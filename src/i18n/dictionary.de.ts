@@ -261,6 +261,15 @@ export const STRINGS_DE = {
   app_tools_title: 'Werkzeuge',
   app_tools_intro: 'Tower-Daten importieren, exportieren, teilen und vergleichen. Diese Aktionen nutzen deinen aktuellen Tower-Arbeitsbereich (Stufen, Werkstatt-Snapshot und Presets).',
   app_tools_lab_hint: 'Tipp: Wechsle zum Tab LABOR, um Stufen zu bearbeiten, oder zur WERKSTATT für modellierte Angriffs-, Verteidigungs- und Utility-Werte; Presets und Hinweise erscheinen im LABOR-Tab während du arbeitest.',
+  app_tools_full_reset: 'Alle gespeicherten Daten zurücksetzen',
+  app_tools_full_reset_aria:
+    'Alle in diesem Browser gespeicherten TowerSmith-Daten löschen: Labor, Werkstatt, Builds, Themes und Einstellungen',
+  app_tools_full_reset_hint:
+    'Löscht alle lokal gespeicherten Daten dieser App und lädt die Seite neu. Exportiere oder kopiere zuerst einen Freigabelink, wenn du deine Daten behalten willst.',
+  app_tools_full_reset_confirm_title: 'Alles in diesem Browser zurücksetzen?',
+  app_tools_full_reset_confirm_body:
+    'Entfernt Labor-Stufen, gespeicherte Builds, Werkstatt-Upgrades, Karten, Module, Relikte, Themes, Sprache und andere für TowerSmith in diesem Browser gespeicherte Einstellungen. Die Seite wird mit Werkseinstellungen neu geladen. Exportiere oder kopiere zuerst einen Freigabelink, wenn du deine Daten behalten willst.',
+  app_tools_full_reset_confirm_btn: 'Alles zurücksetzen',
   app_settings_title: 'Einstellungen',
   app_settings_language_label: 'Sprache',
   app_settings_budget_panels_label: 'Budget-Panels für Labor, Werkstatt & Themes anzeigen',
@@ -460,6 +469,9 @@ export const STRINGS_DE = {
   ws_assist_unlocks_multiplier: 'Multiplikator-Effizienz',
   ws_assist_unlocks_substat: 'Subwert-Effizienz',
   ws_assist_unlocks_unlock: 'Assist-Slot freischalten',
+  ws_assist_unlock: 'Freischalten',
+  ws_assist_unlock_cost_title:
+    'Power Stones zum Freischalten dieses Assist-Slots (je 1.000; startet mit Epic-Unique und 1 % Haupt- und Sub-Effizienz)',
   ws_assist_unlocks_toggle: 'Freischalten',
   ws_modules_assist_stone_efficiency: 'Steineffizienz',
   ws_modules_assist_efficiency_prefix: 'Eff.',

@@ -268,6 +268,15 @@ export const STRINGS_EN = {
     'Import, export, share, and compare Tower data. These actions use your current Tower workspace (levels, workshop snapshot, and presets).',
   app_tools_lab_hint:
     'Tip: switch to the LAB tab to edit levels, or WORKSHOP for modeled attack, defense, and utility stats; presets and notices appear on the LAB tab while you work.',
+  app_tools_full_reset: 'Reset all stored data',
+  app_tools_full_reset_aria:
+    'Clear all TowerSmith data saved in this browser: lab, workshop, builds, themes, and settings',
+  app_tools_full_reset_hint:
+    'Clears everything this app stores locally and reloads the page. Export or copy a share link first if you want to keep your data.',
+  app_tools_full_reset_confirm_title: 'Reset everything in this browser?',
+  app_tools_full_reset_confirm_body:
+    'This removes lab levels, saved builds, workshop upgrades, cards, modules, relics, themes, language, and other settings stored for TowerSmith in this browser. The page will reload with factory defaults. Export or copy a share link first if you want to keep your data.',
+  app_tools_full_reset_confirm_btn: 'Reset everything',
   app_settings_title: 'Settings',
   app_settings_language_label: 'Language',
   app_settings_budget_panels_label: 'Show lab, workshop & themes budget panels',
@@ -470,6 +479,9 @@ export const STRINGS_EN = {
   ws_assist_unlocks_multiplier: 'Multiplier efficiency',
   ws_assist_unlocks_substat: 'Substat efficiency',
   ws_assist_unlocks_unlock: 'Unlock assist slot',
+  ws_assist_unlock: 'Unlock',
+  ws_assist_unlock_cost_title:
+    'Power stones to unlock this assist slot (1,000 each; starts Epic unique with 1% main and sub efficiency)',
   ws_assist_unlocks_toggle: 'Unlock',
   ws_modules_assist_stone_efficiency: 'Stone efficiency',
   ws_modules_assist_efficiency_prefix: 'Eff.',

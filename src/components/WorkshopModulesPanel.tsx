@@ -572,8 +572,14 @@ export function WorkshopModulesPanel({
                     type="button"
                     className="modules-assist-hit"
                     aria-label={`${t('ws_modules_assist_label')} ${t(SLOT_LABEL[key])}`}
+                    aria-disabled={!assistChassis.unlocked}
+                    disabled={!assistChassis.unlocked}
+                    title={
+                      !assistChassis.unlocked ? t('ws_assist_unlock_cost_title') : undefined
+                    }
                     onClick={(e) => {
                       e.stopPropagation()
+                      if (!assistChassis.unlocked) return
                       openModulePicker(key, 'assist')
                     }}
                   >

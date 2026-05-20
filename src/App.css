@@ -3572,6 +3572,10 @@ button.workshop__uw-plus-cost--display:hover {
   color: inherit;
 }
 
+.modules-assist-hit:disabled {
+  cursor: not-allowed;
+}
+
 .modules-slot__frame--assist {
   --module-frame-size: clamp(2.15rem, 17cqi, 2.85rem);
   --module-frame-stroke: 3.5;
@@ -4797,6 +4801,134 @@ button.workshop__uw-plus-cost--display:hover {
 
 .modules-assist-unlocks .workshop__grid--ultimate {
   margin-top: 0;
+}
+
+/* Assist unlock cards — same unlock row layout as bots / ultimate (no icon beside unlock CTA) */
+.modules-assist-unlocks {
+  --workshop-assist-uw-card-height: 220px;
+}
+
+.modules-assist-unlocks .workshop__uw-card {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.modules-assist-unlocks .workshop__uw-card--unowned {
+  height: var(--workshop-assist-uw-card-height);
+  min-height: var(--workshop-assist-uw-card-height);
+}
+
+.modules-assist-unlocks .workshop__uw-card:not(.workshop__uw-card--unowned) {
+  height: auto;
+  min-height: 0;
+}
+
+.modules-assist-unlocks .workshop__uw-head {
+  flex: 0 0 auto;
+}
+
+/* Owned: icon left, upgrade columns right (same as ultimate weapons) */
+.modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  align-self: stretch;
+  gap: 0.65rem;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-icon-wrap {
+  flex: 0 0 3.25rem;
+}
+
+.modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-stats {
+  flex: 1 1 auto;
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  align-items: stretch;
+}
+
+.modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-col {
+  height: auto;
+  min-height: 0;
+}
+
+.modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-col-top {
+  flex: 0 1 auto;
+}
+
+.modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-col-foot {
+  flex: 0 0 auto;
+}
+
+.modules-assist-unlocks .workshop__uw-body--unlock {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+}
+
+.modules-assist-unlocks .workshop__uw-stats--unlock {
+  flex: 1 1 auto;
+  align-self: stretch;
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+}
+
+@media (max-width: 640px) {
+  .modules-assist-unlocks .workshop__uw-card--unowned,
+  .modules-assist-unlocks .workshop__uw-card:not(.workshop__uw-card--unowned) {
+    height: auto;
+    min-height: 0;
+  }
+
+  .modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock),
+  .modules-assist-unlocks .workshop__uw-body--unlock {
+    flex: 0 0 auto;
+  }
+
+  .modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-stats {
+    flex: 0 0 auto;
+    height: auto;
+    align-items: stretch;
+  }
+
+  .modules-assist-unlocks .workshop__uw-body:not(.workshop__uw-body--unlock) .workshop__uw-col {
+    height: auto;
+    min-height: 0;
+  }
+
+  .modules-assist-unlocks .workshop__uw-stats--unlock {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 5rem;
+    align-items: stretch;
+  }
+
+  .modules-assist-unlocks .workshop__uw-col--uw-unlock {
+    width: 100%;
+    height: auto;
+    min-height: 5rem;
+    align-self: stretch;
+  }
+
+  .modules-assist-unlocks .workshop__uw-body-unlock {
+    width: 100%;
+    min-height: 5rem;
+    height: 100%;
+  }
 }
 
 .workshop__uw-stack {
@@ -6180,6 +6312,18 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .tools-page__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tools-page__divider {
+  border: none;
+  border-top: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
+  margin: 1.25rem 0;
+}
+
+.tools-page__danger {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;

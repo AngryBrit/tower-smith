@@ -199,63 +199,97 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
   return (
     <li
       className={
-        assist.unlocked ? 'workshop__uw-card' : 'workshop__uw-card workshop__uw-card--inactive'
+        assist.unlocked
+          ? 'workshop__uw-card'
+          : 'workshop__uw-card workshop__uw-card--unowned'
       }
     >
       <div className="workshop__uw-head">
         <span className="workshop__uw-title">{title}</span>
-        {!assist.unlocked ? (
-          <button
-            type="button"
-            className="workshop__uw-active-toggle"
-            aria-label={`${title} — ${t('ws_assist_unlocks_unlock')}`}
-            onClick={unlock}
+        {assist.unlocked ? null : (
+          <span
+            className="workshop__uw-active-toggle workshop__uw-active-toggle--placeholder"
+            aria-hidden
           >
-            {t('ws_assist_unlocks_unlock')}
-          </button>
-        ) : null}
+            {t('ws_bot_toggle_on')}
+          </span>
+        )}
       </div>
-      <div className="workshop__uw-body">
-        <div className="workshop__uw-icon-wrap">
-          <AssistSlotIcon slot={slot} rarityClass={uniqueRarityClass} />
+      {!assist.unlocked ? (
+        <div className="workshop__uw-body workshop__uw-body--unlock">
+          <div
+            className="workshop__uw-stats workshop__uw-stats--unlock"
+            role="group"
+            aria-label={title}
+          >
+            <div className="workshop__uw-col workshop__uw-col--uw-unlock">
+              <div className="workshop__uw-body-unlock">
+                <button
+                  type="button"
+                  className="workshop__uw-head-unlock-label"
+                  aria-label={`${title} — ${t('ws_assist_unlock')}`}
+                  title={t('ws_assist_unlock_cost_title')}
+                  onClick={unlock}
+                >
+                  {t('ws_assist_unlock')}
+                </button>
+                <button
+                  type="button"
+                  className="workshop__uw-head-unlock-cost"
+                  aria-label={`${title} — ${t('ws_assist_unlock')} ${formatPowerStoneAmount(ASSIST_SLOT_UNLOCK_STONE_COST)}`}
+                  title={t('ws_assist_unlock_cost_title')}
+                  onClick={unlock}
+                >
+                  <span>{formatPowerStoneAmount(ASSIST_SLOT_UNLOCK_STONE_COST)}</span>
+                  <PowerStoneGlyph className="workshop__uw-stone" />
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="workshop__uw-stats" role="group" aria-label={title}>
-          <AssistUnlockCol
-            label={t('ws_assist_unlocks_unique')}
-            value={assist.unlocked ? t(EFFECT_TIER_LABEL[assist.uniqueRarity]) : '—'}
-            valueClass={uniqueRarityClass}
-            nextCost={assist.unlocked ? rarityCost : ASSIST_SLOT_UNLOCK_STONE_COST}
-            maxed={assist.unlocked && rarityMaxed}
-            active={assist.unlocked}
-            decreaseDisabled={assist.uniqueRarity === 'epic'}
-            increaseDisabled={rarityMaxed}
-            onDecrease={() => setRarity(-1)}
-            onIncrease={() => (assist.unlocked ? setRarity(1) : unlock())}
-          />
-          <AssistUnlockCol
-            label={t('ws_assist_unlocks_multiplier')}
-            value={assist.unlocked ? `${assist.mainStoneEfficiency}%` : '—'}
-            nextCost={assist.unlocked ? mainNext : null}
-            maxed={assist.unlocked && mainMaxed}
-            active={assist.unlocked}
-            decreaseDisabled={assist.mainStoneEfficiency <= 1}
-            increaseDisabled={mainMaxed}
-            onDecrease={() => setEfficiency('main', -1)}
-            onIncrease={() => setEfficiency('main', 1)}
-          />
-          <AssistUnlockCol
-            label={t('ws_assist_unlocks_substat')}
-            value={assist.unlocked ? `${assist.subStoneEfficiency}%` : '—'}
-            nextCost={assist.unlocked ? subNext : null}
-            maxed={assist.unlocked && subMaxed}
-            active={assist.unlocked}
-            decreaseDisabled={assist.subStoneEfficiency <= 1}
-            increaseDisabled={subMaxed}
-            onDecrease={() => setEfficiency('sub', -1)}
-            onIncrease={() => setEfficiency('sub', 1)}
-          />
+      ) : (
+        <div className="workshop__uw-body">
+          <div className="workshop__uw-icon-wrap">
+            <AssistSlotIcon slot={slot} rarityClass={uniqueRarityClass} />
+          </div>
+          <div className="workshop__uw-stats" role="group" aria-label={title}>
+            <AssistUnlockCol
+              label={t('ws_assist_unlocks_unique')}
+              value={t(EFFECT_TIER_LABEL[assist.uniqueRarity])}
+              valueClass={uniqueRarityClass}
+              nextCost={rarityCost}
+              maxed={rarityMaxed}
+              active
+              decreaseDisabled={assist.uniqueRarity === 'epic'}
+              increaseDisabled={rarityMaxed}
+              onDecrease={() => setRarity(-1)}
+              onIncrease={() => setRarity(1)}
+            />
+            <AssistUnlockCol
+              label={t('ws_assist_unlocks_multiplier')}
+              value={`${assist.mainStoneEfficiency}%`}
+              nextCost={mainNext}
+              maxed={mainMaxed}
+              active
+              decreaseDisabled={assist.mainStoneEfficiency <= 1}
+              increaseDisabled={mainMaxed}
+              onDecrease={() => setEfficiency('main', -1)}
+              onIncrease={() => setEfficiency('main', 1)}
+            />
+            <AssistUnlockCol
+              label={t('ws_assist_unlocks_substat')}
+              value={`${assist.subStoneEfficiency}%`}
+              nextCost={subNext}
+              maxed={subMaxed}
+              active
+              decreaseDisabled={assist.subStoneEfficiency <= 1}
+              increaseDisabled={subMaxed}
+              onDecrease={() => setEfficiency('sub', -1)}
+              onIncrease={() => setEfficiency('sub', 1)}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </li>
   )
 }

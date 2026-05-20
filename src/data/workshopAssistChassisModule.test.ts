@@ -9,10 +9,10 @@ import {
 } from './workshopAssistChassisModule'
 
 describe('workshopAssistChassisModule', () => {
-  it('defaults assist slots unlocked with epic rarity', () => {
+  it('defaults assist slots locked until purchased', () => {
     const ws = defaultWorkshopPersisted()
     expect(workshopAssistChassisModuleSelection(ws, 'cannon')).toMatchObject({
-      unlocked: true,
+      unlocked: false,
       moduleId: null,
       rarity: 'epic',
       uniqueRarity: 'epic',
@@ -38,6 +38,7 @@ describe('workshopAssistChassisModule', () => {
   it('mainModuleConflictsWithAssist mirrors assist vs main id check', () => {
     const ws: WorkshopPersistedV1 = {
       ...defaultWorkshopPersisted(),
+      simCannonAssistUnlocked: true,
       simCannonChassisModuleId: 'deathPenalty',
       simCannonAssistChassisModuleId: 'astralDeliverance',
     }
@@ -48,6 +49,7 @@ describe('workshopAssistChassisModule', () => {
   it('sanitizeAssistModuleIdAgainstMain drops assist when same as main', () => {
     const ws: WorkshopPersistedV1 = {
       ...defaultWorkshopPersisted(),
+      simCannonAssistUnlocked: true,
       simCannonChassisModuleId: 'deathPenalty',
       simCannonAssistChassisModuleId: 'deathPenalty',
     }
@@ -60,6 +62,7 @@ describe('workshopAssistChassisModule', () => {
   it('detects duplicate main/assist module names', () => {
     const ws: WorkshopPersistedV1 = {
       ...defaultWorkshopPersisted(),
+      simCannonAssistUnlocked: true,
       simCannonChassisModuleId: 'deathPenalty',
       simCannonAssistChassisModuleId: 'astralDeliverance',
     }
@@ -70,6 +73,7 @@ describe('workshopAssistChassisModule', () => {
   it('keeps unique rarity separate from equipped module tier', () => {
     const ws: WorkshopPersistedV1 = {
       ...defaultWorkshopPersisted(),
+      simCannonAssistUnlocked: true,
       simCannonAssistChassisModuleRarity: 'legendary',
       simCannonAssistUniqueRarity: 'mythic',
     }

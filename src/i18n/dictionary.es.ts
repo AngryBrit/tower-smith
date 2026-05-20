@@ -266,6 +266,15 @@ export const STRINGS_ES = {
     'Importar, exportar, compartir y comparar datos de Tower. Usan el espacio de trabajo actual de Tower (niveles, instantánea del taller y presets).',
   app_tools_lab_hint:
     'Consejo: ve a LAB para editar niveles o a WORKSHOP para las estadísticas de ataque, defensa y utilidad modeladas; los avisos y presets aparecen en LAB mientras trabajas.',
+  app_tools_full_reset: 'Restablecer todos los datos guardados',
+  app_tools_full_reset_aria:
+    'Borrar todos los datos de TowerSmith guardados en este navegador: lab, taller, builds, temas y ajustes',
+  app_tools_full_reset_hint:
+    'Borra todo lo que esta app guarda localmente y recarga la página. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
+  app_tools_full_reset_confirm_title: '¿Restablecer todo en este navegador?',
+  app_tools_full_reset_confirm_body:
+    'Elimina niveles del laboratorio, builds guardados, mejoras del taller, cartas, módulos, reliquias, temas, idioma y demás ajustes de TowerSmith en este navegador. La página se recargará con valores de fábrica. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
+  app_tools_full_reset_confirm_btn: 'Restablecer todo',
   app_settings_title: 'Ajustes',
   app_settings_language_label: 'Idioma',
   app_settings_budget_panels_label: 'Mostrar paneles de presupuesto (lab, taller y temas)',
@@ -471,6 +480,9 @@ export const STRINGS_ES = {
   ws_assist_unlocks_multiplier: 'Eficiencia multiplicador',
   ws_assist_unlocks_substat: 'Eficiencia subestadísticas',
   ws_assist_unlocks_unlock: 'Desbloquear ranura assist',
+  ws_assist_unlock: 'Desbloquear',
+  ws_assist_unlock_cost_title:
+    'Power stones para desbloquear esta ranura assist (1.000 cada una; empieza en Epic unique con 1 % de eficiencia principal y sub)',
   ws_assist_unlocks_toggle: 'Desbloquear',
   ws_modules_assist_stone_efficiency: 'Eficiencia de piedras',
   ws_modules_assist_efficiency_prefix: 'Ef.',

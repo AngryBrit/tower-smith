@@ -199,10 +199,10 @@ export function mainModuleConflictsWithAssist(
 
 export function defaultAssistChassisFields(): WorkshopAssistChassisPersisted {
   return {
-    simCannonAssistUnlocked: true,
-    simArmorAssistUnlocked: true,
-    simGeneratorAssistUnlocked: true,
-    simCoreAssistUnlocked: true,
+    simCannonAssistUnlocked: false,
+    simArmorAssistUnlocked: false,
+    simGeneratorAssistUnlocked: false,
+    simCoreAssistUnlocked: false,
     simCannonAssistChassisModuleId: '',
     simArmorAssistChassisModuleId: '',
     simGeneratorAssistChassisModuleId: '',
