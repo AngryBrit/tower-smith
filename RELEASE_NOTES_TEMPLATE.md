@@ -18,6 +18,6 @@ Release date: {{DATE}}
 
 - **TowerSmith** is the user-facing app name (browser title, PWA manifest, social previews). The GitHub repo is [`AngryBrit/tower-smith`](https://github.com/AngryBrit/tower-smith); the npm package name `tower_export` is internal.
 - Live site: [thetower.thatangrybrit.com](https://thetower.thatangrybrit.com/).
-- Share links use **`?tower=`** (codec v4 only). Tower CSV backups use magic line `tower_csv_v1` (includes bot `ws` rows since 2.8.0). **BOTS** labs affect bot stat display on the Bots panel since 2.8.1. Chassis module merge tiers (Rare … 5★) and per-tier max levels since 2.8.2.
+- Share links use **`?tower=`** (codec v4 only). Tower CSV backups use magic line `tower_csv_v1` (includes bot `ws` rows since 2.8.0). **BOTS** labs affect bot stat display on the Bots panel since 2.8.1. Chassis module merge tiers (Rare … 5★) and per-tier max levels since 2.8.2. Assist slots lock until stone unlock and **Tools / Settings** full reset since 2.8.3.
 - `VERSION`, `package.json`, `package-lock.json`, and the release tag are expected to be aligned for each release.
 - Full historical change detail lives in `CHANGELOG.md`.

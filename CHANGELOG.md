@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.3] - 2026-05-21
+
+### Added
+
+- **Full app reset** — **Tools / Settings** button with confirmation clears every `tower-export-*` `localStorage` key and reloads the app ([`fullResetStorage`](src/fullResetStorage.ts), [`ToolsPage`](src/components/ToolsPage.tsx)).
+
+### Changed
+
+- **Assist module slots** — Slots default to **locked** until purchased for **1,000** power stones; unlock cards match bot/ultimate weapon unlock UI; hub module picker disabled until unlocked ([`workshopAssistChassisModule`](src/data/workshopAssistChassisModule.ts), [`AssistUnlocksPanel`](src/components/AssistUnlocksPanel.tsx), [`WorkshopModulesPanel`](src/components/WorkshopModulesPanel.tsx)).
+- **Assist unlock layout** — Modules-panel CSS keeps unlock row height compact, prevents stretch/collapse, and keeps card headers the same height on locked and unlocked cards (hidden toggle placeholder).
+
+### Docs
+
+- README: assist slot locking, full reset; version **2.8.3**.
+
 ## [2.8.2] - 2026-05-21
 
 ### Added

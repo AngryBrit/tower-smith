@@ -206,14 +206,12 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
     >
       <div className="workshop__uw-head">
         <span className="workshop__uw-title">{title}</span>
-        {assist.unlocked ? null : (
-          <span
-            className="workshop__uw-active-toggle workshop__uw-active-toggle--placeholder"
-            aria-hidden
-          >
-            {t('ws_bot_toggle_on')}
-          </span>
-        )}
+        <span
+          className="workshop__uw-active-toggle workshop__uw-active-toggle--placeholder"
+          aria-hidden
+        >
+          {t('ws_bot_toggle_on')}
+        </span>
       </div>
       {!assist.unlocked ? (
         <div className="workshop__uw-body workshop__uw-body--unlock">
