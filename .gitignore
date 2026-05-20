@@ -27,3 +27,7 @@ dist-ssr
 # Local lab import scratch (not for the repo)
 tmp-labs-upstream.json
 tmp-labs.tsv
+
+# i18n maintainer scratch (regenerate via scripts/analyze-es-keys.mjs)
+tmp-strings-en.json
+tmp-kept-en-keys.json
