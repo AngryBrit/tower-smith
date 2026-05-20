@@ -2,10 +2,15 @@
  * Second chassis module (assist) per hub slot — weaker copy of main module effects.
  */
 
-import type { WorkshopChassisModuleRarity } from './workshopChassisModuleShared'
+import {
+  sanitizeChassisModuleEffectTier,
+  sanitizeChassisModuleMergeTier,
+  workshopChassisModuleEffectTier,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleShared'
 import {
   sanitizeChassisModuleId,
-  sanitizeChassisModuleRarity,
   workshopChassisModuleDefForSlot,
   workshopChassisModuleSelection,
   type WorkshopChassisModulePersisted,
@@ -72,9 +77,9 @@ export type WorkshopAssistChassisPersisted = {
 } & {
   [K in (typeof ASSIST_CHASSIS_MODULE_ID_KEY)[WorkshopAssistModuleSlot]]: string
 } & {
-  [K in (typeof ASSIST_CHASSIS_MODULE_RARITY_KEY)[WorkshopAssistModuleSlot]]: WorkshopChassisModuleRarity
+  [K in (typeof ASSIST_CHASSIS_MODULE_RARITY_KEY)[WorkshopAssistModuleSlot]]: WorkshopChassisModuleMergeTier
 } & {
-  [K in (typeof ASSIST_UNIQUE_RARITY_KEY)[WorkshopAssistModuleSlot]]: WorkshopChassisModuleRarity
+  [K in (typeof ASSIST_UNIQUE_RARITY_KEY)[WorkshopAssistModuleSlot]]: WorkshopChassisModuleEffectTier
 } & {
   [K in (typeof ASSIST_STONE_EFFICIENCY_KEY)[WorkshopAssistModuleSlot]]: number
 } & {
@@ -115,14 +120,16 @@ export function assistSubStoneEfficiencyFromPersisted(
 export function assistUniqueRarityFromPersisted(
   ws: WorkshopAssistChassisPersisted,
   slot: WorkshopAssistModuleSlot,
-): WorkshopChassisModuleRarity {
+): WorkshopChassisModuleEffectTier {
   const uniqueKey = ASSIST_UNIQUE_RARITY_KEY[slot]
   const moduleKey = ASSIST_CHASSIS_MODULE_RARITY_KEY[slot]
   const rawUnique = (ws as Record<string, unknown>)[uniqueKey]
   if (rawUnique != null) {
-    return sanitizeChassisModuleRarity(rawUnique)
+    return sanitizeChassisModuleEffectTier(rawUnique)
   }
-  return sanitizeChassisModuleRarity((ws as Record<string, unknown>)[moduleKey])
+  return workshopChassisModuleEffectTier(
+    sanitizeChassisModuleMergeTier((ws as Record<string, unknown>)[moduleKey]),
+  )
 }
 
 export function workshopAssistChassisModuleSelection(
@@ -130,7 +137,7 @@ export function workshopAssistChassisModuleSelection(
   slot: WorkshopAssistModuleSlot,
 ): WorkshopChassisModuleSelection & {
   unlocked: boolean
-  uniqueRarity: WorkshopChassisModuleRarity
+  uniqueRarity: WorkshopChassisModuleEffectTier
   mainStoneEfficiency: number
   subStoneEfficiency: number
   /** @deprecated Use mainStoneEfficiency */
@@ -154,7 +161,7 @@ export function workshopAssistChassisModuleSelection(
           sanitizeChassisModuleId(slot, ws[idKey]),
         )
       : null,
-    rarity: sanitizeChassisModuleRarity(ws[rKey]),
+    rarity: sanitizeChassisModuleMergeTier(ws[rKey]),
   }
 }
 
@@ -248,7 +255,7 @@ export function assistChassisEfficiencyFraction(stoneEfficiency: number): number
 export function formatAssistChassisModuleLabel(
   slot: WorkshopAssistModuleSlot,
   moduleId: string,
-  rarity: WorkshopChassisModuleRarity,
+  rarity: WorkshopChassisModuleMergeTier,
 ): string {
   const def = workshopChassisModuleDefForSlot(slot, moduleId)
   return `${def.name} (${rarity})`

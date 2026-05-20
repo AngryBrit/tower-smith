@@ -5,15 +5,23 @@
 import {
   formatWorkshopChassisModuleAbility,
   formatWorkshopChassisModuleValue,
+  resolveChassisModuleEffectTier,
   type WorkshopChassisModuleDef,
-  type WorkshopChassisModuleRarity,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
 } from './workshopChassisModuleShared'
 
 export type {
-  WorkshopChassisModuleRarity,
+  WorkshopChassisModuleEffectTier,
+  WorkshopChassisModuleMergeTier,
+  WorkshopChassisModuleMergeTier as WorkshopChassisModuleRarity,
   WorkshopChassisModuleValueKind,
 } from './workshopChassisModuleShared'
-export { WORKSHOP_CHASSIS_MODULE_RARITIES } from './workshopChassisModuleShared'
+export {
+  WORKSHOP_CHASSIS_MODULE_EFFECT_TIERS,
+  WORKSHOP_CHASSIS_MODULE_MERGE_TIERS,
+  WORKSHOP_CHASSIS_MODULE_MERGE_TIERS as WORKSHOP_CHASSIS_MODULE_RARITIES,
+} from './workshopChassisModuleShared'
 
 export const WORKSHOP_CANNON_MODULE_ORDER = [
   'astralDeliverance',
@@ -75,16 +83,16 @@ export const formatWorkshopCannonModuleValue = formatWorkshopChassisModuleValue
 
 export function workshopCannonModuleValue(
   id: WorkshopCannonModuleId,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): number {
-  return WORKSHOP_CANNON_MODULES[id].values[rarity]
+  return WORKSHOP_CANNON_MODULES[id].values[resolveChassisModuleEffectTier(tier)]
 }
 
 export function formatWorkshopCannonModuleAbility(
   id: WorkshopCannonModuleId,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): string {
-  return formatWorkshopChassisModuleAbility(WORKSHOP_CANNON_MODULES[id], rarity)
+  return formatWorkshopChassisModuleAbility(WORKSHOP_CANNON_MODULES[id], tier)
 }
 
 export function workshopCannonModuleDef(id: WorkshopCannonModuleId): WorkshopCannonModuleDef {

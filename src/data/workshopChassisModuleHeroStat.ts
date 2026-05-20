@@ -11,10 +11,16 @@ import {
 import {
   formatWorkshopChassisModuleAbility,
   formatWorkshopChassisModuleValue,
+  resolveChassisModuleEffectTier,
   type WorkshopChassisModuleDef,
-  type WorkshopChassisModuleRarity,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
   type WorkshopChassisModuleValueKind,
 } from './workshopChassisModuleShared'
+
+type WorkshopChassisModuleRarity =
+  | WorkshopChassisModuleEffectTier
+  | WorkshopChassisModuleMergeTier
 import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 import { buildWorkshopDefenseLabDisplayOpts } from './workshopLabDisplayOpts'
 import { WORKSHOP_MODULE_LEVEL_MAX } from './workshopSubmoduleCatalog'
@@ -127,7 +133,8 @@ function formatTowerHealthMultHeroStat(
   rarity: WorkshopChassisModuleRarity,
   context?: WorkshopChassisModuleHeroStatContext,
 ): string {
-  const total = towerHealthHeroMult(def.values[rarity], context?.moduleLevel ?? 0, context)
+  const effect = resolveChassisModuleEffectTier(rarity)
+  const total = towerHealthHeroMult(def.values[effect], context?.moduleLevel ?? 0, context)
   return `x${formatMultHeroDisplay(total)} Tower Health`
 }
 
@@ -164,7 +171,8 @@ function formatGenericHeroStat(
   def: WorkshopChassisModuleDef,
   rarity: WorkshopChassisModuleRarity,
 ): string {
-  const value = formatWorkshopChassisModuleValue(def.kind, def.values[rarity])
+  const effect = resolveChassisModuleEffectTier(rarity)
+  const value = formatWorkshopChassisModuleValue(def.kind, def.values[effect])
   const label = SLOT_STAT_LABEL[slot][def.kind] ?? 'Effect'
   if (def.kind === 'mult' || def.kind === 'damageMult') {
     const prefix = value.startsWith('×') || value.startsWith('x') ? '' : '×'
@@ -185,7 +193,7 @@ export function formatWorkshopChassisModuleHeroStat(
       return formatTowerDamageProcHeroStat(procMult, context?.moduleLevel ?? 0)
     }
     if (def.kind === 'percent') {
-      return `${formatWorkshopChassisModuleValue(def.kind, def.values[rarity])} Tower Damage`
+      return `${formatWorkshopChassisModuleValue(def.kind, def.values[resolveChassisModuleEffectTier(rarity)])} Tower Damage`
     }
   }
 

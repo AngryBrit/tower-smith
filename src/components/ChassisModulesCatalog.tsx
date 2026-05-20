@@ -1,14 +1,17 @@
 import {
+  defaultMergeTierForEffectTier,
   formatWorkshopChassisModuleValue,
-  WORKSHOP_CHASSIS_MODULE_RARITIES,
-  WORKSHOP_CHASSIS_MODULE_RARITY_CLASS,
+  WORKSHOP_CHASSIS_MODULE_EFFECT_TIERS,
+  workshopChassisModuleEffectTier,
+  workshopChassisModuleMergeTierCssClass,
   type WorkshopChassisModuleDef,
-  type WorkshopChassisModuleRarity,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
 } from '../data/workshopChassisModuleShared'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 
-const RARITY_COL: Record<WorkshopChassisModuleRarity, StringId> = {
+const EFFECT_COL: Record<WorkshopChassisModuleEffectTier, StringId> = {
   epic: 'ws_modules_col_epic',
   legendary: 'ws_modules_col_legendary',
   mythic: 'ws_modules_col_mythic',
@@ -22,8 +25,8 @@ type ChassisModulesCatalogProps = {
   getDef: (id: string) => WorkshopChassisModuleDef
   notes?: readonly string[]
   selectedModuleId: string | null
-  selectedRarity: WorkshopChassisModuleRarity
-  onSelectModule: (moduleId: string, rarity: WorkshopChassisModuleRarity) => void
+  selectedRarity: WorkshopChassisModuleMergeTier
+  onSelectModule: (moduleId: string, rarity: WorkshopChassisModuleMergeTier) => void
 }
 
 export function ChassisModulesCatalog({
@@ -37,6 +40,7 @@ export function ChassisModulesCatalog({
   onSelectModule,
 }: ChassisModulesCatalogProps) {
   const { t } = useI18n()
+  const selectedEffect = workshopChassisModuleEffectTier(selectedRarity)
 
   return (
     <section className="modules-catalog" aria-labelledby={titleDomId}>
@@ -50,13 +54,13 @@ export function ChassisModulesCatalog({
             <tr>
               <th scope="col">{t('ws_modules_col_module')}</th>
               <th scope="col">{t('ws_modules_col_ability')}</th>
-              {WORKSHOP_CHASSIS_MODULE_RARITIES.map((rarity) => (
+              {WORKSHOP_CHASSIS_MODULE_EFFECT_TIERS.map((effect) => (
                 <th
-                  key={rarity}
+                  key={effect}
                   scope="col"
-                  className={`modules-catalog__th-num ${WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[rarity]}`}
+                  className={`modules-catalog__th-num ${workshopChassisModuleMergeTierCssClass(defaultMergeTierForEffectTier(effect))}`}
                 >
-                  {t(RARITY_COL[rarity])}
+                  {t(EFFECT_COL[effect])}
                 </th>
               ))}
             </tr>
@@ -86,24 +90,25 @@ export function ChassisModulesCatalog({
                     </button>
                   </th>
                   <td className="modules-catalog__ability">{def.description}</td>
-                  {WORKSHOP_CHASSIS_MODULE_RARITIES.map((rarity) => {
-                    const tierSelected = rowSelected && selectedRarity === rarity
+                  {WORKSHOP_CHASSIS_MODULE_EFFECT_TIERS.map((effect) => {
+                    const merge = defaultMergeTierForEffectTier(effect)
+                    const tierSelected = rowSelected && selectedEffect === effect
                     return (
-                      <td key={rarity} className="modules-catalog__num">
+                      <td key={effect} className="modules-catalog__num">
                         <button
                           type="button"
                           className={[
                             'modules-catalog__pick',
                             'modules-catalog__pick--tier',
-                            WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[rarity],
+                            workshopChassisModuleMergeTierCssClass(merge),
                             tierSelected ? 'modules-catalog__pick--tier-on' : '',
                           ]
                             .filter(Boolean)
                             .join(' ')}
                           aria-pressed={tierSelected}
-                          onClick={() => onSelectModule(id, rarity)}
+                          onClick={() => onSelectModule(id, merge)}
                         >
-                          {formatWorkshopChassisModuleValue(def.kind, def.values[rarity])}
+                          {formatWorkshopChassisModuleValue(def.kind, def.values[effect])}
                         </button>
                       </td>
                     )

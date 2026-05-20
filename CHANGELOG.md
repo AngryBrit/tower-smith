@@ -5,6 +5,25 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.2] - 2026-05-21
+
+### Added
+
+- **Module merge tiers** — Full wiki max-level table (Rare 30 … 5★ 300) for chassis modules: 14 merge tiers in the module picker, level clamping per tier, and persistence on workshop presets ([`workshopChassisModuleShared`](src/data/workshopChassisModuleShared.ts), [`ChassisModulePickerDialog`](src/components/ChassisModulePickerDialog.tsx)).
+
+### Fixed
+
+- **Modules panel crash** — Resolve effect-tier values when displaying equipped modules at merge tiers such as Epic+ or 5★ (fixes white screen on Workshop/Modules).
+- **Legacy saves** — `ancestral` rarity with module level above 200 coerces to 5★ on load (planner previously treated Ancestral as max 300).
+
+### Changed
+
+- **Assist unlocks** — Removed redundant hint under Assist unlocks cards.
+
+### Docs
+
+- README: version **2.8.2**.
+
 ## [2.8.1] - 2026-05-20
 
 ### Added

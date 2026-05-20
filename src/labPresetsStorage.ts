@@ -73,7 +73,7 @@ import {
 } from './data/workshopEnhanceUtility'
 import {
   sanitizeChassisModuleId,
-  sanitizeChassisModuleRarity,
+  sanitizeChassisModuleMergeTier,
 } from './data/workshopChassisModuleSelection'
 import { sanitizeRelicOwnedIds } from './data/workshopRelics'
 import {
@@ -88,7 +88,11 @@ import {
   parseSubmoduleSelectionsJson,
   type WorkshopSubmoduleSelections,
 } from './data/workshopSubmoduleSelection'
-import type { WorkshopChassisModuleRarity } from './data/workshopChassisModuleShared'
+import {
+  coerceChassisMergeTierForModuleLevel,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
+} from './data/workshopChassisModuleShared'
 import {
   clampWorkshopAssistModuleLevel,
   type WorkshopAssistModuleSlot,
@@ -340,10 +344,10 @@ export type WorkshopPersistedV1 = {
   simArmorChassisModuleId: string
   simGeneratorChassisModuleId: string
   simCoreChassisModuleId: string
-  simCannonChassisModuleRarity: WorkshopChassisModuleRarity
-  simArmorChassisModuleRarity: WorkshopChassisModuleRarity
-  simGeneratorChassisModuleRarity: WorkshopChassisModuleRarity
-  simCoreChassisModuleRarity: WorkshopChassisModuleRarity
+  simCannonChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simArmorChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simGeneratorChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simCoreChassisModuleRarity: WorkshopChassisModuleMergeTier
   /** Equipped sub-module effect picks per chassis slot. */
   simSubmoduleSelections: WorkshopSubmoduleSelections
   /** Assist chassis slot unlocked (stones). */
@@ -356,14 +360,14 @@ export type WorkshopPersistedV1 = {
   simArmorAssistChassisModuleId: string
   simGeneratorAssistChassisModuleId: string
   simCoreAssistChassisModuleId: string
-  simCannonAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simArmorAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simGeneratorAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simCoreAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simCannonAssistUniqueRarity: WorkshopChassisModuleRarity
-  simArmorAssistUniqueRarity: WorkshopChassisModuleRarity
-  simGeneratorAssistUniqueRarity: WorkshopChassisModuleRarity
-  simCoreAssistUniqueRarity: WorkshopChassisModuleRarity
+  simCannonAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simArmorAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simGeneratorAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simCoreAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simCannonAssistUniqueRarity: WorkshopChassisModuleEffectTier
+  simArmorAssistUniqueRarity: WorkshopChassisModuleEffectTier
+  simGeneratorAssistUniqueRarity: WorkshopChassisModuleEffectTier
+  simCoreAssistUniqueRarity: WorkshopChassisModuleEffectTier
   /** Assist main/sub stone efficiency (0–70%). */
   simCannonAssistStoneEfficiency: number
   simArmorAssistStoneEfficiency: number
@@ -931,12 +935,22 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     simGeneratorChassisModuleId:
       sanitizeChassisModuleId('generator', o.simGeneratorChassisModuleId) ?? '',
     simCoreChassisModuleId: sanitizeChassisModuleId('core', o.simCoreChassisModuleId) ?? '',
-    simCannonChassisModuleRarity: sanitizeChassisModuleRarity(o.simCannonChassisModuleRarity),
-    simArmorChassisModuleRarity: sanitizeChassisModuleRarity(o.simArmorChassisModuleRarity),
-    simGeneratorChassisModuleRarity: sanitizeChassisModuleRarity(
-      o.simGeneratorChassisModuleRarity,
+    simCannonChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simCannonChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simCannonModuleLevel)),
     ),
-    simCoreChassisModuleRarity: sanitizeChassisModuleRarity(o.simCoreChassisModuleRarity),
+    simArmorChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simArmorChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simArmorModuleLevel)),
+    ),
+    simGeneratorChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simGeneratorChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simGeneratorModuleLevel)),
+    ),
+    simCoreChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simCoreChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simCoreModuleLevel)),
+    ),
     simCannonAssistUnlocked: o.simCannonAssistUnlocked === true,
     simArmorAssistUnlocked: o.simArmorAssistUnlocked === true,
     simGeneratorAssistUnlocked: o.simGeneratorAssistUnlocked === true,
@@ -949,17 +963,21 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
       sanitizeChassisModuleId('generator', o.simGeneratorAssistChassisModuleId) ?? '',
     simCoreAssistChassisModuleId:
       sanitizeChassisModuleId('core', o.simCoreAssistChassisModuleId) ?? '',
-    simCannonAssistChassisModuleRarity: sanitizeChassisModuleRarity(
-      o.simCannonAssistChassisModuleRarity,
+    simCannonAssistChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simCannonAssistChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simCannonModuleLevel)),
     ),
-    simArmorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
-      o.simArmorAssistChassisModuleRarity,
+    simArmorAssistChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simArmorAssistChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simArmorModuleLevel)),
     ),
-    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
-      o.simGeneratorAssistChassisModuleRarity,
+    simGeneratorAssistChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simGeneratorAssistChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simGeneratorModuleLevel)),
     ),
-    simCoreAssistChassisModuleRarity: sanitizeChassisModuleRarity(
-      o.simCoreAssistChassisModuleRarity,
+    simCoreAssistChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
+      sanitizeChassisModuleMergeTier(o.simCoreAssistChassisModuleRarity),
+      clampWorkshopAssistModuleLevel(Number(o.simCoreModuleLevel)),
     ),
     simCannonAssistUniqueRarity: assistUniqueRarityFromPersisted(
       o as WorkshopAssistChassisPersisted,

@@ -6,7 +6,7 @@ import {
   ASSIST_STONE_EFFICIENCY_MAX,
   clampAssistStoneEfficiency,
 } from './workshopAssistChassisModule'
-import type { WorkshopChassisModuleRarity } from './workshopChassisModuleShared'
+import type { WorkshopChassisModuleEffectTier } from './workshopChassisModuleShared'
 
 export const ASSIST_SLOT_UNLOCK_STONE_COST = 1000
 export const ASSIST_UNIQUE_RARITY_STONE_TOTAL = 4600
@@ -69,7 +69,7 @@ export const ASSIST_STONE_EFFICIENCY_ROWS: readonly AssistStoneEfficiencyRow[] =
   })
 
 export type AssistUniqueRarityRow = {
-  rarity: WorkshopChassisModuleRarity
+  rarity: WorkshopChassisModuleEffectTier
   stoneCost: number
   cumulativeStones: number
 }
@@ -85,7 +85,7 @@ const ASSIST_UNIQUE_RARITY_ORDER = ASSIST_UNIQUE_RARITY_ROWS.map((r) => r.rarity
 
 /** Stone cost to raise unique-effect tier from current to the next rarity (null at max). */
 export function assistUniqueRarityUpgradeCost(
-  current: WorkshopChassisModuleRarity,
+  current: WorkshopChassisModuleEffectTier,
 ): number | null {
   const idx = ASSIST_UNIQUE_RARITY_ORDER.indexOf(current)
   if (idx < 0 || idx >= ASSIST_UNIQUE_RARITY_ORDER.length - 1) return null
@@ -94,9 +94,9 @@ export function assistUniqueRarityUpgradeCost(
 }
 
 export function stepAssistUniqueRarity(
-  current: WorkshopChassisModuleRarity,
+  current: WorkshopChassisModuleEffectTier,
   delta: -1 | 1,
-): WorkshopChassisModuleRarity {
+): WorkshopChassisModuleEffectTier {
   const idx = ASSIST_UNIQUE_RARITY_ORDER.indexOf(current)
   if (idx < 0) return 'epic'
   const next = Math.max(0, Math.min(ASSIST_UNIQUE_RARITY_ORDER.length - 1, idx + delta))

@@ -5,8 +5,16 @@
 import {
   formatWorkshopChassisModuleAbility,
   formatWorkshopChassisModuleValue,
+  resolveChassisModuleEffectTier,
   type WorkshopChassisModuleDef,
-  type WorkshopChassisModuleRarity,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleShared'
+
+export type {
+  WorkshopChassisModuleEffectTier,
+  WorkshopChassisModuleMergeTier,
+  WorkshopChassisModuleMergeTier as WorkshopChassisModuleRarity,
 } from './workshopChassisModuleShared'
 
 export const WORKSHOP_ARMOR_MODULE_ORDER = [
@@ -73,16 +81,16 @@ export const WORKSHOP_ARMOR_MODULE_NOTES: readonly string[] = [
 
 export function workshopArmorModuleValue(
   id: WorkshopArmorModuleId,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): number {
-  return WORKSHOP_ARMOR_MODULES[id].values[rarity]
+  return WORKSHOP_ARMOR_MODULES[id].values[resolveChassisModuleEffectTier(tier)]
 }
 
 export function formatWorkshopArmorModuleAbility(
   id: WorkshopArmorModuleId,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): string {
-  return formatWorkshopChassisModuleAbility(WORKSHOP_ARMOR_MODULES[id], rarity)
+  return formatWorkshopChassisModuleAbility(WORKSHOP_ARMOR_MODULES[id], tier)
 }
 
 export function workshopArmorModuleDef(id: WorkshopArmorModuleId): WorkshopArmorModuleDef {

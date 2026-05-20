@@ -4,7 +4,16 @@
 
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { clampAssistStoneEfficiency, defaultAssistChassisFields } from './workshopAssistChassisModule'
-import type { WorkshopChassisModuleRarity } from './workshopChassisModuleShared'
+import {
+  sanitizeChassisModuleEffectTier,
+  sanitizeChassisModuleMergeTier,
+  workshopChassisModuleEffectTier,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleShared'
+
+/** @deprecated Use WorkshopChassisModuleMergeTier */
+export type WorkshopChassisModuleRarity = WorkshopChassisModuleMergeTier
 import {
   cannonSubmoduleAttackSpeedFromSelections,
   defaultWorkshopSubmoduleSelections,
@@ -29,10 +38,10 @@ export type WorkshopModulePresetSnapshot = {
   simArmorChassisModuleId: string
   simGeneratorChassisModuleId: string
   simCoreChassisModuleId: string
-  simCannonChassisModuleRarity: WorkshopChassisModuleRarity
-  simArmorChassisModuleRarity: WorkshopChassisModuleRarity
-  simGeneratorChassisModuleRarity: WorkshopChassisModuleRarity
-  simCoreChassisModuleRarity: WorkshopChassisModuleRarity
+  simCannonChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simArmorChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simGeneratorChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simCoreChassisModuleRarity: WorkshopChassisModuleMergeTier
   simSubmoduleSelections: WorkshopSubmoduleSelections
   simAttackSpeedModuleSubEffect: number
   simCannonAssistUnlocked: boolean
@@ -43,14 +52,14 @@ export type WorkshopModulePresetSnapshot = {
   simArmorAssistChassisModuleId: string
   simGeneratorAssistChassisModuleId: string
   simCoreAssistChassisModuleId: string
-  simCannonAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simArmorAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simGeneratorAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simCoreAssistChassisModuleRarity: WorkshopChassisModuleRarity
-  simCannonAssistUniqueRarity: WorkshopChassisModuleRarity
-  simArmorAssistUniqueRarity: WorkshopChassisModuleRarity
-  simGeneratorAssistUniqueRarity: WorkshopChassisModuleRarity
-  simCoreAssistUniqueRarity: WorkshopChassisModuleRarity
+  simCannonAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simArmorAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simGeneratorAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simCoreAssistChassisModuleRarity: WorkshopChassisModuleMergeTier
+  simCannonAssistUniqueRarity: WorkshopChassisModuleEffectTier
+  simArmorAssistUniqueRarity: WorkshopChassisModuleEffectTier
+  simGeneratorAssistUniqueRarity: WorkshopChassisModuleEffectTier
+  simCoreAssistUniqueRarity: WorkshopChassisModuleEffectTier
   simCannonAssistStoneEfficiency: number
   simArmorAssistStoneEfficiency: number
   simGeneratorAssistStoneEfficiency: number
@@ -74,9 +83,6 @@ function sanitizeAssistModuleSlot(raw: unknown): WorkshopAssistModuleSlot {
   return raw === 'armor' || raw === 'generator' || raw === 'core' ? raw : 'cannon'
 }
 
-function sanitizeChassisModuleRarity(raw: unknown): WorkshopChassisModuleRarity {
-  return raw === 'legendary' || raw === 'mythic' || raw === 'ancestral' ? raw : 'epic'
-}
 
 function attackSpeedFromSubmoduleSelections(
   selections: WorkshopSubmoduleSelections,
@@ -110,24 +116,24 @@ export function defaultWorkshopModulePresetSnapshot(): WorkshopModulePresetSnaps
     simArmorAssistChassisModuleId: assist.simArmorAssistChassisModuleId,
     simGeneratorAssistChassisModuleId: assist.simGeneratorAssistChassisModuleId,
     simCoreAssistChassisModuleId: assist.simCoreAssistChassisModuleId,
-    simCannonAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCannonAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       assist.simCannonAssistChassisModuleRarity,
     ),
-    simArmorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simArmorAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       assist.simArmorAssistChassisModuleRarity,
     ),
-    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       assist.simGeneratorAssistChassisModuleRarity,
     ),
-    simCoreAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCoreAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       assist.simCoreAssistChassisModuleRarity,
     ),
-    simCannonAssistUniqueRarity: sanitizeChassisModuleRarity(assist.simCannonAssistUniqueRarity),
-    simArmorAssistUniqueRarity: sanitizeChassisModuleRarity(assist.simArmorAssistUniqueRarity),
-    simGeneratorAssistUniqueRarity: sanitizeChassisModuleRarity(
+    simCannonAssistUniqueRarity: sanitizeChassisModuleEffectTier(assist.simCannonAssistUniqueRarity),
+    simArmorAssistUniqueRarity: sanitizeChassisModuleEffectTier(assist.simArmorAssistUniqueRarity),
+    simGeneratorAssistUniqueRarity: sanitizeChassisModuleEffectTier(
       assist.simGeneratorAssistUniqueRarity,
     ),
-    simCoreAssistUniqueRarity: sanitizeChassisModuleRarity(assist.simCoreAssistUniqueRarity),
+    simCoreAssistUniqueRarity: sanitizeChassisModuleEffectTier(assist.simCoreAssistUniqueRarity),
     simCannonAssistStoneEfficiency: assist.simCannonAssistStoneEfficiency,
     simArmorAssistStoneEfficiency: assist.simArmorAssistStoneEfficiency,
     simGeneratorAssistStoneEfficiency: assist.simGeneratorAssistStoneEfficiency,
@@ -220,12 +226,12 @@ export function applyWorkshopModulePresetSnapshot(
     simArmorChassisModuleId: snap.simArmorChassisModuleId ?? '',
     simGeneratorChassisModuleId: snap.simGeneratorChassisModuleId ?? '',
     simCoreChassisModuleId: snap.simCoreChassisModuleId ?? '',
-    simCannonChassisModuleRarity: sanitizeChassisModuleRarity(snap.simCannonChassisModuleRarity),
-    simArmorChassisModuleRarity: sanitizeChassisModuleRarity(snap.simArmorChassisModuleRarity),
-    simGeneratorChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCannonChassisModuleRarity: sanitizeChassisModuleMergeTier(snap.simCannonChassisModuleRarity),
+    simArmorChassisModuleRarity: sanitizeChassisModuleMergeTier(snap.simArmorChassisModuleRarity),
+    simGeneratorChassisModuleRarity: sanitizeChassisModuleMergeTier(
       snap.simGeneratorChassisModuleRarity,
     ),
-    simCoreChassisModuleRarity: sanitizeChassisModuleRarity(snap.simCoreChassisModuleRarity),
+    simCoreChassisModuleRarity: sanitizeChassisModuleMergeTier(snap.simCoreChassisModuleRarity),
     simSubmoduleSelections,
     simAttackSpeedModuleSubEffect,
     simCannonAssistUnlocked: snap.simCannonAssistUnlocked === true,
@@ -236,24 +242,24 @@ export function applyWorkshopModulePresetSnapshot(
     simArmorAssistChassisModuleId: snap.simArmorAssistChassisModuleId ?? '',
     simGeneratorAssistChassisModuleId: snap.simGeneratorAssistChassisModuleId ?? '',
     simCoreAssistChassisModuleId: snap.simCoreAssistChassisModuleId ?? '',
-    simCannonAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCannonAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       snap.simCannonAssistChassisModuleRarity,
     ),
-    simArmorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simArmorAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       snap.simArmorAssistChassisModuleRarity,
     ),
-    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       snap.simGeneratorAssistChassisModuleRarity,
     ),
-    simCoreAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCoreAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       snap.simCoreAssistChassisModuleRarity,
     ),
-    simCannonAssistUniqueRarity: sanitizeChassisModuleRarity(snap.simCannonAssistUniqueRarity),
-    simArmorAssistUniqueRarity: sanitizeChassisModuleRarity(snap.simArmorAssistUniqueRarity),
-    simGeneratorAssistUniqueRarity: sanitizeChassisModuleRarity(
+    simCannonAssistUniqueRarity: sanitizeChassisModuleEffectTier(snap.simCannonAssistUniqueRarity),
+    simArmorAssistUniqueRarity: sanitizeChassisModuleEffectTier(snap.simArmorAssistUniqueRarity),
+    simGeneratorAssistUniqueRarity: sanitizeChassisModuleEffectTier(
       snap.simGeneratorAssistUniqueRarity,
     ),
-    simCoreAssistUniqueRarity: sanitizeChassisModuleRarity(snap.simCoreAssistUniqueRarity),
+    simCoreAssistUniqueRarity: sanitizeChassisModuleEffectTier(snap.simCoreAssistUniqueRarity),
     simCannonAssistStoneEfficiency: clampAssistStoneEfficiency(snap.simCannonAssistStoneEfficiency),
     simArmorAssistStoneEfficiency: clampAssistStoneEfficiency(snap.simArmorAssistStoneEfficiency),
     simGeneratorAssistStoneEfficiency: clampAssistStoneEfficiency(
@@ -308,12 +314,12 @@ function sanitizeSnapshotFromUnknown(raw: unknown): WorkshopModulePresetSnapshot
       typeof o.simGeneratorChassisModuleId === 'string' ? o.simGeneratorChassisModuleId : '',
     simCoreChassisModuleId:
       typeof o.simCoreChassisModuleId === 'string' ? o.simCoreChassisModuleId : '',
-    simCannonChassisModuleRarity: sanitizeChassisModuleRarity(o.simCannonChassisModuleRarity),
-    simArmorChassisModuleRarity: sanitizeChassisModuleRarity(o.simArmorChassisModuleRarity),
-    simGeneratorChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCannonChassisModuleRarity: sanitizeChassisModuleMergeTier(o.simCannonChassisModuleRarity),
+    simArmorChassisModuleRarity: sanitizeChassisModuleMergeTier(o.simArmorChassisModuleRarity),
+    simGeneratorChassisModuleRarity: sanitizeChassisModuleMergeTier(
       o.simGeneratorChassisModuleRarity,
     ),
-    simCoreChassisModuleRarity: sanitizeChassisModuleRarity(o.simCoreChassisModuleRarity),
+    simCoreChassisModuleRarity: sanitizeChassisModuleMergeTier(o.simCoreChassisModuleRarity),
     simSubmoduleSelections,
     simAttackSpeedModuleSubEffect:
       attackFromSub > 0 ? attackFromSub : Math.max(0, Number(o.simAttackSpeedModuleSubEffect) || 0),
@@ -333,29 +339,41 @@ function sanitizeSnapshotFromUnknown(raw: unknown): WorkshopModulePresetSnapshot
         : '',
     simCoreAssistChassisModuleId:
       typeof o.simCoreAssistChassisModuleId === 'string' ? o.simCoreAssistChassisModuleId : '',
-    simCannonAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCannonAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       o.simCannonAssistChassisModuleRarity,
     ),
-    simArmorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simArmorAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       o.simArmorAssistChassisModuleRarity,
     ),
-    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simGeneratorAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       o.simGeneratorAssistChassisModuleRarity,
     ),
-    simCoreAssistChassisModuleRarity: sanitizeChassisModuleRarity(
+    simCoreAssistChassisModuleRarity: sanitizeChassisModuleMergeTier(
       o.simCoreAssistChassisModuleRarity,
     ),
-    simCannonAssistUniqueRarity: sanitizeChassisModuleRarity(
-      o.simCannonAssistUniqueRarity ?? o.simCannonAssistChassisModuleRarity,
+    simCannonAssistUniqueRarity: sanitizeChassisModuleEffectTier(
+      o.simCannonAssistUniqueRarity ??
+        workshopChassisModuleEffectTier(
+          sanitizeChassisModuleMergeTier(o.simCannonAssistChassisModuleRarity),
+        ),
     ),
-    simArmorAssistUniqueRarity: sanitizeChassisModuleRarity(
-      o.simArmorAssistUniqueRarity ?? o.simArmorAssistChassisModuleRarity,
+    simArmorAssistUniqueRarity: sanitizeChassisModuleEffectTier(
+      o.simArmorAssistUniqueRarity ??
+        workshopChassisModuleEffectTier(
+          sanitizeChassisModuleMergeTier(o.simArmorAssistChassisModuleRarity),
+        ),
     ),
-    simGeneratorAssistUniqueRarity: sanitizeChassisModuleRarity(
-      o.simGeneratorAssistUniqueRarity ?? o.simGeneratorAssistChassisModuleRarity,
+    simGeneratorAssistUniqueRarity: sanitizeChassisModuleEffectTier(
+      o.simGeneratorAssistUniqueRarity ??
+        workshopChassisModuleEffectTier(
+          sanitizeChassisModuleMergeTier(o.simGeneratorAssistChassisModuleRarity),
+        ),
     ),
-    simCoreAssistUniqueRarity: sanitizeChassisModuleRarity(
-      o.simCoreAssistUniqueRarity ?? o.simCoreAssistChassisModuleRarity,
+    simCoreAssistUniqueRarity: sanitizeChassisModuleEffectTier(
+      o.simCoreAssistUniqueRarity ??
+        workshopChassisModuleEffectTier(
+          sanitizeChassisModuleMergeTier(o.simCoreAssistChassisModuleRarity),
+        ),
     ),
     simCannonAssistStoneEfficiency: clampAssistStoneEfficiency(
       Number(o.simCannonAssistStoneEfficiency),

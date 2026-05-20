@@ -10,9 +10,14 @@ import {
 import {
   formatWorkshopChassisModuleAbility,
   formatWorkshopChassisModuleValue,
-  WORKSHOP_CHASSIS_MODULE_RARITY_CLASS,
-  type WorkshopChassisModuleRarity,
+  resolveChassisModuleEffectTier,
+  workshopChassisModuleEffectTierCssClass,
+  workshopChassisModuleMergeTierCssClass,
+  type WorkshopChassisModuleMergeTier,
 } from '../data/workshopChassisModuleShared'
+
+/** @deprecated */
+type WorkshopChassisModuleRarity = WorkshopChassisModuleMergeTier
 import {
   ASSIST_CHASSIS_MODULE_ID_KEY,
   ASSIST_CHASSIS_MODULE_RARITY_KEY,
@@ -151,7 +156,7 @@ function ModuleSlotMetaBelow({
           'modules-slot__name--below',
           'modules-slot__name--module',
           frameRole === 'assist' ? 'modules-slot__name--below-assist' : '',
-          WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[moduleRarity],
+          workshopChassisModuleMergeTierCssClass(moduleRarity),
         ]
           .filter(Boolean)
           .join(' ')}
@@ -203,7 +208,7 @@ function ModuleSlotFrame({
     frameRole === 'assist' ? 'modules-slot__frame--assist' : 'modules-slot__frame--main',
     locked ? 'modules-slot__frame--locked' : '',
     moduleId != null && !locked ? 'modules-slot__frame--equipped' : 'modules-slot__frame--empty',
-    moduleId != null && !locked ? WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[moduleRarity] : '',
+    moduleId != null && !locked ? workshopChassisModuleMergeTierCssClass(moduleRarity) : '',
   ]
     .filter(Boolean)
     .join(' ')
@@ -295,13 +300,16 @@ function ModulesLabDetail({
             'workshop__card--active',
             'workshop__card--sim',
             'workshop__card--sim-wide',
-            WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[moduleRarity],
+            workshopChassisModuleMergeTierCssClass(moduleRarity),
           ].join(' ')}
         >
           <div className="workshop__card-damage-head">
             <span className="workshop__card-name">{equipped.name}</span>
             <span className="workshop__card-value">
-              {formatWorkshopChassisModuleValue(equipped.kind, equipped.values[moduleRarity])}
+              {formatWorkshopChassisModuleValue(
+                equipped.kind,
+                equipped.values[resolveChassisModuleEffectTier(moduleRarity)],
+              )}
             </span>
           </div>
           <p className="workshop__sim-foot">
@@ -316,7 +324,7 @@ function ModulesLabDetail({
             'workshop__card--active',
             'workshop__card--sim',
             'workshop__card--sim-wide',
-            WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[assist.uniqueRarity],
+            workshopChassisModuleEffectTierCssClass(assist.uniqueRarity),
           ].join(' ')}
         >
           <div className="workshop__card-damage-head">

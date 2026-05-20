@@ -20,8 +20,8 @@ import {
   type WorkshopAssistModuleSlot,
 } from '../data/workshopSimModules'
 import {
-  WORKSHOP_CHASSIS_MODULE_RARITY_CLASS,
-  type WorkshopChassisModuleRarity,
+  workshopChassisModuleEffectTierCssClass,
+  type WorkshopChassisModuleEffectTier,
 } from '../data/workshopChassisModuleShared'
 import { formatPowerStoneAmount } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
@@ -37,7 +37,7 @@ const SLOT_LABEL: Record<WorkshopAssistModuleSlot, StringId> = {
   core: 'ws_sim_module_core',
 }
 
-const RARITY_LABEL: Record<WorkshopChassisModuleRarity, StringId> = {
+const EFFECT_TIER_LABEL: Record<WorkshopChassisModuleEffectTier, StringId> = {
   epic: 'ws_modules_col_epic',
   legendary: 'ws_modules_col_legendary',
   mythic: 'ws_modules_col_mythic',
@@ -193,7 +193,7 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
     : assistStoneEfficiencyMarginalCost(assist.subStoneEfficiency + 1)
 
   const uniqueRarityClass = assist.unlocked
-    ? WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[assist.uniqueRarity]
+    ? workshopChassisModuleEffectTierCssClass(assist.uniqueRarity)
     : undefined
 
   return (
@@ -222,7 +222,7 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
         <div className="workshop__uw-stats" role="group" aria-label={title}>
           <AssistUnlockCol
             label={t('ws_assist_unlocks_unique')}
-            value={assist.unlocked ? t(RARITY_LABEL[assist.uniqueRarity]) : '—'}
+            value={assist.unlocked ? t(EFFECT_TIER_LABEL[assist.uniqueRarity]) : '—'}
             valueClass={uniqueRarityClass}
             nextCost={assist.unlocked ? rarityCost : ASSIST_SLOT_UNLOCK_STONE_COST}
             maxed={assist.unlocked && rarityMaxed}
@@ -283,7 +283,6 @@ export function AssistUnlocksPanel({
       <h3 id="assist-unlocks-title" className="modules-catalog__title">
         {t('ws_assist_unlocks_title')}
       </h3>
-      <p className="modules-catalog__hint">{t('ws_assist_unlocks_hint')}</p>
       <ul className="workshop__grid workshop__grid--ultimate">
         {WORKSHOP_ASSIST_MODULE_SLOTS.map((slot) => (
           <AssistUnlockCard key={slot} slot={slot} workshop={workshopPersisted} onPatch={patch} />

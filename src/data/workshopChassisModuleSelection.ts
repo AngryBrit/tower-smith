@@ -3,10 +3,14 @@
  */
 
 import {
-  WORKSHOP_CHASSIS_MODULE_RARITIES,
+  WORKSHOP_CHASSIS_MODULE_MERGE_TIERS,
+  sanitizeChassisModuleMergeTier,
   type WorkshopChassisModuleDef,
-  type WorkshopChassisModuleRarity,
+  type WorkshopChassisModuleMergeTier,
 } from './workshopChassisModuleShared'
+
+/** @deprecated Use WorkshopChassisModuleMergeTier */
+export type WorkshopChassisModuleRarity = WorkshopChassisModuleMergeTier
 import {
   WORKSHOP_ARMOR_MODULE_ORDER,
   workshopArmorModuleDef,
@@ -31,7 +35,7 @@ import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
 export type WorkshopChassisModuleSelection = {
   moduleId: string | null
-  rarity: WorkshopChassisModuleRarity
+  rarity: WorkshopChassisModuleMergeTier
 }
 
 export const CHASSIS_MODULE_ID_KEY = {
@@ -61,9 +65,7 @@ export const CHASSIS_MODULE_ORDERS: Record<WorkshopAssistModuleSlot, readonly st
   core: WORKSHOP_CORE_MODULE_ORDER,
 }
 
-export function sanitizeChassisModuleRarity(raw: unknown): WorkshopChassisModuleRarity {
-  return raw === 'legendary' || raw === 'mythic' || raw === 'ancestral' ? raw : 'epic'
-}
+export { sanitizeChassisModuleMergeTier, sanitizeChassisModuleMergeTier as sanitizeChassisModuleRarity }
 
 export function sanitizeChassisModuleId(
   slot: WorkshopAssistModuleSlot,
@@ -82,7 +84,7 @@ export function workshopChassisModuleSelection(
   const rKey = CHASSIS_MODULE_RARITY_KEY[slot]
   return {
     moduleId: sanitizeChassisModuleId(slot, ws[idKey]),
-    rarity: sanitizeChassisModuleRarity(ws[rKey]),
+    rarity: sanitizeChassisModuleMergeTier(ws[rKey]),
   }
 }
 
@@ -104,4 +106,4 @@ export function workshopChassisModuleDefForSlot(
   }
 }
 
-export { WORKSHOP_CHASSIS_MODULE_RARITIES }
+export { WORKSHOP_CHASSIS_MODULE_MERGE_TIERS, WORKSHOP_CHASSIS_MODULE_MERGE_TIERS as WORKSHOP_CHASSIS_MODULE_RARITIES }

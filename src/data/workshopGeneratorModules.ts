@@ -5,8 +5,16 @@
 import {
   formatWorkshopChassisModuleAbility,
   formatWorkshopChassisModuleValue,
+  resolveChassisModuleEffectTier,
   type WorkshopChassisModuleDef,
-  type WorkshopChassisModuleRarity,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleShared'
+
+export type {
+  WorkshopChassisModuleEffectTier,
+  WorkshopChassisModuleMergeTier,
+  WorkshopChassisModuleMergeTier as WorkshopChassisModuleRarity,
 } from './workshopChassisModuleShared'
 
 export const WORKSHOP_GENERATOR_MODULE_ORDER = [
@@ -80,16 +88,16 @@ export const WORKSHOP_GENERATOR_MODULE_NOTES: readonly string[] = [
 
 export function workshopGeneratorModuleValue(
   id: WorkshopGeneratorModuleId,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): number {
-  return WORKSHOP_GENERATOR_MODULES[id].values[rarity]
+  return WORKSHOP_GENERATOR_MODULES[id].values[resolveChassisModuleEffectTier(tier)]
 }
 
 export function formatWorkshopGeneratorModuleAbility(
   id: WorkshopGeneratorModuleId,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): string {
-  return formatWorkshopChassisModuleAbility(WORKSHOP_GENERATOR_MODULES[id], rarity)
+  return formatWorkshopChassisModuleAbility(WORKSHOP_GENERATOR_MODULES[id], tier)
 }
 
 export function workshopGeneratorModuleDef(

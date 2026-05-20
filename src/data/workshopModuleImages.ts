@@ -2,13 +2,17 @@
  * Chassis module icon paths under `public/modules/`.
  */
 
-import type { WorkshopChassisModuleRarity } from './workshopChassisModuleShared'
+import {
+  resolveChassisModuleEffectTier,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleShared'
 import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
 const base = import.meta.env.BASE_URL
 
 /** Rarity placeholder when a module has no dedicated art yet. */
-export const WORKSHOP_MODULE_RARITY_PLACEHOLDER: Record<WorkshopChassisModuleRarity, string> = {
+export const WORKSHOP_MODULE_RARITY_PLACEHOLDER: Record<WorkshopChassisModuleEffectTier, string> = {
   epic: 'mod_epic.webp',
   legendary: 'mod_legendary.webp',
   mythic: 'mod_mythic.webp',
@@ -53,10 +57,11 @@ export function workshopChassisModuleHasDedicatedArt(
 export function workshopChassisModuleImagePath(
   slot: WorkshopAssistModuleSlot,
   moduleId: string,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): string {
+  const effect = resolveChassisModuleEffectTier(tier)
   return (
-    WORKSHOP_CHASSIS_MODULE_IMAGE[slot][moduleId] ?? WORKSHOP_MODULE_RARITY_PLACEHOLDER[rarity]
+    WORKSHOP_CHASSIS_MODULE_IMAGE[slot][moduleId] ?? WORKSHOP_MODULE_RARITY_PLACEHOLDER[effect]
   )
 }
 
@@ -73,8 +78,8 @@ export function workshopChassisModuleDedicatedImageUrl(
 export function workshopChassisModuleImageUrl(
   slot: WorkshopAssistModuleSlot,
   moduleId: string | null,
-  rarity: WorkshopChassisModuleRarity,
+  tier: WorkshopChassisModuleEffectTier | WorkshopChassisModuleMergeTier,
 ): string | null {
   if (moduleId == null) return null
-  return `${base}modules/${workshopChassisModuleImagePath(slot, moduleId, rarity)}`
+  return `${base}modules/${workshopChassisModuleImagePath(slot, moduleId, tier)}`
 }
