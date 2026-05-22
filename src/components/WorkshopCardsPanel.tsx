@@ -181,21 +181,31 @@ function CardsTileStepper({
   onCommit: (parsed: number) => void
 }) {
   const { t } = useI18n()
-  const [draft, setDraft] = useState(String(value))
+  const maxLabel = t('ws_max')
+  const formatDraft = (v: number) =>
+    max > 0 && v >= max ? maxLabel : String(v)
+  const [draft, setDraft] = useState(() => formatDraft(value))
 
   useEffect(() => {
-    setDraft(String(value))
-  }, [value])
+    setDraft(formatDraft(value))
+  }, [value, max, maxLabel])
 
   const commit = () => {
     const raw = draft.trim().replace(/,/g, '')
     if (raw === '') {
-      setDraft(String(value))
+      setDraft(formatDraft(value))
+      return
+    }
+    if (
+      /^max$/i.test(raw) ||
+      raw.localeCompare(maxLabel, undefined, { sensitivity: 'accent' }) === 0
+    ) {
+      onCommit(max)
       return
     }
     const n = Number(raw)
     if (!Number.isFinite(n)) {
-      setDraft(String(value))
+      setDraft(formatDraft(value))
       return
     }
     onCommit(Math.max(min, Math.min(max, Math.trunc(n))))

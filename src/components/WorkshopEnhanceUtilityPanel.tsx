@@ -8,7 +8,7 @@ import {
   workshopEnhanceUtilityStatDisplay,
   type WorkshopEnhanceUtilityUpgradeKey,
 } from '../data/workshopEnhanceUtility'
-import { formatCoinAbbrev } from '../labCosts'
+import { formatCoinAbbrev, formatCoinAbbrevPreferT } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -55,8 +55,8 @@ function utilityUnlockHint(
   required: number,
 ): string {
   return t('ws_enhance_locked_utility')
-    .replace('{remaining}', formatCoinAbbrev(remaining))
-    .replace('{required}', formatCoinAbbrev(required))
+    .replace('{remaining}', formatCoinAbbrevPreferT(remaining))
+    .replace('{required}', formatCoinAbbrevPreferT(required))
 }
 
 function WorkshopEnhanceUtilityCard({

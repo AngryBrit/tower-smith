@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.4] - 2026-05-22
+
+### Fixed
+
+- **Workshop card stars** — Loading saves with unified `cardStars` no longer zeroes stars when legacy sim mirror fields are `0` (unequipped preset) ([`workshopCardStarsFromLegacy`](src/data/workshopGameCards.ts)).
+- **Research benefit lines** — Labs whose wiki Lv.0 value is **—** show the first-tier benefit at Lv.0 instead of `— » …` ([`benefitLineWithNextUpgrade`](src/types/research.ts)).
+
+### Changed
+
+- **Workshop card star steppers** — At max stars the input shows localized **Max**; typing `max` (or the locale label) commits to max ([`WorkshopCardsPanel`](src/components/WorkshopCardsPanel.tsx)).
+- **Enhance unlock hints** — Coin spend gates display wiki-style **T** abbreviations through quintillion scale (`formatCoinAbbrevPreferT` in [`labCosts.ts`](src/labCosts.ts); attack/defense/utility enhance panels).
+
+### Docs
+
+- README: card star **Max** stepper, enhance **T** hints, research Lv.0 benefit display; version **2.8.4**.
+
 ## [2.8.3] - 2026-05-21
 
 ### Added

@@ -182,6 +182,23 @@ export function formatCoinAbbrev(n: number): string {
   return String(Math.round(n))
 }
 
+/**
+ * Like `formatCoinAbbrev`, but keeps **T** through quintillion scale (skips **q**).
+ * Workshop enhancement unlock hints use wiki “50T / 500T” wording.
+ */
+export function formatCoinAbbrevPreferT(n: number): string {
+  if (!Number.isFinite(n) || n < 0) return '—'
+  if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
+  const abs = n
+  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)} s`
+  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)} Q`
+  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)} T`
+  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)} B`
+  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)} M`
+  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)} K`
+  return String(Math.round(n))
+}
+
 /** Full power-stone amount for ultimate workshop cards (no K/M/B abbrev). */
 export function formatPowerStoneAmount(n: number): string {
   if (!Number.isFinite(n) || n < 0) return '—'

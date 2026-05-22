@@ -47,6 +47,7 @@ function expectedBenefitLineAtLv0(item: ResearchItem, max: number): string {
   }
   const left = benefitDisplayForCard(item, 0, max)
   const right = benefitDisplayForCard(item, 1, max)
+  if (left === '—' && right !== '—') return right
   if (left === right) {
     return `${left} » —`
   }
@@ -2109,9 +2110,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitDisplayForCard(lab!, 2, max)).toBe('Fast enemies')
       expect(benefitDisplayForCard(lab!, 3, max)).toBe('Tank Enemies')
       expect(benefitDisplayForCard(lab!, 6, max)).toBe('Vampire')
-      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe(
-        '— » Ranged enemies',
-      )
+      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('Ranged enemies')
       expect(benefitLineWithNextUpgrade(lab!, 1, max)).toBe(
         'Ranged enemies » Fast enemies',
       )
@@ -2473,7 +2472,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitDisplayForCard(lab!, 1, max)).toBe('2000 waves')
       expect(benefitDisplayForCard(lab!, 4, max)).toBe('1000 waves')
       expect(benefitDisplayForCard(lab!, 7, max)).toBe('400 waves')
-      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('— » 2000 waves')
+      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('2000 waves')
       expect(benefitLineWithNextUpgrade(lab!, 1, max)).toBe(
         '2000 waves » 1500 waves',
       )
@@ -2501,7 +2500,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitDisplayForCard(lab!, 1, max)).toBe('1500 waves')
       expect(benefitDisplayForCard(lab!, 4, max)).toBe('750 waves')
       expect(benefitDisplayForCard(lab!, 7, max)).toBe('300 waves')
-      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('— » 1500 waves')
+      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('1500 waves')
       expect(benefitLineWithNextUpgrade(lab!, 1, max)).toBe(
         '1500 waves » 1250 waves',
       )
@@ -2534,7 +2533,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitDisplayForCard(lab!, 1, max)).toBe('1500 waves')
       expect(benefitDisplayForCard(lab!, 4, max)).toBe('750 waves')
       expect(benefitDisplayForCard(lab!, 7, max)).toBe('300 waves')
-      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('— » 1500 waves')
+      expect(benefitLineWithNextUpgrade(lab!, 0, max)).toBe('1500 waves')
       expect(benefitLineWithNextUpgrade(lab!, max, max)).toBe('300 waves')
     })
 

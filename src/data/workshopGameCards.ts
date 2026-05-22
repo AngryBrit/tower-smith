@@ -276,8 +276,10 @@ export function sanitizeWorkshopCardStars(raw: unknown): WorkshopCardStarsState 
 
 /** Legacy sim fields → unified card star map. */
 export function workshopCardStarsFromLegacy(o: Record<string, unknown>): WorkshopCardStarsState {
-  const stars =
-    o.cardStars != null ? sanitizeWorkshopCardStars(o.cardStars) : defaultWorkshopCardStars()
+  if (o.cardStars != null) {
+    return sanitizeWorkshopCardStars(o.cardStars)
+  }
+  const stars = defaultWorkshopCardStars()
   if (o.simDamageCardStars != null) {
     stars.damage = clampWorkshopGameCardStars(Number(o.simDamageCardStars), 'damage')
   }

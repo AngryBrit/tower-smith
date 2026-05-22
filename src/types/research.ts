@@ -2078,6 +2078,7 @@ function nextBenefitDisplayForUpgradeLine(
  * Unknown / unchanged tail → `» —`; **maxed lab → current value only** (no `» Max`).
  * **Unlock labs** and **Target Priority** omit `»` (current phrase only).
  * **Spotlight Missiles** at Lv.0 omits `»` (unlock prompt only).
+ * Labs with wiki Lv.0→**—** at Lv.0 show first-tier value only (no `— »`).
  */
 export function benefitLineWithNextUpgrade(
   item: ResearchItem,
@@ -2091,6 +2092,19 @@ export function benefitLineWithNextUpgrade(
     return benefitDisplayForCard(item, effectiveLevel, maxLevelCap)
   }
   const current = benefitDisplayForCard(item, effectiveLevel, maxLevelCap)
+  if (
+    effectiveLevel <= 0 &&
+    current === '—' &&
+    maxLevelCap > 0 &&
+    effectiveLevel < maxLevelCap
+  ) {
+    const firstTier = nextBenefitDisplayForUpgradeLine(
+      item,
+      effectiveLevel,
+      maxLevelCap,
+    )
+    if (firstTier !== '—') return firstTier
+  }
 
   if (maxLevelCap <= 0) {
     return `${current} » —`

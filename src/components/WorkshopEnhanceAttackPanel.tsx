@@ -8,7 +8,7 @@ import {
   workshopEnhanceAttackStatDisplay,
   type WorkshopEnhanceAttackUpgradeKey,
 } from '../data/workshopEnhanceAttack'
-import { formatCoinAbbrev } from '../labCosts'
+import { formatCoinAbbrev, formatCoinAbbrevPreferT } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -60,8 +60,8 @@ function attackUnlockHint(
       ? 'ws_enhance_locked_attack_damage'
       : 'ws_enhance_locked_attack'
   return t(id)
-    .replace('{remaining}', formatCoinAbbrev(remaining))
-    .replace('{required}', formatCoinAbbrev(required))
+    .replace('{remaining}', formatCoinAbbrevPreferT(remaining))
+    .replace('{required}', formatCoinAbbrevPreferT(required))
 }
 
 function WorkshopEnhanceAttackCard({

@@ -3,6 +3,7 @@ import {
   defaultWorkshopCardStars,
   WORKSHOP_GAME_CARD_ORDER,
   workshopCardStarMirrorsForPersisted,
+  workshopCardStarsFromLegacy,
   workshopGameCardGlow,
   workshopGameCardImage,
   type WorkshopGameCardId,
@@ -30,6 +31,20 @@ describe('workshopGameCardGlow', () => {
     for (const id of WORKSHOP_GAME_CARD_ORDER) {
       expect(['cyan', 'magenta', 'gold', 'green']).toContain(workshopGameCardGlow(id))
     }
+  })
+})
+
+describe('workshopCardStarsFromLegacy', () => {
+  it('keeps unified cardStars when sim mirrors are zero (unequipped)', () => {
+    const cardStars = { ...defaultWorkshopCardStars(), damage: 7, attackSpeed: 7, berserker: 7 }
+    expect(
+      workshopCardStarsFromLegacy({
+        cardStars,
+        simDamageCardStars: 0,
+        simAttackSpeedCardStars: 0,
+        simBerserkerCardStars: 0,
+      }),
+    ).toEqual(cardStars)
   })
 })
 

@@ -5633,6 +5633,11 @@ button.workshop__uw-plus-cost--display:hover {
   box-shadow: 0 0 6px rgba(244, 114, 182, 0.85);
 }
 
+.cards-tile--max .cards-tile__input {
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 .cards-tile--mastery {
   border-color: rgba(74, 222, 128, 0.85);
   box-shadow:
