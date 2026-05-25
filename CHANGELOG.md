@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.7] - 2026-05-25
+
+### Added
+
+- **Guild Season 9 relics** — **Magic Cards** (rare) and **Dangerous Tricks** (epic) in the relic catalog with WebP art ([`workshopRelics.generated.json`](src/data/workshopRelics.generated.json), [`patch-relics-catalog.mjs`](scripts/patch-relics-catalog.mjs)).
+- **Music theme previews** — Krisu track cards on the Themes **Music** tab use in-game note art ([`public/music/`](public/music/), [`gameThemes.ts`](src/data/gameThemes.ts)).
+
+### Docs
+
+- README: **264** relics, music preview art, `public/music/`; version **2.8.7**.
+
 ## [2.8.6] - 2026-05-25
 
 ### Added

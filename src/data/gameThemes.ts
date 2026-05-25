@@ -370,18 +370,21 @@ export const GAME_THEMES: readonly GameThemeEntry[] = [
     category: 'music',
     nameId: 'theme_music_krisu_oceans_sings',
     icon: 'music-note',
+    image: '/music/music-notes_0.webp',
   },
   {
     id: 'music-krisu-hiding-himalaya',
     category: 'music',
     nameId: 'theme_music_krisu_hiding_himalaya',
     icon: 'music-calm',
+    image: '/music/music-notes_1.webp',
   },
   {
     id: 'music-krisu-forest-bathing',
     category: 'music',
     nameId: 'theme_music_krisu_forest_bathing',
     icon: 'music-intense',
+    image: '/music/music-notes_2.webp',
   },
 
   ...MENU_GUILD_ROWS.map(

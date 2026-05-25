@@ -337,6 +337,26 @@ const newRelics = [
     unlockGroup: 'event',
     damagePct: 0,
   },
+  {
+    order: 263,
+    id: 'magic_cards',
+    name: 'Magic Cards',
+    rarity: 'rare',
+    description: 'Increase free utility upgrade by 1%',
+    unlock: 'Guild: Spend 75 tokens in Guild Season 9',
+    unlockGroup: 'guild',
+    damagePct: 0,
+  },
+  {
+    order: 264,
+    id: 'dangerous_tricks',
+    name: 'Dangerous Tricks',
+    rarity: 'epic',
+    description: 'Increase attack speed by 2%',
+    unlock: 'Guild: Spend 150 tokens in Guild Season 9',
+    unlockGroup: 'guild',
+    damagePct: 0,
+  },
 ]
 
 for (const row of newRelics) {

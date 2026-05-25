@@ -173,6 +173,8 @@
   "river_of_plenty": "River_of_Plenty.webp",
   "world_domination": "World_Domination.webp",
   "brave_heroes": "Brave_Heroes.webp",
+  "model_training": "Machine_Language.webp",
+  "gnosis": "Instant_Knowledge.webp",
   "tower_agent": "Tower_Agent.webp",
   "fake_reality": "Fake_Reality.webp",
   "rlyeh": "R_lyeh.webp",
@@ -259,6 +261,6 @@
   "storm_planet": "StormPlanet.webp",
   "brain_net": "BrainNet.webp",
   "body_control": "BodyControl.webp",
-  "model_training": "Machine_Language.webp",
-  "gnosis": "Instant_Knowledge.webp"
+  "magic_cards": "MagicCards.webp",
+  "dangerous_tricks": "DangerousTricks.webp"
 }

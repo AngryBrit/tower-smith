@@ -2,7 +2,7 @@
   "name": "tower_export",
   "description": "TowerSmith — static web app for The Tower: workshop, bots, ultimate Plus, assist modules, relics, cards, themes, labs, and shareable builds.",
   "private": true,
-  "version": "2.8.6",
+  "version": "2.8.7",
   "type": "module",
   "scripts": {
     "dev": "vite",
