@@ -4,6 +4,7 @@ import {
   getEffectiveLevel,
   getLevelBounds,
   isCardMasteryResearchItem,
+  levelOverrideKey,
   rawDiscountedMarginalCoinAtCurrentLevel,
 } from './types/research'
 
@@ -103,4 +104,40 @@ export function formatSimulatorCoinAggregates(a: SimulatorCoinAggregates): {
     toMaxLabel: formatCoinAbbrev(a.toMaxAll),
     nextVisibleLabel: formatCoinAbbrev(a.nextUpgradeVisibleSum),
   }
+}
+
+/** Set every visible coin lab row (search / hide-completed / section filters) to its max level. */
+export function maxVisibleLabLevels(
+  data: ResearchData,
+  levelOverrides: Record<string, number>,
+  searchQuery: string,
+  hideCompleted: boolean,
+  collapsed: Record<number, boolean>,
+): Record<string, number> {
+  const q = searchQuery.trim().toLowerCase()
+  const next = { ...levelOverrides }
+
+  for (let si = 0; si < data.sections.length; si += 1) {
+    if (Boolean(collapsed[si])) continue
+    const section = data.sections[si]
+    for (let ii = 0; ii < section.items.length; ii += 1) {
+      const item = section.items[ii]
+      if (isCardMasteryResearchItem(item)) continue
+
+      const bounds = getLevelBounds(item)
+      const max = bounds.max
+      if (max <= 0) continue
+
+      const eff = getEffectiveLevel(si, ii, item, levelOverrides)
+      const matchesSearch =
+        q.length === 0 || item.name.toLowerCase().includes(q)
+      const effectivelyMaxed = eff >= max
+      const passesCompleted = !hideCompleted || !effectivelyMaxed
+      if (!matchesSearch || !passesCompleted) continue
+
+      next[levelOverrideKey(si, ii)] = max
+    }
+  }
+
+  return next
 }

@@ -17,7 +17,6 @@ import {
   workshopBotSpecialLevelKey,
   workshopBotSpecialStonePurchased,
   workshopAllBotsOwnedForPlus,
-  workshopBotAllMaxed,
   workshopBotClampLevel,
   workshopBotIsActive,
   workshopBotIsOwned,
@@ -27,6 +26,7 @@ import {
   type WorkshopBotUpgradeKey,
 } from '../data/workshopBots'
 import {
+  maxWorkshopBots,
   resetWorkshopBots,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
@@ -48,25 +48,23 @@ function botsOverlayPortal(node: ReactNode) {
 }
 
 function BotsToolbar({
-  hideMaxed,
-  setHideMaxed,
+  onMaxAll,
   onResetBots,
 }: {
-  hideMaxed: boolean
-  setHideMaxed: (v: boolean) => void
+  onMaxAll: () => void
   onResetBots: () => void
 }) {
   const { t } = useI18n()
   return (
     <div className="select-research__toolbar-quick select-research__toolbar-quick--bots-only">
-      <label className="glow-btn glow-btn--toggle">
-        <input
-          type="checkbox"
-          checked={hideMaxed}
-          onChange={(e) => setHideMaxed(e.target.checked)}
-        />
-        {t('sr_hide_completed')}
-      </label>
+      <button
+        type="button"
+        className="glow-btn glow-btn--block"
+        onClick={onMaxAll}
+        aria-label={t('sr_max_all_bots_aria')}
+      >
+        {t('sr_max_all')}
+      </button>
       <button
         type="button"
         className="glow-btn glow-btn--danger glow-btn--block"
@@ -88,33 +86,12 @@ export function BotsPage({
   labLevelOverrides = {},
 }: BotsPageProps) {
   const { t } = useI18n()
-  const [hideMaxed, setHideMaxed] = useState(workshopPersisted.hideMaxed)
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
   const workshopPersistedRef = useRef(workshopPersisted)
 
   useEffect(() => {
     workshopPersistedRef.current = workshopPersisted
   }, [workshopPersisted])
-
-  useEffect(() => {
-    setHideMaxed(workshopPersisted.hideMaxed)
-  }, [workshopPersisted.hideMaxed])
-
-  const setHideMaxedPersisted = useCallback(
-    (v: boolean) => {
-      setHideMaxed(v)
-      onWorkshopPersistedChange({ ...workshopPersistedRef.current, hideMaxed: v })
-    },
-    [onWorkshopPersistedChange],
-  )
-
-  const visibleBots = useMemo(
-    () =>
-      WORKSHOP_BOT_ORDER.filter(
-        (botId) => !hideMaxed || !workshopBotAllMaxed(workshopPersisted, botId),
-      ),
-    [hideMaxed, workshopPersisted],
-  )
 
   const botLabDisplayOpts = useMemo(
     () => buildWorkshopBotLabDisplayOpts(researchData, labLevelOverrides),
@@ -193,6 +170,10 @@ export function BotsPage({
     onWorkshopPersistedChange(resetWorkshopBots(workshopPersistedRef.current))
   }, [onWorkshopPersistedChange])
 
+  const maxAllBots = useCallback(() => {
+    onWorkshopPersistedChange(maxWorkshopBots(workshopPersistedRef.current))
+  }, [onWorkshopPersistedChange])
+
   useEffect(() => {
     if (!resetConfirmOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -216,8 +197,7 @@ export function BotsPage({
       {embeddedInPanel && toolbarMount
         ? createPortal(
             <BotsToolbar
-              hideMaxed={hideMaxed}
-              setHideMaxed={setHideMaxedPersisted}
+              onMaxAll={maxAllBots}
               onResetBots={() => setResetConfirmOpen(true)}
             />,
             toolbarMount,
@@ -226,7 +206,7 @@ export function BotsPage({
 
       <div className="workshop__body">
         <ul className="workshop__grid workshop__grid--ultimate">
-          {visibleBots.map((botId) => (
+          {WORKSHOP_BOT_ORDER.map((botId) => (
             <WorkshopBotCard
               key={botId}
               botId={botId}

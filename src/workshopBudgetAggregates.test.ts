@@ -7,9 +7,11 @@ import { workshopDamageNextMarginalCoins } from './data/workshopDamage'
 import { defaultWorkshopPersisted } from './labPresetsStorage'
 import { applyWorkshopDiscountToCoins } from './types/research'
 import {
+  applyWorkshopMaxAllVisible,
   computeWorkshopCoinAggregates,
   computeWorkshopStoneAggregates,
 } from './workshopBudgetAggregates'
+import { WORKSHOP_DAMAGE_MAX_LEVEL } from './data/workshopDamage'
 import {
   WORKSHOP_ULTIMATE_WEAPON_ORDER,
   workshopUltimateActiveKey,
@@ -200,5 +202,27 @@ describe('computeWorkshopStoneAggregates', () => {
     }).nextUpgradeVisibleSum
     expect(inactiveOwned).toBeLessThan(activeOwned)
     expect(activeOwned).toBeGreaterThan(0)
+  })
+})
+
+describe('applyWorkshopMaxAllVisible', () => {
+  it('maxes attack upgrade rows in the attack category', () => {
+    const ws = applyWorkshopMaxAllVisible({
+      ...defaultWorkshopPersisted(),
+      mainTab: 'upgrade',
+      category: 'attack',
+      damageLevel: 1,
+    })
+    expect(ws.damageLevel).toBe(WORKSHOP_DAMAGE_MAX_LEVEL)
+  })
+
+  it('maxes all enhance damage rows regardless of unlock gates', () => {
+    const ws = applyWorkshopMaxAllVisible({
+      ...defaultWorkshopPersisted(),
+      mainTab: 'enhance',
+      category: 'attack',
+    })
+    expect(ws.enhanceDamageLevel).toBe(400)
+    expect(ws.enhanceRendArmorLevel).toBe(400)
   })
 })

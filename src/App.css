@@ -294,10 +294,16 @@
   margin-top: -0.3rem;
 }
 
+.select-research__toolbar-quick > .glow-btn--danger,
 .select-research__toolbar-quick--themes-only > .glow-btn--danger,
 .select-research__toolbar-quick--cards-only > .glow-btn--danger,
 .select-research__toolbar-quick--modules-only > .glow-btn--danger,
 .select-research__toolbar-quick--relics-only > .glow-btn--danger {
+  grid-column: 1 / -1;
+}
+
+.select-research__toolbar-quick--cards-only > .glow-btn:not(.glow-btn--danger),
+.select-research__toolbar-quick--bots-only > .glow-btn:not(.glow-btn--danger) {
   grid-column: 1 / -1;
 }
 

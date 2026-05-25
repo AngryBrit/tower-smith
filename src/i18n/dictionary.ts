@@ -865,7 +865,15 @@ export const STRINGS_EN = {
   sr_preset_delete_build: 'Delete build',
   sr_preset_delete_aria: 'Delete the active saved build',
   sr_hide_completed: 'Hide Completed',
+  sr_max_all: 'Max All',
+  sr_max_all_aria:
+    'Set all visible lab levels to maximum (respects search, hide completed, and collapsed sections)',
+  sr_max_all_cards_aria: 'Set all card star levels to maximum',
+  sr_max_all_bots_aria:
+    'Own all bots, activate them, max basic upgrades, and max Bot+ abilities',
   sr_reset_lab_levels: 'Reset Lab',
+  ws_max_all_aria:
+    'Set all visible workshop upgrades in the current category to maximum (respects hide completed)',
   sr_import_export_launcher: 'Import, export & share labs…',
 
   sr_budget_title: 'Lab coins',

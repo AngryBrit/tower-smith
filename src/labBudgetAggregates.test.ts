@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { computeSimulatorCoinAggregates } from './labBudgetAggregates'
+import { computeSimulatorCoinAggregates, maxVisibleLabLevels } from './labBudgetAggregates'
 import type { ResearchData } from './types/research'
 
 const damageItem = {
@@ -43,5 +43,17 @@ describe('computeSimulatorCoinAggregates', () => {
     })
     expect(collapsed.nextUpgradeVisibleSum).toBe(0)
     expect(open.nextUpgradeVisibleSum).toBeGreaterThan(0)
+  })
+})
+
+describe('maxVisibleLabLevels', () => {
+  it('sets visible labs to max and skips collapsed sections', () => {
+    const data: ResearchData = {
+      sections: [{ sectionSlug: 'attack', title: 'ATTACK', items: [{ ...damageItem }] }],
+    }
+    const maxed = maxVisibleLabLevels(data, { '0-0': 5 }, '', false, {})
+    expect(maxed['0-0']).toBe(100)
+    const collapsed = maxVisibleLabLevels(data, {}, '', false, { 0: true })
+    expect(collapsed['0-0']).toBeUndefined()
   })
 })

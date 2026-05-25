@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.5] - 2026-05-25
+
+### Added
+
+- **Max All** — Toolbar button on **Workshop** (current category/tab, respects hide completed), **Lab** (visible coin labs: search, hide completed, expanded sections), **Cards** (all card stars to max), and **Bots** (own all bots, max basic upgrades and Bot+ levels) ([`applyWorkshopMaxAllVisible`](src/workshopBudgetAggregates.ts), [`maxVisibleLabLevels`](src/labBudgetAggregates.ts), [`maxWorkshopCardStars`](src/labPresetsStorage.ts), [`maxWorkshopBots`](src/labPresetsStorage.ts)).
+
+### Changed
+
+- **Bots toolbar** — Removed **Hide Completed** toggle; all five bots are always listed on the Bots panel.
+
+### Docs
+
+- README: **Max All** on workshop, lab, cards, and bots; version **2.8.5**.
+
 ## [2.8.4] - 2026-05-22
 
 ### Fixed

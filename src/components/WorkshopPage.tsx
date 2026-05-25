@@ -145,6 +145,7 @@ import {
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
 import {
+  applyWorkshopMaxAllVisible,
   computeWorkshopCoinAggregates,
   computeWorkshopStoneAggregates,
   formatWorkshopCoinAggregates,
@@ -233,11 +234,13 @@ function workshopOverlayPortal(node: ReactNode) {
 function WorkshopDemoToolbar({
   hideMaxed,
   setHideMaxed,
+  onMaxAll,
   onResetDemo,
   workshopCategory,
 }: {
   hideMaxed: boolean
   setHideMaxed: (v: boolean) => void
+  onMaxAll: () => void
   onResetDemo: () => void
   workshopCategory: WorkshopCategory
 }) {
@@ -254,6 +257,14 @@ function WorkshopDemoToolbar({
         />
         {t('sr_hide_completed')}
       </label>
+      <button
+        type="button"
+        className="glow-btn glow-btn--block"
+        onClick={onMaxAll}
+        aria-label={t('ws_max_all_aria')}
+      >
+        {t('sr_max_all')}
+      </button>
       <button
         type="button"
         className="glow-btn glow-btn--danger glow-btn--block"
@@ -3261,6 +3272,11 @@ export function WorkshopPage({
     [onWorkshopPersistedChange, workshopPersisted],
   )
 
+  const maxAllWorkshopVisible = useCallback(() => {
+    setMultiplierOpen(false)
+    onWorkshopPersistedChange(applyWorkshopMaxAllVisible(workshopPersisted))
+  }, [onWorkshopPersistedChange, workshopPersisted])
+
   const workshopCoinAggregates = useMemo(
     () => computeWorkshopCoinAggregates(workshopPersisted, workshopCoinDiscountOpts),
     [workshopPersisted, workshopCoinDiscountOpts],
@@ -3305,6 +3321,7 @@ export function WorkshopPage({
             <WorkshopDemoToolbar
               hideMaxed={hideMaxed}
               setHideMaxed={setHideMaxed}
+              onMaxAll={maxAllWorkshopVisible}
               onResetDemo={openResetWorkshopConfirm}
               workshopCategory={category}
             />,
@@ -3317,6 +3334,7 @@ export function WorkshopPage({
           <WorkshopDemoToolbar
             hideMaxed={hideMaxed}
             setHideMaxed={setHideMaxed}
+            onMaxAll={maxAllWorkshopVisible}
             onResetDemo={openResetWorkshopConfirm}
             workshopCategory={category}
           />

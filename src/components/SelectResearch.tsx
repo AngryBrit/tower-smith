@@ -25,6 +25,7 @@ import {
 import {
   computeSimulatorCoinAggregates,
   formatSimulatorCoinAggregates,
+  maxVisibleLabLevels,
 } from '../labBudgetAggregates'
 import {
 } from '../labLevelOverridesCsv'
@@ -97,10 +98,12 @@ function labOverlayPortal(node: ReactNode) {
 function LabToolbarQuick({
   hideCompleted,
   setHideCompleted,
+  onMaxAll,
   onResetLevels,
 }: {
   hideCompleted: boolean
   setHideCompleted: (v: boolean) => void
+  onMaxAll: () => void
   onResetLevels: () => void
 }) {
   const { t } = useI18n()
@@ -114,6 +117,14 @@ function LabToolbarQuick({
         />
         {t('sr_hide_completed')}
       </label>
+      <button
+        type="button"
+        className="glow-btn glow-btn--block"
+        onClick={onMaxAll}
+        aria-label={t('sr_max_all_aria')}
+      >
+        {t('sr_max_all')}
+      </button>
       <button
         type="button"
         className="glow-btn glow-btn--danger glow-btn--block"
@@ -998,6 +1009,12 @@ export const SelectResearch = forwardRef<
     setImportNotice(t('sr_notice_preset_deleted'))
   }, [fmt, presets, setWorkshopPersisted, t])
 
+  const maxAllVisibleLabs = useCallback(() => {
+    setLevelOverrides((prev) =>
+      maxVisibleLabLevels(data, prev, search, hideCompleted, collapsed),
+    )
+  }, [collapsed, data, hideCompleted, search])
+
   const openResetLevelsConfirm = useCallback(() => {
     setShareQr(null)
     setLabDataPanelOpen(false)
@@ -1077,6 +1094,7 @@ export const SelectResearch = forwardRef<
         <LabToolbarQuick
           hideCompleted={hideCompleted}
           setHideCompleted={setHideCompleted}
+          onMaxAll={maxAllVisibleLabs}
           onResetLevels={openResetLevelsConfirm}
         />
 

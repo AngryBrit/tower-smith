@@ -809,7 +809,15 @@ export const STRINGS_DE = {
   sr_preset_delete_build: 'Build löschen',
   sr_preset_delete_aria: 'Aktiven gespeicherten Build löschen',
   sr_hide_completed: 'Abgeschlossene ausblenden',
+  sr_max_all: 'Alles max.',
+  sr_max_all_aria:
+    'Alle sichtbaren Labor-Stufen auf Maximum setzen (berücksichtigt Suche, Ausblenden abgeschlossener und eingeklappte Abschnitte)',
+  sr_max_all_cards_aria: 'Alle Karten-Sternstufen auf Maximum setzen',
+  sr_max_all_bots_aria:
+    'Alle Bots kaufen und aktivieren, Basis-Upgrades und Bot+-Fähigkeiten auf Maximum setzen',
   sr_reset_lab_levels: 'Labor zurücksetzen',
+  ws_max_all_aria:
+    'Alle sichtbaren Werkstatt-Upgrades der aktuellen Kategorie auf Maximum setzen (berücksichtigt „Abgeschlossene ausblenden“)',
   sr_import_export_launcher: 'Labs importieren, exportieren & teilen…',
   sr_budget_title: 'Labor-Münzen',
   sr_budget_aria: 'Ausgegeben {{spent}}, bis Maximum {{toMax}}, nächste sichtbare Upgrades {{next}}.',

@@ -10,6 +10,7 @@ import {
 import { createPortal } from 'react-dom'
 import { WorkshopCardsPanel } from './WorkshopCardsPanel'
 import {
+  maxWorkshopCardStars,
   resetWorkshopCards,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
@@ -30,10 +31,24 @@ function cardsOverlayPortal(node: ReactNode) {
   return createPortal(node, document.body)
 }
 
-function CardsToolbarQuick({ onResetCards }: { onResetCards: () => void }) {
+function CardsToolbarQuick({
+  onMaxAll,
+  onResetCards,
+}: {
+  onMaxAll: () => void
+  onResetCards: () => void
+}) {
   const { t } = useI18n()
   return (
     <div className="select-research__toolbar-quick select-research__toolbar-quick--cards-only">
+      <button
+        type="button"
+        className="glow-btn glow-btn--block"
+        onClick={onMaxAll}
+        aria-label={t('sr_max_all_cards_aria')}
+      >
+        {t('sr_max_all')}
+      </button>
       <button
         type="button"
         className="glow-btn glow-btn--danger glow-btn--block"
@@ -73,6 +88,12 @@ export function CardsPage({
     onScratchWorkshopPersistedChange?.((prev) => resetWorkshopCards(prev))
   }, [onScratchWorkshopPersistedChange, onWorkshopPersistedChange])
 
+  const maxAllCards = useCallback(() => {
+    const next = maxWorkshopCardStars(workshopPersistedRef.current)
+    onWorkshopPersistedChange(next)
+    onScratchWorkshopPersistedChange?.((prev) => maxWorkshopCardStars(prev))
+  }, [onScratchWorkshopPersistedChange, onWorkshopPersistedChange])
+
   useEffect(() => {
     if (!resetCardsConfirmOpen) return
     const onKey = (e: KeyboardEvent) => {
@@ -90,7 +111,10 @@ export function CardsPage({
     >
       {embeddedInPanel && toolbarMount
         ? createPortal(
-            <CardsToolbarQuick onResetCards={openResetCardsConfirm} />,
+            <CardsToolbarQuick
+              onMaxAll={maxAllCards}
+              onResetCards={openResetCardsConfirm}
+            />,
             toolbarMount,
           )
         : null}

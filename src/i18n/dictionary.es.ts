@@ -872,7 +872,15 @@ export const STRINGS_ES = {
   sr_preset_delete_build: 'Eliminar build',
   sr_preset_delete_aria: 'Eliminar el build guardado activo',
   sr_hide_completed: 'Ocultar completados',
+  sr_max_all: 'Máx. todo',
+  sr_max_all_aria:
+    'Poner al máximo los laboratorios visibles (respeta búsqueda, ocultar completados y secciones colapsadas)',
+  sr_max_all_cards_aria: 'Poner al máximo las estrellas de todas las cartas',
+  sr_max_all_bots_aria:
+    'Comprar todos los bots, activarlos, maximizar mejoras básicas y habilidades Bot+',
   sr_reset_lab_levels: 'Restablecer LAB',
+  ws_max_all_aria:
+    'Poner al máximo las mejoras visibles de la categoría actual del taller (respeta ocultar completados)',
   sr_import_export_launcher: 'Importar, exportar y compartir labs…',
 
   sr_budget_title: 'Monedas del laboratorio',

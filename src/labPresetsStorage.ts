@@ -44,9 +44,12 @@ import {
   workshopBotActiveKey,
   workshopBotClampLevel,
   workshopBotIsOwned,
+  workshopBotMaxLevel,
   workshopBotOwnedKey,
   workshopBotSpecialClampLevel,
   workshopBotSpecialLevelKey,
+  workshopBotSpecialMaxLevel,
+  workshopBotUpgradeKeys,
   type WorkshopBotActiveKey,
   type WorkshopBotOwnedKey,
   type WorkshopBotSpecialKey,
@@ -100,8 +103,10 @@ import {
 import {
   clampWorkshopCardActivePresetIndex,
   defaultWorkshopCardStars,
+  WORKSHOP_GAME_CARD_ORDER,
   workshopCardStarMirrorsForPersisted,
   workshopCardStarsFromLegacy,
+  workshopGameCardMaxStars,
   type WorkshopCardStarsState,
   type WorkshopGameCardId,
 } from './data/workshopGameCards'
@@ -435,6 +440,25 @@ export function resetWorkshopCards(current: WorkshopPersistedV1): WorkshopPersis
   }
 }
 
+/** Set every in-game card to its maximum star level (preserves loadouts and equip slots). */
+export function maxWorkshopCardStars(current: WorkshopPersistedV1): WorkshopPersistedV1 {
+  const cardStars = {
+    ...current.cardStars,
+    ...Object.fromEntries(
+      WORKSHOP_GAME_CARD_ORDER.map((id) => [id, workshopGameCardMaxStars(id)]),
+    ),
+  } as WorkshopCardStarsState
+  return {
+    ...current,
+    cardStars,
+    ...workshopCardStarMirrorsForPersisted({
+      cardStars,
+      cardPresetLoadouts: current.cardPresetLoadouts,
+      cardActivePresetIndex: current.cardActivePresetIndex,
+    }),
+  }
+}
+
 /**
  * Reset assist module levels, chassis modules, and sub-module effect picks only.
  * Preserves workshop upgrade / enhance / ultimate levels, cards, and other sim fields.
@@ -469,6 +493,24 @@ export function resetWorkshopBots(current: WorkshopPersistedV1): WorkshopPersist
     ...defaultBotSpecialLevels(),
     ...defaultBotOwned(),
   }
+}
+
+/** Own all bots, activate them, max basic upgrades, and max Bot+ ability levels. */
+export function maxWorkshopBots(current: WorkshopPersistedV1): WorkshopPersistedV1 {
+  const patch: Partial<WorkshopPersistedV1> = {}
+  for (const botId of WORKSHOP_BOT_ORDER) {
+    patch[workshopBotOwnedKey(botId)] = true
+    patch[workshopBotActiveKey(botId)] = true
+    for (const key of workshopBotUpgradeKeys(botId)) {
+      patch[key] = workshopBotClampLevel(key, workshopBotMaxLevel(key))
+    }
+    patch[WORKSHOP_BOT_SPECIAL_BY_BOT[botId]] = true
+    patch[workshopBotSpecialLevelKey(botId)] = workshopBotSpecialClampLevel(
+      botId,
+      workshopBotSpecialMaxLevel(botId),
+    )
+  }
+  return { ...current, ...patch }
 }
 
 export function resetWorkshopUpgradeLevels(

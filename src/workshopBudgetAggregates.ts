@@ -99,10 +99,12 @@ import {
   WORKSHOP_ULTIMATE_UPGRADE_ORDER,
   WORKSHOP_ULTIMATE_WEAPON_ORDER,
   WORKSHOP_ULTIMATE_WEAPON_STATS,
-
+  workshopUltimateActiveKey,
+  workshopUltimateClampLevel,
   workshopUltimateMaxLevel,
   workshopUltimateNextMarginalStones,
   workshopUltimateNextUnlockCost,
+  workshopUltimateOwnedKey,
   workshopUltimateUnlockSpentStones,
   workshopUltimateUnlockToMaxStones,
   workshopUltimateIsActive,
@@ -113,6 +115,7 @@ import {
   ULTIMATE_PLUS_MAX_LEVEL,
   WORKSHOP_ULTIMATE_PLUS_ABILITY_ORDER,
   workshopAllUltimateWeaponsReadyForPlus,
+  workshopUltimatePlusClampLevel,
   workshopUltimatePlusIsUnlocked,
   workshopUltimatePlusLevelKey,
   workshopUltimatePlusMaxLevel,
@@ -659,3 +662,134 @@ export function formatWorkshopCoinAggregates(a: WorkshopCoinAggregates): {
 }
 
 export const formatWorkshopStoneAggregates = formatWorkshopCoinAggregates
+
+const ATTACK_UPGRADE_MAX: readonly {
+  key:
+    | 'damageLevel'
+    | 'attackSpeedLevel'
+    | 'critChanceLevel'
+    | 'critFactorLevel'
+    | 'attackRangeLevel'
+    | 'damagePerMeterLevel'
+    | 'multishotChanceLevel'
+    | 'multishotTargetsLevel'
+    | 'rapidFireChanceLevel'
+    | 'rapidFireDurationLevel'
+    | 'bounceShotChanceLevel'
+    | 'bounceShotTargetsLevel'
+    | 'bounceShotRangeLevel'
+    | 'superCritChanceLevel'
+    | 'superCritMultLevel'
+    | 'rendArmorChanceLevel'
+    | 'rendArmorMultLevel'
+  max: number
+}[] = [
+  { key: 'damageLevel', max: WORKSHOP_DAMAGE_MAX_LEVEL },
+  { key: 'attackSpeedLevel', max: WORKSHOP_ATTACK_SPEED_MAX_LEVEL },
+  { key: 'critChanceLevel', max: WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL },
+  { key: 'critFactorLevel', max: WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL },
+  { key: 'attackRangeLevel', max: WORKSHOP_ATTACK_RANGE_MAX_LEVEL },
+  { key: 'damagePerMeterLevel', max: WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL },
+  { key: 'multishotChanceLevel', max: WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL },
+  { key: 'multishotTargetsLevel', max: WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL },
+  { key: 'rapidFireChanceLevel', max: WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL },
+  { key: 'rapidFireDurationLevel', max: WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL },
+  { key: 'bounceShotChanceLevel', max: WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL },
+  { key: 'bounceShotTargetsLevel', max: WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL },
+  { key: 'bounceShotRangeLevel', max: WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL },
+  { key: 'superCritChanceLevel', max: WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL },
+  { key: 'superCritMultLevel', max: WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL },
+  { key: 'rendArmorChanceLevel', max: WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL },
+  { key: 'rendArmorMultLevel', max: WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL },
+]
+
+function shouldMaxWorkshopRow(
+  hideMaxed: boolean,
+  level: number,
+  max: number,
+): boolean {
+  return !hideMaxed || level < max
+}
+
+/**
+ * Max every workshop row in the current category / tab that matches hide-maxed visibility
+ * (same rules as the budget panel “next visible upgrade” sum).
+ */
+export function applyWorkshopMaxAllVisible(ws: WorkshopPersistedV1): WorkshopPersistedV1 {
+  const { hideMaxed, category, mainTab } = ws
+  const patch: Partial<WorkshopPersistedV1> = {}
+
+  if (mainTab === 'enhance') {
+    if (category === 'attack') {
+      for (const key of WORKSHOP_ENHANCE_ATTACK_UPGRADE_ORDER) {
+        const max = workshopEnhanceAttackMaxLevel(key)
+        const level = ws[key]
+        if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+        patch[key] = max
+      }
+    } else if (category === 'defense') {
+      for (const key of WORKSHOP_ENHANCE_DEFENSE_UPGRADE_ORDER) {
+        const max = workshopEnhanceDefenseMaxLevel(key)
+        const level = ws[key]
+        if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+        patch[key] = max
+      }
+    } else if (category === 'utility') {
+      for (const key of WORKSHOP_ENHANCE_UTILITY_UPGRADE_ORDER) {
+        const max = workshopEnhanceUtilityMaxLevel(key)
+        const level = ws[key]
+        if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+        patch[key] = max
+      }
+    }
+    return Object.keys(patch).length > 0 ? { ...ws, ...patch } : ws
+  }
+
+  if (mainTab === 'upgrade' && category === 'attack') {
+    for (const { key, max } of ATTACK_UPGRADE_MAX) {
+      const level = ws[key]
+      if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+      patch[key] = max
+    }
+  } else if (mainTab === 'upgrade' && category === 'defense') {
+    for (const key of WORKSHOP_DEFENSE_UPGRADE_ORDER) {
+      const max = workshopDefenseMaxLevel(key)
+      const level = ws[key]
+      if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+      patch[key] = max
+    }
+  } else if (mainTab === 'upgrade' && category === 'utility') {
+    for (const key of WORKSHOP_UTILITY_UPGRADE_ORDER) {
+      const max = workshopUtilityMaxLevel(key)
+      const level = ws[key]
+      if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+      patch[key] = max
+    }
+  } else if (mainTab === 'upgrade' && category === 'ultimate') {
+    for (const weaponId of WORKSHOP_ULTIMATE_WEAPON_ORDER) {
+      if (hideMaxed && workshopUltimateWeaponAllMaxed(ws, weaponId)) continue
+      patch[workshopUltimateOwnedKey(weaponId)] = true
+      patch[workshopUltimateActiveKey(weaponId)] = true
+      for (const { key } of WORKSHOP_ULTIMATE_WEAPON_STATS[weaponId]) {
+        const max = workshopUltimateMaxLevel(key)
+        const level = ws[key]
+        if (!shouldMaxWorkshopRow(hideMaxed, level, max)) continue
+        patch[key] = workshopUltimateClampLevel(key, max)
+      }
+    }
+    const merged = { ...ws, ...patch }
+    if (workshopAllUltimateWeaponsReadyForPlus(merged)) {
+      for (const abilityId of WORKSHOP_ULTIMATE_PLUS_ABILITY_ORDER) {
+        const levelKey = workshopUltimatePlusLevelKey(abilityId)
+        const level = merged[levelKey] ?? -1
+        const max = workshopUltimatePlusMaxLevel(abilityId)
+        const plusVisible =
+          !hideMaxed || !workshopUltimatePlusIsUnlocked(level) || level < max
+        if (!plusVisible) continue
+        patch[levelKey] = workshopUltimatePlusClampLevel(abilityId, max)
+      }
+    }
+  }
+
+  return Object.keys(patch).length > 0 ? { ...ws, ...patch } : ws
+}

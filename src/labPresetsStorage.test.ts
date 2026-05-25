@@ -3,6 +3,8 @@ import {
   buildLabPresetsPayload,
   defaultWorkshopPersisted,
   parseLabPresetsFile,
+  maxWorkshopBots,
+  maxWorkshopCardStars,
   resetWorkshopCards,
   resetWorkshopModules,
   resetWorkshopRelics,
@@ -55,6 +57,30 @@ describe('resetWorkshopCards', () => {
     expect(after.cardEquipSlots).toBe(1)
     expect(after.cardPresetLoadouts[0]).toEqual([])
     expect(after.simDamageCardStars).toBe(0)
+  })
+})
+
+describe('maxWorkshopBots', () => {
+  it('owns all bots and maxes upgrades and Bot+ levels', () => {
+    const after = maxWorkshopBots(defaultWorkshopPersisted())
+    expect(after.flameOwned).toBe(true)
+    expect(after.flameBotActive).toBe(true)
+    expect(after.flameBotDamageLevel).toBeGreaterThan(0)
+    expect(after.flameBotBurningGroundUnlocked).toBe(true)
+    expect(after.flameBotBurningGroundLevel).toBeGreaterThanOrEqual(0)
+  })
+})
+
+describe('maxWorkshopCardStars', () => {
+  it('sets every card to max stars without clearing loadouts', () => {
+    const before = {
+      ...defaultWorkshopPersisted(),
+      cardStars: { ...defaultWorkshopPersisted().cardStars, damage: 1 },
+    }
+    before.cardPresetLoadouts[0] = ['damage']
+    const after = maxWorkshopCardStars(before)
+    expect(after.cardStars.damage).toBe(7)
+    expect(after.cardPresetLoadouts[0]).toEqual(['damage'])
   })
 })
 
