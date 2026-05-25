@@ -13,6 +13,7 @@ import {
   type RelicStatGroupId,
   type RelicStatRow,
 } from '../data/workshopRelicStats'
+import { workshopRelicImageUrl } from '../data/workshopRelicImages'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -183,6 +184,7 @@ export function WorkshopRelicsPanel({
 
   const renderRelicCard = (relic: WorkshopRelicDef) => {
     const owned = ownedSet.has(relic.id)
+    const imageUrl = workshopRelicImageUrl(relic.id)
     return (
       <div
         key={relic.id}
@@ -192,6 +194,11 @@ export function WorkshopRelicsPanel({
       >
         <div className="relics-page__card-main">
           <div className="relics-page__card-head">
+            {imageUrl != null ? (
+              <span className="relics-page__card-icon" aria-hidden>
+                <img src={imageUrl} alt="" decoding="async" draggable={false} />
+              </span>
+            ) : null}
             <span className="relics-page__card-name">{relic.name}</span>
           </div>
           <p className="relics-page__card-effect">{relic.description}</p>

@@ -245,8 +245,8 @@ export function ThemesPage({
   const [selection, selectTheme] = useThemeSelection()
   const [ownedIds, setThemeOwned] = useThemeOwned()
   const items = themesForCategory(activeCategory)
-  const towerGroups = useMemo(() => towerThemesByGroup(), [])
-  const backgroundGroups = useMemo(() => backgroundThemesByGroup(), [])
+  const towerGroups = towerThemesByGroup()
+  const backgroundGroups = backgroundThemesByGroup()
   const searchNormalized = search.trim().toLowerCase()
   const visibleItems = useMemo(
     () => filterThemes(items, t, searchNormalized),

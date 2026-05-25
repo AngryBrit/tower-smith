@@ -5,6 +5,8 @@ type BackgroundEventRow = {
   nameId: StringId
   eventNameId: StringId
   icon: string
+  /** Preview art in `public/themes/background/`. */
+  image?: string
   ownedDefault?: boolean
 }
 
@@ -24,18 +26,21 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_interstellar',
     eventNameId: 'theme_event_interstellar',
     icon: 'interstellar',
+    image: '/themes/background/InterstellarSkin.webp',
   },
   {
     id: 'bg-volcano',
     nameId: 'theme_bg_volcano',
     eventNameId: 'theme_event_volcano',
     icon: 'volcano',
+    image: '/themes/background/VolcanoSkin.webp',
   },
   {
     id: 'bg-plasma-field',
     nameId: 'theme_bg_plasma_field',
     eventNameId: 'theme_event_plasma_returns',
     icon: 'plasma-ball',
+    image: '/themes/background/PlasmaSkin.webp',
     ownedDefault: true,
   },
   {
@@ -43,12 +48,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_honeycomb',
     eventNameId: 'theme_event_honey',
     icon: 'smile',
+    image: '/themes/background/HoneycombSkin.webp',
   },
   {
     id: 'bg-aurora',
     nameId: 'theme_bg_aurora',
     eventNameId: 'theme_event_aurora',
     icon: 'aurora',
+    image: '/themes/background/AuroraSkin.webp',
     ownedDefault: true,
   },
   {
@@ -56,6 +63,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_alien_ship',
     eventNameId: 'theme_event_aliens',
     icon: 'alien',
+    image: '/themes/background/AlienShipSkin.webp',
     ownedDefault: true,
   },
   {
@@ -63,6 +71,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_ocean_night',
     eventNameId: 'theme_event_ocean_night',
     icon: 'ocean-night',
+    image: '/themes/background/OceanNightSkin.webp',
     ownedDefault: true,
   },
   {
@@ -70,6 +79,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_sakura',
     eventNameId: 'theme_event_cherry_blossom',
     icon: 'sakura',
+    image: '/themes/background/CherryBlossomBackgroundIcon.webp',
     ownedDefault: true,
   },
   {
@@ -77,12 +87,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_easter',
     eventNameId: 'theme_event_easter',
     icon: 'sheep',
+    image: '/themes/background/easter-icon.webp',
   },
   {
     id: 'bg-retrowave',
     nameId: 'theme_bg_retrowave',
     eventNameId: 'theme_event_retrowave',
     icon: 'retrowave',
+    image: '/themes/background/retrowave-icon.webp',
     ownedDefault: true,
   },
   {
@@ -90,12 +102,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_prismatic_lines',
     eventNameId: 'theme_event_prismatic_lines',
     icon: 'retrowave',
+    image: '/themes/background/Prismatic%20Lines.webp',
   },
   {
     id: 'bg-cobweb',
     nameId: 'theme_bg_cobweb',
     eventNameId: 'theme_event_cobweb',
     icon: 'haunted-house',
+    image: '/themes/background/cobweb-icon.webp',
     ownedDefault: true,
   },
   {
@@ -103,6 +117,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_matrix',
     eventNameId: 'theme_event_matrix',
     icon: 'matrix',
+    image: '/themes/background/matrix-icon.webp',
     ownedDefault: true,
   },
   {
@@ -110,24 +125,28 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_virus_field',
     eventNameId: 'theme_event_viral_outbreak',
     icon: 'matrix',
+    image: '/themes/background/virus-field-icon.webp',
   },
   {
     id: 'bg-mountain-night',
     nameId: 'theme_bg_mountain_night',
     eventNameId: 'theme_event_full_moon',
     icon: 'rhino',
+    image: '/themes/background/starry-night-icon.webp',
   },
   {
     id: 'bg-sandstorm',
     nameId: 'theme_bg_sandstorm',
     eventNameId: 'theme_event_sands_of_time',
     icon: 'atomic',
+    image: '/themes/background/sandstorm-icon.webp',
   },
   {
     id: 'bg-autumn-forest',
     nameId: 'theme_bg_autumn_forest',
     eventNameId: 'theme_event_autumn',
     icon: 'cactus',
+    image: '/themes/background/autumn-forest-icon.webp',
     ownedDefault: true,
   },
   {
@@ -135,12 +154,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_haunted_house',
     eventNameId: 'theme_event_halloween',
     icon: 'haunted-house',
+    image: '/themes/background/haunted-house-icon.webp',
   },
   {
     id: 'bg-arcade',
     nameId: 'theme_bg_arcade',
     eventNameId: 'theme_event_retro_arcade',
     icon: 'arcade',
+    image: '/themes/background/arcade-icon.webp',
     ownedDefault: true,
   },
   {
@@ -148,6 +169,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_new_years',
     eventNameId: 'theme_event_new_year',
     icon: 'new-years',
+    image: '/themes/background/new-year-icon.webp',
     ownedDefault: true,
   },
   {
@@ -155,30 +177,35 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_dark_strands',
     eventNameId: 'theme_event_dark_strands',
     icon: 'menu-dark-being',
+    image: '/themes/background/dark-strand-icon.webp',
   },
   {
     id: 'bg-deep-sea',
     nameId: 'theme_bg_deep_sea',
     eventNameId: 'theme_event_deep_blue_sea',
     icon: 'ocean-night',
+    image: '/themes/background/deep-sea-icon.webp',
   },
   {
     id: 'bg-hyper-space',
     nameId: 'theme_bg_hyper_space',
     eventNameId: 'theme_event_faster_than_light',
     icon: 'interstellar',
+    image: '/themes/background/hyperspace-icon.webp',
   },
   {
     id: 'bg-invasion',
     nameId: 'theme_bg_invasion',
     eventNameId: 'theme_event_invaders',
     icon: 'alien',
+    image: '/themes/background/invasion-icon.webp',
   },
   {
     id: 'bg-sunset-river',
     nameId: 'theme_bg_sunset_river',
     eventNameId: 'theme_event_sunset_fishing',
     icon: 'ocean-night',
+    image: '/themes/background/sunset-river-icon.webp',
     ownedDefault: true,
   },
   {
@@ -186,6 +213,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_hurricane',
     eventNameId: 'theme_event_into_the_storm',
     icon: 'snowstorm',
+    image: '/themes/background/hurricane-icon.webp',
     ownedDefault: true,
   },
   {
@@ -193,12 +221,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_rainfall',
     eventNameId: 'theme_event_rainfall',
     icon: 'water-droplet',
+    image: '/themes/background/rainfall.webp',
   },
   {
     id: 'bg-tv-wall',
     nameId: 'theme_bg_tv_wall',
     eventNameId: 'theme_event_towers_channel',
     icon: 'arcade',
+    image: '/themes/background/tv-wall-icon.webp',
     ownedDefault: true,
   },
   {
@@ -206,12 +236,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_abduction',
     eventNameId: 'theme_event_abduction',
     icon: 'sheep',
+    image: '/themes/background/abduction-icon.webp',
   },
   {
     id: 'bg-snowstorm',
     nameId: 'theme_bg_snowstorm',
     eventNameId: 'theme_event_snowstorm',
     icon: 'snowstorm',
+    image: '/themes/background/snowstorm-icon.webp',
     ownedDefault: true,
   },
   {
@@ -219,18 +251,21 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_forest_of_cats',
     eventNameId: 'theme_event_meowy_night',
     icon: 'cat',
+    image: '/themes/background/forest-of-cats_icon.webp',
   },
   {
     id: 'bg-event-horizon',
     nameId: 'theme_bg_event_horizon',
     eventNameId: 'theme_event_gravity',
     icon: 'eclipse',
+    image: '/themes/background/event-horizon_icon.webp',
   },
   {
     id: 'bg-clock-tower',
     nameId: 'theme_bg_clock_tower',
     eventNameId: 'theme_event_what_time_is_it',
     icon: 'atomic',
+    image: '/themes/background/clock-tower_icon.webp',
     ownedDefault: true,
   },
   {
@@ -238,12 +273,14 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_pi_disk',
     eventNameId: 'theme_event_pi',
     icon: 'matrix',
+    image: '/themes/background/pi-number-icon.webp',
   },
   {
     id: 'bg-koi-pond',
     nameId: 'theme_bg_koi_pond',
     eventNameId: 'theme_event_koi_pond',
     icon: 'turtle',
+    image: '/themes/background/koi-pond-icon.webp',
     ownedDefault: true,
   },
   {
@@ -251,6 +288,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_camping',
     eventNameId: 'theme_event_camping',
     icon: 'sheep',
+    image: '/themes/background/Camping-icon.webp',
     ownedDefault: true,
   },
   {
@@ -258,6 +296,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_cthulhu',
     eventNameId: 'theme_event_cthulhu',
     icon: 'alien',
+    image: '/themes/background/cthulhu-icon.webp',
     ownedDefault: true,
   },
   {
@@ -265,6 +304,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_cyberpunk',
     eventNameId: 'theme_event_cyberpunk',
     icon: 'cyber',
+    image: '/themes/background/CyberpunkIcon.webp',
     ownedDefault: true,
   },
   {
@@ -272,6 +312,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_crystal_cave',
     eventNameId: 'theme_event_crystal_cave',
     icon: 'eclipse',
+    image: '/themes/background/Crystal%20Cave%20Icon.webp',
     ownedDefault: true,
   },
   {
@@ -279,6 +320,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_amusement_park',
     eventNameId: 'theme_event_amusement_park',
     icon: 'donut',
+    image: '/themes/background/AmusementParkIcon.webp',
     ownedDefault: true,
   },
   {
@@ -286,6 +328,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_valentine',
     eventNameId: 'theme_event_valentine',
     icon: 'cherry-blossom',
+    image: '/themes/background/ValentinesBackgroundIcon.webp',
     ownedDefault: true,
   },
   {
@@ -293,6 +336,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_glitch',
     eventNameId: 'theme_event_glitch',
     icon: 'matrix',
+    image: '/themes/background/GlitchBackgroundIcon.webp',
     ownedDefault: true,
   },
   {
@@ -300,6 +344,7 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     nameId: 'theme_bg_neuron',
     eventNameId: 'theme_event_neuron',
     icon: 'atomic',
+    image: '/themes/background/NeuronsBackgroundIcon.webp',
     ownedDefault: true,
   },
 ]
@@ -310,14 +355,14 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_throne_room',
     icon: 'menu-crown',
     guildSeason: 1,
-    image: '/themes/background/throne_room.webp',
+    image: '/themes/background/throne-room-icon.webp',
   },
   {
     id: 'bg-guild-mech-world',
     nameId: 'theme_bg_mech_world',
     icon: 'menu-mech',
     guildSeason: 2,
-    image: '/themes/background/mech_world.webp',
+    image: '/themes/background/mech-world-icon.webp',
     ownedDefault: true,
   },
   {
@@ -325,7 +370,7 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_party',
     icon: 'menu-party',
     guildSeason: 3,
-    image: '/themes/background/party.webp',
+    image: '/themes/background/Party-icon.webp',
     ownedDefault: true,
   },
   {
@@ -333,7 +378,7 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_pixel_alien_war',
     icon: 'menu-pixel',
     guildSeason: 4,
-    image: '/themes/background/pixel_alien_war.webp',
+    image: '/themes/background/PixelAlienWar.webp',
     ownedDefault: true,
   },
   {
@@ -341,7 +386,7 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_crimson_horror',
     icon: 'menu-horror',
     guildSeason: 5,
-    image: '/themes/background/crimson_horror.webp',
+    image: '/themes/background/CrimsonHorrorIcon.webp',
     ownedDefault: true,
   },
   {
@@ -349,7 +394,7 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_cozy_cosmos',
     icon: 'menu-cosmos',
     guildSeason: 6,
-    image: '/themes/background/cozy_cosmos.webp',
+    image: '/themes/background/CozyCosmosIcon.webp',
     ownedDefault: true,
   },
   {
@@ -357,7 +402,7 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_supernova',
     icon: 'menu-supernova',
     guildSeason: 7,
-    image: '/themes/background/supernova.webp',
+    image: '/themes/background/SupernovaBackgroundIcon.webp',
     ownedDefault: true,
   },
   {
@@ -365,7 +410,15 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     nameId: 'theme_bg_claw_machine',
     icon: 'menu-claw',
     guildSeason: 8,
-    image: '/themes/background/claw_machine.webp',
+    image: '/themes/background/ClawMachineIcon.webp',
+    ownedDefault: true,
+  },
+  {
+    id: 'bg-guild-magician',
+    nameId: 'theme_bg_magician',
+    icon: 'menu-magician',
+    guildSeason: 9,
+    image: '/themes/background/MagicianIcon.webp',
     ownedDefault: true,
   },
 ]

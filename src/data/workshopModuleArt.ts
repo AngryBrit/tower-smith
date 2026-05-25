@@ -2,8 +2,8 @@ import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
 const base = import.meta.env.BASE_URL
 
-/** Central tower graphic (`public/modules/modules.webp`). */
-export const WORKSHOP_MODULES_TOWER_IMAGE = `${base}modules/modules.webp`
+/** Central tower graphic (`public/modules/The Tower_1.webp`). */
+export const WORKSHOP_MODULES_TOWER_IMAGE = `${base}modules/The%20Tower_1.webp`
 
 export type ModuleHubPlacement = 'tl' | 'tr' | 'bl' | 'br'
 

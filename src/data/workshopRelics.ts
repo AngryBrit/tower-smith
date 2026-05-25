@@ -1,3 +1,4 @@
+import { capitalizeRelicDisplayName } from './relicDisplayName'
 import relicRows from './workshopRelics.generated.json'
 
 export const WORKSHOP_RELIC_RARITIES = ['rare', 'epic', 'legendary'] as const
@@ -30,7 +31,7 @@ type RelicRowJson = Omit<WorkshopRelicDef, 'damagePercent'> & { damagePct: numbe
 const RELICS: WorkshopRelicDef[] = (relicRows as RelicRowJson[]).map((row) => ({
   order: row.order,
   id: row.id,
-  name: row.name,
+  name: capitalizeRelicDisplayName(row.name),
   rarity: row.rarity,
   description: row.description,
   unlock: row.unlock,

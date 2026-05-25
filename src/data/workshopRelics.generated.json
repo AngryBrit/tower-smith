@@ -1872,7 +1872,7 @@
   {
     "order": 188,
     "id": "dry_leaves",
-    "name": "Dry leaves",
+    "name": "Dry Leaves",
     "rarity": "rare",
     "description": "Increase free attack upgrade by 1%",
     "unlock": "Event Premium: Earn 550 medals during the \"Autumn (III)\"",
@@ -1912,7 +1912,7 @@
   {
     "order": 192,
     "id": "glimpse_of_despair",
-    "name": "Glimpse of Despair",
+    "name": "Glimpse Of Despair",
     "rarity": "epic",
     "description": "Increase crit factor by 5%",
     "unlock": "Guild: Spend 150 tokens in Guild Season 5",
@@ -1922,7 +1922,7 @@
   {
     "order": 193,
     "id": "vr",
-    "name": "Vr",
+    "name": "VR",
     "rarity": "rare",
     "description": "Increase thorns by 1%",
     "unlock": "Event: Earn 350 medals during the \"Cyberpunk\"",

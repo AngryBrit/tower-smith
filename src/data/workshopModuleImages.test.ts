@@ -9,12 +9,14 @@ import {
 describe('workshopModuleImages', () => {
   it('resolves known cannon art', () => {
     expect(workshopChassisModuleImagePath('cannon', 'deathPenalty', 'epic')).toBe(
-      'cannon/death_penalty.webp',
+      'cannon/cannon_epic_2.webp',
     )
   })
 
   it('falls back to rarity placeholder for missing art', () => {
-    expect(workshopChassisModuleImagePath('cannon', 'shrinkRay', 'mythic')).toBe('mod_mythic.webp')
+    expect(workshopChassisModuleImagePath('cannon', 'unknownModule', 'mythic')).toBe(
+      'mod_mythic.webp',
+    )
   })
 
   it('returns null url when no module equipped', () => {
@@ -23,12 +25,14 @@ describe('workshopModuleImages', () => {
 
   it('builds absolute url for equipped module', () => {
     const url = workshopChassisModuleImageUrl('armor', 'antiCubePortal', 'legendary')
-    expect(url).toContain('modules/armor/anti-cube_portal.webp')
+    expect(url).toContain('modules/armor/armor_epic_2.webp')
   })
 
   it('detects dedicated art vs placeholder-only modules', () => {
     expect(workshopChassisModuleHasDedicatedArt('cannon', 'havocBringer')).toBe(true)
-    expect(workshopChassisModuleHasDedicatedArt('cannon', 'shrinkRay')).toBe(false)
-    expect(workshopChassisModuleDedicatedImageUrl('cannon', 'shrinkRay')).toBeNull()
+    expect(workshopChassisModuleHasDedicatedArt('cannon', 'shrinkRay')).toBe(true)
+    expect(workshopChassisModuleDedicatedImageUrl('cannon', 'shrinkRay')).toContain(
+      'modules/cannon/Shrink%20Ray.webp',
+    )
   })
 })

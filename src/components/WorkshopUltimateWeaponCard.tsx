@@ -48,15 +48,15 @@ const ULTIMATE_STAT_LABEL: Record<string, StringId> = {
 }
 
 const ULTIMATE_WEAPON_ICON_SRC: Record<WorkshopUltimateWeaponId, string> = {
-  goldenTower: '/ultimate_weapons/Golden_Tower.webp',
-  blackHole: '/ultimate_weapons/Black_Hole.webp',
-  spotlight: '/ultimate_weapons/Spotlight.webp',
-  deathWave: '/ultimate_weapons/Death_Wave.webp',
-  chainLightning: '/ultimate_weapons/Chain_Lightning.webp',
-  smartMissiles: '/ultimate_weapons/Smart_Missiles.webp',
-  innerLandMines: '/ultimate_weapons/Inner_Land_Mines.webp',
-  poisonSwamp: '/ultimate_weapons/Poison_Swamp.webp',
-  chronoField: '/ultimate_weapons/Chrono_Field.webp',
+  goldenTower: '/ultimate_weapons/weapon_goldenTower.webp',
+  blackHole: '/ultimate_weapons/weapon_blackHole.webp',
+  spotlight: '/ultimate_weapons/weapon_spotlight.webp',
+  deathWave: '/ultimate_weapons/weapon_deathWave.webp',
+  chainLightning: '/ultimate_weapons/weapon_chainLightning.webp',
+  smartMissiles: '/ultimate_weapons/weapon_smartMissilies.webp',
+  innerLandMines: '/ultimate_weapons/weapon_landMines.webp',
+  poisonSwamp: '/ultimate_weapons/weapon_swamp.webp',
+  chronoField: '/ultimate_weapons/weapon_chronoField.webp',
 }
 
 function UltimateWeaponIcon({ weaponId }: { weaponId: WorkshopUltimateWeaponId }) {

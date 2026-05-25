@@ -437,6 +437,15 @@ export function ThemeIcon({ icon, className }: ThemeIconProps) {
           <path d="M28 20 L28 12 M36 20 L36 10 M44 20 L44 12" stroke="currentColor" strokeWidth="2" />
         </svg>
       )
+    case 'menu-magician':
+      return (
+        <svg {...common}>
+          <ellipse cx="32" cy="22" rx="14" ry="5" fill="none" stroke="currentColor" strokeWidth="2" />
+          <rect x="22" y="22" width="20" height="8" rx="1" fill="currentColor" opacity="0.85" />
+          <path d="M46 44 L52 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+          <circle cx="54" cy="16" r="3" fill="currentColor" opacity="0.9" />
+        </svg>
+      )
     case 'guardian':
       return (
         <svg {...common}>

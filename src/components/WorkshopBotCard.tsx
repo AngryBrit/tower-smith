@@ -40,11 +40,11 @@ const BOT_STAT_LABEL: Record<string, StringId> = {
 }
 
 const BOT_ICON_SRC: Record<WorkshopBotId, string> = {
-  flame: '/bots/flame_bot.webp',
-  thunder: '/bots/thunder_bot.webp',
-  golden: '/bots/golden_bot.webp',
-  amplify: '/bots/amplify_bot.webp',
-  botBot: '/bots/bot_bot.webp',
+  flame: '/bots/FlameBot.webp',
+  thunder: '/bots/ThunderBot.webp',
+  golden: '/bots/GoldenBot.webp',
+  amplify: '/bots/AmplifyBot.webp',
+  botBot: '/bots/Bot Bot.webp',
 }
 
 function BotIcon({ botId }: { botId: WorkshopBotId }) {

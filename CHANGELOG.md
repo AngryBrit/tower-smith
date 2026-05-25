@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.6] - 2026-05-25
+
+### Added
+
+- **Relic art** — WebP icons for all **262** catalog relics on the Relics tab ([`workshopRelicImages.ts`](src/data/workshopRelicImages.ts), [`public/relics/`](public/relics/)); maintainer scripts [`gen-relic-images.mjs`](scripts/gen-relic-images.mjs) and [`rename-relic-files.mjs`](scripts/rename-relic-files.mjs).
+- **Theme skins** — Rabbit In Hat tower skin, Magician event background/menu/banner, and Shelly / Disco guardians ([`gameThemes.ts`](src/data/gameThemes.ts), [`towerMilestoneImages.ts`](src/data/towerMilestoneImages.ts)).
+- **Relic display names** — Title-case formatting for relic names at load time ([`relicDisplayName.ts`](src/data/relicDisplayName.ts)).
+
+### Changed
+
+- **Game-aligned asset refresh** — Theme, bot, ultimate weapon, and chassis module WebP paths updated to match in-game export filenames; workshop tab icons use sword/shield/star/ultimate glyphs ([`workshopModuleImages.ts`](src/data/workshopModuleImages.ts), [`ThemeIcon.tsx`](src/components/ThemeIcon.tsx)).
+- **Dedicated module art** — Shrink Ray, Magnetic Hook, Primordial Collapse, and other chassis modules now use dedicated icons instead of rarity placeholders.
+
+### Docs
+
+- README: relic WebP art, `public/relics/`, maintainer scripts; version **2.8.6**.
+
 ## [2.8.5] - 2026-05-25
 
 ### Added
