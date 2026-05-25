@@ -48,7 +48,7 @@ const MANUAL = {
   '4th_tower_birthday': 'relic_4year.webp',
   '5th_tower_birthday': 'relic_5year.webp',
   '6th_tower_birthday': 'relic_6year.webp',
-  tower_master: 'Tower_Agent.webp',
+  tower_master: 'relic_ChampionFirst_1.webp',
   no_spoon: 'relic_NoSpoon_1.webp',
   red_pill: 'relic_RedPill_1.webp',
   dreamcatcher: 'relic_Dreamcatcher_1.webp',
