@@ -844,7 +844,7 @@
     "id": "rabies",
     "name": "Rabies",
     "rarity": "rare",
-    "description": "Increase Lab Speed by 2%",
+    "description": "Increase lab speed by 2%",
     "unlock": "Event: Earn 350 medals during the \"Viral Outbreak (II)\"",
     "unlockGroup": "event",
     "damagePct": 0
@@ -2645,7 +2645,7 @@
     "name": "Viral Infection",
     "rarity": "rare",
     "description": "Increase health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak\"",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2655,7 +2655,7 @@
     "name": "Immunization",
     "rarity": "rare",
     "description": "Increase critical chance by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Viral Outbreak\"",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2665,7 +2665,7 @@
     "name": "Personal Care",
     "rarity": "epic",
     "description": "Increase free defense upgrade by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak\"",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2675,7 +2675,7 @@
     "name": "Global Threat",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Viral Outbreak\"",
     "unlockGroup": "event",
     "damagePct": 0
   }

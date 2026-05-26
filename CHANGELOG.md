@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.10] - 2026-05-26
+
+### Fixed
+
+- **Viral Outbreak relic unlocks** — All eight event relics (Bacteriophage, Rabies, Neuron, Ebola, Viral Infection, Immunization, Personal Care, Global Threat) use wiki event names (`Viral Outbreak` / `Viral Outbreak (II)`) instead of `Viral Outbreak (III)` on the four newest entries ([`patch-relics-catalog.mjs`](scripts/patch-relics-catalog.mjs)).
+
+### Changed
+
+- **`patch-relics-catalog.mjs`** — Viral Outbreak patch block for the full eight-relic set; `newRelics` append skips ids already in the catalog.
+
+### Docs
+
+- README version **2.8.10**.
+
 ## [2.8.9] - 2026-05-26
 
 ### Added

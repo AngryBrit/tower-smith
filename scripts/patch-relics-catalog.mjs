@@ -41,6 +41,41 @@ patch('party_mask', {
   unlock: 'Event: Earn 700 medals during the "New Year (II)"',
 })
 
+// —— Viral Outbreak event relics (wiki) ——
+patch('bacteriophage', {
+  description: 'Increase tower damage by 2%',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak"',
+  damagePct: 2,
+})
+patch('rabies', {
+  description: 'Increase lab speed by 2%',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak (II)"',
+})
+patch('neuron', {
+  description: 'Increase health by 5%',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak"',
+})
+patch('ebola', {
+  description: 'Increase defense absolute by 5%',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak (II)"',
+})
+patch('viral_infection', {
+  description: 'Increase health by 2%',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak"',
+})
+patch('immunization', {
+  description: 'Increase critical chance by 1%',
+  unlock: 'Event Premium: Earn 550 medals during the "Viral Outbreak"',
+})
+patch('personal_care', {
+  description: 'Increase free defense upgrade by 2%',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak"',
+})
+patch('global_threat', {
+  description: 'Increase critical factor by 5%',
+  unlock: 'Event Premium: Earn 1100 medals during the "Viral Outbreak"',
+})
+
 // —— Event name / tier fixes ——
 patch('warp_gate', {
   unlock: 'Event: Earn 350 medals during the "Faster Than Light"',
@@ -357,52 +392,12 @@ const newRelics = [
     unlockGroup: 'guild',
     damagePct: 0,
   },
-  {
-    order: 265,
-    id: 'viral_infection',
-    name: 'Viral Infection',
-    rarity: 'rare',
-    description: 'Increase health by 2%',
-    unlock: 'Event: Earn 350 medals during the "Viral Outbreak (III)"',
-    unlockGroup: 'event',
-    damagePct: 0,
-  },
-  {
-    order: 266,
-    id: 'immunization',
-    name: 'Immunization',
-    rarity: 'rare',
-    description: 'Increase critical chance by 1%',
-    unlock: 'Event Premium: Earn 550 medals during the "Viral Outbreak (III)"',
-    unlockGroup: 'event',
-    damagePct: 0,
-  },
-  {
-    order: 267,
-    id: 'personal_care',
-    name: 'Personal Care',
-    rarity: 'epic',
-    description: 'Increase free defense upgrade by 2%',
-    unlock: 'Event: Earn 700 medals during the "Viral Outbreak (III)"',
-    unlockGroup: 'event',
-    damagePct: 0,
-  },
-  {
-    order: 268,
-    id: 'global_threat',
-    name: 'Global Threat',
-    rarity: 'epic',
-    description: 'Increase critical factor by 5%',
-    unlock: 'Event Premium: Earn 1100 medals during the "Viral Outbreak (III)"',
-    unlockGroup: 'event',
-    damagePct: 0,
-  },
 ]
 
 for (const row of newRelics) {
-  if (relics.some((r) => r.id === row.id)) throw new Error(`duplicate new id: ${row.id}`)
+  if (relics.some((r) => r.id === row.id)) continue
+  relics.push(row)
 }
-relics = [...relics, ...newRelics]
 
 writeFileSync(path, JSON.stringify(relics, null, 2) + '\n', 'utf8')
 console.log(`Patched ${relics.length} relics`)
