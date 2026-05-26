@@ -1,4 +1,4 @@
-import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
+import { APP_VERSION, CHANGELOG_URL, SPONSOR_URL } from '../appVersion'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { useModulesCatalogVisible } from '../modulesCatalogVisibility'
 import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
@@ -111,6 +111,15 @@ export function SettingsPage() {
           title={t('sr_changelog_title')}
         >
           {t('sr_changelog')}
+        </a>
+        <a
+          className="select-research__footer-link"
+          href={SPONSOR_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          title={t('sr_sponsor_title')}
+        >
+          {t('sr_sponsor')}
         </a>
       </div>
     </div>
