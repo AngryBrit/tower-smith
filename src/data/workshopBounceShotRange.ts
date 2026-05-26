@@ -20,8 +20,12 @@ export function workshopBounceShotRangeMeters(completedLevels: number): number {
 }
 
 /** Display like wiki (`2.00m` … `8.00m`). */
-export function workshopBounceShotRangeStatDisplay(completedLevels: number): string {
-  return `${workshopBounceShotRangeMeters(completedLevels).toFixed(2)}m`
+export function workshopBounceShotRangeStatDisplay(
+  completedLevels: number,
+  submoduleMetersAdd = 0,
+): string {
+  const m = workshopBounceShotRangeMeters(completedLevels) + submoduleMetersAdd
+  return `${m.toFixed(2)}m`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

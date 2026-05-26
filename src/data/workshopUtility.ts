@@ -80,6 +80,7 @@ import {
   formatWithDamageStyleLabMultiplier,
 } from './workshopLabDisplayHelpers'
 import type { WorkshopUtilityLabDisplayOpts } from './workshopLabDisplayOpts'
+import type { WorkshopUtilitySubmoduleExtras } from './workshopSubmoduleBonuses'
 import { workshopCashBonusStatMultiplier } from './workshopCashBonus'
 import { workshopCashPerWaveStatAmount } from './workshopCashPerWave'
 import { workshopCoinsKillBonusStatMultiplier } from './workshopCoinsKillBonus'
@@ -164,6 +165,10 @@ export function workshopUtilityClampLevel(key: WorkshopUtilityUpgradeKey, n: num
   return cap(n, workshopUtilityMaxLevel(key))
 }
 
+function utilitySub(opts: WorkshopUtilityLabDisplayOpts | undefined): WorkshopUtilitySubmoduleExtras {
+  return opts?.submodule ?? {}
+}
+
 export function workshopUtilityStatDisplay(
   key: WorkshopUtilityUpgradeKey,
   completedLevels: number,
@@ -182,11 +187,13 @@ export function workshopUtilityStatDisplay(
       return workshopCashBonusStatDisplay(completedLevels)
     }
     case 'cashPerWaveLevel': {
+      const sub = utilitySub(opts).cashPerWaveAdd ?? 0
+      const base = workshopCashPerWaveStatAmount(completedLevels) + sub
       const m = opts?.cashPerWaveLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) {
+      if ((m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) || sub > 0) {
         return formatWithDamageStyleLabMultiplier(
-          workshopCashPerWaveStatAmount(completedLevels),
-          m,
+          base,
+          m ?? 1,
           (v) => String(Math.round(v)),
         )
       }
@@ -204,11 +211,13 @@ export function workshopUtilityStatDisplay(
       return workshopCoinsKillBonusStatDisplay(completedLevels)
     }
     case 'coinsWaveLevel': {
+      const sub = utilitySub(opts).coinsWaveAdd ?? 0
+      const base = workshopCoinsWaveStatAmount(completedLevels) + sub
       const m = opts?.coinsWaveLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) {
+      if ((m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) || sub > 0) {
         return formatWithDamageStyleLabMultiplier(
-          workshopCoinsWaveStatAmount(completedLevels),
-          m,
+          base,
+          m ?? 1,
           (v) => String(Math.round(v)),
         )
       }
@@ -272,11 +281,13 @@ export function workshopUtilityStatDisplay(
       return workshopRecoveryAmountStatDisplay(completedLevels)
     }
     case 'maxRecoveryLevel': {
+      const sub = utilitySub(opts).maxRecoveryAdd ?? 0
+      const base = workshopMaxRecoveryStatMultiplier(completedLevels) + sub
       const m = opts?.maxRecoveryLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) {
+      if ((m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) || sub > 0) {
         return formatWithDamageStyleLabMultiplier(
-          workshopMaxRecoveryStatMultiplier(completedLevels),
-          m,
+          base,
+          m ?? 1,
           (v) => `x${v.toFixed(2)}`,
         )
       }

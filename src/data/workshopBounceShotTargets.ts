@@ -13,8 +13,11 @@ export function workshopBounceShotTargetsCount(completedLevels: number): number 
   return 1 + L
 }
 
-export function workshopBounceShotTargetsStatDisplay(completedLevels: number): string {
-  return String(workshopBounceShotTargetsCount(completedLevels))
+export function workshopBounceShotTargetsStatDisplay(
+  completedLevels: number,
+  extraCount = 0,
+): string {
+  return String(workshopBounceShotTargetsCount(completedLevels) + extraCount)
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

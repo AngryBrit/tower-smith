@@ -15,6 +15,7 @@ import {
   formatSecondsAfterLabReduction,
   formatWithHealthStyleLabMultiplier,
 } from './workshopLabDisplayHelpers'
+import type { WorkshopDefenseSubmoduleExtras } from './workshopSubmoduleBonuses'
 import { workshopDefenseAbsoluteStatValue } from './workshopDefenseAbsolute'
 import { workshopLandMineDamageStatPercent } from './workshopLandMineDamage'
 import { workshopOrbSpeedStatMultiplier } from './workshopOrbSpeed'
@@ -57,11 +58,13 @@ import {
   WORKSHOP_LIFESTEAL_MAX_LEVEL,
   workshopLifestealNextMarginalCoins,
   workshopLifestealStatDisplay,
+  workshopLifestealStatPercentPoints,
 } from './workshopLifesteal'
 import {
   WORKSHOP_KNOCKBACK_CHANCE_MAX_LEVEL,
   workshopKnockbackChanceNextMarginalCoins,
   workshopKnockbackChanceStatDisplay,
+  workshopKnockbackChanceStatPercentPoints,
 } from './workshopKnockbackChance'
 import {
   WORKSHOP_KNOCKBACK_FORCE_MAX_LEVEL,
@@ -88,11 +91,13 @@ import {
   WORKSHOP_SHOCKWAVE_FREQUENCY_MAX_LEVEL,
   workshopShockwaveFrequencyNextMarginalCoins,
   workshopShockwaveFrequencyStatDisplay,
+  workshopShockwaveFrequencyStatSeconds,
 } from './workshopShockwaveFrequency'
 import {
   WORKSHOP_LAND_MINE_CHANCE_MAX_LEVEL,
   workshopLandMineChanceNextMarginalCoins,
   workshopLandMineChanceStatDisplay,
+  workshopLandMineChanceStatPercentPoints,
 } from './workshopLandMineChance'
 import {
   WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL,
@@ -103,11 +108,13 @@ import {
   WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL,
   workshopLandMineRadiusNextMarginalCoins,
   workshopLandMineRadiusStatDisplay,
+  workshopLandMineRadiusStatValue,
 } from './workshopLandMineRadius'
 import {
   WORKSHOP_DEATH_DEFY_MAX_LEVEL,
   workshopDeathDefyNextMarginalCoins,
   workshopDeathDefyStatDisplay,
+  workshopDeathDefyStatPercent,
 } from './workshopDeathDefy'
 import {
   WORKSHOP_WALL_HEALTH_MAX_LEVEL,
@@ -233,6 +240,12 @@ export type WorkshopDefenseStatDisplayOpts = {
   knockbackForceRelicPercentPoints?: number
   /** Owned relic orb speed % (multiplicative on workshop multiplier). */
   orbSpeedRelicPercentPoints?: number
+  /** Equipped armor sub-module effects. */
+  submodule?: WorkshopDefenseSubmoduleExtras
+}
+
+function defenseSub(opts: WorkshopDefenseStatDisplayOpts | undefined): WorkshopDefenseSubmoduleExtras {
+  return opts?.submodule ?? {}
 }
 
 export function workshopDefenseStatDisplay(
@@ -285,19 +298,35 @@ export function workshopDefenseStatDisplay(
       }
       return workshopThornDamageStatDisplay(completedLevels)
     }
-    case 'lifestealLevel':
-      return workshopLifestealStatDisplay(completedLevels)
-    case 'knockbackChanceLevel':
-      return workshopKnockbackChanceStatDisplay(completedLevels)
-    case 'knockbackForceLevel': {
-      const relicPct = opts?.knockbackForceRelicPercentPoints ?? 0
-      if (relicPct > 0) {
-        return formatWithHealthStyleLabMultiplier(
-          workshopKnockbackForceStatMultiplier(completedLevels),
-          1 + relicPct / 100,
-          (v) => v.toFixed(2),
+    case 'lifestealLevel': {
+      const sub = defenseSub(opts).lifestealPercentPoints ?? 0
+      if (sub > 0) {
+        return formatAdditivePercentPoints(
+          workshopLifestealStatPercentPoints(completedLevels),
+          sub,
         )
       }
+      return workshopLifestealStatDisplay(completedLevels)
+    }
+    case 'knockbackChanceLevel': {
+      const sub = defenseSub(opts).knockbackChancePercentPoints ?? 0
+      if (sub > 0) {
+        return formatAdditivePercentPoints(
+          workshopKnockbackChanceStatPercentPoints(completedLevels),
+          sub,
+        )
+      }
+      return workshopKnockbackChanceStatDisplay(completedLevels)
+    }
+    case 'knockbackForceLevel': {
+      const subAdd = defenseSub(opts).knockbackForceAdd ?? 0
+      const relicPct = opts?.knockbackForceRelicPercentPoints ?? 0
+      let base = workshopKnockbackForceStatMultiplier(completedLevels)
+      if (subAdd > 0) base += subAdd
+      if (relicPct > 0) {
+        return formatWithHealthStyleLabMultiplier(base, 1 + relicPct / 100, (v) => v.toFixed(2))
+      }
+      if (subAdd > 0) return base.toFixed(2)
       return workshopKnockbackForceStatDisplay(completedLevels)
     }
     case 'orbSpeedLevel': {
@@ -332,10 +361,26 @@ export function workshopDefenseStatDisplay(
       }
       return workshopShockwaveSizeStatDisplay(completedLevels)
     }
-    case 'shockwaveFrequencyLevel':
+    case 'shockwaveFrequencyLevel': {
+      const red = defenseSub(opts).shockwaveFrequencySecondsReduction ?? 0
+      if (red > 0) {
+        return formatSecondsAfterLabReduction(
+          workshopShockwaveFrequencyStatSeconds(completedLevels),
+          red,
+        )
+      }
       return workshopShockwaveFrequencyStatDisplay(completedLevels)
-    case 'landMineChanceLevel':
+    }
+    case 'landMineChanceLevel': {
+      const sub = defenseSub(opts).landMineChancePercentPoints ?? 0
+      if (sub > 0) {
+        return formatAdditivePercentPoints(
+          workshopLandMineChanceStatPercentPoints(completedLevels),
+          sub,
+        )
+      }
       return workshopLandMineChanceStatDisplay(completedLevels)
+    }
     case 'landMineDamageLevel': {
       const lab = opts?.landMineDamageLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
@@ -344,10 +389,20 @@ export function workshopDefenseStatDisplay(
       }
       return workshopLandMineDamageStatDisplay(completedLevels)
     }
-    case 'landMineRadiusLevel':
+    case 'landMineRadiusLevel': {
+      const sub = defenseSub(opts).landMineRadiusAdd ?? 0
+      if (sub > 0) {
+        return formatAdditiveNumeric(workshopLandMineRadiusStatValue(completedLevels), sub)
+      }
       return workshopLandMineRadiusStatDisplay(completedLevels)
-    case 'deathDefyLevel':
+    }
+    case 'deathDefyLevel': {
+      const sub = defenseSub(opts).deathDefyPercentPoints ?? 0
+      if (sub > 0) {
+        return `${workshopDeathDefyStatPercent(completedLevels) + sub}%`
+      }
       return workshopDeathDefyStatDisplay(completedLevels)
+    }
     case 'wallHealthLevel': {
       const lab = opts?.wallHealthLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {

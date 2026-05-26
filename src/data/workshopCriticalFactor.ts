@@ -22,8 +22,9 @@ export function workshopCriticalFactorStatValue(completedLevels: number): number
 export function workshopCriticalFactorStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
+  submoduleAdd = 0,
 ): string {
-  const base = workshopCriticalFactorStatValue(completedLevels)
+  const base = workshopCriticalFactorStatValue(completedLevels) + submoduleAdd
   const v =
     labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9
       ? base * labMultiplier

@@ -25,8 +25,9 @@ export function workshopAttackRangeMeters(completedLevels: number): number {
 export function workshopAttackRangeStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
+  submoduleMetersAdd = 0,
 ): string {
-  let m = workshopAttackRangeMeters(completedLevels)
+  let m = workshopAttackRangeMeters(completedLevels) + submoduleMetersAdd
   if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
     m = Math.round(m * labMultiplier * 100) / 100
   }

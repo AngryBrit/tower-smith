@@ -22,8 +22,12 @@ export function workshopMultishotChancePercent(completedLevels: number): number 
 }
 
 /** Display like wiki **Value** (`0.5%` … `49.5%`). */
-export function workshopMultishotChanceStatDisplay(completedLevels: number): string {
-  return `${workshopMultishotChancePercent(completedLevels).toFixed(1)}%`
+export function workshopMultishotChanceStatDisplay(
+  completedLevels: number,
+  extraPercentPoints = 0,
+): string {
+  const pct = workshopMultishotChancePercent(completedLevels) + extraPercentPoints
+  return `${pct.toFixed(1)}%`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

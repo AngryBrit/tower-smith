@@ -24,8 +24,12 @@ export function workshopRapidFireChancePercent(completedLevels: number): number 
 }
 
 /** Two decimals + `%` (e.g. `0.40%`, `34.00%`). */
-export function workshopRapidFireChanceStatDisplay(completedLevels: number): string {
-  return `${workshopRapidFireChancePercent(completedLevels).toFixed(2)}%`
+export function workshopRapidFireChanceStatDisplay(
+  completedLevels: number,
+  extraPercentPoints = 0,
+): string {
+  const pct = workshopRapidFireChancePercent(completedLevels) + extraPercentPoints
+  return `${pct.toFixed(2)}%`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {
@@ -47,8 +51,12 @@ export function workshopRapidFireDurationSeconds(completedLevels: number): numbe
 }
 
 /** Display like wiki (`0.65s` … `5.55s`). */
-export function workshopRapidFireDurationStatDisplay(completedLevels: number): string {
-  return `${workshopRapidFireDurationSeconds(completedLevels).toFixed(2)}s`
+export function workshopRapidFireDurationStatDisplay(
+  completedLevels: number,
+  submoduleSecondsAdd = 0,
+): string {
+  const sec = workshopRapidFireDurationSeconds(completedLevels) + submoduleSecondsAdd
+  return `${sec.toFixed(2)}s`
 }
 
 export function workshopRapidFireDurationNextMarginalCoins(

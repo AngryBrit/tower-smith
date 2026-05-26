@@ -15,7 +15,7 @@ import {
 /** @deprecated Use WorkshopChassisModuleMergeTier */
 export type WorkshopChassisModuleRarity = WorkshopChassisModuleMergeTier
 import {
-  cannonSubmoduleAttackSpeedFromSelections,
+  totalCannonAttackSpeedFromSelections,
   defaultWorkshopSubmoduleSelections,
   parseSubmoduleSelectionsJson,
   sanitizeSubmoduleSelections,
@@ -87,7 +87,7 @@ function sanitizeAssistModuleSlot(raw: unknown): WorkshopAssistModuleSlot {
 function attackSpeedFromSubmoduleSelections(
   selections: WorkshopSubmoduleSelections,
 ): number {
-  return cannonSubmoduleAttackSpeedFromSelections(selections.cannon)
+  return totalCannonAttackSpeedFromSelections(selections)
 }
 
 export function defaultWorkshopModulePresetSnapshot(): WorkshopModulePresetSnapshot {

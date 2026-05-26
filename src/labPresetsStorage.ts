@@ -87,7 +87,7 @@ import {
   type WorkshopAssistChassisPersisted,
 } from './data/workshopAssistChassisModule'
 import {
-  cannonSubmoduleAttackSpeedFromSelections,
+  totalCannonAttackSpeedFromSelections,
   parseSubmoduleSelectionsJson,
   type WorkshopSubmoduleSelections,
 } from './data/workshopSubmoduleSelection'
@@ -952,9 +952,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     ),
     ...(() => {
       const simSubmoduleSelections = parseSubmoduleSelectionsJson(o.simSubmoduleSelections)
-      const attackFromSub = cannonSubmoduleAttackSpeedFromSelections(
-        simSubmoduleSelections.cannon,
-      )
+      const attackFromSub = totalCannonAttackSpeedFromSelections(simSubmoduleSelections)
       const simAttackSpeedModuleSubEffect =
         attackFromSub > 0
           ? attackFromSub

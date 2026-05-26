@@ -16,8 +16,11 @@ export function workshopMultishotTargetsCount(completedLevels: number): number {
 }
 
 /** Integer target count as display string. */
-export function workshopMultishotTargetsStatDisplay(completedLevels: number): string {
-  return String(workshopMultishotTargetsCount(completedLevels))
+export function workshopMultishotTargetsStatDisplay(
+  completedLevels: number,
+  extraCount = 0,
+): string {
+  return String(workshopMultishotTargetsCount(completedLevels) + extraCount)
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

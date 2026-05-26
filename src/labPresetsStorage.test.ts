@@ -96,7 +96,10 @@ describe('resetWorkshopModules', () => {
       simCannonChassisModuleRarity: 'mythic' as const,
       simSubmoduleSelections: {
         ...defaultWorkshopPersisted().simSubmoduleSelections,
-        cannon: { 'attack-speed': 'legendary' as const },
+        cannon: {
+          main: { 'attack-speed': 'legendary' as const },
+          assist: {},
+        },
       },
       simAttackSpeedModuleSubEffect: 1,
     }
@@ -107,7 +110,7 @@ describe('resetWorkshopModules', () => {
     expect(after.simCannonModuleLevel).toBe(0)
     expect(after.simCannonChassisModuleId).toBe('')
     expect(after.simCannonChassisModuleRarity).toBe('epic')
-    expect(after.simSubmoduleSelections.cannon).toEqual({})
+    expect(after.simSubmoduleSelections.cannon).toEqual({ main: {}, assist: {} })
     expect(after.simAttackSpeedModuleSubEffect).toBe(0)
   })
 })

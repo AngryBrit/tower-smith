@@ -32,7 +32,10 @@ import {
   submoduleEffectId,
   submoduleEffectPickerSlotText,
 } from '../data/workshopSubmoduleCatalog'
-import type { WorkshopSubmoduleSelectionMap } from '../data/workshopSubmoduleSelection'
+import type {
+  WorkshopSubmoduleModuleRole,
+  WorkshopSubmoduleSelectionMap,
+} from '../data/workshopSubmoduleSelection'
 import {
   WORKSHOP_SUBMODULE_RARITIES,
   WORKSHOP_SUBMODULE_RARITY_CLASS,
@@ -107,6 +110,7 @@ type ChassisModulePickerDialogProps = {
     effectId: string,
     rarity: WorkshopSubmoduleRarity,
     cellValue: string | null,
+    role: WorkshopSubmoduleModuleRole,
   ) => void
   onClose: () => void
 }
@@ -290,6 +294,23 @@ export function ChassisModulePickerDialog({
     [slot, submoduleSelections],
   )
 
+  const assignedEffectIds = useMemo(
+    () => new Set(Object.keys(submoduleSelections)),
+    [submoduleSelections],
+  )
+
+  const availableOptionRows = useMemo(
+    () =>
+      section.rows.filter((row) => !assignedEffectIds.has(submoduleEffectId(row.label))),
+    [section.rows, assignedEffectIds],
+  )
+
+  useEffect(() => {
+    if (optionsEffectId !== '' && assignedEffectIds.has(optionsEffectId)) {
+      setOptionsEffectId('')
+    }
+  }, [optionsEffectId, assignedEffectIds])
+
   useEffect(() => {
     setPickerRarity(selectedRarity)
     setPickerModuleId(selectedModuleId)
@@ -311,13 +332,15 @@ export function ChassisModulePickerDialog({
     }
   }
 
-  const optionsRow = section.rows.find((r) => submoduleEffectId(r.label) === optionsEffectId)
+  const optionsRow = availableOptionRows.find(
+    (r) => submoduleEffectId(r.label) === optionsEffectId,
+  )
 
   const assignOptionsEffect = () => {
     if (optionsRow == null) return
     const cell = optionsRow.cells[optionsRarity]
     if (cell == null) return
-    onSelectEffect(optionsEffectId, optionsRarity, cell)
+    onSelectEffect(optionsEffectId, optionsRarity, cell, pickerRole)
     setOptionsEffectId('')
   }
 
@@ -450,10 +473,11 @@ export function ChassisModulePickerDialog({
                 className="modules-picker__select modules-picker__select--options glow-input"
                 value={optionsEffectId}
                 aria-label={t('ws_modules_picker_options_aria')}
+                disabled={availableOptionRows.length === 0}
                 onChange={(e) => setOptionsEffectId(e.target.value)}
               >
                 <option value="">{t('ws_modules_picker_options')}</option>
-                {section.rows.map((row) => {
+                {availableOptionRows.map((row) => {
                   const id = submoduleEffectId(row.label)
                   return (
                     <option key={id} value={id}>
@@ -542,6 +566,7 @@ export function ChassisModulePickerDialog({
                               entry.effectId,
                               entry.rarity,
                               row?.cells[entry.rarity] ?? null,
+                              pickerRole,
                             )
                           }}
                         >

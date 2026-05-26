@@ -78,8 +78,9 @@ export function workshopDamagePerMeterStatMultiplier(completedLevels: number): n
 export function workshopDamagePerMeterStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
+  submoduleMultAdd = 0,
 ): string {
-  const v = workshopDamagePerMeterStatMultiplier(completedLevels)
+  const v = workshopDamagePerMeterStatMultiplier(completedLevels) + submoduleMultAdd
   let n = v === 0 ? 1 : 1 + v
   if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
     n *= labMultiplier

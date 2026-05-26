@@ -40,7 +40,7 @@ export function assistStoneEfficiencyStonesToMax(currentPercent: number): number
   )
 }
 
-/** Quantity sub-stats use floor, not round (wiki assist modules). */
+/** Assist sub-stats scale by efficiency % then floor to a whole integer (wiki). */
 export function assistFlooredQuantity(
   baseQuantity: number,
   efficiencyPercent: number,

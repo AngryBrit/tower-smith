@@ -21,8 +21,12 @@ export function workshopBounceShotChancePercent(completedLevels: number): number
 }
 
 /** Two decimals + `%` (e.g. `0.80%`, `68.00%`). */
-export function workshopBounceShotChanceStatDisplay(completedLevels: number): string {
-  return `${workshopBounceShotChancePercent(completedLevels).toFixed(2)}%`
+export function workshopBounceShotChanceStatDisplay(
+  completedLevels: number,
+  extraPercentPoints = 0,
+): string {
+  const pct = workshopBounceShotChancePercent(completedLevels) + extraPercentPoints
+  return `${pct.toFixed(2)}%`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

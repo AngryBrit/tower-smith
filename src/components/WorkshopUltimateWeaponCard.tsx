@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -11,6 +12,10 @@ import {
   type WorkshopUltimateUpgradeKey,
   type WorkshopUltimateWeaponId,
 } from '../data/workshopUltimate'
+import {
+  buildWorkshopSubmoduleBonuses,
+  type WorkshopSubmoduleBonusContext,
+} from '../data/workshopSubmoduleBonuses'
 import { formatPowerStoneAmount } from '../labCosts'
 import {
   workshopUltimatePlusAbilityForWeapon,
@@ -82,6 +87,7 @@ export type WorkshopUltimateWeaponCardProps = {
   onToggleActive: (weaponId: WorkshopUltimateWeaponId) => void
   onUnlockWeapon?: (weaponId: WorkshopUltimateWeaponId) => void
   workshop?: WorkshopPersistedV1
+  submoduleBonusContext?: WorkshopSubmoduleBonusContext
   plusEnabled?: boolean
   onPlusBump?: (abilityId: WorkshopUltimatePlusAbilityId, direction: -1 | 1) => void
   onPlusUnlock?: (abilityId: WorkshopUltimatePlusAbilityId) => void
@@ -95,6 +101,7 @@ export function WorkshopUltimateWeaponCard({
   onToggleActive,
   onUnlockWeapon,
   workshop,
+  submoduleBonusContext,
   plusEnabled = false,
   onPlusBump,
   onPlusUnlock,
@@ -106,6 +113,16 @@ export function WorkshopUltimateWeaponCard({
   const showPlus = workshop != null && onPlusBump != null && onPlusUnlock != null
   const owned = workshop != null && workshopUltimateWeaponIsOwned(workshop, weaponId)
   const runActive = owned && active
+  const ultimateSubmoduleBonuses = useMemo(
+    () =>
+      workshop != null
+        ? buildWorkshopSubmoduleBonuses(
+            workshop.simSubmoduleSelections,
+            submoduleBonusContext,
+          ).ultimate
+        : {},
+    [workshop, submoduleBonusContext],
+  )
   const unlockStones =
     workshop != null ? workshopUltimateUnlockCostForWeapon(workshop, weaponId) : null
 
@@ -207,7 +224,11 @@ export function WorkshopUltimateWeaponCard({
                     <div className="workshop__uw-col-top">
                       <span className="workshop__uw-stat-label">{statName}</span>
                       <span className="workshop__uw-stat-value">
-                        {workshopUltimateStatDisplay(key, level)}
+                        {workshopUltimateStatDisplay(
+                          key,
+                          level,
+                          ultimateSubmoduleBonuses[key] ?? 0,
+                        )}
                       </span>
                     </div>
                     <div className="workshop__uw-col-foot">

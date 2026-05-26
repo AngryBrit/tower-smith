@@ -171,6 +171,13 @@ import {
   enrichDefenseStatDisplayOpts,
   enrichUtilityLabDisplayOpts,
 } from '../data/workshopRelicWorkshopDisplay'
+import {
+  enrichAttackLabDisplayOptsWithSubmodules,
+  enrichDefenseStatDisplayOptsWithSubmodules,
+  enrichUtilityLabDisplayOptsWithSubmodules,
+} from '../data/workshopSubmoduleWorkshopDisplay'
+import type { WorkshopSubmoduleBonusContext } from '../data/workshopAssistSubmoduleScale'
+import { totalCannonAttackSpeedFromSelections } from '../data/workshopSubmoduleSelection'
 import type { WorkshopGameCardId } from '../data/workshopGameCards'
 import {
   applyWorkshopDiscountToCoins,
@@ -722,7 +729,11 @@ function WorkshopCriticalFactorCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopCriticalFactorStatDisplay(level, attackLabOpts?.criticalFactorLabMultiplier)
+  const statLabel = workshopCriticalFactorStatDisplay(
+    level,
+    attackLabOpts?.criticalFactorLabMultiplier,
+    attackLabOpts?.submodule?.critFactorAdd ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -817,7 +828,11 @@ function WorkshopAttackRangeCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopAttackRangeStatDisplay(level, attackLabOpts?.attackRangeLabMultiplier)
+  const statLabel = workshopAttackRangeStatDisplay(
+    level,
+    attackLabOpts?.attackRangeLabMultiplier,
+    attackLabOpts?.submodule?.attackRangeMetersAdd ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -912,7 +927,11 @@ function WorkshopDamagePerMeterCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopDamagePerMeterStatDisplay(level, attackLabOpts?.damagePerMeterLabMultiplier)
+  const statLabel = workshopDamagePerMeterStatDisplay(
+    level,
+    attackLabOpts?.damagePerMeterLabMultiplier,
+    attackLabOpts?.submodule?.damagePerMeterMultAdd ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1006,7 +1025,11 @@ function WorkshopMultishotChanceCard({
     workshopMultishotChanceNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopMultishotChanceStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopMultishotChanceStatDisplay(
+    level,
+    attackLabOpts?.submodule?.multishotChancePercentPoints ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1100,7 +1123,11 @@ function WorkshopMultishotTargetsCard({
     workshopMultishotTargetsNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopMultishotTargetsStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopMultishotTargetsStatDisplay(
+    level,
+    attackLabOpts?.submodule?.multishotTargetsCount ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1194,7 +1221,11 @@ function WorkshopRapidFireChanceCard({
     workshopRapidFireChanceNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopRapidFireChanceStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopRapidFireChanceStatDisplay(
+    level,
+    attackLabOpts?.submodule?.rapidFireChancePercentPoints ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1288,7 +1319,11 @@ function WorkshopRapidFireDurationCard({
     workshopRapidFireDurationNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopRapidFireDurationStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopRapidFireDurationStatDisplay(
+    level,
+    attackLabOpts?.submodule?.rapidFireDurationSeconds ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1382,7 +1417,11 @@ function WorkshopBounceShotChanceCard({
     workshopBounceShotChanceNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopBounceShotChanceStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopBounceShotChanceStatDisplay(
+    level,
+    attackLabOpts?.submodule?.bounceShotChancePercentPoints ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1476,7 +1515,11 @@ function WorkshopBounceShotTargetsCard({
     workshopBounceShotTargetsNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopBounceShotTargetsStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopBounceShotTargetsStatDisplay(
+    level,
+    attackLabOpts?.submodule?.bounceShotTargetsCount ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1570,7 +1613,11 @@ function WorkshopBounceShotRangeCard({
     workshopBounceShotRangeNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopBounceShotRangeStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopBounceShotRangeStatDisplay(
+    level,
+    attackLabOpts?.submodule?.bounceShotRangeMeters ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1763,7 +1810,11 @@ function WorkshopSuperCritMultCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopSuperCritMultStatDisplay(level, attackLabOpts?.superCritMultLabMultiplier)
+  const statLabel = workshopSuperCritMultStatDisplay(
+    level,
+    attackLabOpts?.superCritMultLabMultiplier,
+    attackLabOpts?.submodule?.superCritMultAdd ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1857,7 +1908,11 @@ function WorkshopRendArmorChanceCard({
     workshopRendArmorChanceNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopRendArmorChanceStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopRendArmorChanceStatDisplay(
+    level,
+    attackLabOpts?.submodule?.rendArmorChancePercentPoints ?? 0,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -1955,6 +2010,7 @@ function WorkshopRendArmorMultCard({
   const statLabel = workshopRendArmorMultStatDisplay(
     level,
     attackLabOpts?.rendArmorMultLabMultiplier,
+    attackLabOpts?.submodule?.rendArmorMultAdd ?? 0,
   )
   const stepHint = `×${bulkStep}`
 
@@ -2326,6 +2382,15 @@ export function WorkshopPage({
     [workshopPersisted.relicOwnedIds],
   )
 
+  const submoduleBonusContext = useMemo(
+    (): WorkshopSubmoduleBonusContext => ({
+      ws: workshopPersisted,
+      research: researchData,
+      labOverrides: labLevelOverrides,
+    }),
+    [workshopPersisted, researchData, labLevelOverrides],
+  )
+
   const defenseStatLabDisplayOpts = useMemo((): WorkshopDefenseStatDisplayOpts | undefined => {
     const lab = buildWorkshopDefenseLabDisplayOpts(researchData, labLevelOverrides)
     const cardMult = (id: WorkshopGameCardId) =>
@@ -2353,10 +2418,24 @@ export function WorkshopPage({
       cardMult('fortress') === 1 &&
       extraDefense === 0
     ) {
-      return enrichDefenseStatDisplayOpts(undefined, relicOwnedSet)
+      return enrichDefenseStatDisplayOpts(
+        enrichDefenseStatDisplayOptsWithSubmodules(
+          undefined,
+          workshopPersisted.simSubmoduleSelections,
+          submoduleBonusContext,
+        ),
+        relicOwnedSet,
+      )
     }
-    return enrichDefenseStatDisplayOpts(enriched, relicOwnedSet)
-  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet])
+    return enrichDefenseStatDisplayOpts(
+      enrichDefenseStatDisplayOptsWithSubmodules(
+        enriched,
+        workshopPersisted.simSubmoduleSelections,
+        submoduleBonusContext,
+      ),
+      relicOwnedSet,
+    )
+  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet, submoduleBonusContext])
 
   const attackStatLabDisplayOpts = useMemo((): WorkshopAttackLabDisplayOpts | undefined => {
     const lab = buildWorkshopAttackLabDisplayOpts(researchData, labLevelOverrides)
@@ -2370,17 +2449,28 @@ export function WorkshopPage({
     )
     const rangeMult = mergeLabAndCardMult(lab?.attackRangeLabMultiplier, cardMult('range'))
     if (lab == null && critCard === 0 && rangeMult === undefined) {
-      return enrichAttackLabDisplayOpts(undefined, relicOwnedSet)
+      return enrichAttackLabDisplayOpts(
+        enrichAttackLabDisplayOptsWithSubmodules(
+          undefined,
+          workshopPersisted.simSubmoduleSelections,
+          submoduleBonusContext,
+        ),
+        relicOwnedSet,
+      )
     }
     return enrichAttackLabDisplayOpts(
-      {
-        ...(lab ?? {}),
-        attackRangeLabMultiplier: rangeMult,
-        criticalChanceCardPercentPoints: critCard > 0 ? critCard : undefined,
-      },
+      enrichAttackLabDisplayOptsWithSubmodules(
+        {
+          ...(lab ?? {}),
+          attackRangeLabMultiplier: rangeMult,
+          criticalChanceCardPercentPoints: critCard > 0 ? critCard : undefined,
+        },
+        workshopPersisted.simSubmoduleSelections,
+        submoduleBonusContext,
+      ),
       relicOwnedSet,
     )
-  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet])
+  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet, submoduleBonusContext])
 
   const utilityStatLabDisplayOpts = useMemo((): WorkshopUtilityLabDisplayOpts | undefined => {
     const lab = buildWorkshopUtilityLabDisplayOpts(researchData, labLevelOverrides)
@@ -2408,10 +2498,24 @@ export function WorkshopPage({
       freeUpgrades === 0 &&
       packageChance === 0
     ) {
-      return enrichUtilityLabDisplayOpts(undefined, relicOwnedSet)
+      return enrichUtilityLabDisplayOpts(
+        enrichUtilityLabDisplayOptsWithSubmodules(
+          undefined,
+          workshopPersisted.simSubmoduleSelections,
+          submoduleBonusContext,
+        ),
+        relicOwnedSet,
+      )
     }
-    return enrichUtilityLabDisplayOpts(enriched, relicOwnedSet)
-  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet])
+    return enrichUtilityLabDisplayOpts(
+      enrichUtilityLabDisplayOptsWithSubmodules(
+        enriched,
+        workshopPersisted.simSubmoduleSelections,
+        submoduleBonusContext,
+      ),
+      relicOwnedSet,
+    )
+  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet, submoduleBonusContext])
 
   const damageDisplayOpts = useMemo(
     (): WorkshopDamageDisplayOpts | undefined =>
@@ -2423,15 +2527,21 @@ export function WorkshopPage({
     [researchData, labLevelOverrides, workshopPersisted],
   )
 
-  const attackSpeedDisplayOpts = useMemo(
-    (): WorkshopAttackSpeedDisplayOpts | undefined =>
-      workshopAttackSpeedDisplayOptsFromPersisted(
-        workshopPersisted,
-        researchData,
-        labLevelOverrides,
+  const attackSpeedDisplayOpts = useMemo((): WorkshopAttackSpeedDisplayOpts | undefined => {
+    const opts = workshopAttackSpeedDisplayOptsFromPersisted(
+      workshopPersisted,
+      researchData,
+      labLevelOverrides,
+    )
+    if (opts == null) return undefined
+    return {
+      ...opts,
+      moduleSubEffect: totalCannonAttackSpeedFromSelections(
+        workshopPersisted.simSubmoduleSelections,
+        submoduleBonusContext,
       ),
-    [researchData, labLevelOverrides, workshopPersisted],
-  )
+    }
+  }, [researchData, labLevelOverrides, workshopPersisted, submoduleBonusContext])
 
   const workshopEnhancementsLabUnlockedFlag = useMemo(
     () => workshopEnhancementsLabUnlocked(researchData, labLevelOverrides),
@@ -3675,6 +3785,7 @@ export function WorkshopPage({
                     onToggleActive={toggleUltimateActive}
                     onUnlockWeapon={unlockUltimateWeapon}
                     workshop={workshopPersisted}
+                    submoduleBonusContext={submoduleBonusContext}
                     plusEnabled={plusEnabled}
                     onPlusBump={bumpUltimatePlus}
                     onPlusUnlock={unlockUltimatePlus}

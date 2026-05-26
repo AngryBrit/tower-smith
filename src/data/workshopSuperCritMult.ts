@@ -81,8 +81,9 @@ export function workshopSuperCritMultValue(completedLevels: number): number {
 export function workshopSuperCritMultStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
+  submoduleAdd = 0,
 ): string {
-  const base = workshopSuperCritMultValue(completedLevels)
+  const base = workshopSuperCritMultValue(completedLevels) + submoduleAdd
   const v =
     labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9
       ? base * labMultiplier

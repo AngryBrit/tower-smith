@@ -502,25 +502,32 @@ export function WorkshopModulesPanel({
     [openModulePicker, selectSlot],
   )
 
-  const activeSubmoduleSelections = workshopSubmoduleSelections(workshopPersisted, slot)
+  const activeSubmoduleSelections = workshopSubmoduleSelections(workshopPersisted, slot, 'main')
 
   const selectSubmoduleEffect = useCallback(
     (
       effectId: string,
       rarity: WorkshopSubmoduleRarity,
       cellValue: string | null,
+      role: 'main' | 'assist',
     ) => {
-      const nextSlotSelections = toggleSubmoduleSelection(
-        activeSubmoduleSelections,
+      const current = workshopSubmoduleSelections(workshopPersisted, slot, role)
+      const nextRoleSelections = toggleSubmoduleSelection(
+        current,
         effectId,
         rarity,
         cellValue,
       )
       patch(
-        workshopPersistedWithSubmoduleSelections(workshopPersisted, slot, nextSlotSelections),
+        workshopPersistedWithSubmoduleSelections(
+          workshopPersisted,
+          slot,
+          role,
+          nextRoleSelections,
+        ),
       )
     },
-    [activeSubmoduleSelections, patch, slot, workshopPersisted],
+    [patch, slot, workshopPersisted],
   )
 
   return (
@@ -756,7 +763,9 @@ export function WorkshopModulesPanel({
         <SubmoduleEffectsCatalog
           slot={slot}
           selectedEffects={activeSubmoduleSelections}
-          onSelectEffect={selectSubmoduleEffect}
+          onSelectEffect={(effectId, rarity, cellValue) =>
+            selectSubmoduleEffect(effectId, rarity, cellValue, 'main')
+          }
         />
       ) : null}
 
@@ -810,6 +819,7 @@ export function WorkshopModulesPanel({
           submoduleSelections={workshopSubmoduleSelections(
             workshopPersisted,
             pickerTarget.slot,
+            pickerTarget.role,
           )}
           onSelect={(moduleId, rarity) => {
             if (pickerTarget.role === 'main') {
@@ -825,7 +835,9 @@ export function WorkshopModulesPanel({
               selectAssistChassisModule(pickerTarget.slot, '', rarity)
             }
           }}
-          onSelectEffect={selectSubmoduleEffect}
+          onSelectEffect={(effectId, rarity, cellValue, role) =>
+            selectSubmoduleEffect(effectId, rarity, cellValue, role)
+          }
           onClose={() => setPickerTarget(null)}
         />
       ) : null}

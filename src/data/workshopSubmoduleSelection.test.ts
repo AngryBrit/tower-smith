@@ -5,9 +5,12 @@ import {
   CANNON_ATTACK_SPEED_EFFECT_ID,
   cannonSubmoduleAttackSpeedFromSelections,
   defaultWorkshopSubmoduleSelections,
+  defaultWorkshopSubmoduleSlotSelections,
   parseSubmoduleSelectionsJson,
   sanitizeSubmoduleSelectionMap,
+  sanitizeSubmoduleSelections,
   toggleSubmoduleSelection,
+  totalCannonAttackSpeedFromSelections,
   workshopPersistedWithSubmoduleSelections,
 } from './workshopSubmoduleSelection'
 
@@ -35,14 +38,64 @@ describe('workshopSubmoduleSelection', () => {
     expect(cannonSubmoduleAttackSpeedFromSelections(map)).toBe(1)
   })
 
-  it('syncs simAttackSpeedModuleSubEffect when cannon selections change', () => {
+  it('sums main and assist cannon attack-speed sub-effects', () => {
+    const selections = defaultWorkshopSubmoduleSelections()
+    selections.cannon.main[CANNON_ATTACK_SPEED_EFFECT_ID] = 'legendary'
+    selections.cannon.assist[CANNON_ATTACK_SPEED_EFFECT_ID] = 'common'
+    expect(totalCannonAttackSpeedFromSelections(selections)).toBe(1.3)
+  })
+
+  it('scales assist attack-speed by sub stone efficiency', () => {
+    const selections = defaultWorkshopSubmoduleSelections()
+    selections.cannon.main[CANNON_ATTACK_SPEED_EFFECT_ID] = 'legendary'
+    selections.cannon.assist[CANNON_ATTACK_SPEED_EFFECT_ID] = 'common'
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simCannonAssistUnlocked: true,
+      simCannonAssistChassisModuleId: 'deathPenalty',
+      simCannonAssistSubStoneEfficiency: 50,
+      simSubmoduleSelections: selections,
+    }
+    expect(
+      totalCannonAttackSpeedFromSelections(selections, {
+        ws,
+        research: null,
+        labOverrides: {},
+      }),
+    ).toBeCloseTo(1.15, 5)
+  })
+
+  it('syncs simAttackSpeedModuleSubEffect when main cannon selections change', () => {
     const ws = defaultWorkshopPersisted()
-    const next = workshopPersistedWithSubmoduleSelections(ws, 'cannon', {
+    const next = workshopPersistedWithSubmoduleSelections(ws, 'cannon', 'main', {
       [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic',
     })
     expect(next.simAttackSpeedModuleSubEffect).toBe(3)
     expect(next.simSubmoduleSelections.cannon).toEqual({
-      [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic',
+      main: { [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic' },
+      assist: {},
+    })
+  })
+
+  it('stores assist sub-effects separately from main', () => {
+    const ws = defaultWorkshopPersisted()
+    const next = workshopPersistedWithSubmoduleSelections(ws, 'cannon', 'assist', {
+      [CANNON_ATTACK_SPEED_EFFECT_ID]: 'common',
+    })
+    expect(next.simSubmoduleSelections.cannon.main).toEqual({})
+    expect(next.simSubmoduleSelections.cannon.assist).toEqual({
+      [CANNON_ATTACK_SPEED_EFFECT_ID]: 'common',
+    })
+    expect(next.simAttackSpeedModuleSubEffect).toBe(0.3)
+  })
+
+  it('migrates legacy flat per-slot maps to main', () => {
+    const parsed = sanitizeSubmoduleSelections({
+      cannon: { [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic', bogus: 'epic' },
+    })
+    expect(parsed.cannon).toEqual({
+      main: { [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic' },
+      assist: {},
     })
   })
 
@@ -54,7 +107,8 @@ describe('workshopSubmoduleSelection', () => {
       },
     })
     expect(ws.simSubmoduleSelections.cannon).toEqual({
-      [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic',
+      main: { [CANNON_ATTACK_SPEED_EFFECT_ID]: 'mythic' },
+      assist: {},
     })
     expect(ws.simAttackSpeedModuleSubEffect).toBe(3)
   })
@@ -75,10 +129,27 @@ describe('workshopSubmoduleSelection', () => {
     ).toEqual({ 'health-regen': 'rare' })
   })
 
-  it('parses JSON selections from CSV-style strings', () => {
+  it('parses JSON selections from CSV-style strings (legacy flat)', () => {
     const parsed = parseSubmoduleSelectionsJson(
       JSON.stringify({ cannon: { 'attack-speed': 'common' } }),
     )
-    expect(parsed.cannon).toEqual({ 'attack-speed': 'common' })
+    expect(parsed.cannon).toEqual({
+      main: { 'attack-speed': 'common' },
+      assist: {},
+    })
+  })
+
+  it('parses nested main/assist JSON', () => {
+    const parsed = parseSubmoduleSelectionsJson(
+      JSON.stringify({
+        cannon: {
+          main: { 'attack-speed': 'epic' },
+          assist: { 'crit-chance': 'rare' },
+        },
+      }),
+    )
+    expect(parsed.cannon.main).toEqual({ 'attack-speed': 'epic' })
+    expect(parsed.cannon.assist).toEqual({ 'crit-chance': 'rare' })
+    expect(parsed.armor).toEqual(defaultWorkshopSubmoduleSlotSelections())
   })
 })

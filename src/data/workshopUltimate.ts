@@ -11,10 +11,12 @@ import {
   type WorkshopUltimateWeaponId,
 } from './workshopUltimateData'
 import {
+  formatWorkshopUltimateValue,
   workshopUltimateTrackClampLevel,
   workshopUltimateTrackMaxLevel,
   workshopUltimateTrackNextMarginalStones,
   workshopUltimateTrackStatDisplay,
+  workshopUltimateTrackStatValue,
   workshopUltimateTrackTotalStonesToMax,
 } from './workshopUltimateTable'
 
@@ -51,8 +53,14 @@ export function workshopUltimateNextMarginalStones(
 export function workshopUltimateStatDisplay(
   key: WorkshopUltimateUpgradeKey,
   completedLevels: number,
+  submoduleAdd = 0,
 ): string {
-  return workshopUltimateTrackStatDisplay(WORKSHOP_ULTIMATE_TRACKS[key], completedLevels)
+  const track = WORKSHOP_ULTIMATE_TRACKS[key]
+  if (submoduleAdd === 0) {
+    return workshopUltimateTrackStatDisplay(track, completedLevels)
+  }
+  const value = workshopUltimateTrackStatValue(track, completedLevels) + submoduleAdd
+  return formatWorkshopUltimateValue(track.valueKind, value)
 }
 
 export function workshopUltimateTotalStonesToMaxFrom(

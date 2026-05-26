@@ -1,5 +1,6 @@
 /**
  * Equipped sub-module effect picks per chassis slot (wiki Sub-Module Effects tables).
+ * Main and assist modules each have their own sub-effect slots.
  */
 
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
@@ -10,29 +11,45 @@ import {
   submoduleEffectId,
 } from './workshopSubmoduleCatalog'
 import type { WorkshopSubmoduleRarity } from './workshopSubmoduleEffects'
+import type { WorkshopSubmoduleBonusContext } from './workshopAssistSubmoduleScale'
+import { scaleAssistSubmoduleValueForSlot } from './workshopAssistSubmoduleScale'
 
 export { submoduleEffectId } from './workshopSubmoduleCatalog'
 
 export const CANNON_ATTACK_SPEED_EFFECT_ID = submoduleEffectId('Attack Speed')
 
+export type WorkshopSubmoduleModuleRole = 'main' | 'assist'
+
 export type WorkshopSubmoduleSelectionMap = Partial<
   Record<string, WorkshopSubmoduleRarity>
 >
 
-export type WorkshopSubmoduleSelections = Record<
-  WorkshopAssistModuleSlot,
-  WorkshopSubmoduleSelectionMap
->
-
-export function defaultWorkshopSubmoduleSelections(): WorkshopSubmoduleSelections {
-  return { cannon: {}, armor: {}, generator: {}, core: {} }
+/** Sub-module picks for one hub slot (primary module + assist copy). */
+export type WorkshopSubmoduleSlotSelections = {
+  main: WorkshopSubmoduleSelectionMap
+  assist: WorkshopSubmoduleSelectionMap
 }
 
-export function workshopSubmoduleSelections(
-  ws: Pick<WorkshopPersistedV1, 'simSubmoduleSelections'>,
-  slot: WorkshopAssistModuleSlot,
-): WorkshopSubmoduleSelectionMap {
-  return ws.simSubmoduleSelections[slot] ?? {}
+export type WorkshopSubmoduleSelections = Record<
+  WorkshopAssistModuleSlot,
+  WorkshopSubmoduleSlotSelections
+>
+
+export function emptySubmoduleSelectionMap(): WorkshopSubmoduleSelectionMap {
+  return {}
+}
+
+export function defaultWorkshopSubmoduleSlotSelections(): WorkshopSubmoduleSlotSelections {
+  return { main: {}, assist: {} }
+}
+
+export function defaultWorkshopSubmoduleSelections(): WorkshopSubmoduleSelections {
+  return {
+    cannon: defaultWorkshopSubmoduleSlotSelections(),
+    armor: defaultWorkshopSubmoduleSlotSelections(),
+    generator: defaultWorkshopSubmoduleSlotSelections(),
+    core: defaultWorkshopSubmoduleSlotSelections(),
+  }
 }
 
 function isSubmoduleRarity(raw: unknown): raw is WorkshopSubmoduleRarity {
@@ -44,6 +61,13 @@ function isSubmoduleRarity(raw: unknown): raw is WorkshopSubmoduleRarity {
     raw === 'mythic' ||
     raw === 'ancestral'
   )
+}
+
+function isLegacyFlatSelectionMap(
+  raw: Record<string, unknown>,
+): boolean {
+  if ('main' in raw || 'assist' in raw) return false
+  return Object.keys(raw).length > 0
 }
 
 export function sanitizeSubmoduleSelectionMap(
@@ -61,16 +85,45 @@ export function sanitizeSubmoduleSelectionMap(
   return out
 }
 
+function sanitizeSubmoduleSlotSelections(
+  slot: WorkshopAssistModuleSlot,
+  raw: unknown,
+): WorkshopSubmoduleSlotSelections {
+  if (raw == null || typeof raw !== 'object' || Array.isArray(raw)) {
+    return defaultWorkshopSubmoduleSlotSelections()
+  }
+  const o = raw as Record<string, unknown>
+  if (isLegacyFlatSelectionMap(o)) {
+    return {
+      main: sanitizeSubmoduleSelectionMap(slot, raw),
+      assist: {},
+    }
+  }
+  return {
+    main: sanitizeSubmoduleSelectionMap(slot, o.main),
+    assist: sanitizeSubmoduleSelectionMap(slot, o.assist),
+  }
+}
+
 export function sanitizeSubmoduleSelections(raw: unknown): WorkshopSubmoduleSelections {
   const d = defaultWorkshopSubmoduleSelections()
   if (raw == null || typeof raw !== 'object' || Array.isArray(raw)) return d
   const o = raw as Record<string, unknown>
   return {
-    cannon: sanitizeSubmoduleSelectionMap('cannon', o.cannon),
-    armor: sanitizeSubmoduleSelectionMap('armor', o.armor),
-    generator: sanitizeSubmoduleSelectionMap('generator', o.generator),
-    core: sanitizeSubmoduleSelectionMap('core', o.core),
+    cannon: sanitizeSubmoduleSlotSelections('cannon', o.cannon),
+    armor: sanitizeSubmoduleSlotSelections('armor', o.armor),
+    generator: sanitizeSubmoduleSlotSelections('generator', o.generator),
+    core: sanitizeSubmoduleSlotSelections('core', o.core),
   }
+}
+
+export function workshopSubmoduleSelections(
+  ws: Pick<WorkshopPersistedV1, 'simSubmoduleSelections'>,
+  slot: WorkshopAssistModuleSlot,
+  role: WorkshopSubmoduleModuleRole = 'main',
+): WorkshopSubmoduleSelectionMap {
+  const slotSelections = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
+  return slotSelections[role] ?? {}
 }
 
 export function toggleSubmoduleSelection(
@@ -99,20 +152,48 @@ export function cannonSubmoduleAttackSpeedFromSelections(
   return parseSubmoduleCellNumber(row.cells[rarity]) ?? 0
 }
 
+/** Sum attack-speed sub-effects from main + assist cannon modules. */
+export function totalCannonAttackSpeedFromSelections(
+  selections: WorkshopSubmoduleSelections,
+  ctx?: WorkshopSubmoduleBonusContext,
+): number {
+  const slot = selections.cannon
+  const main = cannonSubmoduleAttackSpeedFromSelections(slot.main)
+  const assistRaw = cannonSubmoduleAttackSpeedFromSelections(slot.assist)
+  const assist =
+    ctx != null
+      ? scaleAssistSubmoduleValueForSlot(
+          ctx.ws,
+          'cannon',
+          assistRaw,
+          CANNON_ATTACK_SPEED_EFFECT_ID,
+          ctx.research,
+          ctx.labOverrides,
+        )
+      : assistRaw
+  return main + assist
+}
+
 export function workshopPersistedWithSubmoduleSelections(
   ws: WorkshopPersistedV1,
   slot: WorkshopAssistModuleSlot,
-  slotSelections: WorkshopSubmoduleSelectionMap,
+  role: WorkshopSubmoduleModuleRole,
+  roleSelections: WorkshopSubmoduleSelectionMap,
 ): WorkshopPersistedV1 {
+  const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
+  const nextSlot: WorkshopSubmoduleSlotSelections = {
+    main: role === 'main' ? roleSelections : prev.main,
+    assist: role === 'assist' ? roleSelections : prev.assist,
+  }
   const simSubmoduleSelections: WorkshopSubmoduleSelections = {
     ...ws.simSubmoduleSelections,
-    [slot]: slotSelections,
+    [slot]: nextSlot,
   }
   return {
     ...ws,
     simSubmoduleSelections,
-    simAttackSpeedModuleSubEffect: cannonSubmoduleAttackSpeedFromSelections(
-      simSubmoduleSelections.cannon,
+    simAttackSpeedModuleSubEffect: totalCannonAttackSpeedFromSelections(
+      simSubmoduleSelections,
     ),
   }
 }

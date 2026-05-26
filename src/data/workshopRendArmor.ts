@@ -143,8 +143,12 @@ export function workshopRendArmorChancePercent(completedLevels: number): number 
   return Math.round((0.1 + 0.1 * L) * 100) / 100
 }
 
-export function workshopRendArmorChanceStatDisplay(completedLevels: number): string {
-  return `${workshopRendArmorChancePercent(completedLevels).toFixed(2)}%`
+export function workshopRendArmorChanceStatDisplay(
+  completedLevels: number,
+  extraPercentPoints = 0,
+): string {
+  const pct = workshopRendArmorChancePercent(completedLevels) + extraPercentPoints
+  return `${pct.toFixed(2)}%`
 }
 
 /** Extra mult X (0.0010 … 0.3000) after `completedLevels` purchases (0 … 299). */
@@ -157,8 +161,9 @@ export function workshopRendArmorMultValue(completedLevels: number): number {
 export function workshopRendArmorMultStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
+  submodulePercentAdd = 0,
 ): string {
-  let v = workshopRendArmorMultValue(completedLevels)
+  let v = workshopRendArmorMultValue(completedLevels) + submodulePercentAdd / 100
   if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
     v = Math.round(v * labMultiplier * 1_000_000) / 1_000_000
   }

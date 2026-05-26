@@ -20,6 +20,10 @@ import {
   utilityResearchIncludePercentLabPoints,
 } from '../types/research'
 import type { WorkshopDefenseStatDisplayOpts } from './workshopDefense'
+import type {
+  WorkshopAttackSubmoduleExtras,
+  WorkshopUtilitySubmoduleExtras,
+} from './workshopSubmoduleBonuses'
 import type { WorkshopBotUpgradeKey } from './workshopBotsData'
 
 export type WorkshopBotLabDisplayOpts = {
@@ -91,6 +95,8 @@ export type WorkshopAttackLabDisplayOpts = {
   criticalChanceCardPercentPoints?: number
   /** Owned relic rend armor mult % (multiplicative on workshop mult). */
   rendArmorMultLabMultiplier?: number
+  /** Equipped cannon sub-module effects (additive; merged into rows in display). */
+  submodule?: WorkshopAttackSubmoduleExtras
 }
 
 export type WorkshopUtilityLabDisplayOpts = {
@@ -111,6 +117,8 @@ export type WorkshopUtilityLabDisplayOpts = {
   freeAttackUpgradeRelicPercentPoints?: number
   freeDefenseUpgradeRelicPercentPoints?: number
   freeUtilityUpgradeRelicPercentPoints?: number
+  /** Equipped generator sub-module effects. */
+  submodule?: WorkshopUtilitySubmoduleExtras
 }
 
 export function buildWorkshopDefenseLabDisplayOpts(

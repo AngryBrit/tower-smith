@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.11] - 2026-05-26
+
+### Added
+
+- **Sub-module workshop bonuses** — Equipped main and assist sub-module picks add to workshop stat labels (attack, defense, utility, ultimate core stats) via [`workshopSubmoduleBonuses.ts`](src/data/workshopSubmoduleBonuses.ts) and [`workshopSubmoduleWorkshopDisplay.ts`](src/data/workshopSubmoduleWorkshopDisplay.ts).
+- **Assist sub-module scaling** — Assist picks scale by sub stone efficiency plus Assist Module Substats labs; integer stats floor to whole values, attack-speed scales proportionally ([`workshopAssistSubmoduleScale.ts`](src/data/workshopAssistSubmoduleScale.ts)).
+
+### Changed
+
+- **Submodule selections** — `simSubmoduleSelections` stores nested `main` / `assist` maps per chassis slot; legacy flat maps migrate on load ([`workshopSubmoduleSelection.ts`](src/data/workshopSubmoduleSelection.ts)).
+- **Workshop stat cards** — Multishot, rapid fire, bounce shot, crit factor, attack range, damage/meter, super crit, rend armor, defense, and utility cards include sub-module terms alongside relic and lab bonuses.
+- **Module picker** — Options dropdown hides sub-effects already assigned on the current main or assist row ([`ChassisModulePickerDialog.tsx`](src/components/ChassisModulePickerDialog.tsx)).
+
+### Docs
+
+- README: sub-module workshop sim, main/assist selection maps; version **2.8.11**.
+
 ## [2.8.10] - 2026-05-26
 
 ### Fixed
