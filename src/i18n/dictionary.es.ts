@@ -343,6 +343,8 @@ export const STRINGS_ES = {
   ws_relics_stat_thorns: 'Espinas',
   ws_relics_stat_knockbackForce: 'Fuerza de retroceso',
   ws_relics_stat_orbSpeed: 'Velocidad de orbe',
+  ws_relics_stat_landMineDamage: 'Daño de mina terrestre',
+  ws_relics_stat_wallHealth: 'Salud del muro',
   ws_relics_stat_wallRebuild: 'Reconstrucción de muro',
   ws_relics_stat_cash: 'Efectivo',
   ws_relics_stat_coins: 'Monedas',

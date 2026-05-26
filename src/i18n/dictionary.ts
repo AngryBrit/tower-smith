@@ -342,6 +342,8 @@ export const STRINGS_EN = {
   ws_relics_stat_thorns: 'Thorns',
   ws_relics_stat_knockbackForce: 'Knockback Force',
   ws_relics_stat_orbSpeed: 'Orb Speed',
+  ws_relics_stat_landMineDamage: 'Land Mine Damage',
+  ws_relics_stat_wallHealth: 'Wall Health',
   ws_relics_stat_wallRebuild: 'Wall Rebuild',
   ws_relics_stat_cash: 'Cash',
   ws_relics_stat_coins: 'Coins',

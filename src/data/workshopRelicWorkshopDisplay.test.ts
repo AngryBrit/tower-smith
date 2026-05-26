@@ -34,10 +34,14 @@ describe('workshopRelicWorkshopDisplay', () => {
     expect(workshopRelicsLabSpeedMultiplier(owned)).toBeCloseTo(1.3)
     expect(combinedLabsSpeedMultiplier(researchMult, owned)).toBeCloseTo(2.98 * 1.3, 3)
 
-    const workshopItem = {
+    const workshopItem: ResearchItem = {
       name: 'Workshop Attack Discount',
-      state: 'available',
-    } as ResearchItem
+      level: 'Lv.0',
+      benefit: '',
+      time: '—',
+      cost: '—',
+      state: 'default',
+    }
     const max = 99
     const timeResearchOnly = researchTimeForNextUpgrade(workshopItem, 1, max, researchMult)
     const timeCombined = researchTimeForNextUpgrade(

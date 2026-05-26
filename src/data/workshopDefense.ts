@@ -67,6 +67,7 @@ import {
   WORKSHOP_KNOCKBACK_FORCE_MAX_LEVEL,
   workshopKnockbackForceNextMarginalCoins,
   workshopKnockbackForceStatDisplay,
+  workshopKnockbackForceStatMultiplier,
 } from './workshopKnockbackForce'
 import {
   WORKSHOP_ORB_SPEED_MAX_LEVEL,

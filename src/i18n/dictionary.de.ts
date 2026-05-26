@@ -333,6 +333,8 @@ export const STRINGS_DE = {
   ws_relics_stat_thorns: 'Dornen',
   ws_relics_stat_knockbackForce: 'Rückstoßkraft',
   ws_relics_stat_orbSpeed: 'Orb-Geschwindigkeit',
+  ws_relics_stat_landMineDamage: 'Landminen-Schaden',
+  ws_relics_stat_wallHealth: 'Mauer-Gesundheit',
   ws_relics_stat_wallRebuild: 'Mauer-Wiederaufbau',
   ws_relics_stat_cash: 'Bargeld',
   ws_relics_stat_coins: 'Münzen',

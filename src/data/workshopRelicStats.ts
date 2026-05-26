@@ -23,6 +23,8 @@ export type RelicStatId =
   | 'thorns'
   | 'knockbackForce'
   | 'orbSpeed'
+  | 'landMineDamage'
+  | 'wallHealth'
   | 'wallRebuild'
   | 'cash'
   | 'coins'
@@ -61,6 +63,8 @@ export const RELIC_STAT_DEFS: readonly RelicStatDef[] = [
   { id: 'thorns', group: 'defense', labelId: 'ws_relics_stat_thorns', unit: 'percent' },
   { id: 'knockbackForce', group: 'defense', labelId: 'ws_relics_stat_knockbackForce', unit: 'percent' },
   { id: 'orbSpeed', group: 'defense', labelId: 'ws_relics_stat_orbSpeed', unit: 'percent' },
+  { id: 'landMineDamage', group: 'defense', labelId: 'ws_relics_stat_landMineDamage', unit: 'percent' },
+  { id: 'wallHealth', group: 'defense', labelId: 'ws_relics_stat_wallHealth', unit: 'percent' },
   { id: 'wallRebuild', group: 'defense', labelId: 'ws_relics_stat_wallRebuild', unit: 'seconds' },
   { id: 'cash', group: 'utility', labelId: 'ws_relics_stat_cash', unit: 'percent' },
   { id: 'coins', group: 'utility', labelId: 'ws_relics_stat_coins', unit: 'percent' },
@@ -109,6 +113,8 @@ const STAT_PHRASE_TO_ID: readonly [string, RelicStatId][] = [
   ['thorns', 'thorns'],
   ['knockback force', 'knockbackForce'],
   ['orb speed', 'orbSpeed'],
+  ['land mine damage', 'landMineDamage'],
+  ['wall health', 'wallHealth'],
   ['wall rebuild time', 'wallRebuild'],
   ['cash bonus', 'cash'],
   ['cash', 'cash'],
