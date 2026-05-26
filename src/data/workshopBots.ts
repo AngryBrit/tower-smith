@@ -26,6 +26,7 @@ import {
 import type { WorkshopBotLabDisplayOpts } from './workshopLabDisplayOpts'
 import {
   formatWorkshopUltimateCooldown,
+  formatWorkshopUltimateValue,
   workshopUltimateTrackClampLevel,
   workshopUltimateTrackMaxLevel,
   workshopUltimateTrackNextMarginalStones,
@@ -159,6 +160,13 @@ export function workshopBotStatDisplay(
     if (labPct != null && labPct > 0) {
       const pct = workshopUltimateTrackStatValue(track, completedLevels)
       return formatPercentAfterLabAddition(pct, labPct)
+    }
+  }
+  if (track.valueKind === 'meters' && key.endsWith('RangeLevel')) {
+    const relicM = opts?.botRangeRelicMeters ?? 0
+    if (relicM > 0) {
+      const base = workshopUltimateTrackStatValue(track, completedLevels)
+      return formatWorkshopUltimateValue('meters', base + relicM)
     }
   }
   return workshopUltimateTrackStatDisplay(track, completedLevels)

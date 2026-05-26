@@ -32,6 +32,7 @@ import {
 } from '../labPresetsStorage'
 import { useI18n } from '../i18n'
 import { buildWorkshopBotLabDisplayOpts } from '../data/workshopLabDisplayOpts'
+import { enrichBotLabDisplayOpts } from '../data/workshopRelicWorkshopDisplay'
 import type { ResearchData } from '../types/research'
 
 type BotsPageProps = {
@@ -93,9 +94,18 @@ export function BotsPage({
     workshopPersistedRef.current = workshopPersisted
   }, [workshopPersisted])
 
+  const relicOwnedSet = useMemo(
+    () => new Set(workshopPersisted.relicOwnedIds),
+    [workshopPersisted.relicOwnedIds],
+  )
+
   const botLabDisplayOpts = useMemo(
-    () => buildWorkshopBotLabDisplayOpts(researchData, labLevelOverrides),
-    [researchData, labLevelOverrides],
+    () =>
+      enrichBotLabDisplayOpts(
+        buildWorkshopBotLabDisplayOpts(researchData, labLevelOverrides),
+        relicOwnedSet,
+      ),
+    [researchData, labLevelOverrides, relicOwnedSet],
   )
 
   const bumpBot = useCallback(

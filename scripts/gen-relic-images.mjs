@@ -1,8 +1,8 @@
 /**
- * Match workshop relic catalog ids to `public/relics/*.webp` and emit
+ * Match workshop relic catalog ids to `public/relics/{rarity}/*.webp` and emit
  * `src/data/workshopRelicImages.generated.json`.
  */
-import { readFileSync, writeFileSync, readdirSync } from 'fs'
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -11,7 +11,34 @@ const relicsDir = join(root, 'public/relics')
 const catalogPath = join(root, 'src/data/workshopRelics.generated.json')
 const outPath = join(root, 'src/data/workshopRelicImages.generated.json')
 
-const files = readdirSync(relicsDir).filter((f) => f.endsWith('.webp'))
+const RARITY_DIRS = ['rare', 'epic', 'legendary', 'unmapped']
+
+/** @type {string[]} */
+const files = []
+/** @type {Map<string, string>} basename -> path relative to public/relics/ */
+const relPathByBasename = new Map()
+
+function collectWebpFiles(dir, prefix = '') {
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const rel = prefix ? `${prefix}/${entry.name}` : entry.name
+    if (entry.isDirectory()) {
+      collectWebpFiles(join(dir, entry.name), rel)
+      continue
+    }
+    if (!entry.name.endsWith('.webp')) continue
+    files.push(entry.name)
+    if (!relPathByBasename.has(entry.name)) relPathByBasename.set(entry.name, rel)
+  }
+}
+
+if (existsSync(join(relicsDir, 'rare'))) {
+  for (const rarity of RARITY_DIRS) {
+    const sub = join(relicsDir, rarity)
+    if (existsSync(sub)) collectWebpFiles(sub, rarity)
+  }
+} else {
+  collectWebpFiles(relicsDir)
+}
 
 /** @type {Record<string, string>} */
 const MANUAL = {
@@ -74,7 +101,7 @@ const MANUAL = {
   cathode_ray_tube: 'relic_cathodeRay.webp',
   lava_flow: 'relic_lava.webp',
   '3_body_solution': 'relic_threeBodySolution.webp',
-  psychohistorian_brain: 'BrainNet.webp',
+  psychohistorian_brain: 'relic_psychoHistorian.webp',
   duck: 'rare_Duck.webp',
   grass: 'rare_grass.webp',
   wind: 'Epic_wind.webp',
@@ -125,16 +152,19 @@ for (const f of files) {
   byNorm.set(norm(base), f)
 }
 
-/** @type {Array<{id:string,name:string}>} */
+/** @type {Array<{id:string,name:string,rarity:string}>} */
 const catalog = JSON.parse(readFileSync(catalogPath, 'utf8'))
+const rarityById = new Map(catalog.map((r) => [r.id, r.rarity]))
 
 /** @type {Record<string, string>} */
 const map = {}
 const unmatched = []
 
-function assign(id, file) {
-  if (!files.includes(file)) return false
-  map[id] = file
+function assign(id, basename) {
+  if (!files.includes(basename)) return false
+  const rarity = rarityById.get(id)
+  const rel = rarity ? `${rarity}/${basename}` : (relPathByBasename.get(basename) ?? basename)
+  map[id] = rel
   return true
 }
 

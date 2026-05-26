@@ -287,6 +287,10 @@ export const STRINGS_DE = {
   app_settings_assist_wiki_label: 'Assist-Modul-Wiki-Referenz im Tab Module anzeigen',
   app_settings_assist_wiki_hint:
     'Wenn aktiv, werden Freischaltkosten, Steineffizienz-Tabelle und Wiki-Hinweise unter dem Hub angezeigt.',
+  app_settings_relic_workshop_bonus_label:
+    'Werkstatt-Bonuszeilen auf dem Relikt-Tab anzeigen',
+  app_settings_relic_workshop_bonus_hint:
+    'Wenn aktiv, zeigt jede Reliktkarte, wie der Effekt im Simulator wirkt (z. B. +10 % Werkstatt-Schaden). Standardmäßig aus.',
   ws_title: 'Werkstatt',
   ws_tab_upgrade: 'Upgrade',
   ws_tab_enhance: 'Verstärken',
@@ -362,6 +366,11 @@ export const STRINGS_DE = {
   ws_relics_rarity_legendary: 'Legendär',
   ws_relics_rarity_count: '{{owned}} / {{total}} im Besitz',
   ws_relics_damage_line: '+{{percent}} % angezeigter Schaden',
+  ws_relics_workshop_damage_line: '+{{percent}} % Werkstatt-Schaden',
+  ws_relics_workshop_damage_meter_line: '+{{percent}} % Werkstatt-Schaden/m',
+  ws_relics_workshop_line: '+{{percent}} % Werkstatt-{{stat}}',
+  ws_relics_bots_line: '+{{value}} Bot-Reichweite (alle Bots)',
+  ws_relics_labs_line: '+{{percent}} % Labor-Tempo (× Labs-Speed-Forschung)',
   ws_relics_owned_true: 'Im Besitz',
   ws_relics_owned_false: 'Nicht im Besitz',
   ws_relics_owned_toggle_on: '{{name}} als im Besitz markieren',

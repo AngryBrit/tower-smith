@@ -228,6 +228,10 @@ export type WorkshopDefenseStatDisplayOpts = {
   wallRebuildLabSecondsReduction?: number
   /** Equipped Extra Defense card (additive % points). */
   defensePercentCardPercentPoints?: number
+  /** Owned relic knockback force % (multiplicative on workshop value). */
+  knockbackForceRelicPercentPoints?: number
+  /** Owned relic orb speed % (multiplicative on workshop multiplier). */
+  orbSpeedRelicPercentPoints?: number
 }
 
 export function workshopDefenseStatDisplay(
@@ -284,12 +288,32 @@ export function workshopDefenseStatDisplay(
       return workshopLifestealStatDisplay(completedLevels)
     case 'knockbackChanceLevel':
       return workshopKnockbackChanceStatDisplay(completedLevels)
-    case 'knockbackForceLevel':
+    case 'knockbackForceLevel': {
+      const relicPct = opts?.knockbackForceRelicPercentPoints ?? 0
+      if (relicPct > 0) {
+        return formatWithHealthStyleLabMultiplier(
+          workshopKnockbackForceStatMultiplier(completedLevels),
+          1 + relicPct / 100,
+          (v) => v.toFixed(2),
+        )
+      }
       return workshopKnockbackForceStatDisplay(completedLevels)
+    }
     case 'orbSpeedLevel': {
       const lab = opts?.orbSpeedLabPlus
+      const relicPct = opts?.orbSpeedRelicPercentPoints ?? 0
+      const base = workshopOrbSpeedStatMultiplier(completedLevels)
+      const withLab =
+        lab !== undefined && Number.isFinite(lab) && lab > 0
+          ? base + lab
+          : base
+      if (relicPct > 0) {
+        return formatWithHealthStyleLabMultiplier(withLab, 1 + relicPct / 100, (v) =>
+          v.toFixed(2),
+        )
+      }
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatAdditiveNumeric(workshopOrbSpeedStatMultiplier(completedLevels), lab)
+        return formatAdditiveNumeric(base, lab)
       }
       return workshopOrbSpeedStatDisplay(completedLevels)
     }

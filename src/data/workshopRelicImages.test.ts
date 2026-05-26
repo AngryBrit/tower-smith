@@ -7,13 +7,13 @@ import {
 
 describe('workshopRelicImages', () => {
   it('resolves tier and badge art', () => {
-    expect(workshopRelicImagePath('t_i_flux')).toBe('relic_Flux_1.webp')
-    expect(workshopRelicImagePath('gold_badge')).toBe('relic_GoldBadge_1.webp')
+    expect(workshopRelicImagePath('t_i_flux')).toBe('rare/relic_Flux_1.webp')
+    expect(workshopRelicImagePath('gold_badge')).toBe('epic/relic_GoldBadge_1.webp')
   })
 
   it('builds URLs without encoded spaces', () => {
     const url = workshopRelicImageUrl('warm_clothes')
-    expect(url).toBe('/relics/Winter_is_Coming.webp')
+    expect(url).toBe('/relics/epic/Winter_is_Coming.webp')
     expect(url).not.toContain('%20')
   })
 

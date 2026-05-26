@@ -2,7 +2,7 @@ import relicImagePaths from './workshopRelicImages.generated.json'
 
 const base = import.meta.env.BASE_URL
 
-/** Relative paths from `public/relics/` keyed by relic catalog id. */
+/** Relative paths from `public/relics/` (e.g. `rare/foo.webp`) keyed by relic catalog id. */
 export const WORKSHOP_RELIC_IMAGE_PATH: Readonly<Record<string, string>> =
   relicImagePaths
 

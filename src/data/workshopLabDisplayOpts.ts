@@ -26,6 +26,8 @@ export type WorkshopBotLabDisplayOpts = {
   cooldownReduction?: Partial<Record<WorkshopBotUpgradeKey, number>>
   durationBonus?: Partial<Record<WorkshopBotUpgradeKey, number>>
   thunderLingerLabPercentPoints?: number
+  /** Sum of owned relic bot-range bonuses (meters), applied to every bot range row. */
+  botRangeRelicMeters?: number
 }
 
 const BOT_COOLDOWN_LAB_NAMES: Partial<Record<WorkshopBotUpgradeKey, string>> = {
@@ -87,6 +89,8 @@ export type WorkshopAttackLabDisplayOpts = {
   superCritMultLabMultiplier?: number
   /** Equipped Critical Chance card (additive % points). */
   criticalChanceCardPercentPoints?: number
+  /** Owned relic rend armor mult % (multiplicative on workshop mult). */
+  rendArmorMultLabMultiplier?: number
 }
 
 export type WorkshopUtilityLabDisplayOpts = {
@@ -104,6 +108,9 @@ export type WorkshopUtilityLabDisplayOpts = {
   freeUpgradesCardPercentPoints?: number
   /** Equipped Recovery Package Chance card (additive % points). */
   packageChanceCardPercentPoints?: number
+  freeAttackUpgradeRelicPercentPoints?: number
+  freeDefenseUpgradeRelicPercentPoints?: number
+  freeUtilityUpgradeRelicPercentPoints?: number
 }
 
 export function buildWorkshopDefenseLabDisplayOpts(

@@ -226,31 +226,37 @@ export function workshopUtilityStatDisplay(
       return workshopInterestPerWaveStatDisplay(completedLevels)
     }
     case 'freeAttackUpgradeLevel': {
-      const card = opts?.freeUpgradesCardPercentPoints ?? 0
-      if (card > 0) {
+      const extra =
+        (opts?.freeUpgradesCardPercentPoints ?? 0) +
+        (opts?.freeAttackUpgradeRelicPercentPoints ?? 0)
+      if (extra > 0) {
         return formatAdditivePercentPoints(
           workshopFreeAttackUpgradeStatPercentPoints(completedLevels),
-          card,
+          extra,
         )
       }
       return workshopFreeAttackUpgradeStatDisplay(completedLevels)
     }
     case 'freeDefenseUpgradeLevel': {
-      const card = opts?.freeUpgradesCardPercentPoints ?? 0
-      if (card > 0) {
+      const extra =
+        (opts?.freeUpgradesCardPercentPoints ?? 0) +
+        (opts?.freeDefenseUpgradeRelicPercentPoints ?? 0)
+      if (extra > 0) {
         return formatAdditivePercentPoints(
           workshopFreeDefenseUpgradeStatPercentPoints(completedLevels),
-          card,
+          extra,
         )
       }
       return workshopFreeDefenseUpgradeStatDisplay(completedLevels)
     }
     case 'freeUtilityUpgradeLevel': {
-      const card = opts?.freeUpgradesCardPercentPoints ?? 0
-      if (card > 0) {
+      const extra =
+        (opts?.freeUpgradesCardPercentPoints ?? 0) +
+        (opts?.freeUtilityUpgradeRelicPercentPoints ?? 0)
+      if (extra > 0) {
         return formatAdditivePercentPoints(
           workshopFreeUtilityUpgradeStatPercentPoints(completedLevels),
-          card,
+          extra,
         )
       }
       return workshopFreeUtilityUpgradeStatDisplay(completedLevels)

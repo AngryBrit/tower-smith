@@ -11,10 +11,13 @@ import { attackResearchAttackSpeedLabMultiplier, type ResearchData } from '../ty
 import { workshopEnhanceAttackSpeedMultiplier } from './workshopEnhanceAttack'
 import { workshopEnhancementsLabUnlocked } from './workshopEnhanceResearch'
 import { workshopAttackSpeedStatValue } from './workshopAttackSpeed'
+import { enrichAttackSpeedDisplayOpts } from './workshopRelicWorkshopDisplay'
 
 export type WorkshopAttackSpeedDisplayOpts = {
   labMultiplier?: number
   attackSpeedCardMultiplier?: number
+  /** Owned relic attack-speed % as **(1 + Relics)** on the workshop × lab × card product. */
+  relicMultiplier?: number
   /** Flat cannon submodule attack speed add (wiki Sub-Module Effects). */
   moduleSubEffect?: number
   enhancementsMultiplier?: number
@@ -29,9 +32,10 @@ export function computeWorkshopDisplayedAttackSpeed(
 ): number {
   const lab = opts.labMultiplier ?? 1
   const card = opts.attackSpeedCardMultiplier ?? 1
+  const relic = opts.relicMultiplier ?? 1
   const sub = opts.moduleSubEffect ?? 0
   const enhancements = opts.enhancementsMultiplier ?? 1
-  return (workshopAttackSpeed * lab * card + sub) * enhancements
+  return (workshopAttackSpeed * lab * card * relic + sub) * enhancements
 }
 
 function normalizeAttackSpeedDisplayOpts(
@@ -63,16 +67,19 @@ export function workshopAttackSpeedDisplayOptsFromPersisted(
     ws.simAttackSpeedCardStars > 0
       ? workshopCardMultProduct(ws, research, labOverrides, 'attackSpeed')
       : 1
-  return {
-    labMultiplier: attackResearchAttackSpeedLabMultiplier(research, labOverrides),
-    attackSpeedCardMultiplier,
-    moduleSubEffect: ws.simAttackSpeedModuleSubEffect,
-    enhancementsMultiplier: workshopEnhanceAttackSpeedMultiplier(
-      workshopEnhancementsLabUnlocked(research, labOverrides)
-        ? ws.enhanceAttackSpeedLevel
-        : 0,
-    ),
-  }
+  return enrichAttackSpeedDisplayOpts(
+    {
+      labMultiplier: attackResearchAttackSpeedLabMultiplier(research, labOverrides),
+      attackSpeedCardMultiplier,
+      moduleSubEffect: ws.simAttackSpeedModuleSubEffect,
+      enhancementsMultiplier: workshopEnhanceAttackSpeedMultiplier(
+        workshopEnhancementsLabUnlocked(research, labOverrides)
+          ? ws.enhanceAttackSpeedLevel
+          : 0,
+      ),
+    },
+    new Set(ws.relicOwnedIds),
+  )
 }
 
 export function workshopDisplayedAttackSpeedFromPersisted(

@@ -297,6 +297,9 @@ export const STRINGS_EN = {
   app_settings_assist_wiki_label: 'Show assist modules wiki reference on Modules tab',
   app_settings_assist_wiki_hint:
     'When on, shows assist unlock costs, stone efficiency upgrade table, and wiki notes below the hub.',
+  app_settings_relic_workshop_bonus_label: 'Show relic workshop bonus lines on Relics tab',
+  app_settings_relic_workshop_bonus_hint:
+    'When on, each relic card shows how its effect applies in the simulator (e.g. +10% workshop damage). Off by default.',
   ws_title: 'Workshop',
   ws_tab_upgrade: 'Upgrade',
   ws_tab_enhance: 'Enhance',
@@ -372,6 +375,11 @@ export const STRINGS_EN = {
   ws_relics_rarity_legendary: 'Legendary',
   ws_relics_rarity_count: '{{owned}} / {{total}} owned',
   ws_relics_damage_line: '+{{percent}}% displayed damage',
+  ws_relics_workshop_damage_line: '+{{percent}}% workshop damage',
+  ws_relics_workshop_damage_meter_line: '+{{percent}}% workshop damage/meter',
+  ws_relics_workshop_line: '+{{percent}}% workshop {{stat}}',
+  ws_relics_bots_line: '+{{value}} bot range (all bots)',
+  ws_relics_labs_line: '+{{percent}}% lab speed (× Labs Speed research)',
   ws_relics_owned_true: 'Owned',
   ws_relics_owned_false: 'Not owned',
   ws_relics_owned_toggle_on: 'Mark {{name}} as owned',

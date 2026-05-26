@@ -2130,6 +2130,9 @@ export function benefitLineWithNextUpgrade(
 /**
  * Time for the next upgrade at `effectiveLevel`; from `tower-labs.json` `DURATION`, divided by
  * simulated **Labs Speed** (`labsSpeedMultiplier`) on all labs except **Labs Speed** itself.
+ *
+ * `labsSpeedMultiplier` should be **(Labs Speed research) × (1 + Σ relic lab-speed %)**
+ * (multiplicative stacking; see {@link combinedLabsSpeedMultiplier}).
  */
 export function researchTimeForNextUpgrade(
   item: ResearchItem,

@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.8.9] - 2026-05-26
+
+### Added
+
+- **Viral Outbreak relics** — **Viral Infection**, **Immunization**, **Personal Care**, and **Global Threat** (event set; **268** relics total).
+- **Relic art by rarity** — WebP files under `public/relics/rare/`, `epic/`, `legendary/`, and `unmapped/`; image map paths include the subfolder ([`sort-relics-by-rarity.mjs`](scripts/sort-relics-by-rarity.mjs), [`gen-relic-images.mjs`](scripts/gen-relic-images.mjs)).
+- **Relic workshop bonuses** — Owned relics apply parsed stat bonuses to displayed damage, health, lab speed, bot range, and related workshop formulas ([`workshopRelicWorkshopDisplay.ts`](src/data/workshopRelicWorkshopDisplay.ts), [`workshopRelicStats.ts`](src/data/workshopRelicStats.ts)).
+- **Relic workshop bonus lines** — Optional per-card workshop bonus text on the Relics tab (toggle in **Tools / Settings**, [`relicWorkshopBonusLinesVisibility.ts`](src/relicWorkshopBonusLinesVisibility.ts)).
+
+### Changed
+
+- **Displayed damage relic term** — `simRelicsBonusFraction` sums owned **damage** and **damage/meter** relic effects from descriptions instead of catalog `damagePct` only.
+
+### Docs
+
+- README: **268** relics, rarity subfolders, relic workshop sim, maintainer scripts; version **2.8.9**.
+
 ## [2.8.8] - 2026-05-25
 
 ### Fixed

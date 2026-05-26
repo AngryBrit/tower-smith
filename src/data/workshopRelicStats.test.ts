@@ -3,6 +3,7 @@ import relicRows from './workshopRelics.generated.json'
 import {
   formatRelicStatValue,
   parseWorkshopRelicEffect,
+  workshopRelicsActiveBonusPercent,
   workshopRelicsBonusTable,
 } from './workshopRelicStats'
 
@@ -36,6 +37,11 @@ describe('workshopRelicStats', () => {
       }
     }
     expect(unparsed).toEqual([])
+  })
+
+  it('sums owned health bonuses', () => {
+    expect(workshopRelicsActiveBonusPercent(new Set(['t_ix_fusion']), 'health')).toBe(5)
+    expect(workshopRelicsActiveBonusPercent(new Set(['t_ix_fusion']), 'damage')).toBe(0)
   })
 
   it('aggregates owned bonuses by stat', () => {

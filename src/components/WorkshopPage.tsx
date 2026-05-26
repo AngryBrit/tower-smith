@@ -166,6 +166,11 @@ import {
   buildWorkshopUtilityLabDisplayOpts,
   type WorkshopAttackLabDisplayOpts,
 } from '../data/workshopLabDisplayOpts'
+import {
+  enrichAttackLabDisplayOpts,
+  enrichDefenseStatDisplayOpts,
+  enrichUtilityLabDisplayOpts,
+} from '../data/workshopRelicWorkshopDisplay'
 import type { WorkshopGameCardId } from '../data/workshopGameCards'
 import {
   applyWorkshopDiscountToCoins,
@@ -1946,7 +1951,11 @@ function WorkshopRendArmorMultCard({
     workshopRendArmorMultNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const statLabel = workshopRendArmorMultStatDisplay(level)
+  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
+  const statLabel = workshopRendArmorMultStatDisplay(
+    level,
+    attackLabOpts?.rendArmorMultLabMultiplier,
+  )
   const stepHint = `×${bulkStep}`
 
   return (
@@ -2312,6 +2321,11 @@ export function WorkshopPage({
   const workshopMainTab =
     mainTab === 'modules' || mainTab === 'cards' ? 'upgrade' : mainTab
 
+  const relicOwnedSet = useMemo(
+    () => new Set(workshopPersisted.relicOwnedIds),
+    [workshopPersisted.relicOwnedIds],
+  )
+
   const defenseStatLabDisplayOpts = useMemo((): WorkshopDefenseStatDisplayOpts | undefined => {
     const lab = buildWorkshopDefenseLabDisplayOpts(researchData, labLevelOverrides)
     const cardMult = (id: WorkshopGameCardId) =>
@@ -2339,10 +2353,10 @@ export function WorkshopPage({
       cardMult('fortress') === 1 &&
       extraDefense === 0
     ) {
-      return undefined
+      return enrichDefenseStatDisplayOpts(undefined, relicOwnedSet)
     }
-    return enriched
-  }, [researchData, labLevelOverrides, workshopPersisted])
+    return enrichDefenseStatDisplayOpts(enriched, relicOwnedSet)
+  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet])
 
   const attackStatLabDisplayOpts = useMemo((): WorkshopAttackLabDisplayOpts | undefined => {
     const lab = buildWorkshopAttackLabDisplayOpts(researchData, labLevelOverrides)
@@ -2356,14 +2370,17 @@ export function WorkshopPage({
     )
     const rangeMult = mergeLabAndCardMult(lab?.attackRangeLabMultiplier, cardMult('range'))
     if (lab == null && critCard === 0 && rangeMult === undefined) {
-      return undefined
+      return enrichAttackLabDisplayOpts(undefined, relicOwnedSet)
     }
-    return {
-      ...(lab ?? {}),
-      attackRangeLabMultiplier: rangeMult,
-      criticalChanceCardPercentPoints: critCard > 0 ? critCard : undefined,
-    }
-  }, [researchData, labLevelOverrides, workshopPersisted])
+    return enrichAttackLabDisplayOpts(
+      {
+        ...(lab ?? {}),
+        attackRangeLabMultiplier: rangeMult,
+        criticalChanceCardPercentPoints: critCard > 0 ? critCard : undefined,
+      },
+      relicOwnedSet,
+    )
+  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet])
 
   const utilityStatLabDisplayOpts = useMemo((): WorkshopUtilityLabDisplayOpts | undefined => {
     const lab = buildWorkshopUtilityLabDisplayOpts(researchData, labLevelOverrides)
@@ -2391,10 +2408,10 @@ export function WorkshopPage({
       freeUpgrades === 0 &&
       packageChance === 0
     ) {
-      return undefined
+      return enrichUtilityLabDisplayOpts(undefined, relicOwnedSet)
     }
-    return enriched
-  }, [researchData, labLevelOverrides, workshopPersisted])
+    return enrichUtilityLabDisplayOpts(enriched, relicOwnedSet)
+  }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet])
 
   const damageDisplayOpts = useMemo(
     (): WorkshopDamageDisplayOpts | undefined =>

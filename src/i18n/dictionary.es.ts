@@ -297,6 +297,10 @@ export const STRINGS_ES = {
     'Mostrar referencia wiki de módulos de asistencia en la pestaña Módulos',
   app_settings_assist_wiki_hint:
     'Si está activo, muestra costes de desbloqueo, tabla de eficiencia con piedras y notas wiki bajo el hub.',
+  app_settings_relic_workshop_bonus_label:
+    'Mostrar líneas de bonus de taller en la pestaña Reliquias',
+  app_settings_relic_workshop_bonus_hint:
+    'Si está activado, cada reliquia muestra cómo aplica su efecto en el simulador (p. ej. +10% daño de taller). Desactivado por defecto.',
   ws_title: 'Taller',
   ws_tab_upgrade: 'Mejorar',
   ws_tab_enhance: 'Potenciar',
@@ -372,6 +376,11 @@ export const STRINGS_ES = {
   ws_relics_rarity_legendary: 'Legendaria',
   ws_relics_rarity_count: '{{owned}} / {{total}} obtenidas',
   ws_relics_damage_line: '+{{percent}}% daño mostrado',
+  ws_relics_workshop_damage_line: '+{{percent}}% daño de taller',
+  ws_relics_workshop_damage_meter_line: '+{{percent}}% daño/m de taller',
+  ws_relics_workshop_line: '+{{percent}}% taller {{stat}}',
+  ws_relics_bots_line: '+{{value}} alcance de bots (todos)',
+  ws_relics_labs_line: '+{{percent}}% velocidad de laboratorio (× Labs Speed)',
   ws_relics_owned_true: 'Obtenida',
   ws_relics_owned_false: 'No obtenida',
   ws_relics_owned_toggle_on: 'Marcar {{name}} como obtenida',

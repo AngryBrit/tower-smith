@@ -9,12 +9,16 @@ import {
 } from '../data/workshopRelics'
 import {
   formatRelicStatValue,
+  parseWorkshopRelicEffect,
+  RELIC_STAT_DEFS,
   workshopRelicsBonusTable,
   type RelicStatGroupId,
+  type RelicStatId,
   type RelicStatRow,
 } from '../data/workshopRelicStats'
 import { workshopRelicImageUrl } from '../data/workshopRelicImages'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
+import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVisibility'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 
@@ -67,6 +71,10 @@ const GROUP_LABEL_IDS: Record<RelicStatGroupId, StringId> = {
   utility: 'ws_relics_group_utility',
 }
 
+const RELIC_STAT_LABEL_IDS = new Map<RelicStatId, StringId>(
+  RELIC_STAT_DEFS.map((def) => [def.id, def.labelId]),
+)
+
 const RELICS_SUMMARY_COLLAPSED_STORAGE_KEY = 'tower-export-relics-summary-collapsed-v1'
 
 function formatBonusCell(value: number, unit: RelicStatRow['stat']['unit']): string {
@@ -90,12 +98,47 @@ function withParams(
   return out
 }
 
+function relicCardWorkshopBonusLine(
+  relic: WorkshopRelicDef,
+  t: (id: StringId, params?: Record<string, string | number>) => string,
+): string | null {
+  const effect = parseWorkshopRelicEffect(relic.description)
+  if (!effect || effect.sign !== 1) return null
+  const labelId = RELIC_STAT_LABEL_IDS.get(effect.statId)
+  if (!labelId) return null
+
+  if (effect.unit === 'meters' && effect.statId === 'botRange') {
+    return withParams(t('ws_relics_bots_line'), {
+      value: formatRelicStatValue(effect.value, effect.unit),
+    })
+  }
+  if (effect.unit === 'percent' && effect.statId === 'labSpeed') {
+    return withParams(t('ws_relics_labs_line'), { percent: effect.value })
+  }
+  if (effect.unit !== 'percent') return null
+
+  if (effect.statId === 'damage') {
+    return withParams(t('ws_relics_workshop_damage_line'), { percent: effect.value })
+  }
+  if (effect.statId === 'damagePerMeter') {
+    return withParams(t('ws_relics_workshop_damage_meter_line'), {
+      percent: effect.value,
+    })
+  }
+
+  return withParams(t('ws_relics_workshop_line'), {
+    percent: effect.value,
+    stat: t(labelId),
+  })
+}
+
 export function WorkshopRelicsPanel({
   workshopPersisted,
   onWorkshopPersistedChange,
   searchQuery = '',
 }: WorkshopRelicsPanelProps) {
   const { t } = useI18n()
+  const [relicWorkshopBonusLinesVisible] = useRelicWorkshopBonusLinesVisible()
   const summaryBodyId = useId().replace(/:/g, '')
   const [filter, setFilter] = useState<RelicTabFilter>('all')
   const [summaryCollapsed, setSummaryCollapsed] = useState(() => {
@@ -185,6 +228,7 @@ export function WorkshopRelicsPanel({
   const renderRelicCard = (relic: WorkshopRelicDef) => {
     const owned = ownedSet.has(relic.id)
     const imageUrl = workshopRelicImageUrl(relic.id)
+    const workshopBonusLine = relicCardWorkshopBonusLine(relic, t)
     return (
       <div
         key={relic.id}
@@ -202,12 +246,8 @@ export function WorkshopRelicsPanel({
             <span className="relics-page__card-name">{relic.name}</span>
           </div>
           <p className="relics-page__card-effect">{relic.description}</p>
-          {relic.damagePercent > 0 ? (
-            <p className="relics-page__card-damage">
-              {withParams(t('ws_relics_damage_line'), {
-                percent: relic.damagePercent,
-              })}
-            </p>
+          {relicWorkshopBonusLinesVisible && workshopBonusLine ? (
+            <p className="relics-page__card-damage">{workshopBonusLine}</p>
           ) : null}
           <p className="relics-page__card-unlock" title={relic.unlock}>
             {relic.unlock}

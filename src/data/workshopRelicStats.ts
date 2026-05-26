@@ -1,6 +1,6 @@
 import type { StringId } from '../i18n/dictionary'
 import type { WorkshopRelicDef, WorkshopRelicRarity } from './workshopRelics'
-import { workshopRelicsForUnlockGroup } from './workshopRelics'
+import { workshopRelicDef, workshopRelicsForUnlockGroup } from './workshopRelics'
 
 export type RelicStatUnit = 'percent' | 'meters' | 'seconds'
 
@@ -225,6 +225,48 @@ function rarityBonusForStat(
     max = max == null ? signed : Math.max(max, signed)
   }
   return max
+}
+
+/** Sum signed owned-relic bonuses for one stat (percent points, meters, or seconds). */
+export function workshopRelicsActiveBonus(
+  ownedIds: ReadonlySet<string>,
+  statId: RelicStatId,
+): number {
+  let sum = 0
+  for (const id of ownedIds) {
+    const relic = workshopRelicDef(id)
+    if (!relic) continue
+    const effect = parseWorkshopRelicEffect(relic.description)
+    if (!effect || effect.statId !== statId) continue
+    sum += effect.value * effect.sign
+  }
+  return sum
+}
+
+/** Owned relic % bonuses only (0 when stat uses meters/seconds). */
+export function workshopRelicsActiveBonusPercent(
+  ownedIds: ReadonlySet<string>,
+  statId: RelicStatId,
+): number {
+  const def = STAT_BY_ID.get(statId)
+  if (!def || def.unit !== 'percent') return 0
+  return workshopRelicsActiveBonus(ownedIds, statId)
+}
+
+/** Relic stats summed into wiki displayed damage **(1 + Relics)**. */
+export const WORKSHOP_RELIC_DISPLAYED_DAMAGE_STAT_IDS: readonly RelicStatId[] = [
+  'damage',
+  'damagePerMeter',
+]
+
+export function workshopRelicsDisplayedDamageBonusFraction(
+  ownedIds: ReadonlySet<string>,
+): number {
+  let pct = 0
+  for (const statId of WORKSHOP_RELIC_DISPLAYED_DAMAGE_STAT_IDS) {
+    pct += workshopRelicsActiveBonusPercent(ownedIds, statId)
+  }
+  return pct / 100
 }
 
 export function workshopRelicsBonusTable(

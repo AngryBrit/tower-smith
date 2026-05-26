@@ -1,4 +1,9 @@
 import { capitalizeRelicDisplayName } from './relicDisplayName'
+import {
+  workshopRelicsActiveBonusPercent,
+  workshopRelicsDisplayedDamageBonusFraction,
+  WORKSHOP_RELIC_DISPLAYED_DAMAGE_STAT_IDS,
+} from './workshopRelicStats'
 import relicRows from './workshopRelics.generated.json'
 
 export const WORKSHOP_RELIC_RARITIES = ['rare', 'epic', 'legendary'] as const
@@ -22,7 +27,7 @@ export type WorkshopRelicDef = {
   description: string
   unlock: string
   unlockGroup: WorkshopRelicUnlockGroup
-  /** Parsed % that counts toward displayed-damage **(1 + Relics)** when owned. */
+  /** Legacy catalog field; displayed-damage bonus is derived from the description via {@link workshopRelicsDamageBonusFraction}. */
   damagePercent: number
 }
 
@@ -68,15 +73,14 @@ export function workshopRelicsGroupedByRarity(
 
 export function workshopRelicsDamageBonusPercent(ownedIds: ReadonlySet<string>): number {
   let sum = 0
-  for (const id of ownedIds) {
-    const def = BY_ID.get(id)
-    if (def) sum += def.damagePercent
+  for (const statId of WORKSHOP_RELIC_DISPLAYED_DAMAGE_STAT_IDS) {
+    sum += workshopRelicsActiveBonusPercent(ownedIds, statId)
   }
   return sum
 }
 
 export function workshopRelicsDamageBonusFraction(ownedIds: ReadonlySet<string>): number {
-  return workshopRelicsDamageBonusPercent(ownedIds) / 100
+  return workshopRelicsDisplayedDamageBonusFraction(ownedIds)
 }
 
 export function sanitizeRelicOwnedIds(raw: unknown): string[] {

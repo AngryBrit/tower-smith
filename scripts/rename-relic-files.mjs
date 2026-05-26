@@ -1,5 +1,5 @@
 /**
- * Replace spaces with underscores in `public/relics/*.webp` filenames
+ * Replace spaces with underscores in `public/relics/**/*.webp` filenames
  * and sync `workshopRelicImages.generated.json`.
  */
 import { readFileSync, writeFileSync, readdirSync, renameSync } from 'fs'
@@ -15,12 +15,16 @@ function toUnderscoreFilename(name) {
 }
 
 const renames = []
-for (const name of readdirSync(relicsDir)) {
-  if (!name.endsWith('.webp') || !name.includes(' ')) continue
-  const next = toUnderscoreFilename(name)
-  if (next === name) continue
-  renameSync(join(relicsDir, name), join(relicsDir, next))
-  renames.push({ from: name, to: next })
+for (const sub of readdirSync(relicsDir, { withFileTypes: true })) {
+  if (!sub.isDirectory()) continue
+  const dir = join(relicsDir, sub.name)
+  for (const name of readdirSync(dir)) {
+    if (!name.endsWith('.webp') || !name.includes(' ')) continue
+    const next = toUnderscoreFilename(name)
+    if (next === name) continue
+    renameSync(join(dir, name), join(dir, next))
+    renames.push({ from: `${sub.name}/${name}`, to: `${sub.name}/${next}` })
+  }
 }
 
 /** @type {Record<string, string>} */
@@ -28,7 +32,11 @@ const map = JSON.parse(readFileSync(mapPath, 'utf8'))
 let mapUpdates = 0
 for (const [id, rel] of Object.entries(map)) {
   const decoded = decodeURIComponent(rel)
-  const next = toUnderscoreFilename(decoded)
+  const slash = decoded.lastIndexOf('/')
+  const prefix = slash >= 0 ? decoded.slice(0, slash + 1) : ''
+  const base = slash >= 0 ? decoded.slice(slash + 1) : decoded
+  const nextBase = toUnderscoreFilename(base)
+  const next = prefix + nextBase
   if (next !== rel) {
     map[id] = next
     mapUpdates++

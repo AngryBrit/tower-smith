@@ -51,6 +51,7 @@ import {
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
 import type { ResearchData } from '../types/research'
+import { combinedLabsSpeedMultiplier } from '../data/workshopRelicWorkshopDisplay'
 import {
   getLevelBounds,
   levelOverrideKey,
@@ -559,9 +560,18 @@ export const SelectResearch = forwardRef<
     [data, levelOverrides],
   )
 
+  const relicOwnedSet = useMemo(
+    () => new Set(workshopPersisted.relicOwnedIds),
+    [workshopPersisted.relicOwnedIds],
+  )
+
   const labsSpeedMultiplier = useMemo(
-    () => resolveLabsSpeedMultiplier(data, levelOverrides),
-    [data, levelOverrides],
+    () =>
+      combinedLabsSpeedMultiplier(
+        resolveLabsSpeedMultiplier(data, levelOverrides),
+        relicOwnedSet,
+      ),
+    [data, levelOverrides, relicOwnedSet],
   )
 
   const { labDomIdsBySection, labSlugToPosition } = useMemo(

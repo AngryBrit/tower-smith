@@ -2,6 +2,7 @@ import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { useModulesCatalogVisible } from '../modulesCatalogVisibility'
 import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
+import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVisibility'
 import { useSubmodulesCatalogVisible } from '../submodulesCatalogVisibility'
 import { useI18n, type AppLocale } from '../i18n'
 
@@ -13,6 +14,8 @@ export function SettingsPage() {
     useSubmodulesCatalogVisible()
   const [assistModuleCatalogVisible, setAssistModuleCatalogVisible] =
     useAssistModuleCatalogVisible()
+  const [relicWorkshopBonusLinesVisible, setRelicWorkshopBonusLinesVisible] =
+    useRelicWorkshopBonusLinesVisible()
 
   return (
     <div className="settings-page" role="region" aria-label={t('app_settings_title')}>
@@ -79,6 +82,18 @@ export function SettingsPage() {
           {t('app_settings_assist_wiki_label')}
         </label>
         <p className="settings-page__hint">{t('app_settings_assist_wiki_hint')}</p>
+      </div>
+
+      <div className="settings-page__field">
+        <label className="glow-btn glow-btn--toggle settings-page__toggle">
+          <input
+            type="checkbox"
+            checked={relicWorkshopBonusLinesVisible}
+            onChange={(e) => setRelicWorkshopBonusLinesVisible(e.target.checked)}
+          />
+          {t('app_settings_relic_workshop_bonus_label')}
+        </label>
+        <p className="settings-page__hint">{t('app_settings_relic_workshop_bonus_hint')}</p>
       </div>
 
       <div className="settings-page__meta">

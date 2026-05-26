@@ -20,6 +20,7 @@ import { workshopEnhancementsLabUnlocked } from './workshopEnhanceResearch'
 import { workshopBerserkerDisplayedDamageAdd } from './workshopSimCards'
 import { workshopCannonModulePercentFromLabs } from './workshopSimModules'
 import { workshopDamageStatAtLevel } from './workshopDamage'
+import { enrichDamageDisplayOpts } from './workshopRelicWorkshopDisplay'
 
 export type { WorkshopAssistModuleSlot } from './workshopSimModules'
 export {
@@ -146,7 +147,7 @@ export function workshopDamageDisplayOptsFromPersisted(
   }
 
   const preBerserker = computeWorkshopDisplayedDamagePreBerserker(workshop, base)
-  return {
+  const withBerserker: WorkshopDamageDisplayOpts = {
     ...base,
     berserkerDamageAdd: workshopBerserkerDisplayedDamageAdd(
       preBerserker,
@@ -155,6 +156,7 @@ export function workshopDamageDisplayOptsFromPersisted(
       berserkerMasteryMultiplier,
     ),
   }
+  return enrichDamageDisplayOpts(withBerserker, new Set(ws.relicOwnedIds))
 }
 
 export function workshopDisplayedDamageFromPersisted(

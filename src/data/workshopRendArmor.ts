@@ -154,8 +154,14 @@ export function workshopRendArmorMultValue(completedLevels: number): number {
 }
 
 /** Display like wiki (`0.001X` … `0.3X`); trims redundant trailing **0** after four decimal places. */
-export function workshopRendArmorMultStatDisplay(completedLevels: number): string {
-  const v = workshopRendArmorMultValue(completedLevels)
+export function workshopRendArmorMultStatDisplay(
+  completedLevels: number,
+  labMultiplier?: number,
+): string {
+  let v = workshopRendArmorMultValue(completedLevels)
+  if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
+    v = Math.round(v * labMultiplier * 1_000_000) / 1_000_000
+  }
   const s = v.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')
   return `${s}X`
 }
