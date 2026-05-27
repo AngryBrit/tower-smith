@@ -173,9 +173,9 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   mapArrayToWorkshop(save.upgradeWorkshopLevel, GAME_WORKSHOP_ATTACK_LEVEL_KEYS, ws)
   mapArrayToWorkshop(save.upgradeWorkshopDefenseLevel, GAME_WORKSHOP_DEFENSE_LEVEL_KEYS, ws)
   mapArrayToWorkshop(save.upgradeWorkshopUtilityLevel, GAME_WORKSHOP_UTILITY_LEVEL_KEYS, ws)
-  mapArrayToWorkshop(save.upgradeLevel, GAME_ENHANCE_ATTACK_LEVEL_KEYS, ws)
-  mapArrayToWorkshop(save.upgradeDefenseLevel, GAME_ENHANCE_DEFENSE_LEVEL_KEYS, ws)
-  mapArrayToWorkshop(save.upgradeUtilityLevel, GAME_ENHANCE_UTILITY_LEVEL_KEYS, ws)
+  mapArrayToWorkshop(save.enhancementLevel, GAME_ENHANCE_ATTACK_LEVEL_KEYS, ws)
+  mapArrayToWorkshop(save.enhancementDefenseLevel, GAME_ENHANCE_DEFENSE_LEVEL_KEYS, ws)
+  mapArrayToWorkshop(save.enhancementUtilityLevel, GAME_ENHANCE_UTILITY_LEVEL_KEYS, ws)
 
   mapArrayToWorkshop(save.botsLevel, WORKSHOP_BOT_UPGRADE_ORDER, ws)
   mapBoolArrayToWorkshop(save.botsUnlocked, WORKSHOP_BOT_OWNED_ORDER, ws)

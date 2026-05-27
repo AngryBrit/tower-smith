@@ -20,7 +20,16 @@ async function main() {
   console.log('root class', root.typeName)
   const names = root.memberNames.slice(0, 30)
   console.log('first members', names)
-  for (const key of ['researchLevel', 'upgradeWorkshopLevel', 'upgradeWorkshopDefenseLevel', 'upgradeWorkshopUtilityLevel', 'upgradeLevel', 'cardLevel']) {
+  for (const key of [
+    'researchLevel',
+    'upgradeWorkshopLevel',
+    'upgradeWorkshopDefenseLevel',
+    'upgradeWorkshopUtilityLevel',
+    'enhancementLevel',
+    'enhancementDefenseLevel',
+    'enhancementUtilityLevel',
+    'cardLevel',
+  ]) {
     let v = root.getValue(key)
     if (v instanceof MemberReferenceRecord) v = decoder.getRecord(v.idRef)
     if (v instanceof ArraySinglePrimitiveRecord) {

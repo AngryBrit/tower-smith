@@ -23,9 +23,9 @@ export type DecodedPlayerSave = {
   upgradeWorkshopLevel: number[]
   upgradeWorkshopDefenseLevel: number[]
   upgradeWorkshopUtilityLevel: number[]
-  upgradeLevel: number[]
-  upgradeDefenseLevel: number[]
-  upgradeUtilityLevel: number[]
+  enhancementLevel: number[]
+  enhancementDefenseLevel: number[]
+  enhancementUtilityLevel: number[]
   cardLevel: number[]
   currentWorkshopPreset: number
   relicsUnlocked: number[]
@@ -61,9 +61,9 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     upgradeWorkshopLevel: getInt32Array(ctx, 'upgradeWorkshopLevel'),
     upgradeWorkshopDefenseLevel: getInt32Array(ctx, 'upgradeWorkshopDefenseLevel'),
     upgradeWorkshopUtilityLevel: getInt32Array(ctx, 'upgradeWorkshopUtilityLevel'),
-    upgradeLevel: getInt32Array(ctx, 'upgradeLevel'),
-    upgradeDefenseLevel: getInt32Array(ctx, 'upgradeDefenseLevel'),
-    upgradeUtilityLevel: getInt32Array(ctx, 'upgradeUtilityLevel'),
+    enhancementLevel: getInt32Array(ctx, 'enhancementLevel'),
+    enhancementDefenseLevel: getInt32Array(ctx, 'enhancementDefenseLevel'),
+    enhancementUtilityLevel: getInt32Array(ctx, 'enhancementUtilityLevel'),
     cardLevel: getInt32Array(ctx, 'cardLevel'),
     currentWorkshopPreset: getInt32(ctx, 'currentWorkshopPreset'),
     relicsUnlocked: getEnumIntArray(ctx, 'relicsUnlocked'),

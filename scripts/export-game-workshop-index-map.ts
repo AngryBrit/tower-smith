@@ -190,9 +190,9 @@ levelRows(
 )
 
 // --- Enhancements ---
-levelRows('enhance_attack', 'upgradeLevel', GAME_ENHANCE_ATTACK_LEVEL_KEYS)
-levelRows('enhance_defense', 'upgradeDefenseLevel', GAME_ENHANCE_DEFENSE_LEVEL_KEYS)
-levelRows('enhance_utility', 'upgradeUtilityLevel', GAME_ENHANCE_UTILITY_LEVEL_KEYS)
+levelRows('enhance_attack', 'enhancementLevel', GAME_ENHANCE_ATTACK_LEVEL_KEYS)
+levelRows('enhance_defense', 'enhancementDefenseLevel', GAME_ENHANCE_DEFENSE_LEVEL_KEYS)
+levelRows('enhance_utility', 'enhancementUtilityLevel', GAME_ENHANCE_UTILITY_LEVEL_KEYS)
 
 // --- Bots ---
 for (let bi = 0; bi < WORKSHOP_BOT_ORDER.length; bi++) {
