@@ -41,6 +41,27 @@ export function buildLabsShareUrls(
   return { clean: clean.toString(), full: full.toString() }
 }
 
+/** Build share JSON (v4) for export, gallery submit, or clipboard. */
+export function buildLabsShareFile(
+  levelOverrides: Record<string, number>,
+  workshop?: WorkshopPersistedV1,
+  buildName?: string,
+  themes?: TowerThemesSnapshot,
+): LabsShareFile {
+  const trimmedName = buildName?.trim()
+  const includeName = trimmedName != null && trimmedName.length > 0
+  const includeThemes = themes != null && themes.ownedIds.length > 0
+  const includeWorkshop = workshop != null
+
+  return {
+    v: 4,
+    o: levelOverrides,
+    ...(includeWorkshop ? { w: workshop } : {}),
+    ...(includeName ? { n: trimmedName } : {}),
+    ...(includeThemes ? { t: { owned: themes.ownedIds } } : {}),
+  }
+}
+
 export function isLabsShareFile(x: unknown): x is LabsShareFile {
   if (!x || typeof x !== 'object') return false
   const v = (x as { v?: unknown }).v
@@ -99,18 +120,7 @@ export async function encodeLabsShareQueryValue(
   buildName?: string,
   themes?: TowerThemesSnapshot,
 ): Promise<string> {
-  const trimmedName = buildName?.trim()
-  const includeName = trimmedName != null && trimmedName.length > 0
-  const includeThemes = themes != null && themes.ownedIds.length > 0
-  const includeWorkshop = workshop != null
-
-  const file: LabsShareFile = {
-    v: 4,
-    o: levelOverrides,
-    ...(includeWorkshop ? { w: workshop } : {}),
-    ...(includeName ? { n: trimmedName } : {}),
-    ...(includeThemes ? { t: { owned: themes.ownedIds } } : {}),
-  }
+  const file = buildLabsShareFile(levelOverrides, workshop, buildName, themes)
   const json = JSON.stringify(file)
   const bytes = new TextEncoder().encode(json)
 

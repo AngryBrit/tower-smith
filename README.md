@@ -27,6 +27,7 @@
 - **Themes** — **Themes** tab catalogs tower milestone skins, event/guild tower and background art, menu guild seasons, banners, music (Krisu track preview art), and guardians; track owned skins, active selection per category, and coin-bonus rollups (`ThemesPage`, `gameThemes.ts`, `public/themes/`, `public/music/`). **Search** filters skins by name, event, and unlock metadata (`/` to focus).
 - **Unified CSV backup** — Export and import a single **tower CSV** (`tower_csv_v1`) with one or more **named builds** (lab levels, workshop `ws,…` rows, card stars/presets) plus optional global **theme** owned IDs via [`src/towerUnifiedCsv.ts`](src/towerUnifiedCsv.ts). `ws` rows include ultimate Plus levels, **bot** stat levels / owned / active / Bot+ flags and levels, assist unlocks/chassis/rarity/efficiency fields, and the **active** module/relic sim; the five **module loadout presets** stay in browser workshop storage (and in lab compare named presets), not in tower CSV rows.
 - **Shareable builds** — Encode lab levels, full workshop snapshot (including bots), optional build name, and owned theme IDs in the `?tower=` query string (share codec **v4**); optional QR code for sharing.
+- **Community tower gallery** — Submit and browse shared builds via Netlify Functions + Supabase (`/api/towers`). Tools / Settings → **Community towers**; loads a build into the LAB tab. See [Community gallery](#community-gallery-netlify--supabase).
 - **Languages** — English, Spanish, and German UI; Spanish and German research titles and card names are overlaid from bundled JSON (see [Internationalization](#internationalization)).
 - **Persistence** — Section collapse state, locale, last-selected main panel (Research, Workshop, **Bots**, Modules, Cards, Relics, Themes, Tools / Settings), workshop snapshot (bot levels and Bot+, ultimate Plus levels, chassis and assist modules, five module loadout presets, relics, submodule picks), lab compare named presets (with themes), theme owned/selection state, and optional budget-panel, chassis/submodule/assist-wiki catalog visibility survive reloads (`localStorage`, keys prefixed `tower-export-`). **Tools / Settings** offers a confirmed **full reset** that clears all `tower-export-*` keys and reloads ([`fullResetStorage`](src/fullResetStorage.ts)).
 
@@ -66,6 +67,7 @@ npm run preview
 | Command | Description |
 |--------|-------------|
 | `npm run dev` | Start the Vite dev server with HMR. |
+| `npm run dev:netlify` | Run Vite + Netlify Functions locally (required for the community gallery API). |
 | `npm run build` | Typecheck and emit a production bundle to `dist/`. |
 | `npm run preview` | Serve the production build locally. |
 | `npm run lint` | Run ESLint on the repo. |
@@ -172,6 +174,52 @@ Multi-build files repeat `build` / `lab` / `ws` / `card` sections; themes are wr
 - UI strings: English source keys in [`dictionary.ts`](src/i18n/dictionary.ts); Spanish in [`dictionary.es.ts`](src/i18n/dictionary.es.ts); German in [`dictionary.de.ts`](src/i18n/dictionary.de.ts). Every locale file must define the same `StringId` keys. Locale is stored under the key documented in [`src/i18n/constants.ts`](src/i18n/constants.ts).
 - Spanish research **names** (sections and cards) come from [`src/i18n/research-overlay.es.json`](src/i18n/research-overlay.es.json), maintained by `scripts/write-research-overlay.mjs` when you refresh translations from your tables.
 - German research **names** use the same overlay shape in [`src/i18n/research-overlay.de.json`](src/i18n/research-overlay.de.json), maintained by `scripts/write-research-overlay-de.mjs`.
+
+---
+
+## Community gallery (Netlify + Supabase)
+
+The gallery uses **Netlify Functions** as the API and **Supabase** for storage: **Postgres** (metadata + search) and **Storage** bucket `tower-payloads` (payload JSON). Supabase env vars are required for the gallery API to run.
+
+| Endpoint | Method | Purpose |
+|----------|--------|---------|
+| `/api/towers` | GET | Paginated list (`?limit=40&cursor=…&q=…`, newest first; `q` searches titles when Supabase is enabled) |
+| `/api/towers/get?id=…` | GET | Full tower JSON (`LabsShareFile` v4) |
+| `/api/towers/submit` | POST | Submit `{ title, payload }` — **requires `Authorization: Bearer <access_token>`** when Supabase is enabled |
+
+**Auth** — [Supabase Auth](https://supabase.com/docs/guides/auth) with **Google** and **Discord**. Anyone can **browse, search, and load** builds without signing in. **Publish** (Community row or Tools → Community towers) requires sign-in (footer **Sign in**).
+
+**Short share links** use `?build=<uuid>`. **Copy share link** publishes (when signed in) and copies the short URL.
+
+Implementation: [`netlify/functions/`](netlify/functions/), [`supabase/migrations/`](supabase/migrations/), UI in [`src/components/CommunityBuildRow.tsx`](src/components/CommunityBuildRow.tsx) and [`src/components/TowerGalleryPanel.tsx`](src/components/TowerGalleryPanel.tsx).
+
+### Supabase setup
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. Run SQL from [`supabase/migrations/20260526000000_gallery.sql`](supabase/migrations/20260526000000_gallery.sql) in the SQL editor.
+3. **Storage** — create a **public** bucket named `tower-payloads` (public read so `get` can download JSON).
+4. **Auth** — enable Google and Discord providers. In **Authentication → URL Configuration**:
+   - **Site URL:** your production origin (e.g. `https://thetower.thatangrybrit.com/`)
+   - **Redirect URLs:** add **both** production and local dev, e.g. `https://thetower.thatangrybrit.com/` and `http://localhost:5173/**` (wildcard covers local OAuth return). If sign-in from localhost lands on production, localhost is missing from Redirect URLs.
+   - Google/Discord app redirect URI stays `https://<project>.supabase.co/auth/v1/callback` (not localhost).
+5. Copy keys into [`.env.example`](.env.example) (local) and Netlify site env:
+
+   - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (build + browser)
+   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (Functions only)
+
+**Local development** — copy `.env.example` to `.env`, fill values, then:
+
+```bash
+npm run dev:netlify
+```
+
+Vite proxies `/api/*` to Netlify Dev (port 8888). Set the same Supabase vars for Functions in Netlify Dev (`.env` at repo root).
+
+**Deploy** — set env vars on the Netlify site. Optional:
+
+- `TOWER_GALLERY_SUBMIT_DISABLED=1` — reject new submissions
+- `VITE_TOWER_GALLERY_DISABLED=1` — hide gallery in the frontend build
+- `TOWER_GALLERY_ADMIN_USER_IDS` — comma-separated Supabase user UUIDs allowed to use the **Admin** tab and delete builds (set on Netlify + local `.env` for Functions)
 
 ---
 

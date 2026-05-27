@@ -11,9 +11,11 @@ export const STRINGS_ES = {
   app_nav_cards: 'Cartas',
   app_nav_relics: 'RELIQUIAS',
   app_nav_themes: 'Temas',
-  app_nav_tools: 'Herramientas',
+  app_nav_gallery: 'BUILDS',
+  app_nav_tools: 'Herramientas y',
   app_nav_settings: 'Ajustes',
-  app_nav_tools_settings: 'Herramientas y ajustes',
+  app_nav_gallery_admin: 'ADMIN',
+  app_nav_tools_settings: 'Ajustes',
   app_themes_title: 'Temas y canciones',
   app_themes_intro: 'Personaliza la apariencia de TowerSmith.',
   themes_tabs_aria: 'Categorías de temas',
@@ -281,6 +283,133 @@ export const STRINGS_ES = {
   app_tools_full_reset_confirm_body:
     'Elimina niveles del laboratorio, builds guardados, mejoras del taller, cartas, módulos, reliquias, temas, idioma y demás ajustes de TowerSmith en este navegador. La página se recargará con valores de fábrica. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
   app_tools_full_reset_confirm_btn: 'Restablecer todo',
+  auth_loading: 'Comprobando sesión…',
+  auth_sign_in: 'Iniciar sesión',
+  auth_sign_out: 'Cerrar sesión',
+  auth_signed_in: 'Sesión iniciada',
+  auth_sign_in_google: 'Continuar con Google',
+  auth_sign_in_discord: 'Continuar con Discord',
+  auth_required_publish: 'Inicia sesión con Google o Discord para publicar un build.',
+  profile_settings_title: 'Tu perfil',
+  profile_settings_intro:
+    'Configura el nombre de usuario y avatar que se muestran en tus builds de la comunidad. Edítalos en Herramientas y ajustes.',
+  profile_display_name_label: 'Nombre de usuario',
+  profile_display_name_hint:
+    '1–40 caracteres. Debe ser único (no distingue mayúsculas). Se muestra como autor en los builds que publiques.',
+  profile_display_name_save_btn: 'Guardar nombre',
+  profile_display_name_saving: 'Guardando…',
+  profile_avatar_upload_btn: 'Subir avatar',
+  profile_avatar_uploading: 'Subiendo…',
+  profile_avatar_remove_btn: 'Quitar avatar',
+  profile_avatar_hint: 'JPEG, PNG, WebP o GIF de hasta 512 KB.',
+  profile_notice_name_saved: 'Nombre guardado.',
+  profile_notice_avatar_saved: 'Avatar actualizado.',
+  profile_notice_avatar_removed: 'Avatar eliminado.',
+  profile_error_invalid_display_name: 'El nombre debe tener 1–40 caracteres.',
+  profile_error_display_name_taken: 'Ese nombre de usuario ya está en uso.',
+  profile_error_invalid_avatar_type: 'Elige una imagen JPEG, PNG, WebP o GIF.',
+  profile_error_avatar_too_large: 'El avatar debe ser de 512 KB o menos.',
+  profile_error_network: 'No se pudo guardar el perfil. Inténtalo de nuevo.',
+  profile_error_unknown: 'Algo salió mal al guardar tu perfil.',
+  gallery_search_label: 'Buscar builds',
+  gallery_search_placeholder: 'Buscar por título…',
+  gallery_submit_sign_in_hint: 'Inicia sesión para enviar tu torre. Explorar y cargar no requiere cuenta.',
+  gallery_submit_signed_in:
+    'Has iniciado sesión. Los envíos usan tu nombre de usuario de Herramientas y ajustes.',
+  gallery_title: 'Torres de la comunidad',
+  gallery_intro:
+    'Los enlaces cortos (?build=…) cargan torres de la galería comunitaria. Inicia sesión para enviar; explorar y cargar sin cuenta. Requiere Supabase + npm run dev:netlify en local.',
+  gallery_submit_title: 'Enviar tu torre',
+  gallery_submit_hint:
+    'Usa tus niveles de LAB y el taller actuales (los mismos datos que un enlace para compartir). Añade un título; el autor es opcional.',
+  gallery_field_title: 'Título',
+  gallery_field_title_placeholder: 'p. ej. Build de daño endgame',
+  gallery_field_category: 'Categoría del build',
+  gallery_field_category_placeholder: 'Elige una categoría…',
+  gallery_filter_category: 'Categoría',
+  gallery_category_filter_all: 'Todas las categorías',
+  gallery_error_invalid_category: 'Elige una categoría de build antes de enviar.',
+  gallery_category_turtle: 'Turtle Build (Early Game)',
+  gallery_category_turtle_desc:
+    'Maximiza defensa (Defense %, defensa absoluta y vida) para absorber golpes mientras el daño enemigo escala Thorns. Ideal para Tier 1 y early game; cae cuando el daño supera la vida de la torre.',
+  gallery_category_ehp: 'Health/eHP Build (Mid Game)',
+  gallery_category_ehp_desc:
+    'Construye eHP (Health, Defense %, Defense Absolute) y sobrevive lo suficiente para que Orbs y Thorns eliminen enemigos fuertes y jefes. Ideal para mid game y monedas hacia Ultimate Weapons.',
+  gallery_category_blender: 'Blender Build (Mid–Late Game)',
+  gallery_category_blender_desc:
+    'Usa Orbs y Extra Orbs con alcance bajo a propósito para que los orbs “licuen” en el borde de la torre. Ideal para farmear y limpiar oleadas rápido.',
+  gallery_category_devo: 'Devastation / Devo (Mid–Late Game)',
+  gallery_category_devo_desc:
+    'Build eHP complejo con Death Wave; labs multiplican la vida máxima al matar con Death Wave. Variantes Orb Devo y SMAX Devo para farmeo endgame con mucha inversión en labs y monedas.',
+  gallery_category_glass_cannon: 'Glass Cannon (GC) (Late Game)',
+  gallery_category_glass_cannon_desc:
+    'Abandona defensa por daño, velocidad de ataque y críticos—matar antes de que te toquen. Ideal para torneos altos y oleadas máximas; a menudo necesita Chrono Field.',
+  gallery_category_hybrid: 'Hybrid Build (Late Game)',
+  gallery_category_hybrid_desc:
+    'Equilibra daño y defensa—módulos Cannon de ataque y Utility Generators. Ideal para entrar al endgame sin morir de un golpe de jefe.',
+  gallery_category_other: 'Otro',
+  gallery_category_other_desc:
+    'Estrategias experimentales, de nicho o poco convencionales que no encajan en las categorías estándar.',
+  gallery_field_author: 'Autor (opcional)',
+  gallery_field_author_placeholder: 'Nombre de jugador',
+  gallery_submit_btn: 'Enviar a la galería',
+  gallery_submitting: 'Enviando…',
+  gallery_list_title: 'Ver envíos',
+  gallery_list_paged_hint:
+    'Más recientes o mejor valorados. 40 por página — «Cargar más» para builds antiguos.',
+  gallery_sort_label: 'Ordenar builds',
+  gallery_sort_newest: 'Recientes',
+  gallery_sort_top: 'Mejor valorados',
+  gallery_upvote_btn: 'Útil',
+  gallery_upvote_btn_active: 'Útil ✓',
+  gallery_upvote_sign_in: 'Inicia sesión para marcar builds como útiles.',
+  gallery_upvote_short: 'útiles',
+  gallery_error_cannot_vote_own: 'No puedes votar tu propio build.',
+  gallery_error_votes_unavailable:
+    'Los votos útiles aún no están disponibles. Aplica la migración de votos en Supabase.',
+  sr_community_sort_label: 'Orden de builds de la comunidad',
+  gallery_load_more: 'Cargar más',
+  gallery_loading_more: 'Cargando más…',
+  gallery_showing_count: 'Mostrando {{count}} builds',
+  gallery_refresh: 'Actualizar',
+  gallery_loading: 'Cargando galería…',
+  gallery_empty: 'Aún no hay torres. ¡Sé el primero!',
+  gallery_copy_link_btn: 'Copiar enlace',
+  gallery_notice_link_copied: 'Enlace corto copiado al portapapeles.',
+  gallery_load_btn: 'Cargar',
+  gallery_loading_tower: 'Cargando…',
+  gallery_error_network: 'No se pudo contactar la API de la galería. Inténtalo más tarde.',
+  gallery_error_unavailable:
+    'La API de la galería no está disponible. En localhost, usa npm run dev:netlify en lugar de npm run dev.',
+  gallery_error_invalid_title: 'El título debe tener entre 1 y 80 caracteres.',
+  gallery_error_invalid_payload: 'Los datos de la torre no son válidos o son demasiado grandes.',
+  gallery_error_disabled: 'Los envíos están desactivados temporalmente.',
+  gallery_error_not_found: 'No se encontró esa torre.',
+  gallery_error_unknown: 'Algo salió mal.',
+  gallery_error_apply:
+    'No se pudo aplicar esta torre. Abre la pestaña LAB una vez e inténtalo de nuevo.',
+  gallery_notice_loaded: '“{{title}}” cargado en este navegador.',
+  gallery_notice_submitted: '“{{title}}” enviado a la galería.',
+  gallery_by_author: 'por {{author}}',
+  gallery_admin_title: 'Admin de la galería',
+  gallery_admin_page_intro:
+    'Elimina spam o builds antiguos de la comunidad. Las eliminaciones son permanentes para la galería pública.',
+  gallery_admin_sign_in_required: 'Inicia sesión para abrir la página de admin de la galería.',
+  gallery_admin_access_denied: 'Tu cuenta no es admin de este sitio.',
+  gallery_admin_your_user_id:
+    'Tu ID de usuario: {{userId}} — añádela a TOWER_GALLERY_ADMIN_USER_IDS en Netlify para obtener acceso.',
+  gallery_admin_unlocked_hint:
+    'Eliminar quita el enlace corto y el listado de ese build.',
+  gallery_admin_delete: 'Eliminar',
+  gallery_admin_deleting: 'Eliminando…',
+  gallery_admin_delete_confirm_title: '¿Eliminar este build?',
+  gallery_admin_delete_confirm_body:
+    '“{{title}}” se eliminará de la galería. Quien tenga el enlace ?build= antiguo verá un error.',
+  gallery_admin_notice_deleted: '“{{title}}” eliminado de la galería.',
+  gallery_admin_error_network: 'No se pudo contactar la API de admin.',
+  gallery_admin_error_unauthorized: 'No tienes acceso de admin.',
+  gallery_admin_error_not_configured:
+    'Admin no configurado en el servidor (falta TOWER_GALLERY_ADMIN_USER_IDS).',
   app_settings_title: 'Ajustes',
   app_settings_language_label: 'Idioma',
   app_settings_budget_panels_label: 'Mostrar paneles de presupuesto (lab, taller y temas)',
@@ -879,15 +1008,23 @@ export const STRINGS_ES = {
   sr_search_slash_hint:
     'Pulsa la barra (/) cuando no estés en un campo de texto o numérico para enfocar este cuadro de búsqueda.',
 
-  sr_presets_build_label: 'Build',
-  sr_preset_scratch_option: 'Borrador (espacio de trabajo sin guardar)',
-  sr_preset_select_aria: 'Cargar un build guardado (lab + taller) o el espacio de trabajo',
-  sr_preset_save_as: 'Guardar como…',
+  sr_community_build_label: 'Comunidad',
+  sr_builds_row_label: 'Builds',
+  sr_community_gallery_select_aria: 'Cargar una torre de la galería comunitaria',
+  sr_community_gallery_placeholder: 'Cargar de la galería…',
+  sr_community_publish_btn: 'Publicar…',
+  sr_community_publish_title: 'Publicar en la galería comunitaria',
+  sr_community_publish_submit: 'Publicar y copiar enlace',
+  sr_community_clear_workspace: 'Limpiar espacio',
+  sr_community_clear_aria:
+    'Borrar niveles del lab, mejoras del taller, cartas, módulos, reliquias, bots y temas en este navegador',
+  sr_community_clear_confirm_title: '¿Limpiar espacio de trabajo?',
+  sr_community_clear_confirm:
+    'Esto borra todos los niveles del lab y restablece por defecto las mejoras del taller, cartas, módulos, reliquias, bots y temas en este navegador. Exporta o copia un enlace compartido antes si quieres conservar este build.',
+  sr_community_clear_done: 'Espacio de trabajo limpiado.',
   sr_preset_share_link: 'Copiar enlace',
   sr_preset_share_link_aria:
-    'Copiar una URL que abre este build (niveles del lab y taller)',
-  sr_preset_delete_build: 'Eliminar build',
-  sr_preset_delete_aria: 'Eliminar el build guardado activo',
+    'Copiar un enlace corto que abre este build (niveles del lab y taller)',
   sr_hide_completed: 'Ocultar completados',
   sr_max_all: 'Máx. todo',
   sr_max_all_aria:
@@ -913,15 +1050,19 @@ export const STRINGS_ES = {
 
   sr_lab_data_title: 'Tower — copia de seguridad y compartir',
   sr_lab_data_intro:
-    'Un CSV exporta/importa lab, taller, cartas, módulos, reliquias, temas y todos los builds (tower_csv_v1), o copia / QR un enlace con los mismos datos.',
+    'Un CSV exporta/importa lab, taller, cartas, módulos, reliquias, temas y todos los builds (tower_csv_v1), o copia un enlace corto para compartir.',
   sr_lab_data_files: 'CSV Tower (copia completa)',
+  sr_lab_data_save_game: 'Partida guardada',
   sr_lab_data_share: 'Enlace para compartir',
+  sr_lab_data_share_hint:
+    'Los enlaces cortos usan ?build=… (torre en el servidor). Usa «Copiar enlace largo incrustado» solo si alguien no puede abrir enlaces de la galería.',
   sr_lab_import_file: 'Importar tower desde CSV',
+  sr_lab_import_player_save: 'Importar playerInfo.dat',
   sr_lab_export_file: 'Exportar tower a CSV',
   sr_compare_launcher: 'Comparar builds…',
   sr_compare_title: 'Comparar dos instantáneas de labs',
   sr_compare_intro:
-    'Pega un CSV tower (tower_csv_v1; filas lab, ws, card, module, theme, build), URL con ?tower=…, payload u…/z… o JSON { "v":4, "o", "w", "t", "n" }. Restaura lab, taller, cartas, presets de módulos, reliquias y temas en posesión. Cada lado usa su propio Labs Coin Discount.',
+    'Pega un CSV tower (tower_csv_v1; filas lab, ws, card, module, theme, build), URL corta con ?build=…, URL larga con ?tower=…, payload u…/z… o JSON { "v":4, "o", "w", "t", "n" }. Restaura lab, taller, cartas, presets de módulos, reliquias y temas en posesión. Cada lado usa su propio Labs Coin Discount.',
   sr_compare_build_a: 'Build A',
   sr_compare_build_b: 'Build B',
   sr_compare_placeholder: 'CSV tower, URL, payload o JSON…',
@@ -954,12 +1095,15 @@ export const STRINGS_ES = {
     'CSV no válido: la primera línea debe ser tower_csv_v1 y luego filas type,key,value.',
   sr_compare_parse_invalid_payload:
     'No se pudo interpretar como CSV o texto de compartir.',
-  sr_compare_parse_share_fail: 'No se pudo decodificar ?tower= / el payload.',
+  sr_compare_parse_share_fail:
+    'No se pudo cargar ese enlace (?build=… o ?tower= / u… / z…).',
   sr_compare_diff_count_none:
     'Sin diferencias de nivel: los niveles efectivos coinciden en todos los labs.',
   sr_compare_diff_count_one: '1 lab tiene un nivel distinto.',
   sr_compare_diff_count_many: '{{count}} labs tienen niveles distintos.',
-  sr_copy_short_link: 'Copiar enlace corto',
+  sr_copy_short_link: 'Copiar enlace para compartir',
+  sr_copy_embedded_link: 'Copiar enlace largo incrustado',
+  sr_share_publishing: 'Publicando…',
   sr_copy_full_url: 'Copiar URL completa',
   sr_qr_share: 'Mostrar QR del enlace',
   sr_close: 'Cerrar',
@@ -972,7 +1116,7 @@ export const STRINGS_ES = {
   sr_qr_dialog_title: 'Escanea para cargar niveles',
   sr_qr_image_alt: 'Código QR que abre el enlace de compartir en el navegador',
   sr_qr_hint:
-    'Codifica el enlace corto (igual que «Copiar enlace corto»), incluyendo taller si no es la instantánea predeterminada.',
+    'Codifica el enlace corto ?build=… si la API de la galería está disponible; si no, usa un enlace largo incrustado.',
   sr_qr_copy_link: 'Copiar enlace',
 
   sr_reset_confirm_title: '¿Restablecer todos los niveles del laboratorio?',
@@ -1024,6 +1168,16 @@ export const STRINGS_ES = {
     'Enlace copiado — abre la URL para cargar lab, taller, cartas, módulos, reliquias y temas.',
   sr_notice_copy_build_fail:
     'No se pudo copiar el enlace (portapapeles bloqueado o no disponible).',
+  sr_notice_copy_gallery_ok:
+    'Enlace corto copiado (?build=… — cualquiera puede abrir esta torre).',
+  sr_notice_copy_gallery_fail:
+    'No se pudo publicar un enlace corto; se copió un enlace largo incrustado.',
+  sr_notice_copy_gallery_fallback:
+    'Galería no disponible aquí; se copió un enlace largo incrustado.',
+  sr_notice_copy_embedded_ok:
+    'Enlace largo incrustado copiado (?tower=… — funciona sin servidor, URL muy larga).',
+  sr_notice_copy_embedded_fail:
+    'No se pudo copiar el enlace incrustado (portapapeles bloqueado o no disponible).',
   sr_notice_reset_all:
     'Niveles de lab restablecidos a los valores predeterminados en este navegador.',
   sr_notice_copy_short_ok:
@@ -1047,6 +1201,12 @@ export const STRINGS_ES = {
     'CSV tower importado para el build “{{name}}” (cargado en el borrador).',
   sr_notice_import_tower_many:
     'Se importaron {{count}} builds desde CSV tower (el primero quedó activo).',
+  sr_notice_import_player_ok:
+    'Lab, taller, reliquias, temas, módulos, bots y ultimates importados desde playerInfo.dat.',
+  sr_notice_import_player_invalid:
+    'No se pudo leer playerInfo.dat — se espera un guardado BinaryFormatter gzip de The Tower.',
+  sr_notice_import_player_gzip_unsupported:
+    'Este navegador no puede descomprimir guardados gzip. Prueba Chrome, Edge o Firefox.',
   sr_preset_import_default_name: 'Build importado',
   sr_preset_prompt_title: 'Nombre del build — lab + taller (solo en este navegador)',
   sr_preset_name_label: 'Nombre del build',

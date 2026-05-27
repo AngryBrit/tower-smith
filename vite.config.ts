@@ -13,6 +13,12 @@ export default defineConfig({
   cacheDir: path.join(os.tmpdir(), 'vite-cache-tower_export'),
   server: {
     host: true,
+    proxy: {
+      '/api': {
+        target: 'http://127.0.0.1:8888',
+        changeOrigin: true,
+      },
+    },
   },
   plugins: [react()],
   test: {

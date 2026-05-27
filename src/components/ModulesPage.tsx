@@ -3,27 +3,22 @@ import {
   useEffect,
   useRef,
   useState,
-  type Dispatch,
   type ReactNode,
-  type SetStateAction,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { WorkshopModulesPanel } from './WorkshopModulesPanel'
 import {
-  resetWorkshopModules,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
+import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { resetTowerBuildModules, splitTowerBuild } from '../towerBuildStorage'
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
 
 type ModulesPageProps = {
   embeddedInPanel?: boolean
   toolbarMount?: HTMLDivElement | null
-  workshopPersisted: WorkshopPersistedV1
-  onWorkshopPersistedChange: (next: WorkshopPersistedV1) => void
-  onScratchWorkshopPersistedChange?: Dispatch<SetStateAction<WorkshopPersistedV1>>
   researchData: ResearchData | null
-  labLevelOverrides: Record<string, number>
 }
 
 function modulesOverlayPortal(node: ReactNode) {
@@ -49,19 +44,24 @@ function ModulesToolbarQuick({ onResetModules }: { onResetModules: () => void })
 export function ModulesPage({
   embeddedInPanel = false,
   toolbarMount = null,
-  workshopPersisted,
-  onWorkshopPersistedChange,
-  onScratchWorkshopPersistedChange,
   researchData,
-  labLevelOverrides,
 }: ModulesPageProps) {
   const { t } = useI18n()
+  const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides } =
+    useTowerWorkspaceContext()
   const [resetModulesConfirmOpen, setResetModulesConfirmOpen] = useState(false)
-  const workshopPersistedRef = useRef(workshopPersisted)
+  const workshopPersistedRef = useRef(workshopFlat)
 
   useEffect(() => {
-    workshopPersistedRef.current = workshopPersisted
-  }, [workshopPersisted])
+    workshopPersistedRef.current = workshopFlat
+  }, [workshopFlat])
+
+  const onWorkshopPersistedChange = useCallback(
+    (next: WorkshopPersistedV1) => {
+      setTowerBuild(splitTowerBuild(next))
+    },
+    [setTowerBuild],
+  )
 
   const openResetModulesConfirm = useCallback(() => {
     setResetModulesConfirmOpen(true)
@@ -69,9 +69,9 @@ export function ModulesPage({
 
   const performResetModules = useCallback(() => {
     setResetModulesConfirmOpen(false)
-    onWorkshopPersistedChange(resetWorkshopModules(workshopPersistedRef.current))
-    onScratchWorkshopPersistedChange?.((prev) => resetWorkshopModules(prev))
-  }, [onScratchWorkshopPersistedChange, onWorkshopPersistedChange])
+    setTowerBuild((prev) => resetTowerBuildModules(prev))
+    setScratchTowerBuild((prev) => resetTowerBuildModules(prev))
+  }, [setScratchTowerBuild, setTowerBuild])
 
   useEffect(() => {
     if (!resetModulesConfirmOpen) return
@@ -96,7 +96,7 @@ export function ModulesPage({
         : null}
 
       <WorkshopModulesPanel
-        workshopPersisted={workshopPersisted}
+        workshopPersisted={workshopFlat}
         onWorkshopPersistedChange={onWorkshopPersistedChange}
         researchData={researchData}
         labLevelOverrides={labLevelOverrides}

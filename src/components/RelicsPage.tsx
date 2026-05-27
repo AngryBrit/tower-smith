@@ -3,25 +3,21 @@ import {
   useEffect,
   useRef,
   useState,
-  type Dispatch,
   type ReactNode,
   type RefObject,
-  type SetStateAction,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { WorkshopRelicsPanel } from './WorkshopRelicsPanel'
 import {
-  resetWorkshopRelics,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
+import { useTowerBuildContext } from '../TowerBuildContext'
+import { resetTowerBuildRelics, splitTowerBuild } from '../towerBuildStorage'
 import { useI18n } from '../i18n'
 
 type RelicsPageProps = {
   embeddedInPanel?: boolean
   toolbarMount?: HTMLDivElement | null
-  workshopPersisted: WorkshopPersistedV1
-  onWorkshopPersistedChange: (next: WorkshopPersistedV1) => void
-  onScratchWorkshopPersistedChange?: Dispatch<SetStateAction<WorkshopPersistedV1>>
 }
 
 function relicsOverlayPortal(node: ReactNode) {
@@ -78,19 +74,24 @@ function RelicsToolbar({
 export function RelicsPage({
   embeddedInPanel = false,
   toolbarMount = null,
-  workshopPersisted,
-  onWorkshopPersistedChange,
-  onScratchWorkshopPersistedChange,
 }: RelicsPageProps) {
   const { t } = useI18n()
+  const { workshopFlat, setTowerBuild, setScratchTowerBuild } = useTowerBuildContext()
   const [search, setSearch] = useState('')
   const [resetRelicsConfirmOpen, setResetRelicsConfirmOpen] = useState(false)
-  const workshopPersistedRef = useRef(workshopPersisted)
+  const workshopPersistedRef = useRef(workshopFlat)
   const searchInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    workshopPersistedRef.current = workshopPersisted
-  }, [workshopPersisted])
+    workshopPersistedRef.current = workshopFlat
+  }, [workshopFlat])
+
+  const onWorkshopPersistedChange = useCallback(
+    (next: WorkshopPersistedV1) => {
+      setTowerBuild(splitTowerBuild(next))
+    },
+    [setTowerBuild],
+  )
 
   const openResetRelicsConfirm = useCallback(() => {
     setResetRelicsConfirmOpen(true)
@@ -98,9 +99,9 @@ export function RelicsPage({
 
   const performResetRelics = useCallback(() => {
     setResetRelicsConfirmOpen(false)
-    onWorkshopPersistedChange(resetWorkshopRelics(workshopPersistedRef.current))
-    onScratchWorkshopPersistedChange?.((prev) => resetWorkshopRelics(prev))
-  }, [onScratchWorkshopPersistedChange, onWorkshopPersistedChange])
+    setTowerBuild((prev) => resetTowerBuildRelics(prev))
+    setScratchTowerBuild((prev) => resetTowerBuildRelics(prev))
+  }, [setScratchTowerBuild, setTowerBuild])
 
   useEffect(() => {
     if (!resetRelicsConfirmOpen) return
@@ -157,7 +158,7 @@ export function RelicsPage({
         : toolbar}
 
       <WorkshopRelicsPanel
-        workshopPersisted={workshopPersisted}
+        workshopPersisted={workshopFlat}
         onWorkshopPersistedChange={onWorkshopPersistedChange}
         searchQuery={search}
       />

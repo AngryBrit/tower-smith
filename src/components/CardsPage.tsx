@@ -3,28 +3,21 @@ import {
   useEffect,
   useRef,
   useState,
-  type Dispatch,
   type ReactNode,
-  type SetStateAction,
 } from 'react'
 import { createPortal } from 'react-dom'
 import { WorkshopCardsPanel } from './WorkshopCardsPanel'
-import {
-  maxWorkshopCardStars,
-  resetWorkshopCards,
-  type WorkshopPersistedV1,
-} from '../labPresetsStorage'
+import { maxWorkshopCardStars } from '../labPresetsStorage'
+import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { resetTowerBuildCards, splitTowerBuild, flattenTowerBuild } from '../towerBuildStorage'
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
+import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 
 type CardsPageProps = {
   embeddedInPanel?: boolean
   toolbarMount?: HTMLDivElement | null
-  workshopPersisted: WorkshopPersistedV1
-  onWorkshopPersistedChange: (next: WorkshopPersistedV1) => void
-  onScratchWorkshopPersistedChange?: Dispatch<SetStateAction<WorkshopPersistedV1>>
   researchData: ResearchData | null
-  labLevelOverrides: Record<string, number>
 }
 
 function cardsOverlayPortal(node: ReactNode) {
@@ -64,19 +57,24 @@ function CardsToolbarQuick({
 export function CardsPage({
   embeddedInPanel = false,
   toolbarMount = null,
-  workshopPersisted,
-  onWorkshopPersistedChange,
-  onScratchWorkshopPersistedChange,
   researchData,
-  labLevelOverrides,
 }: CardsPageProps) {
   const { t } = useI18n()
+  const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides } =
+    useTowerWorkspaceContext()
   const [resetCardsConfirmOpen, setResetCardsConfirmOpen] = useState(false)
-  const workshopPersistedRef = useRef(workshopPersisted)
+  const workshopPersistedRef = useRef(workshopFlat)
 
   useEffect(() => {
-    workshopPersistedRef.current = workshopPersisted
-  }, [workshopPersisted])
+    workshopPersistedRef.current = workshopFlat
+  }, [workshopFlat])
+
+  const onWorkshopPersistedChange = useCallback(
+    (next: WorkshopPersistedV1) => {
+      setTowerBuild(splitTowerBuild(next))
+    },
+    [setTowerBuild],
+  )
 
   const openResetCardsConfirm = useCallback(() => {
     setResetCardsConfirmOpen(true)
@@ -84,15 +82,17 @@ export function CardsPage({
 
   const performResetCards = useCallback(() => {
     setResetCardsConfirmOpen(false)
-    onWorkshopPersistedChange(resetWorkshopCards(workshopPersistedRef.current))
-    onScratchWorkshopPersistedChange?.((prev) => resetWorkshopCards(prev))
-  }, [onScratchWorkshopPersistedChange, onWorkshopPersistedChange])
+    setTowerBuild((prev) => resetTowerBuildCards(prev))
+    setScratchTowerBuild((prev) => resetTowerBuildCards(prev))
+  }, [setScratchTowerBuild, setTowerBuild])
 
   const maxAllCards = useCallback(() => {
     const next = maxWorkshopCardStars(workshopPersistedRef.current)
     onWorkshopPersistedChange(next)
-    onScratchWorkshopPersistedChange?.((prev) => maxWorkshopCardStars(prev))
-  }, [onScratchWorkshopPersistedChange, onWorkshopPersistedChange])
+    setScratchTowerBuild((prev) =>
+      splitTowerBuild(maxWorkshopCardStars(flattenTowerBuild(prev))),
+    )
+  }, [onWorkshopPersistedChange, setScratchTowerBuild])
 
   useEffect(() => {
     if (!resetCardsConfirmOpen) return
@@ -120,7 +120,7 @@ export function CardsPage({
         : null}
 
       <WorkshopCardsPanel
-        workshopPersisted={workshopPersisted}
+        workshopPersisted={workshopFlat}
         onWorkshopPersistedChange={onWorkshopPersistedChange}
         researchData={researchData}
         labLevelOverrides={labLevelOverrides}
@@ -147,10 +147,7 @@ export function CardsPage({
                 >
                   {t('sr_reset_cards_confirm_title')}
                 </h2>
-                <p
-                  id="reset-cards-confirm-desc"
-                  className="select-research__reset-confirm-desc"
-                >
+                <p id="reset-cards-confirm-desc" className="select-research__reset-confirm-desc">
                   {t('sr_reset_cards_confirm_body')}
                 </p>
                 <div className="select-research__reset-confirm-actions">

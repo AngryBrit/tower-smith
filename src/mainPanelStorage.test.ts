@@ -16,6 +16,10 @@ describe('mainPanelStorage', () => {
     expect(sanitizeMainPanel('modules', true)).toBe('modules')
   })
 
+  it('maps legacy galleryAdmin panel to toolsSettings', () => {
+    expect(sanitizeMainPanel('galleryAdmin', true)).toBe('toolsSettings')
+  })
+
   it('readMainPanel returns workshop when storage empty', () => {
     expect(readMainPanel(false)).toBe('workshop')
   })

@@ -11,6 +11,8 @@ import {
 } from './labPresetsStorage'
 import type { ResearchData } from './types/research'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from './towerDataThemes'
+import { getGalleryTower } from './towerGallery/api'
+import { extractGalleryBuildIdFromText } from './towerGallery/shareLink'
 import { parseTowerUnifiedCsv, towerUnifiedPrimaryBuild } from './towerUnifiedCsv'
 
 export type ParseLabLevelsError =
@@ -63,8 +65,8 @@ function packShareParse(
 }
 
 /**
- * Parse a page URL with `?tower=…`, a raw `u…` / `z…` share payload, inline JSON `{ "v":4, … }`,
- * or **tower CSV** (`tower_csv_v1` first line).
+ * Parse a short gallery URL (`?build=…`), a page URL with `?tower=…`, a raw `u…` / `z…` share
+ * payload, inline JSON `{ "v":4, … }`, or **tower CSV** (`tower_csv_v1` first line).
  */
 export async function parseLabLevelsPayload(
   raw: string,
@@ -72,6 +74,13 @@ export async function parseLabLevelsPayload(
 ): Promise<ParseLabLevelsResult> {
   const text = raw.trim()
   if (!text) return { ok: false, error: 'empty' }
+
+  const galleryBuildId = extractGalleryBuildIdFromText(text)
+  if (galleryBuildId) {
+    const gallery = await getGalleryTower(galleryBuildId)
+    if (!gallery.ok) return { ok: false, error: 'share_decode_failed' }
+    return packShareParse(data, gallery.record.payload)
+  }
 
   const tower = parseTowerUnifiedCsv(text)
   if (tower.tag === 'invalid') return { ok: false, error: 'invalid_csv' }

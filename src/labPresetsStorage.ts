@@ -130,6 +130,8 @@ import {
   sanitizeThemeSelection,
   type TowerThemesSnapshot,
 } from './towerDataThemes'
+import type { TowerBuildPersistedV1 } from './towerBuildStorage'
+import type { TowerWorkspaceV1 } from './towerWorkspaceStorage'
 
 type WorkshopUltimateLevels = { [K in WorkshopUltimateUpgradeKey]: number }
 
@@ -493,6 +495,19 @@ export function resetWorkshopBots(current: WorkshopPersistedV1): WorkshopPersist
     ...defaultBotSpecialLevels(),
     ...defaultBotOwned(),
   }
+}
+
+/**
+ * Reset the full in-browser tower build model by clearing each domain separately:
+ * workshop upgrade/enhance/ultimate levels, cards, modules, relics, and bots.
+ * Preserves workshop UI prefs (tab, category, multiplier, hide maxed).
+ */
+export function clearBuildWorkspace(current: WorkshopPersistedV1): WorkshopPersistedV1 {
+  return resetWorkshopRelics(
+    resetWorkshopModules(
+      resetWorkshopCards(resetWorkshopUpgradeLevels(current)),
+    ),
+  )
 }
 
 /** Own all bots, activate them, max basic upgrades, and max Bot+ ability levels. */
@@ -1108,7 +1123,11 @@ export type LabPreset = {
   id: string
   name: string
   levelOverrides: Record<string, number>
-  /** Workshop snapshot saved with this build (optional for legacy presets). */
+  /** Full workspace snapshot (lab + build + themes). */
+  workspace?: TowerWorkspaceV1
+  /** Nested tower build snapshot (workshop, cards, modules, relics, bots, ultimates). */
+  build?: TowerBuildPersistedV1
+  /** Legacy flat snapshot; read when `build` is absent. */
   workshop?: WorkshopPersistedV1
 }
 
@@ -1118,6 +1137,12 @@ export type LabPresetsFileV1 = {
   presets: LabPreset[]
   /** Last scratch workspace when a named preset is active; current levels when scratch is active. */
   scratchOverrides: Record<string, number>
+  /** Full scratch workspace while a named preset is active. */
+  scratchWorkspace?: TowerWorkspaceV1
+  /**
+   * Nested tower build for the scratch workspace while a named preset is active.
+   */
+  scratchBuild?: TowerBuildPersistedV1
   /**
    * Workshop snapshot for the scratch build while a named preset is active;
    * when scratch is active, mirrors the persisted workshop row (same as lab scratch pattern).
@@ -1197,6 +1222,37 @@ export function parseLabPresetsFile(raw: unknown): LabPresetsFileV1 | null {
     ...(scratchWorkshop !== undefined ? { scratchWorkshop } : {}),
     ...(themeSelection !== undefined ? { themeSelection } : {}),
     ...(themeOwnedIds !== undefined ? { themeOwnedIds } : {}),
+  }
+}
+
+/** Read workspace fields from a v1 presets file (ignores named preset slots). */
+export function extractLabWorkspaceFromPresetsFile(parsed: LabPresetsFileV1): {
+  levelOverrides: Record<string, number>
+  workshopPersisted: WorkshopPersistedV1
+  scratchWorkshopPersisted: WorkshopPersistedV1
+  themeSelection?: TowerThemesSnapshot['selection']
+  themeOwnedIds?: string[]
+} {
+  const active = parsed.activePresetId
+    ? parsed.presets.find((p) => p.id === parsed.activePresetId)
+    : undefined
+  const levelOverrides = active
+    ? { ...active.levelOverrides }
+    : { ...parsed.scratchOverrides }
+  const scratchWorkshopPersisted = sanitizeWorkshopPersisted(parsed.scratchWorkshop)
+  const workshopPersisted = active
+    ? sanitizeWorkshopPersisted(active.workshop)
+    : scratchWorkshopPersisted
+  return {
+    levelOverrides,
+    workshopPersisted,
+    scratchWorkshopPersisted,
+    ...(parsed.themeSelection !== undefined
+      ? { themeSelection: parsed.themeSelection }
+      : {}),
+    ...(parsed.themeOwnedIds !== undefined
+      ? { themeOwnedIds: parsed.themeOwnedIds }
+      : {}),
   }
 }
 

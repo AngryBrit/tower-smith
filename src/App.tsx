@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { APP_VERSION, CHANGELOG_URL, SPONSOR_URL } from './appVersion'
 import type { SelectResearchHandle } from './components/SelectResearch'
 import { SelectResearch } from './components/SelectResearch'
@@ -9,7 +9,10 @@ import { RelicsPage } from './components/RelicsPage'
 import { ThemesPage } from './components/ThemesPage'
 import { BotsPage } from './components/BotsPage'
 import { WorkshopPage } from './components/WorkshopPage'
-import { defaultWorkshopPersisted, type WorkshopPersistedV1 } from './labPresetsStorage'
+import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1 } from './towerWorkspaceStorage'
+import { TowerWorkspaceProvider } from './TowerBuildContext'
+import { TowerGalleryPanel } from './components/TowerGalleryPanel'
+import { AuthButton } from './components/AuthButton'
 import { useI18n } from './i18n'
 import { loadResearchData } from './loadResearchData'
 import type { ResearchData } from './types/research'
@@ -25,6 +28,7 @@ const MODULES_PANEL_ENABLED = true
 
 export default function App() {
   const { t, fmt } = useI18n()
+  const [galleryListRefreshToken, setGalleryListRefreshToken] = useState(0)
   const [mainPanel, setMainPanel] = useState<MainPanel>(() =>
     readMainPanel(MODULES_PANEL_ENABLED),
   )
@@ -41,25 +45,20 @@ export default function App() {
   const [data, setData] = useState<ResearchData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
-  const [workshopPersisted, setWorkshopPersisted] = useState<WorkshopPersistedV1>(() =>
-    defaultWorkshopPersisted(),
+  const [workspace, setWorkspace] = useState<TowerWorkspaceV1>(() => defaultTowerWorkspace())
+  const [scratchWorkspace, setScratchWorkspace] = useState<TowerWorkspaceV1>(() =>
+    defaultTowerWorkspace(),
   )
-  const [scratchWorkshopPersisted, setScratchWorkshopPersisted] = useState<WorkshopPersistedV1>(
-    () => defaultWorkshopPersisted(),
-  )
-  const [labLevelOverrides, setLabLevelOverrides] = useState<Record<string, number>>({})
-
-  const handleLabLevelOverridesChange = useCallback((overrides: Record<string, number>) => {
-    setLabLevelOverrides(overrides)
-  }, [])
 
   useEffect(() => {
-    if (!MODULES_PANEL_ENABLED && workshopPersisted.mainTab === 'modules') {
-      setWorkshopPersisted((w) =>
-        w.mainTab === 'modules' ? { ...w, mainTab: 'upgrade' } : w,
+    if (!MODULES_PANEL_ENABLED && workspace.build.workshop.mainTab === 'modules') {
+      setWorkspace((w) =>
+        w.build.workshop.mainTab === 'modules'
+          ? mergeWorkspaceBuildDomain(w, 'workshop', { ...w.build.workshop, mainTab: 'upgrade' })
+          : w,
       )
     }
-  }, [workshopPersisted.mainTab])
+  }, [workspace.build.workshop.mainTab])
 
   useEffect(() => {
     if (!MODULES_PANEL_ENABLED && mainPanel === 'modules') {
@@ -89,6 +88,10 @@ export default function App() {
     }
   }, [])
 
+  const inpanelTabsClass = MODULES_PANEL_ENABLED
+    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--nine'
+    : 'select-research__inpanel-tabs select-research__inpanel-tabs--eight'
+
   return (
     <div className="app-root">
       <a href="#main-content" className="app-skip-link">
@@ -111,6 +114,12 @@ export default function App() {
           </p>
         ) : null}
         {data ? (
+          <TowerWorkspaceProvider
+            workspace={workspace}
+            setWorkspace={setWorkspace}
+            scratchWorkspace={scratchWorkspace}
+            setScratchWorkspace={setScratchWorkspace}
+          >
           <div className="app-shell">
             <div className="app-shell__page">
               <section
@@ -118,11 +127,7 @@ export default function App() {
                 aria-label={t('app_inpanel_tabs_aria')}
               >
                 <nav
-                  className={
-                    MODULES_PANEL_ENABLED
-                      ? 'select-research__inpanel-tabs select-research__inpanel-tabs--eight'
-                      : 'select-research__inpanel-tabs select-research__inpanel-tabs--seven'
-                  }
+                  className={inpanelTabsClass}
                   role="tablist"
                 >
                   <button
@@ -138,9 +143,14 @@ export default function App() {
                     }
                     onClick={() => {
                       setMainPanel('workshop')
-                      const tab = workshopPersisted.mainTab
+                      const tab = workspace.build.workshop.mainTab
                       if (tab === 'modules' || tab === 'cards') {
-                        setWorkshopPersisted({ ...workshopPersisted, mainTab: 'upgrade' })
+                      setWorkspace((w) =>
+                        mergeWorkspaceBuildDomain(w, 'workshop', {
+                          ...w.build.workshop,
+                          mainTab: 'upgrade',
+                        }),
+                      )
                       }
                     }}
                   >
@@ -174,7 +184,12 @@ export default function App() {
                     }
                     onClick={() => {
                       setMainPanel('cards')
-                      setWorkshopPersisted({ ...workshopPersisted, mainTab: 'cards' })
+                      setWorkspace((w) =>
+                        mergeWorkspaceBuildDomain(w, 'workshop', {
+                          ...w.build.workshop,
+                          mainTab: 'cards',
+                        }),
+                      )
                     }}
                   >
                     {t('app_nav_cards')}
@@ -193,7 +208,12 @@ export default function App() {
                       }
                       onClick={() => {
                         setMainPanel('modules')
-                        setWorkshopPersisted({ ...workshopPersisted, mainTab: 'modules' })
+                        setWorkspace((w) =>
+                          mergeWorkspaceBuildDomain(w, 'workshop', {
+                            ...w.build.workshop,
+                            mainTab: 'modules',
+                          }),
+                        )
                       }}
                     >
                       {t('app_nav_modules')}
@@ -245,12 +265,27 @@ export default function App() {
                     {t('app_nav_relics')}
                   </button>
                   <button
+                    id="inpanel-tab-gallery"
+                    type="button"
+                    role="tab"
+                    aria-selected={mainPanel === 'gallery'}
+                    aria-controls="inpanel-panel-gallery"
+                    className={
+                      mainPanel === 'gallery'
+                        ? 'select-research__inpanel-tab select-research__inpanel-tab--gallery select-research__inpanel-tab--on'
+                        : 'select-research__inpanel-tab select-research__inpanel-tab--gallery'
+                    }
+                    onClick={() => setMainPanel('gallery')}
+                  >
+                    {t('app_nav_gallery')}
+                  </button>
+                  <button
                     id="inpanel-tab-tools-settings"
                     type="button"
                     role="tab"
                     aria-selected={mainPanel === 'toolsSettings'}
                     aria-controls="inpanel-panel-tools-settings"
-                    aria-label={t('app_nav_tools_settings')}
+                    aria-label={t('app_nav_settings')}
                     className={
                       mainPanel === 'toolsSettings'
                         ? 'select-research__inpanel-tab select-research__inpanel-tab--tools-settings select-research__inpanel-tab--on'
@@ -258,10 +293,7 @@ export default function App() {
                     }
                     onClick={() => setMainPanel('toolsSettings')}
                   >
-                    <span className="select-research__inpanel-tab-lines" aria-hidden>
-                      <span>{t('app_nav_tools')}</span>
-                      <span>{t('app_nav_settings')}</span>
-                    </span>
+                    {t('app_nav_settings')}
                   </button>
                 </nav>
 
@@ -271,6 +303,7 @@ export default function App() {
                   hidden={
                     mainPanel !== 'research' &&
                     mainPanel !== 'workshop' &&
+                    mainPanel !== 'bots' &&
                     mainPanel !== 'modules' &&
                     mainPanel !== 'cards' &&
                     mainPanel !== 'relics' &&
@@ -302,11 +335,6 @@ export default function App() {
                     data={data}
                     embeddedInPanel
                     embeddedPresetsMount={inpanelPresetsMount}
-                    workshopPersisted={workshopPersisted}
-                    scratchWorkshopPersisted={scratchWorkshopPersisted}
-                    setWorkshopPersisted={setWorkshopPersisted}
-                    setScratchWorkshopPersisted={setScratchWorkshopPersisted}
-                    onLabLevelOverridesChange={handleLabLevelOverridesChange}
                   />
                 </div>
                 <div
@@ -322,10 +350,7 @@ export default function App() {
                         ? inpanelWorkshopToolbarMount
                         : null
                     }
-                    workshopPersisted={workshopPersisted}
-                    onWorkshopPersistedChange={setWorkshopPersisted}
                     researchData={data}
-                    labLevelOverrides={labLevelOverrides}
                   />
                 </div>
                 <div
@@ -339,10 +364,7 @@ export default function App() {
                     toolbarMount={
                       mainPanel === 'bots' ? inpanelWorkshopToolbarMount : null
                     }
-                    workshopPersisted={workshopPersisted}
-                    onWorkshopPersistedChange={setWorkshopPersisted}
                     researchData={data}
-                    labLevelOverrides={labLevelOverrides}
                   />
                 </div>
                 <div
@@ -356,11 +378,7 @@ export default function App() {
                     toolbarMount={
                       mainPanel === 'cards' ? inpanelWorkshopToolbarMount : null
                     }
-                    workshopPersisted={workshopPersisted}
-                    onWorkshopPersistedChange={setWorkshopPersisted}
-                    onScratchWorkshopPersistedChange={setScratchWorkshopPersisted}
                     researchData={data}
-                    labLevelOverrides={labLevelOverrides}
                   />
                 </div>
                 <div
@@ -374,11 +392,7 @@ export default function App() {
                     toolbarMount={
                       mainPanel === 'modules' ? inpanelWorkshopToolbarMount : null
                     }
-                    workshopPersisted={workshopPersisted}
-                    onWorkshopPersistedChange={setWorkshopPersisted}
-                    onScratchWorkshopPersistedChange={setScratchWorkshopPersisted}
                     researchData={data}
-                    labLevelOverrides={labLevelOverrides}
                   />
                 </div>
                 <div
@@ -405,9 +419,6 @@ export default function App() {
                     toolbarMount={
                       mainPanel === 'relics' ? inpanelWorkshopToolbarMount : null
                     }
-                    workshopPersisted={workshopPersisted}
-                    onWorkshopPersistedChange={setWorkshopPersisted}
-                    onScratchWorkshopPersistedChange={setScratchWorkshopPersisted}
                   />
                 </div>
                 <div
@@ -416,10 +427,29 @@ export default function App() {
                   aria-labelledby="inpanel-tab-tools-settings"
                   hidden={mainPanel !== 'toolsSettings'}
                 >
-                  <ToolsSettingsPage labToolsRef={labToolsRef} />
+                  <ToolsSettingsPage
+                    labToolsRef={labToolsRef}
+                    galleryListRefreshToken={galleryListRefreshToken}
+                    onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
+                  />
+                </div>
+                <div
+                  id="inpanel-panel-gallery"
+                  role="tabpanel"
+                  aria-labelledby="inpanel-tab-gallery"
+                  hidden={mainPanel !== 'gallery'}
+                >
+                  <TowerGalleryPanel
+                    labToolsRef={labToolsRef}
+                    onTowerLoaded={() => setMainPanel('research')}
+                    listRefreshToken={galleryListRefreshToken}
+                  />
                 </div>
 
                 <footer className="select-research__site-footer">
+                  <div className="select-research__site-footer-auth">
+                    <AuthButton />
+                  </div>
                   <nav
                     className="select-research__version-badge"
                     aria-label={t('sr_footer_nav_aria')}
@@ -455,6 +485,7 @@ export default function App() {
               </section>
             </div>
           </div>
+          </TowerWorkspaceProvider>
         ) : null}
       </main>
     </div>

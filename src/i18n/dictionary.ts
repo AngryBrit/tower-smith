@@ -13,9 +13,11 @@ export const STRINGS_EN = {
   app_nav_cards: 'CARDS',
   app_nav_relics: 'RELICS',
   app_nav_themes: 'THEMES',
-  app_nav_tools: 'TOOLS',
+  app_nav_gallery: 'BUILDS',
+  app_nav_tools: 'TOOLS &',
   app_nav_settings: 'SETTINGS',
-  app_nav_tools_settings: 'TOOLS & SETTINGS',
+  app_nav_tools_settings: 'Settings',
+  app_nav_gallery_admin: 'ADMIN',
   app_themes_title: 'Themes & Songs',
   app_themes_intro: 'Customize how TowerSmith looks.',
   themes_tabs_aria: 'Theme categories',
@@ -283,6 +285,129 @@ export const STRINGS_EN = {
   app_tools_full_reset_confirm_body:
     'This removes lab levels, saved builds, workshop upgrades, cards, modules, relics, themes, language, and other settings stored for TowerSmith in this browser. The page will reload with factory defaults. Export or copy a share link first if you want to keep your data.',
   app_tools_full_reset_confirm_btn: 'Reset everything',
+  auth_loading: 'Checking sign-in…',
+  auth_sign_in: 'Sign in',
+  auth_sign_out: 'Sign out',
+  auth_signed_in: 'Signed in',
+  auth_sign_in_google: 'Continue with Google',
+  auth_sign_in_discord: 'Continue with Discord',
+  auth_required_publish: 'Sign in with Google or Discord to publish a build.',
+  profile_settings_title: 'Your profile',
+  profile_settings_intro:
+    'Set the username and avatar shown on your community builds. Edit these in Tools & Settings anytime.',
+  profile_display_name_label: 'Username',
+  profile_display_name_hint: '1–40 characters. Must be unique (not case-sensitive). Shown as the author on builds you publish.',
+  profile_display_name_save_btn: 'Save username',
+  profile_display_name_saving: 'Saving…',
+  profile_avatar_upload_btn: 'Upload avatar',
+  profile_avatar_uploading: 'Uploading…',
+  profile_avatar_remove_btn: 'Remove avatar',
+  profile_avatar_hint: 'JPEG, PNG, WebP, or GIF up to 512 KB.',
+  profile_notice_name_saved: 'Username saved.',
+  profile_notice_avatar_saved: 'Avatar updated.',
+  profile_notice_avatar_removed: 'Avatar removed.',
+  profile_error_invalid_display_name: 'Username must be 1–40 characters.',
+  profile_error_display_name_taken: 'That username is already taken.',
+  profile_error_invalid_avatar_type: 'Choose a JPEG, PNG, WebP, or GIF image.',
+  profile_error_avatar_too_large: 'Avatar must be 512 KB or smaller.',
+  profile_error_network: 'Could not save your profile. Try again.',
+  profile_error_unknown: 'Something went wrong while saving your profile.',
+  gallery_search_label: 'Search builds',
+  gallery_search_placeholder: 'Search by title…',
+  gallery_submit_sign_in_hint: 'Sign in to submit your tower. Browsing and loading builds does not require an account.',
+  gallery_submit_signed_in: 'You are signed in. Submissions use your profile username from Tools & Settings.',
+  gallery_title: 'Community towers',
+  gallery_intro:
+    'Short share links (?build=…) load towers from the community gallery. Sign in to submit; browse and load builds without an account. Requires Supabase + npm run dev:netlify locally.',
+  gallery_submit_title: 'Submit your tower',
+  gallery_submit_hint:
+    'Uses your current LAB levels and workshop snapshot (same data as a share link). Sign in to submit; pick a category and your profile name is shown as author.',
+  gallery_field_title: 'Title',
+  gallery_field_title_placeholder: 'e.g. Endgame damage build',
+  gallery_field_category: 'Build category',
+  gallery_field_category_placeholder: 'Select a category…',
+  gallery_filter_category: 'Category',
+  gallery_category_filter_all: 'All categories',
+  gallery_error_invalid_category: 'Choose a build category before submitting.',
+  gallery_category_turtle: 'Turtle Build (Early Game)',
+  gallery_category_turtle_desc:
+    'Maximize defense (Defense %, absolute defense, and health) to absorb hits while enemy damage scales your Thorns. Best for Tier 1 and early-game progression; falls off when enemy damage outscales tower health.',
+  gallery_category_ehp: 'Health/eHP Build (Mid Game)',
+  gallery_category_ehp_desc:
+    'Build effective HP (Health, Defense %, Defense Absolute) and survive long enough for passive killers—Orbs and Thorns—to clear heavy mobs and bosses. Best for mid-game runs and coin farming toward Ultimate Weapons.',
+  gallery_category_blender: 'Blender Build (Mid–Late Game)',
+  gallery_category_blender_desc:
+    'Use Orbs and Extra Orbs efficiently with intentionally low tower range so orbs circle the tower edge like a blender. Best for reliable farming and fast wave clears.',
+  gallery_category_devo: 'Devastation / Devo (Mid–Late Game)',
+  gallery_category_devo_desc:
+    'Complex eHP build centered on the Death Wave Ultimate Weapon, using labs to multiply max health when enemies die to Death Wave. Orb Devo and SMAX Devo variants scale coins and stats. Best for end-game farming with heavy lab and coin investment.',
+  gallery_category_glass_cannon: 'Glass Cannon (GC) (Late Game)',
+  gallery_category_glass_cannon_desc:
+    'Abandon defense for pure Damage, Attack Speed, and Critical Hits—kill enemies before they reach your tower. Best for high-tier tournaments and max waves; often needs Ultimates like Chrono Field to survive hits.',
+  gallery_category_hybrid: 'Hybrid Build (Late Game)',
+  gallery_category_hybrid_desc:
+    'Balance high-end damage with solid defense—often Attack-focused Cannon modules and Utility Generators for offensive/defensive pushes. Best for transitioning into end-game without getting one-shot by bosses.',
+  gallery_category_other: 'Other',
+  gallery_category_other_desc:
+    'Experimental, niche, or unconventional strategies that do not fit the standard build archetypes above.',
+  gallery_field_author: 'Author (optional)',
+  gallery_field_author_placeholder: 'Player name',
+  gallery_submit_btn: 'Submit to gallery',
+  gallery_submitting: 'Submitting…',
+  gallery_list_title: 'Browse submissions',
+  gallery_list_paged_hint: 'Newest or top-rated. Loads 40 at a time — use Load more for older builds.',
+  gallery_sort_label: 'Sort builds',
+  gallery_sort_newest: 'Newest',
+  gallery_sort_top: 'Top rated',
+  gallery_upvote_btn: 'Helpful',
+  gallery_upvote_btn_active: 'Helpful ✓',
+  gallery_upvote_sign_in: 'Sign in to mark builds as helpful.',
+  gallery_upvote_short: 'helpful',
+  gallery_error_cannot_vote_own: 'You cannot vote on your own build.',
+  gallery_error_votes_unavailable:
+    'Helpful votes are not available yet. Apply the build votes migration in Supabase.',
+  sr_community_sort_label: 'Community build sort',
+  gallery_load_more: 'Load more',
+  gallery_loading_more: 'Loading more…',
+  gallery_showing_count: 'Showing {{count}} builds',
+  gallery_refresh: 'Refresh',
+  gallery_loading: 'Loading gallery…',
+  gallery_empty: 'No towers submitted yet. Be the first!',
+  gallery_copy_link_btn: 'Copy link',
+  gallery_notice_link_copied: 'Short share link copied to clipboard.',
+  gallery_load_btn: 'Load',
+  gallery_loading_tower: 'Loading…',
+  gallery_error_network: 'Could not reach the gallery API. Try again later.',
+  gallery_error_unavailable:
+    'Gallery API is not available. On localhost, run npm run dev:netlify instead of npm run dev.',
+  gallery_error_invalid_title: 'Title must be 1–80 characters.',
+  gallery_error_invalid_payload: 'Tower data was invalid or too large.',
+  gallery_error_disabled: 'Submissions are temporarily disabled.',
+  gallery_error_not_found: 'That tower was not found.',
+  gallery_error_unknown: 'Something went wrong.',
+  gallery_error_apply:
+    'Could not apply this tower. Open the LAB tab once, then try again.',
+  gallery_notice_loaded: 'Loaded “{{title}}” into this browser.',
+  gallery_notice_submitted: 'Submitted “{{title}}” to the gallery.',
+  gallery_by_author: 'by {{author}}',
+  gallery_admin_title: 'Gallery admin',
+  gallery_admin_page_intro:
+    'Remove spam or outdated community builds. Deletes are permanent for the public gallery.',
+  gallery_admin_sign_in_required: 'Sign in to open the gallery admin page.',
+  gallery_admin_access_denied: 'Your account is not an admin for this site.',
+  gallery_admin_your_user_id:
+    'Your user ID: {{userId}} — add it to TOWER_GALLERY_ADMIN_USER_IDS on Netlify to grant access.',
+  gallery_admin_unlocked_hint: 'Delete removes the short link and listing for that build.',
+  gallery_admin_delete: 'Delete',
+  gallery_admin_deleting: 'Deleting…',
+  gallery_admin_delete_confirm_title: 'Delete this build?',
+  gallery_admin_delete_confirm_body:
+    '“{{title}}” will be removed from the gallery. Anyone with the old ?build= link will get an error.',
+  gallery_admin_notice_deleted: 'Deleted “{{title}}” from the gallery.',
+  gallery_admin_error_network: 'Could not reach the admin API.',
+  gallery_admin_error_unauthorized: 'You do not have admin access.',
+  gallery_admin_error_not_configured:
+    'Admin is not configured on the server (missing TOWER_GALLERY_ADMIN_USER_IDS).',
   app_settings_title: 'Settings',
   app_settings_language_label: 'Language',
   app_settings_budget_panels_label: 'Show lab, workshop & themes budget panels',
@@ -871,15 +996,23 @@ export const STRINGS_EN = {
   sr_search_slash_hint:
     'Press slash (/) when not in a text field or number field to move focus to this search box.',
 
-  sr_presets_build_label: 'Build',
-  sr_preset_scratch_option: 'Scratch (unsaved workspace)',
-  sr_preset_select_aria: 'Load a saved build (lab + workshop) or the scratch workspace',
-  sr_preset_save_as: 'Save as…',
+  sr_community_build_label: 'Community',
+  sr_builds_row_label: 'Builds',
+  sr_community_gallery_select_aria: 'Load a tower from the community gallery',
+  sr_community_gallery_placeholder: 'Load from gallery…',
+  sr_community_publish_btn: 'Publish…',
+  sr_community_publish_title: 'Publish to community gallery',
+  sr_community_publish_submit: 'Publish & copy link',
+  sr_community_clear_workspace: 'Clear workspace',
+  sr_community_clear_aria:
+    'Clear lab levels, workshop upgrades, cards, modules, relics, bots, and themes in this browser',
+  sr_community_clear_confirm_title: 'Clear workspace?',
+  sr_community_clear_confirm:
+    'This clears all lab levels and resets workshop upgrades, cards, modules, relics, bots, and themes to defaults in this browser. Export or copy a share link first if you want to keep this build.',
+  sr_community_clear_done: 'Workspace cleared.',
   sr_preset_share_link: 'Copy link',
   sr_preset_share_link_aria:
-    'Copy a URL that opens this build (lab levels and workshop)',
-  sr_preset_delete_build: 'Delete build',
-  sr_preset_delete_aria: 'Delete the active saved build',
+    'Copy a short URL that opens this build (lab levels and workshop)',
   sr_hide_completed: 'Hide Completed',
   sr_max_all: 'Max All',
   sr_max_all_aria:
@@ -905,15 +1038,19 @@ export const STRINGS_EN = {
 
   sr_lab_data_title: 'Tower Backup & Sharing',
   sr_lab_data_intro:
-    'Export/import one CSV with lab, workshop, cards, modules, relics, themes, and all saved builds (tower_csv_v1), or copy / QR a share link with the same data.',
+    'Export/import one CSV with lab, workshop, cards, modules, relics, and themes (tower_csv_v1), import a local The Tower playerInfo.dat save (labs + workshop), or copy a short share link.',
   sr_lab_data_files: 'Tower CSV (full backup)',
+  sr_lab_data_save_game: 'Save Game',
   sr_lab_data_share: 'Share link',
-  sr_lab_import_file: 'Import tower from CSV',
+  sr_lab_data_share_hint:
+    'Share links are short URLs with ?build=… (tower stored on the server). Use “Copy long embedded link” only if someone cannot open gallery links.',
+  sr_lab_import_file: 'Import tower CSV',
+  sr_lab_import_player_save: 'Import playerInfo.dat',
   sr_lab_export_file: 'Export tower to CSV',
   sr_compare_launcher: 'Compare builds…',
   sr_compare_title: 'Compare two lab snapshots',
   sr_compare_intro:
-    'Paste a tower CSV (first line tower_csv_v1; lab, ws, card, module, theme, and build rows), a page URL with ?tower=…, a raw share payload (u… / z…), or JSON { "v":4, "o", "w", "t", "n" }. Imports restore lab, workshop, cards, module loadout presets, relics, and owned themes. Each compare side uses its own Labs Coin Discount level.',
+    'Paste a tower CSV (first line tower_csv_v1; lab, ws, card, module, theme, and build rows), a short URL with ?build=…, a long URL with ?tower=…, a raw share payload (u… / z…), or JSON { "v":4, "o", "w", "t", "n" }. Imports restore lab, workshop, cards, module loadout presets, relics, and owned themes. Each compare side uses its own Labs Coin Discount level.',
   sr_compare_build_a: 'Build A',
   sr_compare_build_b: 'Build B',
   sr_compare_placeholder: 'Tower CSV, URL, share payload, or JSON…',
@@ -945,12 +1082,15 @@ export const STRINGS_EN = {
     'Invalid CSV: first line must be tower_csv_v1, then type,key,value rows.',
   sr_compare_parse_invalid_payload:
     'Could not parse as CSV or share text.',
-  sr_compare_parse_share_fail: 'Could not decode the ?tower= / share payload.',
+  sr_compare_parse_share_fail:
+    'Could not load that share link (?build=… or ?tower= / u… / z…).',
   sr_compare_diff_count_none:
     'No level differences — effective levels match for every lab.',
   sr_compare_diff_count_one: '1 lab has a different level.',
   sr_compare_diff_count_many: '{{count}} labs have different levels.',
-  sr_copy_short_link: 'Copy short share link',
+  sr_copy_short_link: 'Copy share link',
+  sr_copy_embedded_link: 'Copy long embedded link',
+  sr_share_publishing: 'Publishing…',
   sr_copy_full_url: 'Copy full page URL',
   sr_qr_share: 'Show QR for share link',
   sr_close: 'Close',
@@ -963,7 +1103,7 @@ export const STRINGS_EN = {
   sr_qr_dialog_title: 'Scan to load lab levels',
   sr_qr_image_alt: 'QR code that opens the lab share link in a browser',
   sr_qr_hint:
-    'Encodes the short share link (same as “Copy short share link”), including workshop when it differs from defaults.',
+    'Encodes the short ?build=… share link when the gallery API is available; otherwise falls back to a long embedded link.',
   sr_qr_copy_link: 'Copy link',
 
   sr_reset_confirm_title: 'Reset all lab levels?',
@@ -1013,6 +1153,16 @@ export const STRINGS_EN = {
     'Share link copied — open the URL to load lab, workshop, cards, modules, relics, and themes.',
   sr_notice_copy_build_fail:
     'Could not copy link (clipboard blocked or unavailable).',
+  sr_notice_copy_gallery_ok:
+    'Short share link copied (?build=… — opens this tower for anyone).',
+  sr_notice_copy_gallery_fail:
+    'Could not publish a short link; copied a long embedded link instead.',
+  sr_notice_copy_gallery_fallback:
+    'Gallery unavailable here; copied a long embedded link instead.',
+  sr_notice_copy_embedded_ok:
+    'Copied long embedded link (?tower=… — works offline, URL may be very long).',
+  sr_notice_copy_embedded_fail:
+    'Could not copy embedded link (clipboard blocked or unavailable).',
   sr_notice_copy_short_ok:
     'Short share link copied (includes workshop when it is not the default snapshot).',
   sr_notice_copy_short_fail:
@@ -1034,6 +1184,12 @@ export const STRINGS_EN = {
     'Imported tower CSV for build “{{name}}” (loaded into scratch workspace).',
   sr_notice_import_tower_many:
     'Imported {{count}} builds from tower CSV (first build is now active).',
+  sr_notice_import_player_ok:
+    'Imported lab, workshop, relics, themes, modules, bots, and ultimates from playerInfo.dat.',
+  sr_notice_import_player_invalid:
+    'Could not read playerInfo.dat — expected a gzip-compressed BinaryFormatter save from The Tower.',
+  sr_notice_import_player_gzip_unsupported:
+    'This browser cannot decompress gzip saves. Try Chrome, Edge, or Firefox.',
   sr_preset_import_default_name: 'Imported build',
   sr_preset_prompt_title: 'Name this build — lab + workshop (saved in this browser only)',
   sr_preset_name_label: 'Build name',
@@ -1098,6 +1254,13 @@ export type I18nFormatters = {
   compareDifferingWorkshopFields: (count: number) => string
   importedTowerBuildNamed: (name: string) => string
   importedTowerBuilds: (count: number) => string
+  galleryNoticeLoaded: (title: string) => string
+  galleryNoticeSubmitted: (title: string) => string
+  galleryByAuthor: (author: string) => string
+  galleryAdminDeleteConfirmBody: (title: string) => string
+  galleryAdminNoticeDeleted: (title: string) => string
+  galleryAdminYourUserId: (userId: string) => string
+  galleryShowingCount: (count: number) => string
 }
 
 function formatters(s: Record<StringId, string>): I18nFormatters {
@@ -1166,6 +1329,27 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     },
     importedTowerBuilds(count) {
       return replaceParams(s.sr_notice_import_tower_many, { count })
+    },
+    galleryNoticeLoaded(title) {
+      return replaceParams(s.gallery_notice_loaded, { title })
+    },
+    galleryNoticeSubmitted(title) {
+      return replaceParams(s.gallery_notice_submitted, { title })
+    },
+    galleryByAuthor(author) {
+      return replaceParams(s.gallery_by_author, { author })
+    },
+    galleryAdminDeleteConfirmBody(title) {
+      return replaceParams(s.gallery_admin_delete_confirm_body, { title })
+    },
+    galleryAdminNoticeDeleted(title) {
+      return replaceParams(s.gallery_admin_notice_deleted, { title })
+    },
+    galleryAdminYourUserId(userId) {
+      return replaceParams(s.gallery_admin_your_user_id, { userId })
+    },
+    galleryShowingCount(count) {
+      return replaceParams(s.gallery_showing_count, { count })
     },
   }
 }

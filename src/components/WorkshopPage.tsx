@@ -144,6 +144,8 @@ import {
   resetWorkshopUpgradeLevels,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
+import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { splitTowerBuild } from '../towerBuildStorage'
 import {
   applyWorkshopMaxAllVisible,
   computeWorkshopCoinAggregates,
@@ -2330,22 +2332,24 @@ type WorkshopPageProps = {
   embeddedInPanel?: boolean
   /** In-panel: mount node between app tabs and workshop panel (shared chrome). */
   toolbarMount?: HTMLElement | null
-  workshopPersisted: WorkshopPersistedV1
-  onWorkshopPersistedChange: (next: WorkshopPersistedV1) => void
-  /** When set with {@link labLevelOverrides}, defense **Health** / **Health Regen** workshop values include simulated lab multipliers. */
+  /** When set, defense **Health** / **Health Regen** workshop values include simulated lab multipliers. */
   researchData?: ResearchData | null
-  labLevelOverrides?: Record<string, number>
 }
 
 export function WorkshopPage({
   embeddedInPanel = false,
   toolbarMount = null,
-  workshopPersisted,
-  onWorkshopPersistedChange,
   researchData = null,
-  labLevelOverrides = {},
 }: WorkshopPageProps) {
   const { t, fmt } = useI18n()
+  const { workshopFlat, setTowerBuild, labLevelOverrides } = useTowerWorkspaceContext()
+  const workshopPersisted = workshopFlat
+  const onWorkshopPersistedChange = useCallback(
+    (next: WorkshopPersistedV1) => {
+      setTowerBuild(splitTowerBuild(next))
+    },
+    [setTowerBuild],
+  )
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const headingId = useId()
   const workshopBudgetTitleId = useId().replace(/:/g, '')

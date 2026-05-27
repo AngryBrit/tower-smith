@@ -27,9 +27,10 @@ import {
 } from '../data/workshopBots'
 import {
   maxWorkshopBots,
-  resetWorkshopBots,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
+import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { resetTowerBuildBots, splitTowerBuild } from '../towerBuildStorage'
 import { useI18n } from '../i18n'
 import { buildWorkshopBotLabDisplayOpts } from '../data/workshopLabDisplayOpts'
 import { enrichBotLabDisplayOpts } from '../data/workshopRelicWorkshopDisplay'
@@ -38,10 +39,7 @@ import type { ResearchData } from '../types/research'
 type BotsPageProps = {
   embeddedInPanel?: boolean
   toolbarMount?: HTMLDivElement | null
-  workshopPersisted: WorkshopPersistedV1
-  onWorkshopPersistedChange: (next: WorkshopPersistedV1) => void
   researchData?: ResearchData | null
-  labLevelOverrides?: Record<string, number>
 }
 
 function botsOverlayPortal(node: ReactNode) {
@@ -81,22 +79,27 @@ function BotsToolbar({
 export function BotsPage({
   embeddedInPanel = false,
   toolbarMount = null,
-  workshopPersisted,
-  onWorkshopPersistedChange,
   researchData = null,
-  labLevelOverrides = {},
 }: BotsPageProps) {
   const { t } = useI18n()
+  const { workshopFlat, setTowerBuild, labLevelOverrides } = useTowerWorkspaceContext()
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
-  const workshopPersistedRef = useRef(workshopPersisted)
+  const workshopPersistedRef = useRef(workshopFlat)
 
   useEffect(() => {
-    workshopPersistedRef.current = workshopPersisted
-  }, [workshopPersisted])
+    workshopPersistedRef.current = workshopFlat
+  }, [workshopFlat])
+
+  const onWorkshopPersistedChange = useCallback(
+    (next: WorkshopPersistedV1) => {
+      setTowerBuild(splitTowerBuild(next))
+    },
+    [setTowerBuild],
+  )
 
   const relicOwnedSet = useMemo(
-    () => new Set(workshopPersisted.relicOwnedIds),
-    [workshopPersisted.relicOwnedIds],
+    () => new Set(workshopFlat.relicOwnedIds),
+    [workshopFlat.relicOwnedIds],
   )
 
   const botLabDisplayOpts = useMemo(
@@ -177,8 +180,8 @@ export function BotsPage({
 
   const performReset = useCallback(() => {
     setResetConfirmOpen(false)
-    onWorkshopPersistedChange(resetWorkshopBots(workshopPersistedRef.current))
-  }, [onWorkshopPersistedChange])
+    setTowerBuild((prev) => resetTowerBuildBots(prev))
+  }, [setTowerBuild])
 
   const maxAllBots = useCallback(() => {
     onWorkshopPersistedChange(maxWorkshopBots(workshopPersistedRef.current))
@@ -220,8 +223,8 @@ export function BotsPage({
             <WorkshopBotCard
               key={botId}
               botId={botId}
-              levels={workshopPersisted}
-              workshop={workshopPersisted}
+              levels={workshopFlat}
+              workshop={workshopFlat}
               botLabDisplayOpts={botLabDisplayOpts}
               onBump={bumpBot}
               onToggleActive={toggleBotActive}

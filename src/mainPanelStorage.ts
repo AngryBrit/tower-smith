@@ -6,6 +6,7 @@ export type MainPanel =
   | 'cards'
   | 'relics'
   | 'themes'
+  | 'gallery'
   | 'toolsSettings'
 
 export const MAIN_PANEL_STORAGE_KEY = 'tower-export-main-panel-v1'
@@ -18,6 +19,7 @@ const MAIN_PANELS: readonly MainPanel[] = [
   'cards',
   'relics',
   'themes',
+  'gallery',
   'toolsSettings',
 ]
 
@@ -28,6 +30,7 @@ export function sanitizeMainPanel(
   modulesPanelEnabled: boolean,
 ): MainPanel {
   if (typeof raw !== 'string') return DEFAULT_MAIN_PANEL
+  if (raw === 'galleryAdmin') return 'toolsSettings'
   if (!(MAIN_PANELS as readonly string[]).includes(raw)) return DEFAULT_MAIN_PANEL
   const panel = raw as MainPanel
   if (panel === 'modules' && !modulesPanelEnabled) return 'workshop'

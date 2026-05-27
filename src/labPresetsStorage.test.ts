@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest'
 import {
   buildLabPresetsPayload,
+  clearBuildWorkspace,
   defaultWorkshopPersisted,
+  extractLabWorkspaceFromPresetsFile,
   parseLabPresetsFile,
   maxWorkshopBots,
   maxWorkshopCardStars,
@@ -12,7 +14,7 @@ import {
   resetWorkshopUpgradeLevels,
   sanitizeWorkshopPersisted,
 } from './labPresetsStorage'
-import { workshopBotStatDisplay } from './data/workshopBots'
+import { workshopBotIsOwned, workshopBotStatDisplay } from './data/workshopBots'
 
 describe('parseLabPresetsFile', () => {
   it('accepts a valid v1 file', () => {
@@ -170,6 +172,72 @@ describe('resetWorkshopUpgradeLevels', () => {
     expect(after.simAssistModuleSlot).toBe('armor')
     expect(after.simAttackSpeedModuleSubEffect).toBe(12)
     expect(after.simDamageCardStars).toBe(0)
+  })
+})
+
+describe('clearBuildWorkspace', () => {
+  it('clears each build domain while preserving workshop UI prefs', () => {
+    const before = maxWorkshopBots(
+      maxWorkshopCardStars({
+        ...defaultWorkshopPersisted(),
+        mainTab: 'cards',
+        category: 'defense',
+        multiplier: 5,
+        hideMaxed: true,
+        relicOwnedIds: ['relic-a'],
+        simRelicsBonusFraction: 0.25,
+        damageLevel: 42,
+      }),
+    )
+    const after = clearBuildWorkspace(before)
+
+    expect(after.mainTab).toBe('cards')
+    expect(after.category).toBe('defense')
+    expect(after.multiplier).toBe(5)
+    expect(after.hideMaxed).toBe(true)
+    expect(after.damageLevel).toBe(0)
+    expect(after.cardStars.damage).toBe(0)
+    expect(after.relicOwnedIds).toEqual([])
+    expect(after.simRelicsBonusFraction).toBe(0)
+    expect(workshopBotIsOwned(after, 'flame')).toBe(false)
+  })
+})
+
+describe('extractLabWorkspaceFromPresetsFile', () => {
+  const def = defaultWorkshopPersisted()
+
+  it('uses active preset levels and workshop when set', () => {
+    const parsed = parseLabPresetsFile({
+      v: 1,
+      activePresetId: 'a',
+      presets: [
+        {
+          id: 'a',
+          name: 'A',
+          levelOverrides: { '0-0': 2 },
+          workshop: def,
+        },
+      ],
+      scratchOverrides: { '0-0': 1 },
+    })
+    expect(parsed).not.toBeNull()
+    const ws = extractLabWorkspaceFromPresetsFile(parsed!)
+    expect(ws.levelOverrides).toEqual({ '0-0': 2 })
+    expect(ws.workshopPersisted.mainTab).toBe(def.mainTab)
+  })
+
+  it('uses scratch when no active preset', () => {
+    const parsed = parseLabPresetsFile({
+      v: 1,
+      activePresetId: null,
+      presets: [],
+      scratchOverrides: { '1-1': 4 },
+      scratchWorkshop: def,
+    })
+    expect(parsed).not.toBeNull()
+    const ws = extractLabWorkspaceFromPresetsFile(parsed!)
+    expect(ws.levelOverrides).toEqual({ '1-1': 4 })
+    expect(ws.workshopPersisted).toBe(ws.scratchWorkshopPersisted)
   })
 })
 

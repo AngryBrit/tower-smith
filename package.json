@@ -10,11 +10,14 @@
     "lint": "eslint .",
     "test": "vitest run",
     "preview": "vite preview",
+    "dev:netlify": "netlify dev",
     "import-lab": "node scripts/import-lab-csv.mjs",
     "icons": "node scripts/generate-app-icons.mjs",
     "og-banner": "node scripts/generate-og-banner.mjs"
   },
   "dependencies": {
+    "@netlify/functions": "^5.2.2",
+    "@supabase/supabase-js": "^2.106.2",
     "qrcode": "^1.5.4",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
@@ -31,6 +34,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "netlify-cli": "^23.0.0",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.59.2",
     "vite": "^5.4.11",

@@ -11,28 +11,41 @@ import {
 } from 'react'
 import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import { LabPresetsRow } from './LabPresetsRow'
+import { useAuth } from '../auth/AuthProvider'
+import { CommunityBuildRow } from './CommunityBuildRow'
+import { GalleryPublishDialog } from './GalleryPublishDialog'
+import { supabaseBrowserConfigured } from '../supabase/client'
 import { APP_VERSION, CHANGELOG_URL, SPONSOR_URL } from '../appVersion'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { buildLabDomIdTables, getLabSlugFromUrl } from '../labSlug'
 import {
+  buildLabsShareFile,
   buildLabsShareUrls,
   decodeLabsShareQueryValue,
   encodeLabsShareQueryValue,
   clearShareEncodedFromUrl,
   readShareEncodedFromUrlSearchParams,
+  type LabsShareFile,
 } from '../labsShareCodec'
 import {
   computeSimulatorCoinAggregates,
   formatSimulatorCoinAggregates,
   maxVisibleLabLevels,
 } from '../labBudgetAggregates'
+import { importPlayerInfoDat } from '../playerSave/importPlayerInfo'
 import {
-} from '../labLevelOverridesCsv'
+  getGalleryTower,
+  towerGalleryApiAvailable,
+} from '../towerGallery/api'
+import { publishGalleryShareLink } from '../towerGallery/publishShareLink'
+import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
+import {
+  clearGalleryBuildIdFromUrl,
+  readGalleryBuildIdFromUrlSearchParams,
+} from '../towerGallery/shareLink'
 import {
   parseTowerUnifiedCsv,
   serializeTowerUnifiedCsv,
-  serializeTowerUnifiedCsvBuilds,
   towerUnifiedPrimaryBuild,
 } from '../towerUnifiedCsv'
 import {
@@ -42,14 +55,22 @@ import {
 } from '../towerDataThemes'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import {
-  buildLabPresetsPayload,
-  defaultWorkshopPersisted,
-  newPresetId,
   parseLabPresetsFile,
   sanitizeWorkshopPersisted,
-  type LabPreset,
-  type WorkshopPersistedV1,
 } from '../labPresetsStorage'
+import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import {
+  clearTowerWorkspace,
+  defaultTowerWorkspace,
+  mergeWorkspaceBuild,
+  syncWorkspaceThemesFromStorage,
+  workspaceThemesSnapshot,
+} from '../towerWorkspaceStorage'
+import { splitTowerBuild } from '../towerBuildStorage'
+import {
+  buildLabPresetsPayloadWithWorkspace,
+  readTowerWorkspaceFromPresetsFile,
+} from '../towerWorkspacePresets'
 import type { ResearchData } from '../types/research'
 import { combinedLabsSpeedMultiplier } from '../data/workshopRelicWorkshopDisplay'
 import {
@@ -68,6 +89,8 @@ let initialLabUrlNavigationConsumed = false
 export type SelectResearchHandle = {
   openLabDataPanel: () => void
   openCompareDialog: () => void
+  getLabsShareFile: () => LabsShareFile | null
+  applyLabsShareFile: (file: LabsShareFile) => boolean
 }
 
 interface SelectResearchProps {
@@ -76,13 +99,6 @@ interface SelectResearchProps {
   embeddedInPanel?: boolean
   /** In-panel: render BUILD row into this node so it stays visible on Workshop tab. */
   embeddedPresetsMount?: HTMLElement | null
-  /** Workshop snapshot persisted with lab builds (parent owns state). */
-  workshopPersisted: WorkshopPersistedV1
-  scratchWorkshopPersisted: WorkshopPersistedV1
-  setWorkshopPersisted: (next: WorkshopPersistedV1) => void
-  setScratchWorkshopPersisted: (next: WorkshopPersistedV1) => void
-  /** Current simulated lab level map (for sibling UI such as Workshop defense HP). */
-  onLabLevelOverridesChange?: (overrides: Record<string, number>) => void
 }
 
 /** Legacy single-map storage; read once to migrate when `LAB_PRESETS_STORAGE_KEY` is absent. */
@@ -158,28 +174,25 @@ export const SelectResearch = forwardRef<
     data,
     embeddedInPanel = false,
     embeddedPresetsMount = null,
-    workshopPersisted,
-    scratchWorkshopPersisted,
-    setWorkshopPersisted,
-    setScratchWorkshopPersisted,
-    onLabLevelOverridesChange,
   },
   ref,
 ) {
   const { t, fmt, locale, setLocale } = useI18n()
+  const {
+    workspace,
+    setWorkspace,
+    scratchWorkspace,
+    setScratchWorkspace,
+    labLevelOverrides: levelOverrides,
+    setLabLevelOverrides: setLevelOverrides,
+    workshopFlat,
+  } = useTowerWorkspaceContext()
+  const auth = useAuth()
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const labBudgetBodyId = useId().replace(/:/g, '')
   const [search, setSearch] = useState('')
   const [hideCompleted, setHideCompleted] = useState(false)
   const [collapsed, setCollapsed] = useState<Record<number, boolean>>({})
-  const [levelOverrides, setLevelOverrides] = useState<
-    Record<string, number>
-  >({})
-  const [presets, setPresets] = useState<LabPreset[]>([])
-  const [activePresetId, setActivePresetId] = useState<string | null>(null)
-  const [scratchSnapshot, setScratchSnapshot] = useState<
-    Record<string, number>
-  >({})
   const [hydrated, setHydrated] = useState(false)
   const [importNotice, setImportNotice] = useState<string | null>(null)
   const [shareQr, setShareQr] = useState<{
@@ -189,8 +202,13 @@ export const SelectResearch = forwardRef<
   const [resetLevelsConfirmOpen, setResetLevelsConfirmOpen] = useState(false)
   const [labDataPanelOpen, setLabDataPanelOpen] = useState(false)
   const [labCompareOpen, setLabCompareOpen] = useState(false)
-  const [presetSaveDialogOpen, setPresetSaveDialogOpen] = useState(false)
-  const [presetSaveDraft, setPresetSaveDraft] = useState('')
+  const [sharePublishing, setSharePublishing] = useState(false)
+  const [communityPublishDialogOpen, setCommunityPublishDialogOpen] =
+    useState(false)
+  const [publishTitle, setPublishTitle] = useState('')
+  const [publishCategory, setPublishCategory] = useState<GalleryBuildCategory | ''>('')
+  const [communityPublishSubmitting, setCommunityPublishSubmitting] =
+    useState(false)
   const [labBudgetCollapsed, setLabBudgetCollapsed] = useState(() => {
     try {
       return localStorage.getItem(LAB_BUDGET_COLLAPSED_STORAGE_KEY) === '1'
@@ -199,30 +217,11 @@ export const SelectResearch = forwardRef<
     }
   })
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
-  const presetSaveNameInputRef = useRef<HTMLInputElement>(null)
+  const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)
   const bulkAllSectionsToggleRef = useRef<HTMLInputElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const pendingLabScrollSlug = useRef<string | null>(null)
   const [scrollLayoutGen, setScrollLayoutGen] = useState(0)
-
-  const levelOverridesRef = useRef(levelOverrides)
-  const scratchSnapshotRef = useRef(scratchSnapshot)
-  const activePresetIdRef = useRef(activePresetId)
-  const workshopPersistedRef = useRef(workshopPersisted)
-  const scratchWorkshopPersistedRef = useRef(scratchWorkshopPersisted)
-  useLayoutEffect(() => {
-    levelOverridesRef.current = levelOverrides
-    scratchSnapshotRef.current = scratchSnapshot
-    activePresetIdRef.current = activePresetId
-    workshopPersistedRef.current = workshopPersisted
-    scratchWorkshopPersistedRef.current = scratchWorkshopPersisted
-  }, [
-    levelOverrides,
-    scratchSnapshot,
-    activePresetId,
-    workshopPersisted,
-    scratchWorkshopPersisted,
-  ])
 
   useEffect(() => {
     if (!importNotice) return
@@ -271,7 +270,7 @@ export const SelectResearch = forwardRef<
       resetLevelsConfirmOpen ||
       labDataPanelOpen ||
       labCompareOpen ||
-      presetSaveDialogOpen
+      communityPublishDialogOpen
     if (!blocking) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
@@ -279,7 +278,7 @@ export const SelectResearch = forwardRef<
       setResetLevelsConfirmOpen(false)
       setLabDataPanelOpen(false)
       setLabCompareOpen(false)
-      setPresetSaveDialogOpen(false)
+      setCommunityPublishDialogOpen(false)
     }
     window.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
@@ -293,78 +292,24 @@ export const SelectResearch = forwardRef<
     resetLevelsConfirmOpen,
     labDataPanelOpen,
     labCompareOpen,
-    presetSaveDialogOpen,
+    communityPublishDialogOpen,
   ])
 
   useEffect(() => {
     let cancelled = false
 
     async function hydrate() {
-      const loadPersistedLabState = (): {
-        presets: LabPreset[]
-        activePresetId: string | null
-        scratchSnapshot: Record<string, number>
-        levelOverrides: Record<string, number>
-        workshopPersisted: WorkshopPersistedV1
-        scratchWorkshopPersisted: WorkshopPersistedV1
-      } => {
+      const loadPersistedLabState = () => {
         const empty = {
-          presets: [] as LabPreset[],
-          activePresetId: null as string | null,
-          scratchSnapshot: {} as Record<string, number>,
-          levelOverrides: {} as Record<string, number>,
-          workshopPersisted: defaultWorkshopPersisted(),
-          scratchWorkshopPersisted: defaultWorkshopPersisted(),
+          workspace: defaultTowerWorkspace(),
+          scratchWorkspace: defaultTowerWorkspace(),
         }
         try {
           const rawNew = localStorage.getItem(LAB_PRESETS_STORAGE_KEY)
           if (rawNew) {
             const parsed = parseLabPresetsFile(JSON.parse(rawNew))
             if (parsed) {
-              const presets = parsed.presets.map((p) => ({
-                ...p,
-                levelOverrides: sanitizeLevelOverrides(
-                  data,
-                  p.levelOverrides as Record<string, unknown>,
-                ),
-              }))
-              let activePresetId = parsed.activePresetId
-              if (
-                activePresetId &&
-                !presets.some((p) => p.id === activePresetId)
-              ) {
-                activePresetId = null
-              }
-              const scratchSnapshot = sanitizeLevelOverrides(
-                data,
-                parsed.scratchOverrides as Record<string, unknown>,
-              )
-              const activePreset = activePresetId
-                ? presets.find((p) => p.id === activePresetId)
-                : undefined
-              const levelOverrides = activePreset
-                ? { ...activePreset.levelOverrides }
-                : { ...scratchSnapshot }
-              const scratchWorkshopPersisted = sanitizeWorkshopPersisted(
-                parsed.scratchWorkshop,
-              )
-              const workshopPersisted = activePreset
-                ? sanitizeWorkshopPersisted(activePreset.workshop)
-                : scratchWorkshopPersisted
-              if (parsed.themeSelection && parsed.themeOwnedIds) {
-                applyTowerThemes({
-                  selection: parsed.themeSelection,
-                  ownedIds: parsed.themeOwnedIds,
-                })
-              }
-              return {
-                presets,
-                activePresetId,
-                scratchSnapshot,
-                levelOverrides,
-                workshopPersisted,
-                scratchWorkshopPersisted,
-              }
+              return readTowerWorkspaceFromPresetsFile(parsed)
             }
           }
         } catch {
@@ -386,12 +331,14 @@ export const SelectResearch = forwardRef<
                   lo as Record<string, unknown>,
                 )
                 return {
-                  presets: [],
-                  activePresetId: null,
-                  scratchSnapshot: { ...levelOverrides },
-                  levelOverrides,
-                  workshopPersisted: defaultWorkshopPersisted(),
-                  scratchWorkshopPersisted: defaultWorkshopPersisted(),
+                  workspace: {
+                    ...defaultTowerWorkspace(),
+                    lab: { levelOverrides },
+                  },
+                  scratchWorkspace: {
+                    ...defaultTowerWorkspace(),
+                    lab: { levelOverrides },
+                  },
                 }
               }
             }
@@ -433,6 +380,53 @@ export const SelectResearch = forwardRef<
 
       try {
         const params = new URLSearchParams(window.location.search)
+
+        const galleryBuildId = readGalleryBuildIdFromUrlSearchParams(params)
+        if (galleryBuildId) {
+          const gallery = await getGalleryTower(galleryBuildId)
+          const payload = gallery.ok ? gallery.record.payload : null
+          if (payload?.o && !cancelled) {
+            const sanitized = sanitizeLevelOverrides(
+              data,
+              payload.o as Record<string, unknown>,
+            )
+            const workshopFromLink = payload.w !== undefined
+            const sharedBuildName =
+              typeof payload.n === 'string'
+                ? payload.n.trim()
+                : gallery.ok
+                  ? gallery.record.title
+                  : undefined
+            let nextWorkspace = persistedLabs.workspace
+            let nextScratchWorkspace = persistedLabs.scratchWorkspace
+            if (workshopFromLink) {
+              const build = splitTowerBuild(sanitizeWorkshopPersisted(payload.w))
+              nextWorkspace = mergeWorkspaceBuild(nextWorkspace, build)
+              nextScratchWorkspace = mergeWorkspaceBuild(nextScratchWorkspace, build)
+            }
+            if (payload.t) {
+              applyTowerThemes({
+                ownedIds: sanitizeThemeOwnedIds(payload.t.owned),
+              })
+            }
+            const lab = { levelOverrides: sanitized }
+            setLevelOverrides(sanitized)
+            setWorkspace({ ...nextWorkspace, lab })
+            setScratchWorkspace({ ...nextScratchWorkspace, lab })
+            applySectionCollapsedFromStorage()
+            const url = new URL(window.location.href)
+            clearGalleryBuildIdFromUrl(url)
+            clearShareEncodedFromUrl(url)
+            window.history.replaceState(null, '', url.pathname + url.search + url.hash)
+            const n = Object.keys(sanitized).length
+            setImportNotice(
+              fmt.shareOpenedLevels(n, workshopFromLink, sharedBuildName),
+            )
+            setHydrated(true)
+            return
+          }
+        }
+
         const share = readShareEncodedFromUrlSearchParams(params)
         if (share) {
           const payload = await decodeLabsShareQueryValue(share)
@@ -444,24 +438,22 @@ export const SelectResearch = forwardRef<
             const workshopFromLink = payload.w !== undefined
             const sharedBuildName =
               typeof payload.n === 'string' ? payload.n.trim() : undefined
-            let nextWorkshop = persistedLabs.workshopPersisted
-            let nextScratchWorkshop = persistedLabs.scratchWorkshopPersisted
+            let nextWorkspace = persistedLabs.workspace
+            let nextScratchWorkspace = persistedLabs.scratchWorkspace
             if (workshopFromLink) {
-              const ws = sanitizeWorkshopPersisted(payload.w)
-              nextWorkshop = ws
-              nextScratchWorkshop = ws
+              const build = splitTowerBuild(sanitizeWorkshopPersisted(payload.w))
+              nextWorkspace = mergeWorkspaceBuild(nextWorkspace, build)
+              nextScratchWorkspace = mergeWorkspaceBuild(nextScratchWorkspace, build)
             }
             if (payload.t) {
               applyTowerThemes({
                 ownedIds: sanitizeThemeOwnedIds(payload.t.owned),
               })
             }
-            setPresets(persistedLabs.presets)
-            setActivePresetId(null)
-            setScratchSnapshot(sanitized)
+            const lab = { levelOverrides: sanitized }
             setLevelOverrides(sanitized)
-            setWorkshopPersisted(nextWorkshop)
-            setScratchWorkshopPersisted(nextScratchWorkshop)
+            setWorkspace({ ...nextWorkspace, lab })
+            setScratchWorkspace({ ...nextScratchWorkspace, lab })
             applySectionCollapsedFromStorage()
             const url = new URL(window.location.href)
             clearShareEncodedFromUrl(url)
@@ -479,12 +471,17 @@ export const SelectResearch = forwardRef<
       }
 
       if (!cancelled) {
-        setPresets(persistedLabs.presets)
-        setActivePresetId(persistedLabs.activePresetId)
-        setScratchSnapshot(persistedLabs.scratchSnapshot)
-        setLevelOverrides(persistedLabs.levelOverrides)
-        setWorkshopPersisted(persistedLabs.workshopPersisted)
-        setScratchWorkshopPersisted(persistedLabs.scratchWorkshopPersisted)
+        const sanitizeWorkspaceLab = (ws: ReturnType<typeof defaultTowerWorkspace>) => ({
+          ...ws,
+          lab: {
+            levelOverrides: sanitizeLevelOverrides(
+              data,
+              ws.lab.levelOverrides as Record<string, unknown>,
+            ),
+          },
+        })
+        setWorkspace(sanitizeWorkspaceLab(persistedLabs.workspace))
+        setScratchWorkspace(sanitizeWorkspaceLab(persistedLabs.scratchWorkspace))
       }
 
       applySectionCollapsedFromStorage()
@@ -496,35 +493,16 @@ export const SelectResearch = forwardRef<
     return () => {
       cancelled = true
     }
-  }, [data, fmt])
-
-  useEffect(() => {
-    onLabLevelOverridesChange?.(levelOverrides)
-  }, [levelOverrides, onLabLevelOverridesChange])
-
-  /** Keep the active build's stored workshop in sync with live edits (e.g. Reset Cards). */
-  useEffect(() => {
-    if (!hydrated || activePresetId == null) return
-    setPresets((prev) =>
-      prev.map((p) =>
-        p.id === activePresetId
-          ? { ...p, workshop: { ...workshopPersisted } }
-          : p,
-      ),
-    )
-  }, [workshopPersisted, activePresetId, hydrated])
+  }, [data, fmt, setScratchWorkspace, setWorkspace])
 
   useEffect(() => {
     if (!hydrated) return
     try {
-      const payload = buildLabPresetsPayload(
-        activePresetId,
-        presets,
-        levelOverrides,
-        scratchSnapshot,
-        workshopPersisted,
-        scratchWorkshopPersisted,
-        readTowerThemesSnapshot(),
+      const payload = buildLabPresetsPayloadWithWorkspace(
+        null,
+        [],
+        syncWorkspaceThemesFromStorage(workspace),
+        syncWorkspaceThemesFromStorage(scratchWorkspace),
       )
       localStorage.setItem(
         LAB_PRESETS_STORAGE_KEY,
@@ -533,15 +511,7 @@ export const SelectResearch = forwardRef<
     } catch {
       /* quota / private mode */
     }
-  }, [
-    hydrated,
-    activePresetId,
-    presets,
-    levelOverrides,
-    scratchSnapshot,
-    workshopPersisted,
-    scratchWorkshopPersisted,
-  ])
+  }, [hydrated, workspace, scratchWorkspace])
 
   useEffect(() => {
     if (!hydrated) return
@@ -561,8 +531,8 @@ export const SelectResearch = forwardRef<
   )
 
   const relicOwnedSet = useMemo(
-    () => new Set(workshopPersisted.relicOwnedIds),
-    [workshopPersisted.relicOwnedIds],
+    () => new Set(workshopFlat.relicOwnedIds),
+    [workshopFlat.relicOwnedIds],
   )
 
   const labsSpeedMultiplier = useMemo(
@@ -752,38 +722,18 @@ export const SelectResearch = forwardRef<
   const performResetLevels = useCallback(() => {
     setResetLevelsConfirmOpen(false)
     setLevelOverrides({})
-    setScratchSnapshot({})
-    setActivePresetId(null)
-    setPresets((prev) =>
-      prev.map((p) => ({
-        ...p,
-        levelOverrides: {},
-      })),
-    )
     setImportNotice(t('sr_notice_reset_all'))
   }, [t])
 
   const handleExportLevels = useCallback(() => {
     const date = new Date().toISOString().slice(0, 10)
     const themes = readTowerThemesSnapshot()
-    const csv =
-      presets.length > 0
-        ? serializeTowerUnifiedCsvBuilds(
-            presets.map((p) => ({
-              name: p.name,
-              levelOverrides: p.levelOverrides,
-              workshop: sanitizeWorkshopPersisted(p.workshop),
-            })),
-            themes,
-          )
-        : serializeTowerUnifiedCsv(
-            levelOverrides,
-            workshopPersisted,
-            activePresetId
-              ? presets.find((p) => p.id === activePresetId)?.name
-              : undefined,
-            themes,
-          )
+    const csv = serializeTowerUnifiedCsv(
+      levelOverrides,
+      workshopFlat,
+      undefined,
+      themes,
+    )
     const blob = new Blob([`\uFEFF${csv}`], {
       type: 'text/csv;charset=utf-8',
     })
@@ -794,48 +744,215 @@ export const SelectResearch = forwardRef<
     a.rel = 'noopener'
     a.click()
     URL.revokeObjectURL(url)
-  }, [activePresetId, levelOverrides, presets, workshopPersisted])
+  }, [levelOverrides, workshopFlat])
 
-  const handleCopyBuildShareLink = useCallback(async (): Promise<boolean> => {
-    const buildName = activePresetId
-      ? presets.find((p) => p.id === activePresetId)?.name
-      : undefined
-    try {
-      const encoded = await encodeLabsShareQueryValue(
-        levelOverrides,
-        workshopPersisted,
-        buildName,
-        readTowerThemesSnapshot(),
-      )
-      const { clean } = buildLabsShareUrls(encoded, window.location.href)
-      await navigator.clipboard.writeText(clean)
-      return true
-    } catch {
+  const getLabsShareFileForGallery = useCallback((): LabsShareFile | null => {
+    if (!hydrated) return null
+    return buildLabsShareFile(
+      levelOverrides,
+      workshopFlat,
+      undefined,
+      readTowerThemesSnapshot(),
+    )
+  }, [hydrated, levelOverrides, workshopFlat])
+
+  const applyLabsShareFileFromGallery = useCallback(
+    (file: LabsShareFile): boolean => {
+      if (!hydrated) return false
+      try {
+        const sanitized = sanitizeLevelOverrides(
+          data,
+          file.o as Record<string, unknown>,
+        )
+        const ws =
+          file.w !== undefined
+            ? sanitizeWorkshopPersisted(file.w)
+            : workshopFlat
+        if (file.t) {
+          applyTowerThemes({ ownedIds: sanitizeThemeOwnedIds(file.t.owned) })
+        }
+        setLevelOverrides(sanitized)
+        const build = splitTowerBuild(ws)
+        setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
+        setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
+        const buildName = file.n?.trim()
+        setImportNotice(
+          buildName
+            ? fmt.importedTowerBuildNamed(buildName)
+            : t('sr_notice_import_tower_ok'),
+        )
+        return true
+      } catch {
+        return false
+      }
+    },
+    [data, fmt, hydrated, setScratchWorkspace, setWorkspace, t, workshopFlat],
+  )
+
+  const resolveShareTitle = useCallback(() => {
+    return `Build ${new Date().toISOString().slice(0, 10)}`
+  }, [])
+
+  const getPublishAccessToken = useCallback(async (): Promise<string | null> => {
+    return auth.getAccessToken()
+  }, [auth])
+
+  const ensureSignedInForPublish = useCallback(async (): Promise<boolean> => {
+    if (!supabaseBrowserConfigured()) {
+      setImportNotice(t('gallery_error_unavailable'))
       return false
     }
-  }, [activePresetId, levelOverrides, presets, workshopPersisted])
+    const token = await getPublishAccessToken()
+    if (token) return true
+    setImportNotice(t('auth_required_publish'))
+    return false
+  }, [getPublishAccessToken, t])
 
-  const handleCopyCleanShareLink = useCallback(async () => {
+  const ensurePublishCategorySelected = useCallback((): GalleryBuildCategory | null => {
+    if (!publishCategory) {
+      setImportNotice(t('gallery_error_invalid_category'))
+      setCommunityPublishDialogOpen(true)
+      return null
+    }
+    return publishCategory
+  }, [publishCategory, t])
+
+  const copyEmbeddedShareLink = useCallback(async (): Promise<string | null> => {
     try {
       const encoded = await encodeLabsShareQueryValue(
         levelOverrides,
-        workshopPersisted,
+        workshopFlat,
         undefined,
         readTowerThemesSnapshot(),
       )
       const { clean } = buildLabsShareUrls(encoded, window.location.href)
       await navigator.clipboard.writeText(clean)
-      setImportNotice(t('sr_notice_copy_short_ok'))
+      return clean
+    } catch {
+      return null
+    }
+  }, [levelOverrides, workshopFlat])
+
+  const publishAndCopyGalleryShareLink = useCallback(async (): Promise<boolean> => {
+    const payload = getLabsShareFileForGallery()
+    if (!payload) return false
+    if (!towerGalleryApiAvailable()) {
+      return (await copyEmbeddedShareLink()) != null
+    }
+    if (!(await ensureSignedInForPublish())) return false
+    const category = ensurePublishCategorySelected()
+    if (!category) return false
+    const accessToken = await getPublishAccessToken()
+    setSharePublishing(true)
+    try {
+      const result = await publishGalleryShareLink(
+        payload,
+        resolveShareTitle(),
+        category,
+        window.location.href,
+        { accessToken },
+      )
+      if (!result.ok) {
+        if (result.error === 'auth_required') {
+          setImportNotice(t('auth_required_publish'))
+          return false
+        }
+        return (await copyEmbeddedShareLink()) != null
+      }
+      await navigator.clipboard.writeText(result.url)
+      return true
+    } catch {
+      return false
+    } finally {
+      setSharePublishing(false)
+    }
+  }, [
+    copyEmbeddedShareLink,
+    ensurePublishCategorySelected,
+    ensureSignedInForPublish,
+    getLabsShareFileForGallery,
+    getPublishAccessToken,
+    resolveShareTitle,
+    t,
+  ])
+
+  const handleCopyBuildShareLink = useCallback(async (): Promise<boolean> => {
+    if (!towerGalleryApiAvailable()) {
+      return (await copyEmbeddedShareLink()) != null
+    }
+    return publishAndCopyGalleryShareLink()
+  }, [copyEmbeddedShareLink, publishAndCopyGalleryShareLink])
+
+  const handleCopyCleanShareLink = useCallback(async () => {
+    if (!towerGalleryApiAvailable()) {
+      if (await copyEmbeddedShareLink()) {
+        setImportNotice(t('sr_notice_copy_gallery_fallback'))
+      } else {
+        setImportNotice(t('sr_notice_copy_short_fail'))
+      }
+      return
+    }
+    if (!(await ensureSignedInForPublish())) return
+    const category = ensurePublishCategorySelected()
+    if (!category) return
+    const accessToken = await getPublishAccessToken()
+    setSharePublishing(true)
+    const payload = getLabsShareFileForGallery()
+    if (!payload) {
+      setSharePublishing(false)
+      setImportNotice(t('sr_notice_copy_short_fail'))
+      return
+    }
+    try {
+      const result = await publishGalleryShareLink(
+        payload,
+        resolveShareTitle(),
+        category,
+        window.location.href,
+        { accessToken },
+      )
+      if (!result.ok) {
+        if (result.error === 'auth_required') {
+          setImportNotice(t('auth_required_publish'))
+          return
+        }
+        if (await copyEmbeddedShareLink()) {
+          setImportNotice(t('sr_notice_copy_gallery_fail'))
+        } else {
+          setImportNotice(t('sr_notice_copy_short_fail'))
+        }
+        return
+      }
+      await navigator.clipboard.writeText(result.url)
+      setImportNotice(t('sr_notice_copy_gallery_ok'))
     } catch {
       setImportNotice(t('sr_notice_copy_short_fail'))
+    } finally {
+      setSharePublishing(false)
     }
-  }, [levelOverrides, workshopPersisted, t])
+  }, [
+    copyEmbeddedShareLink,
+    ensurePublishCategorySelected,
+    ensureSignedInForPublish,
+    getLabsShareFileForGallery,
+    getPublishAccessToken,
+    resolveShareTitle,
+    t,
+  ])
+
+  const handleCopyEmbeddedShareLink = useCallback(async () => {
+    if (await copyEmbeddedShareLink()) {
+      setImportNotice(t('sr_notice_copy_embedded_ok'))
+    } else {
+      setImportNotice(t('sr_notice_copy_embedded_fail'))
+    }
+  }, [copyEmbeddedShareLink, t])
 
   const handleCopyFullShareLink = useCallback(async () => {
     try {
       const encoded = await encodeLabsShareQueryValue(
         levelOverrides,
-        workshopPersisted,
+        workshopFlat,
         undefined,
         readTowerThemesSnapshot(),
       )
@@ -845,28 +962,90 @@ export const SelectResearch = forwardRef<
     } catch {
       setImportNotice(t('sr_notice_copy_full_fail'))
     }
-  }, [levelOverrides, workshopPersisted, t])
+  }, [levelOverrides, workshopFlat, t])
 
   const handleShowShareQr = useCallback(async () => {
     try {
-      const encoded = await encodeLabsShareQueryValue(
-        levelOverrides,
-        workshopPersisted,
-        undefined,
-        readTowerThemesSnapshot(),
-      )
-      const { clean } = buildLabsShareUrls(encoded, window.location.href)
+      let shareUrl: string | null = null
+      if (towerGalleryApiAvailable()) {
+        const payload = getLabsShareFileForGallery()
+        if (payload && (await ensureSignedInForPublish())) {
+          const category = ensurePublishCategorySelected()
+          if (category) {
+          const accessToken = await getPublishAccessToken()
+          setSharePublishing(true)
+          const result = await publishGalleryShareLink(
+            payload,
+            resolveShareTitle(),
+            category,
+            window.location.href,
+            { accessToken },
+          )
+          setSharePublishing(false)
+          if (result.ok) shareUrl = result.url
+          }
+        }
+      }
+      if (!shareUrl) {
+        const encoded = await encodeLabsShareQueryValue(
+          levelOverrides,
+          workshopFlat,
+          undefined,
+          readTowerThemesSnapshot(),
+        )
+        shareUrl = buildLabsShareUrls(encoded, window.location.href).clean
+      }
       const QRCode = (await import('qrcode')).default
-      const dataUrl = await QRCode.toDataURL(clean, {
+      const dataUrl = await QRCode.toDataURL(shareUrl, {
         width: 220,
         margin: 2,
         color: { dark: '#0f172a', light: '#e0f2fe' },
       })
-      setShareQr({ dataUrl, url: clean })
+      setShareQr({ dataUrl, url: shareUrl })
     } catch {
       setImportNotice(t('sr_notice_qr_fail'))
     }
-  }, [levelOverrides, workshopPersisted, t])
+  }, [
+    ensurePublishCategorySelected,
+    ensureSignedInForPublish,
+    getLabsShareFileForGallery,
+    getPublishAccessToken,
+    levelOverrides,
+    resolveShareTitle,
+    t,
+    workshopFlat,
+  ])
+
+  const handleImportPlayerInfoFileChange = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const input = e.target
+      const file = input.files?.[0]
+      input.value = ''
+      if (!file) return
+      try {
+        const buf = new Uint8Array(await file.arrayBuffer())
+        const imported = await importPlayerInfoDat(buf, data)
+        if (!imported.ok) {
+          if (imported.error === 'gzip_unsupported') {
+            setImportNotice(t('sr_notice_import_player_gzip_unsupported'))
+          } else {
+            setImportNotice(t('sr_notice_import_player_invalid'))
+          }
+          return
+        }
+        const sanitized = imported.overrides
+        setLevelOverrides(sanitized)
+        const build = splitTowerBuild(imported.workshop)
+        setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
+        setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
+        applyTowerThemes(imported.themes)
+        setImportNotice(t('sr_notice_import_player_ok'))
+      } catch {
+        setImportNotice(t('sr_notice_import_read_fail'))
+      }
+    },
+    [data, setScratchWorkspace, setWorkspace, t],
+  )
 
   const handleImportLabCsvFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -883,37 +1062,15 @@ export const SelectResearch = forwardRef<
         }
         if (tower.tag === 'ok') {
           if (tower.themes) applyTowerThemes(tower.themes)
-          if (tower.builds.length > 1) {
-            const imported: LabPreset[] = tower.builds.map((b) => ({
-              id: newPresetId(),
-              name: b.name?.trim() || t('sr_preset_import_default_name'),
-              levelOverrides: sanitizeLevelOverrides(
-                data,
-                b.overrides as Record<string, unknown>,
-              ),
-              workshop: b.workshop,
-            }))
-            setPresets((prev) => [...prev, ...imported])
-            const first = imported[0]!
-            const firstWorkshop = sanitizeWorkshopPersisted(first.workshop)
-            setActivePresetId(first.id)
-            setLevelOverrides({ ...first.levelOverrides })
-            setWorkshopPersisted(firstWorkshop)
-            setScratchSnapshot({ ...first.levelOverrides })
-            setScratchWorkshopPersisted(firstWorkshop)
-            setImportNotice(fmt.importedTowerBuilds(imported.length))
-            return
-          }
           const primary = towerUnifiedPrimaryBuild(tower)
           const sanitized = sanitizeLevelOverrides(
             data,
             primary.overrides as Record<string, unknown>,
           )
-          setActivePresetId(null)
-          setScratchSnapshot(sanitized)
           setLevelOverrides(sanitized)
-          setWorkshopPersisted(primary.workshop)
-          setScratchWorkshopPersisted(primary.workshop)
+          const build = splitTowerBuild(primary.workshop)
+          setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
+          setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
           const buildName = primary.name?.trim()
           setImportNotice(
             buildName
@@ -927,97 +1084,88 @@ export const SelectResearch = forwardRef<
         setImportNotice(t('sr_notice_import_read_fail'))
       }
     },
-    [data, fmt, setScratchWorkshopPersisted, setWorkshopPersisted, t],
+    [data, fmt, setScratchWorkspace, setWorkspace, t],
   )
 
-  const handlePresetSelect = useCallback(
-    (e: React.ChangeEvent<HTMLSelectElement>) => {
-      const nextId = e.target.value === '' ? null : e.target.value
-      const prevActive = activePresetIdRef.current
-      const currentLevels = levelOverridesRef.current
-      const scratch = scratchSnapshotRef.current
-      const wsLive = workshopPersistedRef.current
-      const swScratch = scratchWorkshopPersistedRef.current
+  const openCommunityPublishDialog = useCallback(() => {
+    void (async () => {
+      if (!(await ensureSignedInForPublish())) return
+      setPublishTitle('')
+      setCommunityPublishDialogOpen(true)
+    })()
+  }, [ensureSignedInForPublish])
 
-      if (nextId === null) {
-        if (prevActive !== null) {
-          setLevelOverrides({ ...scratch })
-          setWorkshopPersisted({ ...swScratch })
-        }
-        setActivePresetId(null)
+  const closeCommunityPublishDialog = useCallback(() => {
+    if (communityPublishSubmitting) return
+    setCommunityPublishDialogOpen(false)
+  }, [communityPublishSubmitting])
+
+  const commitCommunityPublish = useCallback(async () => {
+    const trimmedTitle = publishTitle.trim()
+    if (!trimmedTitle) {
+      setImportNotice(t('gallery_error_invalid_title'))
+      return
+    }
+    if (!publishCategory) {
+      setImportNotice(t('gallery_error_invalid_category'))
+      return
+    }
+    const payload = getLabsShareFileForGallery()
+    if (!payload) return
+    const accessToken = await getPublishAccessToken()
+    setCommunityPublishSubmitting(true)
+    try {
+      const result = await publishGalleryShareLink(
+        payload,
+        trimmedTitle,
+        publishCategory,
+        window.location.href,
+        {
+        accessToken,
+      })
+      if (!result.ok) {
+        const msg =
+          result.error === 'auth_required'
+            ? t('auth_required_publish')
+            : result.error === 'invalid_title'
+              ? t('gallery_error_invalid_title')
+              : result.error === 'invalid_category'
+                ? t('gallery_error_invalid_category')
+              : result.error === 'submissions_disabled'
+                ? t('gallery_error_disabled')
+                : result.error === 'gallery_unavailable'
+                  ? t('gallery_error_unavailable')
+                  : result.error === 'network'
+                    ? t('gallery_error_network')
+                    : t('gallery_error_unknown')
+        setImportNotice(msg)
         return
       }
-
-      if (prevActive === null) {
-        setScratchSnapshot({ ...currentLevels })
-        setScratchWorkshopPersisted({ ...wsLive })
-      }
-
-      const target = presets.find((p) => p.id === nextId)
-      if (!target) return
-      setLevelOverrides({ ...target.levelOverrides })
-      setWorkshopPersisted(sanitizeWorkshopPersisted(target.workshop))
-      setActivePresetId(nextId)
-    },
-    [presets, setScratchWorkshopPersisted, setWorkshopPersisted],
-  )
-
-  const openPresetSaveDialog = useCallback(() => {
-    setPresetSaveDraft('')
-    setPresetSaveDialogOpen(true)
-  }, [])
-
-  const closePresetSaveDialog = useCallback(() => {
-    setPresetSaveDialogOpen(false)
-  }, [])
-
-  const commitSavePresetFromDialog = useCallback(() => {
-    const trimmed = presetSaveDraft.trim()
-    if (!trimmed) {
-      setImportNotice(t('sr_notice_preset_empty_name'))
-      return
+      await navigator.clipboard.writeText(result.url)
+      setImportNotice(fmt.galleryNoticeSubmitted(result.title))
+      setCommunityPublishDialogOpen(false)
+      setPublishTitle('')
+    } catch {
+      setImportNotice(t('gallery_error_unknown'))
+    } finally {
+      setCommunityPublishSubmitting(false)
     }
-    const id = newPresetId()
-    const levels = { ...levelOverridesRef.current }
-    const ws = { ...workshopPersistedRef.current }
-    const wasScratch = activePresetIdRef.current === null
-    setPresets((prev) => [...prev, { id, name: trimmed, levelOverrides: levels, workshop: ws }])
-    if (wasScratch) {
-      setScratchSnapshot({ ...levels })
-      setScratchWorkshopPersisted({ ...ws })
-    }
-    setLevelOverrides(levels)
-    setActivePresetId(id)
-    setImportNotice(fmt.savedPreset(trimmed))
-    setPresetSaveDialogOpen(false)
-    setPresetSaveDraft('')
-  }, [fmt, presetSaveDraft, setScratchWorkshopPersisted, t])
+  }, [
+    fmt,
+    getLabsShareFileForGallery,
+    getPublishAccessToken,
+    publishCategory,
+    publishTitle,
+    t,
+  ])
 
-  useLayoutEffect(() => {
-    if (!presetSaveDialogOpen) return
-    const el = presetSaveNameInputRef.current
-    if (!el) return
-    queueMicrotask(() => {
-      el.focus()
-      el.select()
-    })
-  }, [presetSaveDialogOpen])
-
-  const handleDeleteActivePreset = useCallback(() => {
-    const id = activePresetIdRef.current
-    if (!id) return
-    const preset = presets.find((p) => p.id === id)
-    if (
-      !window.confirm(fmt.deleteBuildConfirm(preset?.name ?? id))
-    ) {
-      return
-    }
-    setPresets((prev) => prev.filter((p) => p.id !== id))
-    setActivePresetId(null)
-    setLevelOverrides({ ...scratchSnapshotRef.current })
-    setWorkshopPersisted({ ...scratchWorkshopPersistedRef.current })
-    setImportNotice(t('sr_notice_preset_deleted'))
-  }, [fmt, presets, setWorkshopPersisted, t])
+  const handleClearWorkspace = useCallback(() => {
+    const cleared = clearTowerWorkspace(workspace)
+    applyTowerThemes(workspaceThemesSnapshot(cleared))
+    setWorkspace(cleared)
+    setScratchWorkspace(clearTowerWorkspace(scratchWorkspace))
+    setImportNotice(t('sr_community_clear_done'))
+  }, [scratchWorkspace, setScratchWorkspace, setWorkspace, t, workspace])
 
   const maxAllVisibleLabs = useCallback(() => {
     setLevelOverrides((prev) =>
@@ -1053,8 +1201,14 @@ export const SelectResearch = forwardRef<
         setLabDataPanelOpen(false)
         setLabCompareOpen(true)
       },
+      getLabsShareFile: getLabsShareFileForGallery,
+      applyLabsShareFile: applyLabsShareFileFromGallery,
     }),
-    [hydrated],
+    [
+      applyLabsShareFileFromGallery,
+      getLabsShareFileForGallery,
+      hydrated,
+    ],
   )
 
   const PanelRoot = embeddedInPanel ? 'div' : 'section'
@@ -1090,14 +1244,11 @@ export const SelectResearch = forwardRef<
 
       <nav className="select-research__toolbar" aria-label={t('sr_toolbar_aria')}>
         {presetsBarInline ? (
-          <LabPresetsRow
+          <CommunityBuildRow
             hydrated={hydrated}
-            presets={presets}
-            activePresetId={activePresetId}
-            onPresetSelect={handlePresetSelect}
-            onSaveAs={openPresetSaveDialog}
+            onSaveAs={openCommunityPublishDialog}
             onCopyShareLink={handleCopyBuildShareLink}
-            onDeleteBuild={handleDeleteActivePreset}
+            onClearWorkspace={handleClearWorkspace}
           />
         ) : null}
 
@@ -1141,6 +1292,15 @@ export const SelectResearch = forwardRef<
             aria-hidden
             tabIndex={-1}
             onChange={handleImportLabCsvFileChange}
+          />
+          <input
+            ref={importPlayerInfoFileInputRef}
+            className="visually-hidden"
+            type="file"
+            accept=".dat,application/octet-stream"
+            aria-hidden
+            tabIndex={-1}
+            onChange={handleImportPlayerInfoFileChange}
           />
           {!embeddedInPanel ? (
             <div className="select-research__filter-actions">
@@ -1186,14 +1346,11 @@ export const SelectResearch = forwardRef<
 
       {embeddedInPanel && embeddedPresetsMount
         ? createPortal(
-            <LabPresetsRow
+            <CommunityBuildRow
               hydrated={hydrated}
-              presets={presets}
-              activePresetId={activePresetId}
-              onPresetSelect={handlePresetSelect}
-              onSaveAs={openPresetSaveDialog}
+              onSaveAs={openCommunityPublishDialog}
               onCopyShareLink={handleCopyBuildShareLink}
-              onDeleteBuild={handleDeleteActivePreset}
+              onClearWorkspace={handleClearWorkspace}
             />,
             embeddedPresetsMount,
           )
@@ -1307,37 +1464,67 @@ export const SelectResearch = forwardRef<
                     {t('sr_lab_export_file')}
                   </button>
                 </div>
-                <p className="select-research__lab-data-section-label">{t('sr_lab_data_share')}</p>
+                <p className="select-research__lab-data-section-label">{t('sr_lab_data_save_game')}</p>
                 <div className="select-research__lab-data-actions">
                   <button
                     type="button"
                     className="glow-btn glow-btn--block"
+                    onClick={() => {
+                      setLabDataPanelOpen(false)
+                      queueMicrotask(() => importPlayerInfoFileInputRef.current?.click())
+                    }}
+                  >
+                    {t('sr_lab_import_player_save')}
+                  </button>
+                </div>
+                <p className="select-research__lab-data-section-label">{t('sr_lab_data_share')}</p>
+                <p className="select-research__lab-data-share-hint">
+                  {t('sr_lab_data_share_hint')}
+                </p>
+                <div className="select-research__lab-data-actions">
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--block"
+                    disabled={sharePublishing}
                     onClick={async () => {
                       await handleCopyCleanShareLink()
                       setLabDataPanelOpen(false)
                     }}
                   >
-                    {t('sr_copy_short_link')}
+                    {sharePublishing ? t('sr_share_publishing') : t('sr_copy_short_link')}
                   </button>
                   <button
                     type="button"
                     className="glow-btn glow-btn--block"
-                    onClick={async () => {
-                      await handleCopyFullShareLink()
-                      setLabDataPanelOpen(false)
-                    }}
-                  >
-                    {t('sr_copy_full_url')}
-                  </button>
-                  <button
-                    type="button"
-                    className="glow-btn glow-btn--block"
+                    disabled={sharePublishing}
                     onClick={() => {
                       setLabDataPanelOpen(false)
                       void handleShowShareQr()
                     }}
                   >
                     {t('sr_qr_share')}
+                  </button>
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--block"
+                    disabled={sharePublishing}
+                    onClick={async () => {
+                      await handleCopyEmbeddedShareLink()
+                      setLabDataPanelOpen(false)
+                    }}
+                  >
+                    {t('sr_copy_embedded_link')}
+                  </button>
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--block"
+                    disabled={sharePublishing}
+                    onClick={async () => {
+                      await handleCopyFullShareLink()
+                      setLabDataPanelOpen(false)
+                    }}
+                  >
+                    {t('sr_copy_full_url')}
                   </button>
                 </div>
                 <button
@@ -1358,72 +1545,24 @@ export const SelectResearch = forwardRef<
           open={labCompareOpen}
           onClose={() => setLabCompareOpen(false)}
           currentOverrides={levelOverrides}
-          currentWorkshop={workshopPersisted}
+          currentWorkshop={workshopFlat}
           t={t}
           fmt={fmt}
         />,
       )}
 
-      {presetSaveDialogOpen
-        ? labOverlayPortal(
-            <div
-              className="select-research__preset-save-backdrop"
-              role="presentation"
-              onClick={closePresetSaveDialog}
-            >
-              <div
-                className="select-research__preset-save-dialog"
-                role="dialog"
-                aria-modal="true"
-                aria-labelledby="preset-save-dialog-title"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <h2
-                  id="preset-save-dialog-title"
-                  className="select-research__preset-save-title"
-                >
-                  {t('sr_preset_prompt_title')}
-                </h2>
-                <form
-                  className="select-research__preset-save-form"
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    commitSavePresetFromDialog()
-                  }}
-                >
-                  <label
-                    className="select-research__preset-save-label"
-                    htmlFor="preset-save-name-field"
-                  >
-                    {t('sr_preset_name_label')}
-                  </label>
-                  <input
-                    ref={presetSaveNameInputRef}
-                    id="preset-save-name-field"
-                    className="select-research__preset-save-input glow-input"
-                    type="text"
-                    value={presetSaveDraft}
-                    onChange={(e) => setPresetSaveDraft(e.target.value)}
-                    autoComplete="off"
-                    maxLength={120}
-                  />
-                  <div className="select-research__preset-save-actions">
-                    <button
-                      type="button"
-                      className="glow-btn glow-btn--block"
-                      onClick={closePresetSaveDialog}
-                    >
-                      {t('sr_cancel')}
-                    </button>
-                    <button type="submit" className="glow-btn glow-btn--block">
-                      {t('sr_preset_dialog_save')}
-                    </button>
-                  </div>
-                </form>
-              </div>
-            </div>,
-          )
-        : null}
+      <GalleryPublishDialog
+        open={communityPublishDialogOpen}
+        title={publishTitle}
+        category={publishCategory}
+        submitting={communityPublishSubmitting}
+        onTitleChange={setPublishTitle}
+        onCategoryChange={setPublishCategory}
+        onClose={closeCommunityPublishDialog}
+        onSubmit={() => void commitCommunityPublish()}
+        dialogTitleKey="sr_community_publish_title"
+        submitLabelKey="sr_community_publish_submit"
+      />
 
       <div
         className="select-research__sections"

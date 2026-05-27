@@ -9,6 +9,10 @@ lerna-debug.log*
 
 node_modules
 .vite
+
+# Environment (secrets)
+.env
+
 dist
 dist-ssr
 *.local
@@ -34,3 +38,6 @@ tmp-kept-en-keys.json
 
 # Local IL2CPP / asset extraction scratch (not for the repo)
 tools/
+
+# Local Netlify folder
+.netlify
