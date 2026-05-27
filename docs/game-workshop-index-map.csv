@@ -99,51 +99,51 @@ bot_upgrade,botsLevel,16,botBotDurationLevel,botBotDurationLevel,yes,linear inde
 bot_upgrade,botsLevel,17,botBotCooldownLevel,botBotCooldownLevel,yes,linear index → WORKSHOP_BOT_UPGRADE_ORDER
 bot_upgrade,botsLevel,18,botBotBonusLevel,botBotBonusLevel,yes,linear index → WORKSHOP_BOT_UPGRADE_ORDER
 bot_upgrade,botsLevel,19,botBotRangeLevel,botBotRangeLevel,yes,linear index → WORKSHOP_BOT_UPGRADE_ORDER
-ultimate_owned,ultimateWeaponUnlocked,5,goldenTowerOwned,Golden Tower,yes,UI order 0; game index 5
-ultimate_active,ultimateWeaponOn,5,goldenTowerActive,Golden Tower,yes,UI order 0; game index 5
-ultimate_upgrade,ultimateWeaponLevel,15,goldenTowerBonusLevel,Golden Tower upgrade 0,yes,"game weapon 5, slot 0"
-ultimate_upgrade,ultimateWeaponLevel,16,goldenTowerDurationLevel,Golden Tower upgrade 1,yes,"game weapon 5, slot 1"
-ultimate_upgrade,ultimateWeaponLevel,17,goldenTowerCooldownLevel,Golden Tower upgrade 2,yes,"game weapon 5, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,7,blackHoleOwned,Black Hole,yes,UI order 1; game index 7
-ultimate_active,ultimateWeaponOn,7,blackHoleActive,Black Hole,yes,UI order 1; game index 7
-ultimate_upgrade,ultimateWeaponLevel,21,blackHoleSizeLevel,Black Hole upgrade 0,yes,"game weapon 7, slot 0"
-ultimate_upgrade,ultimateWeaponLevel,22,blackHoleDurationLevel,Black Hole upgrade 1,yes,"game weapon 7, slot 1"
-ultimate_upgrade,ultimateWeaponLevel,23,blackHoleCooldownLevel,Black Hole upgrade 2,yes,"game weapon 7, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,8,spotlightOwned,Spotlight,yes,UI order 2; game index 8
-ultimate_active,ultimateWeaponOn,8,spotlightActive,Spotlight,yes,UI order 2; game index 8
-ultimate_upgrade,ultimateWeaponLevel,24,spotlightBonusLevel,Spotlight upgrade 0,yes,"game weapon 8, slot 0"
-ultimate_upgrade,ultimateWeaponLevel,25,spotlightAngleLevel,Spotlight upgrade 1,yes,"game weapon 8, slot 1"
-ultimate_upgrade,ultimateWeaponLevel,26,spotlightQuantityLevel,Spotlight upgrade 2,yes,"game weapon 8, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,2,deathWaveOwned,Death Wave,yes,UI order 3; game index 2
-ultimate_active,ultimateWeaponOn,2,deathWaveActive,Death Wave,yes,UI order 3; game index 2
-ultimate_upgrade,ultimateWeaponLevel,6,deathWaveDamageLevel,Death Wave upgrade 0,yes,"game weapon 2, slot 0"
-ultimate_upgrade,ultimateWeaponLevel,7,deathWaveQuantityLevel,Death Wave upgrade 1,yes,"game weapon 2, slot 1"
-ultimate_upgrade,ultimateWeaponLevel,8,deathWaveCooldownLevel,Death Wave upgrade 2,yes,"game weapon 2, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,0,chainLightningOwned,Chain Lightning,yes,UI order 4; game index 0
-ultimate_active,ultimateWeaponOn,0,chainLightningActive,Chain Lightning,yes,UI order 4; game index 0
+ultimate_owned,ultimateWeaponUnlocked,0,chainLightningOwned,Chain Lightning,yes,game index 0
+ultimate_active,ultimateWeaponOn,0,chainLightningActive,Chain Lightning,yes,game index 0
 ultimate_upgrade,ultimateWeaponLevel,0,chainLightningDamageLevel,Chain Lightning upgrade 0,yes,"game weapon 0, slot 0"
 ultimate_upgrade,ultimateWeaponLevel,1,chainLightningQuantityLevel,Chain Lightning upgrade 1,yes,"game weapon 0, slot 1"
 ultimate_upgrade,ultimateWeaponLevel,2,chainLightningChanceLevel,Chain Lightning upgrade 2,yes,"game weapon 0, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,1,smartMissilesOwned,Smart Missiles,yes,UI order 5; game index 1
-ultimate_active,ultimateWeaponOn,1,smartMissilesActive,Smart Missiles,yes,UI order 5; game index 1
+ultimate_owned,ultimateWeaponUnlocked,1,smartMissilesOwned,Smart Missiles,yes,game index 1
+ultimate_active,ultimateWeaponOn,1,smartMissilesActive,Smart Missiles,yes,game index 1
 ultimate_upgrade,ultimateWeaponLevel,3,smartMissilesDamageLevel,Smart Missiles upgrade 0,yes,"game weapon 1, slot 0"
 ultimate_upgrade,ultimateWeaponLevel,4,smartMissilesQuantityLevel,Smart Missiles upgrade 1,yes,"game weapon 1, slot 1"
 ultimate_upgrade,ultimateWeaponLevel,5,smartMissilesCooldownLevel,Smart Missiles upgrade 2,yes,"game weapon 1, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,4,innerLandMinesOwned,Inner Land Mines,yes,UI order 6; game index 4
-ultimate_active,ultimateWeaponOn,4,innerLandMinesActive,Inner Land Mines,yes,UI order 6; game index 4
-ultimate_upgrade,ultimateWeaponLevel,12,innerLandMinesDamageLevel,Inner Land Mines upgrade 0,yes,"game weapon 4, slot 0"
-ultimate_upgrade,ultimateWeaponLevel,13,innerLandMinesQuantityLevel,Inner Land Mines upgrade 1,yes,"game weapon 4, slot 1"
-ultimate_upgrade,ultimateWeaponLevel,14,innerLandMinesCooldownLevel,Inner Land Mines upgrade 2,yes,"game weapon 4, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,6,poisonSwampOwned,Poison Swamp,yes,UI order 7; game index 6
-ultimate_active,ultimateWeaponOn,6,poisonSwampActive,Poison Swamp,yes,UI order 7; game index 6
-ultimate_upgrade,ultimateWeaponLevel,18,poisonSwampDamageLevel,Poison Swamp upgrade 0,yes,"game weapon 6, slot 0"
-ultimate_upgrade,ultimateWeaponLevel,19,poisonSwampDurationLevel,Poison Swamp upgrade 1,yes,"game weapon 6, slot 1"
-ultimate_upgrade,ultimateWeaponLevel,20,poisonSwampCooldownLevel,Poison Swamp upgrade 2,yes,"game weapon 6, slot 2"
-ultimate_owned,ultimateWeaponUnlocked,3,chronoFieldOwned,Chrono Field,yes,UI order 8; game index 3
-ultimate_active,ultimateWeaponOn,3,chronoFieldActive,Chrono Field,yes,UI order 8; game index 3
+ultimate_owned,ultimateWeaponUnlocked,2,deathWaveOwned,Death Wave,yes,game index 2
+ultimate_active,ultimateWeaponOn,2,deathWaveActive,Death Wave,yes,game index 2
+ultimate_upgrade,ultimateWeaponLevel,6,deathWaveDamageLevel,Death Wave upgrade 0,yes,"game weapon 2, slot 0"
+ultimate_upgrade,ultimateWeaponLevel,7,deathWaveQuantityLevel,Death Wave upgrade 1,yes,"game weapon 2, slot 1"
+ultimate_upgrade,ultimateWeaponLevel,8,deathWaveCooldownLevel,Death Wave upgrade 2,yes,"game weapon 2, slot 2"
+ultimate_owned,ultimateWeaponUnlocked,3,chronoFieldOwned,Chrono Field,yes,game index 3
+ultimate_active,ultimateWeaponOn,3,chronoFieldActive,Chrono Field,yes,game index 3
 ultimate_upgrade,ultimateWeaponLevel,9,chronoFieldDurationLevel,Chrono Field upgrade 0,yes,"game weapon 3, slot 0"
 ultimate_upgrade,ultimateWeaponLevel,10,chronoFieldSlowLevel,Chrono Field upgrade 1,yes,"game weapon 3, slot 1"
 ultimate_upgrade,ultimateWeaponLevel,11,chronoFieldCooldownLevel,Chrono Field upgrade 2,yes,"game weapon 3, slot 2"
+ultimate_owned,ultimateWeaponUnlocked,4,innerLandMinesOwned,Inner Land Mines,yes,game index 4
+ultimate_active,ultimateWeaponOn,4,innerLandMinesActive,Inner Land Mines,yes,game index 4
+ultimate_upgrade,ultimateWeaponLevel,12,innerLandMinesDamageLevel,Inner Land Mines upgrade 0,yes,"game weapon 4, slot 0"
+ultimate_upgrade,ultimateWeaponLevel,13,innerLandMinesQuantityLevel,Inner Land Mines upgrade 1,yes,"game weapon 4, slot 1"
+ultimate_upgrade,ultimateWeaponLevel,14,innerLandMinesCooldownLevel,Inner Land Mines upgrade 2,yes,"game weapon 4, slot 2"
+ultimate_owned,ultimateWeaponUnlocked,5,goldenTowerOwned,Golden Tower,yes,game index 5
+ultimate_active,ultimateWeaponOn,5,goldenTowerActive,Golden Tower,yes,game index 5
+ultimate_upgrade,ultimateWeaponLevel,15,goldenTowerBonusLevel,Golden Tower upgrade 0,yes,"game weapon 5, slot 0"
+ultimate_upgrade,ultimateWeaponLevel,16,goldenTowerDurationLevel,Golden Tower upgrade 1,yes,"game weapon 5, slot 1"
+ultimate_upgrade,ultimateWeaponLevel,17,goldenTowerCooldownLevel,Golden Tower upgrade 2,yes,"game weapon 5, slot 2"
+ultimate_owned,ultimateWeaponUnlocked,6,poisonSwampOwned,Poison Swamp,yes,game index 6
+ultimate_active,ultimateWeaponOn,6,poisonSwampActive,Poison Swamp,yes,game index 6
+ultimate_upgrade,ultimateWeaponLevel,18,poisonSwampDamageLevel,Poison Swamp upgrade 0,yes,"game weapon 6, slot 0"
+ultimate_upgrade,ultimateWeaponLevel,19,poisonSwampDurationLevel,Poison Swamp upgrade 1,yes,"game weapon 6, slot 1"
+ultimate_upgrade,ultimateWeaponLevel,20,poisonSwampCooldownLevel,Poison Swamp upgrade 2,yes,"game weapon 6, slot 2"
+ultimate_owned,ultimateWeaponUnlocked,7,blackHoleOwned,Black Hole,yes,game index 7
+ultimate_active,ultimateWeaponOn,7,blackHoleActive,Black Hole,yes,game index 7
+ultimate_upgrade,ultimateWeaponLevel,21,blackHoleSizeLevel,Black Hole upgrade 0,yes,"game weapon 7, slot 0"
+ultimate_upgrade,ultimateWeaponLevel,22,blackHoleDurationLevel,Black Hole upgrade 1,yes,"game weapon 7, slot 1"
+ultimate_upgrade,ultimateWeaponLevel,23,blackHoleCooldownLevel,Black Hole upgrade 2,yes,"game weapon 7, slot 2"
+ultimate_owned,ultimateWeaponUnlocked,8,spotlightOwned,Spotlight,yes,game index 8
+ultimate_active,ultimateWeaponOn,8,spotlightActive,Spotlight,yes,game index 8
+ultimate_upgrade,ultimateWeaponLevel,24,spotlightBonusLevel,Spotlight upgrade 0,yes,"game weapon 8, slot 0"
+ultimate_upgrade,ultimateWeaponLevel,25,spotlightAngleLevel,Spotlight upgrade 1,yes,"game weapon 8, slot 1"
+ultimate_upgrade,ultimateWeaponLevel,26,spotlightQuantityLevel,Spotlight upgrade 2,yes,"game weapon 8, slot 2"
 ultimate_plus,ultimateWeaponPlusLevel,0,ultimatePlusChainLightningSmiteLevel,chainLightningSmite,yes,wiki plus unlock order
 ultimate_plus,ultimateWeaponPlusLevel,1,ultimatePlusSmartMissilesCoverFireLevel,smartMissilesCoverFire,yes,wiki plus unlock order
 ultimate_plus,ultimateWeaponPlusLevel,2,ultimatePlusPoisonSwampDeathCreepLevel,poisonSwampDeathCreep,yes,wiki plus unlock order

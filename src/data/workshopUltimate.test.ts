@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { GAME_ULTIMATE_WEAPON_INDEX } from '../playerSave/gameUltimateWeaponMapping'
 import {
   WORKSHOP_ULTIMATE_WEAPON_ORDER,
   workshopUltimateMaxLevel,
@@ -14,6 +15,12 @@ import {
 } from './workshopUltimate'
 
 describe('workshop ultimate wiki spot checks', () => {
+  it('WORKSHOP_ULTIMATE_WEAPON_ORDER matches in-game save array indices', () => {
+    WORKSHOP_ULTIMATE_WEAPON_ORDER.forEach((weaponId, ui) => {
+      expect(GAME_ULTIMATE_WEAPON_INDEX[weaponId]).toBe(ui)
+    })
+  })
+
   it('Chain Lightning chance L5 shows 12.50% with next cost 98', () => {
     expect(workshopUltimateStatDisplay('chainLightningChanceLevel', 5)).toBe('12.50%')
     expect(workshopUltimateNextMarginalStones('chainLightningChanceLevel', 5)).toBe(98)

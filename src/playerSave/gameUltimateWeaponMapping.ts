@@ -1,6 +1,6 @@
 /**
  * Game `ultimateWeapon*` array indices (from Il2Cpp `DevPanelUltimateWeapons`).
- * TowerSmith UI uses {@link WORKSHOP_ULTIMATE_WEAPON_ORDER} — do not assume they match.
+ * {@link WORKSHOP_ULTIMATE_WEAPON_ORDER} matches this index order (0…8).
  * See `docs/game-workshop-index-map.csv` (category `ultimate_*`).
  */
 

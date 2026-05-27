@@ -229,7 +229,7 @@ for (let i = 0; i < WORKSHOP_BOT_UPGRADE_ORDER.length; i++) {
   })
 }
 
-// --- Ultimate weapons (game index ≠ UI order) ---
+// --- Ultimate weapons (UI order = game save index 0…8) ---
 const UI_WEAPON_NAMES: Record<string, string> = {
   goldenTower: 'Golden Tower',
   blackHole: 'Black Hole',
@@ -254,7 +254,7 @@ for (let ui = 0; ui < WORKSHOP_ULTIMATE_WEAPON_ORDER.length; ui++) {
     towersmith_field: workshopUltimateOwnedKey(weaponId),
     display_name: name,
     import_mapped: 'yes',
-    notes: `UI order ${ui}; game index ${gi}`,
+    notes: `game index ${gi}`,
   })
   push({
     category: 'ultimate_active',
@@ -263,7 +263,7 @@ for (let ui = 0; ui < WORKSHOP_ULTIMATE_WEAPON_ORDER.length; ui++) {
     towersmith_field: workshopUltimateActiveKey(weaponId),
     display_name: name,
     import_mapped: 'yes',
-    notes: `UI order ${ui}; game index ${gi}`,
+    notes: `game index ${gi}`,
   })
 
   const upgradeKeys = workshopUltimateWeaponUpgradeKeys(weaponId)
