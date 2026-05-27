@@ -11,7 +11,6 @@ import { GalleryUpvoteButton } from './GalleryUpvoteButton'
 import {
   GalleryBuildCategoryBadge,
   GalleryBuildCategoryFilter,
-  GalleryBuildCategorySelect,
 } from './GalleryBuildCategoryFields'
 
 import { useAuth } from '../auth/AuthProvider'
@@ -19,8 +18,6 @@ import { useAuth } from '../auth/AuthProvider'
 import {
 
   getGalleryTower,
-
-  submitGalleryTower,
 
   towerGalleryApiAvailable,
 
@@ -30,13 +27,11 @@ import {
 
 import { useGalleryList } from '../towerGallery/useGalleryList'
 
-import { TOWER_GALLERY_MAX_TITLE_LEN, type GalleryListSort } from '../towerGallery/types'
+import type { GalleryListSort } from '../towerGallery/types'
 
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 
 import { buildGalleryShareUrls } from '../towerGallery/shareLink'
-
-import { supabaseBrowserConfigured } from '../supabase/client'
 
 import { useI18n } from '../i18n'
 
@@ -214,12 +209,6 @@ export function TowerGalleryPanel({
 
   const [actionNotice, setActionNotice] = useState<string | null>(null)
 
-  const [submitTitle, setSubmitTitle] = useState('')
-
-  const [submitCategory, setSubmitCategory] = useState<GalleryBuildCategory | ''>('')
-
-  const [submitting, setSubmitting] = useState(false)
-
   const [loadingId, setLoadingId] = useState<string | null>(null)
 
 
@@ -294,85 +283,6 @@ export function TowerGalleryPanel({
 
 
 
-  const handleSubmit = useCallback(async () => {
-
-    setActionNotice(null)
-
-    if (supabaseBrowserConfigured() && !auth.session) {
-
-      setActionNotice(t('auth_required_publish'))
-
-      return
-
-    }
-
-    const payload = labToolsRef.current?.getLabsShareFile()
-
-    if (!payload) {
-
-      setActionNotice(t('gallery_error_apply'))
-
-      return
-
-    }
-
-    if (!submitCategory) {
-
-      setActionNotice(t('gallery_error_invalid_category'))
-
-      return
-
-    }
-
-    const accessToken = await auth.getAccessToken()
-
-    setSubmitting(true)
-
-    const result = await submitGalleryTower(
-      { title: submitTitle, category: submitCategory, payload },
-      accessToken,
-    )
-
-    setSubmitting(false)
-
-    if (!result.ok) {
-
-      setActionNotice(apiErrorMessage(result.error, errorStrings))
-
-      return
-
-    }
-
-    setActionNotice(fmt.galleryNoticeSubmitted(result.entry.title))
-
-    setSubmitTitle('')
-
-    setSubmitCategory('')
-
-    void loadFirstPage()
-
-  }, [
-
-    auth,
-
-    errorStrings,
-
-    fmt,
-
-    labToolsRef,
-
-    loadFirstPage,
-
-    submitTitle,
-
-    submitCategory,
-
-    t,
-
-  ])
-
-
-
   return (
 
     <section className="tower-gallery" aria-labelledby="tower-gallery-title">
@@ -384,74 +294,6 @@ export function TowerGalleryPanel({
       </h2>
 
       <p className="tower-gallery__intro">{t('gallery_intro')}</p>
-
-
-
-      {supabaseBrowserConfigured() ? (
-
-        <p className="tower-gallery__hint tower-gallery__hint--tight">
-
-          {auth.session ? t('gallery_submit_signed_in') : t('gallery_submit_sign_in_hint')}
-
-        </p>
-
-      ) : null}
-
-
-
-      <div className="tower-gallery__submit">
-
-        <h3 className="tower-gallery__subtitle">{t('gallery_submit_title')}</h3>
-
-        <p className="tower-gallery__hint">{t('gallery_submit_hint')}</p>
-
-        <label className="tower-gallery__field">
-
-          <span>{t('gallery_field_title')}</span>
-
-          <input
-
-            type="text"
-
-            className="tower-gallery__input"
-
-            value={submitTitle}
-
-            onChange={(e) => setSubmitTitle(e.target.value)}
-
-            maxLength={TOWER_GALLERY_MAX_TITLE_LEN}
-
-            autoComplete="off"
-
-            placeholder={t('gallery_field_title_placeholder')}
-
-          />
-
-        </label>
-
-        <GalleryBuildCategorySelect
-          value={submitCategory}
-          onChange={setSubmitCategory}
-          disabled={submitting}
-        />
-
-        <button
-
-          type="button"
-
-          className="glow-btn glow-btn--block"
-
-          disabled={submitting || submitTitle.trim().length < 1 || submitCategory === ''}
-
-          onClick={() => void handleSubmit()}
-
-        >
-
-          {submitting ? t('gallery_submitting') : t('gallery_submit_btn')}
-
-        </button>
-
-      </div>
 
 
 

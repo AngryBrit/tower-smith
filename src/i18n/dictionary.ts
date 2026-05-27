@@ -15,7 +15,7 @@ export const STRINGS_EN = {
   app_nav_themes: 'THEMES',
   app_nav_gallery: 'BUILDS',
   app_nav_tools: 'TOOLS &',
-  app_nav_settings: 'SETTINGS',
+  app_nav_settings: 'Settings',
   app_nav_tools_settings: 'Settings',
   app_nav_gallery_admin: 'ADMIN',
   app_themes_title: 'Themes & Songs',
@@ -318,7 +318,7 @@ export const STRINGS_EN = {
   gallery_submit_signed_in: 'You are signed in. Submissions use your profile username from Tools & Settings.',
   gallery_title: 'Community towers',
   gallery_intro:
-    'Short share links (?build=…) load towers from the community gallery. Sign in to submit; browse and load builds without an account. Requires Supabase + npm run dev:netlify locally.',
+    'Short share links (?build=…) load towers from the community gallery. Sign in to submit; browse and load builds without an account.',
   gallery_submit_title: 'Submit your tower',
   gallery_submit_hint:
     'Uses your current LAB levels and workshop snapshot (same data as a share link). Sign in to submit; pick a category and your profile name is shown as author.',

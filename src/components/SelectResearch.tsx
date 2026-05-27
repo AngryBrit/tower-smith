@@ -13,6 +13,7 @@ import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { CommunityBuildRow } from './CommunityBuildRow'
+import { AuthSignInDialog } from './AuthSignInDialog'
 import { GalleryPublishDialog } from './GalleryPublishDialog'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import { APP_VERSION, CHANGELOG_URL, SPONSOR_URL } from '../appVersion'
@@ -205,6 +206,7 @@ export const SelectResearch = forwardRef<
   const [sharePublishing, setSharePublishing] = useState(false)
   const [communityPublishDialogOpen, setCommunityPublishDialogOpen] =
     useState(false)
+  const [authSignInDialogOpen, setAuthSignInDialogOpen] = useState(false)
   const [publishTitle, setPublishTitle] = useState('')
   const [publishCategory, setPublishCategory] = useState<GalleryBuildCategory | ''>('')
   const [communityPublishSubmitting, setCommunityPublishSubmitting] =
@@ -270,7 +272,8 @@ export const SelectResearch = forwardRef<
       resetLevelsConfirmOpen ||
       labDataPanelOpen ||
       labCompareOpen ||
-      communityPublishDialogOpen
+      communityPublishDialogOpen ||
+      authSignInDialogOpen
     if (!blocking) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
@@ -279,6 +282,7 @@ export const SelectResearch = forwardRef<
       setLabDataPanelOpen(false)
       setLabCompareOpen(false)
       setCommunityPublishDialogOpen(false)
+      setAuthSignInDialogOpen(false)
     }
     window.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
@@ -293,6 +297,7 @@ export const SelectResearch = forwardRef<
     labDataPanelOpen,
     labCompareOpen,
     communityPublishDialogOpen,
+    authSignInDialogOpen,
   ])
 
   useEffect(() => {
@@ -1089,11 +1094,19 @@ export const SelectResearch = forwardRef<
 
   const openCommunityPublishDialog = useCallback(() => {
     void (async () => {
-      if (!(await ensureSignedInForPublish())) return
+      if (!supabaseBrowserConfigured()) {
+        setImportNotice(t('gallery_error_unavailable'))
+        return
+      }
+      const token = await getPublishAccessToken()
+      if (!token) {
+        setAuthSignInDialogOpen(true)
+        return
+      }
       setPublishTitle('')
       setCommunityPublishDialogOpen(true)
     })()
-  }, [ensureSignedInForPublish])
+  }, [getPublishAccessToken, t])
 
   const closeCommunityPublishDialog = useCallback(() => {
     if (communityPublishSubmitting) return
@@ -1562,6 +1575,11 @@ export const SelectResearch = forwardRef<
         onSubmit={() => void commitCommunityPublish()}
         dialogTitleKey="sr_community_publish_title"
         submitLabelKey="sr_community_publish_submit"
+      />
+
+      <AuthSignInDialog
+        open={authSignInDialogOpen}
+        onClose={() => setAuthSignInDialogOpen(false)}
       />
 
       <div

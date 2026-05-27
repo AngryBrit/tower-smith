@@ -89,8 +89,8 @@ export default function App() {
   }, [])
 
   const inpanelTabsClass = MODULES_PANEL_ENABLED
-    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--nine'
-    : 'select-research__inpanel-tabs select-research__inpanel-tabs--eight'
+    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--eight-no-tools'
+    : 'select-research__inpanel-tabs select-research__inpanel-tabs--seven-no-tools'
 
   return (
     <div className="app-root">
@@ -126,6 +126,7 @@ export default function App() {
                 className="select-research"
                 aria-label={t('app_inpanel_tabs_aria')}
               >
+                <div className="select-research__inpanel-header">
                 <nav
                   className={inpanelTabsClass}
                   role="tablist"
@@ -279,23 +280,14 @@ export default function App() {
                   >
                     {t('app_nav_gallery')}
                   </button>
-                  <button
-                    id="inpanel-tab-tools-settings"
-                    type="button"
-                    role="tab"
-                    aria-selected={mainPanel === 'toolsSettings'}
-                    aria-controls="inpanel-panel-tools-settings"
-                    aria-label={t('app_nav_settings')}
-                    className={
-                      mainPanel === 'toolsSettings'
-                        ? 'select-research__inpanel-tab select-research__inpanel-tab--tools-settings select-research__inpanel-tab--on'
-                        : 'select-research__inpanel-tab select-research__inpanel-tab--tools-settings'
-                    }
-                    onClick={() => setMainPanel('toolsSettings')}
-                  >
-                    {t('app_nav_settings')}
-                  </button>
                 </nav>
+                <div className="select-research__inpanel-auth">
+                  <AuthButton
+                    placement="nav"
+                    onOpenSettings={() => setMainPanel('toolsSettings')}
+                  />
+                </div>
+                </div>
 
                 <div
                   ref={setInpanelPresetsMount}
@@ -424,7 +416,7 @@ export default function App() {
                 <div
                   id="inpanel-panel-tools-settings"
                   role="tabpanel"
-                  aria-labelledby="inpanel-tab-tools-settings"
+                  aria-label={t('app_nav_settings')}
                   hidden={mainPanel !== 'toolsSettings'}
                 >
                   <ToolsSettingsPage
@@ -447,9 +439,6 @@ export default function App() {
                 </div>
 
                 <footer className="select-research__site-footer">
-                  <div className="select-research__site-footer-auth">
-                    <AuthButton />
-                  </div>
                   <nav
                     className="select-research__version-badge"
                     aria-label={t('sr_footer_nav_aria')}
