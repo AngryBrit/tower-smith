@@ -39,5 +39,8 @@ tmp-kept-en-keys.json
 # Local IL2CPP / asset extraction scratch (not for the repo)
 tools/
 
+# Local game research / field dumps (not for the repo)
+docs/
+
 # Local Netlify folder
 .netlify
