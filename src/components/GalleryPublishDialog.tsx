@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
+import { TOWER_GALLERY_MAX_TITLE_LEN } from '../towerGallery/types'
 import { GalleryBuildCategorySelect } from './GalleryBuildCategoryFields'
 import { useI18n } from '../i18n'
 
@@ -87,7 +88,7 @@ export function GalleryPublishDialog({
             value={title}
             onChange={(e) => onTitleChange(e.target.value)}
             autoComplete="off"
-            maxLength={80}
+            maxLength={TOWER_GALLERY_MAX_TITLE_LEN}
             placeholder={t('gallery_field_title_placeholder')}
           />
           <GalleryBuildCategorySelect

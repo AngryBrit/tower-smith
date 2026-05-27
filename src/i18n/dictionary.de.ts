@@ -355,10 +355,10 @@ export const STRINGS_DE = {
   gallery_sort_label: 'Builds sortieren',
   gallery_sort_newest: 'Neueste',
   gallery_sort_top: 'Top',
-  gallery_upvote_btn: 'Hilfreich',
-  gallery_upvote_btn_active: 'Hilfreich ✓',
-  gallery_upvote_sign_in: 'Melde dich an, um Builds als hilfreich zu markieren.',
-  gallery_upvote_short: 'hilfreich',
+  gallery_upvote_btn: 'Upvote',
+  gallery_upvote_btn_active: 'Upvoted',
+  gallery_upvote_sign_in: 'Melde dich an, um Builds upzuvoten.',
+  gallery_upvote_short: 'Upvotes',
   gallery_error_cannot_vote_own: 'Du kannst nicht für deinen eigenen Build abstimmen.',
   gallery_error_votes_unavailable:
     'Hilfreich-Stimmen sind noch nicht verfügbar. Bitte die Build-Votes-Migration in Supabase ausführen.',
@@ -376,7 +376,7 @@ export const STRINGS_DE = {
   gallery_error_network: 'Galerie-API nicht erreichbar. Später erneut versuchen.',
   gallery_error_unavailable:
     'Galerie-API nicht verfügbar. Unter localhost npm run dev:netlify statt npm run dev nutzen.',
-  gallery_error_invalid_title: 'Titel muss 1–80 Zeichen haben.',
+  gallery_error_invalid_title: 'Titel muss 1–40 Zeichen haben.',
   gallery_error_invalid_payload: 'Turm-Daten ungültig oder zu groß.',
   gallery_error_disabled: 'Einreichungen vorübergehend deaktiviert.',
   gallery_error_not_found: 'Dieser Turm wurde nicht gefunden.',

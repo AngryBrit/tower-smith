@@ -6663,8 +6663,25 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .tower-gallery__entry-title {
+  padding: 0;
+  border: none;
+  background: none;
+  font-family: inherit;
   font-size: 0.82rem;
   font-weight: 600;
+  color: var(--sr-text);
+  text-align: left;
+  cursor: pointer;
+}
+
+.tower-gallery__entry-title:hover:not(:disabled) {
+  color: var(--sr-cyan-bright, #22d3ee);
+  text-decoration: underline;
+}
+
+.tower-gallery__entry-title:disabled {
+  cursor: wait;
+  opacity: 0.75;
 }
 
 .tower-gallery__entry-author,

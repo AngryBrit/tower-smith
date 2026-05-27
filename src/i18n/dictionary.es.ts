@@ -360,10 +360,10 @@ export const STRINGS_ES = {
   gallery_sort_label: 'Ordenar builds',
   gallery_sort_newest: 'Recientes',
   gallery_sort_top: 'Mejor valorados',
-  gallery_upvote_btn: 'Útil',
-  gallery_upvote_btn_active: 'Útil ✓',
-  gallery_upvote_sign_in: 'Inicia sesión para marcar builds como útiles.',
-  gallery_upvote_short: 'útiles',
+  gallery_upvote_btn: 'Votar',
+  gallery_upvote_btn_active: 'Votado',
+  gallery_upvote_sign_in: 'Inicia sesión para votar builds.',
+  gallery_upvote_short: 'votos',
   gallery_error_cannot_vote_own: 'No puedes votar tu propio build.',
   gallery_error_votes_unavailable:
     'Los votos útiles aún no están disponibles. Aplica la migración de votos en Supabase.',
@@ -381,7 +381,7 @@ export const STRINGS_ES = {
   gallery_error_network: 'No se pudo contactar la API de la galería. Inténtalo más tarde.',
   gallery_error_unavailable:
     'La API de la galería no está disponible. En localhost, usa npm run dev:netlify en lugar de npm run dev.',
-  gallery_error_invalid_title: 'El título debe tener entre 1 y 80 caracteres.',
+  gallery_error_invalid_title: 'El título debe tener entre 1 y 40 caracteres.',
   gallery_error_invalid_payload: 'Los datos de la torre no son válidos o son demasiado grandes.',
   gallery_error_disabled: 'Los envíos están desactivados temporalmente.',
   gallery_error_not_found: 'No se encontró esa torre.',

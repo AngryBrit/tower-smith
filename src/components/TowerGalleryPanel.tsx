@@ -30,7 +30,7 @@ import {
 
 import { useGalleryList } from '../towerGallery/useGalleryList'
 
-import type { GalleryListSort } from '../towerGallery/types'
+import { TOWER_GALLERY_MAX_TITLE_LEN, type GalleryListSort } from '../towerGallery/types'
 
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 
@@ -419,7 +419,7 @@ export function TowerGalleryPanel({
 
             onChange={(e) => setSubmitTitle(e.target.value)}
 
-            maxLength={80}
+            maxLength={TOWER_GALLERY_MAX_TITLE_LEN}
 
             autoComplete="off"
 
@@ -602,7 +602,17 @@ export function TowerGalleryPanel({
 
                 <div className="tower-gallery__entry-main">
 
-                  <span className="tower-gallery__entry-title">{entry.title}</span>
+                  <button
+                    type="button"
+                    className="tower-gallery__entry-title"
+                    disabled={loadingId === entry.id}
+                    aria-label={`${t('gallery_load_btn')}: ${entry.title}`}
+                    onClick={() => void handleLoad(entry.id)}
+                  >
+                    {loadingId === entry.id
+                      ? t('gallery_loading_tower')
+                      : entry.title}
+                  </button>
 
                   {entry.category ? (
                     <GalleryBuildCategoryBadge
@@ -660,26 +670,6 @@ export function TowerGalleryPanel({
                   >
 
                     {t('gallery_copy_link_btn')}
-
-                  </button>
-
-                  <button
-
-                    type="button"
-
-                    className="glow-btn"
-
-                    disabled={loadingId === entry.id}
-
-                    onClick={() => void handleLoad(entry.id)}
-
-                  >
-
-                    {loadingId === entry.id
-
-                      ? t('gallery_loading_tower')
-
-                      : t('gallery_load_btn')}
 
                   </button>
 

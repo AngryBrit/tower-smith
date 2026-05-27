@@ -2,7 +2,7 @@ import type { LabsShareFile } from '../labsShareCodec'
 import type { GalleryBuildCategory } from './buildCategories'
 
 export const TOWER_GALLERY_MAX_PAYLOAD_BYTES = 512 * 1024
-export const TOWER_GALLERY_MAX_TITLE_LEN = 80
+export const TOWER_GALLERY_MAX_TITLE_LEN = 40
 export const TOWER_GALLERY_MAX_AUTHOR_LEN = 40
 export const TOWER_GALLERY_LIST_PAGE_DEFAULT = 40
 export const TOWER_GALLERY_LIST_PAGE_MAX = 100

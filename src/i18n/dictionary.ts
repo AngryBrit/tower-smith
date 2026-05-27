@@ -359,10 +359,10 @@ export const STRINGS_EN = {
   gallery_sort_label: 'Sort builds',
   gallery_sort_newest: 'Newest',
   gallery_sort_top: 'Top rated',
-  gallery_upvote_btn: 'Helpful',
-  gallery_upvote_btn_active: 'Helpful ✓',
-  gallery_upvote_sign_in: 'Sign in to mark builds as helpful.',
-  gallery_upvote_short: 'helpful',
+  gallery_upvote_btn: 'Upvote',
+  gallery_upvote_btn_active: 'Upvoted',
+  gallery_upvote_sign_in: 'Sign in to upvote builds.',
+  gallery_upvote_short: 'upvotes',
   gallery_error_cannot_vote_own: 'You cannot vote on your own build.',
   gallery_error_votes_unavailable:
     'Helpful votes are not available yet. Apply the build votes migration in Supabase.',
@@ -380,7 +380,7 @@ export const STRINGS_EN = {
   gallery_error_network: 'Could not reach the gallery API. Try again later.',
   gallery_error_unavailable:
     'Gallery API is not available. On localhost, run npm run dev:netlify instead of npm run dev.',
-  gallery_error_invalid_title: 'Title must be 1–80 characters.',
+  gallery_error_invalid_title: 'Title must be 1–40 characters.',
   gallery_error_invalid_payload: 'Tower data was invalid or too large.',
   gallery_error_disabled: 'Submissions are temporarily disabled.',
   gallery_error_not_found: 'That tower was not found.',
