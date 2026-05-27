@@ -1,3 +1,4 @@
+import type { GalleryBuildCategory } from './buildCategories'
 import type {
   GalleryBuildVisibility,
   GalleryListSort,
@@ -322,6 +323,41 @@ export async function setGalleryTowerVisibility(
     if (res.status === 400) {
       const err = (parsed as { error?: string } | null)?.error
       if (err === 'invalid_visibility') return { ok: false, error: 'invalid_visibility' }
+      return { ok: false, error: 'unknown' }
+    }
+    if (res.status === 401) return { ok: false, error: 'auth_required' }
+    if (res.status === 404) return { ok: false, error: 'not_found' }
+    if (res.status === 503) return { ok: false, error: 'gallery_unavailable' }
+    if (!res.ok) return { ok: false, error: 'unknown' }
+    const entry = (parsed as { entry?: TowerGalleryIndexEntry } | null)?.entry
+    if (!entry?.id) return { ok: false, error: 'unknown' }
+    return { ok: true, entry: normalizeIndexEntry(entry) }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
+export async function setGalleryTowerCategory(
+  id: string,
+  category: GalleryBuildCategory,
+  accessToken: string,
+): Promise<
+  | { ok: true; entry: TowerGalleryIndexEntry }
+  | { ok: false; error: TowerGalleryApiError }
+> {
+  try {
+    const res = await fetch(`${API_BASE}/towers/category`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ id, category }),
+    })
+    const parsed = await parseJsonResponse(res)
+    if (res.status === 400) {
+      const err = (parsed as { error?: string } | null)?.error
+      if (err === 'invalid_category') return { ok: false, error: 'invalid_category' }
       return { ok: false, error: 'unknown' }
     }
     if (res.status === 401) return { ok: false, error: 'auth_required' }

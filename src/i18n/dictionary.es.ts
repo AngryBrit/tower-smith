@@ -270,10 +270,6 @@ export const STRINGS_ES = {
   theme_guardian_disco: 'Disco',
   app_inpanel_tabs_aria: 'Secciones principales',
   app_tools_title: 'Herramientas',
-  app_tools_intro:
-    'Importar, exportar, compartir y comparar datos de Tower. Usan el espacio de trabajo actual de Tower (niveles, instantánea del taller y presets).',
-  app_tools_lab_hint:
-    'Consejo: ve a LAB para editar niveles o a WORKSHOP para las estadísticas de ataque, defensa y utilidad modeladas; los avisos y presets aparecen en LAB mientras trabajas.',
   app_tools_full_reset: 'Restablecer todos los datos guardados',
   app_tools_full_reset_aria:
     'Borrar todos los datos de TowerSmith guardados en este navegador: lab, taller, builds, temas y ajustes',
@@ -287,6 +283,7 @@ export const STRINGS_ES = {
   auth_sign_in: 'Iniciar sesión',
   auth_sign_out: 'Cerrar sesión',
   auth_my_builds: 'Mis builds',
+  auth_tower_backup: 'Tower — copia de seguridad y compartir',
   auth_my_builds_title: 'Tus builds',
   auth_my_builds_intro:
     'Gestiona tus builds publicados: cargar, copiar enlace, público o privado, regenerar enlace o eliminar.',
@@ -318,7 +315,7 @@ export const STRINGS_ES = {
   profile_error_network: 'No se pudo guardar el perfil. Inténtalo de nuevo.',
   profile_error_unknown: 'Algo salió mal al guardar tu perfil.',
   gallery_search_label: 'Buscar builds',
-  gallery_search_placeholder: 'Buscar por título…',
+  gallery_search_placeholder: 'Buscar por título o nombre de usuario…',
   gallery_submit_sign_in_hint: 'Inicia sesión para enviar tu torre. Explorar y cargar no requiere cuenta.',
   gallery_submit_signed_in:
     'Has iniciado sesión. Los envíos usan tu nombre de usuario de Herramientas y ajustes.',
@@ -389,6 +386,7 @@ export const STRINGS_ES = {
   gallery_notice_link_copied: 'Enlace corto copiado al portapapeles.',
   gallery_notice_set_public: 'El build ahora es público en la galería.',
   gallery_notice_set_unlisted: 'El build ahora está no listado (solo enlace).',
+  gallery_notice_category_updated: 'Categoría del build actualizada.',
   gallery_notice_regenerated_link:
     'Nuevo enlace generado y copiado. El enlace anterior ya no funciona.',
   gallery_notice_regenerated_no_copy:
@@ -410,6 +408,9 @@ export const STRINGS_ES = {
   gallery_by_author: 'por {{author}}',
   gallery_visibility_public: 'Público',
   gallery_visibility_private: 'Privado',
+  gallery_visibility_select_aria: 'Visibilidad: {{value}}. Elige público o privado.',
+  gallery_category_select_aria: 'Categoría: {{value}}. Elige una categoría de build.',
+  gallery_category_filter_select_aria: 'Filtrar categoría: {{value}}.',
   gallery_admin_title: 'Admin de la galería',
   gallery_admin_page_intro:
     'Elimina spam o builds antiguos de la comunidad. Las eliminaciones son permanentes para la galería pública.',
@@ -1140,7 +1141,7 @@ export const STRINGS_ES = {
   sr_qr_dialog_title: 'Escanea para cargar niveles',
   sr_qr_image_alt: 'Código QR que abre el enlace de compartir en el navegador',
   sr_qr_hint:
-    'Codifica el enlace corto ?build=… si la API de la galería está disponible; si no, usa un enlace largo incrustado.',
+    'Codifica el enlace corto ?build=… de la galería para esta torre. Cualquiera que escanee puede abrir el build.',
   sr_qr_copy_link: 'Copiar enlace',
 
   sr_reset_confirm_title: '¿Restablecer todos los niveles del laboratorio?',

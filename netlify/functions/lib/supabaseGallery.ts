@@ -151,6 +151,35 @@ function listSelectColumns(includeVotes: boolean): string {
   return includeVotes ? BUILD_LIST_SELECT_VOTES : BUILD_LIST_SELECT_LEGACY
 }
 
+function escapeIlikePattern(raw: string): string {
+  return raw.replace(/[%_\\]/g, '\\$&')
+}
+
+/** Match builds whose title or author display name contains `query` (case-insensitive). */
+async function applyBuildSearchFilter<T extends { or: (filters: string) => T; ilike: (column: string, pattern: string) => T }>(
+  sb: ReturnType<typeof getSupabaseAdmin>,
+  request: T,
+  query: string,
+): Promise<T> {
+  const pattern = `%${escapeIlikePattern(query)}%`
+  const { data: profiles, error: profileError } = await sb
+    .from('profiles')
+    .select('id')
+    .ilike('display_name', pattern)
+    .limit(100)
+
+  if (profileError) {
+    console.warn('[gallery] profile search failed:', profileError.message)
+    return request.ilike('title', pattern)
+  }
+
+  const authorIds = (profiles ?? []).map((row) => row.id).filter(Boolean)
+  if (authorIds.length > 0) {
+    return request.or(`title.ilike.${pattern},user_id.in.(${authorIds.join(',')})`)
+  }
+  return request.ilike('title', pattern)
+}
+
 async function fetchBuildListPage(
   limit: number,
   cursor: string | null,
@@ -196,8 +225,7 @@ async function fetchBuildListPage(
   }
 
   if (q.length > 0) {
-    const escaped = q.replace(/[%_\\]/g, '\\$&')
-    request = request.ilike('title', `%${escaped}%`)
+    request = await applyBuildSearchFilter(sb, request, q)
   }
 
   if (keyset) {
@@ -523,6 +551,25 @@ export async function updateTowerVisibility(
   const { data, error } = await sb
     .from('builds')
     .update({ visibility: normalizedVisibility })
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .is('deleted_at', null)
+    .select(`id, user_id, title, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
+    .maybeSingle()
+  if (error || !data) return null
+  return rowToEntry(data as BuildRow, undefined, true)
+}
+
+export async function updateTowerCategory(
+  id: string,
+  user: User,
+  category: string,
+): Promise<TowerGalleryIndexEntry | null> {
+  if (!isGalleryBuildCategory(category)) return null
+  const sb = getSupabaseAdmin()
+  const { data, error } = await sb
+    .from('builds')
+    .update({ category })
     .eq('id', id)
     .eq('user_id', user.id)
     .is('deleted_at', null)

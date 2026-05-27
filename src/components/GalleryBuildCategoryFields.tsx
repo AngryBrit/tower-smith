@@ -1,5 +1,6 @@
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 import { GALLERY_BUILD_CATEGORY_I18N } from '../towerGallery/buildCategories'
+import { GalleryCategoryDropdown } from './GalleryCategorySelect'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 
@@ -81,7 +82,6 @@ type GalleryBuildCategoryFilterProps = {
 }
 
 export function GalleryBuildCategoryFilter({
-  id,
   value,
   onChange,
   disabled = false,
@@ -91,23 +91,13 @@ export function GalleryBuildCategoryFilter({
   return (
     <label className="tower-gallery__field tower-gallery__category-filter">
       <span>{t('gallery_filter_category')}</span>
-      <select
-        id={id}
-        className="tower-gallery__input"
+      <GalleryCategoryDropdown
+        allowAll
         value={value}
         disabled={disabled}
-        onChange={(e) => {
-          const next = e.target.value
-          onChange(next === '' ? '' : (next as GalleryBuildCategory))
-        }}
-      >
-        <option value="">{t('gallery_category_filter_all')}</option>
-        {CATEGORY_ENTRIES.map(([category, keys]) => (
-          <option key={category} value={category}>
-            {t(keys.name)}
-          </option>
-        ))}
-      </select>
+        rootClassName="tower-gallery__category-select--filter"
+        onChange={onChange}
+      />
     </label>
   )
 }

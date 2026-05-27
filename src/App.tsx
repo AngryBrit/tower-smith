@@ -286,6 +286,7 @@ export default function App() {
                 <div className="select-research__inpanel-auth">
                   <AuthButton
                     placement="nav"
+                    onOpenTowerBackup={() => labToolsRef.current?.openLabDataPanel()}
                     onOpenMyBuilds={() => setMyBuildsOpen(true)}
                     onOpenSettings={() => setMainPanel('toolsSettings')}
                   />

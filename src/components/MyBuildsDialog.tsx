@@ -1,18 +1,21 @@
 import { useCallback, useEffect, useMemo, useState, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 import type { SelectResearchHandle } from './SelectResearch'
-import { GalleryBuildCategoryBadge } from './GalleryBuildCategoryFields'
+import { GalleryCategorySelect } from './GalleryCategorySelect'
+import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
 import { useAuth } from '../auth/AuthProvider'
 import {
   deleteGalleryTower,
   getGalleryTower,
   regenerateGalleryTowerLink,
   setGalleryTowerVisibility,
+  setGalleryTowerCategory,
   towerGalleryApiAvailable,
   type TowerGalleryApiError,
 } from '../towerGallery/api'
 import { useGalleryList } from '../towerGallery/useGalleryList'
 import { buildGalleryShareUrls } from '../towerGallery/shareLink'
+import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 import { useI18n } from '../i18n'
 
 type MyBuildsDialogProps = {
@@ -183,15 +186,36 @@ export function MyBuildsDialog({
     [auth, errorStrings, fmt, loadFirstPage, onGalleryMutated, t],
   )
 
-  const handleToggleVisibilityOwn = useCallback(
-    async (id: string, visibility: 'public' | 'unlisted') => {
+  const handleSetCategoryOwn = useCallback(
+    async (id: string, category: GalleryBuildCategory) => {
       setNotice(null)
       const token = await auth.getAccessToken()
       if (!token) {
         setNotice(t('auth_required_publish'))
         return
       }
-      const nextVisibility = visibility === 'unlisted' ? 'public' : 'unlisted'
+      setLoadingId(id)
+      const result = await setGalleryTowerCategory(id, category, token)
+      setLoadingId(null)
+      if (!result.ok) {
+        setNotice(apiErrorMessage(result.error, errorStrings))
+        return
+      }
+      patchEntry(id, { category: result.entry.category ?? category })
+      setNotice(t('gallery_notice_category_updated'))
+      onGalleryMutated?.()
+    },
+    [auth, errorStrings, onGalleryMutated, patchEntry, t],
+  )
+
+  const handleSetVisibilityOwn = useCallback(
+    async (id: string, nextVisibility: 'public' | 'unlisted') => {
+      setNotice(null)
+      const token = await auth.getAccessToken()
+      if (!token) {
+        setNotice(t('auth_required_publish'))
+        return
+      }
       setLoadingId(id)
       const result = await setGalleryTowerVisibility(id, nextVisibility, token)
       setLoadingId(null)
@@ -311,19 +335,22 @@ export function MyBuildsDialog({
                     </button>
                     <div className="my-builds-entry__meta-row">
                       <div className="tower-gallery__entry-main">
-                        {entry.category ? (
-                          <div className="tower-gallery__entry-badges">
-                            <GalleryBuildCategoryBadge
-                              category={entry.category}
-                              className="tower-gallery__entry-category"
-                            />
-                            <span className="tower-gallery__visibility-badge">
-                              {entry.visibility === 'unlisted'
-                                ? t('gallery_visibility_private')
-                                : t('gallery_visibility_public')}
-                            </span>
-                          </div>
-                        ) : null}
+                        <div className="tower-gallery__entry-badges">
+                          <GalleryCategorySelect
+                            value={entry.category ?? 'other'}
+                            disabled={loadingId === entry.id}
+                            onChange={(next) =>
+                              void handleSetCategoryOwn(entry.id, next)
+                            }
+                          />
+                          <GalleryVisibilitySelect
+                            value={entry.visibility === 'unlisted' ? 'unlisted' : 'public'}
+                            disabled={loadingId === entry.id}
+                            onChange={(next) =>
+                              void handleSetVisibilityOwn(entry.id, next)
+                            }
+                          />
+                        </div>
                         <time className="tower-gallery__entry-date" dateTime={entry.createdAt}>
                           {formatGalleryDate(entry.createdAt, locale)}
                         </time>
@@ -339,21 +366,6 @@ export function MyBuildsDialog({
                       </div>
                     </div>
                     <div className="tower-gallery__owner-actions">
-                      <button
-                        type="button"
-                        className="glow-btn"
-                        disabled={loadingId === entry.id}
-                        onClick={() =>
-                          void handleToggleVisibilityOwn(
-                            entry.id,
-                            entry.visibility === 'unlisted' ? 'unlisted' : 'public',
-                          )
-                        }
-                      >
-                        {entry.visibility === 'unlisted'
-                          ? t('gallery_owner_make_public')
-                          : t('gallery_owner_make_unlisted')}
-                      </button>
                       <button
                         type="button"
                         className="glow-btn"

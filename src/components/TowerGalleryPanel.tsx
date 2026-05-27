@@ -13,6 +13,8 @@ import {
   GalleryBuildCategoryBadge,
   GalleryBuildCategoryFilter,
 } from './GalleryBuildCategoryFields'
+import { GalleryCategorySelect } from './GalleryCategorySelect'
+import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
 
 import { useAuth } from '../auth/AuthProvider'
 
@@ -20,6 +22,7 @@ import {
   deleteGalleryTower,
   regenerateGalleryTowerLink,
   setGalleryTowerVisibility,
+  setGalleryTowerCategory,
 
   getGalleryTower,
 
@@ -341,15 +344,36 @@ export function TowerGalleryPanel({
     [auth, errorStrings, fmt, loadFirstPage, t],
   )
 
-  const handleToggleVisibilityOwn = useCallback(
-    async (id: string, visibility: 'public' | 'unlisted') => {
+  const handleSetCategoryOwn = useCallback(
+    async (id: string, category: GalleryBuildCategory) => {
       setActionNotice(null)
       const token = await auth.getAccessToken()
       if (!token) {
         setActionNotice(t('auth_required_publish'))
         return
       }
-      const nextVisibility = visibility === 'unlisted' ? 'public' : 'unlisted'
+      setLoadingId(id)
+      const result = await setGalleryTowerCategory(id, category, token)
+      setLoadingId(null)
+      if (!result.ok) {
+        setActionNotice(apiErrorMessage(result.error, errorStrings))
+        return
+      }
+      patchEntry(id, { category: result.entry.category ?? category })
+      setActionNotice(t('gallery_notice_category_updated'))
+      void loadFirstPage()
+    },
+    [auth, errorStrings, loadFirstPage, patchEntry, t],
+  )
+
+  const handleSetVisibilityOwn = useCallback(
+    async (id: string, nextVisibility: 'public' | 'unlisted') => {
+      setActionNotice(null)
+      const token = await auth.getAccessToken()
+      if (!token) {
+        setActionNotice(t('auth_required_publish'))
+        return
+      }
       setLoadingId(id)
       const result = await setGalleryTowerVisibility(id, nextVisibility, token)
       setLoadingId(null)
@@ -584,18 +608,30 @@ export function TowerGalleryPanel({
                       : entry.title}
                   </button>
 
-                  {entry.category ? (
+                  {(entry.category || entry.viewerOwns) ? (
                     <div className="tower-gallery__entry-badges">
-                      <GalleryBuildCategoryBadge
-                        category={entry.category}
-                        className="tower-gallery__entry-category"
-                      />
                       {entry.viewerOwns ? (
-                        <span className="tower-gallery__visibility-badge">
-                          {entry.visibility === 'unlisted'
-                            ? t('gallery_visibility_private')
-                            : t('gallery_visibility_public')}
-                        </span>
+                        <GalleryCategorySelect
+                          value={entry.category ?? 'other'}
+                          disabled={loadingId === entry.id}
+                          onChange={(next) =>
+                            void handleSetCategoryOwn(entry.id, next)
+                          }
+                        />
+                      ) : entry.category ? (
+                        <GalleryBuildCategoryBadge
+                          category={entry.category}
+                          className="tower-gallery__entry-category"
+                        />
+                      ) : null}
+                      {entry.viewerOwns ? (
+                        <GalleryVisibilitySelect
+                          value={entry.visibility === 'unlisted' ? 'unlisted' : 'public'}
+                          disabled={loadingId === entry.id}
+                          onChange={(next) =>
+                            void handleSetVisibilityOwn(entry.id, next)
+                          }
+                        />
                       ) : null}
                     </div>
                   ) : null}
@@ -653,21 +689,6 @@ export function TowerGalleryPanel({
                 </div>
                 {entry.viewerOwns ? (
                   <div className="tower-gallery__owner-actions">
-                    <button
-                      type="button"
-                      className="glow-btn"
-                      disabled={loadingId === entry.id}
-                      onClick={() =>
-                        void handleToggleVisibilityOwn(
-                          entry.id,
-                          entry.visibility === 'unlisted' ? 'unlisted' : 'public',
-                        )
-                      }
-                    >
-                      {entry.visibility === 'unlisted'
-                        ? t('gallery_owner_make_public')
-                        : t('gallery_owner_make_unlisted')}
-                    </button>
                     <button
                       type="button"
                       className="glow-btn"

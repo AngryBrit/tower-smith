@@ -11,7 +11,7 @@ type UseGalleryListOptions = {
   refreshToken?: number
   pageSize?: number
   paginationMode?: 'append' | 'paged'
-  /** Title search (server-side when Supabase is enabled). */
+  /** Title or author display name search (server-side when Supabase is enabled). */
   searchQuery?: string
   /** Build category filter (server-side). */
   categoryFilter?: string

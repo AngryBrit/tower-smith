@@ -272,10 +272,6 @@ export const STRINGS_EN = {
   theme_guardian_disco: 'Disco',
   app_inpanel_tabs_aria: 'Main sections',
   app_tools_title: 'Tools',
-  app_tools_intro:
-    'Import, export, share, and compare Tower data. These actions use your current Tower workspace (levels, workshop snapshot, and presets).',
-  app_tools_lab_hint:
-    'Tip: switch to the LAB tab to edit levels, or WORKSHOP for modeled attack, defense, and utility stats; presets and notices appear on the LAB tab while you work.',
   app_tools_full_reset: 'Reset all stored data',
   app_tools_full_reset_aria:
     'Clear all TowerSmith data saved in this browser: lab, workshop, builds, themes, and settings',
@@ -289,6 +285,7 @@ export const STRINGS_EN = {
   auth_sign_in: 'Sign in',
   auth_sign_out: 'Sign out',
   auth_my_builds: 'My Builds',
+  auth_tower_backup: 'Tower Backup & Sharing',
   auth_my_builds_title: 'Your builds',
   auth_my_builds_intro:
     'Manage your published builds — load, copy link, set public or private, regenerate link, or delete.',
@@ -319,7 +316,7 @@ export const STRINGS_EN = {
   profile_error_network: 'Could not save your profile. Try again.',
   profile_error_unknown: 'Something went wrong while saving your profile.',
   gallery_search_label: 'Search builds',
-  gallery_search_placeholder: 'Search by title…',
+  gallery_search_placeholder: 'Search by title or username…',
   gallery_submit_sign_in_hint: 'Sign in to submit your tower. Browsing and loading builds does not require an account.',
   gallery_submit_signed_in: 'You are signed in. Submissions use your profile username from Tools & Settings.',
   gallery_title: 'Community towers',
@@ -388,6 +385,7 @@ export const STRINGS_EN = {
   gallery_notice_link_copied: 'Short share link copied to clipboard.',
   gallery_notice_set_public: 'Build is now public in gallery listings.',
   gallery_notice_set_unlisted: 'Build is now unlisted (link-only).',
+  gallery_notice_category_updated: 'Build category updated.',
   gallery_notice_regenerated_link: 'New link generated and copied. Old link no longer works.',
   gallery_notice_regenerated_no_copy: 'New link generated. Copy it from the build row.',
   gallery_load_btn: 'Load',
@@ -407,6 +405,9 @@ export const STRINGS_EN = {
   gallery_by_author: 'by {{author}}',
   gallery_visibility_public: 'Public',
   gallery_visibility_private: 'Private',
+  gallery_visibility_select_aria: 'Visibility: {{value}}. Choose public or private.',
+  gallery_category_select_aria: 'Category: {{value}}. Choose a build category.',
+  gallery_category_filter_select_aria: 'Filter category: {{value}}.',
   gallery_admin_title: 'Gallery admin',
   gallery_admin_page_intro:
     'Remove spam or outdated community builds. Deletes are permanent for the public gallery.',
@@ -1125,7 +1126,7 @@ export const STRINGS_EN = {
   sr_qr_dialog_title: 'Scan to load lab levels',
   sr_qr_image_alt: 'QR code that opens the lab share link in a browser',
   sr_qr_hint:
-    'Encodes the short ?build=… share link when the gallery API is available; otherwise falls back to a long embedded link.',
+    'Encodes the short ?build=… gallery link for this tower. Anyone who scans it can open the build.',
   sr_qr_copy_link: 'Copy link',
 
   sr_reset_confirm_title: 'Reset all lab levels?',

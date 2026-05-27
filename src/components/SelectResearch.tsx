@@ -949,55 +949,55 @@ export const SelectResearch = forwardRef<
   ])
 
   const handleShowShareQr = useCallback(async () => {
+    if (!towerGalleryApiAvailable()) {
+      setImportNotice(t('sr_notice_qr_fail'))
+      return
+    }
+    if (!(await ensureSignedInForPublish())) return
+    const category = ensurePublishCategorySelected()
+    if (!category) return
+    const payload = getLabsShareFileForGallery()
+    if (!payload) {
+      setImportNotice(t('sr_notice_qr_fail'))
+      return
+    }
+    const accessToken = await getPublishAccessToken()
+    setSharePublishing(true)
     try {
-      let shareUrl: string | null = null
-      if (towerGalleryApiAvailable()) {
-        const payload = getLabsShareFileForGallery()
-        if (payload && (await ensureSignedInForPublish())) {
-          const category = ensurePublishCategorySelected()
-          if (category) {
-          const accessToken = await getPublishAccessToken()
-          setSharePublishing(true)
-          const result = await publishGalleryShareLink(
-            payload,
-            resolveShareTitle(),
-            category,
-            window.location.href,
-            { accessToken, visibility: 'unlisted' },
-          )
-          setSharePublishing(false)
-          if (result.ok) shareUrl = result.url
-          }
+      const result = await publishGalleryShareLink(
+        payload,
+        resolveShareTitle(),
+        category,
+        window.location.href,
+        { accessToken, visibility: 'unlisted' },
+      )
+      if (!result.ok) {
+        if (result.error === 'auth_required') {
+          setImportNotice(t('auth_required_publish'))
+        } else {
+          setImportNotice(t('sr_notice_qr_fail'))
         }
-      }
-      if (!shareUrl) {
-        const encoded = await encodeLabsShareQueryValue(
-          levelOverrides,
-          workshopFlat,
-          undefined,
-          readTowerThemesSnapshot(),
-        )
-        shareUrl = buildLabsShareUrls(encoded, window.location.href).clean
+        return
       }
       const QRCode = (await import('qrcode')).default
-      const dataUrl = await QRCode.toDataURL(shareUrl, {
+      const dataUrl = await QRCode.toDataURL(result.url, {
         width: 220,
         margin: 2,
         color: { dark: '#0f172a', light: '#e0f2fe' },
       })
-      setShareQr({ dataUrl, url: shareUrl })
+      setShareQr({ dataUrl, url: result.url })
     } catch {
       setImportNotice(t('sr_notice_qr_fail'))
+    } finally {
+      setSharePublishing(false)
     }
   }, [
     ensurePublishCategorySelected,
     ensureSignedInForPublish,
     getLabsShareFileForGallery,
     getPublishAccessToken,
-    levelOverrides,
     resolveShareTitle,
     t,
-    workshopFlat,
   ])
 
   const handleImportPlayerInfoFileChange = useCallback(

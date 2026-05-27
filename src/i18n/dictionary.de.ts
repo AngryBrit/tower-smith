@@ -267,8 +267,6 @@ export const STRINGS_DE = {
   theme_guardian_disco: 'Disco',
   app_inpanel_tabs_aria: 'Hauptbereiche',
   app_tools_title: 'Werkzeuge',
-  app_tools_intro: 'Tower-Daten importieren, exportieren, teilen und vergleichen. Diese Aktionen nutzen deinen aktuellen Tower-Arbeitsbereich (Stufen, Werkstatt-Snapshot und Presets).',
-  app_tools_lab_hint: 'Tipp: Wechsle zum Tab LABOR, um Stufen zu bearbeiten, oder zur WERKSTATT für modellierte Angriffs-, Verteidigungs- und Utility-Werte; Presets und Hinweise erscheinen im LABOR-Tab während du arbeitest.',
   app_tools_full_reset: 'Alle gespeicherten Daten zurücksetzen',
   app_tools_full_reset_aria:
     'Alle in diesem Browser gespeicherten TowerSmith-Daten löschen: Labor, Werkstatt, Builds, Themes und Einstellungen',
@@ -282,6 +280,7 @@ export const STRINGS_DE = {
   auth_sign_in: 'Anmelden',
   auth_sign_out: 'Abmelden',
   auth_my_builds: 'Meine Builds',
+  auth_tower_backup: 'Tower – Sicherung & Teilen',
   auth_my_builds_title: 'Deine Builds',
   auth_my_builds_intro:
     'Verwalte deine veröffentlichten Builds — laden, Link kopieren, öffentlich oder privat, Link neu erstellen oder löschen.',
@@ -313,7 +312,7 @@ export const STRINGS_DE = {
   profile_error_network: 'Profil konnte nicht gespeichert werden. Bitte erneut versuchen.',
   profile_error_unknown: 'Beim Speichern des Profils ist ein Fehler aufgetreten.',
   gallery_search_label: 'Builds suchen',
-  gallery_search_placeholder: 'Nach Titel suchen…',
+  gallery_search_placeholder: 'Nach Titel oder Benutzername suchen…',
   gallery_submit_sign_in_hint: 'Zum Einreichen anmelden. Durchsuchen und Laden ist ohne Konto möglich.',
   gallery_submit_signed_in:
     'Du bist angemeldet. Einreichungen nutzen deinen Benutzernamen aus Werkzeuge & Einstellungen.',
@@ -384,6 +383,7 @@ export const STRINGS_DE = {
   gallery_notice_link_copied: 'Kurzlink in die Zwischenablage kopiert.',
   gallery_notice_set_public: 'Build ist jetzt öffentlich in der Galerie.',
   gallery_notice_set_unlisted: 'Build ist jetzt ungelistet (nur per Link).',
+  gallery_notice_category_updated: 'Build-Kategorie aktualisiert.',
   gallery_notice_regenerated_link:
     'Neuer Link wurde erstellt und kopiert. Der alte Link funktioniert nicht mehr.',
   gallery_notice_regenerated_no_copy:
@@ -405,6 +405,9 @@ export const STRINGS_DE = {
   gallery_by_author: 'von {{author}}',
   gallery_visibility_public: 'Öffentlich',
   gallery_visibility_private: 'Privat',
+  gallery_visibility_select_aria: 'Sichtbarkeit: {{value}}. Öffentlich oder privat wählen.',
+  gallery_category_select_aria: 'Kategorie: {{value}}. Build-Kategorie wählen.',
+  gallery_category_filter_select_aria: 'Kategorie-Filter: {{value}}.',
   gallery_admin_title: 'Galerie-Admin',
   gallery_admin_page_intro:
     'Spam oder veraltete Community-Builds entfernen. Löschen ist für die öffentliche Galerie dauerhaft.',
@@ -1065,7 +1068,7 @@ export const STRINGS_DE = {
   sr_qr_dialog_title: 'Scannen, um Lab-Stufen zu laden',
   sr_qr_image_alt: 'QR-Code, der den Lab-Freigabelink im Browser öffnet',
   sr_qr_hint:
-    'Enthält den kurzen ?build=…-Link, wenn die Galerie-API verfügbar ist; sonst einen langen eingebetteten Link.',
+    'Enthält den kurzen ?build=…-Galerielink für diesen Turm. Jeder, der scannt, kann den Build öffnen.',
   sr_qr_copy_link: 'Link kopieren',
   sr_reset_confirm_title: 'Alle Labor-Stufen zurücksetzen?',
   sr_reset_confirm_body: 'Setzt die in diesem Browser gespeicherten Forschungsstufen des Labors auf Standard zurück. Werkstatt und andere Werkzeuge bleiben unverändert. Exportiere oder kopiere zuerst einen Freigabelink, wenn du diese Stufen behalten willst.',

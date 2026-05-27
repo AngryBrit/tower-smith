@@ -6,12 +6,14 @@ import { useI18n } from '../i18n'
 export type AuthButtonProps = {
   /** Footer opens menu upward; nav opens downward and uses compact styling. */
   placement?: 'footer' | 'nav'
+  onOpenTowerBackup?: () => void
   onOpenSettings?: () => void
   onOpenMyBuilds?: () => void
 }
 
 export function AuthButton({
   placement = 'footer',
+  onOpenTowerBackup,
   onOpenSettings,
   onOpenMyBuilds,
 }: AuthButtonProps) {
@@ -115,6 +117,20 @@ export function AuthButton({
                 {t('auth_my_builds')}
               </button>
             ) : null}
+            {onOpenTowerBackup ? (
+              <button
+                type="button"
+                className="glow-btn glow-btn--block"
+                role="menuitem"
+                disabled={busy}
+                onClick={() => {
+                  onOpenTowerBackup()
+                  setMenuOpen(false)
+                }}
+              >
+                {t('auth_tower_backup')}
+              </button>
+            ) : null}
             {onOpenSettings ? (
               <button
                 type="button"
@@ -169,6 +185,20 @@ export function AuthButton({
           }
           role="menu"
         >
+          {onOpenTowerBackup ? (
+            <button
+              type="button"
+              className="glow-btn glow-btn--block"
+              role="menuitem"
+              disabled={busy}
+              onClick={() => {
+                onOpenTowerBackup()
+                setMenuOpen(false)
+              }}
+            >
+              {t('auth_tower_backup')}
+            </button>
+          ) : null}
           <button
             type="button"
             className="glow-btn glow-btn--block"

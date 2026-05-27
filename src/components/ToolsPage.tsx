@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState, type ReactNode, type RefObject } from
 import { createPortal } from 'react-dom'
 import type { SelectResearchHandle } from './SelectResearch'
 import { performFullAppReset } from '../fullResetStorage'
+import { supabaseBrowserConfigured } from '../supabase/client'
 import { useI18n } from '../i18n'
 
 type ToolsPageProps = {
@@ -14,6 +15,7 @@ function toolsOverlayPortal(node: ReactNode) {
 
 export function ToolsPage({ labToolsRef }: ToolsPageProps) {
   const { t } = useI18n()
+  const showBackupInTools = !supabaseBrowserConfigured()
   const [fullResetConfirmOpen, setFullResetConfirmOpen] = useState(false)
 
   const openFullResetConfirm = useCallback(() => {
@@ -37,26 +39,20 @@ export function ToolsPage({ labToolsRef }: ToolsPageProps) {
 
   return (
     <div className="tools-page" role="region" aria-label={t('app_tools_title')}>
-      <p className="tools-page__intro">{t('app_tools_intro')}</p>
-      <div className="tools-page__actions">
-        <button
-          type="button"
-          className="glow-btn glow-btn--block"
-          onClick={() => labToolsRef.current?.openLabDataPanel()}
-        >
-          {t('sr_import_export_launcher')}
-        </button>
-        <button
-          type="button"
-          className="glow-btn glow-btn--block"
-          onClick={() => labToolsRef.current?.openCompareDialog()}
-        >
-          {t('sr_compare_launcher')}
-        </button>
-      </div>
-      <p className="tools-page__hint">{t('app_tools_lab_hint')}</p>
-
-      <hr className="tools-page__divider" aria-hidden />
+      {showBackupInTools ? (
+        <>
+          <div className="tools-page__actions">
+            <button
+              type="button"
+              className="glow-btn glow-btn--block"
+              onClick={() => labToolsRef.current?.openLabDataPanel()}
+            >
+              {t('auth_tower_backup')}
+            </button>
+          </div>
+          <hr className="tools-page__divider" aria-hidden />
+        </>
+      ) : null}
       <div className="tools-page__danger">
         <button
           type="button"
