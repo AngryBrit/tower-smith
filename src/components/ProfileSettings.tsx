@@ -6,7 +6,7 @@ import {
   PROFILE_GUILD_MAX,
   removeUserAvatar,
   updateUserDisplayName,
-  updateUserGuild,
+  updateUserGuildId,
   uploadUserAvatar,
   type ProfileError,
 } from '../profile/profileApi'
@@ -36,7 +36,7 @@ function profileErrorId(error: ProfileError): StringId {
 
 export function ProfileSettings() {
   const { t } = useI18n()
-  const { user, displayName, guild, avatarUrl, refreshProfile } = useAuth()
+  const { user, displayName, guildId, avatarUrl, refreshProfile } = useAuth()
   const nameInputId = useId()
   const guildInputId = useId()
   const avatarInputId = useId()
@@ -54,8 +54,8 @@ export function ProfileSettings() {
   }, [displayName])
 
   useEffect(() => {
-    setGuildDraft(guild ?? '')
-  }, [guild])
+    setGuildDraft(guildId ?? '')
+  }, [guildId])
 
   useEffect(() => {
     if (!notice) return
@@ -68,7 +68,7 @@ export function ProfileSettings() {
   }
 
   const nameDirty = nameDraft.trim() !== (displayName ?? '').trim()
-  const guildDirty = guildDraft.trim() !== (guild ?? '').trim()
+  const guildDirty = guildDraft.trim() !== (guildId ?? '').trim()
   const avatarInitial = (displayName ?? user.email ?? '?').trim().charAt(0).toUpperCase()
 
   const handleSaveGuild = () => {
@@ -76,7 +76,7 @@ export function ProfileSettings() {
       if (!guildDirty) return
       setSavingGuild(true)
       setNotice(null)
-      const result = await updateUserGuild(user.id, guildDraft)
+      const result = await updateUserGuildId(user.id, guildDraft)
       setSavingGuild(false)
       if (!result.ok) {
         setNotice(t(profileErrorId(result.error)))

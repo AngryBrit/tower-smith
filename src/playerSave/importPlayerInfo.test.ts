@@ -94,7 +94,26 @@ describe('importPlayerInfo', () => {
       expect(r.workshop.damageLevel).toBeGreaterThan(0)
       expect(r.themes.ownedIds.length).toBeGreaterThan(0)
       expect(r.themes.selection?.tower).toBeTruthy()
+      expect(r.guild).toBeTypeOf('string')
+      expect(r.userName).toBeTypeOf('string')
+      expect(r.fakeUserName).toBeTypeOf('string')
+      expect(r.playfabId).toBeTypeOf('string')
+      expect(r.guildMeta.season).toBeGreaterThanOrEqual(0)
+      expect(r.guildMeta.chestClaimedWeek).toBeGreaterThanOrEqual(0)
+      expect(r.guildMeta.seenChatDisclaimer).toBeTypeOf('boolean')
     }
+  })
+
+  it('extracts guild from sample save', async () => {
+    if (!existsSync(SAMPLE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE)))
+    expect(save.lastGuildID).toBeTruthy()
+    expect(save.userName).toBeTruthy()
+    expect(save.fakeUserName).toBeTruthy()
+    expect(save.playfabID).toBeTruthy()
+    expect(save.lastGuildSeason).toBeGreaterThanOrEqual(0)
+    expect(save.guildChestClaimedWeek).toBeGreaterThanOrEqual(0)
+    expect(save.hasSeenGuildChatDisclaimer).toBeTypeOf('boolean')
   })
 
   it('maps relics, bots, and ultimates from sample save', async () => {

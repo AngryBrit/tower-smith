@@ -1,4 +1,5 @@
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
+import { PROFILE_DISPLAY_NAME_MAX, PROFILE_GUILD_MAX } from '../profile/profileApi'
 import type { ResearchData } from '../types/research'
 import type { TowerThemesSnapshot } from '../towerDataThemes'
 import { decodePlayerInfoFile } from './decodePlayerInfo'
@@ -16,8 +17,36 @@ export type ImportPlayerInfoResult =
       overrides: Record<string, number>
       workshop: ReturnType<typeof mapPlayerSaveToTower>['workshop']
       themes: TowerThemesSnapshot
+      guild: string | null
+      userName: string | null
+      fakeUserName: string | null
+      playfabId: string | null
+      guildMeta: {
+        season: number
+        chestClaimedWeek: number
+        seenChatDisclaimer: boolean
+      }
     }
   | { ok: false; error: ImportPlayerInfoError }
+
+function sanitizeImportedGuild(raw: string): string | null {
+  const trimmed = raw.trim()
+  if (!trimmed || trimmed.length > PROFILE_GUILD_MAX) return null
+  return trimmed
+}
+
+function sanitizeImportedUserName(raw: string): string | null {
+  const trimmed = raw.trim()
+  if (!trimmed || trimmed.length > PROFILE_DISPLAY_NAME_MAX) return null
+  return trimmed
+}
+
+function sanitizeImportedPlayfabId(raw: string): string | null {
+  const trimmed = raw.trim().toUpperCase()
+  if (!trimmed || trimmed.length > 64) return null
+  if (!/^[A-Z0-9]+$/.test(trimmed)) return null
+  return trimmed
+}
 
 export async function importPlayerInfoDat(
   bytes: Uint8Array,
@@ -32,6 +61,15 @@ export async function importPlayerInfoDat(
       overrides: sanitizeLevelOverrides(data, overrides),
       workshop,
       themes,
+      guild: sanitizeImportedGuild(save.lastGuildID),
+      userName: sanitizeImportedUserName(save.userName),
+      fakeUserName: sanitizeImportedUserName(save.fakeUserName),
+      playfabId: sanitizeImportedPlayfabId(save.playfabID),
+      guildMeta: {
+        season: Math.max(0, Math.trunc(save.lastGuildSeason)),
+        chestClaimedWeek: Math.max(0, Math.trunc(save.guildChestClaimedWeek)),
+        seenChatDisclaimer: save.hasSeenGuildChatDisclaimer === true,
+      },
     }
   } catch (e) {
     const msg = e instanceof Error ? e.message : ''

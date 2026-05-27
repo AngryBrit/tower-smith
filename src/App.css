@@ -995,6 +995,15 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.select-research__guild-name-input {
+  margin-bottom: 0.75rem;
+}
+
+.select-research__reset-confirm-dialog .select-research__guild-name-input {
+  margin-bottom: 0.75rem;
 }
 
 .select-research__preset-save-backdrop {

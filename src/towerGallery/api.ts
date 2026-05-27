@@ -402,3 +402,47 @@ export async function regenerateGalleryTowerLink(
     return { ok: false, error: 'network' }
   }
 }
+
+export async function resolveGuildNameById(guildId: string): Promise<string | null> {
+  const id = guildId.trim()
+  if (!id || id.length > 40) return null
+  try {
+    const res = await fetch(`${API_BASE}/guilds/resolve?id=${encodeURIComponent(id)}`)
+    if (!res.ok) return null
+    const parsed = await parseJsonResponse(res)
+    const name = (parsed as { name?: unknown } | null)?.name
+    if (typeof name !== 'string') return null
+    const trimmed = name.trim()
+    return trimmed || null
+  } catch {
+    return null
+  }
+}
+
+export async function registerGuildNameById(
+  guildId: string,
+  guildName: string,
+  accessToken: string,
+): Promise<string | null> {
+  const id = guildId.trim()
+  const name = guildName.trim()
+  if (!id || id.length > 40 || !name || name.length > 40) return null
+  try {
+    const res = await fetch(`${API_BASE}/guilds/register`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ id, name }),
+    })
+    if (!res.ok) return null
+    const parsed = await parseJsonResponse(res)
+    const resolved = (parsed as { name?: unknown } | null)?.name
+    if (typeof resolved !== 'string') return null
+    const trimmed = resolved.trim()
+    return trimmed || null
+  } catch {
+    return null
+  }
+}

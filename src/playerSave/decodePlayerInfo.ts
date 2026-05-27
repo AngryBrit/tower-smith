@@ -1,11 +1,13 @@
 import { NrbfDecoder, NrbfUtils } from './nrbf'
 import {
   findPlayerDataContext,
+  getBool,
   getBoolArray,
   getEnumIntArray,
   getInt32,
   getInt32Array,
   getModuleEquipped,
+  getString,
   type DecodedModuleItem,
   type PlayerDataContext,
 } from './nrbfExtract'
@@ -44,6 +46,13 @@ export type DecodedPlayerSave = {
   ultimateWeaponPlusLevel: number[]
   ultimateWeaponPlusUnlocked: boolean[]
   moduleEquipped: DecodedModuleItem[]
+  lastGuildID: string
+  lastGuildSeason: number
+  guildChestClaimedWeek: number
+  hasSeenGuildChatDisclaimer: boolean
+  userName: string
+  fakeUserName: string
+  playfabID: string
 }
 
 function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
@@ -75,6 +84,13 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     ultimateWeaponPlusLevel: getInt32Array(ctx, 'ultimateWeaponPlusLevel'),
     ultimateWeaponPlusUnlocked: getBoolArray(ctx, 'ultimateWeaponPlusUnlocked'),
     moduleEquipped: getModuleEquipped(ctx),
+    lastGuildID: getString(ctx, 'lastGuildID'),
+    lastGuildSeason: getInt32(ctx, 'lastGuildSeason'),
+    guildChestClaimedWeek: getInt32(ctx, 'guildChestClaimedWeek'),
+    hasSeenGuildChatDisclaimer: getBool(ctx, 'hasSeenGuildChatDisclaimer'),
+    userName: getString(ctx, 'userName'),
+    fakeUserName: getString(ctx, 'fakeUserName'),
+    playfabID: getString(ctx, 'playfabID'),
   }
 }
 

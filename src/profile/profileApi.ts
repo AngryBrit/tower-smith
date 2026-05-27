@@ -17,7 +17,8 @@ export const PROFILE_AVATAR_MIME_TYPES = [
 
 export type UserProfile = {
   displayName: string | null
-  guild: string | null
+  guildId: string | null
+  playfabId: string | null
   avatarUrl: string | null
 }
 
@@ -33,7 +34,8 @@ export type ProfileError =
 
 type ProfileRow = {
   display_name: string | null
-  guild: string | null
+  guild_id: string | null
+  playfab_id: string | null
   avatar_url: string | null
   updated_at?: string | null
 }
@@ -49,7 +51,8 @@ function avatarUrlForDisplay(url: string | null | undefined, updatedAt?: string 
 function rowToProfile(row: ProfileRow): UserProfile {
   return {
     displayName: row.display_name?.trim() || null,
-    guild: row.guild?.trim() || null,
+    guildId: row.guild_id?.trim() || null,
+    playfabId: row.playfab_id?.trim() || null,
     avatarUrl: avatarUrlForDisplay(row.avatar_url, row.updated_at),
   }
 }
@@ -75,7 +78,7 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile | nu
 
   const { data, error } = await sb
     .from('profiles')
-    .select('display_name, guild, avatar_url, updated_at')
+    .select('display_name, guild_id, playfab_id, avatar_url, updated_at')
     .eq('id', userId)
     .maybeSingle()
 
@@ -128,22 +131,22 @@ export async function updateUserDisplayName(
   return { ok: true }
 }
 
-export async function updateUserGuild(
+export async function updateUserGuildId(
   userId: string,
-  guild: string,
+  guildId: string,
 ): Promise<{ ok: true } | { ok: false; error: ProfileError }> {
   const sb = getSupabaseBrowserClient()
   if (!sb) return { ok: false, error: 'not_configured' }
 
-  const trimmed = guild.trim()
-  if (trimmed.length > PROFILE_GUILD_MAX) {
+  const trimmed = guildId.trim()
+  if (trimmed.length > 40 || (trimmed.length > 0 && !/^[A-Za-z0-9_-]+$/.test(trimmed))) {
     return { ok: false, error: 'invalid_guild' }
   }
 
   const { error } = await sb
     .from('profiles')
     .update({
-      guild: trimmed.length > 0 ? trimmed : null,
+      guild_id: trimmed.length > 0 ? trimmed : null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', userId)
@@ -195,6 +198,30 @@ export async function uploadUserAvatar(
 
   if (profileError) return { ok: false, error: 'network' }
   return { ok: true, avatarUrl }
+}
+
+export async function updateUserPlayfabId(
+  userId: string,
+  playfabId: string,
+): Promise<{ ok: true } | { ok: false; error: ProfileError }> {
+  const sb = getSupabaseBrowserClient()
+  if (!sb) return { ok: false, error: 'not_configured' }
+
+  const trimmed = playfabId.trim().toUpperCase()
+  if (trimmed.length < 1 || trimmed.length > 64 || !/^[A-Z0-9]+$/.test(trimmed)) {
+    return { ok: false, error: 'unknown' }
+  }
+
+  const { error } = await sb
+    .from('profiles')
+    .update({
+      playfab_id: trimmed,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+
+  if (error) return { ok: false, error: 'network' }
+  return { ok: true }
 }
 
 export async function removeUserAvatar(

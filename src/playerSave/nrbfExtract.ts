@@ -1,5 +1,6 @@
 import {
   ArraySinglePrimitiveRecord,
+  BinaryObjectStringRecord,
   BinaryArrayRecord,
   ClassRecord,
   MemberReferenceRecord,
@@ -49,6 +50,13 @@ export function getInt32(ctx: PlayerDataContext, name: string): number {
 export function getBool(ctx: PlayerDataContext, name: string): boolean {
   const raw = resolveValue(ctx, ctx.player.getValue(name))
   return raw === true
+}
+
+export function getString(ctx: PlayerDataContext, name: string): string {
+  const raw = resolveValue(ctx, ctx.player.getValue(name))
+  if (typeof raw === 'string') return raw
+  if (raw instanceof BinaryObjectStringRecord) return raw.value
+  return ''
 }
 
 export function getInt32Array(ctx: PlayerDataContext, name: string): number[] {

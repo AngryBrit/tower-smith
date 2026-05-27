@@ -34,8 +34,11 @@ import {
   maxVisibleLabLevels,
 } from '../labBudgetAggregates'
 import { importPlayerInfoDat } from '../playerSave/importPlayerInfo'
+import { updateUserGuildId, updateUserPlayfabId } from '../profile/profileApi'
 import {
   getGalleryTower,
+  registerGuildNameById,
+  resolveGuildNameById,
   towerGalleryApiAvailable,
 } from '../towerGallery/api'
 import { publishGalleryShareLink } from '../towerGallery/publishShareLink'
@@ -208,8 +211,12 @@ export const SelectResearch = forwardRef<
   const [communityPublishDialogOpen, setCommunityPublishDialogOpen] =
     useState(false)
   const [authSignInDialogOpen, setAuthSignInDialogOpen] = useState(false)
+  const [guildNamePrompt, setGuildNamePrompt] = useState<{
+    guildId: string
+    name: string
+  } | null>(null)
   const [publishTitle, setPublishTitle] = useState('')
-  const [publishGuild, setPublishGuild] = useState('')
+  const [publishGuildId, setPublishGuildId] = useState('')
   const [publishCategory, setPublishCategory] = useState<GalleryBuildCategory | ''>('')
   const [publishVisibility, setPublishVisibility] =
     useState<GalleryBuildVisibility>('public')
@@ -227,6 +234,7 @@ export const SelectResearch = forwardRef<
   const bulkAllSectionsToggleRef = useRef<HTMLInputElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const pendingLabScrollSlug = useRef<string | null>(null)
+  const guildNamePromptResolveRef = useRef<((value: string | null) => void) | null>(null)
   const [scrollLayoutGen, setScrollLayoutGen] = useState(0)
 
   useEffect(() => {
@@ -277,7 +285,8 @@ export const SelectResearch = forwardRef<
       labDataPanelOpen ||
       labCompareOpen ||
       communityPublishDialogOpen ||
-      authSignInDialogOpen
+      authSignInDialogOpen ||
+      guildNamePrompt !== null
     if (!blocking) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
@@ -287,6 +296,11 @@ export const SelectResearch = forwardRef<
       setLabCompareOpen(false)
       setCommunityPublishDialogOpen(false)
       setAuthSignInDialogOpen(false)
+      if (guildNamePromptResolveRef.current) {
+        guildNamePromptResolveRef.current(null)
+        guildNamePromptResolveRef.current = null
+      }
+      setGuildNamePrompt(null)
     }
     window.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
@@ -302,7 +316,38 @@ export const SelectResearch = forwardRef<
     labCompareOpen,
     communityPublishDialogOpen,
     authSignInDialogOpen,
+    guildNamePrompt,
   ])
+
+  const requestGuildName = useCallback((guildId: string): Promise<string | null> => {
+    return new Promise((resolve) => {
+      guildNamePromptResolveRef.current = resolve
+      setGuildNamePrompt({ guildId, name: '' })
+    })
+  }, [])
+
+  const resolveGuildNameForPublish = useCallback(
+    async (guildId: string): Promise<string | null> => {
+      const id = guildId.trim()
+      if (!id) return null
+      const resolved = await resolveGuildNameById(id)
+      if (resolved) return resolved
+      const proposed = await requestGuildName(id)
+      const name = proposed?.trim() ?? ''
+      if (!name || name.length > 40) return null
+      const token = await auth.getAccessToken()
+      if (!token) return null
+      return registerGuildNameById(id, name, token)
+    },
+    [auth, requestGuildName],
+  )
+
+  const closeGuildNamePrompt = useCallback((value: string | null) => {
+    const resolve = guildNamePromptResolveRef.current
+    guildNamePromptResolveRef.current = null
+    setGuildNamePrompt(null)
+    resolve?.(value)
+  }, [])
 
   useEffect(() => {
     let cancelled = false
@@ -1024,12 +1069,34 @@ export const SelectResearch = forwardRef<
         setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
         setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
         applyTowerThemes(imported.themes)
+        let shouldRefreshProfile = false
+        if (imported.guild) {
+          setPublishGuildId(imported.guild)
+          const knownGuild = await resolveGuildNameById(imported.guild)
+          if (!knownGuild && auth.user) {
+            await resolveGuildNameForPublish(imported.guild)
+          }
+          if (auth.user) {
+            const updated = await updateUserGuildId(auth.user.id, imported.guild)
+            if (updated.ok) shouldRefreshProfile = true
+          }
+        }
+        if (auth.user && imported.playfabId) {
+          await updateUserPlayfabId(auth.user.id, imported.playfabId)
+          shouldRefreshProfile = true
+        }
+        if (auth.user && shouldRefreshProfile) {
+          await auth.refreshProfile()
+        }
+        auth.prefillProfileFromImport({
+          displayName: imported.fakeUserName ?? imported.userName,
+        })
         setImportNotice(t('sr_notice_import_player_ok'))
       } catch {
         setImportNotice(t('sr_notice_import_read_fail'))
       }
     },
-    [data, setScratchWorkspace, setWorkspace, t],
+    [auth, data, resolveGuildNameForPublish, setScratchWorkspace, setWorkspace, t],
   )
 
   const handleImportLabCsvFileChange = useCallback(
@@ -1084,11 +1151,11 @@ export const SelectResearch = forwardRef<
         return
       }
       setPublishTitle('')
-      setPublishGuild(auth.guild ?? '')
+      setPublishGuildId(auth.guildId ?? '')
       setPublishVisibility('public')
       setCommunityPublishDialogOpen(true)
     })()
-  }, [auth.guild, getPublishAccessToken, t])
+  }, [auth.guildId, getPublishAccessToken, t])
 
   const closeCommunityPublishDialog = useCallback(() => {
     if (communityPublishSubmitting) return
@@ -1110,6 +1177,15 @@ export const SelectResearch = forwardRef<
     const accessToken = await getPublishAccessToken()
     setCommunityPublishSubmitting(true)
     try {
+      const guildId = publishGuildId.trim()
+      let guildName: string | undefined
+      if (guildId) {
+        const resolved = await resolveGuildNameForPublish(guildId)
+        if (resolved) guildName = resolved
+        if (auth.user) {
+          await updateUserGuildId(auth.user.id, guildId)
+        }
+      }
       const result = await publishGalleryShareLink(
         payload,
         trimmedTitle,
@@ -1117,7 +1193,7 @@ export const SelectResearch = forwardRef<
         window.location.href,
         {
           accessToken,
-          guild: publishGuild,
+          ...(guildName ? { guild: guildName } : {}),
           visibility: publishVisibility,
         },
       )
@@ -1145,7 +1221,7 @@ export const SelectResearch = forwardRef<
       setImportNotice(fmt.galleryNoticeSubmitted(result.title))
       setCommunityPublishDialogOpen(false)
       setPublishTitle('')
-      setPublishGuild('')
+      setPublishGuildId('')
       setPublishVisibility('public')
     } catch {
       setImportNotice(t('gallery_error_unknown'))
@@ -1157,9 +1233,11 @@ export const SelectResearch = forwardRef<
     getLabsShareFileForGallery,
     getPublishAccessToken,
     publishCategory,
-    publishGuild,
+    auth.user,
+    publishGuildId,
     publishVisibility,
     publishTitle,
+    resolveGuildNameForPublish,
     t,
   ])
 
@@ -1536,12 +1614,12 @@ export const SelectResearch = forwardRef<
       <GalleryPublishDialog
         open={communityPublishDialogOpen}
         title={publishTitle}
-        guild={publishGuild}
+        guildId={publishGuildId}
         category={publishCategory}
         visibility={publishVisibility}
         submitting={communityPublishSubmitting}
         onTitleChange={setPublishTitle}
-        onGuildChange={setPublishGuild}
+        onGuildIdChange={setPublishGuildId}
         onCategoryChange={setPublishCategory}
         onVisibilityChange={setPublishVisibility}
         onClose={closeCommunityPublishDialog}
@@ -1690,6 +1768,67 @@ export const SelectResearch = forwardRef<
                     onClick={performResetLevels}
                   >
                     {t('sr_reset_all')}
+                  </button>
+                </div>
+              </div>
+            </div>,
+          )
+        : null}
+
+      {guildNamePrompt
+        ? labOverlayPortal(
+            <div
+              className="select-research__reset-confirm-backdrop"
+              role="presentation"
+              onClick={() => closeGuildNamePrompt(null)}
+            >
+              <div
+                className="select-research__reset-confirm-dialog"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="guild-name-prompt-title"
+                aria-describedby="guild-name-prompt-desc"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h2 id="guild-name-prompt-title" className="select-research__reset-confirm-title">
+                  Unknown guild ID
+                </h2>
+                <p id="guild-name-prompt-desc" className="select-research__reset-confirm-desc">
+                  Congratulations! You are the first to map guild ID "{guildNamePrompt.guildId}".
+                  Enter a readable name to save for everyone.
+                </p>
+                <input
+                  type="text"
+                  className="glow-input profile-settings__input select-research__guild-name-input"
+                  value={guildNamePrompt.name}
+                  maxLength={40}
+                  autoFocus
+                  onChange={(e) =>
+                    setGuildNamePrompt((prev) =>
+                      prev ? { ...prev, name: e.target.value } : prev,
+                    )
+                  }
+                  onKeyDown={(e) => {
+                    if (e.key !== 'Enter') return
+                    e.preventDefault()
+                    closeGuildNamePrompt(guildNamePrompt.name.trim() || null)
+                  }}
+                />
+                <div className="select-research__reset-confirm-actions">
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--block"
+                    onClick={() => closeGuildNamePrompt(null)}
+                  >
+                    {t('sr_cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--block"
+                    onClick={() => closeGuildNamePrompt(guildNamePrompt.name.trim() || null)}
+                    disabled={guildNamePrompt.name.trim().length < 1}
+                  >
+                    Save guild name
                   </button>
                 </div>
               </div>

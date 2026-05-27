@@ -9,12 +9,12 @@ import { useI18n } from '../i18n'
 export type GalleryPublishDialogProps = {
   open: boolean
   title: string
-  guild: string
+  guildId: string
   category: GalleryBuildCategory | ''
   visibility: GalleryBuildVisibility
   submitting: boolean
   onTitleChange: (value: string) => void
-  onGuildChange: (value: string) => void
+  onGuildIdChange: (value: string) => void
   onCategoryChange: (value: GalleryBuildCategory) => void
   onVisibilityChange: (value: GalleryBuildVisibility) => void
   onClose: () => void
@@ -28,12 +28,12 @@ export type GalleryPublishDialogProps = {
 export function GalleryPublishDialog({
   open,
   title,
-  guild,
+  guildId,
   category,
   visibility,
   submitting,
   onTitleChange,
-  onGuildChange,
+  onGuildIdChange,
   onCategoryChange,
   onVisibilityChange,
   onClose,
@@ -104,18 +104,21 @@ export function GalleryPublishDialog({
             className="select-research__preset-save-label"
             htmlFor="gallery-publish-guild-field"
           >
-            {t('gallery_field_guild')}
+            {t('gallery_field_guild_id')}
           </label>
           <input
             id="gallery-publish-guild-field"
             className="select-research__preset-save-input glow-input"
             type="text"
-            value={guild}
-            onChange={(e) => onGuildChange(e.target.value)}
+            value={guildId}
+            onChange={(e) => onGuildIdChange(e.target.value)}
             autoComplete="off"
             maxLength={TOWER_GALLERY_MAX_GUILD_LEN}
-            placeholder={t('gallery_field_guild_placeholder')}
+            placeholder={t('gallery_field_guild_id_placeholder')}
           />
+          <p className="select-research__preset-save-hint select-research__preset-save-hint--field">
+            {t('gallery_field_guild_id_hint')}
+          </p>
           <GalleryBuildCategorySelect
             id="gallery-publish-category-field"
             value={category}

@@ -10,6 +10,7 @@ import {
 import type { Session, User } from '@supabase/supabase-js'
 import { fetchUserProfile } from '../profile/profileApi'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
+import { resolveGuildNameById } from '../towerGallery/api'
 import { oauthRedirectUrl } from './oauthRedirect'
 
 export type AuthProvider = 'google' | 'discord' | 'twitch'
@@ -22,11 +23,13 @@ type AuthContextValue = {
   user: User | null
   displayName: string | null
   guild: string | null
+  guildId: string | null
   avatarUrl: string | null
   signIn: (provider: AuthProvider) => Promise<void>
   signOut: () => Promise<void>
   getAccessToken: () => Promise<string | null>
   refreshProfile: () => Promise<void>
+  prefillProfileFromImport: (hints: { displayName?: string | null; guild?: string | null }) => void
 }
 
 const AuthContext = createContext<AuthContextValue | null>(null)
@@ -61,6 +64,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [profileDisplayName, setProfileDisplayName] = useState<string | null>(null)
   const [profileGuild, setProfileGuild] = useState<string | null>(null)
+  const [profileGuildId, setProfileGuildId] = useState<string | null>(null)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState<string | null>(null)
 
   const refreshProfile = useCallback(async () => {
@@ -68,6 +72,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!userId || !configured) {
       setProfileDisplayName(null)
       setProfileGuild(null)
+      setProfileGuildId(null)
       setProfileAvatarUrl(null)
       setProfileResolved(false)
       return
@@ -77,7 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const profile = await fetchUserProfile(userId)
       setProfileDisplayName(profile?.displayName ?? null)
-      setProfileGuild(profile?.guild ?? null)
+      setProfileGuildId(profile?.guildId ?? null)
+      let resolvedGuild: string | null = null
+      if (profile?.guildId) {
+        const resolved = await resolveGuildNameById(profile.guildId)
+        resolvedGuild = resolved ?? profile.guildId
+      }
+      setProfileGuild(resolvedGuild)
       setProfileAvatarUrl(profile?.avatarUrl ?? null)
     } finally {
       setProfileLoading(false)
@@ -142,10 +153,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return data.session?.access_token ?? null
   }, [])
 
+  const prefillProfileFromImport = useCallback(
+    (hints: { displayName?: string | null; guild?: string | null }) => {
+      const display = hints.displayName?.trim()
+      const guild = hints.guild?.trim()
+      if (display && !profileDisplayName) setProfileDisplayName(display)
+      if (guild && !profileGuild) setProfileGuild(guild)
+    },
+    [profileDisplayName, profileGuild],
+  )
+
   const user = session?.user ?? null
   const displayName =
     profileDisplayName ?? displayNameFromUser(user)
   const guild = profileGuild
+  const guildId = profileGuildId
   const avatarUrl = user
     ? profileResolved
       ? (profileAvatarUrl ?? avatarUrlFromUser(user))
@@ -161,19 +183,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       displayName,
       guild,
+      guildId,
       avatarUrl,
       signIn,
       signOut,
       getAccessToken,
       refreshProfile,
+      prefillProfileFromImport,
     }),
     [
       avatarUrl,
       configured,
       displayName,
       guild,
+      guildId,
       getAccessToken,
       loading,
+      prefillProfileFromImport,
       profileLoading,
       refreshProfile,
       session,
