@@ -2,6 +2,7 @@ import { isLabsShareFile, type LabsShareFile } from '../labsShareCodec'
 import { sanitizeGalleryBuildCategory } from './buildCategories'
 import {
   TOWER_GALLERY_MAX_AUTHOR_LEN,
+  TOWER_GALLERY_MAX_GUILD_LEN,
   TOWER_GALLERY_MAX_PAYLOAD_BYTES,
   TOWER_GALLERY_MAX_TITLE_LEN,
   type GalleryBuildVisibility,
@@ -23,6 +24,14 @@ export function sanitizeGalleryAuthor(raw: unknown): string | undefined {
   const a = raw.trim()
   if (a.length < 1 || a.length > TOWER_GALLERY_MAX_AUTHOR_LEN) return undefined
   return a
+}
+
+export function sanitizeGalleryGuild(raw: unknown): string | undefined {
+  if (raw === undefined || raw === null || raw === '') return undefined
+  if (typeof raw !== 'string') return undefined
+  const g = raw.trim()
+  if (g.length < 1 || g.length > TOWER_GALLERY_MAX_GUILD_LEN) return undefined
+  return g
 }
 
 export function sanitizeGalleryVisibility(raw: unknown): GalleryBuildVisibility {
@@ -66,6 +75,11 @@ export function parseTowerGallerySubmitBody(
   if (!category) return { ok: false, error: 'invalid_category' }
   const visibility = sanitizeGalleryVisibility((raw as { visibility?: unknown }).visibility)
   const author = sanitizeGalleryAuthor((raw as { author?: unknown }).author)
+  const guildRaw = (raw as { guild?: unknown }).guild
+  const guild = sanitizeGalleryGuild(guildRaw)
+  if (guildRaw !== undefined && guild === undefined) {
+    return { ok: false, error: 'invalid_guild' }
+  }
   const payload = (raw as { payload?: unknown }).payload
   if (!validateLabsSharePayload(payload)) {
     return { ok: false, error: 'invalid_payload' }
@@ -77,6 +91,7 @@ export function parseTowerGallerySubmitBody(
       category,
       visibility,
       ...(author ? { author } : {}),
+      ...(guild ? { guild } : {}),
       payload,
     },
   }

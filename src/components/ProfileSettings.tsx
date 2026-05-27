@@ -3,8 +3,10 @@ import { useAuth } from '../auth/AuthProvider'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import {
   PROFILE_DISPLAY_NAME_MAX,
+  PROFILE_GUILD_MAX,
   removeUserAvatar,
   updateUserDisplayName,
+  updateUserGuild,
   uploadUserAvatar,
   type ProfileError,
 } from '../profile/profileApi'
@@ -17,6 +19,8 @@ function profileErrorId(error: ProfileError): StringId {
       return 'profile_error_invalid_display_name'
     case 'display_name_taken':
       return 'profile_error_display_name_taken'
+    case 'invalid_guild':
+      return 'profile_error_invalid_guild'
     case 'invalid_avatar_type':
       return 'profile_error_invalid_avatar_type'
     case 'avatar_too_large':
@@ -32,19 +36,26 @@ function profileErrorId(error: ProfileError): StringId {
 
 export function ProfileSettings() {
   const { t } = useI18n()
-  const { user, displayName, avatarUrl, refreshProfile } = useAuth()
+  const { user, displayName, guild, avatarUrl, refreshProfile } = useAuth()
   const nameInputId = useId()
+  const guildInputId = useId()
   const avatarInputId = useId()
   const avatarInputRef = useRef<HTMLInputElement>(null)
 
   const [nameDraft, setNameDraft] = useState('')
+  const [guildDraft, setGuildDraft] = useState('')
   const [savingName, setSavingName] = useState(false)
+  const [savingGuild, setSavingGuild] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
 
   useEffect(() => {
     setNameDraft(displayName ?? '')
   }, [displayName])
+
+  useEffect(() => {
+    setGuildDraft(guild ?? '')
+  }, [guild])
 
   useEffect(() => {
     if (!notice) return
@@ -57,7 +68,24 @@ export function ProfileSettings() {
   }
 
   const nameDirty = nameDraft.trim() !== (displayName ?? '').trim()
+  const guildDirty = guildDraft.trim() !== (guild ?? '').trim()
   const avatarInitial = (displayName ?? user.email ?? '?').trim().charAt(0).toUpperCase()
+
+  const handleSaveGuild = () => {
+    void (async () => {
+      if (!guildDirty) return
+      setSavingGuild(true)
+      setNotice(null)
+      const result = await updateUserGuild(user.id, guildDraft)
+      setSavingGuild(false)
+      if (!result.ok) {
+        setNotice(t(profileErrorId(result.error)))
+        return
+      }
+      await refreshProfile()
+      setNotice(t('profile_notice_guild_saved'))
+    })()
+  }
 
   const handleSaveName = () => {
     void (async () => {
@@ -180,6 +208,31 @@ export function ProfileSettings() {
           onClick={handleSaveName}
         >
           {savingName ? t('profile_display_name_saving') : t('profile_display_name_save_btn')}
+        </button>
+      </div>
+
+      <div className="profile-settings__field">
+        <label className="profile-settings__label" htmlFor={guildInputId}>
+          {t('profile_guild_label')}
+        </label>
+        <input
+          id={guildInputId}
+          type="text"
+          className="glow-input profile-settings__input"
+          value={guildDraft}
+          maxLength={PROFILE_GUILD_MAX}
+          autoComplete="organization"
+          disabled={savingGuild}
+          onChange={(e) => setGuildDraft(e.target.value)}
+        />
+        <p className="profile-settings__hint">{t('profile_guild_hint')}</p>
+        <button
+          type="button"
+          className="glow-btn glow-btn--block profile-settings__save"
+          disabled={!guildDirty || savingGuild}
+          onClick={handleSaveGuild}
+        >
+          {savingGuild ? t('profile_guild_saving') : t('profile_guild_save_btn')}
         </button>
       </div>
 

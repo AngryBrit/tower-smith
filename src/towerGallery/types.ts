@@ -4,6 +4,7 @@ import type { GalleryBuildCategory } from './buildCategories'
 export const TOWER_GALLERY_MAX_PAYLOAD_BYTES = 512 * 1024
 export const TOWER_GALLERY_MAX_TITLE_LEN = 40
 export const TOWER_GALLERY_MAX_AUTHOR_LEN = 40
+export const TOWER_GALLERY_MAX_GUILD_LEN = 40
 export const TOWER_GALLERY_LIST_PAGE_DEFAULT = 20
 export const TOWER_GALLERY_LIST_PAGE_MAX = 100
 /** Curated community picker (no pagination). */
@@ -18,6 +19,7 @@ export type TowerGalleryIndexEntry = {
   visibility?: GalleryBuildVisibility
   category?: GalleryBuildCategory
   author?: string
+  guild?: string
   authorAvatarUrl?: string
   createdAt: string
   upvoteCount: number
@@ -36,5 +38,6 @@ export type TowerGallerySubmitBody = {
   category: GalleryBuildCategory
   visibility?: GalleryBuildVisibility
   author?: string
+  guild?: string
   payload: LabsShareFile
 }

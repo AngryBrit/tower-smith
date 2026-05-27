@@ -11,6 +11,7 @@ export type PublishGalleryShareResult =
       ok: false
       error:
         | 'invalid_title'
+        | 'invalid_guild'
         | 'invalid_category'
         | 'invalid_payload'
         | 'submissions_disabled'
@@ -30,11 +31,13 @@ export async function publishGalleryShareLink(
   pageHref: string,
   options?: {
     author?: string
+    guild?: string
     accessToken?: string | null
     visibility?: GalleryBuildVisibility
   },
 ): Promise<PublishGalleryShareResult> {
   const author = options?.author
+  const guild = options?.guild
   const accessToken = options?.accessToken
   const sanitizedTitle = sanitizeGalleryTitle(title)
   if (!sanitizedTitle) {
@@ -47,6 +50,7 @@ export async function publishGalleryShareLink(
       category,
       visibility: options?.visibility === 'unlisted' ? 'unlisted' : 'public',
       ...(author?.trim() ? { author: author.trim() } : {}),
+      ...(guild?.trim() ? { guild: guild.trim() } : {}),
       payload,
     },
     accessToken,
@@ -56,6 +60,7 @@ export async function publishGalleryShareLink(
     const err = submitted.error
     if (
       err === 'invalid_title' ||
+      err === 'invalid_guild' ||
       err === 'invalid_category' ||
       err === 'invalid_payload' ||
       err === 'submissions_disabled' ||

@@ -162,6 +162,7 @@ export function TowerGalleryPanel({
       gallery_unavailable: t('gallery_error_unavailable'),
 
       invalid_title: t('gallery_error_invalid_title'),
+      invalid_guild: t('gallery_error_invalid_guild'),
 
       invalid_category: t('gallery_error_invalid_category'),
 
@@ -639,6 +640,7 @@ export function TowerGalleryPanel({
                   {entry.author ? (
                     <GalleryAuthorLine
                       author={entry.author}
+                      guild={entry.guild}
                       avatarUrl={entry.authorAvatarUrl}
                       className="tower-gallery__entry-author"
                     />

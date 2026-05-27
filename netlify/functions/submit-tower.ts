@@ -56,7 +56,7 @@ export default async (req: Request): Promise<Response> => {
     return jsonResponse(400, { error: parsed.error }, cors)
   }
 
-  const { title, category, visibility, payload } = parsed.body
+  const { title, category, guild, visibility, payload } = parsed.body
   const id = crypto.randomUUID()
   const createdAt = new Date().toISOString()
 
@@ -80,6 +80,7 @@ export default async (req: Request): Promise<Response> => {
     id,
     title,
     category,
+    ...(guild ? { guild } : {}),
     createdAt,
     upvoteCount: 0,
     ...(displayAuthor ? { author: displayAuthor } : {}),

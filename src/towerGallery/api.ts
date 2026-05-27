@@ -15,6 +15,7 @@ export type TowerGalleryApiError =
   | 'network'
   | 'gallery_unavailable'
   | 'invalid_title'
+  | 'invalid_guild'
   | 'invalid_category'
   | 'invalid_payload'
   | 'invalid_visibility'
@@ -203,6 +204,7 @@ export async function submitGalleryTower(
     if (res.status === 400) {
       const err = (parsed as { error?: string } | null)?.error
       if (err === 'invalid_title') return { ok: false, error: 'invalid_title' }
+      if (err === 'invalid_guild') return { ok: false, error: 'invalid_guild' }
       if (err === 'invalid_category') return { ok: false, error: 'invalid_category' }
       if (err === 'invalid_payload') return { ok: false, error: 'invalid_payload' }
       if (err === 'invalid_visibility') return { ok: false, error: 'invalid_visibility' }

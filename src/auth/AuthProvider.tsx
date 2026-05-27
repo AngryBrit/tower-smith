@@ -21,6 +21,7 @@ type AuthContextValue = {
   session: Session | null
   user: User | null
   displayName: string | null
+  guild: string | null
   avatarUrl: string | null
   signIn: (provider: AuthProvider) => Promise<void>
   signOut: () => Promise<void>
@@ -59,12 +60,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profileResolved, setProfileResolved] = useState(false)
   const [session, setSession] = useState<Session | null>(null)
   const [profileDisplayName, setProfileDisplayName] = useState<string | null>(null)
+  const [profileGuild, setProfileGuild] = useState<string | null>(null)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState<string | null>(null)
 
   const refreshProfile = useCallback(async () => {
     const userId = session?.user?.id
     if (!userId || !configured) {
       setProfileDisplayName(null)
+      setProfileGuild(null)
       setProfileAvatarUrl(null)
       setProfileResolved(false)
       return
@@ -74,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const profile = await fetchUserProfile(userId)
       setProfileDisplayName(profile?.displayName ?? null)
+      setProfileGuild(profile?.guild ?? null)
       setProfileAvatarUrl(profile?.avatarUrl ?? null)
     } finally {
       setProfileLoading(false)
@@ -141,6 +145,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = session?.user ?? null
   const displayName =
     profileDisplayName ?? displayNameFromUser(user)
+  const guild = profileGuild
   const avatarUrl = user
     ? profileResolved
       ? (profileAvatarUrl ?? avatarUrlFromUser(user))
@@ -155,6 +160,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       session,
       user,
       displayName,
+      guild,
       avatarUrl,
       signIn,
       signOut,
@@ -165,6 +171,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       avatarUrl,
       configured,
       displayName,
+      guild,
       getAccessToken,
       loading,
       profileLoading,

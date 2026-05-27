@@ -1,8 +1,12 @@
-import { TOWER_GALLERY_MAX_AUTHOR_LEN } from '../towerGallery/types'
+import {
+  TOWER_GALLERY_MAX_AUTHOR_LEN,
+  TOWER_GALLERY_MAX_GUILD_LEN,
+} from '../towerGallery/types'
 import { getSupabaseBrowserClient } from '../supabase/client'
 
 export const PROFILE_AVATAR_BUCKET = 'avatars'
 export const PROFILE_DISPLAY_NAME_MAX = TOWER_GALLERY_MAX_AUTHOR_LEN
+export const PROFILE_GUILD_MAX = TOWER_GALLERY_MAX_GUILD_LEN
 export const PROFILE_AVATAR_MAX_BYTES = 512 * 1024
 export const PROFILE_AVATAR_MIME_TYPES = [
   'image/jpeg',
@@ -13,12 +17,14 @@ export const PROFILE_AVATAR_MIME_TYPES = [
 
 export type UserProfile = {
   displayName: string | null
+  guild: string | null
   avatarUrl: string | null
 }
 
 export type ProfileError =
   | 'not_configured'
   | 'invalid_display_name'
+  | 'invalid_guild'
   | 'display_name_taken'
   | 'invalid_avatar_type'
   | 'avatar_too_large'
@@ -27,6 +33,7 @@ export type ProfileError =
 
 type ProfileRow = {
   display_name: string | null
+  guild: string | null
   avatar_url: string | null
   updated_at?: string | null
 }
@@ -42,6 +49,7 @@ function avatarUrlForDisplay(url: string | null | undefined, updatedAt?: string 
 function rowToProfile(row: ProfileRow): UserProfile {
   return {
     displayName: row.display_name?.trim() || null,
+    guild: row.guild?.trim() || null,
     avatarUrl: avatarUrlForDisplay(row.avatar_url, row.updated_at),
   }
 }
@@ -67,7 +75,7 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile | nu
 
   const { data, error } = await sb
     .from('profiles')
-    .select('display_name, avatar_url, updated_at')
+    .select('display_name, guild, avatar_url, updated_at')
     .eq('id', userId)
     .maybeSingle()
 
@@ -117,6 +125,30 @@ export async function updateUserDisplayName(
     }
     return { ok: false, error: 'network' }
   }
+  return { ok: true }
+}
+
+export async function updateUserGuild(
+  userId: string,
+  guild: string,
+): Promise<{ ok: true } | { ok: false; error: ProfileError }> {
+  const sb = getSupabaseBrowserClient()
+  if (!sb) return { ok: false, error: 'not_configured' }
+
+  const trimmed = guild.trim()
+  if (trimmed.length > PROFILE_GUILD_MAX) {
+    return { ok: false, error: 'invalid_guild' }
+  }
+
+  const { error } = await sb
+    .from('profiles')
+    .update({
+      guild: trimmed.length > 0 ? trimmed : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+
+  if (error) return { ok: false, error: 'network' }
   return { ok: true }
 }
 

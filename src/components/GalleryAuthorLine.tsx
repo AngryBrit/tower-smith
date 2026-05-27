@@ -2,12 +2,14 @@ import { useI18n } from '../i18n'
 
 type GalleryAuthorLineProps = {
   author: string
+  guild?: string
   avatarUrl?: string
   className?: string
 }
 
 export function GalleryAuthorLine({
   author,
+  guild,
   avatarUrl,
   className,
 }: GalleryAuthorLineProps) {
@@ -32,7 +34,10 @@ export function GalleryAuthorLine({
           aria-hidden
         />
       )}
-      <span>{fmt.galleryByAuthor(author)}</span>
+      <span>
+        {fmt.galleryByAuthor(author)}
+        {guild?.trim() ? ` [${guild.trim()}]` : ''}
+      </span>
     </span>
   )
 }

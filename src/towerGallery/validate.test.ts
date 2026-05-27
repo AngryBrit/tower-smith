@@ -9,6 +9,7 @@ describe('towerGallery validate', () => {
       title: 'Test build',
       category: 'turtle',
       author: 'Player',
+      guild: 'BestGuild',
       payload,
     })
     expect(parsed.ok).toBe(true)
@@ -16,6 +17,7 @@ describe('towerGallery validate', () => {
       expect(parsed.body.title).toBe('Test build')
       expect(parsed.body.category).toBe('turtle')
       expect(parsed.body.author).toBe('Player')
+      expect(parsed.body.guild).toBe('BestGuild')
     }
   })
 

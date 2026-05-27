@@ -2,17 +2,19 @@ import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 import type { GalleryBuildVisibility } from '../towerGallery/types'
-import { TOWER_GALLERY_MAX_TITLE_LEN } from '../towerGallery/types'
+import { TOWER_GALLERY_MAX_GUILD_LEN, TOWER_GALLERY_MAX_TITLE_LEN } from '../towerGallery/types'
 import { GalleryBuildCategorySelect } from './GalleryBuildCategoryFields'
 import { useI18n } from '../i18n'
 
 export type GalleryPublishDialogProps = {
   open: boolean
   title: string
+  guild: string
   category: GalleryBuildCategory | ''
   visibility: GalleryBuildVisibility
   submitting: boolean
   onTitleChange: (value: string) => void
+  onGuildChange: (value: string) => void
   onCategoryChange: (value: GalleryBuildCategory) => void
   onVisibilityChange: (value: GalleryBuildVisibility) => void
   onClose: () => void
@@ -26,10 +28,12 @@ export type GalleryPublishDialogProps = {
 export function GalleryPublishDialog({
   open,
   title,
+  guild,
   category,
   visibility,
   submitting,
   onTitleChange,
+  onGuildChange,
   onCategoryChange,
   onVisibilityChange,
   onClose,
@@ -95,6 +99,22 @@ export function GalleryPublishDialog({
             autoComplete="off"
             maxLength={TOWER_GALLERY_MAX_TITLE_LEN}
             placeholder={t('gallery_field_title_placeholder')}
+          />
+          <label
+            className="select-research__preset-save-label"
+            htmlFor="gallery-publish-guild-field"
+          >
+            {t('gallery_field_guild')}
+          </label>
+          <input
+            id="gallery-publish-guild-field"
+            className="select-research__preset-save-input glow-input"
+            type="text"
+            value={guild}
+            onChange={(e) => onGuildChange(e.target.value)}
+            autoComplete="off"
+            maxLength={TOWER_GALLERY_MAX_GUILD_LEN}
+            placeholder={t('gallery_field_guild_placeholder')}
           />
           <GalleryBuildCategorySelect
             id="gallery-publish-category-field"

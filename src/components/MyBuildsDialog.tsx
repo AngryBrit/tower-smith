@@ -89,6 +89,7 @@ export function MyBuildsDialog({
       network: t('gallery_error_network'),
       gallery_unavailable: t('gallery_error_unavailable'),
       invalid_title: t('gallery_error_invalid_title'),
+      invalid_guild: t('gallery_error_invalid_guild'),
       invalid_category: t('gallery_error_invalid_category'),
       invalid_payload: t('gallery_error_invalid_payload'),
       invalid_visibility: t('gallery_error_unknown'),

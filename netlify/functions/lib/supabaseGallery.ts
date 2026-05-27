@@ -26,6 +26,7 @@ type BuildRow = {
   id: string
   user_id?: string
   title: string
+  guild?: string | null
   visibility?: GalleryBuildVisibility
   category: string | null
   created_at: string
@@ -43,9 +44,9 @@ const BUILD_AUTHOR_PROFILE_INNER =
   'profiles!builds_user_id_fkey!inner(display_name, avatar_url)'
 
 const BUILD_LIST_SELECT_VOTES =
-  `id, user_id, title, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
+  `id, user_id, title, guild, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
 const BUILD_LIST_SELECT_LEGACY =
-  `id, user_id, title, visibility, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
+  `id, user_id, title, guild, visibility, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
 
 /** Cached after first list query — avoids repeated failed selects pre-migration. */
 let votesSchemaAvailable: boolean | null = null
@@ -93,6 +94,7 @@ function rowToEntry(
   return {
     id: row.id,
     title: row.title,
+    ...(row.guild?.trim() ? { guild: row.guild.trim() } : {}),
     visibility: row.visibility === 'unlisted' ? 'unlisted' : 'public',
     createdAt: row.created_at,
     upvoteCount,
@@ -155,7 +157,7 @@ function escapeIlikePattern(raw: string): string {
   return raw.replace(/[%_\\]/g, '\\$&')
 }
 
-/** Match builds whose title or author display name contains `query` (case-insensitive). */
+/** Match builds whose title, guild, or author display name contains `query` (case-insensitive). */
 async function applyBuildSearchFilter<T extends { or: (filters: string) => T; ilike: (column: string, pattern: string) => T }>(
   sb: ReturnType<typeof getSupabaseAdmin>,
   request: T,
@@ -170,14 +172,16 @@ async function applyBuildSearchFilter<T extends { or: (filters: string) => T; il
 
   if (profileError) {
     console.warn('[gallery] profile search failed:', profileError.message)
-    return request.ilike('title', pattern)
+    return request.or(`title.ilike.${pattern},guild.ilike.${pattern}`)
   }
 
   const authorIds = (profiles ?? []).map((row) => row.id).filter(Boolean)
   if (authorIds.length > 0) {
-    return request.or(`title.ilike.${pattern},user_id.in.(${authorIds.join(',')})`)
+    return request.or(
+      `title.ilike.${pattern},guild.ilike.${pattern},user_id.in.(${authorIds.join(',')})`,
+    )
   }
-  return request.ilike('title', pattern)
+  return request.or(`title.ilike.${pattern},guild.ilike.${pattern}`)
 }
 
 async function fetchBuildListPage(
@@ -439,8 +443,8 @@ export async function readTowerRecord(
   const sb = getSupabaseAdmin()
   const includeVotes = votesSchemaAvailable !== false
   const select = includeVotes
-    ? `id, title, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE}`
-    : `id, title, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE}`
+    ? `id, title, guild, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE}`
+    : `id, title, guild, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE}`
 
   let result = await sb
     .from('builds')
@@ -454,7 +458,7 @@ export async function readTowerRecord(
     result = await sb
       .from('builds')
       .select(
-        `id, title, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE}`,
+        `id, title, guild, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE}`,
       )
       .eq('id', id)
       .is('deleted_at', null)
@@ -506,6 +510,7 @@ export async function writeTowerRecord(
     id: record.id,
     user_id: user.id,
     title: record.title,
+    guild: record.guild ?? null,
     visibility: opts?.visibility === 'unlisted' ? 'unlisted' : 'public',
     category: record.category ?? null,
     storage_path: storagePath,
@@ -554,7 +559,7 @@ export async function updateTowerVisibility(
     .eq('id', id)
     .eq('user_id', user.id)
     .is('deleted_at', null)
-    .select(`id, user_id, title, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
+    .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
     .maybeSingle()
   if (error || !data) return null
   return rowToEntry(data as BuildRow, undefined, true)
@@ -573,7 +578,7 @@ export async function updateTowerCategory(
     .eq('id', id)
     .eq('user_id', user.id)
     .is('deleted_at', null)
-    .select(`id, user_id, title, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
+    .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
     .maybeSingle()
   if (error || !data) return null
   return rowToEntry(data as BuildRow, undefined, true)
@@ -586,7 +591,7 @@ export async function regenerateTowerLink(
   const sb = getSupabaseAdmin()
   const { data: existing, error: readError } = await sb
     .from('builds')
-    .select(`id, user_id, title, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE}`)
+    .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE}`)
     .eq('id', id)
     .eq('user_id', user.id)
     .is('deleted_at', null)
@@ -617,12 +622,13 @@ export async function regenerateTowerLink(
       id: newId,
       user_id: user.id,
       title: row.title,
+      guild: row.guild,
       visibility: row.visibility === 'unlisted' ? 'unlisted' : 'public',
       category: row.category,
       storage_path: newStoragePath,
       created_at: createdAt,
     })
-    .select(`id, user_id, title, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
+    .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
     .maybeSingle()
   if (insertError || !inserted) {
     await sb.storage.from(towerPayloadsBucket()).remove([newStoragePath])

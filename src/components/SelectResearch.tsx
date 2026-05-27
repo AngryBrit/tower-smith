@@ -209,6 +209,7 @@ export const SelectResearch = forwardRef<
     useState(false)
   const [authSignInDialogOpen, setAuthSignInDialogOpen] = useState(false)
   const [publishTitle, setPublishTitle] = useState('')
+  const [publishGuild, setPublishGuild] = useState('')
   const [publishCategory, setPublishCategory] = useState<GalleryBuildCategory | ''>('')
   const [publishVisibility, setPublishVisibility] =
     useState<GalleryBuildVisibility>('public')
@@ -1083,10 +1084,11 @@ export const SelectResearch = forwardRef<
         return
       }
       setPublishTitle('')
+      setPublishGuild(auth.guild ?? '')
       setPublishVisibility('public')
       setCommunityPublishDialogOpen(true)
     })()
-  }, [getPublishAccessToken, t])
+  }, [auth.guild, getPublishAccessToken, t])
 
   const closeCommunityPublishDialog = useCallback(() => {
     if (communityPublishSubmitting) return
@@ -1115,6 +1117,7 @@ export const SelectResearch = forwardRef<
         window.location.href,
         {
           accessToken,
+          guild: publishGuild,
           visibility: publishVisibility,
         },
       )
@@ -1124,6 +1127,8 @@ export const SelectResearch = forwardRef<
             ? t('auth_required_publish')
             : result.error === 'invalid_title'
               ? t('gallery_error_invalid_title')
+              : result.error === 'invalid_guild'
+                ? t('gallery_error_invalid_guild')
               : result.error === 'invalid_category'
                 ? t('gallery_error_invalid_category')
               : result.error === 'submissions_disabled'
@@ -1140,6 +1145,7 @@ export const SelectResearch = forwardRef<
       setImportNotice(fmt.galleryNoticeSubmitted(result.title))
       setCommunityPublishDialogOpen(false)
       setPublishTitle('')
+      setPublishGuild('')
       setPublishVisibility('public')
     } catch {
       setImportNotice(t('gallery_error_unknown'))
@@ -1151,6 +1157,7 @@ export const SelectResearch = forwardRef<
     getLabsShareFileForGallery,
     getPublishAccessToken,
     publishCategory,
+    publishGuild,
     publishVisibility,
     publishTitle,
     t,
@@ -1529,10 +1536,12 @@ export const SelectResearch = forwardRef<
       <GalleryPublishDialog
         open={communityPublishDialogOpen}
         title={publishTitle}
+        guild={publishGuild}
         category={publishCategory}
         visibility={publishVisibility}
         submitting={communityPublishSubmitting}
         onTitleChange={setPublishTitle}
+        onGuildChange={setPublishGuild}
         onCategoryChange={setPublishCategory}
         onVisibilityChange={setPublishVisibility}
         onClose={closeCommunityPublishDialog}
