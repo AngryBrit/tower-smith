@@ -45,7 +45,10 @@ function avatarUrlFromUser(user: User | null): string | null {
   if (!user) return null
   const meta = user.user_metadata as Record<string, unknown> | undefined
   const fromMeta =
-    typeof meta?.avatar_url === 'string' ? meta.avatar_url.trim() : ''
+    (typeof meta?.avatar_url === 'string' && meta.avatar_url.trim()) ||
+    (typeof meta?.picture === 'string' && meta.picture.trim()) ||
+    (typeof meta?.photo_url === 'string' && meta.photo_url.trim()) ||
+    ''
   return fromMeta || null
 }
 
@@ -53,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const configured = supabaseBrowserConfigured()
   const [loading, setLoading] = useState(configured)
   const [profileLoading, setProfileLoading] = useState(false)
+  const [profileResolved, setProfileResolved] = useState(false)
   const [session, setSession] = useState<Session | null>(null)
   const [profileDisplayName, setProfileDisplayName] = useState<string | null>(null)
   const [profileAvatarUrl, setProfileAvatarUrl] = useState<string | null>(null)
@@ -62,6 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!userId || !configured) {
       setProfileDisplayName(null)
       setProfileAvatarUrl(null)
+      setProfileResolved(false)
       return
     }
 
@@ -72,6 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setProfileAvatarUrl(profile?.avatarUrl ?? null)
     } finally {
       setProfileLoading(false)
+      setProfileResolved(true)
     }
   }, [configured, session?.user?.id])
 
@@ -103,6 +109,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [configured])
 
   useEffect(() => {
+    setProfileResolved(false)
     void refreshProfile()
   }, [refreshProfile])
 
@@ -134,7 +141,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const user = session?.user ?? null
   const displayName =
     profileDisplayName ?? displayNameFromUser(user)
-  const avatarUrl = profileAvatarUrl ?? avatarUrlFromUser(user)
+  const avatarUrl = user
+    ? profileResolved
+      ? (profileAvatarUrl ?? avatarUrlFromUser(user))
+      : null
+    : null
 
   const value = useMemo(
     (): AuthContextValue => ({
