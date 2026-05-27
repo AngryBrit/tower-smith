@@ -281,10 +281,16 @@ export const STRINGS_DE = {
   auth_loading: 'Anmeldung wird geprüft…',
   auth_sign_in: 'Anmelden',
   auth_sign_out: 'Abmelden',
+  auth_my_builds: 'Meine Builds',
+  auth_my_builds_title: 'Deine Builds',
+  auth_my_builds_intro:
+    'Verwalte deine veröffentlichten Builds — laden, Link kopieren, öffentlich oder privat, Link neu erstellen oder löschen.',
+  auth_my_builds_empty: 'Du hast noch keine Builds veröffentlicht.',
   auth_signed_in: 'Angemeldet',
   auth_sign_in_google: 'Mit Google fortfahren',
   auth_sign_in_discord: 'Mit Discord fortfahren',
-  auth_required_publish: 'Melde dich mit Google oder Discord an, um einen Build zu veröffentlichen.',
+  auth_sign_in_twitch: 'Mit Twitch fortfahren',
+  auth_required_publish: 'Melde dich mit Google, Discord oder Twitch an, um einen Build zu veröffentlichen.',
   profile_settings_title: 'Dein Profil',
   profile_settings_intro:
     'Lege den Benutzernamen und Avatar fest, die bei deinen Community-Builds angezeigt werden. Bearbeiten unter Werkzeuge & Einstellungen.',
@@ -317,6 +323,8 @@ export const STRINGS_DE = {
   gallery_submit_title: 'Turm einreichen',
   gallery_submit_hint:
     'Nutzt deine aktuellen LAB-Stufen und den Werkstatt-Snapshot (wie ein Freigabelink). Titel angeben; Autor optional.',
+  gallery_submit_visibility_unlisted:
+    'Nicht gelistet (nur Personen mit Link haben Zugriff)',
   gallery_field_title: 'Titel',
   gallery_field_title_placeholder: 'z. B. Endgame-Schadensbuild',
   gallery_field_category: 'Build-Kategorie',
@@ -351,7 +359,7 @@ export const STRINGS_DE = {
   gallery_submitting: 'Wird gesendet…',
   gallery_list_title: 'Einreichungen durchsuchen',
   gallery_list_paged_hint:
-    'Neueste oder bestbewertete Builds. 40 pro Seite — „Mehr laden“ für ältere Builds.',
+    'Neueste oder bestbewertete Builds. 20 pro Seite; nutze die Seitennavigation fur altere Builds.',
   gallery_sort_label: 'Builds sortieren',
   gallery_sort_newest: 'Neueste',
   gallery_sort_top: 'Top',
@@ -365,12 +373,21 @@ export const STRINGS_DE = {
   sr_community_sort_label: 'Community-Build-Sortierung',
   gallery_load_more: 'Mehr laden',
   gallery_loading_more: 'Lade mehr…',
+  gallery_page_prev: 'Zuruck',
+  gallery_page_next: 'Weiter',
+  gallery_page_label: 'Seite {{page}}',
   gallery_showing_count: '{{count}} Builds angezeigt',
   gallery_refresh: 'Aktualisieren',
   gallery_loading: 'Galerie wird geladen…',
   gallery_empty: 'Noch keine Türme eingereicht. Sei der Erste!',
   gallery_copy_link_btn: 'Link kopieren',
   gallery_notice_link_copied: 'Kurzlink in die Zwischenablage kopiert.',
+  gallery_notice_set_public: 'Build ist jetzt öffentlich in der Galerie.',
+  gallery_notice_set_unlisted: 'Build ist jetzt ungelistet (nur per Link).',
+  gallery_notice_regenerated_link:
+    'Neuer Link wurde erstellt und kopiert. Der alte Link funktioniert nicht mehr.',
+  gallery_notice_regenerated_no_copy:
+    'Neuer Link wurde erstellt. Bitte aus der Build-Zeile kopieren.',
   gallery_load_btn: 'Laden',
   gallery_loading_tower: 'Laden…',
   gallery_error_network: 'Galerie-API nicht erreichbar. Später erneut versuchen.',
@@ -386,6 +403,8 @@ export const STRINGS_DE = {
   gallery_notice_loaded: '„{{title}}“ in diesen Browser geladen.',
   gallery_notice_submitted: '„{{title}}“ in die Galerie eingereicht.',
   gallery_by_author: 'von {{author}}',
+  gallery_visibility_public: 'Öffentlich',
+  gallery_visibility_private: 'Privat',
   gallery_admin_title: 'Galerie-Admin',
   gallery_admin_page_intro:
     'Spam oder veraltete Community-Builds entfernen. Löschen ist für die öffentliche Galerie dauerhaft.',
@@ -396,6 +415,13 @@ export const STRINGS_DE = {
     'Deine Benutzer-ID: {{userId}} — füge sie zu TOWER_GALLERY_ADMIN_USER_IDS auf Netlify hinzu, um Zugriff zu erhalten.',
   gallery_admin_unlocked_hint:
     'Löschen entfernt Kurzlink und Listeneintrag für diesen Build.',
+  gallery_owner_make_public: 'Öffentlich machen',
+  gallery_owner_make_unlisted: 'Ungelistet machen',
+  gallery_owner_regenerate_link: 'Link neu erstellen',
+  gallery_owner_delete_confirm:
+    'Diesen Build löschen? Das kann nicht rückgängig gemacht werden und der alte Link funktioniert danach nicht mehr.',
+  gallery_regenerate_confirm:
+    'Neue Link-ID erstellen und den alten Link für diesen Build widerrufen?',
   gallery_admin_delete: 'Löschen',
   gallery_admin_deleting: 'Wird gelöscht…',
   gallery_admin_delete_confirm_title: 'Diesen Build löschen?',
@@ -989,7 +1015,7 @@ export const STRINGS_DE = {
   sr_lab_data_save_game: 'Spielstand',
   sr_lab_data_share: 'Freigabelink',
   sr_lab_data_share_hint:
-    'Kurzlinks nutzen ?build=… (Turm auf dem Server). „Langen eingebetteten Link kopieren“ nur, wenn Galerie-Links nicht funktionieren.',
+    'Kurzlinks nutzen ?build=… (Turm auf dem Server). Ist die Galerie nicht verfügbar, wird automatisch ein langer Offline-Link kopiert.',
   sr_lab_import_file: 'Tower aus CSV importieren',
   sr_lab_import_player_save: 'playerInfo.dat importieren',
   sr_lab_export_file: 'Tower nach CSV exportieren',
@@ -1030,9 +1056,7 @@ export const STRINGS_DE = {
   sr_compare_diff_count_one: '1 Lab hat eine andere Stufe.',
   sr_compare_diff_count_many: '{{count}} Labs haben unterschiedliche Stufen.',
   sr_copy_short_link: 'Freigabelink kopieren',
-  sr_copy_embedded_link: 'Langen eingebetteten Link kopieren',
   sr_share_publishing: 'Wird veröffentlicht…',
-  sr_copy_full_url: 'Vollständige URL kopieren',
   sr_qr_share: 'QR-Code für Freigabelink anzeigen',
   sr_close: 'Schließen',
   sr_sections_aria: 'Labor-Bereiche',
@@ -1083,14 +1107,8 @@ export const STRINGS_DE = {
     'Kurzlink konnte nicht veröffentlicht werden; langer eingebetteter Link kopiert.',
   sr_notice_copy_gallery_fallback:
     'Galerie hier nicht verfügbar; langer eingebetteter Link kopiert.',
-  sr_notice_copy_embedded_ok:
-    'Langer eingebetteter Link kopiert (?tower=… — offline nutzbar, URL kann sehr lang sein).',
-  sr_notice_copy_embedded_fail:
-    'Eingebetteter Link konnte nicht kopiert werden (Zwischenablage blockiert oder nicht verfügbar).',
   sr_notice_copy_short_ok: 'Kurzlink kopiert (inkl. Werkstatt, wenn nicht der Standard-Snapshot).',
   sr_notice_copy_short_fail: 'Link konnte nicht kopiert werden (Zwischenablage blockiert oder nicht verfügbar).',
-  sr_notice_copy_full_ok: 'Vollständige URL kopiert (behält andere Query-Parameter und Hash).',
-  sr_notice_copy_full_fail: 'Link konnte nicht kopiert werden (Zwischenablage blockiert oder nicht verfügbar).',
   sr_notice_qr_fail: 'QR-Code konnte nicht erstellt werden.',
   sr_notice_import_cleared: 'Importierte Datei: alle benutzerdefinierten Stufen gelöscht.',
   sr_notice_import_one: '1 Lab-Stufe importiert.',

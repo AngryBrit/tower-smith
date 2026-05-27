@@ -1,5 +1,6 @@
 import type { Config } from '@netlify/functions'
 import { isGalleryBuildId } from '../../src/towerGallery/shareLink'
+import { userFromBearer } from './lib/bearerAuth'
 import { adminUserIdsConfigured, isAdminAuthorized } from './lib/adminAuth'
 import { corsHeaders, jsonResponse } from './lib/http'
 import { isGalleryBackendConfigured } from './lib/supabaseAdmin'
@@ -21,21 +22,22 @@ export default async (req: Request): Promise<Response> => {
     return jsonResponse(503, { error: 'gallery_unavailable' }, cors)
   }
 
-  if (!adminUserIdsConfigured()) {
-    return jsonResponse(503, { error: 'admin_not_configured' }, cors)
-  }
-
-  if (!(await isAdminAuthorized(req))) {
-    return jsonResponse(401, { error: 'unauthorized' }, cors)
-  }
-
   const url = new URL(req.url)
   const id = url.searchParams.get('id')?.trim() ?? ''
   if (!isGalleryBuildId(id)) {
     return jsonResponse(400, { error: 'invalid_id' }, cors)
   }
 
-  const removed = await deleteTowerFromGallery(id)
+  const adminMode = adminUserIdsConfigured() && (await isAdminAuthorized(req))
+  const viewer = adminMode ? null : await userFromBearer(req)
+  if (!adminMode && !viewer) {
+    return jsonResponse(401, { error: 'auth_required' }, cors)
+  }
+
+  const removed = await deleteTowerFromGallery(
+    id,
+    adminMode ? undefined : { ownedByUserId: viewer!.id },
+  )
   if (!removed) {
     return jsonResponse(404, { error: 'not_found' }, cors)
   }

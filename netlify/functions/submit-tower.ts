@@ -56,7 +56,7 @@ export default async (req: Request): Promise<Response> => {
     return jsonResponse(400, { error: parsed.error }, cors)
   }
 
-  const { title, category, payload } = parsed.body
+  const { title, category, visibility, payload } = parsed.body
   const id = crypto.randomUUID()
   const createdAt = new Date().toISOString()
 
@@ -89,7 +89,7 @@ export default async (req: Request): Promise<Response> => {
   const record: TowerGalleryRecord = { ...entry, payload }
 
   try {
-    await writeTowerRecord(record, user)
+    await writeTowerRecord(record, user, { visibility })
   } catch {
     return jsonResponse(503, { error: 'gallery_unavailable' }, cors)
   }

@@ -75,6 +75,14 @@ export function AuthSignInDialog({
             type="button"
             className="glow-btn glow-btn--block"
             disabled={busy}
+            onClick={() => handleSignIn('twitch')}
+          >
+            {t('auth_sign_in_twitch')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={busy}
             onClick={onClose}
           >
             {t('sr_cancel')}

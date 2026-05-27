@@ -40,6 +40,7 @@ import {
 } from '../towerGallery/api'
 import { publishGalleryShareLink } from '../towerGallery/publishShareLink'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
+import type { GalleryBuildVisibility } from '../towerGallery/types'
 import {
   clearGalleryBuildIdFromUrl,
   readGalleryBuildIdFromUrlSearchParams,
@@ -209,6 +210,8 @@ export const SelectResearch = forwardRef<
   const [authSignInDialogOpen, setAuthSignInDialogOpen] = useState(false)
   const [publishTitle, setPublishTitle] = useState('')
   const [publishCategory, setPublishCategory] = useState<GalleryBuildCategory | ''>('')
+  const [publishVisibility, setPublishVisibility] =
+    useState<GalleryBuildVisibility>('public')
   const [communityPublishSubmitting, setCommunityPublishSubmitting] =
     useState(false)
   const [labBudgetCollapsed, setLabBudgetCollapsed] = useState(() => {
@@ -855,7 +858,7 @@ export const SelectResearch = forwardRef<
         resolveShareTitle(),
         category,
         window.location.href,
-        { accessToken },
+        { accessToken, visibility: 'unlisted' },
       )
       if (!result.ok) {
         if (result.error === 'auth_required') {
@@ -914,7 +917,7 @@ export const SelectResearch = forwardRef<
         resolveShareTitle(),
         category,
         window.location.href,
-        { accessToken },
+        { accessToken, visibility: 'unlisted' },
       )
       if (!result.ok) {
         if (result.error === 'auth_required') {
@@ -945,30 +948,6 @@ export const SelectResearch = forwardRef<
     t,
   ])
 
-  const handleCopyEmbeddedShareLink = useCallback(async () => {
-    if (await copyEmbeddedShareLink()) {
-      setImportNotice(t('sr_notice_copy_embedded_ok'))
-    } else {
-      setImportNotice(t('sr_notice_copy_embedded_fail'))
-    }
-  }, [copyEmbeddedShareLink, t])
-
-  const handleCopyFullShareLink = useCallback(async () => {
-    try {
-      const encoded = await encodeLabsShareQueryValue(
-        levelOverrides,
-        workshopFlat,
-        undefined,
-        readTowerThemesSnapshot(),
-      )
-      const { full } = buildLabsShareUrls(encoded, window.location.href)
-      await navigator.clipboard.writeText(full)
-      setImportNotice(t('sr_notice_copy_full_ok'))
-    } catch {
-      setImportNotice(t('sr_notice_copy_full_fail'))
-    }
-  }, [levelOverrides, workshopFlat, t])
-
   const handleShowShareQr = useCallback(async () => {
     try {
       let shareUrl: string | null = null
@@ -984,7 +963,7 @@ export const SelectResearch = forwardRef<
             resolveShareTitle(),
             category,
             window.location.href,
-            { accessToken },
+            { accessToken, visibility: 'unlisted' },
           )
           setSharePublishing(false)
           if (result.ok) shareUrl = result.url
@@ -1104,6 +1083,7 @@ export const SelectResearch = forwardRef<
         return
       }
       setPublishTitle('')
+      setPublishVisibility('public')
       setCommunityPublishDialogOpen(true)
     })()
   }, [getPublishAccessToken, t])
@@ -1134,8 +1114,10 @@ export const SelectResearch = forwardRef<
         publishCategory,
         window.location.href,
         {
-        accessToken,
-      })
+          accessToken,
+          visibility: publishVisibility,
+        },
+      )
       if (!result.ok) {
         const msg =
           result.error === 'auth_required'
@@ -1158,6 +1140,7 @@ export const SelectResearch = forwardRef<
       setImportNotice(fmt.galleryNoticeSubmitted(result.title))
       setCommunityPublishDialogOpen(false)
       setPublishTitle('')
+      setPublishVisibility('public')
     } catch {
       setImportNotice(t('gallery_error_unknown'))
     } finally {
@@ -1168,6 +1151,7 @@ export const SelectResearch = forwardRef<
     getLabsShareFileForGallery,
     getPublishAccessToken,
     publishCategory,
+    publishVisibility,
     publishTitle,
     t,
   ])
@@ -1517,28 +1501,6 @@ export const SelectResearch = forwardRef<
                   >
                     {t('sr_qr_share')}
                   </button>
-                  <button
-                    type="button"
-                    className="glow-btn glow-btn--block"
-                    disabled={sharePublishing}
-                    onClick={async () => {
-                      await handleCopyEmbeddedShareLink()
-                      setLabDataPanelOpen(false)
-                    }}
-                  >
-                    {t('sr_copy_embedded_link')}
-                  </button>
-                  <button
-                    type="button"
-                    className="glow-btn glow-btn--block"
-                    disabled={sharePublishing}
-                    onClick={async () => {
-                      await handleCopyFullShareLink()
-                      setLabDataPanelOpen(false)
-                    }}
-                  >
-                    {t('sr_copy_full_url')}
-                  </button>
                 </div>
                 <button
                   type="button"
@@ -1568,9 +1530,11 @@ export const SelectResearch = forwardRef<
         open={communityPublishDialogOpen}
         title={publishTitle}
         category={publishCategory}
+        visibility={publishVisibility}
         submitting={communityPublishSubmitting}
         onTitleChange={setPublishTitle}
         onCategoryChange={setPublishCategory}
+        onVisibilityChange={setPublishVisibility}
         onClose={closeCommunityPublishDialog}
         onSubmit={() => void commitCommunityPublish()}
         dialogTitleKey="sr_community_publish_title"

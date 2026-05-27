@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
+import type { GalleryBuildVisibility } from '../towerGallery/types'
 import { TOWER_GALLERY_MAX_TITLE_LEN } from '../towerGallery/types'
 import { GalleryBuildCategorySelect } from './GalleryBuildCategoryFields'
 import { useI18n } from '../i18n'
@@ -9,9 +10,11 @@ export type GalleryPublishDialogProps = {
   open: boolean
   title: string
   category: GalleryBuildCategory | ''
+  visibility: GalleryBuildVisibility
   submitting: boolean
   onTitleChange: (value: string) => void
   onCategoryChange: (value: GalleryBuildCategory) => void
+  onVisibilityChange: (value: GalleryBuildVisibility) => void
   onClose: () => void
   onSubmit: () => void
   /** Override dialog heading (defaults to gallery submit title). */
@@ -24,9 +27,11 @@ export function GalleryPublishDialog({
   open,
   title,
   category,
+  visibility,
   submitting,
   onTitleChange,
   onCategoryChange,
+  onVisibilityChange,
   onClose,
   onSubmit,
   dialogTitleKey = 'gallery_submit_title',
@@ -99,6 +104,17 @@ export function GalleryPublishDialog({
             className="select-research__preset-save-label tower-gallery__field"
             inputClassName="select-research__preset-save-input glow-input"
           />
+          <label className="select-research__preset-save-checkbox">
+            <input
+              type="checkbox"
+              checked={visibility === 'unlisted'}
+              onChange={(e) =>
+                onVisibilityChange(e.target.checked ? 'unlisted' : 'public')
+              }
+              disabled={submitting}
+            />
+            <span>{t('gallery_submit_visibility_unlisted')}</span>
+          </label>
           <div className="select-research__preset-save-actions">
             <button
               type="button"

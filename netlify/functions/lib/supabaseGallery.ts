@@ -15,6 +15,7 @@ import {
   towerPayloadsBucket,
 } from './supabaseAdmin'
 import type { User } from '@supabase/supabase-js'
+import type { GalleryBuildVisibility } from '../../../src/towerGallery/types'
 
 export type GalleryListPage = {
   entries: TowerGalleryIndexEntry[]
@@ -23,7 +24,9 @@ export type GalleryListPage = {
 
 type BuildRow = {
   id: string
+  user_id?: string
   title: string
+  visibility?: GalleryBuildVisibility
   category: string | null
   created_at: string
   upvote_count?: number
@@ -40,9 +43,9 @@ const BUILD_AUTHOR_PROFILE_INNER =
   'profiles!builds_user_id_fkey!inner(display_name, avatar_url)'
 
 const BUILD_LIST_SELECT_VOTES =
-  `id, title, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
+  `id, user_id, title, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
 const BUILD_LIST_SELECT_LEGACY =
-  `id, title, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
+  `id, user_id, title, visibility, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE_INNER}`
 
 /** Cached after first list query — avoids repeated failed selects pre-migration. */
 let votesSchemaAvailable: boolean | null = null
@@ -78,6 +81,7 @@ function categoryFromRow(row: BuildRow): TowerGalleryIndexEntry['category'] {
 function rowToEntry(
   row: BuildRow,
   viewerVoted?: boolean,
+  viewerOwns?: boolean,
 ): TowerGalleryIndexEntry {
   const author = authorFromRow(row)
   const authorAvatarUrl = authorAvatarFromRow(row)
@@ -89,12 +93,14 @@ function rowToEntry(
   return {
     id: row.id,
     title: row.title,
+    visibility: row.visibility === 'unlisted' ? 'unlisted' : 'public',
     createdAt: row.created_at,
     upvoteCount,
     ...(category ? { category } : {}),
     ...(author ? { author } : {}),
     ...(authorAvatarUrl ? { authorAvatarUrl } : {}),
     ...(viewerVoted === true ? { viewerVoted: true } : {}),
+    ...(viewerOwns === true ? { viewerOwns: true } : {}),
   }
 }
 
@@ -126,9 +132,14 @@ async function viewerVotedBuildIds(
 function applyViewerVotes(
   rows: BuildRow[],
   votedIds: Set<string>,
+  viewerUserId: string,
 ): TowerGalleryIndexEntry[] {
   return rows.map((row) =>
-    rowToEntry(row, votedIds.has(row.id) ? true : undefined),
+    rowToEntry(
+      row,
+      votedIds.has(row.id) ? true : undefined,
+      row.user_id === viewerUserId ? true : undefined,
+    ),
   )
 }
 
@@ -146,6 +157,8 @@ async function fetchBuildListPage(
   query: string | null,
   category: string | null,
   sortRaw: string | null,
+  viewerUserId: string | null,
+  mineOnly: boolean,
   includeVotes: boolean,
 ): Promise<{ rows: BuildRow[]; effectiveSort: GalleryListSort }> {
   const sb = getSupabaseAdmin()
@@ -160,6 +173,12 @@ async function fetchBuildListPage(
     .select(listSelectColumns(includeVotes))
     .is('deleted_at', null)
     .limit(limit)
+
+  if (viewerUserId) {
+    request = request.or(`visibility.eq.public,user_id.eq.${viewerUserId}`)
+  } else {
+    request = request.eq('visibility', 'public')
+  }
 
   if (effectiveSort === 'top') {
     request = request
@@ -208,6 +227,7 @@ export async function listGalleryEntriesPaginated(
   category: string | null,
   sortRaw: string | null,
   viewerUserId: string | null,
+  mineOnly = false,
 ): Promise<GalleryListPage> {
   const includeVotes = votesSchemaAvailable !== false
   let rows: BuildRow[]
@@ -220,6 +240,8 @@ export async function listGalleryEntriesPaginated(
       query,
       category,
       sortRaw,
+      viewerUserId,
+      mineOnly,
       includeVotes,
     )
     rows = page.rows
@@ -240,6 +262,8 @@ export async function listGalleryEntriesPaginated(
         query,
         category,
         'newest',
+        viewerUserId,
+        mineOnly,
         false,
       )
       rows = page.rows
@@ -254,9 +278,17 @@ export async function listGalleryEntriesPaginated(
       rows.map((r) => r.id),
       viewerUserId,
     )
-    entries = applyViewerVotes(rows, votedIds)
+    entries = applyViewerVotes(rows, votedIds, viewerUserId)
   } else {
-    entries = rows.map((row) => rowToEntry(row))
+    entries = rows.map((row) =>
+      rowToEntry(
+        row,
+        undefined,
+        mineOnly || (viewerUserId && row.user_id === viewerUserId)
+          ? true
+          : undefined,
+      ),
+    )
   }
 
   const last = rows[rows.length - 1]
@@ -424,6 +456,7 @@ export async function readTowerRecord(
 export async function writeTowerRecord(
   record: TowerGalleryRecord,
   user: User,
+  opts?: { visibility?: GalleryBuildVisibility },
 ): Promise<void> {
   await ensureProfileForUser(user)
   const sb = getSupabaseAdmin()
@@ -445,6 +478,7 @@ export async function writeTowerRecord(
     id: record.id,
     user_id: user.id,
     title: record.title,
+    visibility: opts?.visibility === 'unlisted' ? 'unlisted' : 'public',
     category: record.category ?? null,
     storage_path: storagePath,
     created_at: record.createdAt,
@@ -456,18 +490,105 @@ export async function writeTowerRecord(
   }
 }
 
-export async function deleteTowerFromGallery(id: string): Promise<boolean> {
+export async function deleteTowerFromGallery(
+  id: string,
+  opts?: { ownedByUserId?: string },
+): Promise<boolean> {
   const sb = getSupabaseAdmin()
   const { data, error } = await sb
     .from('builds')
-    .select('storage_path')
+    .select('storage_path, user_id')
     .eq('id', id)
+    .is('deleted_at', null)
     .maybeSingle()
 
   if (error || !data) return false
+  if (opts?.ownedByUserId && data.user_id !== opts.ownedByUserId) return false
 
-  await sb.storage.from(towerPayloadsBucket()).remove([data.storage_path])
+  const { error: softDeleteError } = await sb
+    .from('builds')
+    .update({ deleted_at: new Date().toISOString() })
+    .eq('id', id)
+    .is('deleted_at', null)
+  return !softDeleteError
+}
 
-  const { error: deleteError } = await sb.from('builds').delete().eq('id', id)
-  return !deleteError
+export async function updateTowerVisibility(
+  id: string,
+  user: User,
+  visibility: GalleryBuildVisibility,
+): Promise<TowerGalleryIndexEntry | null> {
+  const sb = getSupabaseAdmin()
+  const normalizedVisibility = visibility === 'unlisted' ? 'unlisted' : 'public'
+  const { data, error } = await sb
+    .from('builds')
+    .update({ visibility: normalizedVisibility })
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .is('deleted_at', null)
+    .select(`id, user_id, title, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
+    .maybeSingle()
+  if (error || !data) return null
+  return rowToEntry(data as BuildRow, undefined, true)
+}
+
+export async function regenerateTowerLink(
+  id: string,
+  user: User,
+): Promise<TowerGalleryIndexEntry | null> {
+  const sb = getSupabaseAdmin()
+  const { data: existing, error: readError } = await sb
+    .from('builds')
+    .select(`id, user_id, title, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE}`)
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .is('deleted_at', null)
+    .maybeSingle()
+  if (readError || !existing) return null
+  const row = existing as BuildRow
+  const newId = crypto.randomUUID()
+  const newStoragePath = `${newId}.json`
+
+  const { data: payloadFile, error: dlError } = await sb.storage
+    .from(towerPayloadsBucket())
+    .download(row.storage_path)
+  if (dlError || !payloadFile) return null
+  const payloadText = await payloadFile.text()
+
+  const { error: uploadError } = await sb.storage
+    .from(towerPayloadsBucket())
+    .upload(newStoragePath, payloadText, {
+      contentType: 'application/json',
+      upsert: false,
+    })
+  if (uploadError) return null
+
+  const createdAt = new Date().toISOString()
+  const { data: inserted, error: insertError } = await sb
+    .from('builds')
+    .insert({
+      id: newId,
+      user_id: user.id,
+      title: row.title,
+      visibility: row.visibility === 'unlisted' ? 'unlisted' : 'public',
+      category: row.category,
+      storage_path: newStoragePath,
+      created_at: createdAt,
+    })
+    .select(`id, user_id, title, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
+    .maybeSingle()
+  if (insertError || !inserted) {
+    await sb.storage.from(towerPayloadsBucket()).remove([newStoragePath])
+    return null
+  }
+
+  const { error: oldDeleteError } = await sb
+    .from('builds')
+    .update({ deleted_at: createdAt })
+    .eq('id', id)
+    .eq('user_id', user.id)
+    .is('deleted_at', null)
+  if (oldDeleteError) return null
+
+  return rowToEntry(inserted as BuildRow, undefined, true)
 }

@@ -37,7 +37,12 @@ export default async (req: Request): Promise<Response> => {
   const q = url.searchParams.get('q')?.trim() || null
   const category = url.searchParams.get('category')?.trim() || null
   const sort = url.searchParams.get('sort')?.trim() || null
+  const mine = url.searchParams.get('mine') === '1'
   const viewer = await userFromBearer(req)
+
+  if (mine && !viewer) {
+    return jsonResponse(401, { error: 'auth_required' }, cors)
+  }
 
   let page
   try {
@@ -48,6 +53,7 @@ export default async (req: Request): Promise<Response> => {
       category,
       sort,
       viewer?.id ?? null,
+      mine,
     )
   } catch (err) {
     console.error('[gallery] list-towers failed:', err)
@@ -60,7 +66,11 @@ export default async (req: Request): Promise<Response> => {
       entries: page.entries,
       nextCursor: page.nextCursor,
     },
-    { ...cors, 'Cache-Control': 'public, max-age=15' },
+    {
+      ...cors,
+      'Cache-Control': viewer ? 'private, no-store' : 'public, max-age=15',
+      Vary: 'Authorization',
+    },
   )
 }
 

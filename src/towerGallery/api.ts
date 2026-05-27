@@ -1,4 +1,5 @@
 import type {
+  GalleryBuildVisibility,
   GalleryListSort,
   TowerGalleryIndexEntry,
   TowerGalleryRecord,
@@ -15,6 +16,7 @@ export type TowerGalleryApiError =
   | 'invalid_title'
   | 'invalid_category'
   | 'invalid_payload'
+  | 'invalid_visibility'
   | 'submissions_disabled'
   | 'auth_required'
   | 'cannot_vote_own'
@@ -31,6 +33,8 @@ function normalizeIndexEntry(raw: TowerGalleryIndexEntry): TowerGalleryIndexEntr
     ...raw,
     upvoteCount,
     ...(raw.viewerVoted === true ? { viewerVoted: true } : {}),
+    ...(raw.viewerOwns === true ? { viewerOwns: true } : {}),
+    visibility: raw.visibility === 'unlisted' ? 'unlisted' : 'public',
   }
 }
 
@@ -61,6 +65,7 @@ export async function listGalleryTowersPage(
     category?: string
     sort?: GalleryListSort
     accessToken?: string | null
+    mine?: boolean
   },
 ): Promise<
   | { ok: true; page: GalleryListPageResult }
@@ -85,6 +90,9 @@ export async function listGalleryTowersPage(
     if (options?.sort === 'top') {
       params.set('sort', 'top')
     }
+    if (options?.mine) {
+      params.set('mine', '1')
+    }
     const headers: Record<string, string> = {}
     if (options?.accessToken) {
       headers.Authorization = `Bearer ${options.accessToken}`
@@ -95,6 +103,9 @@ export async function listGalleryTowersPage(
     })
     if (res.status === 404 || res.status === 502) {
       return { ok: false, error: 'gallery_unavailable' }
+    }
+    if (res.status === 401) {
+      return { ok: false, error: 'auth_required' }
     }
     if (!res.ok) return { ok: false, error: 'unknown' }
     const body = await parseJsonResponse(res)
@@ -193,6 +204,7 @@ export async function submitGalleryTower(
       if (err === 'invalid_title') return { ok: false, error: 'invalid_title' }
       if (err === 'invalid_category') return { ok: false, error: 'invalid_category' }
       if (err === 'invalid_payload') return { ok: false, error: 'invalid_payload' }
+      if (err === 'invalid_visibility') return { ok: false, error: 'invalid_visibility' }
       return { ok: false, error: 'unknown' }
     }
     if (res.status === 401) {
@@ -263,6 +275,91 @@ export async function toggleGalleryBuildVote(
       return { ok: false, error: 'unknown' }
     }
     return { ok: true, upvoteCount, viewerVoted }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
+export async function deleteGalleryTower(
+  id: string,
+  accessToken: string,
+): Promise<{ ok: true } | { ok: false; error: TowerGalleryApiError }> {
+  try {
+    const res = await fetch(`${API_BASE}/towers/delete?id=${encodeURIComponent(id)}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    })
+    if (res.status === 401) return { ok: false, error: 'auth_required' }
+    if (res.status === 404) return { ok: false, error: 'not_found' }
+    if (res.status === 503) return { ok: false, error: 'gallery_unavailable' }
+    if (!res.ok) return { ok: false, error: 'unknown' }
+    return { ok: true }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
+export async function setGalleryTowerVisibility(
+  id: string,
+  visibility: GalleryBuildVisibility,
+  accessToken: string,
+): Promise<
+  | { ok: true; entry: TowerGalleryIndexEntry }
+  | { ok: false; error: TowerGalleryApiError }
+> {
+  try {
+    const res = await fetch(`${API_BASE}/towers/visibility`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ id, visibility }),
+    })
+    const parsed = await parseJsonResponse(res)
+    if (res.status === 400) {
+      const err = (parsed as { error?: string } | null)?.error
+      if (err === 'invalid_visibility') return { ok: false, error: 'invalid_visibility' }
+      return { ok: false, error: 'unknown' }
+    }
+    if (res.status === 401) return { ok: false, error: 'auth_required' }
+    if (res.status === 404) return { ok: false, error: 'not_found' }
+    if (res.status === 503) return { ok: false, error: 'gallery_unavailable' }
+    if (!res.ok) return { ok: false, error: 'unknown' }
+    const entry = (parsed as { entry?: TowerGalleryIndexEntry } | null)?.entry
+    if (!entry?.id) return { ok: false, error: 'unknown' }
+    return { ok: true, entry: normalizeIndexEntry(entry) }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
+export async function regenerateGalleryTowerLink(
+  id: string,
+  accessToken: string,
+): Promise<
+  | { ok: true; entry: TowerGalleryIndexEntry }
+  | { ok: false; error: TowerGalleryApiError }
+> {
+  try {
+    const res = await fetch(`${API_BASE}/towers/regenerate`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ id }),
+    })
+    if (res.status === 401) return { ok: false, error: 'auth_required' }
+    if (res.status === 404) return { ok: false, error: 'not_found' }
+    if (res.status === 503) return { ok: false, error: 'gallery_unavailable' }
+    if (!res.ok) return { ok: false, error: 'unknown' }
+    const parsed = await parseJsonResponse(res)
+    const entry = (parsed as { entry?: TowerGalleryIndexEntry } | null)?.entry
+    if (!entry?.id) return { ok: false, error: 'unknown' }
+    return { ok: true, entry: normalizeIndexEntry(entry) }
   } catch {
     return { ok: false, error: 'network' }
   }

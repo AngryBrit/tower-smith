@@ -288,10 +288,16 @@ export const STRINGS_EN = {
   auth_loading: 'Checking sign-in…',
   auth_sign_in: 'Sign in',
   auth_sign_out: 'Sign out',
+  auth_my_builds: 'My Builds',
+  auth_my_builds_title: 'Your builds',
+  auth_my_builds_intro:
+    'Manage your published builds — load, copy link, set public or private, regenerate link, or delete.',
+  auth_my_builds_empty: 'You have not published any builds yet.',
   auth_signed_in: 'Signed in',
   auth_sign_in_google: 'Continue with Google',
   auth_sign_in_discord: 'Continue with Discord',
-  auth_required_publish: 'Sign in with Google or Discord to publish a build.',
+  auth_sign_in_twitch: 'Continue with Twitch',
+  auth_required_publish: 'Sign in with Google, Discord, or Twitch to publish a build.',
   profile_settings_title: 'Your profile',
   profile_settings_intro:
     'Set the username and avatar shown on your community builds. Edit these in Tools & Settings anytime.',
@@ -322,6 +328,7 @@ export const STRINGS_EN = {
   gallery_submit_title: 'Submit your tower',
   gallery_submit_hint:
     'Uses your current LAB levels and workshop snapshot (same data as a share link). Sign in to submit; pick a category and your profile name is shown as author.',
+  gallery_submit_visibility_unlisted: 'Private (only people with the link can access)',
   gallery_field_title: 'Title',
   gallery_field_title_placeholder: 'e.g. Endgame damage build',
   gallery_field_category: 'Build category',
@@ -355,26 +362,34 @@ export const STRINGS_EN = {
   gallery_submit_btn: 'Submit to gallery',
   gallery_submitting: 'Submitting…',
   gallery_list_title: 'Browse submissions',
-  gallery_list_paged_hint: 'Newest or top-rated. Loads 40 at a time — use Load more for older builds.',
+  gallery_list_paged_hint:
+    'Newest or top-rated. Loads 20 at a time; use pagination to browse older builds.',
   gallery_sort_label: 'Sort builds',
   gallery_sort_newest: 'Newest',
   gallery_sort_top: 'Top rated',
-  gallery_upvote_btn: 'Upvote',
-  gallery_upvote_btn_active: 'Upvoted',
-  gallery_upvote_sign_in: 'Sign in to upvote builds.',
-  gallery_upvote_short: 'upvotes',
+  gallery_upvote_btn: 'Like',
+  gallery_upvote_btn_active: 'Liked',
+  gallery_upvote_sign_in: 'Sign in to like builds.',
+  gallery_upvote_short: 'likes',
   gallery_error_cannot_vote_own: 'You cannot vote on your own build.',
   gallery_error_votes_unavailable:
     'Helpful votes are not available yet. Apply the build votes migration in Supabase.',
   sr_community_sort_label: 'Community build sort',
   gallery_load_more: 'Load more',
   gallery_loading_more: 'Loading more…',
+  gallery_page_prev: 'Previous',
+  gallery_page_next: 'Next',
+  gallery_page_label: 'Page {{page}}',
   gallery_showing_count: 'Showing {{count}} builds',
   gallery_refresh: 'Refresh',
   gallery_loading: 'Loading gallery…',
   gallery_empty: 'No towers submitted yet. Be the first!',
   gallery_copy_link_btn: 'Copy link',
   gallery_notice_link_copied: 'Short share link copied to clipboard.',
+  gallery_notice_set_public: 'Build is now public in gallery listings.',
+  gallery_notice_set_unlisted: 'Build is now unlisted (link-only).',
+  gallery_notice_regenerated_link: 'New link generated and copied. Old link no longer works.',
+  gallery_notice_regenerated_no_copy: 'New link generated. Copy it from the build row.',
   gallery_load_btn: 'Load',
   gallery_loading_tower: 'Loading…',
   gallery_error_network: 'Could not reach the gallery API. Try again later.',
@@ -390,6 +405,8 @@ export const STRINGS_EN = {
   gallery_notice_loaded: 'Loaded “{{title}}” into this browser.',
   gallery_notice_submitted: 'Submitted “{{title}}” to the gallery.',
   gallery_by_author: 'by {{author}}',
+  gallery_visibility_public: 'Public',
+  gallery_visibility_private: 'Private',
   gallery_admin_title: 'Gallery admin',
   gallery_admin_page_intro:
     'Remove spam or outdated community builds. Deletes are permanent for the public gallery.',
@@ -398,6 +415,13 @@ export const STRINGS_EN = {
   gallery_admin_your_user_id:
     'Your user ID: {{userId}} — add it to TOWER_GALLERY_ADMIN_USER_IDS on Netlify to grant access.',
   gallery_admin_unlocked_hint: 'Delete removes the short link and listing for that build.',
+  gallery_owner_make_public: 'Make public',
+  gallery_owner_make_unlisted: 'Make Private',
+  gallery_owner_regenerate_link: 'Regenerate link',
+  gallery_owner_delete_confirm:
+    'Delete this build? This cannot be undone, and the old link will stop working.',
+  gallery_regenerate_confirm:
+    'Generate a new link ID and revoke the old one for this build?',
   gallery_admin_delete: 'Delete',
   gallery_admin_deleting: 'Deleting…',
   gallery_admin_delete_confirm_title: 'Delete this build?',
@@ -1043,7 +1067,7 @@ export const STRINGS_EN = {
   sr_lab_data_save_game: 'Save Game',
   sr_lab_data_share: 'Share link',
   sr_lab_data_share_hint:
-    'Share links are short URLs with ?build=… (tower stored on the server). Use “Copy long embedded link” only if someone cannot open gallery links.',
+    'Share links are short URLs with ?build=… (tower stored on the server). If the gallery is unavailable, a long offline link is copied automatically.',
   sr_lab_import_file: 'Import tower CSV',
   sr_lab_import_player_save: 'Import playerInfo.dat',
   sr_lab_export_file: 'Export tower to CSV',
@@ -1089,9 +1113,7 @@ export const STRINGS_EN = {
   sr_compare_diff_count_one: '1 lab has a different level.',
   sr_compare_diff_count_many: '{{count}} labs have different levels.',
   sr_copy_short_link: 'Copy share link',
-  sr_copy_embedded_link: 'Copy long embedded link',
   sr_share_publishing: 'Publishing…',
-  sr_copy_full_url: 'Copy full page URL',
   sr_qr_share: 'Show QR for share link',
   sr_close: 'Close',
 
@@ -1159,17 +1181,9 @@ export const STRINGS_EN = {
     'Could not publish a short link; copied a long embedded link instead.',
   sr_notice_copy_gallery_fallback:
     'Gallery unavailable here; copied a long embedded link instead.',
-  sr_notice_copy_embedded_ok:
-    'Copied long embedded link (?tower=… — works offline, URL may be very long).',
-  sr_notice_copy_embedded_fail:
-    'Could not copy embedded link (clipboard blocked or unavailable).',
   sr_notice_copy_short_ok:
     'Short share link copied (includes workshop when it is not the default snapshot).',
   sr_notice_copy_short_fail:
-    'Could not copy link (clipboard blocked or unavailable).',
-  sr_notice_copy_full_ok:
-    'Full page URL copied (keeps other query params and hash).',
-  sr_notice_copy_full_fail:
     'Could not copy link (clipboard blocked or unavailable).',
   sr_notice_qr_fail: 'Could not create QR code.',
   sr_notice_import_cleared: 'Imported file: all custom levels cleared.',

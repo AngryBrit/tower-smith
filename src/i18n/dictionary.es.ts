@@ -286,10 +286,16 @@ export const STRINGS_ES = {
   auth_loading: 'Comprobando sesión…',
   auth_sign_in: 'Iniciar sesión',
   auth_sign_out: 'Cerrar sesión',
+  auth_my_builds: 'Mis builds',
+  auth_my_builds_title: 'Tus builds',
+  auth_my_builds_intro:
+    'Gestiona tus builds publicados: cargar, copiar enlace, público o privado, regenerar enlace o eliminar.',
+  auth_my_builds_empty: 'Aún no has publicado ningún build.',
   auth_signed_in: 'Sesión iniciada',
   auth_sign_in_google: 'Continuar con Google',
   auth_sign_in_discord: 'Continuar con Discord',
-  auth_required_publish: 'Inicia sesión con Google o Discord para publicar un build.',
+  auth_sign_in_twitch: 'Continuar con Twitch',
+  auth_required_publish: 'Inicia sesión con Google, Discord o Twitch para publicar un build.',
   profile_settings_title: 'Tu perfil',
   profile_settings_intro:
     'Configura el nombre de usuario y avatar que se muestran en tus builds de la comunidad. Edítalos en Herramientas y ajustes.',
@@ -322,6 +328,8 @@ export const STRINGS_ES = {
   gallery_submit_title: 'Enviar tu torre',
   gallery_submit_hint:
     'Usa tus niveles de LAB y el taller actuales (los mismos datos que un enlace para compartir). Añade un título; el autor es opcional.',
+  gallery_submit_visibility_unlisted:
+    'No listado (solo personas con el enlace pueden acceder)',
   gallery_field_title: 'Título',
   gallery_field_title_placeholder: 'p. ej. Build de daño endgame',
   gallery_field_category: 'Categoría del build',
@@ -356,7 +364,7 @@ export const STRINGS_ES = {
   gallery_submitting: 'Enviando…',
   gallery_list_title: 'Ver envíos',
   gallery_list_paged_hint:
-    'Más recientes o mejor valorados. 40 por página — «Cargar más» para builds antiguos.',
+    'Más recientes o mejor valorados. 20 por página; usa la paginación para ver builds más antiguos.',
   gallery_sort_label: 'Ordenar builds',
   gallery_sort_newest: 'Recientes',
   gallery_sort_top: 'Mejor valorados',
@@ -370,12 +378,21 @@ export const STRINGS_ES = {
   sr_community_sort_label: 'Orden de builds de la comunidad',
   gallery_load_more: 'Cargar más',
   gallery_loading_more: 'Cargando más…',
+  gallery_page_prev: 'Anterior',
+  gallery_page_next: 'Siguiente',
+  gallery_page_label: 'Página {{page}}',
   gallery_showing_count: 'Mostrando {{count}} builds',
   gallery_refresh: 'Actualizar',
   gallery_loading: 'Cargando galería…',
   gallery_empty: 'Aún no hay torres. ¡Sé el primero!',
   gallery_copy_link_btn: 'Copiar enlace',
   gallery_notice_link_copied: 'Enlace corto copiado al portapapeles.',
+  gallery_notice_set_public: 'El build ahora es público en la galería.',
+  gallery_notice_set_unlisted: 'El build ahora está no listado (solo enlace).',
+  gallery_notice_regenerated_link:
+    'Nuevo enlace generado y copiado. El enlace anterior ya no funciona.',
+  gallery_notice_regenerated_no_copy:
+    'Nuevo enlace generado. Cópialo desde la fila del build.',
   gallery_load_btn: 'Cargar',
   gallery_loading_tower: 'Cargando…',
   gallery_error_network: 'No se pudo contactar la API de la galería. Inténtalo más tarde.',
@@ -391,6 +408,8 @@ export const STRINGS_ES = {
   gallery_notice_loaded: '“{{title}}” cargado en este navegador.',
   gallery_notice_submitted: '“{{title}}” enviado a la galería.',
   gallery_by_author: 'por {{author}}',
+  gallery_visibility_public: 'Público',
+  gallery_visibility_private: 'Privado',
   gallery_admin_title: 'Admin de la galería',
   gallery_admin_page_intro:
     'Elimina spam o builds antiguos de la comunidad. Las eliminaciones son permanentes para la galería pública.',
@@ -400,6 +419,13 @@ export const STRINGS_ES = {
     'Tu ID de usuario: {{userId}} — añádela a TOWER_GALLERY_ADMIN_USER_IDS en Netlify para obtener acceso.',
   gallery_admin_unlocked_hint:
     'Eliminar quita el enlace corto y el listado de ese build.',
+  gallery_owner_make_public: 'Hacer público',
+  gallery_owner_make_unlisted: 'Hacer no listado',
+  gallery_owner_regenerate_link: 'Regenerar enlace',
+  gallery_owner_delete_confirm:
+    '¿Eliminar este build? Esta acción no se puede deshacer y el enlace anterior dejará de funcionar.',
+  gallery_regenerate_confirm:
+    '¿Generar un nuevo ID de enlace y revocar el anterior para este build?',
   gallery_admin_delete: 'Eliminar',
   gallery_admin_deleting: 'Eliminando…',
   gallery_admin_delete_confirm_title: '¿Eliminar este build?',
@@ -1055,7 +1081,7 @@ export const STRINGS_ES = {
   sr_lab_data_save_game: 'Partida guardada',
   sr_lab_data_share: 'Enlace para compartir',
   sr_lab_data_share_hint:
-    'Los enlaces cortos usan ?build=… (torre en el servidor). Usa «Copiar enlace largo incrustado» solo si alguien no puede abrir enlaces de la galería.',
+    'Los enlaces cortos usan ?build=… (torre en el servidor). Si la galería no está disponible, se copia automáticamente un enlace largo sin conexión.',
   sr_lab_import_file: 'Importar tower desde CSV',
   sr_lab_import_player_save: 'Importar playerInfo.dat',
   sr_lab_export_file: 'Exportar tower a CSV',
@@ -1102,9 +1128,7 @@ export const STRINGS_ES = {
   sr_compare_diff_count_one: '1 lab tiene un nivel distinto.',
   sr_compare_diff_count_many: '{{count}} labs tienen niveles distintos.',
   sr_copy_short_link: 'Copiar enlace para compartir',
-  sr_copy_embedded_link: 'Copiar enlace largo incrustado',
   sr_share_publishing: 'Publicando…',
-  sr_copy_full_url: 'Copiar URL completa',
   sr_qr_share: 'Mostrar QR del enlace',
   sr_close: 'Cerrar',
 
@@ -1174,19 +1198,11 @@ export const STRINGS_ES = {
     'No se pudo publicar un enlace corto; se copió un enlace largo incrustado.',
   sr_notice_copy_gallery_fallback:
     'Galería no disponible aquí; se copió un enlace largo incrustado.',
-  sr_notice_copy_embedded_ok:
-    'Enlace largo incrustado copiado (?tower=… — funciona sin servidor, URL muy larga).',
-  sr_notice_copy_embedded_fail:
-    'No se pudo copiar el enlace incrustado (portapapeles bloqueado o no disponible).',
   sr_notice_reset_all:
     'Niveles de lab restablecidos a los valores predeterminados en este navegador.',
   sr_notice_copy_short_ok:
     'Enlace corto copiado (incluye taller si no es la instantánea predeterminada).',
   sr_notice_copy_short_fail:
-    'No se pudo copiar el enlace (portapapeles bloqueado o no disponible).',
-  sr_notice_copy_full_ok:
-    'URL completa copiada (conserva otros parámetros y el ancla).',
-  sr_notice_copy_full_fail:
     'No se pudo copiar el enlace (portapapeles bloqueado o no disponible).',
   sr_notice_qr_fail: 'No se pudo crear el código QR.',
   sr_notice_import_cleared: 'Archivo importado: se borraron todos los niveles.',

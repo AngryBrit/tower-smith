@@ -12,9 +12,9 @@
     "packageJson": {
       "dependencies": [
         "npm:@eslint/js@^10.0.1",
-        "npm:@netlify/blobs@^10.7.8",
         "npm:@netlify/functions@^5.2.2",
         "npm:@resvg/resvg-js@^2.6.2",
+        "npm:@supabase/supabase-js@^2.106.2",
         "npm:@types/node@^24.12.3",
         "npm:@types/qrcode@^1.5.6",
         "npm:@types/react-dom@^19.2.3",

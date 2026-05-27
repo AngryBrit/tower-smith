@@ -12,7 +12,7 @@ import { fetchUserProfile } from '../profile/profileApi'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
 import { oauthRedirectUrl } from './oauthRedirect'
 
-export type AuthProvider = 'google' | 'discord'
+export type AuthProvider = 'google' | 'discord' | 'twitch'
 
 type AuthContextValue = {
   configured: boolean

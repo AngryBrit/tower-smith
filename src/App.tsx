@@ -13,6 +13,7 @@ import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1
 import { TowerWorkspaceProvider } from './TowerBuildContext'
 import { TowerGalleryPanel } from './components/TowerGalleryPanel'
 import { AuthButton } from './components/AuthButton'
+import { MyBuildsDialog } from './components/MyBuildsDialog'
 import { useI18n } from './i18n'
 import { loadResearchData } from './loadResearchData'
 import type { ResearchData } from './types/research'
@@ -29,6 +30,7 @@ const MODULES_PANEL_ENABLED = true
 export default function App() {
   const { t, fmt } = useI18n()
   const [galleryListRefreshToken, setGalleryListRefreshToken] = useState(0)
+  const [myBuildsOpen, setMyBuildsOpen] = useState(false)
   const [mainPanel, setMainPanel] = useState<MainPanel>(() =>
     readMainPanel(MODULES_PANEL_ENABLED),
   )
@@ -284,6 +286,7 @@ export default function App() {
                 <div className="select-research__inpanel-auth">
                   <AuthButton
                     placement="nav"
+                    onOpenMyBuilds={() => setMyBuildsOpen(true)}
                     onOpenSettings={() => setMainPanel('toolsSettings')}
                   />
                 </div>
@@ -421,6 +424,7 @@ export default function App() {
                 >
                   <ToolsSettingsPage
                     labToolsRef={labToolsRef}
+                    isActive={mainPanel === 'toolsSettings'}
                     galleryListRefreshToken={galleryListRefreshToken}
                     onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
                   />
@@ -433,7 +437,7 @@ export default function App() {
                 >
                   <TowerGalleryPanel
                     labToolsRef={labToolsRef}
-                    onTowerLoaded={() => setMainPanel('research')}
+                    isActive={mainPanel === 'gallery'}
                     listRefreshToken={galleryListRefreshToken}
                   />
                 </div>
@@ -474,6 +478,12 @@ export default function App() {
               </section>
             </div>
           </div>
+          <MyBuildsDialog
+            open={myBuildsOpen}
+            onClose={() => setMyBuildsOpen(false)}
+            labToolsRef={labToolsRef}
+            onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
+          />
           </TowerWorkspaceProvider>
         ) : null}
       </main>

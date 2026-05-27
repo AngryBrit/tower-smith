@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { useAuth } from '../auth/AuthProvider'
 import { GalleryAuthorLine } from './GalleryAuthorLine'
@@ -17,6 +17,7 @@ import { useI18n } from '../i18n'
 type GalleryAdminPageProps = {
   listRefreshToken?: number
   onGalleryMutated?: () => void
+  isActive?: boolean
 }
 
 function formatGalleryDate(iso: string, locale: string): string {
@@ -40,11 +41,18 @@ function adminErrorMessage(
 export function GalleryAdminPage({
   listRefreshToken = 0,
   onGalleryMutated,
+  isActive = true,
 }: GalleryAdminPageProps) {
   const { t, fmt, locale } = useI18n()
   const auth = useAuth()
-  const { loading: adminLoading, isAdmin, userId, error: adminError, signedIn } =
-    useGalleryAdmin()
+  const {
+    loading: adminLoading,
+    isAdmin,
+    userId,
+    error: adminError,
+    signedIn,
+    refresh: refreshAdminStatus,
+  } = useGalleryAdmin()
   const apiEnabled = towerGalleryApiAvailable()
 
   const errorStrings = useMemo(
@@ -77,6 +85,20 @@ export function GalleryAdminPage({
     null,
   )
   const [deleting, setDeleting] = useState(false)
+
+  useEffect(() => {
+    if (!notice) return
+    const timer = window.setTimeout(() => setNotice(null), 5000)
+    return () => window.clearTimeout(timer)
+  }, [notice])
+
+  useEffect(() => {
+    if (!isActive) return
+    void refreshAdminStatus()
+    if (isAdmin) {
+      void loadFirstPage()
+    }
+  }, [isActive, isAdmin, loadFirstPage, refreshAdminStatus])
 
   const performDelete = useCallback(async () => {
     if (!deleteTarget) return

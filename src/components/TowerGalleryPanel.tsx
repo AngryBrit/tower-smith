@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState, type RefObject } from 'react'
+import { createPortal } from 'react-dom'
 
 import type { SelectResearchHandle } from './SelectResearch'
 
@@ -16,6 +17,9 @@ import {
 import { useAuth } from '../auth/AuthProvider'
 
 import {
+  deleteGalleryTower,
+  regenerateGalleryTowerLink,
+  setGalleryTowerVisibility,
 
   getGalleryTower,
 
@@ -43,11 +47,22 @@ type TowerGalleryPanelProps = {
 
   onTowerLoaded?: () => void
 
+  /** True when the Builds tab is visible. */
+  isActive?: boolean
+
   /** Bump after admin deletes a build so the public list refreshes. */
 
   listRefreshToken?: number
 
 }
+
+type OwnerConfirmState =
+  | {
+      kind: 'delete' | 'regenerate'
+      id: string
+      title: string
+    }
+  | null
 
 
 
@@ -92,6 +107,8 @@ export function TowerGalleryPanel({
   labToolsRef,
 
   onTowerLoaded,
+
+  isActive = true,
 
   listRefreshToken = 0,
 
@@ -146,6 +163,7 @@ export function TowerGalleryPanel({
       invalid_category: t('gallery_error_invalid_category'),
 
       invalid_payload: t('gallery_error_invalid_payload'),
+      invalid_visibility: t('gallery_error_unknown'),
 
       submissions_disabled: t('gallery_error_disabled'),
 
@@ -177,13 +195,17 @@ export function TowerGalleryPanel({
 
     error: listErrorCode,
 
-    hasMore,
+    hasPrev,
+    hasNext,
+    currentPage,
 
     loadFirstPage,
 
     loadMore,
+    loadPrevPage,
 
     patchEntryVote,
+    patchEntry,
 
   } = useGalleryList({
 
@@ -198,8 +220,14 @@ export function TowerGalleryPanel({
     sort: listSort,
 
     accessToken,
+    paginationMode: 'paged',
 
   })
+
+  useEffect(() => {
+    if (!isActive) return
+    void loadFirstPage()
+  }, [isActive, loadFirstPage])
 
   const listError = listErrorCode
 
@@ -210,8 +238,18 @@ export function TowerGalleryPanel({
   const [actionNotice, setActionNotice] = useState<string | null>(null)
 
   const [loadingId, setLoadingId] = useState<string | null>(null)
+  const [ownerConfirm, setOwnerConfirm] = useState<OwnerConfirmState>(null)
 
+  useEffect(() => {
+    if (!actionNotice) return
+    const timer = window.setTimeout(() => setActionNotice(null), 5000)
+    return () => window.clearTimeout(timer)
+  }, [actionNotice])
 
+  useEffect(() => {
+    if (isActive) return
+    setActionNotice(null)
+  }, [isActive])
 
   const handleCopyLink = useCallback(
 
@@ -281,6 +319,93 @@ export function TowerGalleryPanel({
 
   )
 
+  const handleDeleteOwn = useCallback(
+    async (id: string, title: string) => {
+      setActionNotice(null)
+      const token = await auth.getAccessToken()
+      if (!token) {
+        setActionNotice(t('auth_required_publish'))
+        return
+      }
+
+      setLoadingId(id)
+      const result = await deleteGalleryTower(id, token)
+      setLoadingId(null)
+      if (!result.ok) {
+        setActionNotice(apiErrorMessage(result.error, errorStrings))
+        return
+      }
+      setActionNotice(fmt.galleryAdminNoticeDeleted(title))
+      void loadFirstPage()
+    },
+    [auth, errorStrings, fmt, loadFirstPage, t],
+  )
+
+  const handleToggleVisibilityOwn = useCallback(
+    async (id: string, visibility: 'public' | 'unlisted') => {
+      setActionNotice(null)
+      const token = await auth.getAccessToken()
+      if (!token) {
+        setActionNotice(t('auth_required_publish'))
+        return
+      }
+      const nextVisibility = visibility === 'unlisted' ? 'public' : 'unlisted'
+      setLoadingId(id)
+      const result = await setGalleryTowerVisibility(id, nextVisibility, token)
+      setLoadingId(null)
+      if (!result.ok) {
+        setActionNotice(apiErrorMessage(result.error, errorStrings))
+        return
+      }
+      patchEntry(id, { visibility: result.entry.visibility ?? nextVisibility })
+      setActionNotice(
+        nextVisibility === 'unlisted'
+          ? t('gallery_notice_set_unlisted')
+          : t('gallery_notice_set_public'),
+      )
+      void loadFirstPage()
+    },
+    [auth, errorStrings, loadFirstPage, patchEntry, t],
+  )
+
+  const handleRegenerateOwn = useCallback(
+    async (id: string) => {
+      setActionNotice(null)
+      const token = await auth.getAccessToken()
+      if (!token) {
+        setActionNotice(t('auth_required_publish'))
+        return
+      }
+      setLoadingId(id)
+      const result = await regenerateGalleryTowerLink(id, token)
+      setLoadingId(null)
+      if (!result.ok) {
+        setActionNotice(apiErrorMessage(result.error, errorStrings))
+        return
+      }
+      try {
+        const { clean } = buildGalleryShareUrls(result.entry.id, window.location.href)
+        await navigator.clipboard.writeText(clean)
+        setActionNotice(t('gallery_notice_regenerated_link'))
+      } catch {
+        setActionNotice(t('gallery_notice_regenerated_no_copy'))
+      }
+      void loadFirstPage()
+    },
+    [auth, errorStrings, loadFirstPage, t],
+  )
+
+  const confirmOwnerAction = useCallback(async () => {
+    if (!ownerConfirm) return
+    const { kind, id, title } = ownerConfirm
+    if (kind === 'delete') {
+      await handleDeleteOwn(id, title)
+    } else {
+      await handleRegenerateOwn(id)
+    }
+    setOwnerConfirm(null)
+  }, [handleDeleteOwn, handleRegenerateOwn, ownerConfirm])
+
 
 
   return (
@@ -323,7 +448,10 @@ export function TowerGalleryPanel({
 
           disabled={loading}
 
-          onClick={() => void loadFirstPage()}
+          onClick={() => {
+            setActionNotice(null)
+            void loadFirstPage()
+          }}
 
         >
 
@@ -457,10 +585,19 @@ export function TowerGalleryPanel({
                   </button>
 
                   {entry.category ? (
-                    <GalleryBuildCategoryBadge
-                      category={entry.category}
-                      className="tower-gallery__entry-category"
-                    />
+                    <div className="tower-gallery__entry-badges">
+                      <GalleryBuildCategoryBadge
+                        category={entry.category}
+                        className="tower-gallery__entry-category"
+                      />
+                      {entry.viewerOwns ? (
+                        <span className="tower-gallery__visibility-badge">
+                          {entry.visibility === 'unlisted'
+                            ? t('gallery_visibility_private')
+                            : t('gallery_visibility_public')}
+                        </span>
+                      ) : null}
+                    </div>
                   ) : null}
 
                   {entry.author ? (
@@ -482,7 +619,6 @@ export function TowerGalleryPanel({
                     {formatGalleryDate(entry.createdAt, locale)}
 
                   </time>
-
                 </div>
 
                 <div className="tower-gallery__entry-actions">
@@ -514,8 +650,54 @@ export function TowerGalleryPanel({
                     {t('gallery_copy_link_btn')}
 
                   </button>
-
                 </div>
+                {entry.viewerOwns ? (
+                  <div className="tower-gallery__owner-actions">
+                    <button
+                      type="button"
+                      className="glow-btn"
+                      disabled={loadingId === entry.id}
+                      onClick={() =>
+                        void handleToggleVisibilityOwn(
+                          entry.id,
+                          entry.visibility === 'unlisted' ? 'unlisted' : 'public',
+                        )
+                      }
+                    >
+                      {entry.visibility === 'unlisted'
+                        ? t('gallery_owner_make_public')
+                        : t('gallery_owner_make_unlisted')}
+                    </button>
+                    <button
+                      type="button"
+                      className="glow-btn"
+                      disabled={loadingId === entry.id}
+                      onClick={() =>
+                        setOwnerConfirm({
+                          kind: 'regenerate',
+                          id: entry.id,
+                          title: entry.title,
+                        })
+                      }
+                    >
+                      {t('gallery_owner_regenerate_link')}
+                    </button>
+                    <button
+                      type="button"
+                      className="glow-btn glow-btn--danger"
+                      disabled={loadingId === entry.id}
+                      onClick={() =>
+                        setOwnerConfirm({
+                          kind: 'delete',
+                          id: entry.id,
+                          title: entry.title,
+                        })
+                      }
+                    >
+                      {t('gallery_admin_delete')}
+                    </button>
+                  </div>
+                ) : null}
 
               </li>
 
@@ -523,29 +705,79 @@ export function TowerGalleryPanel({
 
           </ul>
 
-          {hasMore ? (
-
+          <div className="tower-gallery__pager">
             <button
-
               type="button"
-
-              className="glow-btn glow-btn--block tower-gallery__load-more"
-
-              disabled={loadingMore}
-
-              onClick={() => void loadMore()}
-
+              className="glow-btn"
+              disabled={loadingMore || !hasPrev}
+              onClick={() => void loadPrevPage()}
             >
-
-              {loadingMore ? t('gallery_loading_more') : t('gallery_load_more')}
-
+              {t('gallery_page_prev')}
             </button>
-
-          ) : null}
+            <span className="tower-gallery__pager-label">
+              {t('gallery_page_label').replace('{{page}}', String(currentPage))}
+            </span>
+            <button
+              type="button"
+              className="glow-btn"
+              disabled={loadingMore || !hasNext}
+              onClick={() => void loadMore()}
+            >
+              {t('gallery_page_next')}
+            </button>
+          </div>
 
         </>
 
       ) : null}
+
+      {ownerConfirm
+        ? createPortal(
+            <div
+              className="select-research__reset-confirm-backdrop"
+              role="presentation"
+              onClick={() => setOwnerConfirm(null)}
+            >
+              <div
+                className="select-research__reset-confirm-dialog"
+                role="alertdialog"
+                aria-modal="true"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <h2 className="select-research__reset-confirm-title">
+                  {ownerConfirm.kind === 'delete'
+                    ? t('gallery_admin_delete_confirm_title')
+                    : t('gallery_owner_regenerate_link')}
+                </h2>
+                <p className="select-research__reset-confirm-desc">
+                  {ownerConfirm.kind === 'delete'
+                    ? t('gallery_owner_delete_confirm')
+                    : t('gallery_regenerate_confirm')}
+                </p>
+                <div className="select-research__reset-confirm-actions">
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--block"
+                    onClick={() => setOwnerConfirm(null)}
+                  >
+                    {t('sr_cancel')}
+                  </button>
+                  <button
+                    type="button"
+                    className="glow-btn glow-btn--danger glow-btn--block"
+                    disabled={loadingId === ownerConfirm.id}
+                    onClick={() => void confirmOwnerAction()}
+                  >
+                    {ownerConfirm.kind === 'delete'
+                      ? t('gallery_admin_delete')
+                      : t('gallery_owner_regenerate_link')}
+                  </button>
+                </div>
+              </div>
+            </div>,
+            document.body,
+          )
+        : null}
 
     </section>
 

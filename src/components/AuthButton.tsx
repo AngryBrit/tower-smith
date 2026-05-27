@@ -7,11 +7,13 @@ export type AuthButtonProps = {
   /** Footer opens menu upward; nav opens downward and uses compact styling. */
   placement?: 'footer' | 'nav'
   onOpenSettings?: () => void
+  onOpenMyBuilds?: () => void
 }
 
 export function AuthButton({
   placement = 'footer',
   onOpenSettings,
+  onOpenMyBuilds,
 }: AuthButtonProps) {
   const { t } = useI18n()
   const { configured, loading, user, displayName, avatarUrl, signIn, signOut } = useAuth()
@@ -99,6 +101,20 @@ export function AuthButton({
             <span className="auth-button__menu-label" title={signedInLabel} role="presentation">
               {signedInLabel}
             </span>
+            {onOpenMyBuilds ? (
+              <button
+                type="button"
+                className="glow-btn glow-btn--block"
+                role="menuitem"
+                disabled={busy}
+                onClick={() => {
+                  onOpenMyBuilds()
+                  setMenuOpen(false)
+                }}
+              >
+                {t('auth_my_builds')}
+              </button>
+            ) : null}
             {onOpenSettings ? (
               <button
                 type="button"
@@ -170,6 +186,15 @@ export function AuthButton({
             onClick={() => handleSignIn('discord')}
           >
             {t('auth_sign_in_discord')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            role="menuitem"
+            disabled={busy}
+            onClick={() => handleSignIn('twitch')}
+          >
+            {t('auth_sign_in_twitch')}
           </button>
         </div>
       ) : null}

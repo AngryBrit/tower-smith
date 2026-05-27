@@ -15,12 +15,14 @@ type ToolsSettingsPageProps = {
   labToolsRef: RefObject<SelectResearchHandle | null>
   galleryListRefreshToken?: number
   onGalleryMutated?: () => void
+  isActive?: boolean
 }
 
 export function ToolsSettingsPage({
   labToolsRef,
   galleryListRefreshToken = 0,
   onGalleryMutated,
+  isActive = true,
 }: ToolsSettingsPageProps) {
   const { t } = useI18n()
   const { user } = useAuth()
@@ -48,6 +50,7 @@ export function ToolsSettingsPage({
           <GalleryAdminPage
             listRefreshToken={galleryListRefreshToken}
             onGalleryMutated={onGalleryMutated}
+            isActive={isActive}
           />
         </>
       ) : null}

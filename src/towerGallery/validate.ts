@@ -4,6 +4,7 @@ import {
   TOWER_GALLERY_MAX_AUTHOR_LEN,
   TOWER_GALLERY_MAX_PAYLOAD_BYTES,
   TOWER_GALLERY_MAX_TITLE_LEN,
+  type GalleryBuildVisibility,
   type TowerGallerySubmitBody,
 } from './types'
 
@@ -22,6 +23,10 @@ export function sanitizeGalleryAuthor(raw: unknown): string | undefined {
   const a = raw.trim()
   if (a.length < 1 || a.length > TOWER_GALLERY_MAX_AUTHOR_LEN) return undefined
   return a
+}
+
+export function sanitizeGalleryVisibility(raw: unknown): GalleryBuildVisibility {
+  return raw === 'unlisted' ? 'unlisted' : 'public'
 }
 
 export function validateLabsSharePayload(payload: unknown): payload is LabsShareFile {
@@ -59,9 +64,20 @@ export function parseTowerGallerySubmitBody(
   if (!title) return { ok: false, error: 'invalid_title' }
   const category = sanitizeGalleryBuildCategory((raw as { category?: unknown }).category)
   if (!category) return { ok: false, error: 'invalid_category' }
+  const visibility = sanitizeGalleryVisibility((raw as { visibility?: unknown }).visibility)
   const author = sanitizeGalleryAuthor((raw as { author?: unknown }).author)
   const payload = (raw as { payload?: unknown }).payload
   if (!validateLabsSharePayload(payload)) {
     return { ok: false, error: 'invalid_payload' }
   }
-  return { ok: true, body: { title, category, ...(author ? { author } : {}), payload } }}
+  return {
+    ok: true,
+    body: {
+      title,
+      category,
+      visibility,
+      ...(author ? { author } : {}),
+      payload,
+    },
+  }
+}

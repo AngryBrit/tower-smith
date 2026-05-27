@@ -1,5 +1,6 @@
 import type { LabsShareFile } from '../labsShareCodec'
 import type { GalleryBuildCategory } from './buildCategories'
+import type { GalleryBuildVisibility } from './types'
 import { submitGalleryTower } from './api'
 import { buildGalleryShareUrls } from './shareLink'
 import { sanitizeGalleryTitle } from './validate'
@@ -27,7 +28,11 @@ export async function publishGalleryShareLink(
   title: string,
   category: GalleryBuildCategory,
   pageHref: string,
-  options?: { author?: string; accessToken?: string | null },
+  options?: {
+    author?: string
+    accessToken?: string | null
+    visibility?: GalleryBuildVisibility
+  },
 ): Promise<PublishGalleryShareResult> {
   const author = options?.author
   const accessToken = options?.accessToken
@@ -40,6 +45,7 @@ export async function publishGalleryShareLink(
     {
       title: sanitizedTitle,
       category,
+      visibility: options?.visibility === 'unlisted' ? 'unlisted' : 'public',
       ...(author?.trim() ? { author: author.trim() } : {}),
       payload,
     },
