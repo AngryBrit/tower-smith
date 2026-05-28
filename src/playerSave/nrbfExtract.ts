@@ -99,6 +99,53 @@ export type DecodedModuleItem = {
   rarity: number
 }
 
+export type DecodedUserBotData = {
+  unlocked: boolean
+  active: boolean
+  levels: number[]
+  selectedLevels: number[]
+  plusUnlocked: boolean
+  plusLevel: number
+}
+
+function readUserBotData(ctx: PlayerDataContext, record: ObjectValue | undefined): DecodedUserBotData | null {
+  const item = resolveValue(ctx, record)
+  if (!(item instanceof ClassRecord)) return null
+  return {
+    unlocked: resolveValue(ctx, item.getValue('unlocked')) === true,
+    active: resolveValue(ctx, item.getValue('active')) === true,
+    levels: getInt32ArrayFromValue(ctx, item.getValue('levels')),
+    selectedLevels: getInt32ArrayFromValue(ctx, item.getValue('selectedLevels')),
+    plusUnlocked: resolveValue(ctx, item.getValue('plusUnlocked')) === true,
+    plusLevel: (() => {
+      const raw = resolveValue(ctx, item.getValue('plusLevel'))
+      return typeof raw === 'number' && Number.isFinite(raw) ? Math.trunc(raw) : 0
+    })(),
+  }
+}
+
+function getInt32ArrayFromValue(ctx: PlayerDataContext, value: ObjectValue | undefined): number[] {
+  const raw = resolveValue(ctx, value)
+  if (raw instanceof ArraySinglePrimitiveRecord) {
+    return raw.getArray().map((v) => Math.trunc(Number(v)))
+  }
+  return []
+}
+
+/** `List<UserBotData>` stored as a Class with `_items` BinaryArray. */
+export function getUserBotDataList(ctx: PlayerDataContext, name: string): DecodedUserBotData[] {
+  const raw = resolveValue(ctx, ctx.player.getValue(name))
+  if (!(raw instanceof ClassRecord)) return []
+  const items = resolveValue(ctx, raw.getValue('_items'))
+  if (!(items instanceof BinaryArrayRecord)) return []
+  const out: DecodedUserBotData[] = []
+  for (const el of items.elementValues) {
+    const row = readUserBotData(ctx, el)
+    if (row) out.push(row)
+  }
+  return out
+}
+
 export function getModuleEquipped(ctx: PlayerDataContext): DecodedModuleItem[] {
   const raw = resolveValue(ctx, ctx.player.getValue('moduleEquipped'))
   if (!(raw instanceof BinaryArrayRecord)) return []

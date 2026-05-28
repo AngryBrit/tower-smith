@@ -9,7 +9,19 @@ import {
   WORKSHOP_BOT_ACTIVE_ORDER,
   WORKSHOP_BOT_OWNED_ORDER,
   WORKSHOP_BOT_UPGRADE_ORDER,
+  workshopBotActiveKey,
+  workshopBotOwnedKey,
 } from '../data/workshopBots'
+import {
+  WORKSHOP_BOT_WEAPON_STATS,
+  type WorkshopBotId,
+} from '../data/workshopBotsData'
+import {
+  WORKSHOP_BOT_ORDER,
+  WORKSHOP_BOT_SPECIAL_BY_BOT,
+  WORKSHOP_BOT_SPECIAL_LEVEL_BY_BOT,
+  botSaveLevelIndex,
+} from './gameBotPresetMapping'
 import { workshopRelicIdAtGameIndex } from './gameRelicMapping'
 import { mapUltimateWeaponsFromSave } from './gameUltimateWeaponMapping'
 import { clampWorkshopAssistModuleLevel } from '../data/workshopSimModules'
@@ -45,7 +57,7 @@ import {
   gameThemeIdAtIndex,
   gameThemeOwnedIdsFromUnlockArrays,
 } from './gameThemeIndex'
-import type { DecodedPlayerSave } from './decodePlayerInfo'
+import type { DecodedPlayerSave, DecodedUserBotData } from './decodePlayerInfo'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from '../towerDataThemes'
 import type { ThemeSelectionState } from '../themeSelectionStorage'
 
@@ -330,6 +342,53 @@ export function researchLevelsToOverrides(
   return overrides
 }
 
+function activeBotPresetSlot(
+  save: DecodedPlayerSave,
+  botId: WorkshopBotId,
+): DecodedUserBotData | null {
+  const presets = save.botPresets[botId]
+  if (!presets?.length) return null
+  const idx = Math.max(0, Math.min(save.currentBotPreset, presets.length - 1))
+  return presets[idx] ?? presets.find((p) => p.active) ?? presets[0] ?? null
+}
+
+/** Medal bot upgrades from `*BotPresets` lists (v28+); overrides legacy `botsLevel` / `botsUnlocked`. */
+export function applyBotPresetsToWorkshop(
+  save: DecodedPlayerSave,
+  ws: WorkshopPersistedV1,
+): void {
+  const hasPresets = WORKSHOP_BOT_ORDER.some((id) => (save.botPresets[id]?.length ?? 0) > 0)
+  if (!hasPresets) return
+
+  for (const botId of WORKSHOP_BOT_ORDER) {
+    const slot = activeBotPresetSlot(save, botId)
+    if (!slot) continue
+
+    ws[workshopBotOwnedKey(botId)] = slot.unlocked as never
+    ws[workshopBotActiveKey(botId)] = slot.active as never
+
+    const levelRow =
+      slot.selectedLevels.length >= WORKSHOP_BOT_WEAPON_STATS[botId].length
+        ? slot.selectedLevels
+        : slot.levels
+
+    WORKSHOP_BOT_WEAPON_STATS[botId].forEach((stat, statIndex) => {
+      const saveIndex = botSaveLevelIndex(botId, stat.key, statIndex)
+      const level = levelRow[saveIndex]
+      if (typeof level === 'number' && Number.isFinite(level)) {
+        ws[stat.key] = Math.max(0, Math.trunc(level)) as never
+      }
+    })
+
+    const specialKey = WORKSHOP_BOT_SPECIAL_BY_BOT[botId]
+    const specialLevelKey = WORKSHOP_BOT_SPECIAL_LEVEL_BY_BOT[botId]
+    ws[specialKey] = slot.plusUnlocked as never
+    if (slot.plusUnlocked && slot.plusLevel > 0) {
+      ws[specialLevelKey] = Math.trunc(slot.plusLevel) as never
+    }
+  }
+}
+
 export function relicIndicesToOwnedIds(relicsUnlocked: number[]): string[] {
   const owned: string[] = []
   const seen = new Set<string>()
@@ -409,6 +468,7 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   mapArrayToWorkshop(save.botsLevel, WORKSHOP_BOT_UPGRADE_ORDER, ws)
   mapBoolArrayToWorkshop(save.botsUnlocked, WORKSHOP_BOT_OWNED_ORDER, ws)
   mapBoolArrayToWorkshop(save.botsActive, WORKSHOP_BOT_ACTIVE_ORDER, ws)
+  applyBotPresetsToWorkshop(save, ws)
 
   mapUltimateWeaponsFromSave(save, ws)
 

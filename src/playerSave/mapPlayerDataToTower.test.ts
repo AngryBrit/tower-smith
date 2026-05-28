@@ -32,6 +32,8 @@ function minimalSave(
     botsUnlocked: [],
     botsActive: [],
     botsLevel: [],
+    currentBotPreset: 0,
+    botPresets: {},
     flameBotLevelCooldownSelected: 0,
     thunderBotLevelCooldownSelected: 0,
     goldenBotLevelCooldownSelected: 0,
@@ -151,5 +153,39 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.enhanceCritFactorLevel).toBe(44)
     expect(ws.enhanceDamagePerMeterLevel).toBe(44)
     expect(ws.enhanceSuperCritMultLevel).toBe(0)
+  })
+
+  it('maps Golden Bot medal levels from goldenBotPresets preset 0', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        currentBotPreset: 0,
+        botPresets: {
+          golden: [
+            {
+              unlocked: true,
+              active: true,
+              levels: [6, 6, 6, 20],
+              selectedLevels: [6, 6, 6, 20],
+              plusUnlocked: false,
+              plusLevel: 0,
+            },
+            {
+              unlocked: false,
+              active: false,
+              levels: [0, 0, 0, 0],
+              selectedLevels: [0, 0, 0, 0],
+              plusUnlocked: false,
+              plusLevel: 0,
+            },
+          ],
+        },
+      }),
+    )
+    expect(ws.goldenOwned).toBe(true)
+    expect(ws.goldenBotActive).toBe(true)
+    expect(ws.goldenBotDurationLevel).toBe(20)
+    expect(ws.goldenBotCooldownLevel).toBe(6)
+    expect(ws.goldenBotBonusLevel).toBe(6)
+    expect(ws.goldenBotRangeLevel).toBe(6)
   })
 })

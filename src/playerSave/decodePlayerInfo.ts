@@ -1,4 +1,8 @@
 import { NrbfDecoder, NrbfUtils } from './nrbf'
+import type { WorkshopBotId } from '../data/workshopBotsData'
+import {
+  BOT_PRESET_LIST_FIELD_BY_BOT_ID,
+} from './gameBotPresetMapping'
 import {
   findPlayerDataContext,
   getBool,
@@ -8,7 +12,9 @@ import {
   getInt32Array,
   getModuleEquipped,
   getString,
+  getUserBotDataList,
   type DecodedModuleItem,
+  type DecodedUserBotData,
   type PlayerDataContext,
 } from './nrbfExtract'
 
@@ -16,7 +22,7 @@ function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
   return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
 }
 
-export type { DecodedModuleItem }
+export type { DecodedModuleItem, DecodedUserBotData }
 
 export type DecodedPlayerSave = {
   researchLevel: number[]
@@ -40,6 +46,8 @@ export type DecodedPlayerSave = {
   botsUnlocked: boolean[]
   botsActive: boolean[]
   botsLevel: number[]
+  currentBotPreset: number
+  botPresets: Partial<Record<WorkshopBotId, DecodedUserBotData[]>>
   flameBotLevelCooldownSelected: number
   thunderBotLevelCooldownSelected: number
   goldenBotLevelCooldownSelected: number
@@ -58,6 +66,18 @@ export type DecodedPlayerSave = {
   userName: string
   fakeUserName: string
   playfabID: string
+}
+
+function decodeBotPresets(ctx: PlayerDataContext): Partial<Record<WorkshopBotId, DecodedUserBotData[]>> {
+  const out: Partial<Record<WorkshopBotId, DecodedUserBotData[]>> = {}
+  for (const [botId, field] of Object.entries(BOT_PRESET_LIST_FIELD_BY_BOT_ID) as [
+    WorkshopBotId,
+    string,
+  ][]) {
+    const list = getUserBotDataList(ctx, field)
+    if (list.length > 0) out[botId] = list
+  }
+  return out
 }
 
 function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
@@ -83,6 +103,8 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     botsUnlocked: getBoolArray(ctx, 'botsUnlocked'),
     botsActive: getBoolArray(ctx, 'botsActive'),
     botsLevel: getInt32Array(ctx, 'botsLevel'),
+    currentBotPreset: getInt32(ctx, 'currentBotPreset'),
+    botPresets: decodeBotPresets(ctx),
     flameBotLevelCooldownSelected: getInt32(ctx, 'flameBotLevelCooldownSelected'),
     thunderBotLevelCooldownSelected: getInt32(ctx, 'thunderBotLevelCooldownSelected'),
     goldenBotLevelCooldownSelected: getInt32(ctx, 'goldenBotLevelCooldownSelected'),

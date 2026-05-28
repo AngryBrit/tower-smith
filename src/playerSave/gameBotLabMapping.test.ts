@@ -50,6 +50,8 @@ function minimalSave(partial: Partial<DecodedPlayerSave> = {}): DecodedPlayerSav
     botsUnlocked: [],
     botsActive: [],
     botsLevel: [],
+    currentBotPreset: 0,
+    botPresets: {},
     flameBotLevelCooldownSelected: 0,
     thunderBotLevelCooldownSelected: 0,
     goldenBotLevelCooldownSelected: 0,
