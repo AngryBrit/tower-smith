@@ -2,7 +2,11 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 
 /** Full save ↔ workshop field table: `docs/game-workshop-index-map.csv` (see `scripts/export-game-workshop-index-map.ts`). */
 
-/** Game `upgradeWorkshopLevel` indices → TowerSmith attack workshop fields (20 slots in save, 16 tracked). */export const GAME_WORKSHOP_ATTACK_LEVEL_KEYS: readonly (keyof WorkshopPersistedV1)[] = [
+/**
+ * Game `upgradeWorkshopLevel` indices → TowerSmith attack workshop fields (20 slots in save, 16 tracked).
+ * Do not use `upgradeLevel` (in-round mirror) for import.
+ */
+export const GAME_WORKSHOP_ATTACK_LEVEL_KEYS: readonly (keyof WorkshopPersistedV1)[] = [
   'damageLevel',
   'attackSpeedLevel',
   'critChanceLevel',
@@ -22,6 +26,10 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
   'rendArmorMultLevel',
 ] as const
 
+/**
+ * Game `upgradeWorkshopDefenseLevel` indices → TowerSmith defense workshop fields.
+ * Do not use `upgradeDefenseLevel` (in-round mirror) for import.
+ */
 export const GAME_WORKSHOP_DEFENSE_LEVEL_KEYS: readonly (keyof WorkshopPersistedV1)[] = [
   'healthLevel',
   'healthRegenLevel',
@@ -43,6 +51,10 @@ export const GAME_WORKSHOP_DEFENSE_LEVEL_KEYS: readonly (keyof WorkshopPersisted
   'wallRebuildLevel',
 ] as const
 
+/**
+ * Game `upgradeWorkshopUtilityLevel` indices → TowerSmith utility workshop fields.
+ * Do not use `upgradeUtilityLevel` (in-round mirror) for import.
+ */
 export const GAME_WORKSHOP_UTILITY_LEVEL_KEYS: readonly (keyof WorkshopPersistedV1)[] = [
   'cashBonusLevel',
   'cashPerWaveLevel',

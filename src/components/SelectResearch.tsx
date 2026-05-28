@@ -16,7 +16,8 @@ import { CommunityBuildRow } from './CommunityBuildRow'
 import { AuthSignInDialog } from './AuthSignInDialog'
 import { GalleryPublishDialog } from './GalleryPublishDialog'
 import { supabaseBrowserConfigured } from '../supabase/client'
-import { APP_VERSION, CHANGELOG_URL, SPONSOR_URL } from '../appVersion'
+import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
+import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { buildLabDomIdTables, getLabSlugFromUrl } from '../labSlug'
 import {
@@ -65,6 +66,7 @@ import {
 } from '../labPresetsStorage'
 import { useTowerWorkspaceContext } from '../TowerBuildContext'
 import {
+  applyImportedLabAndBuild,
   clearTowerWorkspace,
   defaultTowerWorkspace,
   mergeWorkspaceBuild,
@@ -74,7 +76,9 @@ import {
 import { splitTowerBuild } from '../towerBuildStorage'
 import {
   buildLabPresetsPayloadWithWorkspace,
+  persistLabWorkspacesToLocalStorage,
   readTowerWorkspaceFromPresetsFile,
+  TOWER_LAB_PRESETS_STORAGE_KEY,
 } from '../towerWorkspacePresets'
 import type { ResearchData } from '../types/research'
 import { combinedLabsSpeedMultiplier } from '../data/workshopRelicWorkshopDisplay'
@@ -108,7 +112,7 @@ interface SelectResearchProps {
 
 /** Legacy single-map storage; read once to migrate when `LAB_PRESETS_STORAGE_KEY` is absent. */
 const LEVEL_OVERRIDES_STORAGE_KEY = 'tower-export-level-overrides-v1'
-const LAB_PRESETS_STORAGE_KEY = 'tower-export-lab-presets-v1'
+const LAB_PRESETS_STORAGE_KEY = TOWER_LAB_PRESETS_STORAGE_KEY
 const SECTION_COLLAPSED_STORAGE_KEY = 'tower-export-section-collapsed-v1'
 const LAB_BUDGET_COLLAPSED_STORAGE_KEY = 'tower-export-lab-budget-collapsed-v1'
 const BULK_SECTIONS_TOGGLE_ID = 'tower-bulk-sections-collapsed-toggle'
@@ -547,7 +551,7 @@ export const SelectResearch = forwardRef<
     return () => {
       cancelled = true
     }
-  }, [data, fmt, setScratchWorkspace, setWorkspace])
+  }, [data, setScratchWorkspace, setWorkspace])
 
   useEffect(() => {
     if (!hydrated) return
@@ -1064,11 +1068,13 @@ export const SelectResearch = forwardRef<
           return
         }
         const sanitized = imported.overrides
-        setLevelOverrides(sanitized)
         const build = splitTowerBuild(imported.workshop)
-        setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
-        setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
         applyTowerThemes(imported.themes)
+        const nextWorkspace = applyImportedLabAndBuild(workspace, sanitized, build)
+        const nextScratch = applyImportedLabAndBuild(scratchWorkspace, sanitized, build)
+        setWorkspace(nextWorkspace)
+        setScratchWorkspace(nextScratch)
+        persistLabWorkspacesToLocalStorage(nextWorkspace, nextScratch)
         let shouldRefreshProfile = false
         if (imported.guild) {
           setPublishGuildId(imported.guild)
@@ -1096,7 +1102,16 @@ export const SelectResearch = forwardRef<
         setImportNotice(t('sr_notice_import_read_fail'))
       }
     },
-    [auth, data, resolveGuildNameForPublish, setScratchWorkspace, setWorkspace, t],
+    [
+      auth,
+      data,
+      resolveGuildNameForPublish,
+      scratchWorkspace,
+      setScratchWorkspace,
+      setWorkspace,
+      t,
+      workspace,
+    ],
   )
 
   const handleImportLabCsvFileChange = useCallback(
@@ -1842,32 +1857,17 @@ export const SelectResearch = forwardRef<
           className="select-research__version-badge"
           aria-label={t('sr_footer_nav_aria')}
         >
-          <span
+          <a
             className="select-research__version-label"
-            aria-label={fmt.versionAria(APP_VERSION)}
+            href={CHANGELOG_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={t('sr_changelog_title')}
+            aria-label={`${fmt.versionAria(APP_VERSION)} — ${t('sr_changelog_title')}`}
           >
             v{APP_VERSION}
-          </span>
-          <div className="select-research__version-badge-links">
-            <a
-              className="select-research__footer-link"
-              href={CHANGELOG_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={t('sr_changelog_title')}
-            >
-              {t('sr_changelog')}
-            </a>
-            <a
-              className="select-research__footer-link"
-              href={SPONSOR_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              title={t('sr_sponsor_title')}
-            >
-              {t('sr_sponsor')}
-            </a>
-          </div>
+          </a>
+          <BuyMeACoffeeButton className="select-research__bmc-button" />
         </nav>
       </footer>
       ) : null}

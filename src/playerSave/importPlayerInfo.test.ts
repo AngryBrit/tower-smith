@@ -68,9 +68,135 @@ describe('importPlayerInfo', () => {
     expect(save?.researchLevel?.length).toBe(250)
     expect(save.researchLevel[30]).toBe(7)
     expect(save.researchLevel[0]).toBe(46)
-    const overrides = researchLevelsToOverrides(data, save.researchLevel)
+    expect(save.researchLevel[1]).toBe(84)
+    expect(save.researchLevel[2]).toBe(16)
+    expect(save.researchLevel[4]).toBe(14)
+    expect(save.goldenBotLevelCooldownSelected).toBe(2)
+    const { overrides } = mapPlayerSaveToTower(data, save)
     expect(overrides['0-0']).toBe(7)
-    expect(overrides['1-0']).toBe(46)
+    expect(overrides['0-6']).toBe(88)
+    expect(overrides['0-5']).toBe(4)
+    const attackSi = data.sections.findIndex((s) => s.sectionSlug === 'attack-research')
+    expect(attackSi).toBeGreaterThanOrEqual(0)
+    expect(overrides[`${attackSi}-0`]).toBe(46)
+    expect(overrides[`${attackSi}-1`]).toBe(84)
+    expect(overrides[`${attackSi}-2`]).toBe(16)
+    expect(overrides[`${attackSi}-4`]).toBe(14)
+    expect(overrides[`${attackSi}-3`]).toBeUndefined()
+    expect(overrides[`${attackSi}-7`]).toBeUndefined()
+    expect(overrides[`${attackSi}-8`]).toBe(1)
+    const modulesSi = data.sections.findIndex((s) => s.sectionSlug === 'modules')
+    expect(modulesSi).toBeGreaterThanOrEqual(0)
+    expect(save.researchLevel[139]).toBe(31)
+    expect(save.researchLevel[140]).toBe(17)
+    expect(save.researchLevel[143]).toBe(2)
+    const rerollIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Reroll Shards')
+    const dailyIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Daily Mission Shards')
+    const rareIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Rare Drop Chance')
+    expect(overrides[`${modulesSi}-${rerollIi}`]).toBe(31)
+    expect(overrides[`${modulesSi}-${dailyIi}`]).toBe(17)
+    expect(overrides[`${modulesSi}-${rareIi}`]).toBe(2)
+    const defenseSi = data.sections.findIndex((s) => s.sectionSlug === 'defense-research')
+    expect(defenseSi).toBeGreaterThanOrEqual(0)
+    expect(overrides[`${defenseSi}-0`]).toBe(80)
+    expect(overrides[`${defenseSi}-1`]).toBe(62)
+    expect(overrides[`${defenseSi}-2`]).toBe(11)
+    expect(overrides[`${defenseSi}-3`]).toBe(32)
+    expect(overrides[`${defenseSi}-4`]).toBe(20)
+    expect(overrides[`${defenseSi}-8`]).toBe(10)
+    expect(overrides[`${defenseSi}-9`]).toBe(50)
+    expect(overrides[`${defenseSi}-10`]).toBe(5)
+    expect(overrides[`${defenseSi}-11`]).toBe(18)
+    expect(overrides[`${defenseSi}-12`]).toBe(16)
+    expect(save.researchLevel[126]).toBe(50)
+    expect(save.researchLevel[129]).toBe(16)
+    expect(save.researchLevel[193]).toBe(10)
+    const garlicIi = data.sections[defenseSi]!.items.findIndex((i) => i.name === 'Garlic Thorns')
+    expect(overrides[`${defenseSi}-${garlicIi}`]).toBe(10)
+    const utilitySi = data.sections.findIndex((s) => s.sectionSlug === 'utility-research')
+    expect(utilitySi).toBeGreaterThanOrEqual(0)
+    expect(save.researchLevel[20]).toBe(27)
+    expect(save.researchLevel[22]).toBe(89)
+    expect(overrides[`${utilitySi}-0`]).toBe(27)
+    expect(overrides[`${utilitySi}-1`]).toBe(5)
+    expect(overrides[`${utilitySi}-2`]).toBe(89)
+    expect(overrides[`${utilitySi}-3`]).toBe(26)
+    expect(overrides[`${utilitySi}-6`]).toBe(1)
+    expect(save.researchLevel[124]).toBe(20)
+    expect(save.researchLevel[125]).toBe(20)
+    expect(overrides[`${utilitySi}-10`]).toBe(20)
+    expect(overrides[`${utilitySi}-11`]).toBe(20)
+    const botsSi = data.sections.findIndex((s) => s.sectionSlug === 'bots')
+    expect(botsSi).toBeGreaterThanOrEqual(0)
+    const { botLabsToOverrides } = await import('./mapPlayerDataToTower')
+    const botOverrides = botLabsToOverrides(data, save)
+    expect(save.researchLevel[104]).toBe(2)
+    expect(botOverrides[`${botsSi}-2`]).toBe(2)
+    const ultimateSi = data.sections.findIndex((s) => s.sectionSlug === 'ultimate-weapon-research')
+    expect(ultimateSi).toBeGreaterThanOrEqual(0)
+    const bhDamageIi = data.sections[ultimateSi]!.items.findIndex(
+      (i) => i.name === 'Black Hole Damage',
+    )
+    const extraBhIi = data.sections[ultimateSi]!.items.findIndex((i) => i.name === 'Extra Black Hole')
+    const bhCoinIi = data.sections[ultimateSi]!.items.findIndex(
+      (i) => i.name === 'Black Hole Coin Bonus',
+    )
+    const spotlightCoinIi = data.sections[ultimateSi]!.items.findIndex(
+      (i) => i.name === 'Spotlight Coin Bonus',
+    )
+    const spotlightMissilesIi = data.sections[ultimateSi]!.items.findIndex(
+      (i) => i.name === 'Spotlight Missiles',
+    )
+    expect(save.researchLevel[60]).toBe(25)
+    expect(save.researchLevel[61]).toBe(10)
+    expect(save.researchLevel[62]).toBe(1)
+    expect(save.researchLevel[66]).toBe(20)
+    const gtBonusIi = data.sections[ultimateSi]!.items.findIndex((i) => i.name === 'Golden Tower Bonus')
+    const gtDurationIi = data.sections[ultimateSi]!.items.findIndex((i) => i.name === 'Golden Tower Duration')
+    const chainShockIi = data.sections[ultimateSi]!.items.findIndex((i) => i.name === 'Chain Lightning Shock')
+    const deathWaveHealthIi = data.sections[ultimateSi]!.items.findIndex((i) => i.name === 'Death Wave Health')
+    const deathWaveCoinIi = data.sections[ultimateSi]!.items.findIndex((i) => i.name === 'Death Wave Coin Bonus')
+    expect(overrides[`${ultimateSi}-${gtBonusIi}`]).toBe(25)
+    expect(overrides[`${ultimateSi}-${gtDurationIi}`]).toBe(10)
+    expect(overrides[`${ultimateSi}-${chainShockIi}`]).toBe(1)
+    expect(overrides[`${ultimateSi}-${deathWaveHealthIi}`]).toBe(17)
+    expect(overrides[`${ultimateSi}-${deathWaveCoinIi}`]).toBe(20)
+    expect(overrides[`${ultimateSi}-${bhDamageIi}`]).toBe(10)
+    expect(overrides[`${ultimateSi}-${extraBhIi}`]).toBe(1)
+    expect(overrides[`${ultimateSi}-${bhCoinIi}`]).toBe(20)
+    expect(overrides[`${ultimateSi}-${spotlightCoinIi}`]).toBe(20)
+    expect(overrides[`${ultimateSi}-${spotlightMissilesIi}`]).toBe(2)
+    expect(save.researchLevel[94]).toBe(10)
+    expect(save.researchLevel[96]).toBe(20)
+    expect(save.researchLevel[97]).toBe(20)
+    expect(save.researchLevel[98]).toBe(2)
+    const cardsSi = data.sections.findIndex((s) => s.sectionSlug === 'cards-research')
+    expect(cardsSi).toBeGreaterThanOrEqual(0)
+    const cardLabs: [string, number][] = [
+      ['Second Wind Blast', 4],
+      ['Double Death Ray', 9],
+      ['Extra Orb Adjuster', 1],
+      ['Extra Extra Orbs', 2],
+      ['Energy Shield Extra Hit', 2],
+    ]
+    for (const [name, level] of cardLabs) {
+      const ii = data.sections[cardsSi]!.items.findIndex((i) => i.name === name)
+      expect(overrides[`${cardsSi}-${ii}`]).toBe(level)
+    }
+    const perksSi = data.sections.findIndex((s) => s.sectionSlug === 'perks-research')
+    expect(perksSi).toBeGreaterThanOrEqual(0)
+    const perkLabs: [string, number][] = [
+      ['Unlock Perks', 1],
+      ['Waves Required', 19],
+      ['Auto Pick Perks', 1],
+      ['Standard Perks Bonus', 17],
+      ['Perk Option Quantity', 2],
+      ['First Perk Choice', 1],
+    ]
+    for (const [name, level] of perkLabs) {
+      const ii = data.sections[perksSi]!.items.findIndex((i) => i.name === name)
+      expect(overrides[`${perksSi}-${ii}`]).toBe(level)
+    }
     const { workshop: ws } = mapPlayerSaveToTower(data, save)
     expect(ws.damageLevel).toBe(save.upgradeWorkshopLevel[0])
   })
@@ -83,6 +209,20 @@ describe('importPlayerInfo', () => {
     const masterySi = data.sections.findIndex((s) => s.sectionSlug === 'card-mastery')
     expect(masterySi).toBeGreaterThanOrEqual(0)
     expect(overrides[`${masterySi}-0`]).toBeUndefined()
+  })
+
+  it('importPlayerInfoDat uses full research manifest for attack labs', async () => {
+    if (!existsSync(SAMPLE)) return
+    const data = loadResearchDataSync()
+    const r = await importPlayerInfoDat(new Uint8Array(readFileSync(SAMPLE)), data)
+    expect(r.ok).toBe(true)
+    if (!r.ok) return
+    const attackSi = data.sections.findIndex((s) => s.sectionSlug === 'attack-research')
+    expect(r.overrides[`${attackSi}-0`]).toBe(46)
+    expect(r.overrides[`${attackSi}-1`]).toBe(84)
+    expect(r.overrides[`${attackSi}-2`]).toBe(16)
+    expect(r.overrides[`${attackSi}-4`]).toBe(14)
+    expect(r.overrides[`${attackSi}-3`]).toBeUndefined()
   })
 
   it('importPlayerInfoDat returns ok for sample', async () => {

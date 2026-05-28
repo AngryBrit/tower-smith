@@ -116,6 +116,15 @@ export function mergeWorkspaceLab(
   return { ...workspace, lab: sanitizeLabPersisted(lab) }
 }
 
+/** Replace lab level overrides and workshop/build snapshot after playerInfo or tower CSV import. */
+export function applyImportedLabAndBuild(
+  workspace: TowerWorkspaceV1,
+  levelOverrides: Record<string, number>,
+  build: TowerBuildPersistedV1,
+): TowerWorkspaceV1 {
+  return mergeWorkspaceBuild(mergeWorkspaceLab(workspace, { levelOverrides }), build)
+}
+
 export function mergeWorkspaceBuild(
   workspace: TowerWorkspaceV1,
   build: TowerBuildPersistedV1,

@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import type { DecodedPlayerSave } from './decodePlayerInfo'
+import {
+  GAME_WORKSHOP_ATTACK_LEVEL_KEYS,
+  GAME_WORKSHOP_DEFENSE_LEVEL_KEYS,
+  GAME_WORKSHOP_UTILITY_LEVEL_KEYS,
+} from './gameWorkshopMapping'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 
 function minimalSave(
@@ -27,6 +32,11 @@ function minimalSave(
     botsUnlocked: [],
     botsActive: [],
     botsLevel: [],
+    flameBotLevelCooldownSelected: 0,
+    thunderBotLevelCooldownSelected: 0,
+    goldenBotLevelCooldownSelected: 0,
+    amplifyBotLevelCooldownSelected: 0,
+    botBotLevelCooldownSelected: 0,
     ultimateWeaponLevel: [],
     ultimateWeaponUnlocked: [],
     ultimateWeaponOn: [],
@@ -44,7 +54,74 @@ function minimalSave(
   }
 }
 
+/** Sample save `upgradeWorkshopLevel` head (player-save-field-dump.json). */
+const SAMPLE_ATTACK_WORKSHOP = [
+  5660, 99, 79, 150, 79, 170, 99, 7, 85, 99, 85, 7, 60, 90, 95, 110, 110, 0, 0, 0,
+] as const
+
+/** Sample save `upgradeWorkshopDefenseLevel` (player-save-field-dump.json). */
+const SAMPLE_DEFENSE_WORKSHOP = [
+  5600, 5900, 99, 5000, 99, 80, 80, 40, 38, 4, 35, 40, 50, 160, 50, 75, 1210, 280, 0, 0,
+] as const
+
+/** Sample save `upgradeWorkshopUtilityLevel` (player-save-field-dump.json). */
+const SAMPLE_UTILITY_WORKSHOP = [
+  149, 149, 149, 149, 99, 99, 99, 99, 300, 500, 60, 240, 240, 0, 0, 0, 0, 0, 0, 0,
+] as const
+
 describe('playerSaveToWorkshop', () => {
+  it('maps attack workshop upgrades from upgradeWorkshopLevel', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        upgradeWorkshopLevel: [...SAMPLE_ATTACK_WORKSHOP],
+      }),
+    )
+    GAME_WORKSHOP_ATTACK_LEVEL_KEYS.forEach((key, i) => {
+      expect(ws[key]).toBe(SAMPLE_ATTACK_WORKSHOP[i])
+    })
+    expect(ws.damageLevel).toBe(5660)
+    expect(ws.attackSpeedLevel).toBe(99)
+    expect(ws.critChanceLevel).toBe(79)
+    expect(ws.critFactorLevel).toBe(150)
+    expect(ws.attackRangeLevel).toBe(79)
+    expect(ws.damagePerMeterLevel).toBe(170)
+    expect(ws.rendArmorMultLevel).toBe(110)
+  })
+
+  it('maps defense workshop upgrades from upgradeWorkshopDefenseLevel', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        upgradeWorkshopDefenseLevel: [...SAMPLE_DEFENSE_WORKSHOP],
+      }),
+    )
+    GAME_WORKSHOP_DEFENSE_LEVEL_KEYS.forEach((key, i) => {
+      expect(ws[key]).toBe(SAMPLE_DEFENSE_WORKSHOP[i])
+    })
+    expect(ws.healthLevel).toBe(5600)
+    expect(ws.healthRegenLevel).toBe(5900)
+    expect(ws.defenseAbsoluteLevel).toBe(5000)
+    expect(ws.landMineDamageLevel).toBe(160)
+    expect(ws.wallHealthLevel).toBe(1210)
+    expect(ws.wallRebuildLevel).toBe(280)
+  })
+
+  it('maps utility workshop upgrades from upgradeWorkshopUtilityLevel', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        upgradeWorkshopUtilityLevel: [...SAMPLE_UTILITY_WORKSHOP],
+      }),
+    )
+    GAME_WORKSHOP_UTILITY_LEVEL_KEYS.forEach((key, i) => {
+      expect(ws[key]).toBe(SAMPLE_UTILITY_WORKSHOP[i])
+    })
+    expect(ws.cashBonusLevel).toBe(149)
+    expect(ws.freeUtilityUpgradeLevel).toBe(99)
+    expect(ws.recoveryAmountLevel).toBe(300)
+    expect(ws.maxRecoveryLevel).toBe(500)
+    expect(ws.packageChanceLevel).toBe(60)
+    expect(ws.enemyHealthLevelSkipLevel).toBe(240)
+  })
+
   it('maps defense enhancements from enhancementDefenseLevel (not upgradeDefenseLevel)', () => {
     const ws = playerSaveToWorkshop(
       minimalSave({

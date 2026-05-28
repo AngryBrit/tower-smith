@@ -1,4 +1,5 @@
-import { APP_VERSION, CHANGELOG_URL, SPONSOR_URL } from '../appVersion'
+import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
+import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { useModulesCatalogVisible } from '../modulesCatalogVisibility'
 import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
@@ -97,30 +98,17 @@ export function SettingsPage() {
       </div>
 
       <div className="settings-page__meta">
-        <span
-          className="select-research__version-label"
-          aria-label={fmt.versionAria(APP_VERSION)}
-        >
-          v{APP_VERSION}
-        </span>
         <a
-          className="select-research__changelog-link"
+          className="select-research__version-label"
           href={CHANGELOG_URL}
           target="_blank"
           rel="noopener noreferrer"
           title={t('sr_changelog_title')}
+          aria-label={`${fmt.versionAria(APP_VERSION)} — ${t('sr_changelog_title')}`}
         >
-          {t('sr_changelog')}
+          v{APP_VERSION}
         </a>
-        <a
-          className="select-research__footer-link"
-          href={SPONSOR_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={t('sr_sponsor_title')}
-        >
-          {t('sr_sponsor')}
-        </a>
+        <BuyMeACoffeeButton className="select-research__bmc-button" />
       </div>
     </div>
   )

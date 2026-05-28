@@ -26,6 +26,19 @@ import {
   GAME_WORKSHOP_DEFENSE_LEVEL_KEYS,
   GAME_WORKSHOP_UTILITY_LEVEL_KEYS,
 } from './gameWorkshopMapping'
+import { ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameAttackResearchMapping'
+import { DEFENSE_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameDefenseResearchMapping'
+import { MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameMainResearchMapping'
+import { MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameModulesResearchMapping'
+import { UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameUtilityResearchMapping'
+import { ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameUltimateResearchMapping'
+import {
+  BOT_COOLDOWN_LAB_SAVE_FIELD,
+  BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+  BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+  type BotCooldownLabName,
+  type BotResearchLabName,
+} from './gameBotLabMapping'
 import { gameResearchIdForManifest } from './gameResearchIndex'
 import { gameModuleRarityToMergeTier } from './gameModuleRarity'
 import {
@@ -78,6 +91,211 @@ function mapBoolArrayToWorkshop(
 /** Lab sections that do not use `researchLevel[]` in the game save. */
 const RESEARCH_LEVEL_IMPORT_SKIP_SLUGS = new Set(['card-mastery'])
 
+function findSectionIndex(data: ResearchData, slug: string): number {
+  return data.sections.findIndex((s) => s.sectionSlug === slug)
+}
+
+function findItemIndex(section: ResearchData['sections'][number], name: string): number {
+  return section.items.findIndex((item) => item.name === name)
+}
+
+/** Map attack labs with confirmed `researchLevel[id]` anchors (see gameAttackResearchMapping.ts). */
+export function attackLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'attack-research')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map main labs with confirmed `researchLevel[id]` anchors (see gameMainResearchMapping.ts). */
+export function mainLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'main-research')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map modules labs with confirmed `researchLevel[id]` anchors (see gameModulesResearchMapping.ts). */
+export function modulesLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'modules')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map ultimate weapon labs with confirmed `researchLevel[id]` anchors. */
+export function ultimateLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'ultimate-weapon-research')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map utility labs with confirmed `researchLevel[id]` anchors (see gameUtilityResearchMapping.ts). */
+export function utilityLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'utility-research')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map defense labs with confirmed `researchLevel[id]` anchors (see gameDefenseResearchMapping.ts). */
+export function defenseLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'defense-research')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(DEFENSE_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof DEFENSE_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map BOTS lab section from dedicated cooldown fields + bot `researchLevel` ids. */
+export function botLabsToOverrides(
+  data: ResearchData,
+  save: DecodedPlayerSave,
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'bots')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, field] of Object.entries(BOT_COOLDOWN_LAB_SAVE_FIELD) as [
+    BotCooldownLabName,
+    keyof DecodedPlayerSave,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const researchId = BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME[name]
+    const fromField = save[field]
+    const fromResearch =
+      researchId != null ? save.researchLevel[researchId] : undefined
+    let level = 0
+    if (typeof fromField === 'number' && Number.isFinite(fromField)) {
+      level = Math.trunc(fromField)
+    }
+    if (typeof fromResearch === 'number' && Number.isFinite(fromResearch)) {
+      level = Math.max(level, Math.trunc(fromResearch))
+    }
+    if (level > 0) {
+      overrides[levelOverrideKey(si, ii)] = level
+    }
+  }
+
+  for (const [name, researchId] of Object.entries(BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    BotResearchLabName,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = save.researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
 /** Map game `researchLevel[researchId]` → TowerSmith `sectionIndex-itemIndex` overrides. */
 export function researchLevelsToOverrides(
   data: ResearchData,
@@ -86,6 +304,17 @@ export function researchLevelsToOverrides(
   const overrides: Record<string, number> = {}
   for (let si = 0; si < data.sections.length; si++) {
     const section = data.sections[si]!
+    if (
+      section.sectionSlug === 'bots' ||
+      section.sectionSlug === 'main-research' ||
+      section.sectionSlug === 'attack-research' ||
+      section.sectionSlug === 'defense-research' ||
+      section.sectionSlug === 'utility-research' ||
+      section.sectionSlug === 'ultimate-weapon-research' ||
+      section.sectionSlug === 'modules'
+    ) {
+      continue
+    }
     if (section.sectionSlug && RESEARCH_LEVEL_IMPORT_SKIP_SLUGS.has(section.sectionSlug)) {
       continue
     }
@@ -208,8 +437,18 @@ export function mapPlayerSaveToTower(
   workshop: WorkshopPersistedV1
   themes: TowerThemesSnapshot
 } {
+  const overrides = {
+    ...researchLevelsToOverrides(data, save.researchLevel),
+    ...mainLabsToOverrides(data, save.researchLevel),
+    ...attackLabsToOverrides(data, save.researchLevel),
+    ...defenseLabsToOverrides(data, save.researchLevel),
+    ...utilityLabsToOverrides(data, save.researchLevel),
+    ...ultimateLabsToOverrides(data, save.researchLevel),
+    ...modulesLabsToOverrides(data, save.researchLevel),
+    ...botLabsToOverrides(data, save),
+  }
   return {
-    overrides: researchLevelsToOverrides(data, save.researchLevel),
+    overrides,
     workshop: playerSaveToWorkshop(save),
     themes: playerSaveToThemes(save),
   }

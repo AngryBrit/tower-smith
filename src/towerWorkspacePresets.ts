@@ -1,11 +1,12 @@
 import type { LabPresetsFileV1, LabPreset } from './labPresetsStorage'
-import { sanitizeWorkshopPersisted } from './labPresetsStorage'
+import { parseLabPresetsFile, sanitizeWorkshopPersisted } from './labPresetsStorage'
 import { applyTowerThemes } from './towerDataThemes'
 import {
   defaultTowerWorkspace,
   sanitizeLabPersisted,
   sanitizeThemesPersisted,
   sanitizeTowerWorkspace,
+  syncWorkspaceThemesFromStorage,
   workspaceThemesSnapshot,
   type TowerWorkspaceV1,
 } from './towerWorkspaceStorage'
@@ -15,6 +16,8 @@ import {
   sanitizeTowerBuild,
   splitTowerBuild,
 } from './towerBuildStorage'
+
+export const TOWER_LAB_PRESETS_STORAGE_KEY = 'tower-export-lab-presets-v1'
 
 export function readWorkspaceFromPreset(preset: LabPreset | undefined): TowerWorkspaceV1 {
   if (preset?.workspace) return sanitizeTowerWorkspace(preset.workspace)
@@ -66,6 +69,38 @@ export function readTowerWorkspaceFromPresetsFile(parsed: LabPresetsFileV1): {
   }
 
   return { workspace, scratchWorkspace }
+}
+
+/** Write lab presets file immediately so a later hydrate cannot restore pre-import overrides. */
+export function persistLabWorkspacesToLocalStorage(
+  workspace: TowerWorkspaceV1,
+  scratchWorkspace: TowerWorkspaceV1,
+  storageKey: string = TOWER_LAB_PRESETS_STORAGE_KEY,
+): void {
+  let activePresetId: string | null = null
+  let presets: readonly LabPreset[] = []
+  try {
+    const raw = localStorage.getItem(storageKey)
+    if (raw) {
+      const parsed = parseLabPresetsFile(JSON.parse(raw))
+      if (parsed) {
+        activePresetId = parsed.activePresetId
+        presets = parsed.presets
+      }
+    }
+  } catch {
+    /* ignore corrupt storage */
+  }
+
+  const syncedWorkspace = syncWorkspaceThemesFromStorage(workspace)
+  const syncedScratch = syncWorkspaceThemesFromStorage(scratchWorkspace)
+  const payload = buildLabPresetsPayloadWithWorkspace(
+    activePresetId,
+    presets,
+    syncedWorkspace,
+    syncedScratch,
+  )
+  localStorage.setItem(storageKey, JSON.stringify(payload))
 }
 
 export function buildLabPresetsPayloadWithWorkspace(

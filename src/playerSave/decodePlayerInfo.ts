@@ -40,6 +40,11 @@ export type DecodedPlayerSave = {
   botsUnlocked: boolean[]
   botsActive: boolean[]
   botsLevel: number[]
+  flameBotLevelCooldownSelected: number
+  thunderBotLevelCooldownSelected: number
+  goldenBotLevelCooldownSelected: number
+  amplifyBotLevelCooldownSelected: number
+  botBotLevelCooldownSelected: number
   ultimateWeaponLevel: number[]
   ultimateWeaponUnlocked: boolean[]
   ultimateWeaponOn: boolean[]
@@ -78,6 +83,11 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     botsUnlocked: getBoolArray(ctx, 'botsUnlocked'),
     botsActive: getBoolArray(ctx, 'botsActive'),
     botsLevel: getInt32Array(ctx, 'botsLevel'),
+    flameBotLevelCooldownSelected: getInt32(ctx, 'flameBotLevelCooldownSelected'),
+    thunderBotLevelCooldownSelected: getInt32(ctx, 'thunderBotLevelCooldownSelected'),
+    goldenBotLevelCooldownSelected: getInt32(ctx, 'goldenBotLevelCooldownSelected'),
+    amplifyBotLevelCooldownSelected: getInt32(ctx, 'amplifyBotLevelCooldownSelected'),
+    botBotLevelCooldownSelected: getInt32(ctx, 'botBotLevelCooldownSelected'),
     ultimateWeaponLevel: getInt32Array(ctx, 'ultimateWeaponLevel'),
     ultimateWeaponUnlocked: getBoolArray(ctx, 'ultimateWeaponUnlocked'),
     ultimateWeaponOn: getBoolArray(ctx, 'ultimateWeaponOn'),

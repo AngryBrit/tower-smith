@@ -1,0 +1,13 @@
+/**
+ * Modules lab ↔ game `researchLevel[id]`.
+ * Ids 139–143 are sequential in the save (AutoplayerProfile max ranges match manifest max levels).
+ */
+export const MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
+  'Reroll Shards': 139,
+  'Daily Mission Shards': 140,
+  'Module Shards Cost': 141,
+  'Module Coin Cost': 142,
+  'Rare Drop Chance': 143,
+} as const satisfies Record<string, number>
+
+export type ModulesResearchLabName = keyof typeof MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME

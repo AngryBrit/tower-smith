@@ -1186,9 +1186,9 @@ export const STRINGS_ES = {
   sr_version_aria: 'Versión {{version}}',
   sr_changelog: 'Cambios',
   sr_changelog_title: 'Notas de versión en GitHub (se abre en una pestaña nueva)',
-  sr_sponsor: 'Patrocinar',
+  sr_sponsor: 'Buy Me A Coffee ☕',
   sr_sponsor_title:
-    'Apoya TowerSmith en GitHub Sponsors (se abre en una pestaña nueva)',
+    'Apoya a AngryBrit en Buy Me a Coffee (se abre en una pestaña nueva)',
   sr_locale_aria: 'Idioma',
   sr_locale_option_en: 'Inglés',
   sr_locale_option_es: 'Español',
