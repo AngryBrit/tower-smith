@@ -191,13 +191,13 @@ The gallery uses **Netlify Functions** as the API and **Supabase** for storage: 
 
 **Short share links** use `?build=<uuid>`. **Copy share link** publishes (when signed in) and copies the short URL.
 
-Implementation: [`netlify/functions/`](netlify/functions/), [`supabase/migrations/`](supabase/migrations/), UI in [`src/components/CommunityBuildRow.tsx`](src/components/CommunityBuildRow.tsx) and [`src/components/TowerGalleryPanel.tsx`](src/components/TowerGalleryPanel.tsx).
+Implementation: [`netlify/functions/`](netlify/functions/), [`supabase/schema.sql`](supabase/schema.sql), UI in [`src/components/CommunityBuildRow.tsx`](src/components/CommunityBuildRow.tsx) and [`src/components/TowerGalleryPanel.tsx`](src/components/TowerGalleryPanel.tsx).
 
 ### Supabase setup
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. Run SQL from [`supabase/migrations/20260526000000_gallery.sql`](supabase/migrations/20260526000000_gallery.sql) in the SQL editor.
-3. **Storage** — create a **public** bucket named `tower-payloads` (public read so `get` can download JSON).
+2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor (canonical gallery schema).
+3. **Storage** — create a **public** bucket named `tower-payloads` (public read so `get` can download JSON). See the note at the end of `schema.sql`.
 4. **Auth** — enable Google and Discord providers. In **Authentication → URL Configuration**:
    - **Site URL:** your production origin (e.g. `https://thetower.thatangrybrit.com/`)
    - **Redirect URLs:** add **both** production and local dev, e.g. `https://thetower.thatangrybrit.com/` and `http://localhost:5173/**` (wildcard covers local OAuth return). If sign-in from localhost lands on production, localhost is missing from Redirect URLs.

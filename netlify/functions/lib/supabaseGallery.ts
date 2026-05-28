@@ -286,7 +286,7 @@ export async function listGalleryEntriesPaginated(
     if (includeVotes && isMissingVotesSchema(message)) {
       votesSchemaAvailable = false
       console.warn(
-        '[gallery] build votes migration not applied — listing without upvote_count. Run supabase/migrations/20260526500000_build_votes.sql',
+        '[gallery] build votes schema missing — listing without upvote_count. Run supabase/schema.sql on the project.',
       )
       const page = await fetchBuildListPage(
         limit,

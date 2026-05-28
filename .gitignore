@@ -45,5 +45,5 @@ docs/
 # Local Netlify folder
 .netlify
 
-# Local Supabase CLI / migrations (not for the repo)
-supabase/
+# Local Supabase incremental migrations (not for the repo)
+supabase/migrations/
