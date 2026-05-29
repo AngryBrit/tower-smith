@@ -409,10 +409,12 @@ export function playerSaveToThemes(save: DecodedPlayerSave): TowerThemesSnapshot
   const background = gameThemeIdAtIndex('background', save.selectedBackground)
   const menus = gameThemeIdAtIndex('menus', save.selectedMenu)
   const banners = gameThemeIdAtIndex('banners', save.selectedProfileBanner)
+  const guardian = gameThemeIdAtIndex('guardian', save.guardianSkinIndex)
   if (tower) partial.tower = tower
   if (background) partial.background = background
   if (menus) partial.menus = menus
   if (banners) partial.banners = banners
+  if (guardian) partial.guardian = guardian
   const hasSelection = Object.keys(partial).length > 0
   return {
     ownedIds: sanitizeThemeOwnedIds(ownedIds),
