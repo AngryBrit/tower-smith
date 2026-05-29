@@ -110,13 +110,16 @@
 
 .select-research {
   width: min(26.25rem, 100%);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
   background: linear-gradient(180deg, #111a2e 0%, var(--sr-panel) 40%);
   border: 1px solid var(--sr-cyan-dim);
   border-radius: 0.75rem;
   box-shadow:
     0 0 0 1px rgba(34, 211, 238, 0.15),
     0 18px 50px rgba(0, 0, 0, 0.55);
-  padding: 0.875rem 0.875rem 1.125rem;
+  padding: 0.875rem 0.875rem max(1.125rem, env(safe-area-inset-bottom, 0px));
 }
 
 .select-research__inpanel-header {
@@ -531,10 +534,12 @@
 }
 
 .select-research__site-footer {
-  margin: 0;
-  padding: 0;
+  margin: 1rem 0 0;
+  padding: 0.65rem 0 0;
   border: none;
+  border-top: 1px solid rgba(34, 211, 238, 0.15);
   background: transparent;
+  flex-shrink: 0;
 }
 
 .select-research__header {
@@ -1370,16 +1375,14 @@
 }
 
 .select-research__version-badge {
-  position: fixed;
-  left: max(0.5rem, env(safe-area-inset-left, 0px));
-  bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
-  z-index: 40;
+  position: static;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   gap: 0.25rem;
+  box-sizing: border-box;
   width: max-content;
-  max-width: min(calc(100vw - 1rem), 20rem);
+  max-width: 100%;
   margin: 0;
   padding: 0.35rem 0.45rem;
   font-size: 0.68rem;
@@ -1426,25 +1429,34 @@ a.select-research__version-label:focus-visible {
 
 .select-research__bmc-button .bmc-btn {
   box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center !important;
   min-width: 0 !important;
   max-width: none !important;
   width: auto !important;
-  height: 2rem !important;
-  padding: 0 0.5rem 0 0.4rem !important;
-  border-radius: 0.35rem !important;
+  height: 2.25rem !important;
+  padding: 0 0.75rem 0 0.5625rem !important;
+  border-radius: 0.375rem !important;
   font-size: 0.75rem !important;
-  line-height: 2rem !important;
+  line-height: 1 !important;
+  font-family: 'Cookie', cursive !important;
+  color: #000 !important;
+  background-color: #ffdd00 !important;
+  text-decoration: none !important;
 }
 
 .select-research__bmc-button .bmc-btn svg {
-  height: 1rem !important;
-  width: 1rem !important;
+  flex-shrink: 0 !important;
+  height: 1.125rem !important;
+  width: 1.125rem !important;
+  margin-bottom: 0 !important;
   transform: none !important;
 }
 
 .select-research__bmc-button .bmc-btn-text {
   width: auto !important;
-  margin-left: 0.3rem !important;
+  margin-left: 0.375rem !important;
+  line-height: 1 !important;
   white-space: nowrap !important;
 }
 

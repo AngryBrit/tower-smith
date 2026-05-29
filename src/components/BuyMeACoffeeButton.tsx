@@ -63,32 +63,6 @@ function loadBmcScript(): Promise<void> {
   return bmcScriptLoad
 }
 
-function compactBmcButton(host: HTMLElement): void {
-  const anchor = host.querySelector<HTMLElement>('.bmc-btn')
-  if (!anchor) return
-
-  anchor.style.setProperty('min-width', '0', 'important')
-  anchor.style.setProperty('width', 'auto', 'important')
-  anchor.style.setProperty('height', '32px', 'important')
-  anchor.style.setProperty('padding', '0 8px 0 6px', 'important')
-  anchor.style.setProperty('font-size', '12px', 'important')
-  anchor.style.setProperty('line-height', '32px', 'important')
-  anchor.style.setProperty('border-radius', '6px', 'important')
-
-  const svg = anchor.querySelector<SVGElement>('svg')
-  if (svg) {
-    svg.style.setProperty('height', '16px', 'important')
-    svg.style.setProperty('width', '16px', 'important')
-    svg.style.setProperty('transform', 'none', 'important')
-  }
-
-  const text = anchor.querySelector<HTMLElement>('.bmc-btn-text')
-  if (text) {
-    text.style.setProperty('width', 'auto', 'important')
-    text.style.setProperty('margin-left', '5px', 'important')
-  }
-}
-
 function renderBmcButton(host: HTMLElement): void {
   const widget = window.bmcBtnWidget
   if (!widget) return
@@ -103,7 +77,9 @@ function renderBmcButton(host: HTMLElement): void {
     BMC_CONFIG.outlineColor,
     BMC_CONFIG.coffeeColor,
   )
-  compactBmcButton(host)
+
+  // Drop BMC's bundled sizing rules; footer styles live in App.css.
+  host.querySelector('style')?.remove()
 }
 
 type BuyMeACoffeeButtonProps = {
@@ -129,7 +105,6 @@ export function BuyMeACoffeeButton({ className }: BuyMeACoffeeButtonProps) {
       .catch(() => {
         if (cancelled || !hostRef.current) return
         hostRef.current.innerHTML = `<a class="bmc-btn" href="https://buymeacoffee.com/${BMC_CONFIG.slug}" target="_blank" rel="noopener noreferrer">${BMC_CONFIG.text}</a>`
-        compactBmcButton(hostRef.current)
       })
 
     return () => {
