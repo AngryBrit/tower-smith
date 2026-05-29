@@ -5,7 +5,11 @@ import {
 } from '../labPresetsStorage'
 import { levelOverrideKey, type ResearchData } from '../types/research'
 import { clampWorkshopCardEquipSlots } from '../data/workshopGameCardWiki'
-import { mapCardStarsFromSave } from './cardSaveSlotMap'
+import {
+  CARD_PRESET_SLOT_ARRAY_LENGTH,
+  mapCardPresetsFromSave,
+  mapCardStarsFromSave,
+} from './cardSaveSlotMap'
 import {
   WORKSHOP_BOT_ACTIVE_ORDER,
   WORKSHOP_BOT_OWNED_ORDER,
@@ -477,6 +481,18 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
 
   ws.cardStars = mapCardStarsFromSave(save.cardLevel, save.cardUnlocked)
   ws.cardEquipSlots = clampWorkshopCardEquipSlots(save.slotsUnlocked)
+  if (
+    save.slotPresetCardInt.length >= CARD_PRESET_SLOT_ARRAY_LENGTH &&
+    save.slotPresetCardAssignedBool.length >= CARD_PRESET_SLOT_ARRAY_LENGTH
+  ) {
+    const cardPresets = mapCardPresetsFromSave(
+      save.slotPresetCardInt,
+      save.slotPresetCardAssignedBool,
+      save.currentCardPreset,
+    )
+    ws.cardPresetLoadouts = cardPresets.cardPresetLoadouts
+    ws.cardActivePresetIndex = cardPresets.cardActivePresetIndex
+  }
 
   ws.relicOwnedIds = relicIndicesToOwnedIds(save.relicsUnlocked)
 

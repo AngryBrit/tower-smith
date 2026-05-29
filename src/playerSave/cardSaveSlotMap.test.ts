@@ -4,6 +4,7 @@ import {
   CARD_SAVE_ARRAY_LENGTH,
   CARD_SAVE_INDEX_BY_CARD_ID,
   CARD_SAVE_RESERVED_INDICES,
+  mapCardPresetsFromSave,
   mapCardStarsFromSave,
 } from './cardSaveSlotMap'
 
@@ -76,5 +77,47 @@ describe('cardSaveSlotMap', () => {
     expect(stars.criticalChance).toBe(7)
     expect(stars.plasmaCannon).toBe(7)
     expect(stars.areaOfEffect).toBe(1)
+  })
+
+  it('maps card preset slots from slotPresetCardInt save indices', () => {
+    const slotPresetCardInt = new Array(140).fill(0)
+    const slotPresetCardAssignedBool = new Array(140).fill(false)
+    const preset0Slots = [15, 6, 19, 2, 12, 1, 11, 20, 16, 22, 23, 31, 7, 3, 0, 26, 25, 18]
+    preset0Slots.forEach((saveIndex, slot) => {
+      slotPresetCardInt[slot] = saveIndex
+      slotPresetCardAssignedBool[slot] = true
+    })
+    slotPresetCardInt[28] = 15
+    slotPresetCardInt[29] = 2
+    slotPresetCardAssignedBool[28] = true
+    slotPresetCardAssignedBool[29] = true
+
+    const { cardPresetLoadouts, cardActivePresetIndex } = mapCardPresetsFromSave(
+      slotPresetCardInt,
+      slotPresetCardAssignedBool,
+      0,
+    )
+    expect(cardActivePresetIndex).toBe(0)
+    expect(cardPresetLoadouts[0]).toEqual([
+      'freeUpgrades',
+      'coins',
+      'criticalCoin',
+      'health',
+      'extraDefense',
+      'attackSpeed',
+      'enemyBalance',
+      'waveSkip',
+      'extraOrb',
+      'landMineStun',
+      'recoveryPackageChance',
+      'waveAccelerator',
+      'slowAura',
+      'healthRegen',
+      'damage',
+      'energyNet',
+      'deathRay',
+      'plasmaCannon',
+    ])
+    expect(cardPresetLoadouts[1]).toEqual(['freeUpgrades', 'health'])
   })
 })

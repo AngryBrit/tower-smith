@@ -1,11 +1,14 @@
+import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
-import type { DecodedPlayerSave } from './decodePlayerInfo'
+import { decodePlayerInfoFile, type DecodedPlayerSave } from './decodePlayerInfo'
 import {
   GAME_WORKSHOP_ATTACK_LEVEL_KEYS,
   GAME_WORKSHOP_DEFENSE_LEVEL_KEYS,
   GAME_WORKSHOP_UTILITY_LEVEL_KEYS,
 } from './gameWorkshopMapping'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
+
+const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
 
 function minimalSave(
   partial: Partial<DecodedPlayerSave> = {},
@@ -21,6 +24,9 @@ function minimalSave(
     cardLevel: [],
     cardUnlocked: [],
     slotsUnlocked: 0,
+    currentCardPreset: 0,
+    slotPresetCardInt: [],
+    slotPresetCardAssignedBool: [],
     currentWorkshopPreset: 0,
     relicsUnlocked: [],
     towerUnlocked: [],
@@ -197,5 +203,40 @@ describe('playerSaveToWorkshop', () => {
   it('maps slotsUnlocked to cardEquipSlots', () => {
     const ws = playerSaveToWorkshop(minimalSave({ slotsUnlocked: 18 }))
     expect(ws.cardEquipSlots).toBe(18)
+  })
+
+  it('maps card preset loadouts from slotPresetCardInt when present', async () => {
+    const slotPresetCardInt = new Array(140).fill(0)
+    const slotPresetCardAssignedBool = new Array(140).fill(false)
+    const preset0Slots = [15, 6, 19, 2, 12, 1, 11, 20, 16, 22, 23, 31, 7, 3, 0, 26, 25, 18]
+    preset0Slots.forEach((saveIndex, slot) => {
+      slotPresetCardInt[slot] = saveIndex
+      slotPresetCardAssignedBool[slot] = true
+    })
+
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        slotsUnlocked: 18,
+        currentCardPreset: 0,
+        slotPresetCardInt,
+        slotPresetCardAssignedBool,
+      }),
+    )
+    expect(ws.cardActivePresetIndex).toBe(0)
+    expect(ws.cardPresetLoadouts[0]).toContain('damage')
+    expect(ws.cardPresetLoadouts[0]).toContain('plasmaCannon')
+    expect(ws.cardPresetLoadouts[0]).toHaveLength(18)
+  })
+
+  it('imports card presets from sample playerInfo.dat', async () => {
+    if (!existsSync(SAMPLE_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE)))
+    expect(save.slotPresetCardInt.length).toBe(140)
+    expect(save.slotPresetCardAssignedBool.length).toBe(140)
+    expect(save.currentCardPreset).toBe(0)
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.cardPresetLoadouts[0]).toContain('damage')
+    expect(ws.cardPresetLoadouts[0]).toHaveLength(18)
+    expect(ws.cardPresetLoadouts[1]?.length).toBeGreaterThan(0)
   })
 })

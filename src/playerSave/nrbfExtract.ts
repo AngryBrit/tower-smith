@@ -76,6 +76,34 @@ export function getBoolArray(ctx: PlayerDataContext, name: string): boolean[] {
 }
 
 /** Enum arrays stored as BinaryArray of boxed enum values (`value__`). */
+/** `int[]` / boxed ints stored as BinaryArray (e.g. `slotPresetCardInt`). */
+export function getBinaryIntArray(ctx: PlayerDataContext, name: string): number[] {
+  const raw = resolveValue(ctx, ctx.player.getValue(name))
+  if (!(raw instanceof BinaryArrayRecord)) return []
+  const out: number[] = []
+  for (const el of raw.elementValues) {
+    const rec = resolveValue(ctx, el)
+    if (typeof rec === 'number' && Number.isFinite(rec)) {
+      out.push(Math.trunc(rec))
+      continue
+    }
+    if (rec instanceof ClassRecord) {
+      const v = rec.getValue('value__')
+      out.push(typeof v === 'number' && Number.isFinite(v) ? Math.trunc(v) : 0)
+      continue
+    }
+    out.push(0)
+  }
+  return out
+}
+
+/** `bool[]` stored as BinaryArray (e.g. `slotPresetCardAssignedBool`). */
+export function getBinaryBoolArray(ctx: PlayerDataContext, name: string): boolean[] {
+  const raw = resolveValue(ctx, ctx.player.getValue(name))
+  if (!(raw instanceof BinaryArrayRecord)) return []
+  return raw.elementValues.map((el) => resolveValue(ctx, el) === true)
+}
+
 export function getEnumIntArray(ctx: PlayerDataContext, name: string): number[] {
   const raw = resolveValue(ctx, ctx.player.getValue(name))
   if (!(raw instanceof BinaryArrayRecord)) return []

@@ -5,6 +5,8 @@ import {
 } from './gameBotPresetMapping'
 import {
   findPlayerDataContext,
+  getBinaryBoolArray,
+  getBinaryIntArray,
   getBool,
   getBoolArray,
   getEnumIntArray,
@@ -35,6 +37,9 @@ export type DecodedPlayerSave = {
   cardLevel: number[]
   cardUnlocked: boolean[]
   slotsUnlocked: number
+  currentCardPreset: number
+  slotPresetCardInt: number[]
+  slotPresetCardAssignedBool: boolean[]
   currentWorkshopPreset: number
   relicsUnlocked: number[]
   towerUnlocked: boolean[]
@@ -97,6 +102,9 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     cardLevel: getInt32Array(ctx, 'cardLevel'),
     cardUnlocked: getBoolArray(ctx, 'cardUnlocked'),
     slotsUnlocked: getInt32(ctx, 'slotsUnlocked'),
+    currentCardPreset: getInt32(ctx, 'currentPreset'),
+    slotPresetCardInt: getBinaryIntArray(ctx, 'slotPresetCardInt'),
+    slotPresetCardAssignedBool: getBinaryBoolArray(ctx, 'slotPresetCardAssignedBool'),
     currentWorkshopPreset: getInt32(ctx, 'currentWorkshopPreset'),
     relicsUnlocked: getEnumIntArray(ctx, 'relicsUnlocked'),
     towerUnlocked: getBoolArray(ctx, 'towerUnlocked'),
