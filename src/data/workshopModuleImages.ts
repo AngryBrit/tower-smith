@@ -94,3 +94,34 @@ export function workshopChassisModuleImageUrl(
   if (moduleId == null) return null
   return `${base}modules/${workshopChassisModuleImagePath(slot, moduleId, tier)}`
 }
+
+const MODULE_BORDER_PREFIX: Record<WorkshopAssistModuleSlot, string> = {
+  cannon: 'mf_cannon',
+  armor: 'mf_armor',
+  // Asset folders are misnamed: generator/* is diamond (core), core/* is triangle (generator).
+  generator: 'mf_core',
+  core: 'mf_generator',
+}
+
+const MODULE_BORDER_FOLDER: Record<WorkshopAssistModuleSlot, WorkshopAssistModuleSlot> = {
+  cannon: 'cannon',
+  armor: 'armor',
+  generator: 'core',
+  core: 'generator',
+}
+
+function mergeTierToBorderSuffix(merge: WorkshopChassisModuleMergeTier): string {
+  if (merge.startsWith('star_')) return 'ancestral'
+  return merge
+}
+
+/** Rarity / empty slot frame under `public/modules/borders/{slot}/`. */
+export function workshopChassisModuleBorderImageUrl(
+  slot: WorkshopAssistModuleSlot,
+  state: 'empty' | WorkshopChassisModuleMergeTier | WorkshopChassisModuleEffectTier,
+): string {
+  const folder = MODULE_BORDER_FOLDER[slot]
+  const prefix = MODULE_BORDER_PREFIX[slot]
+  const suffix = state === 'empty' ? 'empty' : mergeTierToBorderSuffix(state)
+  return `${base}modules/borders/${folder}/${prefix}_${suffix}.webp`
+}

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  workshopChassisModuleBorderImageUrl,
   workshopChassisModuleDedicatedImageUrl,
   workshopChassisModuleHasDedicatedArt,
   workshopChassisModuleImagePath,
@@ -33,6 +34,24 @@ describe('workshopModuleImages', () => {
     expect(workshopChassisModuleHasDedicatedArt('cannon', 'shrinkRay')).toBe(true)
     expect(workshopChassisModuleDedicatedImageUrl('cannon', 'shrinkRay')).toContain(
       'modules/cannon/Shrink%20Ray.webp',
+    )
+  })
+
+  it('builds border url for empty and merge tiers', () => {
+    expect(workshopChassisModuleBorderImageUrl('cannon', 'empty')).toContain(
+      'modules/borders/cannon/mf_cannon_empty.webp',
+    )
+    expect(workshopChassisModuleBorderImageUrl('cannon', 'epic_plus')).toContain(
+      'modules/borders/cannon/mf_cannon_epic_plus.webp',
+    )
+    expect(workshopChassisModuleBorderImageUrl('core', 'star_3')).toContain(
+      'modules/borders/generator/mf_generator_ancestral.webp',
+    )
+    expect(workshopChassisModuleBorderImageUrl('generator', 'empty')).toContain(
+      'modules/borders/core/mf_core_empty.webp',
+    )
+    expect(workshopChassisModuleBorderImageUrl('cannon', 'legendary')).toContain(
+      'modules/borders/cannon/mf_cannon_legendary.webp',
     )
   })
 })

@@ -4095,6 +4095,71 @@ button.workshop__uw-plus-cost--display:hover {
   pointer-events: none;
 }
 
+.modules-slot__border {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+  pointer-events: none;
+}
+
+.modules-slot__frame--has-border {
+  filter: none;
+}
+
+.modules-slot__frame--has-border .modules-slot__icon {
+  z-index: 2;
+  background: transparent;
+  overflow: visible;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modules-slot__frame--has-border .modules-slot__icon-img {
+  width: 98%;
+  height: 98%;
+  object-fit: contain;
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--circle .modules-slot__icon {
+  inset: 22%;
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--triangle .modules-slot__icon {
+  inset: 24% 18% 16% 18%;
+  transform: translateY(-3px);
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--triangle .modules-slot__icon--triangle {
+  clip-path: polygon(50% 2%, 98% 64%, 98% 98%, 2% 98%, 2% 64%);
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--octagon .modules-slot__icon {
+  inset: 23%;
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--octagon .modules-slot__icon--octagon {
+  clip-path: polygon(24% 2%, 76% 2%, 98% 24%, 98% 76%, 76% 98%, 24% 98%, 2% 76%, 2% 24%);
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--diamond .modules-slot__icon {
+  inset: 20% 18% 18% 18%;
+  transform: translateY(-1px);
+}
+
+.modules-slot__frame--has-border.modules-slot__frame--diamond .modules-slot__icon--diamond {
+  clip-path: polygon(32% 2%, 68% 2%, 98% 32%, 98% 68%, 68% 98%, 32% 98%, 2% 68%, 2% 32%);
+}
+
+.modules-slot-pair:not(.modules-slot-pair--on) .modules-slot__frame--has-border {
+  opacity: 0.72;
+}
+
 .modules-slot__icon {
   position: absolute;
   inset: 9%;
@@ -4262,6 +4327,11 @@ button.workshop__uw-plus-cost--display:hover {
   stroke: rgba(148, 163, 184, 0.62);
 }
 
+.modules-slot:not(.modules-slot--on) .modules-slot__frame--has-border {
+  filter: none;
+  opacity: 0.72;
+}
+
 .modules-slot:not(.modules-slot--on) .modules-slot__frame {
   filter: drop-shadow(0 0 5px rgba(var(--module-glow-rgb), 0.2));
 }
@@ -4294,6 +4364,11 @@ button.workshop__uw-plus-cost--display:hover {
 .modules-slot__frame--equipped .modules-slot__frame-shape {
   fill: rgba(8, 12, 24, 0.62);
   stroke: rgba(var(--module-rarity-rgb), 0.95);
+}
+
+.modules-slot--on .modules-slot__frame--has-border {
+  filter: none;
+  opacity: 1;
 }
 
 .modules-slot--on .modules-slot__frame--equipped {
@@ -4333,12 +4408,22 @@ button.workshop__uw-plus-cost--display:hover {
   text-shadow: 0 1px 8px rgba(0, 0, 0, 0.92);
 }
 
+.modules-slot__hit:hover .modules-slot__frame--has-border {
+  filter: brightness(1.08);
+  opacity: 1;
+}
+
 .modules-slot__hit:hover .modules-slot__frame--empty {
   filter: drop-shadow(0 0 8px rgba(148, 163, 184, 0.32)) brightness(1.06);
 }
 
 .modules-slot__hit:hover .modules-slot__frame--equipped {
   filter: drop-shadow(0 0 12px rgba(var(--module-rarity-rgb), 0.58)) brightness(1.08);
+}
+
+.modules-assist-hit:hover .modules-slot__frame--has-border {
+  filter: brightness(1.08);
+  opacity: 1;
 }
 
 .modules-assist-hit:hover .modules-slot__frame--empty {
@@ -5427,31 +5512,8 @@ button.workshop__uw-plus-cost--display:hover {
   display: block;
   width: 3rem;
   height: 3rem;
-  filter: drop-shadow(0 0 8px rgba(var(--module-rarity-rgb), 0.45));
-}
-
-.workshop__uw-icon-wrap
-  .workshop__uw-assist-icon:not(
-    .modules-rarity--epic,
-    .modules-rarity--legendary,
-    .modules-rarity--mythic,
-    .modules-rarity--ancestral
-  ) {
-  --module-rarity-rgb: 148, 163, 184;
-}
-
-.workshop__uw-assist-icon-shape {
-  fill: rgba(8, 12, 24, 0.55);
-  stroke: rgba(var(--module-rarity-rgb), 0.95);
-  stroke-width: 4;
-  vector-effect: non-scaling-stroke;
-}
-
-.workshop__uw-assist-icon.modules-rarity--epic .workshop__uw-assist-icon-shape,
-.workshop__uw-assist-icon.modules-rarity--legendary .workshop__uw-assist-icon-shape,
-.workshop__uw-assist-icon.modules-rarity--mythic .workshop__uw-assist-icon-shape,
-.workshop__uw-assist-icon.modules-rarity--ancestral .workshop__uw-assist-icon-shape {
-  fill: rgba(8, 12, 24, 0.62);
+  object-fit: contain;
+  filter: none;
 }
 
 .modules-catalog__row--total th,

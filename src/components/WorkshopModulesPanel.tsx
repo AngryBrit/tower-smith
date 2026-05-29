@@ -38,12 +38,12 @@ import {
 } from '../data/workshopSubmoduleSelection'
 import type { WorkshopSubmoduleRarity } from '../data/workshopSubmoduleEffects'
 import {
-  MODULE_FRAME_SHAPE,
   MODULE_HUB_SLOT_ART,
   WORKSHOP_MODULES_TOWER_IMAGE,
   type ModuleHubShape,
 } from '../data/workshopModuleArt'
 import {
+  workshopChassisModuleBorderImageUrl,
   workshopChassisModuleDedicatedImageUrl,
   workshopChassisModuleHasDedicatedArt,
 } from '../data/workshopModuleImages'
@@ -187,7 +187,6 @@ function ModuleSlotFrame({
   showNameBelow?: boolean
 }) {
   const { t } = useI18n()
-  const frameDef = MODULE_FRAME_SHAPE[shape]
   const equipped =
     moduleId != null ? workshopChassisModuleDefForSlot(slot, moduleId) : null
   const dedicatedIconUrl =
@@ -201,9 +200,14 @@ function ModuleSlotFrame({
   }, [dedicatedIconUrl])
 
   const showIcon = dedicatedIconUrl != null && !iconFailed
+  const borderUrl = workshopChassisModuleBorderImageUrl(
+    slot,
+    locked || moduleId == null ? 'empty' : moduleRarity,
+  )
 
   const frameClass = [
     'modules-slot__frame',
+    'modules-slot__frame--has-border',
     `modules-slot__frame--${shape}`,
     frameRole === 'assist' ? 'modules-slot__frame--assist' : 'modules-slot__frame--main',
     locked ? 'modules-slot__frame--locked' : '',
@@ -216,6 +220,13 @@ function ModuleSlotFrame({
   return (
     <span className="modules-slot__frame-wrap">
       <span className={frameClass}>
+        <img
+          className="modules-slot__border"
+          src={borderUrl}
+          alt=""
+          decoding="async"
+          draggable={false}
+        />
         {showIcon ? (
           <span className={`modules-slot__icon modules-slot__icon--${shape}`} aria-hidden>
             <img
@@ -228,33 +239,10 @@ function ModuleSlotFrame({
             />
           </span>
         ) : null}
-        <svg className="modules-slot__frame-svg" viewBox="0 0 100 100" aria-hidden>
-          {frameDef.type === 'circle' ? (
-            <circle
-              className="modules-slot__frame-shape"
-              cx="50"
-              cy="50"
-              r={frameDef.r}
-              vectorEffect="nonScalingStroke"
-            />
-          ) : (
-            <polygon
-              className="modules-slot__frame-shape"
-              points={frameDef.points}
-              vectorEffect="nonScalingStroke"
-            />
-          )}
-        </svg>
         {locked ? (
           <span className="modules-slot__frame-label" aria-hidden>
             <span className="modules-slot__name modules-slot__name--empty">
               {t('ws_modules_assist_locked')}
-            </span>
-          </span>
-        ) : equipped == null ? (
-          <span className="modules-slot__frame-label" aria-hidden>
-            <span className="modules-slot__name modules-slot__name--empty">
-              {t('ws_modules_none_selected')}
             </span>
           </span>
         ) : null}

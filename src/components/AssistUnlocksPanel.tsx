@@ -12,17 +12,14 @@ import {
   stepAssistUniqueRarity,
 } from '../data/workshopAssistModuleCatalog'
 import {
-  MODULE_FRAME_SHAPE,
-  MODULE_HUB_SLOT_ART,
-} from '../data/workshopModuleArt'
+  workshopChassisModuleEffectTierCssClass,
+  type WorkshopChassisModuleEffectTier,
+} from '../data/workshopChassisModuleShared'
+import { workshopChassisModuleBorderImageUrl } from '../data/workshopModuleImages'
 import {
   WORKSHOP_ASSIST_MODULE_SLOTS,
   type WorkshopAssistModuleSlot,
 } from '../data/workshopSimModules'
-import {
-  workshopChassisModuleEffectTierCssClass,
-  type WorkshopChassisModuleEffectTier,
-} from '../data/workshopChassisModuleShared'
 import { formatPowerStoneAmount } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { patchWorkshopModules } from '../data/workshopModulePresets'
@@ -46,26 +43,24 @@ const EFFECT_TIER_LABEL: Record<WorkshopChassisModuleEffectTier, StringId> = {
 
 function AssistSlotIcon({
   slot,
+  effectTier,
   rarityClass,
 }: {
   slot: WorkshopAssistModuleSlot
+  effectTier: WorkshopChassisModuleEffectTier
   /** Same class as the Unique column value (`modules-rarity--*`). */
   rarityClass?: string
 }) {
-  const art = MODULE_HUB_SLOT_ART[slot]
-  const frameDef = MODULE_FRAME_SHAPE[art.shape]
+  const borderUrl = workshopChassisModuleBorderImageUrl(slot, effectTier)
   return (
-    <svg
+    <img
       className={['workshop__uw-assist-icon', rarityClass ?? ''].filter(Boolean).join(' ')}
-      viewBox="0 0 100 100"
+      src={borderUrl}
+      alt=""
+      decoding="async"
+      draggable={false}
       aria-hidden
-    >
-      {frameDef.type === 'circle' ? (
-        <circle className="workshop__uw-assist-icon-shape" cx="50" cy="50" r={frameDef.r} />
-      ) : (
-        <polygon className="workshop__uw-assist-icon-shape" points={frameDef.points} />
-      )}
-    </svg>
+    />
   )
 }
 
@@ -248,7 +243,11 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
       ) : (
         <div className="workshop__uw-body">
           <div className="workshop__uw-icon-wrap">
-            <AssistSlotIcon slot={slot} rarityClass={uniqueRarityClass} />
+            <AssistSlotIcon
+              slot={slot}
+              effectTier={assist.uniqueRarity}
+              rarityClass={uniqueRarityClass}
+            />
           </div>
           <div className="workshop__uw-stats" role="group" aria-label={title}>
             <AssistUnlockCol
