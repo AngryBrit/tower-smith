@@ -55,7 +55,15 @@ type CardArtVariant =
   | 'perk'
   | 'taken'
 
-const CARDS_ACTIVE_SCROLL_ARROW_THRESHOLD = 4
+const CARD_EQUIPPED_CHECKMARK_SRC = '/icons/Checkmark_glow.webp'
+const ACTIVE_ROW_DRAG_THRESHOLD_PX = 6
+
+type ActiveRowDragState = {
+  pointerId: number
+  startX: number
+  startScrollLeft: number
+  dragging: boolean
+}
 
 function CardsActiveScroller({
   cardCount,
@@ -66,30 +74,22 @@ function CardsActiveScroller({
   scrollKey: number
   children: ReactNode
 }) {
-  const { t } = useI18n()
   const scrollRef = useRef<HTMLUListElement>(null)
-  const [canScrollLeft, setCanScrollLeft] = useState(false)
-  const [canScrollRight, setCanScrollRight] = useState(false)
-  const showArrows = cardCount > CARDS_ACTIVE_SCROLL_ARROW_THRESHOLD
+  const dragRef = useRef<ActiveRowDragState | null>(null)
+  const [canScrollHorizontally, setCanScrollHorizontally] = useState(false)
+  const [rowDragging, setRowDragging] = useState(false)
 
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current
     if (!el) return
     const maxScroll = el.scrollWidth - el.clientWidth
-    if (maxScroll <= 1) {
-      setCanScrollLeft(false)
-      setCanScrollRight(false)
-      return
-    }
-    setCanScrollLeft(el.scrollLeft > 2)
-    setCanScrollRight(el.scrollLeft < maxScroll - 2)
+    setCanScrollHorizontally(maxScroll > 1)
   }, [])
 
   useEffect(() => {
     const el = scrollRef.current
     if (!el) return
     updateScrollState()
-    if (!showArrows) return
     el.addEventListener('scroll', updateScrollState, { passive: true })
     const ro = new ResizeObserver(updateScrollState)
     ro.observe(el)
@@ -97,7 +97,7 @@ function CardsActiveScroller({
       el.removeEventListener('scroll', updateScrollState)
       ro.disconnect()
     }
-  }, [cardCount, showArrows, updateScrollState])
+  }, [cardCount, updateScrollState])
 
   useEffect(() => {
     const el = scrollRef.current
@@ -106,48 +106,83 @@ function CardsActiveScroller({
     updateScrollState()
   }, [scrollKey, updateScrollState])
 
-  const scrollActive = useCallback((dir: -1 | 1) => {
-    const el = scrollRef.current
-    if (!el) return
-    const tile = el.querySelector<HTMLElement>('.cards-tile')
-    const gap = Number.parseFloat(getComputedStyle(el).columnGap || getComputedStyle(el).gap) || 0
-    const step = tile ? tile.offsetWidth + gap : el.clientWidth * 0.5
-    el.scrollBy({ left: dir * step, behavior: 'smooth' })
-  }, [])
+  const onActiveRowPointerDown = useCallback(
+    (e: React.PointerEvent<HTMLUListElement>) => {
+      if (e.button !== 0 || !canScrollHorizontally) return
+      const el = scrollRef.current
+      if (!el) return
+      dragRef.current = {
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startScrollLeft: el.scrollLeft,
+        dragging: false,
+      }
+    },
+    [canScrollHorizontally],
+  )
+
+  const onActiveRowPointerMove = useCallback(
+    (e: React.PointerEvent<HTMLUListElement>) => {
+      const state = dragRef.current
+      if (!state || state.pointerId !== e.pointerId) return
+      const el = scrollRef.current
+      if (!el) return
+
+      const dx = e.clientX - state.startX
+      if (!state.dragging) {
+        if (Math.abs(dx) < ACTIVE_ROW_DRAG_THRESHOLD_PX) return
+        state.dragging = true
+        setRowDragging(true)
+        el.setPointerCapture(e.pointerId)
+      }
+
+      e.preventDefault()
+      el.scrollLeft = state.startScrollLeft - dx
+      updateScrollState()
+    },
+    [updateScrollState],
+  )
+
+  const endActiveRowPointer = useCallback(
+    (e: React.PointerEvent<HTMLUListElement>) => {
+      const state = dragRef.current
+      if (!state || state.pointerId !== e.pointerId) return
+      const el = scrollRef.current
+      const wasDragging = state.dragging
+      dragRef.current = null
+      setRowDragging(false)
+      if (el?.hasPointerCapture(e.pointerId)) {
+        el.releasePointerCapture(e.pointerId)
+      }
+      if (wasDragging) {
+        const blockClick = (ev: Event) => {
+          ev.preventDefault()
+          ev.stopPropagation()
+        }
+        el?.addEventListener('click', blockClick, { capture: true, once: true })
+      }
+    },
+    [],
+  )
 
   return (
-    <div
-      className={
-        showArrows
-          ? 'cards-active-scroller cards-active-scroller--arrows'
-          : 'cards-active-scroller'
-      }
-    >
-      {showArrows ? (
-        <button
-          type="button"
-          className="cards-active-scroller__btn cards-active-scroller__btn--prev"
-          aria-label={t('ws_cards_active_scroll_left')}
-          disabled={!canScrollLeft}
-          onClick={() => scrollActive(-1)}
-        >
-          <span aria-hidden>‹</span>
-        </button>
-      ) : null}
-      <ul ref={scrollRef} className="cards-active-row">
+    <div className="cards-active-scroller">
+      <ul
+        ref={scrollRef}
+        className={[
+          'cards-active-row',
+          canScrollHorizontally ? 'cards-active-row--scrollable' : '',
+          rowDragging ? 'cards-active-row--dragging' : '',
+        ]
+          .filter(Boolean)
+          .join(' ')}
+        onPointerDown={onActiveRowPointerDown}
+        onPointerMove={onActiveRowPointerMove}
+        onPointerUp={endActiveRowPointer}
+        onPointerCancel={endActiveRowPointer}
+      >
         {children}
       </ul>
-      {showArrows ? (
-        <button
-          type="button"
-          className="cards-active-scroller__btn cards-active-scroller__btn--next"
-          aria-label={t('ws_cards_active_scroll_right')}
-          disabled={!canScrollRight}
-          onClick={() => scrollActive(1)}
-        >
-          <span aria-hidden>›</span>
-        </button>
-      ) : null}
     </div>
   )
 }
@@ -262,6 +297,7 @@ function CardsStarTile({
   maxStars,
   valueHint = '',
   equipped = false,
+  showEquippedCheckmark = false,
   masteryUnlocked = false,
   statsLocked = false,
   statOverlay = true,
@@ -278,6 +314,7 @@ function CardsStarTile({
   maxStars: number
   valueHint?: string
   equipped?: boolean
+  showEquippedCheckmark?: boolean
   masteryUnlocked?: boolean
   statsLocked?: boolean
   statOverlay?: boolean
@@ -330,7 +367,13 @@ function CardsStarTile({
         aria-hidden
       >
         {imageSrc ? (
-          <img className="cards-tile__img" src={imageSrc} alt="" />
+          <img
+            className="cards-tile__img"
+            src={imageSrc}
+            alt=""
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+          />
         ) : (
           <span className="cards-tile__glyph">{glyph}</span>
         )}
@@ -356,6 +399,14 @@ function CardsStarTile({
         </div>
       )}
       {valueHint && !statOverlay ? <p className="cards-tile__stat">{valueHint}</p> : null}
+      {showEquippedCheckmark ? (
+        <img
+          className="cards-tile__equipped-mark"
+          src={CARD_EQUIPPED_CHECKMARK_SRC}
+          alt=""
+          aria-hidden
+        />
+      ) : null}
     </li>
   )
 }
@@ -433,11 +484,6 @@ export function WorkshopCardsPanel({
 
   const equippedSet = useMemo(() => new Set(presetLoadout), [presetLoadout])
 
-  const inventoryCardIds = useMemo(
-    () => WORKSHOP_GAME_CARD_ORDER.filter((id) => !equippedSet.has(id)),
-    [equippedSet],
-  )
-
   const setPresetLoadout = useCallback(
     (next: WorkshopGameCardId[]) => {
       const loadouts = workshopPersisted.cardPresetLoadouts.map((row, i) =>
@@ -492,6 +538,7 @@ export function WorkshopCardsPanel({
           masteryMultiplierByCard.get(id) ?? 1,
         )}
         equipped={equippedSet.has(id)}
+        showEquippedCheckmark={opts.inventory === true && equippedSet.has(id)}
         masteryUnlocked={masteryUnlocked.has(id)}
         statsLocked={opts.active === true}
         onToggleEquip={
@@ -557,11 +604,11 @@ export function WorkshopCardsPanel({
             {t('ws_cards_inventory')}
           </h3>
           <p className="cards-zone__count" aria-live="polite">
-            {inventoryCardIds.length}/{WORKSHOP_GAME_CARD_COUNT}
+            {WORKSHOP_GAME_CARD_COUNT}/{WORKSHOP_GAME_CARD_COUNT}
           </p>
         </header>
         <ul className="cards-inventory-grid">
-          {inventoryCardIds.map((id) => renderCardTile(id, { inventory: true }))}
+          {WORKSHOP_GAME_CARD_ORDER.map((id) => renderCardTile(id, { inventory: true }))}
         </ul>
       </section>
     </div>
