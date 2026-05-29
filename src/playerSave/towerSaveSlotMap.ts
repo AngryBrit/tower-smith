@@ -32,7 +32,17 @@ export const TOWER_SAVE_INDEX_BY_THEME_ID: Readonly<Record<string, number>> = {
   'tower-cheese': 18,
   'tower-cat': 19,
   'tower-skull': 20,
+  'tower-event-snowman': 48,
+  'tower-event-black-cat': 49,
+  'tower-event-black-hole': 50,
   'tower-event-pocket-watch': 51,
+  'tower-guild-crown': 52, // Guild S1 / Throne
+  'tower-event-neon-pi': 53,
+  'tower-guild-mech-warrior': 54, // Guild S2 / Mech World
+  'tower-event-marshmallow': 55, // Event — selectedTower when equipped
+  'tower-event-cthulhu': 56, // Event
+  'tower-event-frog': 57, // Event
+  'tower-guild-dj': 58, // Guild S3 / Party
   'tower-guild-pixel-soldier': 63,
   'tower-event-flying-car': 64,
   'tower-event-crystal': 65,

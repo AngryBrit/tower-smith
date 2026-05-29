@@ -45,9 +45,43 @@ describe('towerSaveSlotMap', () => {
     expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-eclipse']).toBeUndefined()
   })
 
-  it('maps pocket watch event tower at index 51 (selectedTower in sample save)', () => {
+  it('maps event/guild towers at indices 48–53', () => {
+    expect(gameThemeIdAtIndex('tower', 48)).toBe('tower-event-snowman')
+    expect(gameThemeIdAtIndex('tower', 49)).toBe('tower-event-black-cat')
+    expect(gameThemeIdAtIndex('tower', 50)).toBe('tower-event-black-hole')
+    expect(gameThemeIdAtIndex('tower', 51)).toBe('tower-event-pocket-watch')
+    expect(gameThemeIdAtIndex('tower', 52)).toBe('tower-guild-crown')
+    expect(gameThemeIdAtIndex('tower', 53)).toBe('tower-event-neon-pi')
+  })
+
+  it('maps pocket watch event tower at index 51', () => {
     expect(gameThemeIdAtIndex('tower', 51)).toBe('tower-event-pocket-watch')
     expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-pocket-watch']).toBe(51)
+  })
+
+  it('maps mech warrior guild tower at index 54 (selectedTower when equipped)', () => {
+    expect(gameThemeIdAtIndex('tower', 54)).toBe('tower-guild-mech-warrior')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-guild-mech-warrior']).toBe(54)
+  })
+
+  it('maps marshmallow event tower at index 55 (selectedTower when equipped)', () => {
+    expect(gameThemeIdAtIndex('tower', 55)).toBe('tower-event-marshmallow')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-marshmallow']).toBe(55)
+  })
+
+  it('maps cthulhu event tower at index 56', () => {
+    expect(gameThemeIdAtIndex('tower', 56)).toBe('tower-event-cthulhu')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-cthulhu']).toBe(56)
+  })
+
+  it('maps frog event tower at index 57', () => {
+    expect(gameThemeIdAtIndex('tower', 57)).toBe('tower-event-frog')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-frog']).toBe(57)
+  })
+
+  it('maps dj guild tower at index 58', () => {
+    expect(gameThemeIdAtIndex('tower', 58)).toBe('tower-guild-dj')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-guild-dj']).toBe(58)
   })
 
   it('maps guild/event block at indices 63–73 (sample save)', () => {
