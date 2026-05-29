@@ -1378,10 +1378,10 @@
   position: static;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: stretch;
   gap: 0.25rem;
   box-sizing: border-box;
-  width: max-content;
+  width: 100%;
   max-width: 100%;
   margin: 0;
   padding: 0.35rem 0.45rem;
@@ -1411,6 +1411,21 @@ a.select-research__version-label:focus-visible {
   color: var(--sr-cyan-bright);
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+
+.select-research__version-badge .select-research__bmc-button {
+  width: 100%;
+  max-width: 100%;
+}
+
+.select-research__version-badge .select-research__bmc-button .bmc-btn-container {
+  display: block;
+  width: 100%;
+}
+
+.select-research__version-badge .select-research__bmc-button .bmc-btn {
+  justify-content: center !important;
+  width: 100% !important;
 }
 
 .select-research__bmc-button {
