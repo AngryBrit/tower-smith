@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useAuth, type AuthProvider } from '../auth/AuthProvider'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import { useI18n } from '../i18n'
+import { AuthProviderIcon } from './AuthProviderIcon'
 
 export type AuthButtonProps = {
   /** Footer opens menu upward; nav opens downward and uses compact styling. */
@@ -201,30 +202,33 @@ export function AuthButton({
           ) : null}
           <button
             type="button"
-            className="glow-btn glow-btn--block"
+            className="glow-btn glow-btn--block auth-button__provider-option"
             role="menuitem"
             disabled={busy}
             onClick={() => handleSignIn('google')}
           >
-            {t('auth_sign_in_google')}
+            <AuthProviderIcon provider="google" className="auth-button__provider-icon" />
+            <span>{t('auth_sign_in_google')}</span>
           </button>
           <button
             type="button"
-            className="glow-btn glow-btn--block"
+            className="glow-btn glow-btn--block auth-button__provider-option"
             role="menuitem"
             disabled={busy}
             onClick={() => handleSignIn('discord')}
           >
-            {t('auth_sign_in_discord')}
+            <AuthProviderIcon provider="discord" className="auth-button__provider-icon" />
+            <span>{t('auth_sign_in_discord')}</span>
           </button>
           <button
             type="button"
-            className="glow-btn glow-btn--block"
+            className="glow-btn glow-btn--block auth-button__provider-option"
             role="menuitem"
             disabled={busy}
             onClick={() => handleSignIn('twitch')}
           >
-            {t('auth_sign_in_twitch')}
+            <AuthProviderIcon provider="twitch" className="auth-button__provider-icon" />
+            <span>{t('auth_sign_in_twitch')}</span>
           </button>
         </div>
       ) : null}

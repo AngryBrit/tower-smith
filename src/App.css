@@ -782,6 +782,20 @@
   margin-bottom: 0;
 }
 
+.auth-button__provider-option {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.auth-button__provider-icon {
+  flex-shrink: 0;
+  width: 1.125rem;
+  height: 1.125rem;
+  object-fit: contain;
+}
+
 .my-builds-dialog {
   max-width: 42rem;
   width: min(42rem, 100%);

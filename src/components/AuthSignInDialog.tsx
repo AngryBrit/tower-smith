@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import { useAuth, type AuthProvider } from '../auth/AuthProvider'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
+import { AuthProviderIcon } from './AuthProviderIcon'
 
 export type AuthSignInDialogProps = {
   open: boolean
@@ -57,27 +58,30 @@ export function AuthSignInDialog({
         <div className="auth-sign-in-dialog__actions">
           <button
             type="button"
-            className="glow-btn glow-btn--block"
+            className="glow-btn glow-btn--block auth-button__provider-option"
             disabled={busy}
             onClick={() => handleSignIn('google')}
           >
-            {t('auth_sign_in_google')}
+            <AuthProviderIcon provider="google" className="auth-button__provider-icon" />
+            <span>{t('auth_sign_in_google')}</span>
           </button>
           <button
             type="button"
-            className="glow-btn glow-btn--block"
+            className="glow-btn glow-btn--block auth-button__provider-option"
             disabled={busy}
             onClick={() => handleSignIn('discord')}
           >
-            {t('auth_sign_in_discord')}
+            <AuthProviderIcon provider="discord" className="auth-button__provider-icon" />
+            <span>{t('auth_sign_in_discord')}</span>
           </button>
           <button
             type="button"
-            className="glow-btn glow-btn--block"
+            className="glow-btn glow-btn--block auth-button__provider-option"
             disabled={busy}
             onClick={() => handleSignIn('twitch')}
           >
-            {t('auth_sign_in_twitch')}
+            <AuthProviderIcon provider="twitch" className="auth-button__provider-icon" />
+            <span>{t('auth_sign_in_twitch')}</span>
           </button>
           <button
             type="button"
