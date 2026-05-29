@@ -9,7 +9,10 @@ type MenuGuildRow = {
   image?: string
 }
 
-/** Main-menu guild themes (one per guild season). */
+/**
+ * Main-menu guild themes (seasons 1–9). Save index 0 is the default game menu (not listed here).
+ * `menuUnlocked` slots: 0 default, 1 Throne, 2–8 seasons 2–8, 9 Magician.
+ */
 export const MENU_GUILD_ROWS: readonly MenuGuildRow[] = [
   {
     id: 'menu-dark-being',

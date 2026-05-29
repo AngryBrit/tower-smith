@@ -2,8 +2,31 @@ import {
   GAME_THEMES,
   type ThemeCategory,
 } from '../data/gameThemes'
+import {
+  buildBackgroundThemeIdsByGameIndex,
+  buildTowerThemeIdsByGameIndex,
+} from './gameEventTimeline'
+import {
+  buildBannerThemeIdsByGameIndex,
+  buildMenuThemeIdsByGameIndex,
+} from './gameGuildSeasonTimeline'
 
 const GUARDIAN_THEME_IDS = GAME_THEMES.filter((t) => t.category === 'guardian').map((t) => t.id)
+
+const BANNER_THEME_IDS = GAME_THEMES.filter((t) => t.category === 'banners').map((t) => t.id)
+const MENU_THEME_IDS = GAME_THEMES.filter((t) => t.category === 'menus').map((t) => t.id)
+
+const TOWER_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
+  buildTowerThemeIdsByGameIndex()
+
+const BACKGROUND_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
+  buildBackgroundThemeIdsByGameIndex()
+
+const MENU_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
+  buildMenuThemeIdsByGameIndex()
+
+const BANNER_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
+  buildBannerThemeIdsByGameIndex()
 
 /**
  * Game guardian skin index order includes non-theme slots:
@@ -12,8 +35,8 @@ const GUARDIAN_THEME_IDS = GAME_THEMES.filter((t) => t.category === 'guardian').
  */
 const GUARDIAN_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] = [
   undefined,
-  GUARDIAN_THEME_IDS[0], // Butter
-  GUARDIAN_THEME_IDS[1], // Muse
+  GUARDIAN_THEME_IDS[0], // Butter (Throne)
+  GUARDIAN_THEME_IDS[1], // Muse (Mech World)
   undefined,
   ...GUARDIAN_THEME_IDS.slice(2), // Finn..Disco
 ]
@@ -21,25 +44,25 @@ const GUARDIAN_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] = [
 /** Theme ids in game index order (parallel to `towerUnlocked`, etc.). */
 const THEME_IDS_BY_CATEGORY: Record<ThemeCategory, readonly string[]> = {
   tower: Object.freeze(
-    GAME_THEMES.filter((t) => t.category === 'tower').map((t) => t.id),
+    TOWER_THEME_IDS_BY_GAME_INDEX.filter((id): id is string => !!id),
   ),
   background: Object.freeze(
-    GAME_THEMES.filter((t) => t.category === 'background').map((t) => t.id),
+    BACKGROUND_THEME_IDS_BY_GAME_INDEX.filter((id): id is string => !!id),
   ),
   music: Object.freeze(
     GAME_THEMES.filter((t) => t.category === 'music').map((t) => t.id),
   ),
-  menus: Object.freeze(
-    GAME_THEMES.filter((t) => t.category === 'menus').map((t) => t.id),
-  ),
-  banners: Object.freeze(
-    GAME_THEMES.filter((t) => t.category === 'banners').map((t) => t.id),
-  ),
+  menus: Object.freeze(MENU_THEME_IDS),
+  banners: Object.freeze(BANNER_THEME_IDS),
   guardian: Object.freeze(GUARDIAN_THEME_IDS_BY_GAME_INDEX.filter((id): id is string => !!id)),
 }
 
 const THEME_IDS_BY_CATEGORY_GAME_INDEX: Record<ThemeCategory, readonly (string | undefined)[]> = {
   ...THEME_IDS_BY_CATEGORY,
+  tower: TOWER_THEME_IDS_BY_GAME_INDEX,
+  background: BACKGROUND_THEME_IDS_BY_GAME_INDEX,
+  menus: MENU_THEME_IDS_BY_GAME_INDEX,
+  banners: BANNER_THEME_IDS_BY_GAME_INDEX,
   guardian: GUARDIAN_THEME_IDS_BY_GAME_INDEX,
 }
 

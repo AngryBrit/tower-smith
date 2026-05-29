@@ -20,6 +20,7 @@ type BackgroundGuildRow = {
   ownedDefault?: boolean
 }
 
+/** Row order = game save slots for event backgrounds. UI display order is `gameEventDisplayOrder.ts`. */
 export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
   {
     id: 'bg-interstellar',

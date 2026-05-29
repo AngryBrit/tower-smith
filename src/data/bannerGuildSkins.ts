@@ -9,7 +9,10 @@ type BannerGuildRow = {
   image?: string
 }
 
-/** Guild profile / main-menu banners (one per guild season). */
+/**
+ * Guild profile banners (seasons 2–9). No season 1 banner (Throne).
+ * Save slots: 0 default, 1–2 unused, 3–9 seasons 2–8, 10 Magician; 11+ reserved in the 80-array.
+ */
 export const BANNER_GUILD_ROWS: readonly BannerGuildRow[] = [
   {
     id: 'banner-mech',

@@ -7,6 +7,7 @@ import { BANNER_GUILD_ROWS } from './bannerGuildSkins'
 import { GUARDIAN_THEME_IMAGES } from './guardianThemeImages'
 import { MENU_GUILD_ROWS } from './menuGuildSkins'
 import { TOWER_MILESTONE_IMAGES } from './towerMilestoneImages'
+import { sortEventThemesForDisplay } from './gameEventDisplayOrder'
 import { TOWER_EVENT_SKIN_ROWS, TOWER_GUILD_SKIN_ROWS } from './towerEventGuildSkins'
 
 export type ThemeCategory =
@@ -573,7 +574,7 @@ export function towerThemesByGroup(): {
     milestone: tower
       .filter((e) => e.milestoneTier != null)
       .sort((a, b) => (a.milestoneTier ?? 0) - (b.milestoneTier ?? 0)),
-    event: tower.filter((e) => e.towerGroup === 'event'),
+    event: sortEventThemesForDisplay(tower.filter((e) => e.towerGroup === 'event')),
     guild: tower
       .filter((e) => e.towerGroup === 'guild')
       .sort((a, b) => (a.guildSeason ?? 0) - (b.guildSeason ?? 0)),
@@ -586,7 +587,7 @@ export function backgroundThemesByGroup(): {
 } {
   const background = GAME_THEMES.filter((e) => e.category === 'background')
   return {
-    event: background.filter((e) => e.backgroundGroup === 'event'),
+    event: sortEventThemesForDisplay(background.filter((e) => e.backgroundGroup === 'event')),
     guild: background
       .filter((e) => e.backgroundGroup === 'guild')
       .sort((a, b) => (a.guildSeason ?? 0) - (b.guildSeason ?? 0)),
