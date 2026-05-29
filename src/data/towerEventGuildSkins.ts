@@ -18,7 +18,7 @@ type TowerGuildRow = {
   image?: string
 }
 
-/** Row order = game save slots (indices 21+). UI display order is `gameEventDisplayOrder.ts`. */
+/** Row order = UI/catalog. Save slots are in `towerSaveSlotMap.ts`. */
 export const TOWER_EVENT_SKIN_ROWS: readonly TowerEventRow[] = [
   {
     id: 'tower-event-plasma-ball',

@@ -53,6 +53,178 @@ describe('gameThemeIndex menus', () => {
   })
 })
 
+describe('gameThemeIndex backgrounds', () => {
+  it('uses index 0 for default and maps event rows to save slots 1+', () => {
+    expect(gameThemeIdAtIndex('background', 0)).toBeUndefined()
+    expect(gameThemeIdAtIndex('background', 1)).toBe('bg-interstellar')
+    expect(gameThemeIdAtIndex('background', 2)).toBe('bg-volcano')
+    expect(gameThemeIdAtIndex('background', 3)).toBe('bg-plasma-field')
+    expect(gameThemeIdAtIndex('background', 4)).toBe('bg-honeycomb')
+    expect(gameThemeIdAtIndex('background', 5)).toBe('bg-aurora')
+    expect(gameThemeIdAtIndex('background', 6)).toBe('bg-alien-ship')
+    expect(gameThemeIdAtIndex('background', 7)).toBe('bg-ocean-night')
+    expect(gameThemeIdAtIndex('background', 8)).toBe('bg-sakura')
+    expect(gameThemeIdAtIndex('background', 9)).toBe('bg-easter')
+    expect(gameThemeIdAtIndex('background', 10)).toBe('bg-retrowave')
+    expect(gameThemeIdAtIndex('background', 11)).toBe('bg-prismatic-lines')
+    expect(gameThemeIdAtIndex('background', 12)).toBe('bg-cobweb')
+    expect(gameThemeIdAtIndex('background', 13)).toBe('bg-matrix')
+    expect(gameThemeIdAtIndex('background', 14)).toBe('bg-haunted-house')
+    expect(gameThemeIdAtIndex('background', 15)).toBe('bg-virus-field')
+    expect(gameThemeIdAtIndex('background', 16)).toBe('bg-mountain-night')
+    expect(gameThemeIdAtIndex('background', 17)).toBe('bg-sandstorm')
+    expect(gameThemeIdAtIndex('background', 18)).toBe('bg-autumn-forest')
+    expect(gameThemeIdAtIndex('background', 19)).toBe('bg-arcade')
+    expect(gameThemeIdAtIndex('background', 20)).toBe('bg-new-years')
+    expect(gameThemeIdAtIndex('background', 21)).toBe('bg-dark-strands')
+    expect(gameThemeIdAtIndex('background', 22)).toBe('bg-deep-sea')
+    expect(gameThemeIdAtIndex('background', 23)).toBe('bg-hyper-space')
+    expect(gameThemeIdAtIndex('background', 24)).toBe('bg-invasion')
+    expect(gameThemeIdAtIndex('background', 25)).toBe('bg-sunset-river')
+    expect(gameThemeIdAtIndex('background', 26)).toBe('bg-hurricane')
+    expect(gameThemeIdAtIndex('background', 27)).toBe('bg-rainfall')
+    expect(gameThemeIdAtIndex('background', 28)).toBe('bg-tv-wall')
+    expect(gameThemeIdAtIndex('background', 29)).toBe('bg-abduction')
+    expect(gameThemeIdAtIndex('background', 30)).toBe('bg-snowstorm')
+    expect(gameThemeIdAtIndex('background', 31)).toBe('bg-forest-of-cats')
+    expect(gameThemeIdAtIndex('background', 32)).toBe('bg-event-horizon')
+    expect(gameThemeIdAtIndex('background', 33)).toBe('bg-clock-tower')
+    expect(gameThemeIdAtIndex('background', 34)).toBe('bg-pi-disk')
+    expect(gameThemeIdAtIndex('background', 35)).toBeUndefined()
+    expect(gameThemeIdAtIndex('background', 36)).toBe('bg-guild-mech-world')
+    expect(gameThemeIdAtIndex('background', 39)).toBe('bg-koi-pond')
+    expect(gameThemeIdAtIndex('background', 50)).toBe('bg-guild-claw-machine')
+    expect(gameThemeIdAtIndex('background', 51)).toBe('bg-neuron')
+    expect(gameThemeIdAtIndex('background', 52)).toBeUndefined()
+  })
+
+  it('imports mech world from save flag at index 36', () => {
+    const flags = Array<boolean>(37).fill(false)
+    flags[36] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual(['bg-guild-mech-world'])
+  })
+
+  it('imports koi pond from save flag at index 39', () => {
+    const flags = Array<boolean>(40).fill(false)
+    flags[39] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual(['bg-koi-pond'])
+  })
+
+  it('imports owned backgrounds from sample save flags at indices 29–34', () => {
+    const flags = Array<boolean>(35).fill(false)
+    flags[30] = true
+    flags[33] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual(
+      expect.arrayContaining(['bg-snowstorm', 'bg-clock-tower']),
+    )
+    expect(owned).not.toContain('bg-abduction')
+    expect(owned).not.toContain('bg-pi-disk')
+    expect(owned).toHaveLength(2)
+  })
+
+  it('imports owned backgrounds from sample save flags at indices 19–28', () => {
+    const flags = Array<boolean>(29).fill(false)
+    for (const i of [19, 20, 25, 26, 28]) flags[i] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual(
+      expect.arrayContaining([
+        'bg-arcade',
+        'bg-new-years',
+        'bg-sunset-river',
+        'bg-hurricane',
+        'bg-tv-wall',
+      ]),
+    )
+    expect(owned).not.toContain('bg-dark-strands')
+    expect(owned).not.toContain('bg-rainfall')
+    expect(owned).toHaveLength(5)
+  })
+
+  it('imports owned backgrounds from sample save flags at indices 15–18', () => {
+    const flags = Array<boolean>(19).fill(false)
+    flags[15] = true
+    flags[18] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual(
+      expect.arrayContaining(['bg-virus-field', 'bg-autumn-forest']),
+    )
+    expect(owned).toHaveLength(2)
+  })
+
+  it('imports owned backgrounds from sample save flags at indices 5–13', () => {
+    const flags = Array<boolean>(14).fill(false)
+    flags[0] = true
+    for (const i of [5, 6, 7, 8, 10, 12, 13]) flags[i] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual(
+      expect.arrayContaining([
+        'bg-aurora',
+        'bg-alien-ship',
+        'bg-ocean-night',
+        'bg-sakura',
+        'bg-retrowave',
+        'bg-cobweb',
+        'bg-matrix',
+      ]),
+    )
+    expect(owned).not.toContain('bg-easter')
+    expect(owned).not.toContain('bg-prismatic-lines')
+    expect(owned).toHaveLength(7)
+  })
+
+  it('does not treat index 0 unlock flag as an owned catalog background', () => {
+    const flags = Array<boolean>(53).fill(false)
+    flags[0] = true
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: flags,
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+    })
+    expect(owned).toEqual([])
+  })
+})
+
 describe('gameThemeIndex banners', () => {
   it('maps guild seasons 2–9 at indices 3–9 with gaps at 0–2', () => {
     expect(gameThemeIdAtIndex('banners', 0)).toBeUndefined()

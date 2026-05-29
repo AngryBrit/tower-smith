@@ -20,7 +20,10 @@ type BackgroundGuildRow = {
   ownedDefault?: boolean
 }
 
-/** Row order = game save slots for event backgrounds. UI display order is `gameEventDisplayOrder.ts`. */
+/**
+ * Row order = UI / spreadsheet order. Save slot order differs (e.g. Haunted @ 14, Koi Pond @ 36).
+ * Save slot order is `BACKGROUND_SAVE_INDEX_BY_THEME_ID` in `backgroundSaveSlotMap.ts`.
+ */
 export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
   {
     id: 'bg-interstellar',

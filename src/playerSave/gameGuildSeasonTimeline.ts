@@ -1,6 +1,6 @@
 /**
  * Guild event seasons (oldest → newest), from the game effect-paths spreadsheet.
- * Season 1 (Throne) has a menu theme but no profile banner.
+ * Season 1 (Throne) has a menu theme but no profile banner or guild background.
  */
 export type GuildSeasonRow = {
   season: number
