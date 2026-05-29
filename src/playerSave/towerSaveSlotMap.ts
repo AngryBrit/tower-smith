@@ -32,7 +32,22 @@ export const TOWER_SAVE_INDEX_BY_THEME_ID: Readonly<Record<string, number>> = {
   'tower-cheese': 18,
   'tower-cat': 19,
   'tower-skull': 20,
-  'tower-event-snowman': 48,
+  'tower-event-neo-turbo': 23, // Event — selectedTower when equipped
+  'tower-event-spider': 27, // Event
+  'tower-event-sentinel': 28, // Event
+  'tower-event-virus': 30, // Event
+  'tower-event-autumn-leaf': 33,
+  'tower-event-invader': 34,
+  'tower-event-toast-glass': 35,
+  'tower-event-dark-tower': 36,
+  'tower-event-dive-helmet': 37,
+  'tower-event-starship': 38,
+  'tower-event-elite-tower': 39,
+  'tower-event-fisherman': 40,
+  'tower-event-storm-eye': 41,
+  'tower-event-umbrella': 42,
+  'tower-event-noise-tower': 43,
+  'tower-event-snowman': 48, // Event — selectedTower when equipped
   'tower-event-black-cat': 49,
   'tower-event-black-hole': 50,
   'tower-event-pocket-watch': 51,

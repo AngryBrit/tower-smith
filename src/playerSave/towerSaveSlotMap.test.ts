@@ -37,12 +37,52 @@ describe('towerSaveSlotMap', () => {
   })
 
   it('does not place Aug 2025 milestone tiers 19–21 in save map yet', () => {
-    expect(gameThemeIdAtIndex('tower', 23)).toBeUndefined()
-    expect(gameThemeIdAtIndex('tower', 27)).toBeUndefined()
     expect(gameThemeIdAtIndex('tower', 29)).toBeUndefined()
     expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-atomic']).toBeUndefined()
     expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-cyber']).toBeUndefined()
     expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-eclipse']).toBeUndefined()
+  })
+
+  it('maps neo turbo event tower at index 23 (selectedTower when equipped)', () => {
+    expect(gameThemeIdAtIndex('tower', 23)).toBe('tower-event-neo-turbo')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-neo-turbo']).toBe(23)
+  })
+
+  it('maps spider event tower at index 27', () => {
+    expect(gameThemeIdAtIndex('tower', 27)).toBe('tower-event-spider')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-spider']).toBe(27)
+  })
+
+  it('maps sentinel event tower at index 28', () => {
+    expect(gameThemeIdAtIndex('tower', 28)).toBe('tower-event-sentinel')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-sentinel']).toBe(28)
+  })
+
+  it('maps virus event tower at index 30', () => {
+    expect(gameThemeIdAtIndex('tower', 30)).toBe('tower-event-virus')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-virus']).toBe(30)
+  })
+
+  it('maps event towers at indices 33–35 and 36–39', () => {
+    expect(gameThemeIdAtIndex('tower', 33)).toBe('tower-event-autumn-leaf')
+    expect(gameThemeIdAtIndex('tower', 34)).toBe('tower-event-invader')
+    expect(gameThemeIdAtIndex('tower', 35)).toBe('tower-event-toast-glass')
+    expect(gameThemeIdAtIndex('tower', 36)).toBe('tower-event-dark-tower')
+    expect(gameThemeIdAtIndex('tower', 37)).toBe('tower-event-dive-helmet')
+    expect(gameThemeIdAtIndex('tower', 38)).toBe('tower-event-starship')
+    expect(gameThemeIdAtIndex('tower', 39)).toBe('tower-event-elite-tower')
+  })
+
+  it('maps event towers at indices 40–43', () => {
+    expect(gameThemeIdAtIndex('tower', 40)).toBe('tower-event-fisherman')
+    expect(gameThemeIdAtIndex('tower', 41)).toBe('tower-event-storm-eye')
+    expect(gameThemeIdAtIndex('tower', 42)).toBe('tower-event-umbrella')
+    expect(gameThemeIdAtIndex('tower', 43)).toBe('tower-event-noise-tower')
+  })
+
+  it('maps snowman event tower at index 48 (selectedTower when equipped)', () => {
+    expect(gameThemeIdAtIndex('tower', 48)).toBe('tower-event-snowman')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-snowman']).toBe(48)
   })
 
   it('maps event/guild towers at indices 48–53', () => {
