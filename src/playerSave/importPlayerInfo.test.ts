@@ -310,4 +310,19 @@ describe('importPlayerInfo', () => {
     expect(themes.ownedIds).not.toContain('bg-guild-throne-room')
     expect(themes.ownedIds).not.toContain('bg-guild-magician')
   })
+
+  it('maps card stars from cardLevel/cardUnlocked save slot layout', async () => {
+    if (!existsSync(SAMPLE)) return
+    const data = loadResearchDataSync()
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE)))
+    expect(save.cardLevel.length).toBe(40)
+    expect(save.cardUnlocked.length).toBe(40)
+    const { workshop: ws } = mapPlayerSaveToTower(data, save)
+    expect(ws.cardStars.criticalChance).toBe(7)
+    expect(ws.cardStars.enemyBalance).toBe(7)
+    expect(ws.cardStars.plasmaCannon).toBe(7)
+    expect(ws.cardStars.areaOfEffect).toBe(0)
+    expect(save.slotsUnlocked).toBe(18)
+    expect(ws.cardEquipSlots).toBe(18)
+  })
 })

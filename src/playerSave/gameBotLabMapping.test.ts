@@ -37,6 +37,8 @@ function minimalSave(partial: Partial<DecodedPlayerSave> = {}): DecodedPlayerSav
     enhancementDefenseLevel: [],
     enhancementUtilityLevel: [],
     cardLevel: [],
+    cardUnlocked: [],
+    slotsUnlocked: 0,
     currentWorkshopPreset: 0,
     relicsUnlocked: [],
     towerUnlocked: [],

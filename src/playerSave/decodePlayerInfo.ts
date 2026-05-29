@@ -33,6 +33,8 @@ export type DecodedPlayerSave = {
   enhancementDefenseLevel: number[]
   enhancementUtilityLevel: number[]
   cardLevel: number[]
+  cardUnlocked: boolean[]
+  slotsUnlocked: number
   currentWorkshopPreset: number
   relicsUnlocked: number[]
   towerUnlocked: boolean[]
@@ -93,6 +95,8 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     enhancementDefenseLevel: getInt32Array(ctx, 'enhancementDefenseLevel'),
     enhancementUtilityLevel: getInt32Array(ctx, 'enhancementUtilityLevel'),
     cardLevel: getInt32Array(ctx, 'cardLevel'),
+    cardUnlocked: getBoolArray(ctx, 'cardUnlocked'),
+    slotsUnlocked: getInt32(ctx, 'slotsUnlocked'),
     currentWorkshopPreset: getInt32(ctx, 'currentWorkshopPreset'),
     relicsUnlocked: getEnumIntArray(ctx, 'relicsUnlocked'),
     towerUnlocked: getBoolArray(ctx, 'towerUnlocked'),

@@ -19,6 +19,8 @@ function minimalSave(
     enhancementDefenseLevel: [],
     enhancementUtilityLevel: [],
     cardLevel: [],
+    cardUnlocked: [],
+    slotsUnlocked: 0,
     currentWorkshopPreset: 0,
     relicsUnlocked: [],
     towerUnlocked: [],
@@ -190,5 +192,10 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.goldenBotCooldownLevel).toBe(6)
     expect(ws.goldenBotBonusLevel).toBe(6)
     expect(ws.goldenBotRangeLevel).toBe(6)
+  })
+
+  it('maps slotsUnlocked to cardEquipSlots', () => {
+    const ws = playerSaveToWorkshop(minimalSave({ slotsUnlocked: 18 }))
+    expect(ws.cardEquipSlots).toBe(18)
   })
 })

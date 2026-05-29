@@ -4,7 +4,8 @@ import {
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
 import { levelOverrideKey, type ResearchData } from '../types/research'
-import { WORKSHOP_GAME_CARD_ORDER } from '../data/workshopGameCards'
+import { clampWorkshopCardEquipSlots } from '../data/workshopGameCardWiki'
+import { mapCardStarsFromSave } from './cardSaveSlotMap'
 import {
   WORKSHOP_BOT_ACTIVE_ORDER,
   WORKSHOP_BOT_OWNED_ORDER,
@@ -474,15 +475,8 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
 
   mapUltimateWeaponsFromSave(save, ws)
 
-  const stars = { ...ws.cardStars }
-  for (let i = 0; i < WORKSHOP_GAME_CARD_ORDER.length; i++) {
-    const cardId = WORKSHOP_GAME_CARD_ORDER[i]!
-    const level = save.cardLevel[i]
-    if (typeof level === 'number' && Number.isFinite(level)) {
-      stars[cardId] = Math.max(0, Math.trunc(level))
-    }
-  }
-  ws.cardStars = stars
+  ws.cardStars = mapCardStarsFromSave(save.cardLevel, save.cardUnlocked)
+  ws.cardEquipSlots = clampWorkshopCardEquipSlots(save.slotsUnlocked)
 
   ws.relicOwnedIds = relicIndicesToOwnedIds(save.relicsUnlocked)
 
