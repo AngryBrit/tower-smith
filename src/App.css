@@ -7470,15 +7470,6 @@ button.workshop__uw-plus-cost--display:hover {
   color: var(--sr-muted);
 }
 
-.settings-page__meta {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  padding-top: 0.25rem;
-  border-top: 1px solid rgba(34, 211, 238, 0.15);
-}
-
 /* Relics page */
 .relics-page {
   container-type: inline-size;

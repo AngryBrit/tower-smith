@@ -1,5 +1,3 @@
-import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
-import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { useModulesCatalogVisible } from '../modulesCatalogVisibility'
 import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
@@ -8,7 +6,7 @@ import { useSubmodulesCatalogVisible } from '../submodulesCatalogVisibility'
 import { useI18n, type AppLocale } from '../i18n'
 
 export function SettingsPage() {
-  const { t, fmt, locale, setLocale } = useI18n()
+  const { t, locale, setLocale } = useI18n()
   const [budgetPanelsVisible, setBudgetPanelsVisible] = useBudgetPanelsVisible()
   const [modulesCatalogVisible, setModulesCatalogVisible] = useModulesCatalogVisible()
   const [submodulesCatalogVisible, setSubmodulesCatalogVisible] =
@@ -95,20 +93,6 @@ export function SettingsPage() {
           {t('app_settings_relic_workshop_bonus_label')}
         </label>
         <p className="settings-page__hint">{t('app_settings_relic_workshop_bonus_hint')}</p>
-      </div>
-
-      <div className="settings-page__meta">
-        <a
-          className="select-research__version-label"
-          href={CHANGELOG_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          title={t('sr_changelog_title')}
-          aria-label={`${fmt.versionAria(APP_VERSION)} — ${t('sr_changelog_title')}`}
-        >
-          v{APP_VERSION}
-        </a>
-        <BuyMeACoffeeButton className="select-research__bmc-button" />
       </div>
     </div>
   )
