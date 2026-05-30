@@ -1,6 +1,6 @@
 import type { RefObject } from 'react'
 
-import type { SelectResearchHandle } from './SelectResearch'
+import type { SelectResearchHandle } from '../lab/labToolsTypes'
 
 import { GalleryAdminPage } from './GalleryAdminPage'
 import { ProfileSettings } from './ProfileSettings'

@@ -1,20 +1,19 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { APP_VERSION, CHANGELOG_URL } from './appVersion'
 import { BuyMeACoffeeButton } from './components/BuyMeACoffeeButton'
-import type { SelectResearchHandle } from './components/SelectResearch'
-import { SelectResearch } from './components/SelectResearch'
-import { ToolsSettingsPage } from './components/ToolsSettingsPage'
-import { CardsPage } from './components/CardsPage'
-import { ModulesPage } from './components/ModulesPage'
-import { RelicsPage } from './components/RelicsPage'
-import { ThemesPage } from './components/ThemesPage'
-import { BotsPage } from './components/BotsPage'
-import { WorkshopPage } from './components/WorkshopPage'
+import type { SelectResearchHandle } from './lab/labToolsTypes'
 import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1 } from './towerWorkspaceStorage'
 import { TowerWorkspaceProvider } from './TowerBuildContext'
-import { TowerGalleryPanel } from './components/TowerGalleryPanel'
+import { LabHydrationProvider } from './lab/LabHydrationContext'
+import { LabToolsBridgeProvider } from './lab/LabToolsBridge'
+import { CommunityBuildProvider } from './lab/CommunityBuildProvider'
+import { InpanelPresetsPortal } from './components/InpanelPresetsPortal'
 import { AuthButton } from './components/AuthButton'
-import { MyBuildsDialog } from './components/MyBuildsDialog'
+const MyBuildsDialog = lazy(() =>
+  import('./components/MyBuildsDialog').then((m) => ({ default: m.MyBuildsDialog })),
+)
+import { LabToolsRefBinder } from './components/LabToolsRefBinder'
+import { MainPanelContent } from './components/MainPanelContent'
 import { useI18n } from './i18n'
 import { loadResearchData } from './loadResearchData'
 import type { ResearchData } from './types/research'
@@ -123,6 +122,25 @@ export default function App() {
             scratchWorkspace={scratchWorkspace}
             setScratchWorkspace={setScratchWorkspace}
           >
+          <LabHydrationProvider data={data}>
+          <LabToolsBridgeProvider
+            data={data}
+            onRequestResearchPanel={() => setMainPanel('research')}
+          >
+          <CommunityBuildProvider>
+          <LabToolsRefBinder labToolsRef={labToolsRef} />
+          <InpanelPresetsPortal
+            mount={inpanelPresetsMount}
+            visible={
+              mainPanel === 'research' ||
+              mainPanel === 'workshop' ||
+              mainPanel === 'bots' ||
+              mainPanel === 'modules' ||
+              mainPanel === 'cards' ||
+              mainPanel === 'relics' ||
+              mainPanel === 'themes'
+            }
+          />
           <div className="app-shell">
             <div className="app-shell__page">
               <section
@@ -297,15 +315,6 @@ export default function App() {
                 <div
                   ref={setInpanelPresetsMount}
                   className="select-research__inpanel-presets-slot"
-                  hidden={
-                    mainPanel !== 'research' &&
-                    mainPanel !== 'workshop' &&
-                    mainPanel !== 'bots' &&
-                    mainPanel !== 'modules' &&
-                    mainPanel !== 'cards' &&
-                    mainPanel !== 'relics' &&
-                    mainPanel !== 'themes'
-                  }
                 />
 
                 <div
@@ -321,128 +330,14 @@ export default function App() {
                   }
                 />
 
-                <div
-                  id="inpanel-panel-lab"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-lab"
-                  hidden={mainPanel !== 'research'}
-                >
-                  <SelectResearch
-                    ref={labToolsRef}
-                    data={data}
-                    embeddedInPanel
-                    embeddedPresetsMount={inpanelPresetsMount}
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-workshop"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-workshop"
-                  hidden={mainPanel !== 'workshop'}
-                >
-                  <WorkshopPage
-                    embeddedInPanel
-                    toolbarMount={
-                      mainPanel === 'workshop'
-                        ? inpanelWorkshopToolbarMount
-                        : null
-                    }
-                    researchData={data}
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-bots"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-bots"
-                  hidden={mainPanel !== 'bots'}
-                >
-                  <BotsPage
-                    embeddedInPanel
-                    toolbarMount={
-                      mainPanel === 'bots' ? inpanelWorkshopToolbarMount : null
-                    }
-                    researchData={data}
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-cards"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-cards"
-                  hidden={mainPanel !== 'cards'}
-                >
-                  <CardsPage
-                    embeddedInPanel
-                    toolbarMount={
-                      mainPanel === 'cards' ? inpanelWorkshopToolbarMount : null
-                    }
-                    researchData={data}
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-modules"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-modules"
-                  hidden={mainPanel !== 'modules'}
-                >
-                  <ModulesPage
-                    embeddedInPanel
-                    toolbarMount={
-                      mainPanel === 'modules' ? inpanelWorkshopToolbarMount : null
-                    }
-                    researchData={data}
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-themes"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-themes"
-                  hidden={mainPanel !== 'themes'}
-                >
-                  <ThemesPage
-                    embeddedInPanel
-                    toolbarMount={
-                      mainPanel === 'themes' ? inpanelWorkshopToolbarMount : null
-                    }
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-relics"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-relics"
-                  hidden={mainPanel !== 'relics'}
-                >
-                  <RelicsPage
-                    embeddedInPanel
-                    toolbarMount={
-                      mainPanel === 'relics' ? inpanelWorkshopToolbarMount : null
-                    }
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-tools-settings"
-                  role="tabpanel"
-                  aria-label={t('app_nav_settings')}
-                  hidden={mainPanel !== 'toolsSettings'}
-                >
-                  <ToolsSettingsPage
-                    labToolsRef={labToolsRef}
-                    isActive={mainPanel === 'toolsSettings'}
-                    galleryListRefreshToken={galleryListRefreshToken}
-                    onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
-                  />
-                </div>
-                <div
-                  id="inpanel-panel-gallery"
-                  role="tabpanel"
-                  aria-labelledby="inpanel-tab-gallery"
-                  hidden={mainPanel !== 'gallery'}
-                >
-                  <TowerGalleryPanel
-                    labToolsRef={labToolsRef}
-                    isActive={mainPanel === 'gallery'}
-                    listRefreshToken={galleryListRefreshToken}
-                  />
-                </div>
+                <MainPanelContent
+                  mainPanel={mainPanel}
+                  data={data}
+                  labToolsRef={labToolsRef}
+                  inpanelWorkshopToolbarMount={inpanelWorkshopToolbarMount}
+                  galleryListRefreshToken={galleryListRefreshToken}
+                  onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
+                />
 
                 <footer className="select-research__site-footer">
                   <nav
@@ -465,12 +360,19 @@ export default function App() {
               </section>
             </div>
           </div>
-          <MyBuildsDialog
-            open={myBuildsOpen}
-            onClose={() => setMyBuildsOpen(false)}
-            labToolsRef={labToolsRef}
-            onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
-          />
+          {myBuildsOpen ? (
+            <Suspense fallback={null}>
+              <MyBuildsDialog
+                open
+                onClose={() => setMyBuildsOpen(false)}
+                labToolsRef={labToolsRef}
+                onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
+              />
+            </Suspense>
+          ) : null}
+          </CommunityBuildProvider>
+          </LabToolsBridgeProvider>
+          </LabHydrationProvider>
           </TowerWorkspaceProvider>
         ) : null}
       </main>

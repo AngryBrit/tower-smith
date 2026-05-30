@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, type ReactNode, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
-import type { SelectResearchHandle } from './SelectResearch'
+import type { SelectResearchHandle } from '../lab/labToolsTypes'
 import { performFullAppReset } from '../fullResetStorage'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import { useI18n } from '../i18n'

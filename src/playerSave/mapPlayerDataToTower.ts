@@ -71,7 +71,11 @@ import {
   ASSIST_SUB_STONE_EFFICIENCY_KEY,
   clampAssistStoneEfficiency,
 } from '../data/workshopAssistChassisModule'
-import type { DecodedPlayerSave, DecodedUserBotData } from './decodePlayerInfo'
+import type {
+  DecodedAssistModuleSlot,
+  DecodedPlayerSave,
+  DecodedUserBotData,
+} from './decodePlayerInfo'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from '../towerDataThemes'
 import type { ThemeSelectionState } from '../themeSelectionStorage'
 

@@ -436,6 +436,18 @@ export function modulePresetSnapshotsFromPersisted(
   return sanitizeModulePresetSnapshots(null, ws)
 }
 
+/** Ensure the active preset tab matches live `ws` sim fields before tower CSV export. */
+export function syncModulePresetsForExport(ws: WorkshopPersistedV1): WorkshopPersistedV1 {
+  const activeIndex = clampWorkshopModuleActivePresetIndex(ws.moduleActivePresetIndex)
+  const snapshots = modulePresetSnapshotsFromPersisted(ws)
+  snapshots[activeIndex] = extractWorkshopModulePresetSnapshot(ws)
+  return {
+    ...ws,
+    moduleActivePresetIndex: activeIndex,
+    modulePresetSnapshots: snapshots,
+  }
+}
+
 /** Merge module sim changes and persist them on the active preset tab. */
 export function patchWorkshopModules(
   ws: WorkshopPersistedV1,

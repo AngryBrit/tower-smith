@@ -8,6 +8,13 @@ import {
 } from './towerUnifiedCsv'
 import { DEFAULT_THEME_SELECTION } from './data/gameThemes'
 import { defaultWorkshopPersisted } from './labPresetsStorage'
+import {
+  defaultModulePresetSnapshots,
+  extractWorkshopModulePresetSnapshot,
+  modulePresetSnapshotsFromPersisted,
+  workshopPersistedWithModulePresets,
+  type WorkshopModulePresetSnapshot,
+} from './data/workshopModulePresets'
 import type { TowerThemesSnapshot } from './towerDataThemes'
 
 describe('towerUnifiedCsv', () => {
@@ -89,6 +96,32 @@ describe('towerUnifiedCsv', () => {
     }
   })
 
+  it('roundtrips all five module loadout presets', () => {
+    const snapshots = defaultModulePresetSnapshots()
+    const preset2: WorkshopModulePresetSnapshot = {
+      ...extractWorkshopModulePresetSnapshot(defaultWorkshopPersisted()),
+      simCoreModuleLevel: 42,
+      simGeneratorChassisModuleId: 'pulsarHarvester',
+      simGeneratorChassisModuleRarity: 'legendary',
+    }
+    snapshots[2] = preset2
+    const ws = workshopPersistedWithModulePresets(defaultWorkshopPersisted(), snapshots, 2)
+    const csv = serializeTowerUnifiedCsv({}, ws)
+    expect(csv).toContain('module,preset.2,')
+    expect(csv).toContain('module,activePresetIndex,2')
+    const parsed = parseTowerUnifiedCsv(csv)
+    expect(parsed.tag).toBe('ok')
+    if (parsed.tag === 'ok') {
+      const out = towerUnifiedPrimaryBuild(parsed).workshop
+      expect(out.moduleActivePresetIndex).toBe(2)
+      const outSnapshots = modulePresetSnapshotsFromPersisted(out)
+      expect(outSnapshots[2]?.simCoreModuleLevel).toBe(42)
+      expect(outSnapshots[2]?.simGeneratorChassisModuleId).toBe('pulsarHarvester')
+      expect(out.simCoreModuleLevel).toBe(42)
+      expect(out.simGeneratorChassisModuleId).toBe('pulsarHarvester')
+    }
+  })
+
   it('roundtrips bot workshop fields', () => {
     const ws = {
       ...defaultWorkshopPersisted(),
@@ -144,6 +177,15 @@ describe('towerUnifiedCsv', () => {
       TOWER_UNIFIED_CSV_MAGIC,
       'type,key,value',
       'ws,multiplier,3',
+    ]
+    expect(parseTowerUnifiedCsv(lines.join('\n')).tag).toBe('invalid')
+  })
+
+  it('returns invalid for bad module preset index', () => {
+    const lines = [
+      TOWER_UNIFIED_CSV_MAGIC,
+      'type,key,value',
+      'module,activePresetIndex,9',
     ]
     expect(parseTowerUnifiedCsv(lines.join('\n')).tag).toBe('invalid')
   })

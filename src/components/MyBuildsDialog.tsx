@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
-import type { SelectResearchHandle } from './SelectResearch'
+import type { SelectResearchHandle } from '../lab/labToolsTypes'
 import { GalleryCategorySelect } from './GalleryCategorySelect'
 import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
 import { useAuth } from '../auth/AuthProvider'

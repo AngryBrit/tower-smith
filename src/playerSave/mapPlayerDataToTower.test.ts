@@ -6,6 +6,7 @@ import {
   GAME_WORKSHOP_DEFENSE_LEVEL_KEYS,
   GAME_WORKSHOP_UTILITY_LEVEL_KEYS,
 } from './gameWorkshopMapping'
+import { gameWorkshopChassisModuleId } from './gameModuleIndex'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 
 const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
@@ -255,10 +256,18 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.simArmorChassisModuleRarity).toBe('legendary')
     expect(ws.simGeneratorChassisModuleRarity).toBe('epic')
     expect(ws.simCoreChassisModuleRarity).toBe('legendary_plus')
-    expect(ws.simCannonChassisModuleId).toBe('amplifyingStrike')
-    expect(ws.simArmorChassisModuleId).toBe('sharpFortitude')
-    expect(ws.simGeneratorChassisModuleId).toBe('pulsarHarvester')
-    expect(ws.simCoreChassisModuleId).toBe('primordialCollapse')
+    expect(ws.simCannonChassisModuleId).toBe(
+      gameWorkshopChassisModuleId(save.moduleEquipped[0]!.infoIndex, 'cannon'),
+    )
+    expect(ws.simArmorChassisModuleId).toBe(
+      gameWorkshopChassisModuleId(save.moduleEquipped[1]!.infoIndex, 'armor'),
+    )
+    expect(ws.simGeneratorChassisModuleId).toBe(
+      gameWorkshopChassisModuleId(save.moduleEquipped[2]!.infoIndex, 'generator'),
+    )
+    expect(ws.simCoreChassisModuleId).toBe(
+      gameWorkshopChassisModuleId(save.moduleEquipped[3]!.infoIndex, 'core'),
+    )
     expect(save.moduleEquipped[0]!.effects.length).toBeGreaterThan(0)
   })
 })

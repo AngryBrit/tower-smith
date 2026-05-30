@@ -1,6 +1,8 @@
 import type { ReactNode } from 'react'
 import {
   createContext,
+  lazy,
+  Suspense,
   useCallback,
   useContext,
   useEffect,
@@ -11,6 +13,7 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 import { CoinGlyph } from './CoinGlyph'
+import { WorkshopDemoToolbar } from './workshop/WorkshopDemoToolbar'
 import {
   WORKSHOP_ATTACK_RANGE_MAX_LEVEL,
   workshopAttackRangeNextMarginalCoins,
@@ -135,9 +138,15 @@ import { workshopAttackSpeedDisplayOptsFromPersisted } from '../data/workshopDis
 import { workshopDamageDisplayOptsFromPersisted } from '../data/workshopDisplayedDamage'
 import type { WorkshopAttackSpeedDisplayOpts } from '../data/workshopAttackSpeed'
 import { workshopEnhancementsLabUnlocked } from '../data/workshopEnhanceResearch'
-import { WorkshopEnhanceAttackPanel } from './WorkshopEnhanceAttackPanel'
-import { WorkshopEnhanceDefensePanel } from './WorkshopEnhanceDefensePanel'
-import { WorkshopEnhanceUtilityPanel } from './WorkshopEnhanceUtilityPanel'
+const WorkshopEnhanceAttackPanel = lazy(() =>
+  import('./WorkshopEnhanceAttackPanel').then((m) => ({ default: m.WorkshopEnhanceAttackPanel })),
+)
+const WorkshopEnhanceDefensePanel = lazy(() =>
+  import('./WorkshopEnhanceDefensePanel').then((m) => ({ default: m.WorkshopEnhanceDefensePanel })),
+)
+const WorkshopEnhanceUtilityPanel = lazy(() =>
+  import('./WorkshopEnhanceUtilityPanel').then((m) => ({ default: m.WorkshopEnhanceUtilityPanel })),
+)
 import { formatCoinAbbrev } from '../labCosts'
 import {
   resetWorkshopUltimates,
@@ -243,51 +252,6 @@ const DEMO_ROWS_BY_CATEGORY: Record<WorkshopCategory, readonly DemoRow[]> = {
 
 function workshopOverlayPortal(node: ReactNode) {
   return createPortal(node, document.body)
-}
-
-function WorkshopDemoToolbar({
-  hideMaxed,
-  setHideMaxed,
-  onMaxAll,
-  onResetDemo,
-  workshopCategory,
-}: {
-  hideMaxed: boolean
-  setHideMaxed: (v: boolean) => void
-  onMaxAll: () => void
-  onResetDemo: () => void
-  workshopCategory: WorkshopCategory
-}) {
-  const { t } = useI18n()
-  const resetLabelKey =
-    workshopCategory === 'ultimate' ? 'ws_reset_ultimate_demo' : 'ws_reset_demo'
-  return (
-    <div className="select-research__toolbar-quick">
-      <label className="glow-btn glow-btn--toggle">
-        <input
-          type="checkbox"
-          checked={hideMaxed}
-          onChange={(e) => setHideMaxed(e.target.checked)}
-        />
-        {t('sr_hide_completed')}
-      </label>
-      <button
-        type="button"
-        className="glow-btn glow-btn--block"
-        onClick={onMaxAll}
-        aria-label={t('ws_max_all_aria')}
-      >
-        {t('sr_max_all')}
-      </button>
-      <button
-        type="button"
-        className="glow-btn glow-btn--danger glow-btn--block"
-        onClick={onResetDemo}
-      >
-        {t(resetLabelKey)}
-      </button>
-    </div>
-  )
 }
 
 function clampWorkshopDamageLevel(n: number): number {
@@ -3674,34 +3638,36 @@ export function WorkshopPage({
               </div>
             </div>
             <ul className="workshop__grid">
-              {category === 'attack' ? (
-                <WorkshopEnhanceAttackPanel
-                  workshopPersisted={workshopPersisted}
-                  onWorkshopPersistedChange={onWorkshopPersistedChange}
-                  hideMaxed={hideMaxed}
-                  multiplier={multiplier}
-                  enhancementAttackDiscountPercent={enhancementAttackDiscountPercent}
-                  workshopEnhancementsLabUnlocked={workshopEnhancementsLabUnlockedFlag}
-                />
-              ) : category === 'defense' ? (
-                <WorkshopEnhanceDefensePanel
-                  workshopPersisted={workshopPersisted}
-                  onWorkshopPersistedChange={onWorkshopPersistedChange}
-                  hideMaxed={hideMaxed}
-                  multiplier={multiplier}
-                  enhancementDefenseDiscountPercent={enhancementDefenseDiscountPercent}
-                  workshopEnhancementsLabUnlocked={workshopEnhancementsLabUnlockedFlag}
-                />
-              ) : (
-                <WorkshopEnhanceUtilityPanel
-                  workshopPersisted={workshopPersisted}
-                  onWorkshopPersistedChange={onWorkshopPersistedChange}
-                  hideMaxed={hideMaxed}
-                  multiplier={multiplier}
-                  enhancementUtilityDiscountPercent={enhancementUtilityDiscountPercent}
-                  workshopEnhancementsLabUnlocked={workshopEnhancementsLabUnlockedFlag}
-                />
-              )}
+              <Suspense fallback={null}>
+                {category === 'attack' ? (
+                  <WorkshopEnhanceAttackPanel
+                    workshopPersisted={workshopPersisted}
+                    onWorkshopPersistedChange={onWorkshopPersistedChange}
+                    hideMaxed={hideMaxed}
+                    multiplier={multiplier}
+                    enhancementAttackDiscountPercent={enhancementAttackDiscountPercent}
+                    workshopEnhancementsLabUnlocked={workshopEnhancementsLabUnlockedFlag}
+                  />
+                ) : category === 'defense' ? (
+                  <WorkshopEnhanceDefensePanel
+                    workshopPersisted={workshopPersisted}
+                    onWorkshopPersistedChange={onWorkshopPersistedChange}
+                    hideMaxed={hideMaxed}
+                    multiplier={multiplier}
+                    enhancementDefenseDiscountPercent={enhancementDefenseDiscountPercent}
+                    workshopEnhancementsLabUnlocked={workshopEnhancementsLabUnlockedFlag}
+                  />
+                ) : (
+                  <WorkshopEnhanceUtilityPanel
+                    workshopPersisted={workshopPersisted}
+                    onWorkshopPersistedChange={onWorkshopPersistedChange}
+                    hideMaxed={hideMaxed}
+                    multiplier={multiplier}
+                    enhancementUtilityDiscountPercent={enhancementUtilityDiscountPercent}
+                    workshopEnhancementsLabUnlocked={workshopEnhancementsLabUnlockedFlag}
+                  />
+                )}
+              </Suspense>
             </ul>
           </>
         ) : (
