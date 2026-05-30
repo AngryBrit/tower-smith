@@ -2,9 +2,9 @@
 
 <img src="public/logo-towersmith.webp" width="100" alt="TowerSmith">
 
-> A browser-based companion for [**The Tower**](https://thetowergame.com/) — plan labs, model upgrades, import your save, compare builds, and share loadouts without touching the game.
+> A browser-based companion for [**The Tower**](https://www.techtreegames.com/) — plan labs, model upgrades, import your save, compare builds, and share loadouts without touching the game.
 
-**[▶ Open TowerSmith](https://towersmith.com/)**
+**[▶ Open TowerSmith](https://www.towersmith.com/)**
 
 **Get The Tower:** [Google Play](https://play.google.com/store/apps/details?id=com.TechTreeGames.TheTower&hl=en_GB) · [App Store](https://apps.apple.com/gb/app/the-tower-idle-tower-defense/id1575590830) · [TechTree Store](https://store.techtreegames.com/thetower/)
 
@@ -151,7 +151,7 @@ The gallery uses Netlify Functions as the API layer and Supabase (Postgres + Sto
 2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor.
 3. **Storage** — create a **public** bucket named `tower-payloads`.
 4. **Auth** — enable Google and Discord providers. In **Authentication → URL Configuration**:
-   - **Site URL:** your production origin (e.g. `https://towersmith.com/`)
+   - **Site URL:** your production origin (e.g. `https://www.towersmith.com/`)
    - **Redirect URLs:** add both production and local dev origins (e.g. `http://localhost:5173/**`). If sign-in from localhost lands on production, localhost is missing here.
    - Google/Discord redirect URI: `https://<project>.supabase.co/auth/v1/callback`.
 5. Copy keys into `.env` (local) and your Netlify site env:
