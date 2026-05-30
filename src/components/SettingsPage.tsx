@@ -4,6 +4,8 @@ import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
 import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVisibility'
 import { useSubmodulesCatalogVisible } from '../submodulesCatalogVisibility'
 import { useState } from 'react'
+import { useColorScheme } from '../ColorSchemeProvider'
+import type { ColorSchemePreference } from '../colorSchemePreference'
 import { useI18n, type AppLocale } from '../i18n'
 import { InstallAppPanel } from './InstallAppPanel'
 import { KeyboardShortcutsSection } from './settings/KeyboardShortcutsSection'
@@ -18,6 +20,7 @@ export function SettingsPage({
   researchRefreshing = false,
 }: SettingsPageProps) {
   const { t, locale, setLocale } = useI18n()
+  const { preference: colorScheme, setPreference: setColorScheme } = useColorScheme()
   const [refreshError, setRefreshError] = useState<string | null>(null)
   const [budgetPanelsVisible, setBudgetPanelsVisible] = useBudgetPanelsVisible()
   const [modulesCatalogVisible, setModulesCatalogVisible] = useModulesCatalogVisible()
@@ -61,6 +64,24 @@ export function SettingsPage({
           ) : null}
         </div>
       ) : null}
+
+      <div className="settings-page__field">
+        <label className="settings-page__label" htmlFor="settings-color-scheme-select">
+          {t('app_settings_color_scheme_label')}
+        </label>
+        <select
+          id="settings-color-scheme-select"
+          className="select-research__header-locale-select settings-page__locale-select"
+          value={colorScheme}
+          onChange={(e) => setColorScheme(e.target.value as ColorSchemePreference)}
+          aria-label={t('app_settings_color_scheme_aria')}
+        >
+          <option value="dark">{t('app_settings_color_scheme_dark')}</option>
+          <option value="light">{t('app_settings_color_scheme_light')}</option>
+          <option value="high-contrast">{t('app_settings_color_scheme_high_contrast')}</option>
+        </select>
+        <p className="settings-page__hint">{t('app_settings_color_scheme_hint')}</p>
+      </div>
 
       <div className="settings-page__field">
         <label className="settings-page__label" htmlFor="settings-locale-select">

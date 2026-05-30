@@ -480,6 +480,13 @@ export const STRINGS_DE = {
   gallery_admin_error_not_configured:
     'Admin auf dem Server nicht konfiguriert (TOWER_GALLERY_ADMIN_USER_IDS fehlt).',
   app_settings_title: 'Einstellungen',
+  app_settings_color_scheme_label: 'Darstellung',
+  app_settings_color_scheme_aria: 'Farbschema',
+  app_settings_color_scheme_dark: 'Dunkel',
+  app_settings_color_scheme_light: 'Hell',
+  app_settings_color_scheme_high_contrast: 'Hoher Kontrast',
+  app_settings_color_scheme_hint:
+    'Dunkel ist die Standarddarstellung. Hoher Kontrast nutzt stärkere Ränder und Text für lange Sitzungen.',
   app_settings_language_label: 'Sprache',
   app_settings_budget_panels_label: 'Budget-Panels für Labor, Werkstatt & Themes anzeigen',
   app_settings_budget_panels_hint: 'Münz-Summen in LABOR und WERKSTATT (ausgegeben, bis Max, nächstes Upgrade) und das Panel für den passiven Münz-Bonus unter THEMES.',

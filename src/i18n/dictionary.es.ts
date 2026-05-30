@@ -482,6 +482,13 @@ export const STRINGS_ES = {
   gallery_admin_error_not_configured:
     'Admin no configurado en el servidor (falta TOWER_GALLERY_ADMIN_USER_IDS).',
   app_settings_title: 'Ajustes',
+  app_settings_color_scheme_label: 'Apariencia',
+  app_settings_color_scheme_aria: 'Tema de color',
+  app_settings_color_scheme_dark: 'Oscuro',
+  app_settings_color_scheme_light: 'Claro',
+  app_settings_color_scheme_high_contrast: 'Alto contraste',
+  app_settings_color_scheme_hint:
+    'Oscuro es el predeterminado. Alto contraste usa bordes y texto más marcados para sesiones largas.',
   app_settings_language_label: 'Idioma',
   app_settings_budget_panels_label: 'Mostrar paneles de presupuesto (lab, taller y temas)',
   app_settings_budget_panels_hint:

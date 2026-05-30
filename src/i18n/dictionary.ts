@@ -478,6 +478,13 @@ export const STRINGS_EN = {
   gallery_admin_error_not_configured:
     'Admin is not configured on the server (missing TOWER_GALLERY_ADMIN_USER_IDS).',
   app_settings_title: 'Settings',
+  app_settings_color_scheme_label: 'Appearance',
+  app_settings_color_scheme_aria: 'Color theme',
+  app_settings_color_scheme_dark: 'Dark',
+  app_settings_color_scheme_light: 'Light',
+  app_settings_color_scheme_high_contrast: 'High contrast',
+  app_settings_color_scheme_hint:
+    'Dark is the default. High contrast uses stronger borders and text for long sessions.',
   app_settings_language_label: 'Language',
   app_settings_budget_panels_label: 'Show lab, workshop & themes budget panels',
   app_settings_budget_panels_hint:
