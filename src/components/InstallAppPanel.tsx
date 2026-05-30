@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useI18n } from '../i18n'
-import { usePwaInstall } from '../pwa/PwaInstallProvider'
+import { usePwaInstall } from '../pwa/pwaInstallContext'
 
 export function InstallAppPanel() {
   const { t } = useI18n()

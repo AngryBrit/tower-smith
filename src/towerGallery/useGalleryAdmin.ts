@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useAuth } from '../auth/AuthProvider'
+import { useAuth } from '../auth/useAuth'
+import { deferInEffect } from '../deferInEffect'
 import { fetchGalleryAdminStatus, type GalleryAdminApiError } from './adminApi'
 import { towerGalleryApiAvailable } from './api'
 
@@ -35,7 +36,7 @@ export function useGalleryAdmin() {
   }, [apiEnabled, getAccessToken, session])
 
   useEffect(() => {
-    void refresh()
+    deferInEffect(() => void refresh())
   }, [refresh])
 
   return {

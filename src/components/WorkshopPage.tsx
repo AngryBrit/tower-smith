@@ -154,14 +154,15 @@ const WorkshopEnhanceDefensePanel = lazy(() =>
 const WorkshopEnhanceUtilityPanel = lazy(() =>
   import('./WorkshopEnhanceUtilityPanel').then((m) => ({ default: m.WorkshopEnhanceUtilityPanel })),
 )
-import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
+import { deferInEffect } from '../deferInEffect'
 import { formatCoinAbbrev } from '../labCosts'
 import {
   resetWorkshopUltimates,
   resetWorkshopUpgradeLevels,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { splitTowerBuild } from '../towerBuildStorage'
 import {
   applyWorkshopMaxAllVisible,
@@ -3403,14 +3404,16 @@ export function WorkshopPage({
   }, [multiplierOpen])
 
   useEffect(() => {
-    if (category === 'ultimate') setMultiplierOpen(false)
+    if (category === 'ultimate') deferInEffect(() => setMultiplierOpen(false))
   }, [category])
 
   const enhanceTabDisabled = category === 'ultimate'
 
   useEffect(() => {
     if (!enhanceTabDisabled || mainTab !== 'enhance') return
-    onWorkshopPersistedChange({ ...workshopPersisted, mainTab: 'upgrade' })
+    deferInEffect(() =>
+      onWorkshopPersistedChange({ ...workshopPersisted, mainTab: 'upgrade' }),
+    )
   }, [enhanceTabDisabled, mainTab, onWorkshopPersistedChange, workshopPersisted])
 
   const setHideMaxed = useCallback(
@@ -3476,7 +3479,7 @@ export function WorkshopPage({
 
   useEffect(() => {
     const link = parseAppDeepLinkFromUrl()
-    if (link?.kind === 'workshop') requestWorkshopDeepLink(link.target)
+    if (link?.kind === 'workshop') deferInEffect(() => requestWorkshopDeepLink(link.target))
   }, [requestWorkshopDeepLink])
 
   const maxAllWorkshopVisible = useCallback(() => {

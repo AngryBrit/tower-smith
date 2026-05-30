@@ -1,5 +1,6 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { useAuth } from '../auth/AuthProvider'
+import { useAuth } from '../auth/useAuth'
+import { deferInEffect } from '../deferInEffect'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import {
   PROFILE_DISPLAY_NAME_MAX,
@@ -50,11 +51,11 @@ export function ProfileSettings() {
   const [notice, setNotice] = useState<string | null>(null)
 
   useEffect(() => {
-    setNameDraft(displayName ?? '')
+    deferInEffect(() => setNameDraft(displayName ?? ''))
   }, [displayName])
 
   useEffect(() => {
-    setGuildDraft(guildId ?? '')
+    deferInEffect(() => setGuildDraft(guildId ?? ''))
   }, [guildId])
 
   useEffect(() => {

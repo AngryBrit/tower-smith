@@ -1,19 +1,17 @@
 import {
-  createContext,
   lazy,
   Suspense,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
   type ReactNode,
 } from 'react'
-import { useAuth } from '../auth/AuthProvider'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
-import { useLabHydration } from './LabHydrationContext'
-import { useWorkspaceUndo } from './WorkspaceUndoContext'
+import { useAuth } from '../auth/useAuth'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
+import { useLabHydration } from './labHydrationContext'
+import { useWorkspaceUndo } from './workspaceUndoContext'
 import { buildLabsShareFileFromWorkspace } from './labShareActions'
 import {
   buildLabsShareUrls,
@@ -36,6 +34,7 @@ import {
   workspaceThemesSnapshot,
 } from '../towerWorkspaceStorage'
 import { useI18n } from '../i18n'
+import { CommunityBuildContext } from './communityBuildContext'
 
 const GalleryPublishDialog = lazy(() =>
   import('../components/GalleryPublishDialog').then((m) => ({ default: m.GalleryPublishDialog })),
@@ -48,30 +47,6 @@ const LabGuildNamePromptDialog = lazy(() =>
     default: m.LabGuildNamePromptDialog,
   })),
 )
-
-type CommunityBuildContextValue = {
-  hydrated: boolean
-  sharePublishing: boolean
-  openPublishDialog: () => void
-  copyBuildShareLink: () => Promise<boolean>
-  clearWorkspace: () => void
-  /** Lab import/export panel: copy gallery or embedded share link. */
-  copyCleanShareLink: () => Promise<void>
-  /** Lab import/export panel: publish unlisted link for QR code. */
-  publishForQrUrl: () => Promise<string | null>
-  prefillPublishGuildId: (guildId: string) => void
-  resolveGuildNameForPublish: (guildId: string) => Promise<string | null>
-}
-
-const CommunityBuildContext = createContext<CommunityBuildContextValue | null>(null)
-
-export function useCommunityBuild(): CommunityBuildContextValue {
-  const ctx = useContext(CommunityBuildContext)
-  if (!ctx) {
-    throw new Error('useCommunityBuild must be used within CommunityBuildProvider')
-  }
-  return ctx
-}
 
 export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   const { t, fmt } = useI18n()

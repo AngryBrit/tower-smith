@@ -9,7 +9,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useAuth } from '../auth/AuthProvider'
+import { useAuth } from '../auth/useAuth'
 import { CommunityBuildRow } from './CommunityBuildRow'
 import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
 import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
@@ -39,7 +39,7 @@ import {
   readTowerThemesSnapshot,
 } from '../towerDataThemes'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import {
   applyImportedLabAndBuild,
   mergeWorkspaceBuild,
@@ -56,7 +56,11 @@ import {
 } from '../types/research'
 import { ResearchSection } from './ResearchSection'
 import { useSearchHotkey } from '../hooks/useSearchHotkey'
-import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
+import { useCommunityBuild } from '../lab/communityBuildContext'
+import { useLabHydration } from '../lab/labHydrationContext'
+import { useLabToolsBridge } from '../lab/labToolsBridgeContext'
+import { deferInEffect } from '../deferInEffect'
 import { LabToolbarQuick } from './lab/LabToolbarQuick'
 import { labOverlayPortal } from './lab/labOverlayPortal'
 
@@ -71,9 +75,6 @@ const LabResetLevelsConfirmDialog = lazy(() =>
     default: m.LabResetLevelsConfirmDialog,
   })),
 )
-import { useCommunityBuild } from '../lab/CommunityBuildProvider'
-import { useLabHydration } from '../lab/LabHydrationContext'
-import { useLabToolsBridge } from '../lab/LabToolsBridge'
 import { useI18n, type AppLocale } from '../i18n'
 
 const LabCompareDialog = lazy(() =>
@@ -165,7 +166,7 @@ export function SelectResearch({
     if (!importNotice) return
     const t = window.setTimeout(() => setImportNotice(null), 5000)
     return () => window.clearTimeout(t)
-  }, [importNotice])
+  }, [importNotice, setImportNotice])
 
   useEffect(() => {
     try {
@@ -217,8 +218,10 @@ export function SelectResearch({
       if (!parsed || typeof parsed !== 'object' || !('collapsed' in parsed)) return
       const c = (parsed as { collapsed?: unknown }).collapsed
       if (!c || typeof c !== 'object' || Array.isArray(c)) return
-      setCollapsed(
-        sanitizeSectionCollapsed(data.sections.length, c as Record<string, unknown>),
+      deferInEffect(() =>
+        setCollapsed(
+          sanitizeSectionCollapsed(data.sections.length, c as Record<string, unknown>),
+        ),
       )
     } catch {
       /* ignore corrupt storage */
@@ -322,7 +325,7 @@ export function SelectResearch({
   useEffect(() => {
     if (!hydrated) return
     const slug = getLabSlugFromUrl()
-    if (slug) requestLabScroll(slug)
+    if (slug) deferInEffect(() => requestLabScroll(slug))
   }, [hydrated, requestLabScroll])
 
   useEffect(() => {
@@ -349,7 +352,7 @@ export function SelectResearch({
         return { ...prev, [key]: capped }
       })
     },
-    [data.sections],
+    [data.sections, setLevelOverrides],
   )
 
   const setLevel = useCallback(
@@ -367,7 +370,7 @@ export function SelectResearch({
         return { ...prev, [key]: capped }
       })
     },
-    [data.sections],
+    [data.sections, setLevelOverrides],
   )
 
   const toggleSection = useCallback((index: number) => {
@@ -429,7 +432,7 @@ export function SelectResearch({
     pushUndoSnapshot()
     setLevelOverrides({})
     setImportNotice(t('sr_notice_reset_all'))
-  }, [pushUndoSnapshot, t])
+  }, [pushUndoSnapshot, setImportNotice, setLevelOverrides, t])
 
   const handleExportLevels = useCallback(() => {
     const date = new Date().toISOString().slice(0, 10)
@@ -527,6 +530,7 @@ export function SelectResearch({
       prefillPublishGuildId,
       resolveGuildNameForPublish,
       scratchWorkspace,
+      setImportNotice,
       setScratchWorkspace,
       setWorkspace,
       t,
@@ -585,7 +589,7 @@ export function SelectResearch({
         setImportNotice(t('sr_notice_import_read_fail'))
       }
     },
-    [data, fmt, setScratchWorkspace, setWorkspace, t],
+    [data, fmt, setImportNotice, setLevelOverrides, setScratchWorkspace, setWorkspace, t],
   )
 
   const maxAllVisibleLabs = useCallback(() => {
@@ -593,7 +597,7 @@ export function SelectResearch({
     setLevelOverrides((prev) =>
       maxVisibleLabLevels(data, prev, search, hideCompleted, collapsed),
     )
-  }, [collapsed, data, hideCompleted, pushUndoSnapshot, search])
+  }, [collapsed, data, hideCompleted, pushUndoSnapshot, search, setLevelOverrides])
 
   const openResetLevelsConfirm = useCallback(() => {
     setShareQr(null)

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState, type CSSProperties } from 'react'
+import { useCallback, useMemo, useState, type CSSProperties } from 'react'
 import {
   ASSIST_MODULE_LEVEL_KEY,
   WORKSHOP_ASSIST_MODULE_SLOTS,
@@ -195,10 +195,6 @@ function ModuleSlotFrame({
       : null
   const [iconFailed, setIconFailed] = useState(false)
 
-  useEffect(() => {
-    setIconFailed(false)
-  }, [dedicatedIconUrl])
-
   const showIcon = dedicatedIconUrl != null && !iconFailed
   const borderUrl = workshopChassisModuleBorderImageUrl(
     slot,
@@ -230,6 +226,7 @@ function ModuleSlotFrame({
         {showIcon ? (
           <span className={`modules-slot__icon modules-slot__icon--${shape}`} aria-hidden>
             <img
+              key={dedicatedIconUrl}
               className="modules-slot__icon-img"
               src={dedicatedIconUrl!}
               alt=""

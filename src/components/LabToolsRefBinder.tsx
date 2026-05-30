@@ -1,5 +1,5 @@
 import { useEffect, type RefObject } from 'react'
-import { useLabToolsApi } from '../lab/LabToolsBridge'
+import { useLabToolsApi } from '../lab/labToolsBridgeContext'
 import type { SelectResearchHandle } from '../lab/labToolsTypes'
 
 /** Keeps a parent-owned ref in sync with the stable lab tools API from context. */

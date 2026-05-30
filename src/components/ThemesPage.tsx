@@ -19,7 +19,7 @@ import {
   type ThemeCategory,
 } from '../data/gameThemes'
 import { useSearchHotkey } from '../hooks/useSearchHotkey'
-import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import {
@@ -354,7 +354,7 @@ export function ThemesPage({
       </div>
     )
   },
-    [activeCategory, ownedIds, selectTheme, selectedId, t],
+    [activeCategory, ownedIds, selectTheme, selectedId, setThemeOwned, t],
   )
 
   const renderThemeGrid = useCallback(

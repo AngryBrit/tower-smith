@@ -1,3 +1,4 @@
+import { deferInEffect } from '../deferInEffect'
 import {
   Fragment,
   useCallback,
@@ -309,8 +310,10 @@ export function WorkshopRelicsPanel({
 
   useEffect(() => {
     if (!pendingRelicDeepLinkId || searchNormalized.length > 0) return
-    requestRelicScroll(pendingRelicDeepLinkId)
-    onPendingRelicDeepLinkHandled?.()
+    deferInEffect(() => {
+      requestRelicScroll(pendingRelicDeepLinkId)
+      onPendingRelicDeepLinkHandled?.()
+    })
   }, [
     pendingRelicDeepLinkId,
     searchNormalized,
@@ -328,7 +331,7 @@ export function WorkshopRelicsPanel({
   useEffect(() => {
     const link = parseAppDeepLinkFromUrl()
     if (link?.kind !== 'relic' || searchNormalized.length > 0) return
-    requestRelicScroll(link.target)
+    deferInEffect(() => requestRelicScroll(link.target))
   }, [requestRelicScroll, searchNormalized])
 
   const renderRelicCard = useCallback(

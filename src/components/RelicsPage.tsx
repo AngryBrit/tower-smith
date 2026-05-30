@@ -12,10 +12,11 @@ import { WorkshopRelicsPanel } from './WorkshopRelicsPanel'
 import {
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { resetTowerBuildRelics, splitTowerBuild } from '../towerBuildStorage'
 import { useSearchHotkey } from '../hooks/useSearchHotkey'
-import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
+import { deferInEffect } from '../deferInEffect'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useI18n } from '../i18n'
 
 type RelicsPageProps = {
@@ -136,7 +137,7 @@ export function RelicsPage({
 
   useEffect(() => {
     if (!pendingRelicDeepLinkId) return
-    setSearch('')
+    deferInEffect(() => setSearch(''))
   }, [pendingRelicDeepLinkId])
 
   const toolbar = (

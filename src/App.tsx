@@ -13,10 +13,10 @@ import { BuyMeACoffeeButton } from './components/BuyMeACoffeeButton'
 import type { SelectResearchHandle } from './lab/labToolsTypes'
 import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1 } from './towerWorkspaceStorage'
 import { TowerWorkspaceProvider } from './TowerBuildContext'
-import { LabHydrationProvider } from './lab/LabHydrationContext'
+import { LabHydrationProvider } from './lab/LabHydrationProvider'
 import { LabToolsBridgeProvider } from './lab/LabToolsBridge'
 import { CommunityBuildProvider } from './lab/CommunityBuildProvider'
-import { WorkspaceUndoProvider } from './lab/WorkspaceUndoContext'
+import { WorkspaceUndoProvider } from './lab/WorkspaceUndoProvider'
 import { useInpanelTabHotkeys } from './hooks/useInpanelTabHotkeys'
 import { InpanelPresetsPortal } from './components/InpanelPresetsPortal'
 import { AuthButton } from './components/AuthButton'
@@ -77,17 +77,19 @@ export default function App() {
 
   useEffect(() => {
     if (!MODULES_PANEL_ENABLED && workspace.build.workshop.mainTab === 'modules') {
-      setWorkspace((w) =>
-        w.build.workshop.mainTab === 'modules'
-          ? mergeWorkspaceBuildDomain(w, 'workshop', { ...w.build.workshop, mainTab: 'upgrade' })
-          : w,
-      )
+      queueMicrotask(() => {
+        setWorkspace((w) =>
+          w.build.workshop.mainTab === 'modules'
+            ? mergeWorkspaceBuildDomain(w, 'workshop', { ...w.build.workshop, mainTab: 'upgrade' })
+            : w,
+        )
+      })
     }
   }, [workspace.build.workshop.mainTab])
 
   useEffect(() => {
     if (!MODULES_PANEL_ENABLED && mainPanel === 'modules') {
-      setMainPanel('workshop')
+      queueMicrotask(() => setMainPanel('workshop'))
       return
     }
     writeMainPanel(mainPanel)

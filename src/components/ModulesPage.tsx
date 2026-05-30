@@ -10,9 +10,9 @@ import { WorkshopModulesPanel } from './WorkshopModulesPanel'
 import {
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { resetTowerBuildModules, splitTowerBuild } from '../towerBuildStorage'
-import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
 

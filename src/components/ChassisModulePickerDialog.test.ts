@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   shouldHighlightModuleAbilityPart,
   splitModuleAbilityUniqueParts,
-} from './ChassisModulePickerDialog'
+} from './chassisModuleAbilityText'
 
 describe('ModuleAbilityUniqueText helpers', () => {
   it('highlights plain count tier values', () => {

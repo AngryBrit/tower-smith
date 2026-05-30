@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import { deferInEffect } from '../deferInEffect'
 import {
   listGalleryTowersPage,
   type TowerGalleryApiError,
@@ -143,7 +144,7 @@ export function useGalleryList({
   )
 
   useEffect(() => {
-    void loadFirstPage()
+    deferInEffect(() => void loadFirstPage())
   }, [loadFirstPage, refreshToken])
 
   return {

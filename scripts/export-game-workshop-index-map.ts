@@ -88,27 +88,6 @@ function levelRows(
   }
 }
 
-function boolRows(
-  category: string,
-  saveArray: string,
-  ids: readonly string[],
-  keyFn: (id: string) => string,
-  displayFn: (id: string) => string,
-) {
-  for (let i = 0; i < ids.length; i++) {
-    const id = ids[i]!
-    push({
-      category,
-      save_array: saveArray,
-      save_index: i,
-      towersmith_field: keyFn(id),
-      display_name: displayFn(id),
-      import_mapped: 'yes',
-      notes: '',
-    })
-  }
-}
-
 // --- Basic workshop (coins) ---
 const ATTACK_LABELS = [
   'Damage',

@@ -425,7 +425,6 @@ export function computeWorkshopCoinAggregates(
   const defensePct = coinDiscountOpts.defenseDiscountPercent ?? 0
   const utilityPct = coinDiscountOpts.utilityDiscountPercent ?? 0
 
-  let nextUpgradeVisibleSum = 0
   const { hideMaxed, category } = ws
   const sum = { n: 0 }
 
@@ -566,7 +565,7 @@ export function computeWorkshopCoinAggregates(
     }
   }
 
-  nextUpgradeVisibleSum = sum.n
+  const nextUpgradeVisibleSum = sum.n
 
   return {
     spentAll: sink.spent,

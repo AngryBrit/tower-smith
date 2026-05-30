@@ -1,13 +1,12 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useMemo,
   useRef,
   type ReactNode,
 } from 'react'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
-import { useLabHydration } from './LabHydrationContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
+import { useLabHydration } from './labHydrationContext'
+import { LabToolsBridgeContext } from './labToolsBridgeContext'
 import {
   applyLabsShareFileToWorkspace,
   buildLabsShareFileFromWorkspace,
@@ -15,17 +14,6 @@ import {
 import type { LabsShareFile } from '../labsShareCodec'
 import type { PendingLabUiAction, SelectResearchHandle } from './labToolsTypes'
 import type { ResearchData } from '../types/research'
-
-type LabToolsBridgeContextValue = {
-  api: SelectResearchHandle
-  registerResearchUi: (handle: Pick<
-    SelectResearchHandle,
-    'openLabDataPanel' | 'openCompareDialog'
-  > | null) => void
-  consumePendingUiAction: () => PendingLabUiAction | null
-}
-
-const LabToolsBridgeContext = createContext<LabToolsBridgeContextValue | null>(null)
 
 export function LabToolsBridgeProvider({
   data,
@@ -139,17 +127,4 @@ export function LabToolsBridgeProvider({
   return (
     <LabToolsBridgeContext.Provider value={value}>{children}</LabToolsBridgeContext.Provider>
   )
-}
-
-export function useLabToolsBridge(): LabToolsBridgeContextValue {
-  const ctx = useContext(LabToolsBridgeContext)
-  if (!ctx) {
-    throw new Error('useLabToolsBridge must be used within LabToolsBridgeProvider')
-  }
-  return ctx
-}
-
-/** Stable imperative API for gallery, settings, and auth actions. */
-export function useLabToolsApi(): SelectResearchHandle {
-  return useLabToolsBridge().api
 }

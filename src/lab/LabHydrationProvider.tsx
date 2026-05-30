@@ -1,14 +1,5 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type Dispatch,
-  type ReactNode,
-  type SetStateAction,
-} from 'react'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
 import {
@@ -16,15 +7,8 @@ import {
   TOWER_LAB_PRESETS_STORAGE_KEY,
 } from '../towerWorkspacePresets'
 import { syncWorkspaceThemesFromStorage } from '../towerWorkspaceStorage'
+import { LabHydrationContext } from './labHydrationContext'
 import { hydrateWorkspaceFromStorage } from './workspaceHydration'
-
-type LabHydrationContextValue = {
-  hydrated: boolean
-  importNotice: string | null
-  setImportNotice: Dispatch<SetStateAction<string | null>>
-}
-
-const LabHydrationContext = createContext<LabHydrationContextValue | null>(null)
 
 export function LabHydrationProvider({
   data,
@@ -78,12 +62,4 @@ export function LabHydrationProvider({
   return (
     <LabHydrationContext.Provider value={value}>{children}</LabHydrationContext.Provider>
   )
-}
-
-export function useLabHydration(): LabHydrationContextValue {
-  const ctx = useContext(LabHydrationContext)
-  if (!ctx) {
-    throw new Error('useLabHydration must be used within LabHydrationProvider')
-  }
-  return ctx
 }

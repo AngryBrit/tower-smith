@@ -590,7 +590,7 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
     return { tag: 'invalid' }
   }
 
-  acc = flushBuildAccumulator(builds, acc)
+  flushBuildAccumulator(builds, acc)
   if (builds.length === 0) {
     builds.push({
       overrides: {},

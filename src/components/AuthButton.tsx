@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useAuth, type AuthProvider } from '../auth/AuthProvider'
+import { useAuth, type OAuthProvider } from '../auth/useAuth'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import { useI18n } from '../i18n'
 import { AuthProviderIcon } from './AuthProviderIcon'
@@ -29,7 +29,7 @@ export function AuthButton({
     return null
   }
 
-  const handleSignIn = (provider: AuthProvider) => {
+  const handleSignIn = (provider: OAuthProvider) => {
     void (async () => {
       setBusy(true)
       try {

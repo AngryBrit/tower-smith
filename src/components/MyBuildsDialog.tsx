@@ -3,7 +3,8 @@ import { createPortal } from 'react-dom'
 import type { SelectResearchHandle } from '../lab/labToolsTypes'
 import { GalleryCategorySelect } from './GalleryCategorySelect'
 import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
-import { useAuth } from '../auth/AuthProvider'
+import { useAuth } from '../auth/useAuth'
+import { deferInEffect } from '../deferInEffect'
 import {
   deleteGalleryTower,
   getGalleryTower,
@@ -74,9 +75,11 @@ export function MyBuildsDialog({
 
   useEffect(() => {
     if (!open) {
-      setNotice(null)
-      setOwnerConfirm(null)
-      setLoadingId(null)
+      deferInEffect(() => {
+        setNotice(null)
+        setOwnerConfirm(null)
+        setLoadingId(null)
+      })
     }
   }, [open])
 
@@ -146,7 +149,7 @@ export function MyBuildsDialog({
         setNotice(t('gallery_error_unknown'))
       }
     },
-    [t],
+    [setNotice, t],
   )
 
   const handleLoad = useCallback(
@@ -166,7 +169,7 @@ export function MyBuildsDialog({
       }
       setNotice(fmt.galleryNoticeLoaded(result.record.title))
     },
-    [errorStrings, fmt, labToolsRef, t],
+    [errorStrings, fmt, labToolsRef, setLoadingId, setNotice, t],
   )
 
   const handleDeleteOwn = useCallback(
@@ -188,7 +191,7 @@ export function MyBuildsDialog({
       onGalleryMutated?.()
       void loadFirstPage()
     },
-    [auth, errorStrings, fmt, loadFirstPage, onGalleryMutated, t],
+    [auth, errorStrings, fmt, loadFirstPage, onGalleryMutated, setLoadingId, setNotice, t],
   )
 
   const handleSetCategoryOwn = useCallback(
@@ -210,7 +213,7 @@ export function MyBuildsDialog({
       setNotice(t('gallery_notice_category_updated'))
       onGalleryMutated?.()
     },
-    [auth, errorStrings, onGalleryMutated, patchEntry, t],
+    [auth, errorStrings, onGalleryMutated, patchEntry, setLoadingId, setNotice, t],
   )
 
   const handleSetVisibilityOwn = useCallback(
@@ -236,7 +239,7 @@ export function MyBuildsDialog({
       )
       onGalleryMutated?.()
     },
-    [auth, errorStrings, onGalleryMutated, patchEntry, t],
+    [auth, errorStrings, onGalleryMutated, patchEntry, setLoadingId, setNotice, t],
   )
 
   const handleRegenerateOwn = useCallback(
@@ -264,7 +267,7 @@ export function MyBuildsDialog({
       onGalleryMutated?.()
       void loadFirstPage()
     },
-    [auth, errorStrings, loadFirstPage, onGalleryMutated, t],
+    [auth, errorStrings, loadFirstPage, onGalleryMutated, setLoadingId, setNotice, t],
   )
 
   const confirmOwnerAction = useCallback(async () => {
@@ -276,7 +279,7 @@ export function MyBuildsDialog({
       await handleRegenerateOwn(id)
     }
     setOwnerConfirm(null)
-  }, [handleDeleteOwn, handleRegenerateOwn, ownerConfirm])
+  }, [handleDeleteOwn, handleRegenerateOwn, ownerConfirm, setOwnerConfirm])
 
   if (!open) return null
 

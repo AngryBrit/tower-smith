@@ -13,18 +13,10 @@ import {
 } from '../data/workshopUltimatePlus'
 import { formatPowerStoneAmount } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
-
-export const WORKSHOP_ULTIMATE_PLUS_TITLE: Record<WorkshopUltimatePlusAbilityId, StringId> = {
-  chainLightningSmite: 'ws_uwp_chainLightningSmite',
-  smartMissilesCoverFire: 'ws_uwp_smartMissilesCoverFire',
-  poisonSwampDeathCreep: 'ws_uwp_poisonSwampDeathCreep',
-  goldenTowerGoldenCombo: 'ws_uwp_goldenTowerGoldenCombo',
-  innerLandMinesChargedMines: 'ws_uwp_innerLandMinesChargedMines',
-  deathWaveKillWall: 'ws_uwp_deathWaveKillWall',
-  blackHoleConsume: 'ws_uwp_blackHoleConsume',
-  chronoFieldChronoLoop: 'ws_uwp_chronoFieldChronoLoop',
-  spotlightLightRange: 'ws_uwp_spotlightLightRange',
-}
+import {
+  plusAbilityBarTitle,
+  WORKSHOP_ULTIMATE_PLUS_TITLE,
+} from './workshopUltimatePlusAbilityCardMeta'
 
 const ULTIMATE_STAT_LABEL: Record<string, StringId> = {
   damage: 'ws_uw_stat_damage',
@@ -36,12 +28,6 @@ const ULTIMATE_STAT_LABEL: Record<string, StringId> = {
   bonus: 'ws_uw_stat_bonus',
   size: 'ws_uw_stat_size',
   angle: 'ws_uw_stat_angle',
-}
-
-export function plusAbilityBarTitle(fullTitle: string): string {
-  const sep = fullTitle.includes(' — ') ? ' — ' : ' - '
-  const idx = fullTitle.lastIndexOf(sep)
-  return idx >= 0 ? fullTitle.slice(idx + sep.length) : fullTitle
 }
 
 export type WorkshopUltimatePlusAbilityCardProps = {

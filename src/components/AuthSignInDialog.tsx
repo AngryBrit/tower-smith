@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useAuth, type AuthProvider } from '../auth/AuthProvider'
+import { useAuth, type OAuthProvider } from '../auth/useAuth'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import { AuthProviderIcon } from './AuthProviderIcon'
@@ -24,7 +24,7 @@ export function AuthSignInDialog({
 
   if (!open) return null
 
-  const handleSignIn = (provider: AuthProvider) => {
+  const handleSignIn = (provider: OAuthProvider) => {
     void (async () => {
       setBusy(true)
       try {

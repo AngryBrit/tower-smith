@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { deferInEffect } from '../deferInEffect'
 import { CoinGlyph } from './CoinGlyph'
 import {
   WORKSHOP_ENHANCE_ATTACK_UPGRADE_ORDER,
@@ -221,7 +222,7 @@ export function WorkshopEnhanceAttackPanel({
     useState<Record<WorkshopEnhanceAttackUpgradeKey, string>>(initialDrafts)
 
   useEffect(() => {
-    setDrafts(initialDrafts)
+    deferInEffect(() => setDrafts(initialDrafts))
   }, [initialDrafts])
 
   const commitDraft = useCallback(
@@ -253,7 +254,6 @@ export function WorkshopEnhanceAttackPanel({
     },
     [
       drafts,
-      enhancementAttackDiscountPercent,
       onWorkshopPersistedChange,
       workshopEnhancementsLabUnlocked,
       workshopPersisted,
@@ -280,7 +280,6 @@ export function WorkshopEnhanceAttackPanel({
       onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
     },
     [
-      enhancementAttackDiscountPercent,
       multiplier,
       onWorkshopPersistedChange,
       workshopEnhancementsLabUnlocked,

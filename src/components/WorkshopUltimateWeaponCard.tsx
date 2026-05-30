@@ -26,8 +26,8 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import {
   plusAbilityBarTitle,
   WORKSHOP_ULTIMATE_PLUS_TITLE,
-  WorkshopUltimatePlusAbilityCard,
-} from './WorkshopUltimatePlusAbilityCard'
+} from './workshopUltimatePlusAbilityCardMeta'
+import { WorkshopUltimatePlusAbilityCard } from './WorkshopUltimatePlusAbilityCard'
 
 const ULTIMATE_WEAPON_TITLE: Record<WorkshopUltimateWeaponId, StringId> = {
   chainLightning: 'ws_uw_chainLightning',

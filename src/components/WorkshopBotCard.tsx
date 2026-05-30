@@ -16,10 +16,8 @@ import {
 } from '../data/workshopBots'
 import { formatPowerStoneAmount } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
-import {
-  WORKSHOP_BOT_SPECIAL_TITLE,
-  WorkshopBotSpecialCard,
-} from './WorkshopBotSpecialCard'
+import { WORKSHOP_BOT_SPECIAL_TITLE } from './workshopBotSpecialCardMeta'
+import { WorkshopBotSpecialCard } from './WorkshopBotSpecialCard'
 
 const BOT_TITLE: Record<WorkshopBotId, StringId> = {
   flame: 'ws_bot_flame',

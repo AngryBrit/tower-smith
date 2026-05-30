@@ -66,20 +66,17 @@ export function useColorSchemePreference(): [
   ResolvedColorScheme,
 ] {
   const [preference, setPreference] = useState<ColorSchemePreference>(readColorSchemePreference)
-  const [resolved, setResolved] = useState<ResolvedColorScheme>(() =>
-    resolveColorScheme(readColorSchemePreference()),
-  )
+  const resolved = resolveColorScheme(preference)
 
   useLayoutEffect(() => {
-    const scheme = syncDocumentColorScheme(preference)
-    setResolved(scheme)
+    syncDocumentColorScheme(preference)
   }, [preference])
 
   useEffect(() => {
     const sync = () => {
       const next = readColorSchemePreference()
       setPreference(next)
-      setResolved(syncDocumentColorScheme(next))
+      syncDocumentColorScheme(next)
     }
     window.addEventListener(CHANGE_EVENT, sync)
     const onStorage = (e: StorageEvent) => {
@@ -95,7 +92,7 @@ export function useColorSchemePreference(): [
   const setColorSchemePreference = useCallback((next: ColorSchemePreference) => {
     writeColorSchemePreference(next)
     setPreference(next)
-    setResolved(syncDocumentColorScheme(next))
+    syncDocumentColorScheme(next)
   }, [])
 
   return [preference, setColorSchemePreference, resolved]

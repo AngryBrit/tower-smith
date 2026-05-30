@@ -118,7 +118,7 @@ export function maxVisibleLabLevels(
   const next = { ...levelOverrides }
 
   for (let si = 0; si < data.sections.length; si += 1) {
-    if (Boolean(collapsed[si])) continue
+    if (collapsed[si]) continue
     const section = data.sections[si]
     for (let ii = 0; ii < section.items.length; ii += 1) {
       const item = section.items[ii]

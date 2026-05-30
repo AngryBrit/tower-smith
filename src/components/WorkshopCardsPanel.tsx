@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { deferInEffect } from '../deferInEffect'
 import {
   clampWorkshopCardActivePresetIndex,
   clampWorkshopGameCardStars,
@@ -217,13 +218,15 @@ function CardsTileStepper({
 }) {
   const { t } = useI18n()
   const maxLabel = t('ws_max')
-  const formatDraft = (v: number) =>
-    max > 0 && v >= max ? maxLabel : String(v)
+  const formatDraft = useCallback(
+    (v: number) => (max > 0 && v >= max ? maxLabel : String(v)),
+    [max, maxLabel],
+  )
   const [draft, setDraft] = useState(() => formatDraft(value))
 
   useEffect(() => {
-    setDraft(formatDraft(value))
-  }, [value, max, maxLabel])
+    deferInEffect(() => setDraft(formatDraft(value)))
+  }, [formatDraft, value])
 
   const commit = () => {
     const raw = draft.trim().replace(/,/g, '')

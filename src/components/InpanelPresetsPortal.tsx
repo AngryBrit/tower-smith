@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom'
-import { useCommunityBuild } from '../lab/CommunityBuildProvider'
+import { useCommunityBuild } from '../lab/communityBuildContext'
 import { CommunityBuildRow } from './CommunityBuildRow'
 
 type InpanelPresetsPortalProps = {

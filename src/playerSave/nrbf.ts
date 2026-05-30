@@ -787,7 +787,6 @@ export class NrbfDecoder {
       const contextBytes: number[] = [];
       
       // Read some context bytes (temporarily rewind)
-      const savedPos = this.reader.getPosition();
       for (let i = 0; i < 32 && contextStart + i < this.reader['view'].byteLength; i++) {
         contextBytes.push(this.reader['view'].getUint8(contextStart + i));
       }

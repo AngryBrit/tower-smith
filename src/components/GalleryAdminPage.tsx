@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useAuth } from '../auth/AuthProvider'
+import { useAuth } from '../auth/useAuth'
 import { GalleryAuthorLine } from './GalleryAuthorLine'
 import { GalleryBuildCategoryBadge } from './GalleryBuildCategoryFields'
 import {

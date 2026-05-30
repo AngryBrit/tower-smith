@@ -15,7 +15,8 @@ import { GalleryUnavailableCallout } from './GalleryUnavailableCallout'
 import { GalleryCategorySelect } from './GalleryCategorySelect'
 import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
 
-import { useAuth } from '../auth/AuthProvider'
+import { useAuth } from '../auth/useAuth'
+import { deferInEffect } from '../deferInEffect'
 
 import {
   deleteGalleryTower,
@@ -142,7 +143,7 @@ export function TowerGalleryPanel({
   }, [auth, auth.session])
 
   useEffect(() => {
-    if (!auth.session) setMineOnlyFilter(false)
+    if (!auth.session) deferInEffect(() => setMineOnlyFilter(false))
   }, [auth.session])
 
 
@@ -260,7 +261,7 @@ export function TowerGalleryPanel({
 
   useEffect(() => {
     if (isActive) return
-    setActionNotice(null)
+    deferInEffect(() => setActionNotice(null))
   }, [isActive])
 
   const handleCopyLink = useCallback(

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { deferInEffect } from '../../deferInEffect'
 
 export type UseProgressiveListOptions = {
   /** Items per batch when the sentinel enters view. */
@@ -27,7 +28,9 @@ export function useProgressiveList<T>(
   const sentinelRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    setVisibleCount(enabled ? Math.min(firstBatch, items.length) : items.length)
+    deferInEffect(() =>
+      setVisibleCount(enabled ? Math.min(firstBatch, items.length) : items.length),
+    )
   }, [enabled, firstBatch, items])
 
   useEffect(() => {

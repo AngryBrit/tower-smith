@@ -1,64 +1,23 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from 'react'
-import type { Session, User } from '@supabase/supabase-js'
+import type { Session } from '@supabase/supabase-js'
 import { fetchUserProfile } from '../profile/profileApi'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
 import { resolveGuildNameById } from '../towerGallery/api'
+import { deferInEffect } from '../deferInEffect'
+import { AuthContext, displayNameFromUser, avatarUrlFromUser, type AuthContextValue, type OAuthProvider } from './authContext'
 import { oauthRedirectUrl } from './oauthRedirect'
 
-export type AuthProvider = 'google' | 'discord' | 'twitch'
-
-type AuthContextValue = {
-  configured: boolean
-  loading: boolean
-  profileLoading: boolean
-  session: Session | null
-  user: User | null
-  displayName: string | null
-  guild: string | null
-  guildId: string | null
-  avatarUrl: string | null
-  signIn: (provider: AuthProvider) => Promise<void>
-  signOut: () => Promise<void>
-  getAccessToken: () => Promise<string | null>
-  refreshProfile: () => Promise<void>
-  prefillProfileFromImport: (hints: { displayName?: string | null; guild?: string | null }) => void
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null)
-
-function displayNameFromUser(user: User | null): string | null {
-  if (!user) return null
-  const meta = user.user_metadata as Record<string, unknown> | undefined
-  const fromMeta =
-    (typeof meta?.full_name === 'string' && meta.full_name.trim()) ||
-    (typeof meta?.name === 'string' && meta.name.trim()) ||
-    (typeof meta?.user_name === 'string' && meta.user_name.trim())
-  if (fromMeta) return fromMeta
-  return user.email?.split('@')[0] ?? null
-}
-
-function avatarUrlFromUser(user: User | null): string | null {
-  if (!user) return null
-  const meta = user.user_metadata as Record<string, unknown> | undefined
-  const fromMeta =
-    (typeof meta?.avatar_url === 'string' && meta.avatar_url.trim()) ||
-    (typeof meta?.picture === 'string' && meta.picture.trim()) ||
-    (typeof meta?.photo_url === 'string' && meta.photo_url.trim()) ||
-    ''
-  return fromMeta || null
-}
+export type { OAuthProvider } from './authContext'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const configured = supabaseBrowserConfigured()
-  const [loading, setLoading] = useState(configured)
+  const [loading, setLoading] = useState(() => configured && getSupabaseBrowserClient() != null)
   const [profileLoading, setProfileLoading] = useState(false)
   const [profileResolved, setProfileResolved] = useState(false)
   const [session, setSession] = useState<Session | null>(null)
@@ -99,7 +58,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const sb = getSupabaseBrowserClient()
     if (!sb) {
-      setLoading(false)
       return
     }
 
@@ -124,11 +82,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, [configured])
 
   useEffect(() => {
-    setProfileResolved(false)
-    void refreshProfile()
+    deferInEffect(() => {
+      setProfileResolved(false)
+      void refreshProfile()
+    })
   }, [refreshProfile])
 
-  const signIn = useCallback(async (provider: AuthProvider) => {
+  const signIn = useCallback(async (provider: OAuthProvider) => {
     const sb = getSupabaseBrowserClient()
     if (!sb) return
     const redirectTo = oauthRedirectUrl()
@@ -210,12 +170,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
-}
-
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext)
-  if (!ctx) {
-    throw new Error('useAuth must be used within AuthProvider')
-  }
-  return ctx
 }

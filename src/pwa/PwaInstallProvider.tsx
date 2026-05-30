@@ -1,13 +1,13 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
   type ReactNode,
 } from 'react'
+import { deferInEffect } from '../deferInEffect'
+import { PwaInstallContext, isIosSafari } from './pwaInstallContext'
 
 interface BeforeInstallPromptEvent extends Event {
   prompt: () => Promise<void>
@@ -23,20 +23,6 @@ function isStandaloneDisplayMode(): boolean {
   )
 }
 
-export function isIosSafari(): boolean {
-  if (typeof navigator === 'undefined') return false
-  return /iPhone|iPad|iPod/i.test(navigator.userAgent)
-}
-
-type PwaInstallContextValue = {
-  canInstall: boolean
-  isInstalled: boolean
-  isIos: boolean
-  promptInstall: () => Promise<boolean>
-}
-
-const PwaInstallContext = createContext<PwaInstallContextValue | null>(null)
-
 /** Listen from app mount so `beforeinstallprompt` is not missed before Settings opens. */
 export function PwaInstallProvider({ children }: { children: ReactNode }) {
   const deferredPromptRef = useRef<BeforeInstallPromptEvent | null>(null)
@@ -44,7 +30,7 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
   const [isInstalled, setIsInstalled] = useState(() => isStandaloneDisplayMode())
 
   useEffect(() => {
-    setIsInstalled(isStandaloneDisplayMode())
+    deferInEffect(() => setIsInstalled(isStandaloneDisplayMode()))
 
     const onBeforeInstallPrompt = (event: Event) => {
       event.preventDefault()
@@ -91,12 +77,4 @@ export function PwaInstallProvider({ children }: { children: ReactNode }) {
   )
 
   return <PwaInstallContext.Provider value={value}>{children}</PwaInstallContext.Provider>
-}
-
-export function usePwaInstall(): PwaInstallContextValue {
-  const ctx = useContext(PwaInstallContext)
-  if (!ctx) {
-    throw new Error('usePwaInstall must be used within PwaInstallProvider')
-  }
-  return ctx
 }

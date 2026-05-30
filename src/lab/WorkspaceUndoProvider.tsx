@@ -1,20 +1,19 @@
 import {
-  createContext,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
   useState,
   type ReactNode,
 } from 'react'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { applyTowerThemes } from '../towerDataThemes'
 import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
 import type { TowerWorkspaceV1 } from '../towerWorkspaceStorage'
 import { workspaceThemesSnapshot } from '../towerWorkspaceStorage'
 import { useI18n } from '../i18n'
-import { useLabHydration } from './LabHydrationContext'
+import { useLabHydration } from './labHydrationContext'
+import { WorkspaceUndoContext } from './workspaceUndoContext'
 
 const MAX_UNDO_SNAPSHOTS = 20
 
@@ -22,14 +21,6 @@ type WorkspacePairSnapshot = {
   workspace: TowerWorkspaceV1
   scratchWorkspace: TowerWorkspaceV1
 }
-
-type WorkspaceUndoContextValue = {
-  canUndo: boolean
-  pushUndoSnapshot: () => void
-  undo: () => boolean
-}
-
-const WorkspaceUndoContext = createContext<WorkspaceUndoContextValue | null>(null)
 
 function cloneWorkspace(workspace: TowerWorkspaceV1): TowerWorkspaceV1 {
   return structuredClone(workspace)
@@ -103,12 +94,4 @@ export function WorkspaceUndoProvider({ children }: { children: ReactNode }) {
   return (
     <WorkspaceUndoContext.Provider value={value}>{children}</WorkspaceUndoContext.Provider>
   )
-}
-
-export function useWorkspaceUndo(): WorkspaceUndoContextValue {
-  const ctx = useContext(WorkspaceUndoContext)
-  if (!ctx) {
-    throw new Error('useWorkspaceUndo must be used within WorkspaceUndoProvider')
-  }
-  return ctx
 }

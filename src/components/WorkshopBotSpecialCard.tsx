@@ -13,14 +13,7 @@ import {
 } from '../data/workshopBots'
 import { formatPowerStoneAmount } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
-
-export const WORKSHOP_BOT_SPECIAL_TITLE: Record<WorkshopBotId, StringId> = {
-  flame: 'ws_bot_special_burningGround',
-  thunder: 'ws_bot_special_titanShock',
-  golden: 'ws_bot_special_bonusCells',
-  amplify: 'ws_bot_special_echoingShot',
-  botBot: 'ws_bot_special_maximumPower',
-}
+import { WORKSHOP_BOT_SPECIAL_TITLE } from './workshopBotSpecialCardMeta'
 
 const BOT_SPECIAL_STAT_LABEL: Record<WorkshopBotId, StringId> = {
   flame: 'ws_bot_special_stat_damageMult',

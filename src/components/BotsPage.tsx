@@ -29,9 +29,9 @@ import {
   maxWorkshopBots,
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
-import { useTowerWorkspaceContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { resetTowerBuildBots, splitTowerBuild } from '../towerBuildStorage'
-import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useI18n } from '../i18n'
 import { buildWorkshopBotLabDisplayOpts } from '../data/workshopLabDisplayOpts'
 import { enrichBotLabDisplayOpts } from '../data/workshopRelicWorkshopDisplay'
