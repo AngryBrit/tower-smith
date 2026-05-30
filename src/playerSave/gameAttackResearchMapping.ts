@@ -1,6 +1,6 @@
 /**
  * Attack lab ↔ game `researchLevel[id]`.
- * First five attack labs use sequential ids 0–4 (UI order); later labs use scattered ids.
+ * First seven attack labs use sequential ids 0–6 (UI order); later labs use scattered ids.
  */
 export const ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   Damage: 0,
@@ -8,6 +8,9 @@ export const ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Critical Factor': 2,
   Range: 3,
   'Damage / Meter': 4,
+  'Super Crit Chance': 5,
+  'Super Crit Multi': 6,
+  'Max Rend Armor Multiplier': 131,
   'Light Speed Shots': 150,
 } as const satisfies Record<string, number>
 

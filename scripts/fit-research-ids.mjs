@@ -27,7 +27,7 @@ const EXPECTED = {
     ['Damage / Meter', 14],
     ['Super Crit Chance', 0],
     ['Super Crit Multi', 0],
-    ['Max Rend Armor Multiplier', 0],
+    ['Max Rend Armor Multiplier', 4],
     ['Light Speed Shots', 1],
   ],
   'defense-research': [

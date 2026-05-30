@@ -31,12 +31,13 @@ function attackResearchData(): ResearchData {
   }
 }
 
-/** Sample save: researchLevel[0..4] match attack UI order; id 10 is defense Health (80). */
+/** Sample save: researchLevel[0..6] match attack UI order; id 10 is defense Health (80). */
 const SAMPLE_ATTACK_LEVELS: Record<number, number> = {
   0: 46,
   1: 84,
   2: 16,
   4: 14,
+  131: 4,
   150: 1,
 }
 
@@ -52,7 +53,18 @@ describe('attackLabsToOverrides', () => {
     expect(overrides['0-2']).toBe(16)
     expect(overrides['0-3']).toBeUndefined()
     expect(overrides['0-4']).toBe(14)
-    expect(overrides['0-7']).toBeUndefined()
+    expect(overrides['0-5']).toBeUndefined()
+    expect(overrides['0-6']).toBeUndefined()
+    expect(overrides['0-7']).toBe(4)
     expect(overrides['0-8']).toBe(1)
+  })
+
+  it('maps Super Crit labs from researchLevel ids 5 and 6 when level > 0', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[5] = 12
+    researchLevel[6] = 8
+    const overrides = attackLabsToOverrides(attackResearchData(), researchLevel)
+    expect(overrides['0-5']).toBe(12)
+    expect(overrides['0-6']).toBe(8)
   })
 })
