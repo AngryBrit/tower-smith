@@ -20,7 +20,9 @@ import {
   workshopChassisModuleDefForSlot,
 } from '../data/workshopChassisModuleSelection'
 import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
+import { MODULE_HUB_SLOT_ART } from '../data/workshopModuleArt'
 import {
+  workshopChassisModuleBorderImageUrl,
   workshopChassisModuleDedicatedImageUrl,
   workshopChassisModuleHasDedicatedArt,
 } from '../data/workshopModuleImages'
@@ -288,6 +290,11 @@ export function ChassisModulePickerDialog({
     pickerModuleId != null && workshopChassisModuleHasDedicatedArt(slot, pickerModuleId)
       ? workshopChassisModuleDedicatedImageUrl(slot, pickerModuleId)
       : null
+  const shape = MODULE_HUB_SLOT_ART[slot].shape
+  const borderUrl = workshopChassisModuleBorderImageUrl(
+    slot,
+    pickerModuleId == null ? 'empty' : pickerRarity,
+  )
 
   const selectedSubmodules = useMemo(
     () => selectedSubmoduleEntries(slot, submoduleSelections),
@@ -368,13 +375,37 @@ export function ChassisModulePickerDialog({
 
         <div className="modules-picker__hero">
           <div className="modules-picker__hero-icon-wrap">
-            {iconUrl != null ? (
-              <span className="modules-picker__hero-icon" aria-hidden>
-                <img src={iconUrl} alt="" decoding="async" draggable={false} />
-              </span>
-            ) : (
-              <span className="modules-picker__hero-icon modules-picker__hero-icon--empty" aria-hidden />
-            )}
+            <span
+              className={[
+                'modules-picker__hero-icon',
+                `modules-picker__hero-icon--${shape}`,
+                pickerModuleId == null ? 'modules-picker__hero-icon--empty' : '',
+                pickerModuleId != null
+                  ? WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[pickerRarity]
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')}
+              aria-hidden
+            >
+              <img
+                className="modules-picker__hero-border"
+                src={borderUrl}
+                alt=""
+                decoding="async"
+                draggable={false}
+              />
+              {iconUrl != null ? (
+                <span
+                  className={[
+                    'modules-picker__hero-module-icon',
+                    `modules-picker__hero-module-icon--${shape}`,
+                  ].join(' ')}
+                >
+                  <img src={iconUrl} alt="" decoding="async" draggable={false} />
+                </span>
+              ) : null}
+            </span>
             <PickerModuleLevelInput
               slot={slot}
               rarity={pickerRarity}
