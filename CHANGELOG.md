@@ -5,6 +5,29 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **playerInfo.dat import** — LAB tab imports gzip-compressed BinaryFormatter saves from The Tower: lab levels, workshop, bots, ultimates, modules, card stars/presets, relic ownership, and owned cosmetic themes ([`importPlayerInfo.ts`](src/playerSave/importPlayerInfo.ts), [`mapPlayerDataToTower.ts`](src/playerSave/mapPlayerDataToTower.ts)). Android path hints copy the save folder to the clipboard.
+- **Appearance themes** — Dark (default), Light, and High contrast color schemes in Tools / Settings, with early boot in [`public/color-scheme-boot.js`](public/color-scheme-boot.js) to avoid theme flash.
+- **Deep links** — URL hash or query navigation to lab cards (`?lab=…`), workshop stats (`?workshop=…`), and relics (`?relic=…`) ([`appDeepLink.ts`](src/appDeepLink.ts)).
+- **Keyboard shortcuts & undo** — `/` search focus, `1`–`8` main tabs, `Ctrl+Z` workspace undo (20 steps), `Esc` closes dialogs; documented under Tools / Settings.
+- **PWA** — Service worker and install guidance for Add to Home Screen ([`vite-plugin-pwa`](package.json)).
+- **First-run hints** — In-app onboarding callout for import and community builds.
+- **Panel error boundaries** — Isolated crash recovery per main tab with reload and copy-details actions.
+- **CI** — GitHub Actions: `check:i18n`, lint, Vitest, build, and Playwright e2e (`.github/workflows/ci.yml`).
+
+### Changed
+
+- **Gallery discoverability** — Setup callouts and category filters when Supabase is not configured or gallery is disabled.
+- **Performance** — Lazy-loaded main panels; community build row restored on all tabs.
+- **Production research cache** — Stale-while-revalidate via service worker; manual refresh in Tools / Settings.
+
+### Docs
+
+- README: reorganized features, player save import, appearance, deep links, keyboard shortcuts, maintainer `docs/` folder, save-mapping scripts, CI, and expanded npm script table.
+
 ## [2.8.11] - 2026-05-26
 
 ### Added

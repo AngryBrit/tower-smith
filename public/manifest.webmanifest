@@ -2,7 +2,7 @@
   "id": "/",
   "name": "TowerSmith",
   "short_name": "TowerSmith",
-  "description": "Workshop upgrades, bots, ultimate weapons, assist modules, relics, card loadouts, themes, lab research, and shareable Tower builds.",
+  "description": "Workshop upgrades, bots, modules, relics, cards, lab research, playerInfo.dat import, and shareable Tower builds.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

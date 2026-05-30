@@ -1,9 +1,12 @@
-# TowerSmith — workshop, cards, labs & themes
+# TowerSmith — Forge your perfect build
 
-**TowerSmith** is a static web app for [**The Tower**](https://thetowergame.com/): browse research trees from exported JSON, model workshop upgrades, **bots**, and card loadouts, track cosmetic themes, compare builds, and share lab configurations from the browser.
+<img src="public/logo-towersmith.webp" width="100" alt="TowerSmith">
 
-**Live site:** [thetower.thatangrybrit.com](https://thetower.thatangrybrit.com/)  
-**Repository:** [AngryBrit/tower-smith](https://github.com/AngryBrit/tower-smith) (npm package name `tower_export` is internal only; user-facing branding is always **TowerSmith**).
+> A browser-based companion for [**The Tower**](https://thetowergame.com/) — plan labs, model upgrades, import your save, compare builds, and share loadouts without touching the game.
+
+**[▶ Open TowerSmith](https://towersmith.com/)**
+
+**Get The Tower:** [Google Play](https://play.google.com/store/apps/details?id=com.TechTreeGames.TheTower&hl=en_GB) · [App Store](https://apps.apple.com/gb/app/the-tower-idle-tower-defense/id1575590830) · [TechTree Store](https://store.techtreegames.com/thetower/)
 
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
@@ -13,240 +16,180 @@
 
 ---
 
-## Features
+## Screenshots
 
-- **Research browser** — Loads [`public/research/manifest.json`](public/research/manifest.json) and every section file it lists (main, attack, defense, utility, ultimate weapon, cards, perks, bots, enemies, modules, card mastery, battle conditions). Cards show costs and benefits where data allows (e.g. **Dissonant Echo** labs: wiki **Value** = **0.50% × (level + 1)**, Lv.0→0.50% … Lv.20→10.50%). Labs with wiki Lv.0 **—** show the first-tier benefit at Lv.0 instead of `— » …`.
-- **Lab economics** — Upgrade costs and build times from [`src/data/tower-labs.json`](src/data/tower-labs.json), aligned with the in-game lab grid.
-- **Lab compare** — Side-by-side comparison, budget-style rollups, named presets (stored locally), and safe handling of pasted or imported level payloads. **Max All** on the Lab toolbar sets every visible coin lab to its cap (honors search, hide completed, and collapsed sections).
-- **Workshop** — Top-level **Workshop**, **Modules**, and **Cards** areas model in-game upgrade and enhance ladders (attack, defense, utility, ultimate weapons), with coin costs, marginal spend, and category budgets (coins on attack/defense/utility; **power stones** on the ultimate tab, including Plus tracks). **Max All** on Workshop, Cards, and Bots toolbars maxes the current view (workshop category/tab with hide completed; all card stars; all bots owned with max upgrades and Bot+). The **Enhance** tab is locked until **Workshop Enhancements** is researched in Main Research; then attack, defense, and utility enhancements use wiki coin-spend unlock gates (hints use **T** abbreviations at trillions+), tier ladders, recovery package, orb size, and related utility curves. **Ultimate weapon** basic upgrades (power stones) for all nine weapons follow wiki milestone tables in [`workshopUltimateData.ts`](src/data/workshopUltimateData.ts) (source: [`scripts/gen-workshop-ultimate-data.mjs`](scripts/gen-workshop-ultimate-data.mjs); Vitest locks per-weapon stone totals). **Ultimate Weapon Plus** adds nine wiki secondary abilities (Smite, Cover Fire, Death Creep, …) with ordered unlock costs and per-ability upgrade tracks on each weapon card ([`workshopUltimatePlusData.ts`](src/data/workshopUltimatePlusData.ts), [`workshopUltimatePlus.ts`](src/data/workshopUltimatePlus.ts)). **Duration** and **cooldown** stats on ultimate weapons (and bots) display as plain seconds (e.g. `75s`, `200s`).
-- **Bots** — Top-level **Bots** panel for the five event-shop bots (Flame, Thunder, Golden, Amplify, Bot Bot): medal unlock order (100→1200), per-stat upgrade tracks from wiki Basic Upgrades tables ([`workshopBotsData.ts`](src/data/workshopBotsData.ts), [`scripts/gen-workshop-bots-data.mjs`](scripts/gen-workshop-bots-data.mjs)), ON/OFF toggles, and **Bot+** abilities unlocked with **1,250** power stones once all five bots are owned. **Max All** owns every bot, activates them, and maxes basic and Bot+ tracks. Bot+ uses separate stone-purchase flags and medal level tracks (Burning Ground, Titan Shock, Bonus Cells, Echoing Shot, Maximum Power) with Vitest coverage in [`workshopBots.test.ts`](src/data/workshopBots.test.ts). **BOTS** lab levels from the Lab tab update displayed cooldown, duration, and Thunder linger % on bot cards (same lab override source as Workshop).
-- **Displayed stats** — Wiki-aligned **displayed damage** and **displayed attack speed** on workshop cards, folding in lab multipliers, enhancement tiers, equipped card stars (active preset × Card Mastery), owned **relic** bonuses (damage, damage/meter, health, lab speed, bot range, …), perk quantity, assist-module substats from your lab levels, and equipped **sub-module** picks (main + assist; assist values scale by sub stone efficiency and Assist Module Substats labs).
-- **Cards page** — Full **31-card** inventory with wiki art, star tables (Lv.1–7), rarities, five **preset loadouts**, equip-slot limits (gems / Harmony), and Card Mastery tier scaling from the research `card-mastery` section. Workshop **Cards** star steppers show **Max** at the cap and accept `max` (or the localized label) in the input. Scaled effect values (× Card Mastery) show as a badge overlay on card art. Equipped cards on the active preset feed workshop displayed-stat formulas.
-- **Modules** — Top-level **Modules** tab with hub levels, equipped **cannon / armor / core / generator** chassis modules (epic→ancestral tiers), per-slot **sub-module effect** picks (separate **main** and **assist** maps per hub slot), and **assist chassis** unlocks (**1,000** power stones per slot; locked until purchased), unique-rarity upgrades, main/sub stone efficiency (1–70%), and equipped assist modules per slot (`workshopAssistChassisModule`, `AssistUnlocksPanel`). Assist sub-module stats scale by sub stone % + Assist Module Substats labs (integer effects floor; attack-speed uses proportional scaling). Selected sub-modules feed workshop stat displays on the Workshop tab ([`workshopSubmoduleBonuses.ts`](src/data/workshopSubmoduleBonuses.ts), [`workshopSubmoduleWorkshopDisplay.ts`](src/data/workshopSubmoduleWorkshopDisplay.ts)). Assist hub pickers stay disabled until the slot is unlocked; unlock cards use the same layout as bot/ultimate unlock rows. Browsable chassis/sub-module catalogs with WebP art; optional **assist module wiki tables** (stone efficiency and unique rarity costs) when enabled in **Tools / Settings**. Module substats pull from MODULES research labs when data is loaded. **Five module loadout presets** save hub levels, chassis, assist, and sub-module picks (`workshopModulePresets`).
-- **Relics** — **Relics** tab tracks **268** wiki relics with in-game WebP art on each card (owned IDs, unlock-group filters, bonus breakdown). Owned relics update workshop sim formulas and optional per-card **workshop bonus** lines (toggle in **Tools / Settings**). **Search** filters by name, description, or unlock text (`/` to focus).
-- **Themes** — **Themes** tab catalogs tower milestone skins, event/guild tower and background art, menu guild seasons, banners, music (Krisu track preview art), and guardians; track owned skins, active selection per category, and coin-bonus rollups (`ThemesPage`, `gameThemes.ts`, `public/themes/`, `public/music/`). **Search** filters skins by name, event, and unlock metadata (`/` to focus).
-- **Unified CSV backup** — Export and import a single **tower CSV** (`tower_csv_v1`) with one or more **named builds** (lab levels, workshop `ws,…` rows, card stars/presets, **module loadout presets**) plus optional global **theme** owned IDs via [`src/towerUnifiedCsv.ts`](src/towerUnifiedCsv.ts). `ws` rows include ultimate Plus levels, **bot** stat levels / owned / active / Bot+ flags and levels, assist unlocks/chassis/rarity/efficiency fields, and the **active** module/relic sim; `module,preset.<n>,…` rows JSON-encode each of the five hub presets and `module,activePresetIndex,…` records the selected tab. Share links (`LabsShareFile` v4 `w`) already carry the full workshop object including presets when present.
-- **Shareable builds** — Encode lab levels, full workshop snapshot (including bots), optional build name, and owned theme IDs in the `?tower=` query string (share codec **v4**); optional QR code for sharing.
-- **Community tower gallery** — Submit and browse shared builds via Netlify Functions + Supabase (`/api/towers`). Tools / Settings → **Community towers**; loads a build into the LAB tab. See [Community gallery](#community-gallery-netlify--supabase).
-- **Languages** — English, Spanish, and German UI; Spanish and German research titles and card names are overlaid from bundled JSON (see [Internationalization](#internationalization)).
-- **Persistence** — Section collapse state, locale, last-selected main panel (Research, Workshop, **Bots**, Modules, Cards, Relics, Themes, Tools / Settings), workshop snapshot (bot levels and Bot+, ultimate Plus levels, chassis and assist modules, five module loadout presets, relics, submodule picks), lab compare named presets (with themes), theme owned/selection state, and optional budget-panel, chassis/submodule/assist-wiki catalog visibility survive reloads (`localStorage`, keys prefixed `tower-export-`). **Tools / Settings** offers a confirmed **full reset** that clears all `tower-export-*` keys and reloads ([`fullResetStorage`](src/fullResetStorage.ts)).
+<p float="left">
+  <img src="public/screenshots/workshop.jpg" width="180" alt="Workshop" />
+  <img src="public/screenshots/lab.jpg" width="180" alt="Lab" />
+  <img src="public/screenshots/cards.jpg" width="180" alt="Cards" />
+  <img src="public/screenshots/modules.jpg" width="180" alt="Modules" />
+  <img src="public/screenshots/bots.jpg" width="180" alt="Bots" />
+  <img src="public/screenshots/themes.jpg" width="180" alt="Themes" />
+  <img src="public/screenshots/relics.jpg" width="180" alt="Relics" />
+  <img src="public/screenshots/builds.jpg" width="180" alt="Builds" />
+</p>
 
+---
+
+## What TowerSmith does
+
+| Area | What you can do |
+|------|----------------|
+| **Research** | Browse every research tree (main, attack, defense, utility, cards, perks, bots, modules, and more) with costs and benefits shown where wiki data allows. |
+| **Labs** | Model upgrade costs and build times, compare configs side by side, save named presets, and use **Max All** to cap every visible lab at once. |
+| **Workshop** | Simulate attack, defense, utility, and ultimate-weapon upgrades with full coin and power-stone costs. The **Enhance** tab unlocks once Workshop Enhancements is researched. |
+| **Bots** | Track the five event-shop bots (Flame, Thunder, Golden, Amplify, Bot Bot), medal unlock order, stat upgrades, and Bot+ abilities. BOTS lab levels update cooldown and duration live. |
+| **Cards** | Manage your full 31-card inventory, star levels (Lv.1–7), five preset loadouts, equip-slot limits, and Card Mastery scaling. |
+| **Modules** | Configure chassis modules (cannon / armor / core / generator) across epic→ancestral tiers, sub-module effects, assist unlocks, stone efficiency, and five saved module presets. |
+| **Relics** | Catalog all 268 wiki relics with art, filter by unlock group, and have owned relics feed automatically into workshop stat formulas. |
+| **Themes** | Track owned tower skins, backgrounds, banners, music, and guardians — including coin-bonus rollups per category. |
+| **Displayed stats** | Workshop cards show wiki-aligned damage and attack speed folding in labs, enhancements, Card Mastery, relics, perks, and equipped sub-modules. |
+
+---
+
+## Getting your data in
+
+**Import your save** — On the LAB tab, load a gzip-compressed **playerInfo.dat** from The Tower (account menu → tower backup). TowerSmith maps your lab levels, workshop stats, bots, ultimates, modules, card stars, relics, and owned themes in one shot.
+
+- **Android:** tap **Import playerInfo.dat** to copy the save-folder path, then pick the file.
+- **iOS:** import a copy from Files, iCloud, or a backup extract (the game sandbox isn't browsable in-browser).
+
+**CSV backup** — Export/import a `tower_csv_v1` file with one or more named builds (labs, workshop, cards, module presets) plus your owned theme IDs. Swap builds without overwriting your current setup.
+
+---
+
+## Sharing builds
+
+**Share links** encode a full snapshot (labs, workshop, build name, themes) in the `?tower=` query string. Copy the URL or generate a QR code — anyone opening the link gets the same build.
+
+**Community gallery** — Browse and load community builds from the **BUILDS** tab. Sign in with Google or Discord (footer) to publish your own. **Copy share link** publishes and copies a short `?build=<uuid>` URL in one step.
+
+---
+
+## App experience
+
+- **Appearance** — Dark (default), Light, and High contrast themes in Tools / Settings.
+- **Keyboard shortcuts** — `/` focuses search on Labs, Relics, and Themes; `1`–`8` switches main tabs; `Ctrl+Z` undoes the last Max All or reset (up to 20 steps); `Esc` closes the top dialog. Full list under Tools / Settings → **Keyboard shortcuts**.
+- **Deep links** — Link directly to a lab card, workshop stat, ultimate weapon, or relic via URL hash or query param.
+- **PWA** — Install to your home screen (Tools / Settings → **Install app** on Android; Safari Share → Add to Home Screen on iOS). Works with limited offline support.
+- **Persistence** — All settings, snapshots, presets, and owned IDs survive reloads. Full reset available in Tools / Settings.
 
 For release history, see [`CHANGELOG.md`](CHANGELOG.md).
 
 ---
 
-## Requirements
+## Getting started (local dev)
 
-- **Node.js** 20 or newer (current LTS is recommended).
-
----
-
-## Quick start
+**Requirements:** Node.js 20 or newer (CI uses Node 22).
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open the URL Vite prints (by default `http://localhost:5173/`). The dev server also listens on your LAN (`server.host: true` in `vite.config.ts`) and prints a **Network** URL for testing on a phone or tablet on the same Wi‑Fi. It serves `public/` at the site root, so `/research/manifest.json` resolves to `public/research/manifest.json`.
+Open the URL Vite prints (default `http://localhost:5173/`). The dev server also advertises a **Network** URL for testing on a phone on the same Wi-Fi.
 
 **Production build**
 
 ```bash
-npm run build
-npm run preview
+npm run build   # typecheck + bundle → dist/
+npm run preview # serve dist/ locally
 ```
 
-`npm run build` runs the TypeScript project build and Vite; output is written to `dist/`.
+**With the community gallery**
+
+```bash
+npm run dev:netlify
+```
+
+Requires Supabase env vars — copy `.env.example` to `.env` and fill in your keys. See [Community gallery](#community-gallery-netlify--supabase).
 
 ---
 
 ## npm scripts
 
 | Command | Description |
-|--------|-------------|
+|---------|-------------|
 | `npm run dev` | Start the Vite dev server with HMR. |
-| `npm run dev:netlify` | Run Vite + Netlify Functions locally (required for the community gallery API). |
-| `npm run build` | Typecheck and emit a production bundle to `dist/`. |
+| `npm run dev:netlify` | Vite + Netlify Functions locally (needed for the community gallery). |
+| `npm run build` | Typecheck and bundle to `dist/`. |
 | `npm run preview` | Serve the production build locally. |
-| `npm run lint` | Run ESLint on the repo. |
-| `npm run test` | Run Vitest unit tests (`src/**/*.test.ts`). |
-| `npm run import-lab` | Wrapper for [`scripts/import-lab-csv.mjs`](scripts/import-lab-csv.mjs) (CSV → lab helper). |
-| `npm run icons` | Rasterize [`public/app-icon.svg`](public/app-icon.svg) into favicon and PWA PNGs under `public/`. |
-| `npm run og-banner` | Regenerate [`public/og-banner.svg`](public/og-banner.svg) and [`public/og-banner.png`](public/og-banner.png) (1200×630 social preview). |
+| `npm run lint` | Run ESLint. |
+| `npm run test` | Run Vitest unit tests. |
+| `npm run test:e2e` | Playwright end-to-end tests (share-link flow). |
+| `npm run check:i18n` | Fail if locale dictionaries drift from English keys. |
+| `npm run wiki-stamp` | Bump the wiki/game alignment date shown in Tools / Settings. |
+| `npm run icons` | Re-rasterize `public/app-icon.svg` → favicon and PWA PNGs. |
+| `npm run og-banner` | Regenerate the 1200×630 social preview image. |
 
 ---
 
-## Maintenance scripts (`scripts/`)
-
-These are run with Node directly when you update data or regenerate assets.
-
-Wiki/game alignment: scripts that refresh tables call [`scripts/lib/wiki-data-stamp.mjs`](scripts/lib/wiki-data-stamp.mjs), which updates [`src/data/wikiDataStamp.json`](src/data/wikiDataStamp.json) and prints `Wiki/game data aligned as of YYYY-MM-DD`. The app shows that date under **Tools / Settings**. Manual bump: `npm run wiki-stamp`.
-
-| Script | Purpose |
-|--------|--------|
-| [`import-lab-csv.mjs`](scripts/import-lab-csv.mjs) | Import lab rows from CSV (also available as `npm run import-lab`). |
-| [`build-module-tower-labs.mjs`](scripts/build-module-tower-labs.mjs) | Build pipeline for per-module lab JSON. |
-| [`merge-module-tower-labs.mjs`](scripts/merge-module-tower-labs.mjs) | Merge module exports into `src/data/tower-labs.json`. |
-| [`write-research-overlay.mjs`](scripts/write-research-overlay.mjs) | Regenerate [`src/i18n/research-overlay.es.json`](src/i18n/research-overlay.es.json) from the manifest and Spanish string tables. |
-| [`write-research-overlay-de.mjs`](scripts/write-research-overlay-de.mjs) | Regenerate [`src/i18n/research-overlay.de.json`](src/i18n/research-overlay.de.json) from the manifest and German string tables. |
-| [`patch-relics-catalog.mjs`](scripts/patch-relics-catalog.mjs) | Apply wiki table corrections to [`workshopRelics.generated.json`](src/data/workshopRelics.generated.json). |
-| [`gen-relic-images.mjs`](scripts/gen-relic-images.mjs) | Match `public/relics/{rarity}/*.webp` to catalog ids and regenerate [`workshopRelicImages.generated.json`](src/data/workshopRelicImages.generated.json). |
-| [`rename-relic-files.mjs`](scripts/rename-relic-files.mjs) | Rename relic art files to use underscores instead of spaces and sync the image map. |
-| [`sort-relics-by-rarity.mjs`](scripts/sort-relics-by-rarity.mjs) | Move flat `public/relics/*.webp` into `rare/`, `epic/`, `legendary/`, or `unmapped/` and update image-map paths. |
-| [`gen-dissonant-echo-labs.mjs`](scripts/gen-dissonant-echo-labs.mjs) | Generate Dissonant Echo lab duration/cost rows and patch `tower-labs.json` (wiki-aligned). |
-| [`gen-enhancement-coin-discount-labs.mjs`](scripts/gen-enhancement-coin-discount-labs.mjs) | Generate enhancement coin discount lab rows and patch `tower-labs.json`. |
-| [`gen-utility-enhance-coins.mjs`](scripts/gen-utility-enhance-coins.mjs) | Regenerate utility enhancement coin ladders (`workshopEnhanceUtilityTier200`, free upgrades, enemy level skip) from a wiki table scrape. |
-| [`gen-workshop-ultimate-data.mjs`](scripts/gen-workshop-ultimate-data.mjs) | Regenerate ultimate-weapon basic-upgrade milestone tables (`workshopUltimateData.ts`) from embedded wiki rows. |
-| [`gen-workshop-bots-data.mjs`](scripts/gen-workshop-bots-data.mjs) | Regenerate bot basic-upgrade and Bot+ milestone tables (`workshopBotsData.ts`) from embedded wiki rows. |
-| [`generate-dictionary-de.mjs`](scripts/generate-dictionary-de.mjs) | Regenerate [`dictionary.de.ts`](src/i18n/dictionary.de.ts) from `tmp-strings-en.json` and `dictionary-de-by-key.json` (maintainer workflow). |
-| [`analyze-es-keys.mjs`](scripts/analyze-es-keys.mjs) | Compare English vs Spanish UI keys (lists keys still identical to EN in `dictionary.es.ts`). |
-| [`check-i18n-keys.mjs`](scripts/check-i18n-keys.mjs) | CI: fail if `dictionary.es.ts` / `dictionary.de.ts` keys drift from `dictionary.ts`. |
-| [`build-app-icon-svg.mjs`](scripts/build-app-icon-svg.mjs) | Legacy: rebuild `app-icon.svg` from `app-icon-maskable.svg` (canonical source is `public/app-icon.svg`). |
-| [`generate-app-icons.mjs`](scripts/generate-app-icons.mjs) | Rasterize `app-icon.svg` → favicon / apple-touch / PWA PNGs (`npm run icons`). |
-| [`generate-og-banner.mjs`](scripts/generate-og-banner.mjs) | Build OG/Twitter banner SVG + PNG (`npm run og-banner`). |
-
-Example:
-
-```bash
-node scripts/merge-module-tower-labs.mjs
-node scripts/write-research-overlay.mjs
-```
-
----
-
-## Project layout
+## Project layout (key paths)
 
 | Path | Role |
 |------|------|
-| [`public/research/`](public/research/) | Runtime research data: `manifest.json` and `sections/*.json`. |
-| [`src/data/tower-labs.json`](src/data/tower-labs.json) | Lab upgrade costs, durations, and metadata used by the UI. |
-| [`src/data/card-mastery-tier-labels.json`](src/data/card-mastery-tier-labels.json) | Tier labels for card mastery display. |
-| [`src/types/research.ts`](src/types/research.ts) | Typed parsing and validation helpers for research JSON. |
-| [`src/loadResearchData.ts`](src/loadResearchData.ts) | Fetches manifest + sections and returns typed `ResearchData`. |
-| [`src/components/`](src/components/) | UI: research (`SelectResearch`, `ResearchCard`, …), workshop (`WorkshopPage`, `WorkshopUltimateWeaponCard`, `WorkshopUltimatePlusAbilityCard`, enhance panels), **bots** (`BotsPage`, `WorkshopBotCard`, `WorkshopBotSpecialCard`), `WorkshopModulesPanel`, `AssistUnlocksPanel`, `AssistModuleReference`, `RelicsPage`, `CardsPage`, `ThemesPage`, module catalogs/picker, `LabCompareDialog`, `SettingsPage`, and related pieces. |
-| [`public/modules/`](public/modules/) | Chassis module and rarity-frame WebP art (cannon, armor, core, generator). |
-| [`public/themes/`](public/themes/) | Theme preview art (tower, background, banners, menus, guardian). |
-| [`public/music/`](public/music/) | Krisu music-track preview WebP art for the Themes **Music** tab. |
-| [`public/relics/`](public/relics/) | Relic WebP art in `rare/`, `epic/`, `legendary/`, and `unmapped/` subfolders; paths keyed by catalog id in [`workshopRelicImages.generated.json`](src/data/workshopRelicImages.generated.json). |
-| [`src/towerDataThemes.ts`](src/towerDataThemes.ts) | Theme selection/owned snapshot helpers for CSV and presets. |
-| [`src/data/workshop*.ts`](src/data/) | Per-stat upgrade/enhance curves, displayed-stat helpers, full card wiki/loadouts, **bot** and ultimate Plus tracks ([`workshopBots.ts`](src/data/workshopBots.ts)), chassis and assist module catalogs, relic stats, submodule selection, module simulators, and Vitest coverage. [`workshopEnhanceResearch.ts`](src/data/workshopEnhanceResearch.ts) gates the Enhance tab on Main Research **Workshop Enhancements**. |
-| [`src/data/workshopModulePresets.ts`](src/data/workshopModulePresets.ts) | Five module loadout presets (hub levels, chassis, assist, sub-modules); persisted on `WorkshopPersistedV1`. |
-| [`src/labPresetsStorage.ts`](src/labPresetsStorage.ts) | Workshop snapshot, lab compare named presets, card/module preset fields, and sanitization on load. |
-| [`public/manifest.webmanifest`](public/manifest.webmanifest) | PWA name **TowerSmith**, theme colours, and icon list for Add to Home Screen. Production builds also register a service worker (via `vite-plugin-pwa`) that caches the app shell and runtime-fetches images/research JSON for faster repeat visits and limited offline use. |
-| [`public/app-icon.svg`](public/app-icon.svg), [`public/og-banner.png`](public/og-banner.png) | Brand icon and social preview image (regenerate with `npm run icons` / `npm run og-banner` after edits). |
-| [`index.html`](index.html) | Document title, `theme-color`, favicon links, and Open Graph / Twitter Card meta tags. |
-| [`public/*.webp`](public/) | Resource glyphs (coin, cash, …) and per-card art (`Damage.webp`, `Berserker.webp`, …) used by the Cards UI. |
-| [`src/i18n/`](src/i18n/) | Locale provider; English in [`dictionary.ts`](src/i18n/dictionary.ts), Spanish in [`dictionary.es.ts`](src/i18n/dictionary.es.ts), German in [`dictionary.de.ts`](src/i18n/dictionary.de.ts); research overlays; benefit translation helpers. |
-| [`src/labCompare.ts`](src/labCompare.ts), [`src/labBudgetAggregates.ts`](src/labBudgetAggregates.ts), [`src/workshopCompare.ts`](src/workshopCompare.ts), [`src/workshopBudgetAggregates.ts`](src/workshopBudgetAggregates.ts), … | Lab and workshop comparison, coin/stone budget rollups, presets, slugs, share codec, and unified CSV. |
-| [`src/budgetPanelsVisibility.ts`](src/budgetPanelsVisibility.ts), [`src/assistModuleCatalogVisibility.ts`](src/assistModuleCatalogVisibility.ts) | Toggles for budget panels and optional assist wiki tables (persisted). |
-| [`src/appVersion.ts`](src/appVersion.ts) | `APP_VERSION` and changelog URL (from `package.json`). |
+| `public/research/` | Runtime research data: `manifest.json` and section JSON files. |
+| `src/data/` | Lab costs, workshop curves, bot/ultimate/relic/module tables, and generated data files. |
+| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. |
+| `src/components/` | All UI — research browser, workshop, bots, modules, cards, relics, themes, settings, compare dialogs. |
+| `src/i18n/` | English, Spanish, and German UI strings and research overlays. |
+| `netlify/functions/` | Community gallery API (Netlify Functions + Supabase). |
+| `scripts/` | Data maintenance scripts (lab import, wiki table generators, save dump tools, icon/banner regen). |
+| `supabase/schema.sql` | Gallery database schema. |
 
-After you edit files under `public/research/` or `src/data/`, save and refresh the browser (or let Vite HMR pick up changes).
-
----
-
-## Sharing lab builds
-
-The app serializes lab levels (and optional workshop, build name, and owned theme catalog IDs) into the **`tower`** query parameter (`?tower=…`). Share codec **v4** only (`LabsShareFile` with `v: 4`). Copy the URL from the share control, or use the QR path where offered. Anyone opening that URL with the same app version should decode to the same payload (within codec limits). Import/compare accepts **tower CSV**, `?tower=` URLs, raw `u…` / `z…` payloads, or inline share JSON — not legacy `?labs=` links or old share codecs.
-
----
-
-## Tower CSV backup format
-
-The first line must be `tower_csv_v1`; the header row is `type,key,value`. Each **build** block can include:
-
-| Row type | Purpose |
-|----------|---------|
-| `build,name,…` | Optional label for the build (escaped if needed). |
-| `lab,<grid-key>,…` | Custom lab level overrides (`section-row` keys). |
-| `ws,<field>,…` | Workshop persisted fields (upgrade/enhance levels, ultimate Plus levels, **bot** stat levels, `*Owned` / `*Active`, Bot+ `*Unlocked` and `*Level`, assist chassis unlocks/efficiency, active module sim, relic ownership, etc.). Booleans are `true` / `false`; Bot+ levels may be `-1` when not stone-purchased. |
-| `card,star.<id>,…` | Per-card star level. |
-| `card,preset.<n>,…` | Pipe-separated equipped card IDs for preset *n*. |
-| `card,activePresetIndex,…` / `card,equipSlots,…` | Active card preset and equip-slot limit. |
-| `module,preset.<n>,…` | JSON object for module hub preset *n* (levels, chassis, assist, sub-modules). |
-| `module,activePresetIndex,…` | Active module preset tab (0–4). |
-| `theme,ownedIds,…` | JSON array of owned theme catalog IDs (global, not per-build). |
-
-Multi-build files repeat `build` / `lab` / `ws` / `card` / `module` sections; themes are written once at the end. Older CSV files without `module` rows still import: `sanitizeWorkshopPersisted` seeds preset 1 from the active `ws` sim fields.
-
----
-
-## Internationalization
-
-- Supported locales: **English (`en`)**, **Spanish (`es`)**, and **German (`de`)**.
-- UI strings: English source keys in [`dictionary.ts`](src/i18n/dictionary.ts); Spanish in [`dictionary.es.ts`](src/i18n/dictionary.es.ts); German in [`dictionary.de.ts`](src/i18n/dictionary.de.ts). Every locale file must define the same `StringId` keys. Locale is stored under the key documented in [`src/i18n/constants.ts`](src/i18n/constants.ts).
-- Spanish research **names** (sections and cards) come from [`src/i18n/research-overlay.es.json`](src/i18n/research-overlay.es.json), maintained by `scripts/write-research-overlay.mjs` when you refresh translations from your tables.
-- German research **names** use the same overlay shape in [`src/i18n/research-overlay.de.json`](src/i18n/research-overlay.de.json), maintained by `scripts/write-research-overlay-de.mjs`.
+After editing files under `public/research/` or `src/data/`, save and refresh — Vite HMR picks up most changes automatically.
 
 ---
 
 ## Community gallery (Netlify + Supabase)
 
-The gallery uses **Netlify Functions** as the API and **Supabase** for storage: **Postgres** (metadata + search) and **Storage** bucket `tower-payloads` (payload JSON). Supabase env vars are required for the gallery API to run.
-
-| Endpoint | Method | Purpose |
-|----------|--------|---------|
-| `/api/towers` | GET | Paginated list (`?limit=40&cursor=…&q=…`, newest first; `q` searches titles when Supabase is enabled) |
-| `/api/towers/get?id=…` | GET | Full tower JSON (`LabsShareFile` v4) |
-| `/api/towers/submit` | POST | Submit `{ title, payload }` — **requires `Authorization: Bearer <access_token>`** when Supabase is enabled |
-
-**Auth** — [Supabase Auth](https://supabase.com/docs/guides/auth) with **Google** and **Discord**. Anyone can **browse, search, and load** builds without signing in. **Publish** (Community row or Tools → Community towers) requires sign-in (footer **Sign in**).
-
-**Short share links** use `?build=<uuid>`. **Copy share link** publishes (when signed in) and copies the short URL.
-
-Implementation: [`netlify/functions/`](netlify/functions/), [`supabase/schema.sql`](supabase/schema.sql), UI in [`src/components/CommunityBuildRow.tsx`](src/components/CommunityBuildRow.tsx) and [`src/components/TowerGalleryPanel.tsx`](src/components/TowerGalleryPanel.tsx).
+The gallery uses Netlify Functions as the API layer and Supabase (Postgres + Storage) for data. Anyone can browse and load builds; publishing requires signing in.
 
 ### Supabase setup
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor (canonical gallery schema).
-3. **Storage** — create a **public** bucket named `tower-payloads` (public read so `get` can download JSON). See the note at the end of `schema.sql`.
+2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor.
+3. **Storage** — create a **public** bucket named `tower-payloads`.
 4. **Auth** — enable Google and Discord providers. In **Authentication → URL Configuration**:
-   - **Site URL:** your production origin (e.g. `https://thetower.thatangrybrit.com/`)
-   - **Redirect URLs:** add **both** production and local dev, e.g. `https://thetower.thatangrybrit.com/` and `http://localhost:5173/**` (wildcard covers local OAuth return). If sign-in from localhost lands on production, localhost is missing from Redirect URLs.
-   - Google/Discord app redirect URI stays `https://<project>.supabase.co/auth/v1/callback` (not localhost).
-5. Copy keys into [`.env.example`](.env.example) (local) and Netlify site env:
-
+   - **Site URL:** your production origin (e.g. `https://towersmith.com/`)
+   - **Redirect URLs:** add both production and local dev origins (e.g. `http://localhost:5173/**`). If sign-in from localhost lands on production, localhost is missing here.
+   - Google/Discord redirect URI: `https://<project>.supabase.co/auth/v1/callback`.
+5. Copy keys into `.env` (local) and your Netlify site env:
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (build + browser)
    - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (Functions only)
 
-**Local development** — copy `.env.example` to `.env`, fill values, then:
+### Optional env flags
 
-```bash
-npm run dev:netlify
-```
+| Flag | Effect |
+|------|--------|
+| `TOWER_GALLERY_SUBMIT_DISABLED=1` | Reject new submissions. |
+| `VITE_TOWER_GALLERY_DISABLED=1` | Disable gallery API calls in the frontend build. |
+| `TOWER_GALLERY_ADMIN_USER_IDS` | Comma-separated Supabase user UUIDs with admin/delete access. |
 
-Vite proxies `/api/*` to Netlify Dev (port 8888). Set the same Supabase vars for Functions in Netlify Dev (`.env` at repo root).
+---
 
-**Deploy** — set env vars on the Netlify site. Optional:
+## Internationalization
 
-- `TOWER_GALLERY_SUBMIT_DISABLED=1` — reject new submissions
-- `VITE_TOWER_GALLERY_DISABLED=1` — disable gallery API calls in the frontend build (the **BUILDS** tab still appears with a setup callout and link to this section)
-- `TOWER_GALLERY_ADMIN_USER_IDS` — comma-separated Supabase user UUIDs allowed to use the **Admin** tab and delete builds (set on Netlify + local `.env` for Functions)
+UI is available in **English**, **Spanish**, and **German**. Research section and card names have locale overlays generated by scripts in `scripts/`. Run `npm run check:i18n` to verify all locale files stay in sync with the English key set.
 
 ---
 
 ## Development notes
 
-- **Lint and tests** — Run `npm run lint`, `npm run check:i18n`, and `npm run test` before pushing substantive changes. UI smoke tests use Vitest + Testing Library (`*.test.tsx`); critical share-link flow: `npm run test:e2e` (Playwright, builds preview server).
-- **Research JSON cache** — Dev uses `cache: 'no-store'` on research fetches. Production relies on the PWA stale-while-revalidate cache; bump `dataVersion` in [`public/research/manifest.json`](public/research/manifest.json) when data changes. **Tools / Settings → Refresh research data** busts the cache and clears the research service-worker bucket.
-- **Branding assets** — After editing [`public/app-icon.svg`](public/app-icon.svg), run `npm run icons` so favicon and PWA PNGs stay in sync. After changing the banner layout or title in [`scripts/generate-og-banner.mjs`](scripts/generate-og-banner.mjs), run `npm run og-banner`. [`index.html`](index.html) and [`public/manifest.webmanifest`](public/manifest.webmanifest) hold the display name **TowerSmith** for tabs, unfurlers, and install prompts. **Install on mobile:** Tools / Settings → **Install app** (Chrome/Android) or Safari Share → Add to Home Screen (iOS).
-- **Windows / OneDrive** — This repo sets Vite [`cacheDir`](vite.config.ts) to the system temp directory (`vite-cache-tower_export`) to reduce permission issues when the tree lives under OneDrive or aggressive antivirus. If you still see EPERM on cache clears, keep the project outside synced folders or exclude the Vite cache from sync.
+- Run `npm run lint`, `npm run check:i18n`, and `npm run test` before pushing. CI (GitHub Actions) runs the same checks plus Playwright on every push/PR.
+- Bump `dataVersion` in `public/research/manifest.json` when research data changes — this busts the PWA cache. Users can also force a refresh via **Tools / Settings → Refresh research data**.
+- After editing `public/app-icon.svg`, run `npm run icons`. After changing the banner layout, run `npm run og-banner`.
+- On Windows with OneDrive, Vite's cache is redirected to the system temp directory to avoid EPERM errors. Keep the project outside synced folders if issues persist.
 
 ---
 
-## Versioning and releases
+## Versioning
 
-- The canonical version string is in [`VERSION`](VERSION) and mirrored in [`package.json`](package.json) and the root package entry in [`package-lock.json`](package-lock.json). The in-app badge reads `package.json` via [`src/appVersion.ts`](src/appVersion.ts).
-- Human-readable history is in [`CHANGELOG.md`](CHANGELOG.md) (Keep a Changelog, SemVer).
-- GitHub release notes can follow [`RELEASE_NOTES_TEMPLATE.md`](RELEASE_NOTES_TEMPLATE.md).
+Canonical version lives in `VERSION`, mirrored in `package.json`. Human-readable history is in [`CHANGELOG.md`](CHANGELOG.md).
 
 ---
 
 ## Licence and credits
 
-Licensed under **CC BY-NC-SA 4.0** — see [`LICENCE`](LICENCE).
-
+Licensed under **[CC BY-NC-SA 4.0](LICENCE)**.  
 Contributors are listed in [`AUTHORS`](AUTHORS).
