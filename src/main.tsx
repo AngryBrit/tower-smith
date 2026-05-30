@@ -5,15 +5,18 @@ import './index.css'
 import App from './App.tsx'
 import { AuthProvider } from './auth/AuthProvider'
 import { I18nProvider } from './i18n'
+import { PwaInstallProvider } from './pwa/PwaInstallProvider'
 
 registerSW({ immediate: true })
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <I18nProvider>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
+      <PwaInstallProvider>
+        <AuthProvider>
+          <App />
+        </AuthProvider>
+      </PwaInstallProvider>
     </I18nProvider>
   </StrictMode>,
 )

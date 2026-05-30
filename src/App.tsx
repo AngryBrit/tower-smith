@@ -1,4 +1,13 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import {
+  lazy,
+  Suspense,
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { APP_VERSION, CHANGELOG_URL } from './appVersion'
 import { BuyMeACoffeeButton } from './components/BuyMeACoffeeButton'
 import type { SelectResearchHandle } from './lab/labToolsTypes'
@@ -7,6 +16,8 @@ import { TowerWorkspaceProvider } from './TowerBuildContext'
 import { LabHydrationProvider } from './lab/LabHydrationContext'
 import { LabToolsBridgeProvider } from './lab/LabToolsBridge'
 import { CommunityBuildProvider } from './lab/CommunityBuildProvider'
+import { WorkspaceUndoProvider } from './lab/WorkspaceUndoContext'
+import { useInpanelTabHotkeys } from './hooks/useInpanelTabHotkeys'
 import { InpanelPresetsPortal } from './components/InpanelPresetsPortal'
 import { AuthButton } from './components/AuthButton'
 const MyBuildsDialog = lazy(() =>
@@ -70,6 +81,54 @@ export default function App() {
     writeMainPanel(mainPanel)
   }, [mainPanel])
 
+  const selectInpanelPanel = useCallback(
+    (panel: MainPanel) => {
+      setMainPanel(panel)
+      if (panel === 'workshop') {
+        const tab = workspace.build.workshop.mainTab
+        if (tab === 'modules' || tab === 'cards') {
+          setWorkspace((w) =>
+            mergeWorkspaceBuildDomain(w, 'workshop', {
+              ...w.build.workshop,
+              mainTab: 'upgrade',
+            }),
+          )
+        }
+      } else if (panel === 'cards') {
+        setWorkspace((w) =>
+          mergeWorkspaceBuildDomain(w, 'workshop', {
+            ...w.build.workshop,
+            mainTab: 'cards',
+          }),
+        )
+      } else if (panel === 'modules' && MODULES_PANEL_ENABLED) {
+        setWorkspace((w) =>
+          mergeWorkspaceBuildDomain(w, 'workshop', {
+            ...w.build.workshop,
+            mainTab: 'modules',
+          }),
+        )
+      }
+    },
+    [workspace.build.workshop.mainTab],
+  )
+
+  const inpanelTabHotkeys = useMemo(
+    () => [
+      { key: '1', panel: 'workshop' as const },
+      { key: '2', panel: 'research' as const },
+      { key: '3', panel: 'cards' as const },
+      { key: '4', panel: 'modules' as const, enabled: MODULES_PANEL_ENABLED },
+      { key: '5', panel: 'bots' as const },
+      { key: '6', panel: 'themes' as const },
+      { key: '7', panel: 'relics' as const },
+      { key: '8', panel: 'gallery' as const },
+    ],
+    [],
+  )
+
+  useInpanelTabHotkeys(inpanelTabHotkeys, selectInpanelPanel, Boolean(data) && !loading)
+
   useEffect(() => {
     let cancelled = false
     const base = import.meta.env.BASE_URL
@@ -123,6 +182,7 @@ export default function App() {
             setScratchWorkspace={setScratchWorkspace}
           >
           <LabHydrationProvider data={data}>
+          <WorkspaceUndoProvider>
           <LabToolsBridgeProvider
             data={data}
             onRequestResearchPanel={() => setMainPanel('research')}
@@ -372,6 +432,7 @@ export default function App() {
           ) : null}
           </CommunityBuildProvider>
           </LabToolsBridgeProvider>
+          </WorkspaceUndoProvider>
           </LabHydrationProvider>
           </TowerWorkspaceProvider>
         ) : null}

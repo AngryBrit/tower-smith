@@ -18,6 +18,8 @@ import {
   type GameThemeEntry,
   type ThemeCategory,
 } from '../data/gameThemes'
+import { useSearchHotkey } from '../hooks/useSearchHotkey'
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import {
@@ -34,8 +36,16 @@ import { resetAllThemes } from '../resetThemes'
 import { isThemeOwned, setThemesOwnedBatch, useThemeOwned } from '../themeOwnedStorage'
 import { useThemeSelection } from '../themeSelectionStorage'
 import { ThemeIcon } from './ThemeIcon'
+import { CollapsibleCatalogSection } from './catalog/CollapsibleCatalogSection'
+import {
+  readCatalogSectionCollapsed,
+  writeCatalogSectionCollapsed,
+} from './catalog/catalogSectionCollapsedStorage'
+import { ProgressiveGrid } from './catalog/ProgressiveGrid'
 
 const THEMES_COIN_BONUS_COLLAPSED_STORAGE_KEY = 'tower-export-themes-coin-bonus-collapsed-v1'
+const THEMES_SECTION_COLLAPSED_STORAGE_KEY = 'tower-export-themes-section-collapsed-v1'
+const THEMES_PROGRESSIVE_BATCH = 32
 
 type ThemesPageProps = {
   embeddedInPanel?: boolean
@@ -214,10 +224,14 @@ function tabPassivePercent(category: ThemeCategory): number | undefined {
   return undefined
 }
 
-function themesPanelClassName(category: ThemeCategory): string {
+function themesTabPanelClassName(category: ThemeCategory): string {
   if (category === 'tower' || category === 'background') {
     return 'themes-page__tower-panels'
   }
+  return 'themes-page__flat-panel'
+}
+
+function themesGridClassName(category: ThemeCategory): string {
   if (category === 'banners') {
     return 'themes-page__grid themes-page__grid--banners'
   }
@@ -229,11 +243,15 @@ export function ThemesPage({
   toolbarMount = null,
 }: ThemesPageProps) {
   const { t } = useI18n()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
   const [search, setSearch] = useState('')
   const searchInputRef = useRef<HTMLInputElement>(null)
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const coinBonusBodyId = useId().replace(/:/g, '')
   const [resetThemesConfirmOpen, setResetThemesConfirmOpen] = useState(false)
+  const [sectionCollapsed, setSectionCollapsed] = useState(() =>
+    readCatalogSectionCollapsed(THEMES_SECTION_COLLAPSED_STORAGE_KEY),
+  )
   const [coinBonusCollapsed, setCoinBonusCollapsed] = useState(() => {
     try {
       return localStorage.getItem(THEMES_COIN_BONUS_COLLAPSED_STORAGE_KEY) === '1'
@@ -248,6 +266,7 @@ export function ThemesPage({
   const towerGroups = towerThemesByGroup()
   const backgroundGroups = backgroundThemesByGroup()
   const searchNormalized = search.trim().toLowerCase()
+  const useProgressiveCatalog = searchNormalized.length === 0
   const visibleItems = useMemo(
     () => filterThemes(items, t, searchNormalized),
     [items, t, searchNormalized],
@@ -270,12 +289,20 @@ export function ThemesPage({
   const selectedId = selection[activeCategory]
   const tabPassive = tabPassivePercent(activeCategory)
 
-  const renderThemeCard = (theme: GameThemeEntry) => {
+  const toggleThemeSection = useCallback((sectionKey: string) => {
+    setSectionCollapsed((prev) => {
+      const next = { ...prev, [sectionKey]: !prev[sectionKey] }
+      writeCatalogSectionCollapsed(THEMES_SECTION_COLLAPSED_STORAGE_KEY, next)
+      return next
+    })
+  }, [])
+
+  const renderThemeCard = useCallback(
+    (theme: GameThemeEntry) => {
     const selected = theme.id === selectedId
     const owned = isThemeOwned(theme, ownedIds)
     return (
       <div
-        key={theme.id}
         className={
           selected
             ? 'themes-page__card themes-page__card--selected'
@@ -300,7 +327,7 @@ export function ThemesPage({
             data-theme-icon={theme.icon}
           >
             {theme.image ? (
-              <img className="themes-page__card-img" src={theme.image} alt="" />
+              <img className="themes-page__card-img" src={theme.image} alt="" loading="lazy" />
             ) : (
               <ThemeIcon icon={theme.icon} />
             )}
@@ -326,7 +353,25 @@ export function ThemesPage({
         </button>
       </div>
     )
-  }
+  },
+    [activeCategory, ownedIds, selectTheme, selectedId, t],
+  )
+
+  const renderThemeGrid = useCallback(
+    (items: readonly GameThemeEntry[], gridClassName: string) => (
+      <ProgressiveGrid
+        items={items}
+        className={gridClassName}
+        getKey={(theme) => theme.id}
+        renderItem={renderThemeCard}
+        progressive={{
+          enabled: useProgressiveCatalog,
+          batchSize: THEMES_PROGRESSIVE_BATCH,
+        }}
+      />
+    ),
+    [renderThemeCard, useProgressiveCatalog],
+  )
 
   const ownedCountInCategory = useMemo(
     () => visibleItems.filter((entry) => isThemeOwned(entry, ownedIds)).length,
@@ -381,8 +426,9 @@ export function ThemesPage({
 
   const performResetThemes = useCallback(() => {
     setResetThemesConfirmOpen(false)
+    pushUndoSnapshot()
     resetAllThemes()
-  }, [])
+  }, [pushUndoSnapshot])
 
   useEffect(() => {
     if (!resetThemesConfirmOpen) return
@@ -405,31 +451,7 @@ export function ThemesPage({
     }
   }, [coinBonusCollapsed])
 
-  useEffect(() => {
-    const onDocKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return
-      if (e.repeat) return
-      const panel = document.getElementById('inpanel-panel-themes')
-      if (!panel || panel.hidden) return
-      if (e.target === searchInputRef.current) return
-      const target = e.target
-      if (target instanceof HTMLElement && target.isContentEditable) return
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target instanceof HTMLSelectElement
-      ) {
-        return
-      }
-      e.preventDefault()
-      const el = searchInputRef.current
-      if (!el) return
-      el.focus()
-      el.select()
-    }
-    document.addEventListener('keydown', onDocKeyDown)
-    return () => document.removeEventListener('keydown', onDocKeyDown)
-  }, [])
+  useSearchHotkey(searchInputRef, { panelId: 'inpanel-panel-themes' })
 
   const toolbar = (
     <ThemesToolbar
@@ -488,10 +510,10 @@ export function ThemesPage({
             </span>
           </button>
         </div>
+        {!coinBonusCollapsed ? (
         <div
           id={coinBonusBodyId}
           className="select-research__budget-body themes-page__coin-bonus-body"
-          hidden={coinBonusCollapsed}
         >
           <p className="themes-page__coin-bonus-total">
             <span className="themes-page__coin-bonus-multiplier">
@@ -514,6 +536,7 @@ export function ThemesPage({
             ))}
           </ul>
         </div>
+        ) : null}
       </div>
       ) : null}
 
@@ -585,7 +608,7 @@ export function ThemesPage({
         id={`themes-panel-${activeCategory}`}
         role="tabpanel"
         aria-labelledby={`themes-tab-${activeCategory}`}
-        className={themesPanelClassName(activeCategory)}
+        className={themesTabPanelClassName(activeCategory)}
       >
         {!anyVisibleInPanel && searchNormalized.length > 0 ? (
           <p className="themes-page__search-empty" role="status">
@@ -595,76 +618,81 @@ export function ThemesPage({
         {activeCategory === 'background' ? (
           <>
             {visibleBackgroundGroups.event.length > 0 ? (
-              <section
-                className="themes-page__section"
-                aria-labelledby="themes-bg-event-title"
+              <CollapsibleCatalogSection
+                sectionId="themes-bg-event-title"
+                sectionClassName="themes-page__section"
+                collapsed={sectionCollapsed['bg-event'] === true}
+                onToggle={() => toggleThemeSection('bg-event')}
+                title={t('themes_tower_group_event')}
+                countLabel={withParams(t('themes_section_count'), {
+                  count: visibleBackgroundGroups.event.length,
+                })}
               >
-                <h3 id="themes-bg-event-title" className="themes-page__section-title">
-                  {t('themes_tower_group_event')}
-                </h3>
-                <div className="themes-page__grid">
-                  {visibleBackgroundGroups.event.map(renderThemeCard)}
-                </div>
-              </section>
+                {renderThemeGrid(visibleBackgroundGroups.event, 'themes-page__grid')}
+              </CollapsibleCatalogSection>
             ) : null}
             {visibleBackgroundGroups.guild.length > 0 ? (
-              <section
-                className="themes-page__section"
-                aria-labelledby="themes-bg-guild-title"
+              <CollapsibleCatalogSection
+                sectionId="themes-bg-guild-title"
+                sectionClassName="themes-page__section"
+                collapsed={sectionCollapsed['bg-guild'] === true}
+                onToggle={() => toggleThemeSection('bg-guild')}
+                title={t('themes_tower_group_guild')}
+                countLabel={withParams(t('themes_section_count'), {
+                  count: visibleBackgroundGroups.guild.length,
+                })}
               >
-              <h3 id="themes-bg-guild-title" className="themes-page__section-title">
-                {t('themes_tower_group_guild')}
-              </h3>
-              <div className="themes-page__grid">
-                {visibleBackgroundGroups.guild.map(renderThemeCard)}
-              </div>
-            </section>
+                {renderThemeGrid(visibleBackgroundGroups.guild, 'themes-page__grid')}
+              </CollapsibleCatalogSection>
             ) : null}
           </>
         ) : activeCategory === 'tower' ? (
           <>
             {visibleTowerGroups.milestone.length > 0 ? (
-              <section
-                className="themes-page__section"
-                aria-labelledby="themes-tower-milestone-title"
+              <CollapsibleCatalogSection
+                sectionId="themes-tower-milestone-title"
+                sectionClassName="themes-page__section"
+                collapsed={sectionCollapsed['tower-milestone'] === true}
+                onToggle={() => toggleThemeSection('tower-milestone')}
+                title={t('themes_tower_group_milestone')}
+                countLabel={withParams(t('themes_section_count'), {
+                  count: visibleTowerGroups.milestone.length,
+                })}
               >
-              <h3 id="themes-tower-milestone-title" className="themes-page__section-title">
-                {t('themes_tower_group_milestone')}
-              </h3>
-              <div className="themes-page__grid">
-                {visibleTowerGroups.milestone.map(renderThemeCard)}
-              </div>
-            </section>
+                {renderThemeGrid(visibleTowerGroups.milestone, 'themes-page__grid')}
+              </CollapsibleCatalogSection>
             ) : null}
             {visibleTowerGroups.event.length > 0 ? (
-              <section
-                className="themes-page__section"
-                aria-labelledby="themes-tower-event-title"
+              <CollapsibleCatalogSection
+                sectionId="themes-tower-event-title"
+                sectionClassName="themes-page__section"
+                collapsed={sectionCollapsed['tower-event'] === true}
+                onToggle={() => toggleThemeSection('tower-event')}
+                title={t('themes_tower_group_event')}
+                countLabel={withParams(t('themes_section_count'), {
+                  count: visibleTowerGroups.event.length,
+                })}
               >
-                <h3 id="themes-tower-event-title" className="themes-page__section-title">
-                  {t('themes_tower_group_event')}
-                </h3>
-                <div className="themes-page__grid">
-                  {visibleTowerGroups.event.map(renderThemeCard)}
-                </div>
-              </section>
+                {renderThemeGrid(visibleTowerGroups.event, 'themes-page__grid')}
+              </CollapsibleCatalogSection>
             ) : null}
             {visibleTowerGroups.guild.length > 0 ? (
-              <section
-                className="themes-page__section"
-                aria-labelledby="themes-tower-guild-title"
+              <CollapsibleCatalogSection
+                sectionId="themes-tower-guild-title"
+                sectionClassName="themes-page__section"
+                collapsed={sectionCollapsed['tower-guild'] === true}
+                onToggle={() => toggleThemeSection('tower-guild')}
+                title={t('themes_tower_group_guild')}
+                countLabel={withParams(t('themes_section_count'), {
+                  count: visibleTowerGroups.guild.length,
+                })}
               >
-                <h3 id="themes-tower-guild-title" className="themes-page__section-title">
-                  {t('themes_tower_group_guild')}
-                </h3>
-                <div className="themes-page__grid">
-                  {visibleTowerGroups.guild.map(renderThemeCard)}
-                </div>
-              </section>
+                {renderThemeGrid(visibleTowerGroups.guild, 'themes-page__grid')}
+              </CollapsibleCatalogSection>
             ) : null}
           </>
         ) : (
-          visibleItems.map(renderThemeCard)
+          renderThemeGrid(visibleItems, themesGridClassName(activeCategory))
         )}
       </div>
 

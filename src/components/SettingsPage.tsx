@@ -5,6 +5,7 @@ import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVis
 import { useSubmodulesCatalogVisible } from '../submodulesCatalogVisibility'
 import { useI18n, type AppLocale } from '../i18n'
 import { InstallAppPanel } from './InstallAppPanel'
+import { KeyboardShortcutsSection } from './settings/KeyboardShortcutsSection'
 
 export function SettingsPage() {
   const { t, locale, setLocale } = useI18n()
@@ -20,6 +21,9 @@ export function SettingsPage() {
   return (
     <div className="settings-page" role="region" aria-label={t('app_settings_title')}>
       <InstallAppPanel />
+      <hr className="settings-page__divider" aria-hidden />
+
+      <KeyboardShortcutsSection />
       <hr className="settings-page__divider" aria-hidden />
 
       <div className="settings-page__field">

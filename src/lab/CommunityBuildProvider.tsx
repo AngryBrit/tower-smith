@@ -13,6 +13,7 @@ import {
 import { useAuth } from '../auth/AuthProvider'
 import { useTowerWorkspaceContext } from '../TowerBuildContext'
 import { useLabHydration } from './LabHydrationContext'
+import { useWorkspaceUndo } from './WorkspaceUndoContext'
 import { buildLabsShareFileFromWorkspace } from './labShareActions'
 import {
   buildLabsShareUrls,
@@ -84,6 +85,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     workshopFlat,
   } = useTowerWorkspaceContext()
   const auth = useAuth()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
 
   const [sharePublishing, setSharePublishing] = useState(false)
   const [communityPublishDialogOpen, setCommunityPublishDialogOpen] = useState(false)
@@ -435,12 +437,21 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   ])
 
   const clearWorkspace = useCallback(() => {
+    pushUndoSnapshot()
     const cleared = clearTowerWorkspace(workspace)
     applyTowerThemes(workspaceThemesSnapshot(cleared))
     setWorkspace(cleared)
     setScratchWorkspace(clearTowerWorkspace(scratchWorkspace))
     setImportNotice(t('sr_community_clear_done'))
-  }, [scratchWorkspace, setScratchWorkspace, setWorkspace, setImportNotice, t, workspace])
+  }, [
+    pushUndoSnapshot,
+    scratchWorkspace,
+    setScratchWorkspace,
+    setWorkspace,
+    setImportNotice,
+    t,
+    workspace,
+  ])
 
   useEffect(() => {
     const blocking =

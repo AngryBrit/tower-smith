@@ -1,4 +1,11 @@
 import { Fragment, useCallback, useEffect, useId, useMemo, useState } from 'react'
+import { CollapsibleCatalogSection } from './catalog/CollapsibleCatalogSection'
+import {
+  readCatalogSectionCollapsed,
+  writeCatalogSectionCollapsed,
+} from './catalog/catalogSectionCollapsedStorage'
+import { ProgressiveGrid } from './catalog/ProgressiveGrid'
+import { RelicCatalogCard } from './catalog/RelicCatalogCard'
 import {
   WORKSHOP_RELIC_COUNT,
   workshopRelicsDamageBonusFraction,
@@ -16,7 +23,6 @@ import {
   type RelicStatId,
   type RelicStatRow,
 } from '../data/workshopRelicStats'
-import { workshopRelicImageUrl } from '../data/workshopRelicImages'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVisibility'
 import { useI18n } from '../i18n'
@@ -76,6 +82,8 @@ const RELIC_STAT_LABEL_IDS = new Map<RelicStatId, StringId>(
 )
 
 const RELICS_SUMMARY_COLLAPSED_STORAGE_KEY = 'tower-export-relics-summary-collapsed-v1'
+const RELICS_RARITY_COLLAPSED_STORAGE_KEY = 'tower-export-relics-rarity-collapsed-v1'
+const RELICS_PROGRESSIVE_BATCH = 36
 
 function formatBonusCell(value: number, unit: RelicStatRow['stat']['unit']): string {
   if (value === 0 && unit === 'percent') return '0.0%'
@@ -148,6 +156,9 @@ export function WorkshopRelicsPanel({
       return false
     }
   })
+  const [rarityCollapsed, setRarityCollapsed] = useState(() =>
+    readCatalogSectionCollapsed(RELICS_RARITY_COLLAPSED_STORAGE_KEY),
+  )
 
   useEffect(() => {
     try {
@@ -168,6 +179,7 @@ export function WorkshopRelicsPanel({
   const bonusTable = useMemo(() => workshopRelicsBonusTable(ownedSet), [ownedSet])
 
   const searchNormalized = searchQuery.trim().toLowerCase()
+  const useProgressiveCatalog = searchNormalized.length === 0
 
   const visibleRelics = useMemo(() => {
     const groupFiltered = workshopRelicsForUnlockGroup(filter)
@@ -209,6 +221,23 @@ export function WorkshopRelicsPanel({
     [patch, workshopPersisted.relicOwnedIds],
   )
 
+  const toggleRaritySection = useCallback((rarity: string) => {
+    setRarityCollapsed((prev) => {
+      const next = { ...prev, [rarity]: !prev[rarity] }
+      writeCatalogSectionCollapsed(RELICS_RARITY_COLLAPSED_STORAGE_KEY, next)
+      return next
+    })
+  }, [])
+
+  const workshopBonusByRelicId = useMemo(() => {
+    if (!relicWorkshopBonusLinesVisible) return new Map<string, string | null>()
+    const map = new Map<string, string | null>()
+    for (const relic of visibleRelics) {
+      map.set(relic.id, relicCardWorkshopBonusLine(relic, t))
+    }
+    return map
+  }, [relicWorkshopBonusLinesVisible, t, visibleRelics])
+
   const setVisibleOwned = useCallback(
     (owned: boolean) => {
       const next = new Set(workshopPersisted.relicOwnedIds)
@@ -225,52 +254,26 @@ export function WorkshopRelicsPanel({
     [patch, visibleRelics, workshopPersisted.relicOwnedIds],
   )
 
-  const renderRelicCard = (relic: WorkshopRelicDef) => {
-    const owned = ownedSet.has(relic.id)
-    const imageUrl = workshopRelicImageUrl(relic.id)
-    const workshopBonusLine = relicCardWorkshopBonusLine(relic, t)
-    return (
-      <div
-        key={relic.id}
-        className={
-          owned ? 'relics-page__card relics-page__card--owned' : 'relics-page__card'
-        }
-      >
-        <div className="relics-page__card-main">
-          <div className="relics-page__card-head">
-            {imageUrl != null ? (
-              <span className="relics-page__card-icon" aria-hidden>
-                <img src={imageUrl} alt="" decoding="async" draggable={false} />
-              </span>
-            ) : null}
-            <span className="relics-page__card-name">{relic.name}</span>
-          </div>
-          <p className="relics-page__card-effect">{relic.description}</p>
-          {relicWorkshopBonusLinesVisible && workshopBonusLine ? (
-            <p className="relics-page__card-damage">{workshopBonusLine}</p>
-          ) : null}
-          <p className="relics-page__card-unlock" title={relic.unlock}>
-            {relic.unlock}
-          </p>
-        </div>
-        <button
-          type="button"
-          className={
-            owned ? 'relics-page__owned relics-page__owned--on' : 'relics-page__owned'
-          }
-          aria-pressed={owned}
-          aria-label={
-            owned
-              ? withParams(t('ws_relics_owned_toggle_off'), { name: relic.name })
-              : withParams(t('ws_relics_owned_toggle_on'), { name: relic.name })
-          }
-          onClick={() => setOwned(relic.id, !owned)}
-        >
-          {owned ? t('ws_relics_owned_true') : t('ws_relics_owned_false')}
-        </button>
-      </div>
-    )
-  }
+  const renderRelicCard = useCallback(
+    (relic: WorkshopRelicDef) => (
+      <RelicCatalogCard
+        relic={relic}
+        owned={ownedSet.has(relic.id)}
+        workshopBonusLine={workshopBonusByRelicId.get(relic.id) ?? null}
+        showWorkshopBonusLine={relicWorkshopBonusLinesVisible}
+        onToggleOwned={setOwned}
+        t={t}
+        withParams={withParams}
+      />
+    ),
+    [
+      ownedSet,
+      relicWorkshopBonusLinesVisible,
+      setOwned,
+      t,
+      workshopBonusByRelicId,
+    ],
+  )
 
   return (
     <div className="relics-page">
@@ -314,10 +317,10 @@ export function WorkshopRelicsPanel({
             </span>
           </button>
         </div>
+        {!summaryCollapsed ? (
         <div
           id={summaryBodyId}
           className="select-research__budget-body relics-page__summary-body"
-          hidden={summaryCollapsed}
         >
           <p className="relics-page__summary-stats">
             {withParams(t('ws_relics_owned_count'), {
@@ -382,6 +385,7 @@ export function WorkshopRelicsPanel({
             </table>
           </div>
         </div>
+        ) : null}
       </div>
 
       <div className="relics-page__tabs" role="tablist" aria-label={t('ws_relics_tabs_aria')}>
@@ -440,29 +444,37 @@ export function WorkshopRelicsPanel({
         {relicsByRarity.map(({ rarity, relics }) => {
           const ownedInRarity = relics.filter((r) => ownedSet.has(r.id)).length
           const sectionId = `relics-section-${rarity}`
+          const collapsed = rarityCollapsed[rarity] === true
           return (
-            <section
+            <CollapsibleCatalogSection
               key={rarity}
-              className={`relics-page__section relics-page__section--${rarity}`}
-              aria-labelledby={sectionId}
+              sectionId={sectionId}
+              sectionClassName={`relics-page__section relics-page__section--${rarity}`}
+              collapsed={collapsed}
+              onToggle={() => toggleRaritySection(rarity)}
+              title={
+                <span
+                  className={`relics-page__rarity relics-page__rarity--${rarity}`}
+                >
+                  {t(RARITY_LABEL_IDS[rarity])}
+                </span>
+              }
+              countLabel={withParams(t('ws_relics_rarity_count'), {
+                owned: ownedInRarity,
+                total: relics.length,
+              })}
             >
-              <header className="relics-page__section-head">
-                <h3 id={sectionId} className="relics-page__section-title">
-                  <span
-                    className={`relics-page__rarity relics-page__rarity--${rarity}`}
-                  >
-                    {t(RARITY_LABEL_IDS[rarity])}
-                  </span>
-                </h3>
-                <p className="relics-page__section-count">
-                  {withParams(t('ws_relics_rarity_count'), {
-                    owned: ownedInRarity,
-                    total: relics.length,
-                  })}
-                </p>
-              </header>
-              <div className="relics-page__grid">{relics.map(renderRelicCard)}</div>
-            </section>
+              <ProgressiveGrid
+                items={relics}
+                className="relics-page__grid"
+                getKey={(relic) => relic.id}
+                renderItem={renderRelicCard}
+                progressive={{
+                  enabled: useProgressiveCatalog,
+                  batchSize: RELICS_PROGRESSIVE_BATCH,
+                }}
+              />
+            </CollapsibleCatalogSection>
           )
         })}
       </div>

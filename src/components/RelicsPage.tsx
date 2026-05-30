@@ -11,8 +11,10 @@ import { WorkshopRelicsPanel } from './WorkshopRelicsPanel'
 import {
   type WorkshopPersistedV1,
 } from '../labPresetsStorage'
-import { useTowerBuildContext } from '../TowerBuildContext'
+import { useTowerWorkspaceContext } from '../TowerBuildContext'
 import { resetTowerBuildRelics, splitTowerBuild } from '../towerBuildStorage'
+import { useSearchHotkey } from '../hooks/useSearchHotkey'
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { useI18n } from '../i18n'
 
 type RelicsPageProps = {
@@ -76,7 +78,8 @@ export function RelicsPage({
   toolbarMount = null,
 }: RelicsPageProps) {
   const { t } = useI18n()
-  const { workshopFlat, setTowerBuild, setScratchTowerBuild } = useTowerBuildContext()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
+  const { workshopFlat, setTowerBuild, setScratchTowerBuild } = useTowerWorkspaceContext()
   const [search, setSearch] = useState('')
   const [resetRelicsConfirmOpen, setResetRelicsConfirmOpen] = useState(false)
   const workshopPersistedRef = useRef(workshopFlat)
@@ -99,9 +102,10 @@ export function RelicsPage({
 
   const performResetRelics = useCallback(() => {
     setResetRelicsConfirmOpen(false)
+    pushUndoSnapshot()
     setTowerBuild((prev) => resetTowerBuildRelics(prev))
     setScratchTowerBuild((prev) => resetTowerBuildRelics(prev))
-  }, [setScratchTowerBuild, setTowerBuild])
+  }, [pushUndoSnapshot, setScratchTowerBuild, setTowerBuild])
 
   useEffect(() => {
     if (!resetRelicsConfirmOpen) return
@@ -113,31 +117,7 @@ export function RelicsPage({
     return () => window.removeEventListener('keydown', onKey)
   }, [resetRelicsConfirmOpen])
 
-  useEffect(() => {
-    const onDocKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return
-      if (e.repeat) return
-      const panel = document.getElementById('inpanel-panel-relics')
-      if (!panel || panel.hidden) return
-      if (e.target === searchInputRef.current) return
-      const target = e.target
-      if (target instanceof HTMLElement && target.isContentEditable) return
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target instanceof HTMLSelectElement
-      ) {
-        return
-      }
-      e.preventDefault()
-      const el = searchInputRef.current
-      if (!el) return
-      el.focus()
-      el.select()
-    }
-    document.addEventListener('keydown', onDocKeyDown)
-    return () => document.removeEventListener('keydown', onDocKeyDown)
-  }, [])
+  useSearchHotkey(searchInputRef, { panelId: 'inpanel-panel-relics' })
 
   const toolbar = (
     <RelicsToolbar

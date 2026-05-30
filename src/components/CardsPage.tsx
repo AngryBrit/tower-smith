@@ -10,6 +10,7 @@ import { WorkshopCardsPanel } from './WorkshopCardsPanel'
 import { maxWorkshopCardStars } from '../labPresetsStorage'
 import { useTowerWorkspaceContext } from '../TowerBuildContext'
 import { resetTowerBuildCards, splitTowerBuild, flattenTowerBuild } from '../towerBuildStorage'
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
@@ -60,6 +61,7 @@ export function CardsPage({
   researchData,
 }: CardsPageProps) {
   const { t } = useI18n()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
   const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides } =
     useTowerWorkspaceContext()
   const [resetCardsConfirmOpen, setResetCardsConfirmOpen] = useState(false)
@@ -82,17 +84,19 @@ export function CardsPage({
 
   const performResetCards = useCallback(() => {
     setResetCardsConfirmOpen(false)
+    pushUndoSnapshot()
     setTowerBuild((prev) => resetTowerBuildCards(prev))
     setScratchTowerBuild((prev) => resetTowerBuildCards(prev))
-  }, [setScratchTowerBuild, setTowerBuild])
+  }, [pushUndoSnapshot, setScratchTowerBuild, setTowerBuild])
 
   const maxAllCards = useCallback(() => {
+    pushUndoSnapshot()
     const next = maxWorkshopCardStars(workshopPersistedRef.current)
     onWorkshopPersistedChange(next)
     setScratchTowerBuild((prev) =>
       splitTowerBuild(maxWorkshopCardStars(flattenTowerBuild(prev))),
     )
-  }, [onWorkshopPersistedChange, setScratchTowerBuild])
+  }, [onWorkshopPersistedChange, pushUndoSnapshot, setScratchTowerBuild])
 
   useEffect(() => {
     if (!resetCardsConfirmOpen) return

@@ -6748,6 +6748,11 @@ button.workshop__uw-plus-cost--display:hover {
   gap: 1.25rem;
 }
 
+.themes-page__flat-panel {
+  display: block;
+  min-width: 0;
+}
+
 .themes-page__section-title {
   margin: 0 0 0.55rem;
   font-size: 0.72rem;
@@ -7641,6 +7646,40 @@ button.workshop__uw-plus-cost--display:hover {
   color: var(--sr-muted);
 }
 
+.settings-page__shortcuts-title {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.settings-page__shortcut-list {
+  margin: 0.5rem 0 0;
+  display: grid;
+  gap: 0.45rem;
+  max-width: 36rem;
+}
+
+.settings-page__shortcut-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.65rem;
+  align-items: baseline;
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
+.settings-page__shortcut-row dt {
+  margin: 0;
+  font-family: ui-monospace, monospace;
+  font-weight: 600;
+  color: var(--sr-accent, #7dd3fc);
+}
+
+.settings-page__shortcut-row dd {
+  margin: 0;
+  color: var(--sr-muted);
+}
+
 .install-app-panel__title {
   margin: 0 0 0.35rem;
   font-size: 0.82rem;
@@ -7956,6 +7995,27 @@ button.workshop__uw-plus-cost--display:hover {
 
 .relics-page__section--legendary .relics-page__section-head {
   border-bottom-color: rgba(245, 158, 11, 0.4);
+}
+
+.catalog-section__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.65rem;
+}
+
+.catalog-section__head .catalog-section__toggle {
+  margin-left: auto;
+}
+
+.catalog-section__body {
+  margin-top: 0.35rem;
+}
+
+.catalog-progressive-grid__sentinel {
+  grid-column: 1 / -1;
+  height: 1px;
+  pointer-events: none;
 }
 
 .relics-page__grid {

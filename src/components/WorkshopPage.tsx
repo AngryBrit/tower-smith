@@ -147,6 +147,7 @@ const WorkshopEnhanceDefensePanel = lazy(() =>
 const WorkshopEnhanceUtilityPanel = lazy(() =>
   import('./WorkshopEnhanceUtilityPanel').then((m) => ({ default: m.WorkshopEnhanceUtilityPanel })),
 )
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { formatCoinAbbrev } from '../labCosts'
 import {
   resetWorkshopUltimates,
@@ -3308,11 +3309,14 @@ export function WorkshopPage({
     [category, workshopPersisted],
   )
 
+  const { pushUndoSnapshot } = useWorkspaceUndo()
+
   const performResetWorkshopDemo = useCallback(() => {
     setResetWorkshopConfirmOpen(false)
+    pushUndoSnapshot()
     onWorkshopPersistedChange(resetWorkshopDemo())
     setMultiplierOpen(false)
-  }, [onWorkshopPersistedChange, resetWorkshopDemo])
+  }, [onWorkshopPersistedChange, pushUndoSnapshot, resetWorkshopDemo])
 
   const openResetWorkshopConfirm = useCallback(() => {
     setMultiplierOpen(false)
@@ -3369,8 +3373,9 @@ export function WorkshopPage({
 
   const maxAllWorkshopVisible = useCallback(() => {
     setMultiplierOpen(false)
+    pushUndoSnapshot()
     onWorkshopPersistedChange(applyWorkshopMaxAllVisible(workshopPersisted))
-  }, [onWorkshopPersistedChange, workshopPersisted])
+  }, [onWorkshopPersistedChange, pushUndoSnapshot, workshopPersisted])
 
   const workshopCoinAggregates = useMemo(
     () => computeWorkshopCoinAggregates(workshopPersisted, workshopCoinDiscountOpts),

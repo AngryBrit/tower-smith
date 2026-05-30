@@ -54,6 +54,8 @@ import {
   resolveLabsSpeedMultiplier,
 } from '../types/research'
 import { ResearchSection } from './ResearchSection'
+import { useSearchHotkey } from '../hooks/useSearchHotkey'
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { LabToolbarQuick } from './lab/LabToolbarQuick'
 import { labOverlayPortal } from './lab/labOverlayPortal'
 
@@ -112,6 +114,7 @@ export function SelectResearch({
   const { t, fmt, locale, setLocale } = useI18n()
   const { hydrated, importNotice, setImportNotice } = useLabHydration()
   const { registerResearchUi } = useLabToolsBridge()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
   const {
     sharePublishing,
     openPublishDialog,
@@ -175,29 +178,7 @@ export function SelectResearch({
     }
   }, [labBudgetCollapsed])
 
-  useEffect(() => {
-    const onDocKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return
-      if (e.repeat) return
-      if (e.target === searchInputRef.current) return
-      const t = e.target
-      if (t instanceof HTMLElement && t.isContentEditable) return
-      if (
-        t instanceof HTMLInputElement ||
-        t instanceof HTMLTextAreaElement ||
-        t instanceof HTMLSelectElement
-      ) {
-        return
-      }
-      e.preventDefault()
-      const el = searchInputRef.current
-      if (!el) return
-      el.focus()
-      el.select()
-    }
-    document.addEventListener('keydown', onDocKeyDown)
-    return () => document.removeEventListener('keydown', onDocKeyDown)
-  }, [])
+  useSearchHotkey(searchInputRef, { panelId: 'inpanel-panel-lab' })
 
   useEffect(() => {
     const blocking =
@@ -452,9 +433,10 @@ export function SelectResearch({
 
   const performResetLevels = useCallback(() => {
     setResetLevelsConfirmOpen(false)
+    pushUndoSnapshot()
     setLevelOverrides({})
     setImportNotice(t('sr_notice_reset_all'))
-  }, [t])
+  }, [pushUndoSnapshot, t])
 
   const handleExportLevels = useCallback(() => {
     const date = new Date().toISOString().slice(0, 10)
@@ -614,10 +596,11 @@ export function SelectResearch({
   )
 
   const maxAllVisibleLabs = useCallback(() => {
+    pushUndoSnapshot()
     setLevelOverrides((prev) =>
       maxVisibleLabLevels(data, prev, search, hideCompleted, collapsed),
     )
-  }, [collapsed, data, hideCompleted, search])
+  }, [collapsed, data, hideCompleted, pushUndoSnapshot, search])
 
   const openResetLevelsConfirm = useCallback(() => {
     setShareQr(null)

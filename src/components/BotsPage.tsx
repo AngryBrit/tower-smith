@@ -31,6 +31,7 @@ import {
 } from '../labPresetsStorage'
 import { useTowerWorkspaceContext } from '../TowerBuildContext'
 import { resetTowerBuildBots, splitTowerBuild } from '../towerBuildStorage'
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { useI18n } from '../i18n'
 import { buildWorkshopBotLabDisplayOpts } from '../data/workshopLabDisplayOpts'
 import { enrichBotLabDisplayOpts } from '../data/workshopRelicWorkshopDisplay'
@@ -82,6 +83,7 @@ export function BotsPage({
   researchData = null,
 }: BotsPageProps) {
   const { t } = useI18n()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
   const { workshopFlat, setTowerBuild, labLevelOverrides } = useTowerWorkspaceContext()
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
   const workshopPersistedRef = useRef(workshopFlat)
@@ -180,12 +182,14 @@ export function BotsPage({
 
   const performReset = useCallback(() => {
     setResetConfirmOpen(false)
+    pushUndoSnapshot()
     setTowerBuild((prev) => resetTowerBuildBots(prev))
-  }, [setTowerBuild])
+  }, [pushUndoSnapshot, setTowerBuild])
 
   const maxAllBots = useCallback(() => {
+    pushUndoSnapshot()
     onWorkshopPersistedChange(maxWorkshopBots(workshopPersistedRef.current))
-  }, [onWorkshopPersistedChange])
+  }, [onWorkshopPersistedChange, pushUndoSnapshot])
 
   useEffect(() => {
     if (!resetConfirmOpen) return

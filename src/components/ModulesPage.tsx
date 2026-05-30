@@ -12,6 +12,7 @@ import {
 } from '../labPresetsStorage'
 import { useTowerWorkspaceContext } from '../TowerBuildContext'
 import { resetTowerBuildModules, splitTowerBuild } from '../towerBuildStorage'
+import { useWorkspaceUndo } from '../lab/WorkspaceUndoContext'
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
 
@@ -47,6 +48,7 @@ export function ModulesPage({
   researchData,
 }: ModulesPageProps) {
   const { t } = useI18n()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
   const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides } =
     useTowerWorkspaceContext()
   const [resetModulesConfirmOpen, setResetModulesConfirmOpen] = useState(false)
@@ -69,9 +71,10 @@ export function ModulesPage({
 
   const performResetModules = useCallback(() => {
     setResetModulesConfirmOpen(false)
+    pushUndoSnapshot()
     setTowerBuild((prev) => resetTowerBuildModules(prev))
     setScratchTowerBuild((prev) => resetTowerBuildModules(prev))
-  }, [setScratchTowerBuild, setTowerBuild])
+  }, [pushUndoSnapshot, setScratchTowerBuild, setTowerBuild])
 
   useEffect(() => {
     if (!resetModulesConfirmOpen) return
