@@ -62,6 +62,15 @@ import {
   gameThemeIdAtIndex,
   gameThemeOwnedIdsFromUnlockArrays,
 } from './gameThemeIndex'
+import { gameWorkshopChassisModuleId } from './gameModuleIndex'
+import {
+  ASSIST_CHASSIS_MODULE_ID_KEY,
+  ASSIST_CHASSIS_MODULE_RARITY_KEY,
+  ASSIST_CHASSIS_UNLOCKED_KEY,
+  ASSIST_MAIN_STONE_EFFICIENCY_KEY,
+  ASSIST_SUB_STONE_EFFICIENCY_KEY,
+  clampAssistStoneEfficiency,
+} from '../data/workshopAssistChassisModule'
 import type { DecodedPlayerSave, DecodedUserBotData } from './decodePlayerInfo'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from '../towerDataThemes'
 import type { ThemeSelectionState } from '../themeSelectionStorage'
@@ -458,8 +467,45 @@ function applyModuleEquipped(
     if (merge) {
       ws[CHASSIS_MODULE_RARITY_KEY[slot]] = merge
     }
-    void CHASSIS_MODULE_ID_KEY[slot]
-    void item.infoIndex // chassis id mapping not yet implemented
+    const moduleId = gameWorkshopChassisModuleId(item.infoIndex, slot)
+    if (moduleId) {
+      ws[CHASSIS_MODULE_ID_KEY[slot]] = moduleId
+    }
+    void item.effects
+  }
+}
+
+function applyAssistModuleSlots(
+  ws: WorkshopPersistedV1,
+  slots: DecodedAssistModuleSlot[],
+): void {
+  for (let i = 0; i < MODULE_SLOTS.length; i++) {
+    const slot = MODULE_SLOTS[i]!
+    const row = slots[i]
+    if (!row) continue
+    ws[ASSIST_CHASSIS_UNLOCKED_KEY[slot]] = row.unlocked
+    if (row.mainEffectEfficiencyLevel > 0) {
+      ws[ASSIST_MAIN_STONE_EFFICIENCY_KEY[slot]] = clampAssistStoneEfficiency(
+        row.mainEffectEfficiencyLevel,
+      )
+    }
+    if (row.substatEfficiencyLevel > 0) {
+      ws[ASSIST_SUB_STONE_EFFICIENCY_KEY[slot]] = clampAssistStoneEfficiency(
+        row.substatEfficiencyLevel,
+      )
+    }
+    const item = row.equipped
+    if (!item) continue
+    const merge = gameModuleRarityToMergeTier(item.rarity)
+    if (merge) {
+      ws[ASSIST_CHASSIS_MODULE_RARITY_KEY[slot]] = merge
+    }
+    const moduleId = gameWorkshopChassisModuleId(item.infoIndex, slot)
+    if (moduleId) {
+      ws[ASSIST_CHASSIS_MODULE_ID_KEY[slot]] = moduleId
+    }
+    void row.uniqueEffectEfficiencyLevel
+    void item.effects
   }
 }
 
@@ -497,8 +543,12 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   ws.relicOwnedIds = relicIndicesToOwnedIds(save.relicsUnlocked)
 
   applyModuleEquipped(ws, save.moduleEquipped)
+  if (save.assistModulesAvailable) {
+    applyAssistModuleSlots(ws, save.assistModuleSlots)
+  }
 
-  return sanitizeWorkshopPersisted(ws)
+  // Drop default empty module presets so sanitize seeds preset 1 from imported sim fields.
+  return sanitizeWorkshopPersisted({ ...ws, modulePresetSnapshots: undefined })
 }
 
 export function mapPlayerSaveToTower(

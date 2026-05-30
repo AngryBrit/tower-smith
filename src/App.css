@@ -1156,6 +1156,12 @@
   text-align: center;
 }
 
+.select-research__lab-data-path {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.62rem;
+  word-break: break-all;
+}
+
 .select-research__lab-data-actions {
   display: flex;
   flex-direction: column;

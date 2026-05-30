@@ -56,6 +56,8 @@ function minimalSave(
     ultimateWeaponPlusLevel: [],
     ultimateWeaponPlusUnlocked: [],
     moduleEquipped: [],
+    assistModuleSlots: [],
+    assistModulesAvailable: false,
     lastGuildID: '',
     lastGuildSeason: 0,
     guildChestClaimedWeek: 0,
@@ -238,5 +240,25 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.cardPresetLoadouts[0]).toContain('damage')
     expect(ws.cardPresetLoadouts[0]).toHaveLength(18)
     expect(ws.cardPresetLoadouts[1]?.length).toBeGreaterThan(0)
+  })
+
+  it('imports equipped module levels, merge tiers, and chassis ids from sample save', async () => {
+    if (!existsSync(SAMPLE_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE)))
+    expect(save.moduleEquipped).toHaveLength(4)
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simCannonModuleLevel).toBe(save.moduleEquipped[0]!.level)
+    expect(ws.simArmorModuleLevel).toBe(save.moduleEquipped[1]!.level)
+    expect(ws.simGeneratorModuleLevel).toBe(save.moduleEquipped[2]!.level)
+    expect(ws.simCoreModuleLevel).toBe(save.moduleEquipped[3]!.level)
+    expect(ws.simCannonChassisModuleRarity).toBe('mythic_plus')
+    expect(ws.simArmorChassisModuleRarity).toBe('legendary')
+    expect(ws.simGeneratorChassisModuleRarity).toBe('epic')
+    expect(ws.simCoreChassisModuleRarity).toBe('legendary_plus')
+    expect(ws.simCannonChassisModuleId).toBe('amplifyingStrike')
+    expect(ws.simArmorChassisModuleId).toBe('sharpFortitude')
+    expect(ws.simGeneratorChassisModuleId).toBe('pulsarHarvester')
+    expect(ws.simCoreChassisModuleId).toBe('primordialCollapse')
+    expect(save.moduleEquipped[0]!.effects.length).toBeGreaterThan(0)
   })
 })

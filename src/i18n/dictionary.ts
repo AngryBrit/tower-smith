@@ -1083,6 +1083,14 @@ export const STRINGS_EN = {
     'Share links are short URLs with ?build=… (tower stored on the server). If the gallery is unavailable, a long offline link is copied automatically.',
   sr_lab_import_file: 'Import tower CSV',
   sr_lab_import_player_save: 'Import playerInfo.dat',
+  sr_lab_import_player_save_android_hint:
+    'Android save: {{path}}/playerInfo.dat — the path is copied when you tap Import; pick that file in the file picker.',
+  sr_lab_import_player_save_ios_hint:
+    'iOS: playerInfo.dat lives in the game’s sandbox — you can’t browse to it here. Import a copy from Files, iCloud, or a backup extract.',
+  sr_notice_import_player_android_path:
+    'Save folder path copied. In the file picker, open Android/data/com.TechTreeGames.TheTower/files and choose playerInfo.dat.',
+  sr_notice_import_player_android_path_no_clip:
+    'Opening file picker — in your file manager go to Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat.',
   sr_lab_export_file: 'Export tower to CSV',
   sr_compare_launcher: 'Compare builds…',
   sr_compare_title: 'Compare two lab snapshots',

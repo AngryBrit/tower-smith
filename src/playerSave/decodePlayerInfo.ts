@@ -13,8 +13,10 @@ import {
   getInt32,
   getInt32Array,
   getModuleEquipped,
+  getAssistModuleSlots,
   getString,
   getUserBotDataList,
+  type DecodedAssistModuleSlot,
   type DecodedModuleItem,
   type DecodedUserBotData,
   type PlayerDataContext,
@@ -24,7 +26,7 @@ function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
   return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
 }
 
-export type { DecodedModuleItem, DecodedUserBotData }
+export type { DecodedAssistModuleSlot, DecodedModuleItem, DecodedUserBotData }
 
 export type DecodedPlayerSave = {
   researchLevel: number[]
@@ -69,6 +71,8 @@ export type DecodedPlayerSave = {
   ultimateWeaponPlusLevel: number[]
   ultimateWeaponPlusUnlocked: boolean[]
   moduleEquipped: DecodedModuleItem[]
+  assistModuleSlots: DecodedAssistModuleSlot[]
+  assistModulesAvailable: boolean
   lastGuildID: string
   lastGuildSeason: number
   guildChestClaimedWeek: number
@@ -134,6 +138,8 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     ultimateWeaponPlusLevel: getInt32Array(ctx, 'ultimateWeaponPlusLevel'),
     ultimateWeaponPlusUnlocked: getBoolArray(ctx, 'ultimateWeaponPlusUnlocked'),
     moduleEquipped: getModuleEquipped(ctx),
+    assistModuleSlots: getAssistModuleSlots(ctx),
+    assistModulesAvailable: getBool(ctx, 'assistModulesAvailable'),
     lastGuildID: getString(ctx, 'lastGuildID'),
     lastGuildSeason: getInt32(ctx, 'lastGuildSeason'),
     guildChestClaimedWeek: getInt32(ctx, 'guildChestClaimedWeek'),

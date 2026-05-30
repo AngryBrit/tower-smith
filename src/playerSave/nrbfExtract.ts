@@ -125,6 +125,16 @@ export type DecodedModuleItem = {
   infoIndex: number
   level: number
   rarity: number
+  /** Indices into game `ModuleManager.effects` (sub-module rolls). */
+  effects: number[]
+}
+
+export type DecodedAssistModuleSlot = {
+  unlocked: boolean
+  uniqueEffectEfficiencyLevel: number
+  mainEffectEfficiencyLevel: number
+  substatEfficiencyLevel: number
+  equipped: DecodedModuleItem | null
 }
 
 export type DecodedUserBotData = {
@@ -174,27 +184,61 @@ export function getUserBotDataList(ctx: PlayerDataContext, name: string): Decode
   return out
 }
 
+function readModuleItem(ctx: PlayerDataContext, record: ObjectValue | undefined): DecodedModuleItem | null {
+  const item = resolveValue(ctx, record)
+  if (!(item instanceof ClassRecord)) return null
+  const rarRaw = resolveValue(ctx, item.getValue('currentRarity'))
+  let rarity = 0
+  if (rarRaw instanceof ClassRecord) {
+    const v = rarRaw.getValue('value__')
+    rarity = typeof v === 'number' ? Math.trunc(v) : 0
+  } else if (typeof rarRaw === 'number') {
+    rarity = Math.trunc(rarRaw)
+  }
+  const infoIndex = item.getValue('infoIndex')
+  const level = item.getValue('level')
+  return {
+    infoIndex: typeof infoIndex === 'number' ? Math.trunc(infoIndex) : 0,
+    level: typeof level === 'number' ? Math.trunc(level) : 0,
+    rarity,
+    effects: getInt32ArrayFromValue(ctx, item.getValue('effects')),
+  }
+}
+
 export function getModuleEquipped(ctx: PlayerDataContext): DecodedModuleItem[] {
   const raw = resolveValue(ctx, ctx.player.getValue('moduleEquipped'))
   if (!(raw instanceof BinaryArrayRecord)) return []
   const out: DecodedModuleItem[] = []
   for (const el of raw.elementValues) {
-    const item = resolveValue(ctx, el)
-    if (!(item instanceof ClassRecord)) continue
-    const rarRaw = resolveValue(ctx, item.getValue('currentRarity'))
-    let rarity = 0
-    if (rarRaw instanceof ClassRecord) {
-      const v = rarRaw.getValue('value__')
-      rarity = typeof v === 'number' ? Math.trunc(v) : 0
-    } else if (typeof rarRaw === 'number') {
-      rarity = Math.trunc(rarRaw)
-    }
-    const infoIndex = item.getValue('infoIndex')
-    const level = item.getValue('level')
+    const row = readModuleItem(ctx, el)
+    if (row) out.push(row)
+  }
+  return out
+}
+
+export function getAssistModuleSlots(ctx: PlayerDataContext): DecodedAssistModuleSlot[] {
+  const raw = resolveValue(ctx, ctx.player.getValue('assistModuleSlots'))
+  if (!(raw instanceof BinaryArrayRecord)) return []
+  const out: DecodedAssistModuleSlot[] = []
+  for (const el of raw.elementValues) {
+    const slot = resolveValue(ctx, el)
+    if (!(slot instanceof ClassRecord)) continue
+    const equipped = readModuleItem(ctx, slot.getValue('equippedModule'))
     out.push({
-      infoIndex: typeof infoIndex === 'number' ? Math.trunc(infoIndex) : 0,
-      level: typeof level === 'number' ? Math.trunc(level) : 0,
-      rarity,
+      unlocked: resolveValue(ctx, slot.getValue('unlocked')) === true,
+      uniqueEffectEfficiencyLevel: (() => {
+        const v = resolveValue(ctx, slot.getValue('uniqueEffectEfficiencyLevel'))
+        return typeof v === 'number' && Number.isFinite(v) ? Math.trunc(v) : 0
+      })(),
+      mainEffectEfficiencyLevel: (() => {
+        const v = resolveValue(ctx, slot.getValue('mainEffectEfficiencyLevel'))
+        return typeof v === 'number' && Number.isFinite(v) ? Math.trunc(v) : 0
+      })(),
+      substatEfficiencyLevel: (() => {
+        const v = resolveValue(ctx, slot.getValue('substatEfficiencyLevel'))
+        return typeof v === 'number' && Number.isFinite(v) ? Math.trunc(v) : 0
+      })(),
+      equipped,
     })
   }
   return out

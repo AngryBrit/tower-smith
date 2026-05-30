@@ -35,6 +35,11 @@ import {
   maxVisibleLabLevels,
 } from '../labBudgetAggregates'
 import { importPlayerInfoDat } from '../playerSave/importPlayerInfo'
+import {
+  isAndroidBrowser,
+  isIosBrowser,
+  TOWER_ANDROID_SAVE_FOLDER,
+} from '../playerSave/playerInfoSavePath'
 import { updateUserGuildId, updateUserPlayfabId } from '../profile/profileApi'
 import {
   getGalleryTower,
@@ -235,6 +240,8 @@ export const SelectResearch = forwardRef<
   })
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)
+  const androidPlayerSaveImport = useMemo(() => isAndroidBrowser(), [])
+  const iosPlayerSaveImport = useMemo(() => isIosBrowser(), [])
   const bulkAllSectionsToggleRef = useRef<HTMLInputElement>(null)
   const searchInputRef = useRef<HTMLInputElement>(null)
   const pendingLabScrollSlug = useRef<string | null>(null)
@@ -1114,6 +1121,22 @@ export const SelectResearch = forwardRef<
     ],
   )
 
+  const handleImportPlayerSaveClick = useCallback(() => {
+    // Must run synchronously in the click handler — deferred .click() is blocked on mobile.
+    importPlayerInfoFileInputRef.current?.click()
+    setLabDataPanelOpen(false)
+    if (androidPlayerSaveImport) {
+      void navigator.clipboard
+        .writeText(TOWER_ANDROID_SAVE_FOLDER)
+        .then(() => {
+          setImportNotice(t('sr_notice_import_player_android_path'))
+        })
+        .catch(() => {
+          setImportNotice(t('sr_notice_import_player_android_path_no_clip'))
+        })
+    }
+  }, [androidPlayerSaveImport, t])
+
   const handleImportLabCsvFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       const input = e.target
@@ -1562,14 +1585,23 @@ export const SelectResearch = forwardRef<
                   </button>
                 </div>
                 <p className="select-research__lab-data-section-label">{t('sr_lab_data_save_game')}</p>
+                {androidPlayerSaveImport ? (
+                  <p className="select-research__lab-data-share-hint select-research__lab-data-path">
+                    {t('sr_lab_import_player_save_android_hint').replace(
+                      '{{path}}',
+                      TOWER_ANDROID_SAVE_FOLDER,
+                    )}
+                  </p>
+                ) : iosPlayerSaveImport ? (
+                  <p className="select-research__lab-data-share-hint">
+                    {t('sr_lab_import_player_save_ios_hint')}
+                  </p>
+                ) : null}
                 <div className="select-research__lab-data-actions">
                   <button
                     type="button"
                     className="glow-btn glow-btn--block"
-                    onClick={() => {
-                      setLabDataPanelOpen(false)
-                      queueMicrotask(() => importPlayerInfoFileInputRef.current?.click())
-                    }}
+                    onClick={handleImportPlayerSaveClick}
                   >
                     {t('sr_lab_import_player_save')}
                   </button>

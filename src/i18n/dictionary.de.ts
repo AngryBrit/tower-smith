@@ -1033,6 +1033,14 @@ export const STRINGS_DE = {
     'Kurzlinks nutzen ?build=… (Turm auf dem Server). Ist die Galerie nicht verfügbar, wird automatisch ein langer Offline-Link kopiert.',
   sr_lab_import_file: 'Tower aus CSV importieren',
   sr_lab_import_player_save: 'playerInfo.dat importieren',
+  sr_lab_import_player_save_android_hint:
+    'Android-Speicher: {{path}}/playerInfo.dat — Pfad wird beim Import antippen kopiert; Datei im Datei-Dialog wählen.',
+  sr_lab_import_player_save_ios_hint:
+    'iOS: playerInfo.dat liegt in der App-Sandbox — hier nicht erreichbar. Kopie aus Dateien, iCloud oder Backup-Extrakt importieren.',
+  sr_notice_import_player_android_path:
+    'Speicherpfad kopiert. Im Datei-Dialog Android/data/com.TechTreeGames.TheTower/files öffnen und playerInfo.dat wählen.',
+  sr_notice_import_player_android_path_no_clip:
+    'Datei-Dialog wird geöffnet — im Dateimanager zu Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat navigieren.',
   sr_lab_export_file: 'Tower nach CSV exportieren',
   sr_compare_launcher: 'Builds vergleichen…',
   sr_compare_title: 'Zwei Lab-Snapshots vergleichen',

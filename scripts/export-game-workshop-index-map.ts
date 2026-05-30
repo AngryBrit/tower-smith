@@ -393,7 +393,7 @@ for (let i = 0; i < MODULE_SLOTS.length; i++) {
     towersmith_field: `module slot ${MODULE_SLOTS[i]}`,
     display_name: MODULE_SLOTS[i]!,
     import_mapped: 'partial',
-    notes: 'level + rarity only; chassis id (infoIndex) not mapped',
+    notes: 'level + rarity + chassis id (MANUAL_OVERRIDES in gen-game-module-index.mjs); sub-module effects not mapped',
   })
 }
 
