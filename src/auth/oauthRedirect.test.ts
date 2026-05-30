@@ -15,18 +15,18 @@ describe('oauthRedirectUrl', () => {
   it('keeps path and query on production', () => {
     expect(
       oauthRedirectUrl({
-        origin: 'https://thetower.thatangrybrit.com',
+        origin: 'https://www.towersmith.com',
         pathname: '/',
         search: '',
       }),
-    ).toBe('https://thetower.thatangrybrit.com')
+    ).toBe('https://www.towersmith.com')
 
     expect(
       oauthRedirectUrl({
-        origin: 'https://thetower.thatangrybrit.com',
+        origin: 'https://www.towersmith.com',
         pathname: '/foo',
         search: '?bar=1',
       }),
-    ).toBe('https://thetower.thatangrybrit.com/foo?bar=1')
+    ).toBe('https://www.towersmith.com/foo?bar=1')
   })
 })
