@@ -34,3 +34,26 @@ body {
 #root {
   min-height: 100svh;
 }
+
+.legal-page {
+  min-height: 100svh;
+  background: #f8fafc;
+  color: #1a1a1a;
+}
+
+.legal-page__back {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.25rem 2rem 0;
+  font-size: 0.875rem;
+}
+
+.legal-page__back a {
+  color: #0369a1;
+  text-decoration: none;
+}
+
+.legal-page__back a:hover,
+.legal-page__back a:focus-visible {
+  text-decoration: underline;
+}

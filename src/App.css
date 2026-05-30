@@ -2153,6 +2153,42 @@ a.select-research__version-label {
   user-select: none;
 }
 
+.select-research__footer-top-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.35rem 0.5rem;
+  width: 100%;
+}
+
+.select-research__footer-legal {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.select-research__footer-legal a {
+  color: var(--sr-muted);
+  text-decoration: none;
+}
+
+.select-research__footer-legal a:hover,
+.select-research__footer-legal a:focus-visible {
+  color: var(--sr-cyan-hover);
+  text-decoration: underline;
+}
+
+.select-research__footer-legal span {
+  color: var(--sr-muted-border);
+  user-select: none;
+}
+
 a.select-research__version-label:hover,
 a.select-research__version-label:focus-visible {
   color: var(--sr-cyan-bright);

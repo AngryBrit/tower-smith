@@ -1279,7 +1279,9 @@ export const STRINGS_ES = {
   sr_reset_modules_confirm_body:
     'Borra niveles de módulos, módulos de chasis equipados y efectos de submódulos. No cambia mejoras del taller, cartas ni investigación del laboratorio.',
 
-  sr_footer_nav_aria: 'Versión de la app, registro de cambios y patrocinio',
+  sr_footer_nav_aria: 'Versión de la app, registro de cambios, legal y patrocinio',
+  sr_footer_privacy: 'Privacidad',
+  sr_footer_terms: 'Términos',
   sr_version_aria: 'Versión {{version}}',
   sr_changelog: 'Cambios',
   sr_changelog_title: 'Notas de versión en GitHub (se abre en una pestaña nueva)',

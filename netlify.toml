@@ -10,3 +10,8 @@
   command = "npm run dev"
   targetPort = 5173
   framework = "#custom"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

@@ -1263,7 +1263,9 @@ export const STRINGS_EN = {
   sr_reset_modules_confirm_body:
     'Clears module levels, equipped chassis modules, and sub-module effect picks. Workshop upgrade levels, cards, and lab research are not changed.',
 
-  sr_footer_nav_aria: 'App version, changelog, and sponsorship',
+  sr_footer_nav_aria: 'App version, changelog, legal, and sponsorship',
+  sr_footer_privacy: 'Privacy',
+  sr_footer_terms: 'Terms',
   sr_version_aria: 'Version {{version}}',
   sr_changelog: 'Changelog',
   sr_changelog_title: 'Release notes on GitHub (opens in a new tab)',
