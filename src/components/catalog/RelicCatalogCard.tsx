@@ -1,4 +1,5 @@
 import { memo } from 'react'
+import { relicDomId } from '../../appDeepLink'
 import type { WorkshopRelicDef } from '../../data/workshopRelics'
 import { workshopRelicImageUrl } from '../../data/workshopRelicImages'
 import type { StringId } from '../../i18n/dictionary'
@@ -26,6 +27,7 @@ export const RelicCatalogCard = memo(function RelicCatalogCard({
 
   return (
     <div
+      id={relicDomId(relic.id)}
       className={
         owned ? 'relics-page__card relics-page__card--owned' : 'relics-page__card'
       }

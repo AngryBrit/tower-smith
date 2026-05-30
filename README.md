@@ -80,7 +80,9 @@ npm run preview
 
 ## Maintenance scripts (`scripts/`)
 
-These are run with Node directly when you update data or regenerate assets:
+These are run with Node directly when you update data or regenerate assets.
+
+Wiki/game alignment: scripts that refresh tables call [`scripts/lib/wiki-data-stamp.mjs`](scripts/lib/wiki-data-stamp.mjs), which updates [`src/data/wikiDataStamp.json`](src/data/wikiDataStamp.json) and prints `Wiki/game data aligned as of YYYY-MM-DD`. The app shows that date under **Tools / Settings**. Manual bump: `npm run wiki-stamp`.
 
 | Script | Purpose |
 |--------|--------|

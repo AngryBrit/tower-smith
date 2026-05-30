@@ -14,6 +14,7 @@ import { CommunityBuildRow } from './CommunityBuildRow'
 import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
 import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
+import { subscribeAppDeepLink } from '../appDeepLink'
 import { buildLabDomIdTables, getLabSlugFromUrl } from '../labSlug'
 import {
   computeSimulatorCoinAggregates,
@@ -80,7 +81,6 @@ const LabCompareDialog = lazy(() =>
 )
 
 /** Survives React Strict Mode remount so initial `?lab=` / `#` runs once per full load. */
-let initialLabUrlNavigationConsumed = false
 
 export type { SelectResearchHandle } from '../lab/labToolsTypes'
 
@@ -321,22 +321,15 @@ export function SelectResearch({
 
   useEffect(() => {
     if (!hydrated) return
-    if (initialLabUrlNavigationConsumed) return
-    initialLabUrlNavigationConsumed = true
     const slug = getLabSlugFromUrl()
-    if (!slug) return
-    queueMicrotask(() => {
-      requestLabScroll(slug)
-    })
+    if (slug) requestLabScroll(slug)
   }, [hydrated, requestLabScroll])
 
   useEffect(() => {
-    const onHashChange = () => {
-      const slug = getLabSlugFromUrl()
-      if (slug) requestLabScroll(slug)
-    }
-    window.addEventListener('hashchange', onHashChange)
-    return () => window.removeEventListener('hashchange', onHashChange)
+    return subscribeAppDeepLink((link) => {
+      if (link.kind !== 'lab') return
+      requestLabScroll(link.target)
+    })
   }, [requestLabScroll])
 
   const adjustLevel = useCallback(

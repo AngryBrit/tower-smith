@@ -1,4 +1,19 @@
-import { Fragment, useCallback, useEffect, useId, useMemo, useState } from 'react'
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
+import {
+  isKnownRelicId,
+  parseAppDeepLinkFromUrl,
+  relicDomId,
+  subscribeAppDeepLink,
+} from '../appDeepLink'
 import { CollapsibleCatalogSection } from './catalog/CollapsibleCatalogSection'
 import {
   readCatalogSectionCollapsed,
@@ -8,6 +23,7 @@ import { ProgressiveGrid } from './catalog/ProgressiveGrid'
 import { RelicCatalogCard } from './catalog/RelicCatalogCard'
 import {
   WORKSHOP_RELIC_COUNT,
+  workshopRelicDef,
   workshopRelicsDamageBonusFraction,
   workshopRelicsForUnlockGroup,
   workshopRelicsGroupedByRarity,
@@ -32,6 +48,9 @@ type WorkshopRelicsPanelProps = {
   workshopPersisted: WorkshopPersistedV1
   onWorkshopPersistedChange: (next: WorkshopPersistedV1) => void
   searchQuery?: string
+  /** Set by parent when opening a relic deep link (after clearing search). */
+  pendingRelicDeepLinkId?: string | null
+  onPendingRelicDeepLinkHandled?: () => void
 }
 
 function relicMatchesSearch(relic: WorkshopRelicDef, query: string): boolean {
@@ -144,6 +163,8 @@ export function WorkshopRelicsPanel({
   workshopPersisted,
   onWorkshopPersistedChange,
   searchQuery = '',
+  pendingRelicDeepLinkId = null,
+  onPendingRelicDeepLinkHandled,
 }: WorkshopRelicsPanelProps) {
   const { t } = useI18n()
   const [relicWorkshopBonusLinesVisible] = useRelicWorkshopBonusLinesVisible()
@@ -179,7 +200,11 @@ export function WorkshopRelicsPanel({
   const bonusTable = useMemo(() => workshopRelicsBonusTable(ownedSet), [ownedSet])
 
   const searchNormalized = searchQuery.trim().toLowerCase()
-  const useProgressiveCatalog = searchNormalized.length === 0
+  const pendingRelicScrollDomId = useRef<string | null>(null)
+  const [relicDeepLinkRevealAll, setRelicDeepLinkRevealAll] = useState(false)
+  const [relicScrollLayoutGen, setRelicScrollLayoutGen] = useState(0)
+  const useProgressiveCatalog =
+    searchNormalized.length === 0 && !relicDeepLinkRevealAll
 
   const visibleRelics = useMemo(() => {
     const groupFiltered = workshopRelicsForUnlockGroup(filter)
@@ -253,6 +278,58 @@ export function WorkshopRelicsPanel({
     },
     [patch, visibleRelics, workshopPersisted.relicOwnedIds],
   )
+
+  const requestRelicScroll = useCallback((relicId: string) => {
+    if (!isKnownRelicId(relicId)) return
+    const relic = workshopRelicDef(relicId)
+    if (!relic) return
+    pendingRelicScrollDomId.current = relicDomId(relicId)
+    setFilter('all')
+    setRarityCollapsed((prev) => ({ ...prev, [relic.rarity]: false }))
+    setRelicDeepLinkRevealAll(true)
+    setRelicScrollLayoutGen((g) => g + 1)
+  }, [])
+
+  useLayoutEffect(() => {
+    const domId = pendingRelicScrollDomId.current
+    if (!domId) return
+    const el = document.getElementById(domId)
+    if (!el) return
+    pendingRelicScrollDomId.current = null
+    setRelicDeepLinkRevealAll(false)
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [
+    filter,
+    relicScrollLayoutGen,
+    relicDeepLinkRevealAll,
+    searchNormalized,
+    visibleRelics.length,
+    relicsByRarity,
+  ])
+
+  useEffect(() => {
+    if (!pendingRelicDeepLinkId || searchNormalized.length > 0) return
+    requestRelicScroll(pendingRelicDeepLinkId)
+    onPendingRelicDeepLinkHandled?.()
+  }, [
+    pendingRelicDeepLinkId,
+    searchNormalized,
+    requestRelicScroll,
+    onPendingRelicDeepLinkHandled,
+  ])
+
+  useEffect(() => {
+    return subscribeAppDeepLink((link) => {
+      if (link.kind !== 'relic') return
+      requestRelicScroll(link.target)
+    })
+  }, [requestRelicScroll])
+
+  useEffect(() => {
+    const link = parseAppDeepLinkFromUrl()
+    if (link?.kind !== 'relic' || searchNormalized.length > 0) return
+    requestRelicScroll(link.target)
+  }, [requestRelicScroll, searchNormalized])
 
   const renderRelicCard = useCallback(
     (relic: WorkshopRelicDef) => (

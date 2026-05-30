@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
+import { workshopUltimateDomId } from '../appDeepLink'
 import {
   workshopUltimateMaxLevel,
   workshopUltimateNextMarginalStones,
@@ -132,7 +133,7 @@ export function WorkshopUltimateWeaponCard({
   }
 
   return (
-    <li className="workshop__uw-stack">
+    <li id={workshopUltimateDomId(weaponId)} className="workshop__uw-stack">
       <div
         className={
           !owned

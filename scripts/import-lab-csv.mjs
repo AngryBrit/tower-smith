@@ -8,6 +8,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
@@ -159,3 +160,4 @@ if (cursor !== dataRows.length) {
 }
 
 console.log('Done.')
+touchWikiDataStamp('import-lab-csv')

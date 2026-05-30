@@ -4,6 +4,7 @@
 import { readFileSync, writeFileSync } from 'fs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const path = join(root, 'src/data/workshopRelics.generated.json')
@@ -401,3 +402,4 @@ for (const row of newRelics) {
 
 writeFileSync(path, JSON.stringify(relics, null, 2) + '\n', 'utf8')
 console.log(`Patched ${relics.length} relics`)
+touchWikiDataStamp('patch-relics-catalog')

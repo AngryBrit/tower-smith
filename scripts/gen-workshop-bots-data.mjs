@@ -5,6 +5,7 @@
 import { writeFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { dirname, join } from 'node:path'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -268,3 +269,4 @@ ${specialTracksBody}
 
 writeFileSync(join(__dirname, '../src/data/workshopBotsData.ts'), out)
 console.log('Wrote src/data/workshopBotsData.ts')
+touchWikiDataStamp('gen-workshop-bots-data')

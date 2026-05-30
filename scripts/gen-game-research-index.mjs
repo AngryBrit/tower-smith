@@ -7,6 +7,7 @@ import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'url'
 import { gunzipSync } from 'node:zlib'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SAMPLE = process.env.PLAYER_SAVE ?? 'h:/The Tower/playerInfo.dat'
@@ -574,3 +575,4 @@ lines.push('')
 
 writeFileSync(OUT, lines.join('\n'))
 console.log('Wrote', OUT)
+touchWikiDataStamp('gen-game-research-index')

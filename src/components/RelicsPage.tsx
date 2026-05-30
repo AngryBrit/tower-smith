@@ -6,6 +6,7 @@ import {
   type ReactNode,
   type RefObject,
 } from 'react'
+import { parseAppDeepLinkFromUrl, subscribeAppDeepLink } from '../appDeepLink'
 import { createPortal } from 'react-dom'
 import { WorkshopRelicsPanel } from './WorkshopRelicsPanel'
 import {
@@ -81,6 +82,12 @@ export function RelicsPage({
   const { pushUndoSnapshot } = useWorkspaceUndo()
   const { workshopFlat, setTowerBuild, setScratchTowerBuild } = useTowerWorkspaceContext()
   const [search, setSearch] = useState('')
+  const [pendingRelicDeepLinkId, setPendingRelicDeepLinkId] = useState<string | null>(
+    () => {
+      const link = parseAppDeepLinkFromUrl()
+      return link?.kind === 'relic' ? link.target : null
+    },
+  )
   const [resetRelicsConfirmOpen, setResetRelicsConfirmOpen] = useState(false)
   const workshopPersistedRef = useRef(workshopFlat)
   const searchInputRef = useRef<HTMLInputElement>(null)
@@ -119,6 +126,19 @@ export function RelicsPage({
 
   useSearchHotkey(searchInputRef, { panelId: 'inpanel-panel-relics' })
 
+  useEffect(() => {
+    return subscribeAppDeepLink((link) => {
+      if (link.kind !== 'relic') return
+      setSearch('')
+      setPendingRelicDeepLinkId(link.target)
+    })
+  }, [])
+
+  useEffect(() => {
+    if (!pendingRelicDeepLinkId) return
+    setSearch('')
+  }, [pendingRelicDeepLinkId])
+
   const toolbar = (
     <RelicsToolbar
       onResetRelics={openResetRelicsConfirm}
@@ -141,6 +161,8 @@ export function RelicsPage({
         workshopPersisted={workshopFlat}
         onWorkshopPersistedChange={onWorkshopPersistedChange}
         searchQuery={search}
+        pendingRelicDeepLinkId={pendingRelicDeepLinkId}
+        onPendingRelicDeepLinkHandled={() => setPendingRelicDeepLinkId(null)}
       />
 
       {resetRelicsConfirmOpen

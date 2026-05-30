@@ -34,6 +34,11 @@ import {
 } from './researchCacheBust'
 import type { ResearchData } from './types/research'
 import {
+  emitAppDeepLink,
+  mainPanelForDeepLink,
+  parseAppDeepLinkFromUrl,
+} from './appDeepLink'
+import {
   readMainPanel,
   writeMainPanel,
   type MainPanel,
@@ -87,6 +92,18 @@ export default function App() {
     }
     writeMainPanel(mainPanel)
   }, [mainPanel])
+
+  useEffect(() => {
+    const applyFromUrl = () => {
+      const link = parseAppDeepLinkFromUrl()
+      if (!link) return
+      setMainPanel(mainPanelForDeepLink(link))
+      queueMicrotask(() => emitAppDeepLink(link))
+    }
+    applyFromUrl()
+    window.addEventListener('hashchange', applyFromUrl)
+    return () => window.removeEventListener('hashchange', applyFromUrl)
+  }, [])
 
   const selectInpanelPanel = useCallback(
     (panel: MainPanel) => {

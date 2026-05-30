@@ -503,6 +503,10 @@ export const STRINGS_EN = {
   app_settings_refresh_research_hint:
     'Reload lab and workshop definitions from the server. Use after a data update, or if cards look stale. Production uses the offline cache unless you refresh.',
   app_settings_refresh_research_busy: 'Refreshing…',
+  app_wiki_data_stamp:
+    'Game and wiki data in this build were aligned as of {{date}} (updated when maintainer scripts regenerate tables).',
+  app_wiki_data_stamp_unknown:
+    'Game and wiki alignment date is not recorded for this build.',
   app_settings_relic_workshop_bonus_hint:
     'When on, each relic card shows how its effect applies in the simulator (e.g. +10% workshop damage). Off by default.',
   settings_shortcuts_title: 'Keyboard shortcuts',

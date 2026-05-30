@@ -3,6 +3,7 @@
  * `src/data/workshopRelicImages.generated.json`.
  */
 import { readFileSync, writeFileSync, readdirSync, existsSync } from 'fs'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 import { join, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -212,3 +213,4 @@ if (unmatched.length) {
   console.log(`Unmatched (${unmatched.length}):`)
   for (const u of unmatched) console.log(`  ${u.id} — ${u.name}`)
 }
+touchWikiDataStamp('gen-relic-images')

@@ -5,6 +5,7 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const relicCs = readFileSync('h:/The Tower/Dump/Assembly-CSharp/Relic.cs', 'utf8')
@@ -347,3 +348,4 @@ lines.push(
 
 writeFileSync(outPath, lines.join('\n'))
 console.log('wrote', outPath)
+touchWikiDataStamp('gen-game-relic-index')

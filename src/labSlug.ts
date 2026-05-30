@@ -1,3 +1,4 @@
+import { parseAppDeepLinkFromUrl } from './appDeepLink'
 import type { ResearchData } from './types/research'
 
 /** Query param for deep links, e.g. `?lab=attack-research--damage` */
@@ -92,21 +93,9 @@ export function buildLabDomIdTables(data: ResearchData): LabDomIdTables {
 }
 
 /**
- * Read `#slug` first, then `?lab=slug` (hash wins if non-empty after `#`).
+ * Read lab deep link (`#slug` or `?lab=slug`). Ignores `relic-` / `workshop-` hashes.
  */
 export function getLabSlugFromUrl(): string | null {
-  if (typeof window === 'undefined') return null
-  const rawHash = window.location.hash.replace(/^#/, '').trim()
-  if (rawHash.length > 0) {
-    try {
-      return decodeURIComponent(rawHash)
-    } catch {
-      return rawHash
-    }
-  }
-  const q = new URLSearchParams(window.location.search).get(
-    LAB_DEEP_LINK_QUERY_PARAM,
-  )
-  const trimmed = q?.trim()
-  return trimmed && trimmed.length > 0 ? trimmed : null
+  const link = parseAppDeepLinkFromUrl()
+  return link?.kind === 'lab' ? link.target : null
 }

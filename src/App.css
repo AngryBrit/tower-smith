@@ -121,6 +121,8 @@ html[data-color-scheme='dark'] {
   --sr-modules-label-shadow: 0 1px 8px rgba(0, 0, 0, 0.92);
   --sr-modules-tower-filter: drop-shadow(0 0 12px var(--sr-cyan-a28));
   --sr-modules-icon-filter: none;
+  --sr-workshop-damage-max-caps: rgba(226, 232, 240, 0.72);
+  --sr-workshop-damage-max-caps-max: rgba(253, 230, 138, 0.88);
   --sr-picker-backdrop: rgba(0, 0, 0, 0.55);
   --sr-picker-dialog-bg: linear-gradient(180deg, #111a2e 0%, #0f172a 50%);
   --sr-picker-dialog-shadow: 0 18px 50px rgba(0, 0, 0, 0.65);
@@ -259,6 +261,8 @@ html[data-color-scheme='light'] {
   --sr-modules-label-shadow: 0 1px 3px rgba(15, 23, 42, 0.15);
   --sr-modules-tower-filter: drop-shadow(0 1px 5px rgba(15, 23, 42, 0.25));
   --sr-modules-icon-filter: none;
+  --sr-workshop-damage-max-caps: #475569;
+  --sr-workshop-damage-max-caps-max: var(--sr-max-text-soft);
   --sr-picker-backdrop: rgba(15, 23, 42, 0.4);
   --sr-picker-dialog-bg: linear-gradient(180deg, #ffffff 0%, #f1f5f9 50%);
   --sr-picker-dialog-shadow: 0 18px 50px rgba(15, 23, 42, 0.16);
@@ -364,6 +368,8 @@ html[data-color-scheme='high-contrast'] {
   --sr-modules-label-shadow: none;
   --sr-modules-tower-filter: none;
   --sr-modules-icon-filter: invert(1);
+  --sr-workshop-damage-max-caps: #000000;
+  --sr-workshop-damage-max-caps-max: #000000;
   --sr-picker-backdrop: rgba(0, 0, 0, 0.65);
   --sr-picker-dialog-bg: #ffffff;
   --sr-picker-dialog-shadow: 0 0 0 2px #000000;
@@ -4116,7 +4122,7 @@ button.workshop__uw-plus-cost--display:hover {
   font-size: 0.58rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  color: rgba(226, 232, 240, 0.72);
+  color: var(--sr-workshop-damage-max-caps);
   line-height: 1.1;
   white-space: nowrap;
 }
@@ -4228,7 +4234,7 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .workshop__card--max .workshop__damage-max-caps {
-  color: rgba(253, 230, 138, 0.88);
+  color: var(--sr-workshop-damage-max-caps-max);
 }
 
 .workshop__card--max .workshop__card-value {
@@ -8351,6 +8357,12 @@ button.workshop__uw-plus-cost--display:hover {
 
 .settings-page__hint--error {
   color: var(--sr-error-soft);
+}
+
+.settings-page__wiki-stamp {
+  margin-top: 1.25rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--sr-border-subtle);
 }
 
 html[data-color-scheme='high-contrast'] .select-research,

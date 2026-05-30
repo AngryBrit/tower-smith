@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const wikiPath = path.join(
@@ -155,3 +156,4 @@ fs.writeFileSync(path.join(outDir, 'workshopEnhanceUtilityTier200.ts'), tier200F
 fs.writeFileSync(path.join(outDir, 'workshopEnhanceFreeUpgrades.ts'), free100File())
 fs.writeFileSync(path.join(outDir, 'workshopEnhanceEnemyLevelSkip.ts'), skip60File())
 console.log('ok', tier200.length, free100.length, skip60.length)
+touchWikiDataStamp('gen-utility-enhance-coins')

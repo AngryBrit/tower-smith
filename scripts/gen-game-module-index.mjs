@@ -13,6 +13,7 @@
 import { writeFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..')
 const outPath = join(root, 'src/playerSave/gameModuleIndex.ts')
@@ -148,3 +149,4 @@ export function gameWorkshopChassisModuleId(
 
 writeFileSync(outPath, ts, 'utf8')
 console.log('Wrote', outPath, `(${GAME_MODULE_INFO_INDEX_TO_WORKSHOP_ID.length} indices)`)
+touchWikiDataStamp('gen-game-module-index')

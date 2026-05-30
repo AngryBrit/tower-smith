@@ -510,6 +510,10 @@ export const STRINGS_ES = {
   app_settings_refresh_research_hint:
     'Vuelve a cargar las definiciones de laboratorio y taller desde el servidor. Úsalo tras una actualización de datos o si las cartas se ven desactualizadas.',
   app_settings_refresh_research_busy: 'Actualizando…',
+  app_wiki_data_stamp:
+    'Los datos del juego y la wiki de esta compilación están alineados desde el {{date}} (se actualizan al regenerar tablas con scripts del proyecto).',
+  app_wiki_data_stamp_unknown:
+    'No hay fecha de alineación con el juego y la wiki para esta compilación.',
   app_settings_relic_workshop_bonus_hint:
     'Si está activado, cada reliquia muestra cómo aplica su efecto en el simulador (p. ej. +10% daño de taller). Desactivado por defecto.',
   settings_shortcuts_title: 'Atajos de teclado',

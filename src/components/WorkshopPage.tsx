@@ -7,11 +7,18 @@ import {
   useContext,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
 } from 'react'
 import { createPortal } from 'react-dom'
+import {
+  parseAppDeepLinkFromUrl,
+  resolveWorkshopDeepLinkNav,
+  subscribeAppDeepLink,
+  workshopStatDomId,
+} from '../appDeepLink'
 import { CoinGlyph } from './CoinGlyph'
 import { WorkshopDemoToolbar } from './workshop/WorkshopDemoToolbar'
 import {
@@ -412,6 +419,8 @@ function WorkshopDamageCard({
 
   return (
     <li
+      id={workshopStatDomId('damageLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -508,6 +517,8 @@ function WorkshopAttackSpeedCard({
 
   return (
     <li
+      id={workshopStatDomId('attackSpeedLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -606,6 +617,8 @@ function WorkshopCriticalChanceCard({
 
   return (
     <li
+      id={workshopStatDomId('critChanceLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -705,6 +718,8 @@ function WorkshopCriticalFactorCard({
 
   return (
     <li
+      id={workshopStatDomId('critFactorLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -804,6 +819,8 @@ function WorkshopAttackRangeCard({
 
   return (
     <li
+      id={workshopStatDomId('attackRangeLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -903,6 +920,8 @@ function WorkshopDamagePerMeterCard({
 
   return (
     <li
+      id={workshopStatDomId('damagePerMeterLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1001,6 +1020,8 @@ function WorkshopMultishotChanceCard({
 
   return (
     <li
+      id={workshopStatDomId('multishotChanceLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1099,6 +1120,8 @@ function WorkshopMultishotTargetsCard({
 
   return (
     <li
+      id={workshopStatDomId('multishotTargetsLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1197,6 +1220,8 @@ function WorkshopRapidFireChanceCard({
 
   return (
     <li
+      id={workshopStatDomId('rapidFireChanceLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1295,6 +1320,8 @@ function WorkshopRapidFireDurationCard({
 
   return (
     <li
+      id={workshopStatDomId('rapidFireDurationLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1393,6 +1420,8 @@ function WorkshopBounceShotChanceCard({
 
   return (
     <li
+      id={workshopStatDomId('bounceShotChanceLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1491,6 +1520,8 @@ function WorkshopBounceShotTargetsCard({
 
   return (
     <li
+      id={workshopStatDomId('bounceShotTargetsLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1589,6 +1620,8 @@ function WorkshopBounceShotRangeCard({
 
   return (
     <li
+      id={workshopStatDomId('bounceShotRangeLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1687,6 +1720,8 @@ function WorkshopSuperCritChanceCard({
 
   return (
     <li
+      id={workshopStatDomId('superCritChanceLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1786,6 +1821,8 @@ function WorkshopSuperCritMultCard({
 
   return (
     <li
+      id={workshopStatDomId('superCritMultLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1884,6 +1921,8 @@ function WorkshopRendArmorChanceCard({
 
   return (
     <li
+      id={workshopStatDomId('rendArmorChanceLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -1983,6 +2022,8 @@ function WorkshopRendArmorMultCard({
 
   return (
     <li
+      id={workshopStatDomId('rendArmorMultLevel')}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -2122,6 +2163,8 @@ function WorkshopDefenseUpgradeCard({
 
   return (
     <li
+      id={workshopStatDomId(fieldKey)}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -2224,6 +2267,8 @@ function WorkshopUtilityUpgradeCard({
 
   return (
     <li
+      id={workshopStatDomId(fieldKey)}
+      
       className={maxed ? 'workshop__card workshop__card--max' : 'workshop__card workshop__card--active'}
     >
       <div className="workshop__card-damage-head">
@@ -2618,6 +2663,8 @@ export function WorkshopPage({
       >,
   )
   const [resetWorkshopConfirmOpen, setResetWorkshopConfirmOpen] = useState(false)
+  const pendingWorkshopScrollDomId = useRef<string | null>(null)
+  const [workshopScrollLayoutGen, setWorkshopScrollLayoutGen] = useState(0)
   const multRailRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -3370,6 +3417,67 @@ export function WorkshopPage({
     (v: boolean) => onWorkshopPersistedChange({ ...workshopPersisted, hideMaxed: v }),
     [onWorkshopPersistedChange, workshopPersisted],
   )
+
+  const requestWorkshopDeepLink = useCallback(
+    (target: string) => {
+      const nav = resolveWorkshopDeepLinkNav(target)
+      if (!nav) return
+      pendingWorkshopScrollDomId.current = nav.domId
+      onWorkshopPersistedChange({
+        ...workshopPersisted,
+        category: nav.category,
+        mainTab: nav.mainTab,
+        hideMaxed: false,
+      })
+      setWorkshopScrollLayoutGen((g) => g + 1)
+    },
+    [onWorkshopPersistedChange, workshopPersisted],
+  )
+
+  useLayoutEffect(() => {
+    const domId = pendingWorkshopScrollDomId.current
+    if (!domId) return
+    const el = document.getElementById(domId)
+    if (!el) return
+    pendingWorkshopScrollDomId.current = null
+    el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [
+    category,
+    workshopMainTab,
+    hideMaxed,
+    workshopScrollLayoutGen,
+    showDamageCard,
+    showAttackSpeedCard,
+    showCritChanceCard,
+    showCritFactorCard,
+    showAttackRangeCard,
+    showDamagePerMeterCard,
+    showMultishotChanceCard,
+    showMultishotTargetsCard,
+    showRapidFireChanceCard,
+    showRapidFireDurationCard,
+    showBounceShotChanceCard,
+    showBounceShotTargetsCard,
+    showBounceShotRangeCard,
+    showSuperCritChanceCard,
+    showSuperCritMultCard,
+    showRendArmorChanceCard,
+    showRendArmorMultCard,
+    visibleDemoRows,
+    visibleUltimateWeapons,
+  ])
+
+  useEffect(() => {
+    return subscribeAppDeepLink((link) => {
+      if (link.kind !== 'workshop') return
+      requestWorkshopDeepLink(link.target)
+    })
+  }, [requestWorkshopDeepLink])
+
+  useEffect(() => {
+    const link = parseAppDeepLinkFromUrl()
+    if (link?.kind === 'workshop') requestWorkshopDeepLink(link.target)
+  }, [requestWorkshopDeepLink])
 
   const maxAllWorkshopVisible = useCallback(() => {
     setMultiplierOpen(false)

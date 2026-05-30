@@ -10,6 +10,7 @@ import {
 } from '../data/workshopEnhanceDefense'
 import { formatCoinAbbrev, formatCoinAbbrevPreferT } from '../labCosts'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
+import { workshopStatDomId } from '../appDeepLink'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import { applyWorkshopDiscountToCoins } from '../types/research'
@@ -103,7 +104,7 @@ function WorkshopEnhanceDefenseCard({
       : 'workshop__card workshop__card--active'
 
   return (
-    <li className={cardClass}>
+    <li id={workshopStatDomId(upgradeKey)} className={cardClass}>
       <div className="workshop__card-body" aria-hidden={locked || undefined}>
         <div className="workshop__card-damage-head">
         <span className="workshop__card-name">{t(ENHANCE_DEFENSE_LABEL[upgradeKey])}</span>

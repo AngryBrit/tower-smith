@@ -503,6 +503,10 @@ export const STRINGS_DE = {
   app_settings_refresh_research_hint:
     'Lädt Labor- und Werkstatt-Definitionen vom Server neu. Nach Datenupdates nutzen oder wenn Karten veraltet wirken.',
   app_settings_refresh_research_busy: 'Wird aktualisiert…',
+  app_wiki_data_stamp:
+    'Spiel- und Wiki-Daten in diesem Build wurden zuletzt am {{date}} abgeglichen (Aktualisierung bei Regenerierung durch Maintainer-Skripte).',
+  app_wiki_data_stamp_unknown:
+    'Für diesen Build ist kein Abgleichsdatum mit Spiel und Wiki hinterlegt.',
   app_settings_relic_workshop_bonus_hint:
     'Wenn aktiv, zeigt jede Reliktkarte, wie der Effekt im Simulator wirkt (z. B. +10 % Werkstatt-Schaden). Standardmäßig aus.',
   settings_shortcuts_title: 'Tastenkürzel',

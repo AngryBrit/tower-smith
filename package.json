@@ -14,6 +14,7 @@
     "preview": "vite preview",
     "dev:netlify": "netlify dev",
     "import-lab": "node scripts/import-lab-csv.mjs",
+    "wiki-stamp": "node scripts/touch-wiki-stamp.mjs",
     "icons": "node scripts/generate-app-icons.mjs",
     "og-banner": "node scripts/generate-og-banner.mjs"
   },

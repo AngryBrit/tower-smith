@@ -1,6 +1,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
@@ -178,3 +179,4 @@ fs.writeFileSync(
 
 console.log('sumCost', sumCost)
 console.log('wrote', outPath, metaPath)
+touchWikiDataStamp('gen-enhancement-coin-discount-labs')

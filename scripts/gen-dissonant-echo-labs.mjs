@@ -10,6 +10,7 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
@@ -154,3 +155,4 @@ console.log('Patched', labsPath)
 console.log('coinsToMaxRaw (one lab, sum L1..L20):', sumCost)
 console.log('L1 DURATION', oneLab['1'].DURATION, 'COST', oneLab['1'].COST)
 console.log('L20', oneLab['20'])
+touchWikiDataStamp('gen-dissonant-echo-labs')
