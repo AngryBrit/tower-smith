@@ -114,7 +114,7 @@ export default function Terms() {
 
       <h2>11. Third-Party Services</h2>
       <p>
-        TowerSmith uses Google (for authentication) and Supabase (for database and infrastructure).
+        TowerSmith uses Google, Discord, and Twitch (for authentication) and Supabase (for database and infrastructure).
         Your use of these services is subject to their respective terms and privacy policies.
       </p>
 
