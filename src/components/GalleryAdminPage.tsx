@@ -12,6 +12,7 @@ import { useGalleryList } from '../towerGallery/useGalleryList'
 import { useGalleryAdmin } from '../towerGallery/useGalleryAdmin'
 import { buildGalleryShareUrls } from '../towerGallery/shareLink'
 import type { TowerGalleryIndexEntry } from '../towerGallery/types'
+import { GalleryUnavailableCallout } from './GalleryUnavailableCallout'
 import { useI18n } from '../i18n'
 
 type GalleryAdminPageProps = {
@@ -133,7 +134,10 @@ export function GalleryAdminPage({
   if (!apiEnabled) {
     return (
       <div className="gallery-admin-page" role="region" aria-labelledby="gallery-admin-title">
-        <p className="tower-gallery__hint">{t('gallery_error_unavailable')}</p>
+        <h2 id="gallery-admin-title" className="tower-gallery__title">
+          {t('gallery_admin_title')}
+        </h2>
+        <GalleryUnavailableCallout />
       </div>
     )
   }

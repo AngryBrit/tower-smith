@@ -853,6 +853,139 @@
   margin-top: 0.75rem;
 }
 
+.gallery-unavailable-callout {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  background: rgba(125, 211, 252, 0.08);
+}
+
+.gallery-unavailable-callout--compact {
+  padding: 0;
+  margin: 0.35rem 0 0;
+  border: none;
+  background: transparent;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: var(--sr-muted);
+}
+
+.gallery-unavailable-callout__title {
+  margin: 0 0 0.4rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.gallery-unavailable-callout__body,
+.gallery-unavailable-callout__cmd-hint {
+  margin: 0 0 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--sr-muted);
+}
+
+.gallery-unavailable-callout__cmd {
+  margin: 0 0 0.55rem;
+  font-size: 0.75rem;
+}
+
+.gallery-unavailable-callout__cmd code {
+  display: inline-block;
+  margin-right: 0.35rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.25);
+  font-size: 0.78rem;
+}
+
+.gallery-unavailable-callout__actions {
+  margin: 0;
+}
+
+.gallery-unavailable-callout__link {
+  font-size: 0.75rem;
+  color: var(--sr-accent, #7dd3fc);
+}
+
+.gallery-unavailable-callout__link.glow-btn {
+  display: inline-flex;
+  padding: 0.35rem 0.65rem;
+  font-size: 0.72rem;
+  text-decoration: none;
+}
+
+.tower-gallery__filters {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.65rem 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.tower-gallery__filters .tower-gallery__search {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  margin-bottom: 0;
+}
+
+.tower-gallery__mine-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.15rem;
+  font-size: 0.72rem;
+  color: var(--sr-muted);
+  cursor: pointer;
+  user-select: none;
+}
+
+.tower-gallery__mine-filter input {
+  margin: 0;
+}
+
+.gallery-category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 0.45rem;
+}
+
+.tower-gallery__sort-row {
+  display: flex;
+  align-items: center;
+  margin: 0 0 0.75rem;
+}
+
+.tower-gallery__sort-row .gallery-sort-toggle {
+  margin-bottom: 0;
+}
+
+.gallery-category-chips__chip {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.18));
+  background: rgba(0, 0, 0, 0.15);
+  color: inherit;
+  font-size: 0.68rem;
+  line-height: 1.3;
+  cursor: pointer;
+}
+
+.gallery-category-chips__chip:hover:not(:disabled) {
+  border-color: rgba(125, 211, 252, 0.45);
+}
+
+.gallery-category-chips__chip--on {
+  border-color: rgba(125, 211, 252, 0.55);
+  background: rgba(125, 211, 252, 0.12);
+}
+
+.gallery-category-chips__chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .tower-gallery__search {
   margin-top: 0.5rem;
 }

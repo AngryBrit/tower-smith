@@ -405,6 +405,19 @@ export const STRINGS_DE = {
   gallery_error_network: 'Galerie-API nicht erreichbar. Später erneut versuchen.',
   gallery_error_unavailable:
     'Galerie-API nicht verfügbar. Unter localhost npm run dev:netlify statt npm run dev nutzen.',
+  gallery_unavailable_title: 'Community-Galerie ist offline',
+  gallery_unavailable_disabled_body:
+    'Dieser Build hat die Galerie deaktiviert (VITE_TOWER_GALLERY_DISABLED). Entferne das Flag und deploye neu, oder nutze einen normalen Build zum Durchsuchen und Einreichen.',
+  gallery_unavailable_local_body:
+    'Die Galerie braucht Netlify Functions und Supabase. npm run dev liefert nur die statische App — Aufrufe von /api/towers schlagen fehl.',
+  gallery_unavailable_production_body:
+    'Die Galerie-API antwortet nicht. Setze Supabase-Umgebungsvariablen auf dem Host (VITE_SUPABASE_* im Browser, SUPABASE_* in den Functions) und wende supabase/schema.sql an.',
+  gallery_unavailable_local_cmd_hint: '— startet Vite und leitet /api an Netlify Dev weiter',
+  gallery_unavailable_setup_link: 'Galerie-Einrichtungsanleitung',
+  gallery_publish_unavailable_hint:
+    'Veröffentlichen und Durchsuchen brauchen die Galerie-API.',
+  gallery_filter_mine: 'Nur meine Builds',
+  gallery_filter_tags_aria: 'Nach Build-Kategorie filtern',
   gallery_error_invalid_title: 'Titel muss 1–40 Zeichen haben.',
   gallery_error_invalid_payload: 'Turm-Daten ungültig oder zu groß.',
   gallery_error_disabled: 'Einreichungen vorübergehend deaktiviert.',

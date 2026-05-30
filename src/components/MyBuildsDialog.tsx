@@ -16,6 +16,8 @@ import {
 import { useGalleryList } from '../towerGallery/useGalleryList'
 import { buildGalleryShareUrls } from '../towerGallery/shareLink'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
+import { GalleryUnavailableCallout } from './GalleryUnavailableCallout'
+import { shouldShowGallerySetupCallout } from '../towerGallery/gallerySetup'
 import { useI18n } from '../i18n'
 
 type MyBuildsDialogProps = {
@@ -130,6 +132,8 @@ export function MyBuildsDialog({
   const listError = listErrorCode
     ? apiErrorMessage(listErrorCode, errorStrings)
     : null
+  const showSetupCallout = shouldShowGallerySetupCallout(apiEnabled, listErrorCode)
+  const listInteractive = apiEnabled && !showSetupCallout
 
   const handleCopyLink = useCallback(
     async (id: string) => {
@@ -295,29 +299,31 @@ export function MyBuildsDialog({
           </h2>
           <p className="select-research__lab-data-intro">{t('auth_my_builds_intro')}</p>
 
+          {showSetupCallout ? <GalleryUnavailableCallout error={listErrorCode} /> : null}
+
           {notice ? (
             <p className="tower-gallery__notice" role="status">
               {notice}
             </p>
           ) : null}
 
-          {loading ? (
+          {listInteractive && loading ? (
             <p className="tower-gallery__hint" role="status">
               {t('gallery_loading')}
             </p>
           ) : null}
 
-          {listError && !loading ? (
+          {listInteractive && listError && !loading && !showSetupCallout ? (
             <p className="tower-gallery__error" role="alert">
               {listError}
             </p>
           ) : null}
 
-          {!loading && !listError && entries.length === 0 ? (
+          {listInteractive && !loading && !listError && entries.length === 0 ? (
             <p className="tower-gallery__hint">{t('auth_my_builds_empty')}</p>
           ) : null}
 
-          {!loading && entries.length > 0 ? (
+          {listInteractive && !loading && entries.length > 0 ? (
             <>
               <ul className="tower-gallery__entries my-builds-dialog__entries">
                 {entries.map((entry) => (

@@ -408,6 +408,19 @@ export const STRINGS_ES = {
   gallery_error_network: 'No se pudo contactar la API de la galería. Inténtalo más tarde.',
   gallery_error_unavailable:
     'La API de la galería no está disponible. En localhost, usa npm run dev:netlify en lugar de npm run dev.',
+  gallery_unavailable_title: 'La galería comunitaria no está disponible',
+  gallery_unavailable_disabled_body:
+    'Esta compilación desactivó la galería (VITE_TOWER_GALLERY_DISABLED). Quita esa variable y vuelve a desplegar, o usa una compilación normal para explorar y publicar builds.',
+  gallery_unavailable_local_body:
+    'La galería necesita Netlify Functions y Supabase. npm run dev solo sirve la app estática; las llamadas a /api/towers fallarán.',
+  gallery_unavailable_production_body:
+    'La API de la galería no responde. Configura las variables de Supabase en tu hosting (VITE_SUPABASE_* en el navegador, SUPABASE_* en las funciones) y aplica supabase/schema.sql.',
+  gallery_unavailable_local_cmd_hint: '— inicia Vite y envía /api a Netlify Dev',
+  gallery_unavailable_setup_link: 'Guía de configuración de la galería',
+  gallery_publish_unavailable_hint:
+    'Publicar y explorar requieren la API de la galería.',
+  gallery_filter_mine: 'Solo mis builds',
+  gallery_filter_tags_aria: 'Filtrar por categoría de build',
   gallery_error_invalid_title: 'El título debe tener entre 1 y 40 caracteres.',
   gallery_error_invalid_payload: 'Los datos de la torre no son válidos o son demasiado grandes.',
   gallery_error_disabled: 'Los envíos están desactivados temporalmente.',

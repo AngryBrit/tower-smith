@@ -405,6 +405,19 @@ export const STRINGS_EN = {
   gallery_error_network: 'Could not reach the gallery API. Try again later.',
   gallery_error_unavailable:
     'Gallery API is not available. On localhost, run npm run dev:netlify instead of npm run dev.',
+  gallery_unavailable_title: 'Community gallery is offline',
+  gallery_unavailable_disabled_body:
+    'This build was compiled with the gallery disabled (VITE_TOWER_GALLERY_DISABLED). Remove that flag and redeploy, or run a normal build to browse and publish builds.',
+  gallery_unavailable_local_body:
+    'The gallery API needs Netlify Functions and Supabase. Plain npm run dev only serves the static app — API calls to /api/towers will fail.',
+  gallery_unavailable_production_body:
+    'The gallery API is not responding. Set Supabase env vars on your host (VITE_SUPABASE_* for the browser, SUPABASE_* for serverless functions) and apply supabase/schema.sql.',
+  gallery_unavailable_local_cmd_hint: '— starts Vite and proxies /api to Netlify Dev',
+  gallery_unavailable_setup_link: 'Gallery setup guide',
+  gallery_publish_unavailable_hint:
+    'Publish and browse need the gallery API.',
+  gallery_filter_mine: 'My builds only',
+  gallery_filter_tags_aria: 'Filter by build category',
   gallery_error_invalid_title: 'Title must be 1–40 characters.',
   gallery_error_invalid_payload: 'Tower data was invalid or too large.',
   gallery_error_disabled: 'Submissions are temporarily disabled.',

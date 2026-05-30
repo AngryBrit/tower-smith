@@ -77,7 +77,9 @@ export function useGalleryList({
   const loadFirstPage = useCallback(async () => {
     if (!enabled) {
       setLoading(false)
-      setError('gallery_unavailable')
+      setError(null)
+      setEntries([])
+      setNextCursor(null)
       return
     }
     setLoading(true)

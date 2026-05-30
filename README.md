@@ -220,7 +220,7 @@ Vite proxies `/api/*` to Netlify Dev (port 8888). Set the same Supabase vars for
 **Deploy** — set env vars on the Netlify site. Optional:
 
 - `TOWER_GALLERY_SUBMIT_DISABLED=1` — reject new submissions
-- `VITE_TOWER_GALLERY_DISABLED=1` — hide gallery in the frontend build
+- `VITE_TOWER_GALLERY_DISABLED=1` — disable gallery API calls in the frontend build (the **BUILDS** tab still appears with a setup callout and link to this section)
 - `TOWER_GALLERY_ADMIN_USER_IDS` — comma-separated Supabase user UUIDs allowed to use the **Admin** tab and delete builds (set on Netlify + local `.env` for Functions)
 
 ---

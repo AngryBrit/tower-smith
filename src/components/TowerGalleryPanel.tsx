@@ -9,10 +9,9 @@ import { GallerySortToggle } from './GallerySortToggle'
 
 import { GalleryUpvoteButton } from './GalleryUpvoteButton'
 
-import {
-  GalleryBuildCategoryBadge,
-  GalleryBuildCategoryFilter,
-} from './GalleryBuildCategoryFields'
+import { GalleryBuildCategoryBadge } from './GalleryBuildCategoryFields'
+import { GalleryCategoryChips } from './GalleryCategoryChips'
+import { GalleryUnavailableCallout } from './GalleryUnavailableCallout'
 import { GalleryCategorySelect } from './GalleryCategorySelect'
 import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
 
@@ -39,6 +38,7 @@ import type { GalleryListSort } from '../towerGallery/types'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 
 import { buildGalleryShareUrls } from '../towerGallery/shareLink'
+import { shouldShowGallerySetupCallout } from '../towerGallery/gallerySetup'
 
 import { useI18n } from '../i18n'
 
@@ -128,7 +128,7 @@ export function TowerGalleryPanel({
   const [searchQuery, setSearchQuery] = useState('')
 
   const [categoryFilter, setCategoryFilter] = useState<GalleryBuildCategory | ''>('')
-
+  const [mineOnlyFilter, setMineOnlyFilter] = useState(false)
   const [listSort, setListSort] = useState<GalleryListSort>('newest')
 
   const [accessToken, setAccessToken] = useState<string | null>(null)
@@ -140,6 +140,10 @@ export function TowerGalleryPanel({
     void auth.getAccessToken().then(setAccessToken)
 
   }, [auth, auth.session])
+
+  useEffect(() => {
+    if (!auth.session) setMineOnlyFilter(false)
+  }, [auth.session])
 
 
 
@@ -224,9 +228,13 @@ export function TowerGalleryPanel({
     sort: listSort,
 
     accessToken,
+    mineOnly: mineOnlyFilter && Boolean(accessToken),
     paginationMode: 'paged',
 
   })
+
+  const showSetupCallout = shouldShowGallerySetupCallout(apiEnabled, listErrorCode)
+  const listInteractive = apiEnabled && !showSetupCallout
 
   useEffect(() => {
     if (!isActive) return
@@ -449,7 +457,9 @@ export function TowerGalleryPanel({
 
       <hr className="tower-gallery__divider" aria-hidden />
 
-
+      {showSetupCallout ? (
+        <GalleryUnavailableCallout error={listErrorCode} />
+      ) : null}
 
       <div className="tower-gallery__list-header">
 
@@ -471,7 +481,7 @@ export function TowerGalleryPanel({
 
           className="glow-btn"
 
-          disabled={loading}
+          disabled={loading || !listInteractive}
 
           onClick={() => {
             setActionNotice(null)
@@ -488,55 +498,52 @@ export function TowerGalleryPanel({
 
 
 
-      <label className="tower-gallery__field tower-gallery__search">
+      <div className="tower-gallery__filters">
+        <label className="tower-gallery__field tower-gallery__search">
+          <span>{t('gallery_search_label')}</span>
+          <input
+            type="search"
+            className="tower-gallery__input"
+            value={searchDraft}
+            onChange={(e) => setSearchDraft(e.target.value)}
+            placeholder={t('gallery_search_placeholder')}
+            autoComplete="off"
+            disabled={!listInteractive}
+          />
+        </label>
 
-        <span>{t('gallery_search_label')}</span>
+        {auth.session ? (
+          <label className="tower-gallery__mine-filter">
+            <input
+              type="checkbox"
+              checked={mineOnlyFilter}
+              disabled={loading || !listInteractive || !accessToken}
+              onChange={(e) => setMineOnlyFilter(e.target.checked)}
+            />
+            <span>{t('gallery_filter_mine')}</span>
+          </label>
+        ) : null}
+      </div>
 
-        <input
-
-          type="search"
-
-          className="tower-gallery__input"
-
-          value={searchDraft}
-
-          onChange={(e) => setSearchDraft(e.target.value)}
-
-          placeholder={t('gallery_search_placeholder')}
-
-          autoComplete="off"
-
-        />
-
-      </label>
-
-
-
-      <GalleryBuildCategoryFilter
+      <GalleryCategoryChips
         value={categoryFilter}
         onChange={setCategoryFilter}
-        disabled={loading}
+        disabled={loading || !listInteractive}
       />
 
+      <div className="tower-gallery__sort-row">
+        <GallerySortToggle
+          name="tower-gallery-sort"
+          value={listSort}
+          onChange={setListSort}
+          disabled={loading || !listInteractive}
+        />
+      </div>
 
-
-      <GallerySortToggle
-        name="tower-gallery-sort"
-        value={listSort}
-        onChange={setListSort}
-        disabled={loading}
-      />
-
-
-
-      {!loading && entries.length > 0 ? (
-
+      {listInteractive && !loading && entries.length > 0 ? (
         <p className="tower-gallery__hint tower-gallery__hint--tight">
-
           {fmt.galleryShowingCount(entries.length)}
-
         </p>
-
       ) : null}
 
 
@@ -553,39 +560,23 @@ export function TowerGalleryPanel({
 
 
 
-      {loading ? (
-
+      {listInteractive && loading ? (
         <p className="tower-gallery__hint" role="status">
-
           {t('gallery_loading')}
-
         </p>
-
       ) : null}
 
-
-
-      {listError && !loading ? (
-
+      {listInteractive && listError && !loading && !showSetupCallout ? (
         <p className="tower-gallery__error" role="alert">
-
           {listError}
-
         </p>
-
       ) : null}
 
-
-
-      {!loading && !listError && entries.length === 0 ? (
-
+      {listInteractive && !loading && !listError && entries.length === 0 ? (
         <p className="tower-gallery__hint">{t('gallery_empty')}</p>
-
       ) : null}
 
-
-
-      {!loading && entries.length > 0 ? (
+      {listInteractive && !loading && entries.length > 0 ? (
 
         <>
 

@@ -228,6 +228,10 @@ async function fetchBuildListPage(
     request = request.eq('category', category)
   }
 
+  if (mineOnly && viewerUserId) {
+    request = request.eq('user_id', viewerUserId)
+  }
+
   if (q.length > 0) {
     request = await applyBuildSearchFilter(sb, request, q)
   }

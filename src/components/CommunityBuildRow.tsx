@@ -1,6 +1,7 @@
 import { useEffect, useId, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { towerGalleryApiAvailable } from '../towerGallery/api'
+import { GalleryUnavailableCallout } from './GalleryUnavailableCallout'
 import { useI18n } from '../i18n'
 
 export type CommunityBuildRowProps = {
@@ -74,6 +75,7 @@ export function CommunityBuildRow({
           {t('sr_community_clear_workspace')}
         </button>
       </div>
+      {!apiEnabled ? <GalleryUnavailableCallout compact /> : null}
       {copyNotice ? (
         <p
           id="community-copy-notice"
