@@ -541,6 +541,7 @@ export function SelectResearch({
           displayName: imported.fakeUserName ?? imported.userName,
         })
         setImportNotice(t('sr_notice_import_player_ok'))
+        setLabDataPanelOpen(false)
       } catch {
         setImportNotice(t('sr_notice_import_read_fail'))
       }
@@ -559,7 +560,6 @@ export function SelectResearch({
   )
 
   const handleImportPlayerSaveClick = useCallback(() => {
-    setLabDataPanelOpen(false)
     if (androidPlayerSaveImport) {
       void navigator.clipboard
         .writeText(TOWER_ANDROID_SAVE_FOLDER)
@@ -570,7 +570,7 @@ export function SelectResearch({
           setImportNotice(t('sr_notice_import_player_android_path_no_clip'))
         })
     }
-  }, [androidPlayerSaveImport, t])
+  }, [androidPlayerSaveImport, setImportNotice, t])
 
   const handleImportLabCsvFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -602,6 +602,7 @@ export function SelectResearch({
               ? fmt.importedTowerBuildNamed(buildName)
               : t('sr_notice_import_tower_ok'),
           )
+          setLabDataPanelOpen(false)
           return
         }
         setImportNotice(t('sr_notice_import_invalid_tower_csv'))
@@ -826,10 +827,9 @@ export function SelectResearch({
       </div>
       ) : null}
 
-      {labDataPanelOpen ? (
-        <Suspense fallback={null}>
+      <Suspense fallback={null}>
           <LabImportExportPanel
-            open
+            open={labDataPanelOpen}
             onClose={() => setLabDataPanelOpen(false)}
             sharePublishing={sharePublishing}
             androidPlayerSaveImport={androidPlayerSaveImport}
@@ -841,8 +841,7 @@ export function SelectResearch({
             onCopyShareLink={() => void copyCleanShareLink()}
             onShowShareQr={() => void handleShowShareQr()}
           />
-        </Suspense>
-      ) : null}
+      </Suspense>
 
       {labCompareOpen ? (
         <Suspense fallback={null}>

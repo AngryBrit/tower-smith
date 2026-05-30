@@ -34,8 +34,6 @@ export function LabImportExportPanel({
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)
 
-  if (!open) return null
-
   return labOverlayPortal(
     <>
       <input
@@ -56,6 +54,7 @@ export function LabImportExportPanel({
         tabIndex={-1}
         onChange={onImportPlayerSaveFile}
       />
+      {!open ? null : (
       <div
         className="select-research__lab-data-backdrop"
         role="presentation"
@@ -78,10 +77,7 @@ export function LabImportExportPanel({
             <button
               type="button"
               className="glow-btn glow-btn--block"
-              onClick={() => {
-                onClose()
-                queueMicrotask(() => importLabCsvFileInputRef.current?.click())
-              }}
+              onClick={() => importLabCsvFileInputRef.current?.click()}
             >
               {t('sr_lab_import_file')}
             </button>
@@ -115,7 +111,7 @@ export function LabImportExportPanel({
               className="glow-btn glow-btn--block"
               onClick={() => {
                 importPlayerInfoFileInputRef.current?.click()
-                onImportPlayerSaveClick()
+                if (androidPlayerSaveImport) onImportPlayerSaveClick()
               }}
             >
               {t('sr_lab_import_player_save')}
@@ -156,6 +152,7 @@ export function LabImportExportPanel({
           </button>
         </div>
       </div>
+      )}
     </>,
   )
 }
