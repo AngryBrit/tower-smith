@@ -4,6 +4,7 @@ import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
 import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVisibility'
 import { useSubmodulesCatalogVisible } from '../submodulesCatalogVisibility'
 import { useI18n, type AppLocale } from '../i18n'
+import { InstallAppPanel } from './InstallAppPanel'
 
 export function SettingsPage() {
   const { t, locale, setLocale } = useI18n()
@@ -18,6 +19,9 @@ export function SettingsPage() {
 
   return (
     <div className="settings-page" role="region" aria-label={t('app_settings_title')}>
+      <InstallAppPanel />
+      <hr className="settings-page__divider" aria-hidden />
+
       <div className="settings-page__field">
         <label className="settings-page__label" htmlFor="settings-locale-select">
           {t('app_settings_language_label')}

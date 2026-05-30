@@ -131,7 +131,7 @@ node scripts/write-research-overlay.mjs
 | [`src/data/workshop*.ts`](src/data/) | Per-stat upgrade/enhance curves, displayed-stat helpers, full card wiki/loadouts, **bot** and ultimate Plus tracks ([`workshopBots.ts`](src/data/workshopBots.ts)), chassis and assist module catalogs, relic stats, submodule selection, module simulators, and Vitest coverage. [`workshopEnhanceResearch.ts`](src/data/workshopEnhanceResearch.ts) gates the Enhance tab on Main Research **Workshop Enhancements**. |
 | [`src/data/workshopModulePresets.ts`](src/data/workshopModulePresets.ts) | Five module loadout presets (hub levels, chassis, assist, sub-modules); persisted on `WorkshopPersistedV1`. |
 | [`src/labPresetsStorage.ts`](src/labPresetsStorage.ts) | Workshop snapshot, lab compare named presets, card/module preset fields, and sanitization on load. |
-| [`public/manifest.webmanifest`](public/manifest.webmanifest) | PWA name **TowerSmith**, theme colours, and icon list for Add to Home Screen. |
+| [`public/manifest.webmanifest`](public/manifest.webmanifest) | PWA name **TowerSmith**, theme colours, and icon list for Add to Home Screen. Production builds also register a service worker (via `vite-plugin-pwa`) that caches the app shell and runtime-fetches images/research JSON for faster repeat visits and limited offline use. |
 | [`public/app-icon.svg`](public/app-icon.svg), [`public/og-banner.png`](public/og-banner.png) | Brand icon and social preview image (regenerate with `npm run icons` / `npm run og-banner` after edits). |
 | [`index.html`](index.html) | Document title, `theme-color`, favicon links, and Open Graph / Twitter Card meta tags. |
 | [`public/*.webp`](public/) | Resource glyphs (coin, cash, …) and per-card art (`Damage.webp`, `Berserker.webp`, …) used by the Cards UI. |
@@ -226,7 +226,7 @@ Vite proxies `/api/*` to Netlify Dev (port 8888). Set the same Supabase vars for
 ## Development notes
 
 - **Lint and tests** — Run `npm run lint` and `npm run test` before pushing substantive changes.
-- **Branding assets** — After editing [`public/app-icon.svg`](public/app-icon.svg), run `npm run icons` so favicon and PWA PNGs stay in sync. After changing the banner layout or title in [`scripts/generate-og-banner.mjs`](scripts/generate-og-banner.mjs), run `npm run og-banner`. [`index.html`](index.html) and [`public/manifest.webmanifest`](public/manifest.webmanifest) hold the display name **TowerSmith** for tabs, unfurlers, and install prompts.
+- **Branding assets** — After editing [`public/app-icon.svg`](public/app-icon.svg), run `npm run icons` so favicon and PWA PNGs stay in sync. After changing the banner layout or title in [`scripts/generate-og-banner.mjs`](scripts/generate-og-banner.mjs), run `npm run og-banner`. [`index.html`](index.html) and [`public/manifest.webmanifest`](public/manifest.webmanifest) hold the display name **TowerSmith** for tabs, unfurlers, and install prompts. **Install on mobile:** Tools / Settings → **Install app** (Chrome/Android) or Safari Share → Add to Home Screen (iOS).
 - **Windows / OneDrive** — This repo sets Vite [`cacheDir`](vite.config.ts) to the system temp directory (`vite-cache-tower_export`) to reduce permission issues when the tree lives under OneDrive or aggressive antivirus. If you still see EPERM on cache clears, keep the project outside synced folders or exclude the Vite cache from sync.
 
 ---

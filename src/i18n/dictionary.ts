@@ -462,6 +462,17 @@ export const STRINGS_EN = {
   app_settings_relic_workshop_bonus_label: 'Show relic workshop bonus lines on Relics tab',
   app_settings_relic_workshop_bonus_hint:
     'When on, each relic card shows how its effect applies in the simulator (e.g. +10% workshop damage). Off by default.',
+  app_install_title: 'Install app',
+  app_install_intro:
+    'Add TowerSmith to your home screen for a full-screen app experience and faster repeat visits.',
+  app_install_button: 'Install TowerSmith',
+  app_install_installed: 'Installed on this device',
+  app_install_installed_hint:
+    'You opened TowerSmith from your home screen. Updates apply automatically when you are online.',
+  app_install_ios_hint:
+    'In Safari, tap Share, then “Add to Home Screen”.',
+  app_install_browser_hint:
+    'Use your browser menu — Install app, Add to Home screen, or Install TowerSmith — when it appears.',
   ws_title: 'Workshop',
   ws_tab_upgrade: 'Upgrade',
   ws_tab_enhance: 'Enhance',

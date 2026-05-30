@@ -469,6 +469,17 @@ export const STRINGS_ES = {
     'Mostrar líneas de bonus de taller en la pestaña Reliquias',
   app_settings_relic_workshop_bonus_hint:
     'Si está activado, cada reliquia muestra cómo aplica su efecto en el simulador (p. ej. +10% daño de taller). Desactivado por defecto.',
+  app_install_title: 'Instalar app',
+  app_install_intro:
+    'Añade TowerSmith a la pantalla de inicio para una experiencia a pantalla completa y visitas más rápidas.',
+  app_install_button: 'Instalar TowerSmith',
+  app_install_installed: 'Instalado en este dispositivo',
+  app_install_installed_hint:
+    'Abriste TowerSmith desde la pantalla de inicio. Las actualizaciones se aplican automáticamente cuando hay conexión.',
+  app_install_ios_hint:
+    'En Safari, pulsa Compartir y luego «Añadir a pantalla de inicio».',
+  app_install_browser_hint:
+    'Usa el menú del navegador — Instalar app, Añadir a pantalla de inicio o Instalar TowerSmith — cuando aparezca.',
   ws_title: 'Taller',
   ws_tab_upgrade: 'Mejorar',
   ws_tab_enhance: 'Potenciar',

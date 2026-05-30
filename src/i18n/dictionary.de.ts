@@ -462,6 +462,17 @@ export const STRINGS_DE = {
     'Werkstatt-Bonuszeilen auf dem Relikt-Tab anzeigen',
   app_settings_relic_workshop_bonus_hint:
     'Wenn aktiv, zeigt jede Reliktkarte, wie der Effekt im Simulator wirkt (z. B. +10 % Werkstatt-Schaden). Standardmäßig aus.',
+  app_install_title: 'App installieren',
+  app_install_intro:
+    'Füge TowerSmith zum Startbildschirm hinzu für Vollbild-Nutzung und schnellere Wiederkehr.',
+  app_install_button: 'TowerSmith installieren',
+  app_install_installed: 'Auf diesem Gerät installiert',
+  app_install_installed_hint:
+    'Du hast TowerSmith vom Startbildschirm geöffnet. Updates werden online automatisch angewendet.',
+  app_install_ios_hint:
+    'In Safari auf Teilen tippen, dann „Zum Home-Bildschirm“.',
+  app_install_browser_hint:
+    'Im Browsermenü — App installieren, Zum Startbildschirm hinzufügen oder TowerSmith installieren — wenn verfügbar.',
   ws_title: 'Werkstatt',
   ws_tab_upgrade: 'Upgrade',
   ws_tab_enhance: 'Verstärken',

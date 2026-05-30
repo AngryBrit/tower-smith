@@ -7637,8 +7637,29 @@ button.workshop__uw-plus-cost--display:hover {
 .settings-page__hint {
   margin: 0.4rem 0 0;
   font-size: 0.68rem;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--sr-muted);
+}
+
+.install-app-panel__title {
+  margin: 0 0 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.install-app-panel__status {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #86efac;
+}
+
+.install-app-panel__btn {
+  margin-top: 0.65rem;
+}
+
+.install-app-panel__ios-hint {
+  margin-top: 0.65rem;
 }
 
 /* Relics page */
