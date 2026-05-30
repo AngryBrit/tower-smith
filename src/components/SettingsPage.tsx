@@ -3,12 +3,22 @@ import { useModulesCatalogVisible } from '../modulesCatalogVisibility'
 import { useAssistModuleCatalogVisible } from '../assistModuleCatalogVisibility'
 import { useRelicWorkshopBonusLinesVisible } from '../relicWorkshopBonusLinesVisibility'
 import { useSubmodulesCatalogVisible } from '../submodulesCatalogVisibility'
+import { useState } from 'react'
 import { useI18n, type AppLocale } from '../i18n'
 import { InstallAppPanel } from './InstallAppPanel'
 import { KeyboardShortcutsSection } from './settings/KeyboardShortcutsSection'
 
-export function SettingsPage() {
+type SettingsPageProps = {
+  onRefreshResearch?: () => void | Promise<void>
+  researchRefreshing?: boolean
+}
+
+export function SettingsPage({
+  onRefreshResearch,
+  researchRefreshing = false,
+}: SettingsPageProps) {
   const { t, locale, setLocale } = useI18n()
+  const [refreshError, setRefreshError] = useState<string | null>(null)
   const [budgetPanelsVisible, setBudgetPanelsVisible] = useBudgetPanelsVisible()
   const [modulesCatalogVisible, setModulesCatalogVisible] = useModulesCatalogVisible()
   const [submodulesCatalogVisible, setSubmodulesCatalogVisible] =
@@ -25,6 +35,32 @@ export function SettingsPage() {
 
       <KeyboardShortcutsSection />
       <hr className="settings-page__divider" aria-hidden />
+
+      {onRefreshResearch ? (
+        <div className="settings-page__field">
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={researchRefreshing}
+            onClick={() => {
+              setRefreshError(null)
+              void Promise.resolve(onRefreshResearch()).catch((e: unknown) => {
+                setRefreshError(e instanceof Error ? e.message : String(e))
+              })
+            }}
+          >
+            {researchRefreshing
+              ? t('app_settings_refresh_research_busy')
+              : t('app_settings_refresh_research_label')}
+          </button>
+          <p className="settings-page__hint">{t('app_settings_refresh_research_hint')}</p>
+          {refreshError ? (
+            <p className="settings-page__hint settings-page__hint--error" role="alert">
+              {refreshError}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="settings-page__field">
         <label className="settings-page__label" htmlFor="settings-locale-select">

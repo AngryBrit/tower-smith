@@ -4,6 +4,25 @@ import { STRINGS_ES } from './dictionary.es'
 /** UI string ids — English is the source of truth; locales in dictionary.*.ts must define every key. */
 export const STRINGS_EN = {
   app_skipToMain: 'Skip to main content',
+  app_first_run_title: 'Start here',
+  app_first_run_body:
+    'LAB sets research levels. WORKSHOP, CARDS, and MODULES shape your build. Import a player save (account menu → tower backup) or load a community build from BUILDS.',
+  app_first_run_import: 'Import save',
+  app_first_run_gallery: 'Browse builds',
+  app_first_run_dismiss: 'Got it',
+  panel_error_title: 'This tab crashed',
+  panel_error_desc:
+    'Something went wrong while rendering {{panel}}. Reload this tab or switch to another tab.',
+  panel_error_reload: 'Reload tab',
+  panel_error_copy: 'Copy error details',
+  panel_error_copied: 'Error details copied to clipboard.',
+  panel_error_copy_fail: 'Could not copy — select the text below manually.',
+  panel_error_details_label: 'Error details',
+  whats_new_dismiss: 'Dismiss',
+  whats_new_changelog: 'Full changelog',
+  whats_new_2811_headline: "What's new in v2.8.11",
+  whats_new_2811_body:
+    'Sub-module bonuses now affect workshop stat labels — equipped main and assist picks stack with labs and relics.',
   app_loadingResearch: 'Loading research…',
   app_nav_main_aria: 'Primary pages',
   app_nav_research: 'LAB',
@@ -473,6 +492,10 @@ export const STRINGS_EN = {
   app_settings_assist_wiki_hint:
     'When on, shows assist unlock costs, stone efficiency upgrade table, and wiki notes below the hub.',
   app_settings_relic_workshop_bonus_label: 'Show relic workshop bonus lines on Relics tab',
+  app_settings_refresh_research_label: 'Refresh research data',
+  app_settings_refresh_research_hint:
+    'Reload lab and workshop definitions from the server. Use after a data update, or if cards look stale. Production uses the offline cache unless you refresh.',
+  app_settings_refresh_research_busy: 'Refreshing…',
   app_settings_relic_workshop_bonus_hint:
     'When on, each relic card shows how its effect applies in the simulator (e.g. +10% workshop damage). Off by default.',
   settings_shortcuts_title: 'Keyboard shortcuts',
@@ -1351,6 +1374,7 @@ export type I18nFormatters = {
   galleryAdminNoticeDeleted: (title: string) => string
   galleryAdminYourUserId: (userId: string) => string
   galleryShowingCount: (count: number) => string
+  panelErrorDesc: (panel: string) => string
 }
 
 function formatters(s: Record<StringId, string>): I18nFormatters {
@@ -1440,6 +1464,9 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     },
     galleryShowingCount(count) {
       return replaceParams(s.gallery_showing_count, { count })
+    },
+    panelErrorDesc(panel) {
+      return replaceParams(s.panel_error_desc, { panel })
     },
   }
 }

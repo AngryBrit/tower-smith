@@ -15,6 +15,8 @@ type ToolsSettingsPageProps = {
   labToolsRef: RefObject<SelectResearchHandle | null>
   galleryListRefreshToken?: number
   onGalleryMutated?: () => void
+  onRefreshResearch?: () => void | Promise<void>
+  researchRefreshing?: boolean
   isActive?: boolean
 }
 
@@ -22,6 +24,8 @@ export function ToolsSettingsPage({
   labToolsRef,
   galleryListRefreshToken = 0,
   onGalleryMutated,
+  onRefreshResearch,
+  researchRefreshing = false,
   isActive = true,
 }: ToolsSettingsPageProps) {
   const { t } = useI18n()
@@ -43,7 +47,10 @@ export function ToolsSettingsPage({
       ) : null}
       <ToolsPage labToolsRef={labToolsRef} />
       <hr className="tools-settings-page__divider" aria-hidden />
-      <SettingsPage />
+      <SettingsPage
+        onRefreshResearch={onRefreshResearch}
+        researchRefreshing={researchRefreshing}
+      />
       {!adminLoading && isAdmin ? (
         <>
           <hr className="tools-settings-page__divider" aria-hidden />

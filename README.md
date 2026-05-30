@@ -100,6 +100,7 @@ These are run with Node directly when you update data or regenerate assets:
 | [`gen-workshop-bots-data.mjs`](scripts/gen-workshop-bots-data.mjs) | Regenerate bot basic-upgrade and Bot+ milestone tables (`workshopBotsData.ts`) from embedded wiki rows. |
 | [`generate-dictionary-de.mjs`](scripts/generate-dictionary-de.mjs) | Regenerate [`dictionary.de.ts`](src/i18n/dictionary.de.ts) from `tmp-strings-en.json` and `dictionary-de-by-key.json` (maintainer workflow). |
 | [`analyze-es-keys.mjs`](scripts/analyze-es-keys.mjs) | Compare English vs Spanish UI keys (lists keys still identical to EN in `dictionary.es.ts`). |
+| [`check-i18n-keys.mjs`](scripts/check-i18n-keys.mjs) | CI: fail if `dictionary.es.ts` / `dictionary.de.ts` keys drift from `dictionary.ts`. |
 | [`build-app-icon-svg.mjs`](scripts/build-app-icon-svg.mjs) | Legacy: rebuild `app-icon.svg` from `app-icon-maskable.svg` (canonical source is `public/app-icon.svg`). |
 | [`generate-app-icons.mjs`](scripts/generate-app-icons.mjs) | Rasterize `app-icon.svg` → favicon / apple-touch / PWA PNGs (`npm run icons`). |
 | [`generate-og-banner.mjs`](scripts/generate-og-banner.mjs) | Build OG/Twitter banner SVG + PNG (`npm run og-banner`). |
@@ -227,7 +228,8 @@ Vite proxies `/api/*` to Netlify Dev (port 8888). Set the same Supabase vars for
 
 ## Development notes
 
-- **Lint and tests** — Run `npm run lint` and `npm run test` before pushing substantive changes.
+- **Lint and tests** — Run `npm run lint`, `npm run check:i18n`, and `npm run test` before pushing substantive changes. UI smoke tests use Vitest + Testing Library (`*.test.tsx`); critical share-link flow: `npm run test:e2e` (Playwright, builds preview server).
+- **Research JSON cache** — Dev uses `cache: 'no-store'` on research fetches. Production relies on the PWA stale-while-revalidate cache; bump `dataVersion` in [`public/research/manifest.json`](public/research/manifest.json) when data changes. **Tools / Settings → Refresh research data** busts the cache and clears the research service-worker bucket.
 - **Branding assets** — After editing [`public/app-icon.svg`](public/app-icon.svg), run `npm run icons` so favicon and PWA PNGs stay in sync. After changing the banner layout or title in [`scripts/generate-og-banner.mjs`](scripts/generate-og-banner.mjs), run `npm run og-banner`. [`index.html`](index.html) and [`public/manifest.webmanifest`](public/manifest.webmanifest) hold the display name **TowerSmith** for tabs, unfurlers, and install prompts. **Install on mobile:** Tools / Settings → **Install app** (Chrome/Android) or Safari Share → Add to Home Screen (iOS).
 - **Windows / OneDrive** — This repo sets Vite [`cacheDir`](vite.config.ts) to the system temp directory (`vite-cache-tower_export`) to reduce permission issues when the tree lives under OneDrive or aggressive antivirus. If you still see EPERM on cache clears, keep the project outside synced folders or exclude the Vite cache from sync.
 

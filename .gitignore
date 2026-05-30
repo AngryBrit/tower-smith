@@ -42,6 +42,10 @@ tools/
 # Local game research / field dumps (not for the repo)
 docs/
 
+# Playwright
+test-results/
+playwright-report/
+
 # Local Netlify folder
 .netlify
 

@@ -24,9 +24,14 @@ const MyBuildsDialog = lazy(() =>
   import('./components/MyBuildsDialog').then((m) => ({ default: m.MyBuildsDialog })),
 )
 import { LabToolsRefBinder } from './components/LabToolsRefBinder'
+import { AppHintsBanner } from './components/AppHintsBanner'
 import { MainPanelContent } from './components/MainPanelContent'
 import { useI18n } from './i18n'
 import { loadResearchData } from './loadResearchData'
+import {
+  bumpResearchCacheBust,
+  clearResearchServiceWorkerCaches,
+} from './researchCacheBust'
 import type { ResearchData } from './types/research'
 import {
   readMainPanel,
@@ -58,6 +63,8 @@ export default function App() {
   const [data, setData] = useState<ResearchData | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const [researchRefreshing, setResearchRefreshing] = useState(false)
+  const [researchReloadToken, setResearchReloadToken] = useState(0)
   const [workspace, setWorkspace] = useState<TowerWorkspaceV1>(() => defaultTowerWorkspace())
   const [scratchWorkspace, setScratchWorkspace] = useState<TowerWorkspaceV1>(() =>
     defaultTowerWorkspace(),
@@ -142,11 +149,22 @@ export default function App() {
         }
       })
       .finally(() => {
-        if (!cancelled) setLoading(false)
+        if (!cancelled) {
+          setLoading(false)
+          setResearchRefreshing(false)
+        }
       })
     return () => {
       cancelled = true
     }
+  }, [researchReloadToken])
+
+  const refreshResearchData = useCallback(async () => {
+    setResearchRefreshing(true)
+    setError(null)
+    bumpResearchCacheBust()
+    await clearResearchServiceWorkerCaches()
+    setResearchReloadToken((token) => token + 1)
   }, [])
 
   const inpanelTabsClass = MODULES_PANEL_ENABLED
@@ -372,6 +390,11 @@ export default function App() {
                 </div>
                 </div>
 
+                <AppHintsBanner
+                  onImportSave={() => labToolsRef.current?.openLabDataPanel()}
+                  onBrowseBuilds={() => setMainPanel('gallery')}
+                />
+
                 <div
                   ref={setInpanelPresetsMount}
                   className="select-research__inpanel-presets-slot"
@@ -397,6 +420,8 @@ export default function App() {
                   inpanelWorkshopToolbarMount={inpanelWorkshopToolbarMount}
                   galleryListRefreshToken={galleryListRefreshToken}
                   onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
+                  onRefreshResearch={() => void refreshResearchData()}
+                  researchRefreshing={researchRefreshing}
                 />
 
                 <footer className="select-research__site-footer">

@@ -4,13 +4,15 @@ import {
   type ResearchData,
 } from './types/research'
 import type { I18nFormatters } from './i18n/dictionary'
+import { researchFetchInit, withResearchCacheBust } from './researchLoadCache'
 
 export async function loadResearchData(
   baseUrl: string,
   fmt: I18nFormatters,
 ): Promise<ResearchData> {
-  const manifestUrl = `${baseUrl}research/manifest.json`
-  const manifestRes = await fetch(manifestUrl, { cache: 'no-store' })
+  const fetchInit = researchFetchInit()
+  const manifestUrl = withResearchCacheBust(`${baseUrl}research/manifest.json`)
+  const manifestRes = await fetch(manifestUrl, fetchInit)
   if (!manifestRes.ok) {
     throw new Error(fmt.manifestLoadError(manifestRes.status))
   }
@@ -19,8 +21,8 @@ export async function loadResearchData(
 
   const sections = await Promise.all(
     sectionFiles.map(async (rel) => {
-      const url = `${baseUrl}${rel.replace(/^\//, '')}`
-      const res = await fetch(url, { cache: 'no-store' })
+      const url = withResearchCacheBust(`${baseUrl}${rel.replace(/^\//, '')}`)
+      const res = await fetch(url, fetchInit)
       if (!res.ok) {
         throw new Error(fmt.sectionLoadError(rel, res.status))
       }

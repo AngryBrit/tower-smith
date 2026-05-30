@@ -1,7 +1,8 @@
-import { lazy, Suspense, type RefObject } from 'react'
+import { lazy, Suspense, useCallback, useState, type ReactNode, type RefObject } from 'react'
 import type { SelectResearchHandle } from '../lab/labToolsTypes'
 import type { MainPanel } from '../mainPanelStorage'
 import type { ResearchData } from '../types/research'
+import { PanelErrorBoundary } from './PanelErrorBoundary'
 import { useI18n } from '../i18n'
 
 const SelectResearch = lazy(() =>
@@ -37,6 +38,46 @@ function PanelFallback() {
   )
 }
 
+type PanelTabShellProps = {
+  panel: MainPanel
+  panelLabel: string
+  boundaryKey: number
+  onReloadPanel: () => void
+  id: string
+  labelledBy?: string
+  ariaLabel?: string
+  children: ReactNode
+}
+
+function PanelTabShell({
+  panel,
+  panelLabel,
+  boundaryKey,
+  onReloadPanel,
+  id,
+  labelledBy,
+  ariaLabel,
+  children,
+}: PanelTabShellProps) {
+  return (
+    <div
+      id={id}
+      role="tabpanel"
+      {...(labelledBy ? { 'aria-labelledby': labelledBy } : {})}
+      {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
+    >
+      <PanelErrorBoundary
+        key={boundaryKey}
+        panelId={panel}
+        panelLabel={panelLabel}
+        onReload={onReloadPanel}
+      >
+        {children}
+      </PanelErrorBoundary>
+    </div>
+  )
+}
+
 type MainPanelContentProps = {
   mainPanel: MainPanel
   data: ResearchData
@@ -44,6 +85,8 @@ type MainPanelContentProps = {
   inpanelWorkshopToolbarMount: HTMLDivElement | null
   galleryListRefreshToken: number
   onGalleryMutated: () => void
+  onRefreshResearch?: () => void | Promise<void>
+  researchRefreshing?: boolean
 }
 
 export function MainPanelContent({
@@ -53,8 +96,17 @@ export function MainPanelContent({
   inpanelWorkshopToolbarMount,
   galleryListRefreshToken,
   onGalleryMutated,
+  onRefreshResearch,
+  researchRefreshing = false,
 }: MainPanelContentProps) {
   const { t } = useI18n()
+  const [panelResetKey, setPanelResetKey] = useState(0)
+  const reloadPanel = useCallback(() => {
+    setPanelResetKey((key) => key + 1)
+  }, [])
+
+  const boundaryKey = panelResetKey
+
   const workshopToolbarMount =
     mainPanel === 'workshop' ||
     mainPanel === 'bots' ||
@@ -65,124 +117,146 @@ export function MainPanelContent({
       ? inpanelWorkshopToolbarMount
       : null
 
+  const shellProps = {
+    boundaryKey,
+    onReloadPanel: reloadPanel,
+  }
+
   return (
     <Suspense fallback={<PanelFallback />}>
       {mainPanel === 'research' ? (
-        <div
+        <PanelTabShell
+          panel="research"
+          panelLabel={t('app_nav_research')}
           id="inpanel-panel-lab"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-lab"
+          labelledBy="inpanel-tab-lab"
+          {...shellProps}
         >
-          <SelectResearch
-            data={data}
-            embeddedInPanel
-          />
-        </div>
+          <SelectResearch data={data} embeddedInPanel />
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'workshop' ? (
-        <div
+        <PanelTabShell
+          panel="workshop"
+          panelLabel={t('app_nav_workshop')}
           id="inpanel-panel-workshop"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-workshop"
+          labelledBy="inpanel-tab-workshop"
+          {...shellProps}
         >
           <WorkshopPage
             embeddedInPanel
             toolbarMount={workshopToolbarMount}
             researchData={data}
           />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'bots' ? (
-        <div
+        <PanelTabShell
+          panel="bots"
+          panelLabel={t('app_nav_bots')}
           id="inpanel-panel-bots"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-bots"
+          labelledBy="inpanel-tab-bots"
+          {...shellProps}
         >
           <BotsPage
             embeddedInPanel
             toolbarMount={workshopToolbarMount}
             researchData={data}
           />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'cards' ? (
-        <div
+        <PanelTabShell
+          panel="cards"
+          panelLabel={t('app_nav_cards')}
           id="inpanel-panel-cards"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-cards"
+          labelledBy="inpanel-tab-cards"
+          {...shellProps}
         >
           <CardsPage
             embeddedInPanel
             toolbarMount={workshopToolbarMount}
             researchData={data}
           />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'modules' ? (
-        <div
+        <PanelTabShell
+          panel="modules"
+          panelLabel={t('app_nav_modules')}
           id="inpanel-panel-modules"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-modules"
+          labelledBy="inpanel-tab-modules"
+          {...shellProps}
         >
           <ModulesPage
             embeddedInPanel
             toolbarMount={workshopToolbarMount}
             researchData={data}
           />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'themes' ? (
-        <div
+        <PanelTabShell
+          panel="themes"
+          panelLabel={t('app_nav_themes')}
           id="inpanel-panel-themes"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-themes"
+          labelledBy="inpanel-tab-themes"
+          {...shellProps}
         >
           <ThemesPage embeddedInPanel toolbarMount={workshopToolbarMount} />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'relics' ? (
-        <div
+        <PanelTabShell
+          panel="relics"
+          panelLabel={t('app_nav_relics')}
           id="inpanel-panel-relics"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-relics"
+          labelledBy="inpanel-tab-relics"
+          {...shellProps}
         >
           <RelicsPage embeddedInPanel toolbarMount={workshopToolbarMount} />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'toolsSettings' ? (
-        <div
+        <PanelTabShell
+          panel="toolsSettings"
+          panelLabel={t('app_nav_settings')}
           id="inpanel-panel-tools-settings"
-          role="tabpanel"
-          aria-label={t('app_nav_settings')}
+          ariaLabel={t('app_nav_settings')}
+          {...shellProps}
         >
           <ToolsSettingsPage
             labToolsRef={labToolsRef}
             isActive
             galleryListRefreshToken={galleryListRefreshToken}
             onGalleryMutated={onGalleryMutated}
+            onRefreshResearch={onRefreshResearch}
+            researchRefreshing={researchRefreshing}
           />
-        </div>
+        </PanelTabShell>
       ) : null}
 
       {mainPanel === 'gallery' ? (
-        <div
+        <PanelTabShell
+          panel="gallery"
+          panelLabel={t('app_nav_gallery')}
           id="inpanel-panel-gallery"
-          role="tabpanel"
-          aria-labelledby="inpanel-tab-gallery"
+          labelledBy="inpanel-tab-gallery"
+          {...shellProps}
         >
           <TowerGalleryPanel
             labToolsRef={labToolsRef}
             isActive
             listRefreshToken={galleryListRefreshToken}
           />
-        </div>
+        </PanelTabShell>
       ) : null}
     </Suspense>
   )

@@ -2,6 +2,25 @@ import type { StringId } from './dictionary'
 
 export const STRINGS_DE = {
   app_skipToMain: 'Zum Hauptinhalt springen',
+  app_first_run_title: 'Hier starten',
+  app_first_run_body:
+    'LABOR setzt Forschungsstufen. WERKSTATT, KARTEN und MODULE formen deinen Build. Spielstand importieren (Kontomenü → Turm-Backup) oder Community-Build unter BUILDS laden.',
+  app_first_run_import: 'Spielstand importieren',
+  app_first_run_gallery: 'Builds durchsuchen',
+  app_first_run_dismiss: 'Verstanden',
+  panel_error_title: 'Dieser Tab ist abgestürzt',
+  panel_error_desc:
+    'Beim Anzeigen von {{panel}} ist ein Fehler aufgetreten. Tab neu laden oder zu einem anderen Tab wechseln.',
+  panel_error_reload: 'Tab neu laden',
+  panel_error_copy: 'Fehlerdetails kopieren',
+  panel_error_copied: 'Fehlerdetails in die Zwischenablage kopiert.',
+  panel_error_copy_fail: 'Kopieren fehlgeschlagen — Text unten manuell markieren.',
+  panel_error_details_label: 'Fehlerdetails',
+  whats_new_dismiss: 'Schließen',
+  whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_2811_headline: 'Neu in v2.8.11',
+  whats_new_2811_body:
+    'Submodul-Boni wirken jetzt auf Werkstatt-Statlabels — gewählte Haupt- und Assist-Effekte addieren zu Labs und Relikten.',
   app_loadingResearch: 'Forschung wird geladen…',
   app_nav_main_aria: 'Hauptseiten',
   app_nav_research: 'LABOR',
@@ -473,6 +492,10 @@ export const STRINGS_DE = {
     'Wenn aktiv, werden Freischaltkosten, Steineffizienz-Tabelle und Wiki-Hinweise unter dem Hub angezeigt.',
   app_settings_relic_workshop_bonus_label:
     'Werkstatt-Bonuszeilen auf dem Relikt-Tab anzeigen',
+  app_settings_refresh_research_label: 'Forschungsdaten aktualisieren',
+  app_settings_refresh_research_hint:
+    'Lädt Labor- und Werkstatt-Definitionen vom Server neu. Nach Datenupdates nutzen oder wenn Karten veraltet wirken.',
+  app_settings_refresh_research_busy: 'Wird aktualisiert…',
   app_settings_relic_workshop_bonus_hint:
     'Wenn aktiv, zeigt jede Reliktkarte, wie der Effekt im Simulator wirkt (z. B. +10 % Werkstatt-Schaden). Standardmäßig aus.',
   settings_shortcuts_title: 'Tastenkürzel',

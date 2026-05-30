@@ -2,6 +2,25 @@ import type { StringId } from './dictionary'
 
 export const STRINGS_ES = {
   app_skipToMain: 'Saltar al contenido principal',
+  app_first_run_title: 'Empieza aquí',
+  app_first_run_body:
+    'LABORATORIO define los niveles de investigación. TALLER, CARTAS y MÓDULOS configuran tu build. Importa un guardado (menú de cuenta → copia de torre) o carga un build de la galería en BUILDS.',
+  app_first_run_import: 'Importar guardado',
+  app_first_run_gallery: 'Ver builds',
+  app_first_run_dismiss: 'Entendido',
+  panel_error_title: 'Esta pestaña falló',
+  panel_error_desc:
+    'Algo salió mal al mostrar {{panel}}. Recarga esta pestaña o cambia a otra.',
+  panel_error_reload: 'Recargar pestaña',
+  panel_error_copy: 'Copiar detalles del error',
+  panel_error_copied: 'Detalles copiados al portapapeles.',
+  panel_error_copy_fail: 'No se pudo copiar — selecciona el texto manualmente.',
+  panel_error_details_label: 'Detalles del error',
+  whats_new_dismiss: 'Cerrar',
+  whats_new_changelog: 'Changelog completo',
+  whats_new_2811_headline: 'Novedades en v2.8.11',
+  whats_new_2811_body:
+    'Los bonos de submódulos afectan ahora las estadísticas del taller — las elecciones principal y de asistencia se suman a laboratorios y reliquias.',
   app_loadingResearch: 'Cargando investigación…',
   app_nav_main_aria: 'Páginas principales',
   app_nav_research: 'Laboratorio',
@@ -480,6 +499,10 @@ export const STRINGS_ES = {
     'Si está activo, muestra costes de desbloqueo, tabla de eficiencia con piedras y notas wiki bajo el hub.',
   app_settings_relic_workshop_bonus_label:
     'Mostrar líneas de bonus de taller en la pestaña Reliquias',
+  app_settings_refresh_research_label: 'Actualizar datos de investigación',
+  app_settings_refresh_research_hint:
+    'Vuelve a cargar las definiciones de laboratorio y taller desde el servidor. Úsalo tras una actualización de datos o si las cartas se ven desactualizadas.',
+  app_settings_refresh_research_busy: 'Actualizando…',
   app_settings_relic_workshop_bonus_hint:
     'Si está activado, cada reliquia muestra cómo aplica su efecto en el simulador (p. ej. +10% daño de taller). Desactivado por defecto.',
   settings_shortcuts_title: 'Atajos de teclado',

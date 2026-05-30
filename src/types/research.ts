@@ -2690,6 +2690,8 @@ export interface ResearchData {
 
 export interface ResearchManifest {
   sectionFiles: string[]
+  /** Bump when research JSON changes so clients and SW can invalidate caches. */
+  dataVersion?: string
 }
 
 function isResearchState(v: unknown): v is ResearchState {
@@ -2772,7 +2774,14 @@ export function parseResearchManifest(raw: unknown): ResearchManifest {
   if (!o.sectionFiles.every((x) => typeof x === 'string')) {
     throw new Error('Manifest "sectionFiles" must be strings')
   }
-  return { sectionFiles: o.sectionFiles as string[] }
+  const dataVersion =
+    typeof o.dataVersion === 'string' && o.dataVersion.trim().length > 0
+      ? o.dataVersion.trim()
+      : undefined
+  return {
+    sectionFiles: o.sectionFiles as string[],
+    ...(dataVersion ? { dataVersion } : {}),
+  }
 }
 
 export function parseResearchSection(
