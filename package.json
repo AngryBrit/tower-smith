@@ -12,7 +12,7 @@
     "test:e2e": "playwright test",
     "check:i18n": "node scripts/check-i18n-keys.mjs",
     "preview": "vite preview",
-    "dev:netlify": "netlify dev",
+    "dev:netlify": "node --disable-warning=DEP0060 ./node_modules/netlify-cli/bin/run.js dev",
     "import-lab": "node scripts/import-lab-csv.mjs",
     "wiki-stamp": "node scripts/touch-wiki-stamp.mjs",
     "icons": "node scripts/generate-app-icons.mjs",

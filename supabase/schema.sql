@@ -43,7 +43,6 @@ create table if not exists public.builds (
   visibility text not null default 'public',
   guild text,
   created_at timestamptz not null default now(),
-  deleted_at timestamptz,
   constraint builds_title_check check (char_length(title) >= 1 and char_length(title) <= 40),
   constraint builds_category_check check (
     category is null
@@ -83,24 +82,19 @@ create table if not exists public.guild_identities (
 -- ---------------------------------------------------------------------------
 
 create index if not exists builds_list_idx
-  on public.builds (created_at desc, id desc)
-  where deleted_at is null;
+  on public.builds (created_at desc, id desc);
 
 create index if not exists builds_title_trgm_idx
-  on public.builds using gin (title gin_trgm_ops)
-  where deleted_at is null;
+  on public.builds using gin (title gin_trgm_ops);
 
 create index if not exists builds_user_idx
-  on public.builds (user_id, created_at desc)
-  where deleted_at is null;
+  on public.builds (user_id, created_at desc);
 
 create index if not exists builds_category_list_idx
-  on public.builds (category, created_at desc, id desc)
-  where deleted_at is null;
+  on public.builds (category, created_at desc, id desc);
 
 create index if not exists builds_top_list_idx
-  on public.builds (upvote_count desc, created_at desc, id desc)
-  where deleted_at is null;
+  on public.builds (upvote_count desc, created_at desc, id desc);
 
 create index if not exists build_votes_user_idx
   on public.build_votes (user_id, build_id);
@@ -123,7 +117,7 @@ drop policy if exists builds_select_public on public.builds;
 create policy builds_select_public
   on public.builds
   for select
-  using (deleted_at is null and visibility = 'public');
+  using (visibility = 'public');
 
 drop policy if exists profiles_select_public on public.profiles;
 create policy profiles_select_public
@@ -282,3 +276,21 @@ set guild_name = excluded.guild_name,
 -- Manual step (Dashboard): create a **public** storage bucket `tower-payloads`
 -- for LabsShareFile JSON. Uploads use the service role from Netlify Functions.
 -- ---------------------------------------------------------------------------
+
+-- ---------------------------------------------------------------------------
+-- Upgrade (existing project that used soft delete): run once in SQL editor.
+-- ---------------------------------------------------------------------------
+-- delete from public.builds where deleted_at is not null;
+-- alter table public.builds drop column if exists deleted_at;
+-- drop index if exists public.builds_list_idx;
+-- drop index if exists public.builds_title_trgm_idx;
+-- drop index if exists public.builds_user_idx;
+-- drop index if exists public.builds_category_list_idx;
+-- drop index if exists public.builds_top_list_idx;
+-- create index if not exists builds_list_idx on public.builds (created_at desc, id desc);
+-- create index if not exists builds_title_trgm_idx on public.builds using gin (title gin_trgm_ops);
+-- create index if not exists builds_user_idx on public.builds (user_id, created_at desc);
+-- create index if not exists builds_category_list_idx on public.builds (category, created_at desc, id desc);
+-- create index if not exists builds_top_list_idx on public.builds (upvote_count desc, created_at desc, id desc);
+-- drop policy if exists builds_select_public on public.builds;
+-- create policy builds_select_public on public.builds for select using (visibility = 'public');

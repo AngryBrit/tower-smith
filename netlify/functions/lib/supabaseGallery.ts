@@ -204,7 +204,6 @@ async function fetchBuildListPage(
   let request = sb
     .from('builds')
     .select(listSelectColumns(includeVotes))
-    .is('deleted_at', null)
     .limit(limit)
 
   if (viewerUserId) {
@@ -367,7 +366,6 @@ export async function toggleBuildVote(
     .from('builds')
     .select('id, user_id, upvote_count')
     .eq('id', buildId)
-    .is('deleted_at', null)
     .maybeSingle()
 
   if (buildError) {
@@ -454,7 +452,6 @@ export async function readTowerRecord(
     .from('builds')
     .select(select)
     .eq('id', id)
-    .is('deleted_at', null)
     .maybeSingle()
 
   if (result.error && includeVotes && isMissingVotesSchema(result.error.message)) {
@@ -465,7 +462,6 @@ export async function readTowerRecord(
         `id, title, guild, category, created_at, storage_path, ${BUILD_AUTHOR_PROFILE}`,
       )
       .eq('id', id)
-      .is('deleted_at', null)
       .maybeSingle()
   }
 
@@ -536,18 +532,21 @@ export async function deleteTowerFromGallery(
     .from('builds')
     .select('storage_path, user_id')
     .eq('id', id)
-    .is('deleted_at', null)
     .maybeSingle()
 
   if (error || !data) return false
   if (opts?.ownedByUserId && data.user_id !== opts.ownedByUserId) return false
 
-  const { error: softDeleteError } = await sb
-    .from('builds')
-    .update({ deleted_at: new Date().toISOString() })
-    .eq('id', id)
-    .is('deleted_at', null)
-  return !softDeleteError
+  const { error: deleteRowError } = await sb.from('builds').delete().eq('id', id)
+  if (deleteRowError) return false
+
+  const { error: storageError } = await sb.storage
+    .from(towerPayloadsBucket())
+    .remove([data.storage_path])
+  if (storageError) {
+    console.warn('[gallery] build row deleted but storage cleanup failed:', storageError.message)
+  }
+  return true
 }
 
 export async function updateTowerVisibility(
@@ -562,7 +561,6 @@ export async function updateTowerVisibility(
     .update({ visibility: normalizedVisibility })
     .eq('id', id)
     .eq('user_id', user.id)
-    .is('deleted_at', null)
     .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
     .maybeSingle()
   if (error || !data) return null
@@ -581,7 +579,6 @@ export async function updateTowerCategory(
     .update({ category })
     .eq('id', id)
     .eq('user_id', user.id)
-    .is('deleted_at', null)
     .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, ${BUILD_AUTHOR_PROFILE}`)
     .maybeSingle()
   if (error || !data) return null
@@ -598,7 +595,6 @@ export async function regenerateTowerLink(
     .select(`id, user_id, title, guild, visibility, category, created_at, upvote_count, storage_path, ${BUILD_AUTHOR_PROFILE}`)
     .eq('id', id)
     .eq('user_id', user.id)
-    .is('deleted_at', null)
     .maybeSingle()
   if (readError || !existing) return null
   const row = existing as BuildRow
@@ -639,13 +635,20 @@ export async function regenerateTowerLink(
     return null
   }
 
+  const oldStoragePath = row.storage_path
   const { error: oldDeleteError } = await sb
     .from('builds')
-    .update({ deleted_at: createdAt })
+    .delete()
     .eq('id', id)
     .eq('user_id', user.id)
-    .is('deleted_at', null)
   if (oldDeleteError) return null
+
+  const { error: oldStorageError } = await sb.storage
+    .from(towerPayloadsBucket())
+    .remove([oldStoragePath])
+  if (oldStorageError) {
+    console.warn('[gallery] old build row deleted but storage cleanup failed:', oldStorageError.message)
+  }
 
   return rowToEntry(inserted as BuildRow, undefined, true)
 }
