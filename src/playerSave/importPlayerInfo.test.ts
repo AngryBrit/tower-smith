@@ -189,6 +189,7 @@ describe('importPlayerInfo', () => {
       ['Extra Orb Adjuster', 1],
       ['Extra Extra Orbs', 2],
       ['Energy Shield Extra Hit', 2],
+      ['Super Tower Bonus', 2],
     ]
     for (const [name, level] of cardLabs) {
       const ii = data.sections[cardsSi]!.items.findIndex((i) => i.name === name)
