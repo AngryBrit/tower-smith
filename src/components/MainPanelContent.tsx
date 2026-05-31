@@ -67,9 +67,9 @@ function PanelTabShell({
       {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
     >
       <PanelErrorBoundary
-        key={boundaryKey}
         panelId={panel}
         panelLabel={panelLabel}
+        resetKey={boundaryKey}
         onReload={onReloadPanel}
       >
         {children}

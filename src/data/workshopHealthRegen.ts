@@ -64,8 +64,16 @@ export function workshopHealthRegenStatValue(completedLevels: number): number {
   return Math.round(logLerp(v0, v1, t))
 }
 
-export function workshopHealthRegenStatDisplay(completedLevels: number): string {
-  return formatCoinAbbrev(workshopHealthRegenStatValue(completedLevels))
+export function workshopHealthRegenStatDisplay(
+  completedLevels: number,
+  dissonanceMultiplier = 1,
+): string {
+  const base = workshopHealthRegenStatValue(completedLevels)
+  const scaled =
+    dissonanceMultiplier !== 1 && Number.isFinite(dissonanceMultiplier)
+      ? Math.round(base * dissonanceMultiplier)
+      : base
+  return formatCoinAbbrev(scaled)
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

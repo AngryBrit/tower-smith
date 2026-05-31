@@ -1,10 +1,11 @@
-import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { Component, Fragment, type ErrorInfo, type ReactNode } from 'react'
 import type { MainPanel } from '../mainPanelStorage'
 import { PanelErrorFallback } from './PanelErrorFallback'
 
 type PanelErrorBoundaryProps = {
   panelId: MainPanel
   panelLabel: string
+  resetKey: number
   onReload: () => void
   children: ReactNode
 }
@@ -32,6 +33,16 @@ export class PanelErrorBoundary extends Component<
     console.error(`[TowerSmith panel:${this.props.panelId}]`, error, info)
   }
 
+  componentDidUpdate(prevProps: PanelErrorBoundaryProps): void {
+    if (prevProps.resetKey !== this.props.resetKey && this.state.error) {
+      this.setState({ error: null, componentStack: null })
+    }
+  }
+
+  private handleReload = (): void => {
+    this.props.onReload()
+  }
+
   render(): ReactNode {
     const { error, componentStack } = this.state
     if (error) {
@@ -41,10 +52,10 @@ export class PanelErrorBoundary extends Component<
           panelLabel={this.props.panelLabel}
           error={error}
           componentStack={componentStack}
-          onReload={this.props.onReload}
+          onReload={this.handleReload}
         />
       )
     }
-    return this.props.children
+    return <Fragment key={this.props.resetKey}>{this.props.children}</Fragment>
   }
 }

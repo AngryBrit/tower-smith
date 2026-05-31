@@ -47,7 +47,10 @@ import {
   workshopChassisModuleDedicatedImageUrl,
   workshopChassisModuleHasDedicatedArt,
 } from '../data/workshopModuleImages'
-import { buildTowerHealthHeroStatContext } from '../data/workshopChassisModuleHeroStat'
+import {
+  buildTowerDamageHeroStatContext,
+  buildTowerHealthHeroStatContext,
+} from '../data/workshopChassisModuleHeroStat'
 import { ChassisModulePickerDialog } from './ChassisModulePickerDialog'
 import { ChassisModulesCatalog } from './ChassisModulesCatalog'
 import { AssistModuleReference } from './AssistModuleReference'
@@ -795,12 +798,26 @@ export function WorkshopModulesPanel({
           }
           moduleLevel={workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)}
           onModuleLevelCommit={(next) => setModuleLevel(pickerTarget.slot, next)}
-          heroStatContext={buildTowerHealthHeroStatContext(
-            workshopPersisted,
-            researchData,
-            labLevelOverrides,
-            workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot),
-          )}
+          heroStatContext={(() => {
+            const moduleLevel = workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)
+            if (pickerTarget.slot === 'cannon') {
+              return buildTowerDamageHeroStatContext(
+                workshopPersisted,
+                researchData,
+                labLevelOverrides,
+                moduleLevel,
+              )
+            }
+            if (pickerTarget.slot === 'armor') {
+              return buildTowerHealthHeroStatContext(
+                workshopPersisted,
+                researchData,
+                labLevelOverrides,
+                moduleLevel,
+              )
+            }
+            return { moduleLevel }
+          })()}
           submoduleSelections={workshopSubmoduleSelections(
             workshopPersisted,
             pickerTarget.slot,
