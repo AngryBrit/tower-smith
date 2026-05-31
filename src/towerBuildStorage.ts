@@ -108,6 +108,8 @@ const WORKSHOP_UPGRADES_KEYS = [
   'simPerkDamageQuantity',
 ] as const satisfies readonly (keyof WorkshopPersistedV1)[]
 
+export type WorkshopUpgradePersistedKey = (typeof WORKSHOP_UPGRADES_KEYS)[number]
+
 const CARDS_KEYS = [
   'cardStars',
   'cardPresetLoadouts',
