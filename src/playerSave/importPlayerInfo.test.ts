@@ -85,8 +85,19 @@ describe('importPlayerInfo', () => {
     expect(save.goldenBotLevelCooldownSelected).toBe(2)
     const { overrides } = mapPlayerSaveToTower(data, save)
     expect(overrides['0-0']).toBe(7)
-    expect(overrides['0-6']).toBe(88)
+    expect(overrides['0-6']).toBe(save.researchLevel[36])
     expect(overrides['0-5']).toBe(4)
+    const mainSi = data.sections.findIndex((s) => s.sectionSlug === 'main-research')
+    expect(mainSi).toBeGreaterThanOrEqual(0)
+    const workshopEnhancementsIi = data.sections[mainSi]!.items.findIndex(
+      (i) => i.name === 'Workshop Enhancements',
+    )
+    expect(save.researchLevel[133]).toBe(1)
+    expect(overrides[`${mainSi}-${workshopEnhancementsIi}`]).toBe(1)
+    const rerollDailyMissionIi = data.sections[mainSi]!.items.findIndex(
+      (i) => i.name === 'Reroll Daily Mission',
+    )
+    expect(overrides[`${mainSi}-${rerollDailyMissionIi}`]).toBeUndefined()
     const attackSi = data.sections.findIndex((s) => s.sectionSlug === 'attack-research')
     expect(attackSi).toBeGreaterThanOrEqual(0)
     expect(overrides[`${attackSi}-0`]).toBe(46)

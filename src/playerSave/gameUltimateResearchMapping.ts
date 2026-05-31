@@ -16,6 +16,7 @@ export const ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Black Hole Coin Bonus': 96,
   'Spotlight Coin Bonus': 97,
   'Spotlight Missiles': 98,
+  'Black Hole Disable Ranged Enemies': 132,
 } as const satisfies Record<string, number>
 
 export type UltimateResearchLabName = keyof typeof ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME

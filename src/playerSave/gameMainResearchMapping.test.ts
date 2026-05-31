@@ -42,6 +42,8 @@ function mainResearchData(): ResearchData {
           { name: 'Target Priority', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Card Presets', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Workshop Respec', level: '0', benefit: '', time: '', cost: '', state: 'default' },
+          { name: 'Reroll Daily Mission', level: '0', benefit: '', time: '', cost: '', state: 'default' },
+          { name: 'Workshop Enhancements', level: '0', benefit: '', time: '', cost: '', state: 'default' },
         ],
       },
     ],
@@ -76,5 +78,13 @@ describe('mainLabsToOverrides', () => {
     expect(overrides['0-5']).toBe(4)
     expect(overrides['0-6']).toBe(88)
     expect(overrides['0-11']).toBe(1)
+  })
+
+  it('maps Workshop Enhancements from researchLevel id 133', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[133] = 1
+    const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
+    expect(overrides['0-12']).toBeUndefined()
+    expect(overrides['0-13']).toBe(1)
   })
 })
