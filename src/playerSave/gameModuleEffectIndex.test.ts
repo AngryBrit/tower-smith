@@ -62,6 +62,34 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('maps Package Chance epic→ancestral at 208–211; 212 starts Enemy Attack Level Skip', () => {
+    expect(gameModuleEffectByIndex(208)).toMatchObject({
+      effectId: 'package-chance',
+      rarity: 'epic',
+    })
+    expect(gameModuleEffectByIndex(209)).toMatchObject({
+      effectId: 'package-chance',
+      rarity: 'legendary',
+    })
+    expect(gameModuleEffectByIndex(210)).toMatchObject({
+      effectId: 'package-chance',
+      rarity: 'mythic',
+    })
+    expect(gameModuleEffectByIndex(211)).toMatchObject({
+      effectId: 'package-chance',
+      rarity: 'ancestral',
+    })
+    expect(gameModuleEffectByIndex(212)).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'epic',
+    })
+  })
+
+  it('decodes level-offset effect index 330 as Package Chance mythic at 210', () => {
+    expect(gameModuleEffectByIndex(330, 120)).toEqual(gameModuleEffectByIndex(210))
+    expect(gameModuleEffectByIndex(330, 119)).toEqual(gameModuleEffectByIndex(211))
+  })
+
   it('maps Fudgyrella core effect indices to death wave damage, spotlight, golden tower, chain lightning', () => {
     expect(gameModuleEffectByIndex(250)).toMatchObject({
       effectId: 'death-wave-damage-x',

@@ -306,4 +306,17 @@ describe('playerSaveToWorkshop', () => {
       'chain-lightning-damage-x': 'mythic',
     })
   })
+
+  it('imports Fudgyrella generator submodule effects from sample save', async () => {
+    if (!existsSync(FUDGYRELLA_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(FUDGYRELLA_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simGeneratorChassisModuleId).toBe('galaxyCompressor')
+    expect(ws.simSubmoduleSelections.generator.main).toEqual({
+      'recovery-amount': 'mythic',
+      'package-chance': 'mythic',
+      'cash-wave': 'mythic',
+      'max-recovery': 'mythic',
+    })
+  })
 })

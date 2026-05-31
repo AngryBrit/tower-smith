@@ -227,8 +227,8 @@ export const GAME_MODULE_EFFECT_BY_INDEX: readonly GameModuleEffectDecode[] = [
   { slot: "generator", effectId: "max-recovery", rarity: "mythic" }, // 207
   { slot: "generator", effectId: "package-chance", rarity: "epic" }, // 208
   { slot: "generator", effectId: "package-chance", rarity: "legendary" }, // 209
-  { slot: "generator", effectId: "package-chance", rarity: "legendary" }, // 210
-  { slot: "generator", effectId: "package-chance", rarity: "mythic" }, // 211
+  { slot: "generator", effectId: "package-chance", rarity: "mythic" }, // 210
+  { slot: "generator", effectId: "package-chance", rarity: "ancestral" }, // 211
   { slot: "generator", effectId: "enemy-attack-level-skip", rarity: "epic" }, // 212
   { slot: "generator", effectId: "enemy-attack-level-skip", rarity: "legendary" }, // 213
   { slot: "generator", effectId: "enemy-attack-level-skip", rarity: "legendary" }, // 214
@@ -349,20 +349,31 @@ export const GAME_MODULE_EFFECT_BY_INDEX: readonly GameModuleEffectDecode[] = [
   { slot: "core", effectId: "spotlight-angle", rarity: "mythic" }, // 329
 ] as const
 
-export function gameModuleEffectByIndex(index: number): GameModuleEffectDecode | null {
+export function gameModuleEffectByIndex(
+  index: number,
+  moduleLevel = 0,
+): GameModuleEffectDecode | null {
   if (!Number.isFinite(index) || index < 0) return null
-  return GAME_MODULE_EFFECT_BY_INDEX[Math.trunc(index)] ?? null
+  let i = Math.trunc(index)
+  const level = Number.isFinite(moduleLevel) ? Math.max(0, Math.trunc(moduleLevel)) : 0
+  // High-level modules store sparseIndex + level when that sum reaches the table size (330).
+  if (i >= GAME_MODULE_EFFECT_COUNT && level > 0) {
+    i -= level
+  }
+  if (i < 0 || i >= GAME_MODULE_EFFECT_COUNT) return null
+  return GAME_MODULE_EFFECT_BY_INDEX[i] ?? null
 }
 
 /** Map equipped module `effects` array (0 = empty slot) to workshop selection map. */
 export function gameSubmoduleSelectionFromEffectIndices(
   slot: WorkshopAssistModuleSlot,
   effectIndices: readonly number[],
+  moduleLevel = 0,
 ): WorkshopSubmoduleSelectionMap {
   const out: WorkshopSubmoduleSelectionMap = {}
   for (const raw of effectIndices) {
     if (raw === 0) continue
-    const decoded = gameModuleEffectByIndex(raw)
+    const decoded = gameModuleEffectByIndex(raw, moduleLevel)
     if (decoded == null || decoded.slot !== slot) continue
     out[decoded.effectId] = decoded.rarity
   }

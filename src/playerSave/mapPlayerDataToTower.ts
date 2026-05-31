@@ -485,7 +485,7 @@ function applyModuleEquipped(
       ...ws.simSubmoduleSelections,
       [slot]: {
         ...prev,
-        main: gameSubmoduleSelectionFromEffectIndices(slot, item.effects),
+        main: gameSubmoduleSelectionFromEffectIndices(slot, item.effects, item.level),
       },
     }
   }
@@ -526,7 +526,7 @@ function applyAssistModuleSlots(
       ...ws.simSubmoduleSelections,
       [slot]: {
         ...prev,
-        assist: gameSubmoduleSelectionFromEffectIndices(slot, item.effects),
+        assist: gameSubmoduleSelectionFromEffectIndices(slot, item.effects, item.level),
       },
     }
   }

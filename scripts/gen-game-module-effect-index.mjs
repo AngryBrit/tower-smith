@@ -30,6 +30,11 @@ const RARITIES = ['common', 'rare', 'epic', 'legendary', 'mythic', 'ancestral']
  */
 function gameRarityForSparseRowEntry(row, offsetInRow, slot) {
   const firstNonNull = RARITIES.findIndex((r) => row.cells[r] != null)
+  // Package Chance wiki columns (Epic→Ancestral) map 1:1; no legendary duplicate tier.
+  if (slot === 'generator' && row.label === 'Package Chance [%]') {
+    const tiers = RARITIES.filter((r) => row.cells[r] != null)
+    return tiers[offsetInRow]
+  }
   let fixedSlot
   if (firstNonNull === 0) {
     if (slot === 'core') {
@@ -93,20 +98,31 @@ export const GAME_MODULE_EFFECT_BY_INDEX: readonly GameModuleEffectDecode[] = [
 ${lines.join('\n')}
 ] as const
 
-export function gameModuleEffectByIndex(index: number): GameModuleEffectDecode | null {
+export function gameModuleEffectByIndex(
+  index: number,
+  moduleLevel = 0,
+): GameModuleEffectDecode | null {
   if (!Number.isFinite(index) || index < 0) return null
-  return GAME_MODULE_EFFECT_BY_INDEX[Math.trunc(index)] ?? null
+  let i = Math.trunc(index)
+  const level = Number.isFinite(moduleLevel) ? Math.max(0, Math.trunc(moduleLevel)) : 0
+  // High-level modules store sparseIndex + level when that sum reaches the table size (330).
+  if (i >= GAME_MODULE_EFFECT_COUNT && level > 0) {
+    i -= level
+  }
+  if (i < 0 || i >= GAME_MODULE_EFFECT_COUNT) return null
+  return GAME_MODULE_EFFECT_BY_INDEX[i] ?? null
 }
 
 /** Map equipped module \`effects\` array (0 = empty slot) to workshop selection map. */
 export function gameSubmoduleSelectionFromEffectIndices(
   slot: WorkshopAssistModuleSlot,
   effectIndices: readonly number[],
+  moduleLevel = 0,
 ): WorkshopSubmoduleSelectionMap {
   const out: WorkshopSubmoduleSelectionMap = {}
   for (const raw of effectIndices) {
     if (raw === 0) continue
-    const decoded = gameModuleEffectByIndex(raw)
+    const decoded = gameModuleEffectByIndex(raw, moduleLevel)
     if (decoded == null || decoded.slot !== slot) continue
     out[decoded.effectId] = decoded.rarity
   }
