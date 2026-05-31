@@ -24,7 +24,8 @@ import {
   shareBugReportWithSave,
   type BugReportSaveAttachment,
 } from '../bugReportSaveAttachment'
-import { useBugBuster } from '../bugBuster/BugBusterContext'
+import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
+import { useBugBuster } from '../bugBuster/useBugBuster'
 import { useI18n, type StringId } from '../i18n'
 import type { MainPanel } from '../mainPanelStorage'
 
@@ -62,15 +63,33 @@ function mainPanelLabelKey(panel: MainPanel): StringId {
   }
 }
 
-export function BugBusterDialog() {
+function bugBusterFormDefaults(initial: BugBusterInitial | null): {
+  category: BugReportCategory
+  description: string
+  steps: string
+} {
+  return {
+    category: initial?.category ?? (initial?.error ? 'crash' : 'other'),
+    description: initial?.description ?? initial?.error?.message ?? '',
+    steps: initial?.steps ?? '',
+  }
+}
+
+type BugBusterDialogBodyProps = {
+  initial: BugBusterInitial | null
+  mainPanel: MainPanel
+  closeBugBuster: () => void
+}
+
+function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDialogBodyProps) {
   const { t } = useI18n()
   const { user } = useAuth()
-  const { open, initial, mainPanel, closeBugBuster } = useBugBuster()
   const saveInputRef = useRef<HTMLInputElement>(null)
+  const formDefaults = bugBusterFormDefaults(initial)
 
-  const [category, setCategory] = useState<BugReportCategory>('other')
-  const [description, setDescription] = useState('')
-  const [steps, setSteps] = useState('')
+  const [category, setCategory] = useState<BugReportCategory>(formDefaults.category)
+  const [description, setDescription] = useState(formDefaults.description)
+  const [steps, setSteps] = useState(formDefaults.steps)
   const [notice, setNotice] = useState<string | null>(null)
   const [saveFile, setSaveFile] = useState<File | null>(null)
   const [saveAttachment, setSaveAttachment] = useState<BugReportSaveAttachment | null>(null)
@@ -81,26 +100,12 @@ export function BugBusterDialog() {
   const mainPanelLabel = t(mainPanelLabelKey(activePanel))
 
   useEffect(() => {
-    if (!open) return
-    setCategory(initial?.category ?? (initial?.error ? 'crash' : 'other'))
-    setDescription(initial?.description ?? initial?.error?.message ?? '')
-    setSteps(initial?.steps ?? '')
-    setNotice(null)
-    setSaveFile(null)
-    setSaveAttachment(null)
-    setSaveError(null)
-    setSaveBusy(false)
-    if (saveInputRef.current) saveInputRef.current.value = ''
-  }, [open, initial])
-
-  useEffect(() => {
-    if (!open) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') closeBugBuster()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [closeBugBuster, open])
+  }, [closeBugBuster])
 
   const categoryLabel = t(CATEGORY_LABEL_KEYS[category])
 
@@ -248,9 +253,7 @@ export function BugBusterDialog() {
     offerSaveDownload('email')
   }, [buildEnv, offerSaveDownload, reportInput, requireDescription, saveFile, t])
 
-  if (!open) return null
-
-  return createPortal(
+  return (
     <div
       className="select-research__preset-save-backdrop"
       role="presentation"
@@ -389,7 +392,20 @@ export function BugBusterDialog() {
           </p>
         ) : null}
       </div>
-    </div>,
+    </div>
+  )
+}
+
+export function BugBusterDialog() {
+  const { open, initial, mainPanel, closeBugBuster, sessionId } = useBugBuster()
+  if (!open) return null
+  return createPortal(
+    <BugBusterDialogBody
+      key={sessionId}
+      initial={initial}
+      mainPanel={mainPanel}
+      closeBugBuster={closeBugBuster}
+    />,
     document.body,
   )
 }

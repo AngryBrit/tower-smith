@@ -62,7 +62,7 @@ import { useCommunityBuild } from '../lab/communityBuildContext'
 import { useLabHydration } from '../lab/labHydrationContext'
 import { useLabToolsBridge } from '../lab/labToolsBridgeContext'
 import { deferInEffect } from '../deferInEffect'
-import type { BugBusterInitial } from '../bugBuster/BugBusterContext'
+import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
 import { LabToolbarQuick } from './lab/LabToolbarQuick'
 import { labOverlayPortal } from './lab/labOverlayPortal'
 import { ImportNoticeBlock } from './ImportNoticeBlock'
@@ -185,10 +185,7 @@ export function SelectResearch({
   )
 
   useEffect(() => {
-    if (!importNotice) {
-      setImportNoticeBugInitial(null)
-      return
-    }
+    if (!importNotice) return
     const id = window.setTimeout(() => {
       setImportNotice(null)
       setImportNoticeBugInitial(null)

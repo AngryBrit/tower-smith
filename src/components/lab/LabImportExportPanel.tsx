@@ -1,5 +1,5 @@
 import { useRef, type ChangeEvent } from 'react'
-import type { BugBusterInitial } from '../../bugBuster/BugBusterContext'
+import type { BugBusterInitial } from '../../bugBuster/bugBusterTypes'
 import { TOWER_ANDROID_SAVE_FOLDER } from '../../playerSave/playerInfoSavePath'
 import { ImportNoticeBlock } from '../ImportNoticeBlock'
 import { useI18n } from '../../i18n'

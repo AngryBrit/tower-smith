@@ -1,4 +1,4 @@
-import type { BugBusterInitial } from '../bugBuster/BugBusterContext'
+import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
 import { BugBusterTrigger } from './BugBusterTrigger'
 
 type ImportNoticeBlockProps = {

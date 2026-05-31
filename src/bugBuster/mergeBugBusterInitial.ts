@@ -1,5 +1,5 @@
 import { getLastCapturedGlobalError } from './globalErrorCapture'
-import type { BugBusterInitial } from './BugBusterContext'
+import type { BugBusterInitial } from './bugBusterTypes'
 
 /** Merge explicit Bug Buster open options with the last uncaught window error, if any. */
 export function mergeBugBusterInitial(initial?: BugBusterInitial): BugBusterInitial | null {

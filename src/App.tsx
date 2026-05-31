@@ -9,7 +9,7 @@ import {
   useState,
 } from 'react'
 import { APP_VERSION, CHANGELOG_URL } from './appVersion'
-import { BugBusterProvider } from './bugBuster/BugBusterContext'
+import { BugBusterProvider } from './bugBuster/BugBusterProvider'
 import { BugBusterDialog } from './components/BugBusterDialog'
 import { BugBusterFab } from './components/BugBusterFab'
 import { BugBusterTrigger } from './components/BugBusterTrigger'

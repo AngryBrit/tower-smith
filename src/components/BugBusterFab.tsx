@@ -1,5 +1,5 @@
 import { createPortal } from 'react-dom'
-import { useBugBuster } from '../bugBuster/BugBusterContext'
+import { useBugBuster } from '../bugBuster/useBugBuster'
 import { useI18n } from '../i18n'
 import { BugBusterFabIcon } from './BugBusterFabIcon'
 

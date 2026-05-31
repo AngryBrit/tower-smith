@@ -1,6 +1,6 @@
-import { useBugBuster } from '../bugBuster/BugBusterContext'
+import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
+import { useBugBuster } from '../bugBuster/useBugBuster'
 import { useI18n, type StringId } from '../i18n'
-import type { BugBusterInitial } from '../bugBuster/BugBusterContext'
 
 type BugBusterTriggerProps = {
   initial?: BugBusterInitial
