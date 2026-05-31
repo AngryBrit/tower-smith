@@ -923,6 +923,10 @@ html[data-color-scheme='high-contrast'] {
   margin: 0.65rem 0 0;
 }
 
+.select-research__filters .import-notice-block {
+  grid-column: 1 / -1;
+}
+
 .import-notice-block__report {
   margin-top: 0.35rem;
   font-size: 0.68rem;
@@ -1844,7 +1848,9 @@ html[data-color-scheme='high-contrast'] {
 }
 
 .select-research__import-notice {
-  grid-column: 1 / -1;
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
   margin: 0;
   padding: 0.35rem 0.5rem;
   font-size: 0.75rem;
