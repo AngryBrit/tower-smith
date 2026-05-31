@@ -879,21 +879,34 @@ html[data-color-scheme='high-contrast'] {
   width: 2.5rem;
   height: 2.5rem;
   padding: 0;
-  border: none;
+  border: 1px solid var(--sr-cyan-dim);
   border-radius: 999px;
   background: linear-gradient(180deg, var(--sr-panel-gradient-start) 0%, var(--sr-panel) 100%);
   cursor: pointer;
-  box-shadow: 0 8px 24px var(--sr-shadow-mid);
+  box-shadow:
+    0 0 0 1px var(--sr-cyan-ring-15),
+    0 8px 24px var(--sr-shadow-mid);
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
-.bug-buster-fab:hover,
-.bug-buster-fab:focus-visible {
-  outline: none;
+.bug-buster-fab:hover {
+  border-color: var(--sr-cyan-bright);
+  box-shadow:
+    0 0 0 1px var(--sr-cyan-ring-15),
+    0 0 14px var(--sr-cyan-glow-12),
+    0 8px 24px var(--sr-shadow-mid);
 }
 
 .bug-buster-fab:focus-visible {
+  border-color: var(--sr-cyan-bright);
   outline: 3px solid var(--sr-focus-outline);
   outline-offset: 2px;
+  box-shadow:
+    0 0 0 1px var(--sr-cyan-ring-15),
+    0 0 14px var(--sr-cyan-glow-12),
+    0 8px 24px var(--sr-shadow-mid);
 }
 
 .bug-buster-fab__icon {
