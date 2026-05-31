@@ -9,7 +9,7 @@ export const ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   Range: 3,
   'Damage / Meter': 4,
   'Super Crit Chance': 5,
-  'Super Crit Multi': 6,
+  'Super Crit Mult': 6,
   'Max Rend Armor Multiplier': 131,
   'Light Speed Shots': 150,
 } as const satisfies Record<string, number>

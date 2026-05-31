@@ -23,8 +23,8 @@ const towerLabs = towerLabsJson as ToolkitLabsFile
 /** Display-name mismatches between our research JSON and Tower Data lab keys */
 const LAB_NAME_ALIASES: Record<string, string> = {
   'Labs Speed': 'Lab Speed',
-  // Legacy typo from game data / old exports; canonical key in tower-labs.json is Super Crit Multi
-  'Super Crit Mult': 'Super Crit Multi',
+  // Legacy research export name; canonical key in tower-labs.json is Super Crit Mult
+  'Super Crit Multi': 'Super Crit Mult',
   'Black Hole Coin Bonus': 'Blackhole Coin Bonus',
   'Lightning Amplifier - Scatter': 'Swamp Rend',
   'Extra Extra Orbs': 'Extra Inner Orbs',

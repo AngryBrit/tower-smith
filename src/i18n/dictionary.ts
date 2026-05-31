@@ -878,7 +878,7 @@ export const STRINGS_EN = {
   ws_stat_enhanceRendArmor: 'Rend Armor',
   ws_stat_enhanceCritFactor: 'Critical Factor +',
   ws_stat_enhanceDamagePerMeter: 'Damage / Meter +',
-  ws_stat_enhanceSuperCritMult: 'Super Crit Multi +',
+  ws_stat_enhanceSuperCritMult: 'Super Crit Mult +',
   ws_stat_enhanceAttackSpeed: 'Attack Speed +',
   ws_budget_title: 'Workshop coins',
   ws_budget_stones_title: 'Workshop power stones',

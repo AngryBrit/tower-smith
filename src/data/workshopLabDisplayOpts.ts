@@ -196,7 +196,7 @@ export function buildWorkshopAttackLabDisplayOpts(
     superCritMultLabMultiplier: attackResearchDamageStyleLabMultiplier(
       research,
       labOverrides,
-      'Super Crit Multi',
+      'Super Crit Mult',
     ),
   }
 }

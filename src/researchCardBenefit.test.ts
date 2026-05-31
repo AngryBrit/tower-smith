@@ -1589,8 +1589,8 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitLineWithNextUpgrade(scc!, max, max)).toBe('+5.00%')
     })
 
-    it('Super Crit Multi wiki Value (+0.02/level to x1.80), cost/time ladder (40 levels)', () => {
-      const scm = attack.items.find((i) => i.name === 'Super Crit Multi')
+    it('Super Crit Mult wiki Value (+0.02/level to x1.80), cost/time ladder (40 levels)', () => {
+      const scm = attack.items.find((i) => i.name === 'Super Crit Mult')
       expect(scm).toBeDefined()
       const max = scm!.maxLevel ?? 40
       const towerLabs: Record<
@@ -1599,7 +1599,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       > = JSON.parse(
         readFileSync(join(srcDir, 'data/tower-labs.json'), 'utf-8'),
       ) as Record<string, Record<string, { COST: number; DURATION: number }>>
-      const multTable = towerLabs['Super Crit Multi']
+      const multTable = towerLabs['Super Crit Mult']
       expect(benefitDisplayForCard(scm!, 0, max)).toBe('x1.00')
       expect(benefitDisplayForCard(scm!, 1, max)).toBe('x1.02')
       expect(benefitDisplayForCard(scm!, 29, max)).toBe('x1.58')
@@ -1607,24 +1607,24 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitLineWithNextUpgrade(scm!, 0, max)).toBe('x1.00 » x1.02')
       expect(benefitLineWithNextUpgrade(scm!, 39, max)).toBe('x1.78 » x1.80')
       expect(benefitLineWithNextUpgrade(scm!, max, max)).toBe('x1.80')
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 0)).toBe(multTable['1'].COST)
       expect(toolkitMarginalCoinCost('Super Crit Mult', 0)).toBe(multTable['1'].COST)
-      expect(toolkitUpgradeDurationSeconds('Super Crit Multi', 0)).toBe(
+      expect(toolkitMarginalCoinCost('Super Crit Multi', 0)).toBe(multTable['1'].COST)
+      expect(toolkitUpgradeDurationSeconds('Super Crit Mult', 0)).toBe(
         multTable['1'].DURATION,
       )
       expect(researchTimeForNextUpgrade(scm!, 0, max)).toBe('1d 3h 46m')
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 2)).toBe(multTable['3'].COST)
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 9)).toBe(multTable['10'].COST)
+      expect(toolkitMarginalCoinCost('Super Crit Mult', 2)).toBe(multTable['3'].COST)
+      expect(toolkitMarginalCoinCost('Super Crit Mult', 9)).toBe(multTable['10'].COST)
       expect(researchTimeForNextUpgrade(scm!, 9, max)).toBe('11d 16h 21m')
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 29)).toBe(multTable['30'].COST)
+      expect(toolkitMarginalCoinCost('Super Crit Mult', 29)).toBe(multTable['30'].COST)
       expect(researchTimeForNextUpgrade(scm!, 29, max)).toBe('1y 225d 23h 14m')
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 38)).toBe(multTable['39'].COST)
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 39)).toBe(multTable['40'].COST)
-      expect(toolkitUpgradeDurationSeconds('Super Crit Multi', 39)).toBe(
+      expect(toolkitMarginalCoinCost('Super Crit Mult', 38)).toBe(multTable['39'].COST)
+      expect(toolkitMarginalCoinCost('Super Crit Mult', 39)).toBe(multTable['40'].COST)
+      expect(toolkitUpgradeDurationSeconds('Super Crit Mult', 39)).toBe(
         multTable['40'].DURATION,
       )
       expect(researchTimeForNextUpgrade(scm!, 39, max)).toBe('5y 73d 1h 1m')
-      expect(toolkitMarginalCoinCost('Super Crit Multi', 40)).toBeUndefined()
+      expect(toolkitMarginalCoinCost('Super Crit Mult', 40)).toBeUndefined()
     })
 
     it('Max Rend Armor Multiplier wiki Rend Armor Max (x8.000…x15.500), cost/time ladder (30 levels)', () => {

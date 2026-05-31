@@ -35,7 +35,7 @@ export const WORKSHOP_ENHANCE_DAMAGE_PER_METER_UNLOCK_ATTACK_ENHANCE_SPENT_COINS
   5_000_000_000_000 as const
 
 /**
- * Wiki: **Super Crit Multi** unlocks after **50T** coins spent on attack enhancements.
+ * Wiki: **Super Crit Mult** unlocks after **50T** coins spent on attack enhancements.
  */
 export const WORKSHOP_ENHANCE_SUPER_CRIT_MULT_UNLOCK_ATTACK_ENHANCE_SPENT_COINS =
   50_000_000_000_000 as const

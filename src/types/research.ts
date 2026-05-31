@@ -321,8 +321,8 @@ export function damageStyleLabMultiplier(
 /**
  * Damage-style labs (+0.02/level multiplier): **Damage** (max **100**→x3.00), **Attack Speed** (max **99**→x2.98),
  * **Range** (max **80**→x2.60; wiki **Tier 2 wave 30**), **Damage / Meter** (max **99**→x2.98; wiki **Tier 3 wave 30**),
- * **Super Crit Multi**, **Cash Bonus**, **Cash / Wave**, **Coins / Kill Bonus**, **Coins / Wave**,
- * **Interest** (Lv.1→x1.02 … Lv.99→x2.98; Damage **100** levels Lv.100→x3.00; **Super Crit Multi** max **40**→x1.80, wiki unlock **Tier 5 wave 200** with **Super Crit Chance**).
+ * **Super Crit Mult**, **Cash Bonus**, **Cash / Wave**, **Coins / Kill Bonus**, **Coins / Wave**,
+ * **Interest** (Lv.1→x1.02 … Lv.99→x2.98; Damage **100** levels Lv.100→x3.00; **Super Crit Mult** max **40**→x1.80, wiki unlock **Tier 5 wave 200** with **Super Crit Chance**).
  */
 export function damageValueDisplay(
   effectiveLevel: number,
@@ -362,7 +362,7 @@ export function criticalFactorValueDisplay(
 
 /**
  * Super Crit Chance — **+0.10% × lab level** with Include **%**.
- * Marginal **Time** / **Coins** through **50** levels live in `tower-labs.json` (wiki unlock **Tier 5 wave 200** with **Super Crit Multi**).
+ * Marginal **Time** / **Coins** through **50** levels live in `tower-labs.json` (wiki unlock **Tier 5 wave 200** with **Super Crit Mult**).
  */
 export function superCritChancePercentDisplay(
   effectiveLevel: number,
@@ -1718,7 +1718,7 @@ export function benefitDisplayForCard(
     item.name === 'Attack Speed' ||
     item.name === 'Range' ||
     item.name === 'Damage / Meter' ||
-    item.name === 'Super Crit Multi' ||
+    item.name === 'Super Crit Mult' ||
     item.name === 'Cash Bonus' ||
     item.name === 'Cash / Wave' ||
     item.name === 'Coins / Kill Bonus' ||

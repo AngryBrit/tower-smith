@@ -15,7 +15,7 @@ function attackResearchData(): ResearchData {
           { name: 'Range', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Damage / Meter', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Super Crit Chance', level: '0', benefit: '', time: '', cost: '', state: 'default' },
-          { name: 'Super Crit Multi', level: '0', benefit: '', time: '', cost: '', state: 'default' },
+          { name: 'Super Crit Mult', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           {
             name: 'Max Rend Armor Multiplier',
             level: '0',

@@ -17,7 +17,7 @@ const LAB_BY_ID = {
   3: 'Attack: Range',
   4: 'Attack: Damage / Meter',
   5: 'Attack: Super Crit Chance',
-  6: 'Attack: Super Crit Multi',
+  6: 'Attack: Super Crit Mult',
   10: 'Defense: Health',
   11: 'Defense: Health Regen',
   12: 'Defense Absolute',
