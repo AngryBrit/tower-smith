@@ -1190,6 +1190,10 @@ export const STRINGS_ES = {
     'Guardado en Android: {{path}}/playerInfo.dat — la ruta se copia al pulsar Importar; elige ese archivo en el selector.',
   sr_lab_import_player_save_ios_hint:
     'iOS: playerInfo.dat está en el sandbox del juego — no puedes abrirlo desde aquí. Importa una copia desde Archivos, iCloud o una extracción de backup.',
+  sr_lab_import_player_save_stage_reading: 'Leyendo archivo de guardado…',
+  sr_lab_import_player_save_stage_decoding: 'Decodificando guardado…',
+  sr_lab_import_player_save_stage_applying: 'Aplicando lab y build…',
+  sr_lab_import_player_save_stage_syncing: 'Sincronizando perfil…',
   sr_notice_import_player_android_path:
     'Ruta copiada. En el selector, abre Android/data/com.TechTreeGames.TheTower/files y elige playerInfo.dat.',
   sr_notice_import_player_android_path_no_clip:

@@ -68,12 +68,14 @@ describe('towerUnifiedCsv', () => {
     }
   })
 
-  it('roundtrips cards, modules sim, and themes', () => {
+  it('roundtrips cards, modules sim, themes, and relics', () => {
     const ws = {
       ...defaultWorkshopPersisted(),
       simAssistModuleSlot: 'armor' as const,
       simAttackSpeedModuleSubEffect: 0.12,
       cardStars: { ...defaultWorkshopPersisted().cardStars, damage: 5 },
+      relicOwnedIds: ['t_iv_harmonic', 't_xiv_arcane'],
+      simRelicsBonusFraction: 0.12,
     }
     const themes: TowerThemesSnapshot = {
       selection: { ...DEFAULT_THEME_SELECTION, tower: 'tower-plasma' },
@@ -81,6 +83,9 @@ describe('towerUnifiedCsv', () => {
     }
     const csv = serializeTowerUnifiedCsv({ '2-2': 4 }, ws, undefined, themes)
     expect(csv).toContain('theme,ownedIds,')
+    expect(csv).toContain('relic,ownedIds,')
+    expect(csv).toContain('relic,simBonusFraction,0.12')
+    expect(csv).not.toContain('ws,relicOwnedIds,')
     expect(csv).not.toContain('theme,selection,')
     expect(csv).not.toContain('theme,owned,')
     expect(csv).not.toContain('theme,sel.')
@@ -91,8 +96,26 @@ describe('towerUnifiedCsv', () => {
       expect(b.overrides['2-2']).toBe(4)
       expect(b.workshop.simAssistModuleSlot).toBe('armor')
       expect(b.workshop.cardStars.damage).toBe(5)
+      expect(b.workshop.relicOwnedIds).toEqual(['t_iv_harmonic', 't_xiv_arcane'])
+      expect(b.workshop.simRelicsBonusFraction).toBeCloseTo(0.12)
       expect(parsed.themes?.selection).toBeUndefined()
       expect(parsed.themes?.ownedIds).toContain('tower-plasma')
+    }
+  })
+
+  it('imports legacy ws relic rows from older tower CSV exports', () => {
+    const lines = [
+      TOWER_UNIFIED_CSV_MAGIC,
+      'type,key,value',
+      'ws,relicOwnedIds,["t_iv_harmonic","t_xiv_arcane"]',
+      'ws,simRelicsBonusFraction,0.12',
+    ]
+    const parsed = parseTowerUnifiedCsv(lines.join('\n'))
+    expect(parsed.tag).toBe('ok')
+    if (parsed.tag === 'ok') {
+      const w = towerUnifiedPrimaryBuild(parsed).workshop
+      expect(w.relicOwnedIds).toEqual(['t_iv_harmonic', 't_xiv_arcane'])
+      expect(w.simRelicsBonusFraction).toBeCloseTo(0.12)
     }
   })
 
@@ -119,6 +142,25 @@ describe('towerUnifiedCsv', () => {
       expect(outSnapshots[2]?.simGeneratorChassisModuleId).toBe('pulsarHarvester')
       expect(out.simCoreModuleLevel).toBe(42)
       expect(out.simGeneratorChassisModuleId).toBe('pulsarHarvester')
+    }
+  })
+
+  it('roundtrips all chassis module merge tiers', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simCannonChassisModuleRarity: 'rare' as const,
+      simArmorChassisModuleRarity: 'star_5' as const,
+      simGeneratorAssistChassisModuleRarity: 'legendary_plus' as const,
+    }
+    const csv = serializeTowerUnifiedCsv({}, ws)
+    const withBom = `\uFEFF${csv}`
+    const parsed = parseTowerUnifiedCsv(withBom)
+    expect(parsed.tag).toBe('ok')
+    if (parsed.tag === 'ok') {
+      const w = towerUnifiedPrimaryBuild(parsed).workshop
+      expect(w.simCannonChassisModuleRarity).toBe('rare')
+      expect(w.simArmorChassisModuleRarity).toBe('star_5')
+      expect(w.simGeneratorAssistChassisModuleRarity).toBe('legendary_plus')
     }
   })
 

@@ -67,6 +67,7 @@ import { labOverlayPortal } from './lab/labOverlayPortal'
 const LabImportExportPanel = lazy(() =>
   import('./lab/LabImportExportPanel').then((m) => ({ default: m.LabImportExportPanel })),
 )
+import type { PlayerSaveImportStage } from './lab/LabImportExportPanel'
 const LabShareQrDialog = lazy(() =>
   import('./lab/LabShareQrDialog').then((m) => ({ default: m.LabShareQrDialog })),
 )
@@ -147,6 +148,9 @@ export function SelectResearch({
   } | null>(null)
   const [resetLevelsConfirmOpen, setResetLevelsConfirmOpen] = useState(false)
   const [labDataPanelOpen, setLabDataPanelOpen] = useState(false)
+  const [playerSaveImporting, setPlayerSaveImporting] = useState(false)
+  const [playerSaveImportStage, setPlayerSaveImportStage] =
+    useState<PlayerSaveImportStage | null>(null)
   const [labCompareOpen, setLabCompareOpen] = useState(false)
   const [labBudgetCollapsed, setLabBudgetCollapsed] = useState(() => {
     try {
@@ -477,8 +481,11 @@ export function SelectResearch({
       const file = input.files?.[0]
       input.value = ''
       if (!file) return
+      setPlayerSaveImporting(true)
+      setPlayerSaveImportStage('reading')
       try {
         const buf = new Uint8Array(await file.arrayBuffer())
+        setPlayerSaveImportStage('decoding')
         const imported = await importPlayerInfoDat(buf, data)
         if (!imported.ok) {
           if (imported.error === 'gzip_unsupported') {
@@ -488,6 +495,7 @@ export function SelectResearch({
           }
           return
         }
+        setPlayerSaveImportStage('applying')
         const sanitized = imported.overrides
         const build = splitTowerBuild(imported.workshop)
         applyTowerThemes(imported.themes)
@@ -504,15 +512,18 @@ export function SelectResearch({
             await resolveGuildNameForPublish(imported.guild)
           }
           if (auth.user) {
+            setPlayerSaveImportStage('syncing')
             const updated = await updateUserGuildId(auth.user.id, imported.guild)
             if (updated.ok) shouldRefreshProfile = true
           }
         }
         if (auth.user && imported.playfabId) {
+          setPlayerSaveImportStage('syncing')
           await updateUserPlayfabId(auth.user.id, imported.playfabId)
           shouldRefreshProfile = true
         }
         if (auth.user && shouldRefreshProfile) {
+          setPlayerSaveImportStage('syncing')
           await auth.refreshProfile()
         }
         auth.prefillProfileFromImport({
@@ -522,6 +533,9 @@ export function SelectResearch({
         setLabDataPanelOpen(false)
       } catch {
         setImportNotice(t('sr_notice_import_read_fail'))
+      } finally {
+        setPlayerSaveImporting(false)
+        setPlayerSaveImportStage(null)
       }
     },
     [
@@ -810,8 +824,13 @@ export function SelectResearch({
       <Suspense fallback={null}>
           <LabImportExportPanel
             open={labDataPanelOpen}
-            onClose={() => setLabDataPanelOpen(false)}
+            onClose={() => {
+              if (playerSaveImporting) return
+              setLabDataPanelOpen(false)
+            }}
             sharePublishing={sharePublishing}
+            playerSaveImporting={playerSaveImporting}
+            playerSaveImportStage={playerSaveImportStage}
             androidPlayerSaveImport={androidPlayerSaveImport}
             iosPlayerSaveImport={iosPlayerSaveImport}
             onImportCsvFile={handleImportLabCsvFileChange}

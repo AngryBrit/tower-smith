@@ -29,6 +29,11 @@ import {
   WORKSHOP_MODULE_PRESET_COUNT,
   clampWorkshopModuleActivePresetIndex,
 } from './data/workshopModulePresets'
+import {
+  sanitizeChassisModuleEffectTier,
+  sanitizeChassisModuleMergeTier,
+} from './data/workshopChassisModuleShared'
+import { parseRelicOwnedIdsCell } from './data/workshopRelics'
 import { sanitizeWorkshopPersisted, type WorkshopPersistedV1 } from './labPresetsStorage'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from './towerDataThemes'
 
@@ -125,8 +130,6 @@ const WS_FIELDS: readonly (keyof WorkshopPersistedV1)[] = [
   'enhanceEnemyLevelSkipLevel',
   'simAttackSpeedModuleSubEffect',
   'simBerserkerDamageTaken',
-  'relicOwnedIds',
-  'simRelicsBonusFraction',
   'simPerkDamageQuantity',
   'simAssistModuleSlot',
   'simCannonModuleLevel',
@@ -181,6 +184,7 @@ const WS_FIELDS: readonly (keyof WorkshopPersistedV1)[] = [
   ...WORKSHOP_BOT_SPECIAL_LEVEL_ORDER,
 ]
 
+const LEGACY_WS_FIELDS = ['relicOwnedIds', 'simRelicsBonusFraction'] as const satisfies readonly (keyof WorkshopPersistedV1)[]
 const CARD_STAR_PREFIX = 'star.'
 const CARD_PRESET_PREFIX = 'preset.'
 const MODULE_PRESET_PREFIX = 'preset.'
@@ -210,7 +214,7 @@ function sortLabKeys(keys: string[]): string[] {
 function serializeWsValue(v: WorkshopPersistedV1, k: keyof WorkshopPersistedV1): string {
   const x = v[k]
   if (typeof x === 'boolean') return x ? 'true' : 'false'
-  if (k === 'simSubmoduleSelections' || k === 'relicOwnedIds') {
+  if (k === 'simSubmoduleSelections') {
     return JSON.stringify(x)
   }
   return String(x)
@@ -245,6 +249,11 @@ function appendThemeRows(lines: string[], themes: TowerThemesSnapshot): void {
   lines.push(`theme,ownedIds,${escapeCsvCell(JSON.stringify(themes.ownedIds))}`)
 }
 
+function appendRelicRows(lines: string[], workshop: WorkshopPersistedV1): void {
+  lines.push(`relic,ownedIds,${escapeCsvCell(JSON.stringify(workshop.relicOwnedIds))}`)
+  lines.push(`relic,simBonusFraction,${workshop.simRelicsBonusFraction}`)
+}
+
 function appendBuildRows(
   lines: string[],
   build: {
@@ -263,6 +272,7 @@ function appendBuildRows(
   for (const k of WS_FIELDS) {
     lines.push(`ws,${k},${serializeWsValue(build.workshop, k)}`)
   }
+  appendRelicRows(lines, build.workshop)
   appendCardRows(lines, build.workshop)
   appendModuleRows(lines, build.workshop)
 }
@@ -408,19 +418,26 @@ function parseWsRow(wsRaw: Record<string, unknown>, wsKey: keyof WorkshopPersist
     wsKey === 'simCannonAssistChassisModuleRarity' ||
     wsKey === 'simArmorAssistChassisModuleRarity' ||
     wsKey === 'simGeneratorAssistChassisModuleRarity' ||
-    wsKey === 'simCoreAssistChassisModuleRarity' ||
+    wsKey === 'simCoreAssistChassisModuleRarity'
+  ) {
+    wsRaw[wsKey] = sanitizeChassisModuleMergeTier(valCell.trim().toLowerCase())
+    return true
+  }
+  if (
     wsKey === 'simCannonAssistUniqueRarity' ||
     wsKey === 'simArmorAssistUniqueRarity' ||
     wsKey === 'simGeneratorAssistUniqueRarity' ||
     wsKey === 'simCoreAssistUniqueRarity'
   ) {
-    const t = valCell.toLowerCase()
-    if (t !== 'epic' && t !== 'legendary' && t !== 'mythic' && t !== 'ancestral') return false
-    wsRaw[wsKey] = t
+    wsRaw[wsKey] = sanitizeChassisModuleEffectTier(valCell.trim().toLowerCase())
     return true
   }
-  if (wsKey === 'simSubmoduleSelections' || wsKey === 'relicOwnedIds') {
+  if (wsKey === 'simSubmoduleSelections') {
     wsRaw[wsKey] = valCell.trim()
+    return true
+  }
+  if (wsKey === 'relicOwnedIds') {
+    wsRaw[wsKey] = parseRelicOwnedIdsCell(valCell)
     return true
   }
   if (
@@ -509,6 +526,20 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
       return { tag: 'invalid' }
     }
 
+    if (kind === 'relic') {
+      if (key === 'ownedIds') {
+        acc.wsRaw.relicOwnedIds = parseRelicOwnedIdsCell(valCell)
+        continue
+      }
+      if (key === 'simBonusFraction' || key === 'simRelicsBonusFraction') {
+        const n = valCell === '' ? 0 : Number(valCell)
+        if (!Number.isFinite(n) || n < 0) return { tag: 'invalid' }
+        acc.wsRaw.simRelicsBonusFraction = n
+        continue
+      }
+      return { tag: 'invalid' }
+    }
+
     if (kind === 'build') {
       if (key !== 'name') return { tag: 'invalid' }
       acc = flushBuildAccumulator(builds, acc)
@@ -526,7 +557,7 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
     }
 
     if (kind === 'ws') {
-      const allowed = new Set<keyof WorkshopPersistedV1>(WS_FIELDS)
+      const allowed = new Set<keyof WorkshopPersistedV1>([...WS_FIELDS, ...LEGACY_WS_FIELDS])
       if (!allowed.has(key as keyof WorkshopPersistedV1)) return { tag: 'invalid' }
       const wsKey = key as keyof WorkshopPersistedV1
       if (!parseWsRow(acc.wsRaw, wsKey, valCell)) return { tag: 'invalid' }

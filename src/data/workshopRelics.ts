@@ -95,3 +95,40 @@ export function sanitizeRelicOwnedIds(raw: unknown): string[] {
   }
   return out
 }
+
+/** Parse relic id lists from JSON arrays or tower CSV `ws,relicOwnedIds,…` cells. */
+export function parseRelicOwnedIdsJson(raw: unknown): string[] {
+  if (typeof raw === 'string') {
+    const trimmed = raw.trim()
+    if (trimmed === '') return []
+    try {
+      return sanitizeRelicOwnedIds(JSON.parse(trimmed))
+    } catch {
+      return []
+    }
+  }
+  return sanitizeRelicOwnedIds(raw)
+}
+
+/**
+ * Parse relic ids from a tower CSV value cell.
+ * Handles quoted JSON and legacy `ws,relicOwnedIds,[id1,id2]` rows where inner quotes were lost.
+ */
+export function parseRelicOwnedIdsCell(valCell: string): string[] {
+  const trimmed = valCell.trim()
+  if (trimmed === '' || trimmed === '[]') return []
+  try {
+    const parsed = sanitizeRelicOwnedIds(JSON.parse(trimmed))
+    if (parsed.length > 0) return parsed
+  } catch {
+    // fall through for legacy unquoted bracket lists
+  }
+  if (trimmed.startsWith('[') && trimmed.endsWith(']')) {
+    const inner = trimmed.slice(1, -1).trim()
+    if (inner === '') return []
+    return sanitizeRelicOwnedIds(
+      inner.split(',').map((s) => s.trim().replace(/^"(.*)"$/, '$1')),
+    )
+  }
+  return []
+}

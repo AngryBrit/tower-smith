@@ -1126,6 +1126,10 @@ export const STRINGS_DE = {
     'Android-Speicher: {{path}}/playerInfo.dat — Pfad wird beim Import antippen kopiert; Datei im Datei-Dialog wählen.',
   sr_lab_import_player_save_ios_hint:
     'iOS: playerInfo.dat liegt in der App-Sandbox — hier nicht erreichbar. Kopie aus Dateien, iCloud oder Backup-Extrakt importieren.',
+  sr_lab_import_player_save_stage_reading: 'Speicherdatei wird gelesen…',
+  sr_lab_import_player_save_stage_decoding: 'Speicher wird dekodiert…',
+  sr_lab_import_player_save_stage_applying: 'Lab und Build werden übernommen…',
+  sr_lab_import_player_save_stage_syncing: 'Profil wird synchronisiert…',
   sr_notice_import_player_android_path:
     'Speicherpfad kopiert. Im Datei-Dialog Android/data/com.TechTreeGames.TheTower/files öffnen und playerInfo.dat wählen.',
   sr_notice_import_player_android_path_no_clip:

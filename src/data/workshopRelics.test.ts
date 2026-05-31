@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   WORKSHOP_RELIC_COUNT,
+  parseRelicOwnedIdsJson,
+  parseRelicOwnedIdsCell,
   sanitizeRelicOwnedIds,
   workshopRelicDef,
   workshopRelicsDamageBonusFraction,
@@ -24,6 +26,17 @@ describe('workshopRelics', () => {
   it('sanitizeRelicOwnedIds drops unknown ids', () => {
     expect(sanitizeRelicOwnedIds(['t_iv_harmonic', 'bogus', 't_iv_harmonic'])).toEqual([
       't_iv_harmonic',
+    ])
+  })
+
+  it('parseRelicOwnedIdsCell accepts JSON strings and legacy bracket lists', () => {
+    expect(parseRelicOwnedIdsJson('["t_iv_harmonic","t_xiv_arcane"]')).toEqual([
+      't_iv_harmonic',
+      't_xiv_arcane',
+    ])
+    expect(parseRelicOwnedIdsCell('[t_iv_harmonic,t_xiv_arcane]')).toEqual([
+      't_iv_harmonic',
+      't_xiv_arcane',
     ])
   })
 

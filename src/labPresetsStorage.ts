@@ -78,7 +78,7 @@ import {
   sanitizeChassisModuleId,
   sanitizeChassisModuleMergeTier,
 } from './data/workshopChassisModuleSelection'
-import { sanitizeRelicOwnedIds } from './data/workshopRelics'
+import { parseRelicOwnedIdsJson } from './data/workshopRelics'
 import {
   assistMainStoneEfficiencyFromPersisted,
   assistSubStoneEfficiencyFromPersisted,
@@ -975,7 +975,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
       return { simSubmoduleSelections, simAttackSpeedModuleSubEffect }
     })(),
     simBerserkerDamageTaken: Math.max(0, Number(o.simBerserkerDamageTaken) || 0),
-    relicOwnedIds: sanitizeRelicOwnedIds(o.relicOwnedIds),
+    relicOwnedIds: parseRelicOwnedIdsJson(o.relicOwnedIds),
     simRelicsBonusFraction: Math.max(0, Number(o.simRelicsBonusFraction) || 0),
     simPerkDamageQuantity: clampInt(Number(o.simPerkDamageQuantity), 0, 99),
     simAssistModuleSlot,

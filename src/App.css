@@ -1913,6 +1913,36 @@ html[data-color-scheme='high-contrast'] {
   margin-top: 0.65rem;
 }
 
+.select-research__lab-data-import-progress {
+  margin: 0.65rem 0 0;
+  padding: 0.65rem 0.75rem;
+  border-radius: 0.5rem;
+  border: 1px solid var(--sr-cyan-dim);
+  background: var(--sr-surface-60);
+}
+
+.select-research__lab-data-import-progress-label {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  line-height: 1.35;
+  text-align: center;
+  color: var(--sr-cyan-bright);
+}
+
+.select-research__lab-data-import-progress-track {
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.select-research__lab-data-import-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--sr-cyan-dim), var(--sr-cyan-bright));
+  transition: width 0.25s ease;
+}
+
 .select-research__compare-dialog {
   max-width: min(95vw, 52rem);
   width: 100%;

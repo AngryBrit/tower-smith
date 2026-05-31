@@ -63,6 +63,11 @@ import {
   gameThemeOwnedIdsFromUnlockArrays,
 } from './gameThemeIndex'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
+import { gameSubmoduleSelectionFromEffectIndices } from './gameModuleEffectIndex'
+import {
+  defaultWorkshopSubmoduleSlotSelections,
+  totalCannonAttackSpeedFromSelections,
+} from '../data/workshopSubmoduleSelection'
 import {
   ASSIST_CHASSIS_MODULE_ID_KEY,
   ASSIST_CHASSIS_MODULE_RARITY_KEY,
@@ -475,7 +480,14 @@ function applyModuleEquipped(
     if (moduleId) {
       ws[CHASSIS_MODULE_ID_KEY[slot]] = moduleId
     }
-    void item.effects
+    const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
+    ws.simSubmoduleSelections = {
+      ...ws.simSubmoduleSelections,
+      [slot]: {
+        ...prev,
+        main: gameSubmoduleSelectionFromEffectIndices(slot, item.effects),
+      },
+    }
   }
 }
 
@@ -509,7 +521,14 @@ function applyAssistModuleSlots(
       ws[ASSIST_CHASSIS_MODULE_ID_KEY[slot]] = moduleId
     }
     void row.uniqueEffectEfficiencyLevel
-    void item.effects
+    const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
+    ws.simSubmoduleSelections = {
+      ...ws.simSubmoduleSelections,
+      [slot]: {
+        ...prev,
+        assist: gameSubmoduleSelectionFromEffectIndices(slot, item.effects),
+      },
+    }
   }
 }
 
@@ -550,6 +569,7 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   if (save.assistModulesAvailable) {
     applyAssistModuleSlots(ws, save.assistModuleSlots)
   }
+  ws.simAttackSpeedModuleSubEffect = totalCannonAttackSpeedFromSelections(ws.simSubmoduleSelections)
 
   // Drop default empty module presets so sanitize seeds preset 1 from imported sim fields.
   return sanitizeWorkshopPersisted({ ...ws, modulePresetSnapshots: undefined })

@@ -269,5 +269,28 @@ describe('playerSaveToWorkshop', () => {
       gameWorkshopChassisModuleId(save.moduleEquipped[3]!.infoIndex, 'core'),
     )
     expect(save.moduleEquipped[0]!.effects.length).toBeGreaterThan(0)
+    expect(ws.simSubmoduleSelections.cannon.main).toEqual({
+      'attack-speed': 'legendary',
+      'crit-chance': 'legendary',
+      'crit-factor': 'legendary',
+      'multishot-chance': 'legendary',
+    })
+    expect(ws.simAttackSpeedModuleSubEffect).toBe(1)
+    expect(ws.simSubmoduleSelections.armor.main).toEqual({
+      'health-regen': 'legendary',
+      defense: 'legendary',
+      'wall-health': 'legendary',
+    })
+    expect(ws.simSubmoduleSelections.generator.main).toEqual({
+      'free-attack-upgrade': 'epic',
+      'free-defense-upgrade': 'epic',
+      'free-utility-upgrade': 'epic',
+    })
+    expect(ws.simSubmoduleSelections.core.main).toEqual({
+      'chain-lightning-damage-x': 'legendary',
+      'death-wave-quantity': 'legendary',
+      'golden-tower-bonus': 'legendary',
+      'black-hole-duration-s': 'legendary',
+    })
   })
 })

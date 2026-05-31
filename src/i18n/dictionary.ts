@@ -1176,6 +1176,10 @@ export const STRINGS_EN = {
     'Android save: {{path}}/playerInfo.dat — the path is copied when you tap Import; pick that file in the file picker.',
   sr_lab_import_player_save_ios_hint:
     'iOS: playerInfo.dat lives in the game’s sandbox — you can’t browse to it here. Import a copy from Files, iCloud, or a backup extract.',
+  sr_lab_import_player_save_stage_reading: 'Reading save file…',
+  sr_lab_import_player_save_stage_decoding: 'Decoding save…',
+  sr_lab_import_player_save_stage_applying: 'Applying lab and build…',
+  sr_lab_import_player_save_stage_syncing: 'Syncing profile…',
   sr_notice_import_player_android_path:
     'Save folder path copied. In the file picker, open Android/data/com.TechTreeGames.TheTower/files and choose playerInfo.dat.',
   sr_notice_import_player_android_path_no_clip:

@@ -3,10 +3,28 @@ import { TOWER_ANDROID_SAVE_FOLDER } from '../../playerSave/playerInfoSavePath'
 import { useI18n } from '../../i18n'
 import { labOverlayPortal } from './labOverlayPortal'
 
+export type PlayerSaveImportStage = 'reading' | 'decoding' | 'applying' | 'syncing'
+
+const PLAYER_SAVE_IMPORT_PROGRESS: Record<PlayerSaveImportStage, number> = {
+  reading: 20,
+  decoding: 45,
+  applying: 75,
+  syncing: 92,
+}
+
+const PLAYER_SAVE_IMPORT_STAGE_KEYS = {
+  reading: 'sr_lab_import_player_save_stage_reading',
+  decoding: 'sr_lab_import_player_save_stage_decoding',
+  applying: 'sr_lab_import_player_save_stage_applying',
+  syncing: 'sr_lab_import_player_save_stage_syncing',
+} as const
+
 export type LabImportExportPanelProps = {
   open: boolean
   onClose: () => void
   sharePublishing: boolean
+  playerSaveImporting: boolean
+  playerSaveImportStage: PlayerSaveImportStage | null
   androidPlayerSaveImport: boolean
   iosPlayerSaveImport: boolean
   onImportCsvFile: (e: ChangeEvent<HTMLInputElement>) => void
@@ -21,6 +39,8 @@ export function LabImportExportPanel({
   open,
   onClose,
   sharePublishing,
+  playerSaveImporting,
+  playerSaveImportStage,
   androidPlayerSaveImport,
   iosPlayerSaveImport,
   onImportCsvFile,
@@ -33,6 +53,14 @@ export function LabImportExportPanel({
   const { t } = useI18n()
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)
+  const importProgressLabel =
+    playerSaveImportStage != null
+      ? t(PLAYER_SAVE_IMPORT_STAGE_KEYS[playerSaveImportStage])
+      : t('sr_lab_import_player_save_stage_reading')
+  const importProgressPercent =
+    playerSaveImportStage != null
+      ? PLAYER_SAVE_IMPORT_PROGRESS[playerSaveImportStage]
+      : 10
 
   return labOverlayPortal(
     <>
@@ -58,7 +86,7 @@ export function LabImportExportPanel({
       <div
         className="select-research__lab-data-backdrop"
         role="presentation"
-        onClick={onClose}
+        onClick={playerSaveImporting ? undefined : onClose}
       >
         <div
           id="lab-data-panel"
@@ -66,6 +94,7 @@ export function LabImportExportPanel({
           role="dialog"
           aria-modal="true"
           aria-labelledby="lab-data-panel-title"
+          aria-busy={playerSaveImporting}
           onClick={(e) => e.stopPropagation()}
         >
           <h2 id="lab-data-panel-title" className="select-research__lab-data-title">
@@ -109,6 +138,7 @@ export function LabImportExportPanel({
             <button
               type="button"
               className="glow-btn glow-btn--block"
+              disabled={playerSaveImporting}
               onClick={() => {
                 importPlayerInfoFileInputRef.current?.click()
                 if (androidPlayerSaveImport) onImportPlayerSaveClick()
@@ -117,6 +147,30 @@ export function LabImportExportPanel({
               {t('sr_lab_import_player_save')}
             </button>
           </div>
+          {playerSaveImporting ? (
+            <div
+              className="select-research__lab-data-import-progress"
+              role="status"
+              aria-live="polite"
+            >
+              <p className="select-research__lab-data-import-progress-label">
+                {importProgressLabel}
+              </p>
+              <div
+                className="select-research__lab-data-import-progress-track"
+                role="progressbar"
+                aria-valuemin={0}
+                aria-valuemax={100}
+                aria-valuenow={importProgressPercent}
+                aria-label={importProgressLabel}
+              >
+                <div
+                  className="select-research__lab-data-import-progress-fill"
+                  style={{ width: `${importProgressPercent}%` }}
+                />
+              </div>
+            </div>
+          ) : null}
           <p className="select-research__lab-data-section-label">{t('sr_lab_data_share')}</p>
           <p className="select-research__lab-data-share-hint">{t('sr_lab_data_share_hint')}</p>
           <div className="select-research__lab-data-actions">
@@ -146,6 +200,7 @@ export function LabImportExportPanel({
           <button
             type="button"
             className="glow-btn glow-btn--block select-research__lab-data-close"
+            disabled={playerSaveImporting}
             onClick={onClose}
           >
             {t('sr_close')}
