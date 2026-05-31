@@ -80,6 +80,8 @@ function renderBmcButton(host: HTMLElement): void {
 
   // Drop BMC's bundled sizing rules; footer styles live in App.css.
   host.querySelector('style')?.remove()
+  // Cookie is preloaded from index.html — drop duplicate widget stylesheet link.
+  host.querySelector('link[href*="fonts.googleapis.com"]')?.remove()
 }
 
 type BuyMeACoffeeButtonProps = {

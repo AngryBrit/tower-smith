@@ -2456,14 +2456,16 @@ a.select-research__version-label:focus-visible {
   display: block;
   width: max-content;
   max-width: 100%;
-  line-height: 0;
+  line-height: normal;
   flex-shrink: 1;
   min-width: 0;
+  letter-spacing: normal;
+  font-weight: 400;
 }
 
 .select-research__bmc-button .bmc-btn-container {
   display: inline-block;
-  line-height: 0;
+  line-height: normal;
 }
 
 .select-research__bmc-button .bmc-btn {
@@ -2476,12 +2478,16 @@ a.select-research__version-label:focus-visible {
   height: 2.25rem !important;
   padding: 0 0.75rem 0 0.5625rem !important;
   border-radius: 0.375rem !important;
-  font-size: 0.75rem !important;
+  font-size: 0.875rem !important;
   line-height: 1 !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
   font-family: 'Cookie', cursive !important;
   color: #000 !important;
   background-color: #ffdd00 !important;
   text-decoration: none !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .select-research__bmc-button .bmc-btn svg {
@@ -2496,7 +2502,11 @@ a.select-research__version-label:focus-visible {
   width: auto !important;
   margin-left: 0.375rem !important;
   line-height: 1 !important;
+  font-weight: 400 !important;
+  letter-spacing: normal !important;
   white-space: nowrap !important;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .select-research__footer-link,
