@@ -22,6 +22,7 @@ import {
   maxVisibleLabLevels,
 } from '../labBudgetAggregates'
 import { importPlayerInfoDat } from '../playerSave/importPlayerInfo'
+import { validatePlayerInfoSize } from '../playerSave/playerInfoLimits'
 import {
   isAndroidBrowser,
   isIosBrowser,
@@ -61,8 +62,10 @@ import { useCommunityBuild } from '../lab/communityBuildContext'
 import { useLabHydration } from '../lab/labHydrationContext'
 import { useLabToolsBridge } from '../lab/labToolsBridgeContext'
 import { deferInEffect } from '../deferInEffect'
+import type { BugBusterInitial } from '../bugBuster/BugBusterContext'
 import { LabToolbarQuick } from './lab/LabToolbarQuick'
 import { labOverlayPortal } from './lab/labOverlayPortal'
+import { ImportNoticeBlock } from './ImportNoticeBlock'
 
 const LabImportExportPanel = lazy(() =>
   import('./lab/LabImportExportPanel').then((m) => ({ default: m.LabImportExportPanel })),
@@ -165,11 +168,32 @@ export function SelectResearch({
   const searchInputRef = useRef<HTMLInputElement>(null)
   const pendingLabScrollSlug = useRef<string | null>(null)
   const [scrollLayoutGen, setScrollLayoutGen] = useState(0)
+  const [importNoticeBugInitial, setImportNoticeBugInitial] =
+    useState<BugBusterInitial | null>(null)
+
+  const reportImportProblem = useCallback(
+    (message: string, partial?: Partial<BugBusterInitial>) => {
+      setImportNotice(message)
+      setImportNoticeBugInitial({
+        category: 'import',
+        description: message,
+        panelId: 'research',
+        ...partial,
+      })
+    },
+    [setImportNotice],
+  )
 
   useEffect(() => {
-    if (!importNotice) return
-    const t = window.setTimeout(() => setImportNotice(null), 5000)
-    return () => window.clearTimeout(t)
+    if (!importNotice) {
+      setImportNoticeBugInitial(null)
+      return
+    }
+    const id = window.setTimeout(() => {
+      setImportNotice(null)
+      setImportNoticeBugInitial(null)
+    }, 5000)
+    return () => window.clearTimeout(id)
   }, [importNotice, setImportNotice])
 
   useEffect(() => {
@@ -481,6 +505,15 @@ export function SelectResearch({
       const file = input.files?.[0]
       input.value = ''
       if (!file) return
+      const sizeError = validatePlayerInfoSize(file.size)
+      if (sizeError === 'too_large') {
+        reportImportProblem(t('sr_notice_import_player_too_large'))
+        return
+      }
+      if (sizeError === 'empty') {
+        reportImportProblem(t('sr_notice_import_player_invalid'))
+        return
+      }
       setPlayerSaveImporting(true)
       setPlayerSaveImportStage('reading')
       try {
@@ -489,9 +522,13 @@ export function SelectResearch({
         const imported = await importPlayerInfoDat(buf, data)
         if (!imported.ok) {
           if (imported.error === 'gzip_unsupported') {
-            setImportNotice(t('sr_notice_import_player_gzip_unsupported'))
+            reportImportProblem(t('sr_notice_import_player_gzip_unsupported'))
+          } else if (imported.error === 'too_large') {
+            reportImportProblem(t('sr_notice_import_player_too_large'))
+          } else if (imported.error === 'empty') {
+            reportImportProblem(t('sr_notice_import_player_invalid'))
           } else {
-            setImportNotice(t('sr_notice_import_player_invalid'))
+            reportImportProblem(t('sr_notice_import_player_invalid'))
           }
           return
         }
@@ -529,10 +566,11 @@ export function SelectResearch({
         auth.prefillProfileFromImport({
           displayName: imported.fakeUserName ?? imported.userName,
         })
+        setImportNoticeBugInitial(null)
         setImportNotice(t('sr_notice_import_player_ok'))
         setLabDataPanelOpen(false)
       } catch {
-        setImportNotice(t('sr_notice_import_read_fail'))
+        reportImportProblem(t('sr_notice_import_read_fail'))
       } finally {
         setPlayerSaveImporting(false)
         setPlayerSaveImportStage(null)
@@ -544,6 +582,7 @@ export function SelectResearch({
       prefillPublishGuildId,
       resolveGuildNameForPublish,
       scratchWorkspace,
+      reportImportProblem,
       setImportNotice,
       setScratchWorkspace,
       setWorkspace,
@@ -575,7 +614,7 @@ export function SelectResearch({
         const text = await file.text()
         const tower = parseTowerUnifiedCsv(text)
         if (tower.tag === 'invalid') {
-          setImportNotice(t('sr_notice_import_invalid_tower_csv'))
+          reportImportProblem(t('sr_notice_import_invalid_tower_csv'))
           return
         }
         if (tower.tag === 'ok') {
@@ -590,6 +629,7 @@ export function SelectResearch({
           setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
           setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
           const buildName = primary.name?.trim()
+          setImportNoticeBugInitial(null)
           setImportNotice(
             buildName
               ? fmt.importedTowerBuildNamed(buildName)
@@ -598,12 +638,21 @@ export function SelectResearch({
           setLabDataPanelOpen(false)
           return
         }
-        setImportNotice(t('sr_notice_import_invalid_tower_csv'))
+        reportImportProblem(t('sr_notice_import_invalid_tower_csv'))
       } catch {
-        setImportNotice(t('sr_notice_import_read_fail'))
+        reportImportProblem(t('sr_notice_import_read_fail'))
       }
     },
-    [data, fmt, setImportNotice, setLevelOverrides, setScratchWorkspace, setWorkspace, t],
+    [
+      data,
+      fmt,
+      reportImportProblem,
+      setImportNotice,
+      setLevelOverrides,
+      setScratchWorkspace,
+      setWorkspace,
+      t,
+    ],
   )
 
   const maxAllVisibleLabs = useCallback(() => {
@@ -749,10 +798,12 @@ export function SelectResearch({
               </button>
             </div>
           ) : null}
-        {importNotice ? (
-          <p className="select-research__import-notice" role="status">
-            {importNotice}
-          </p>
+        {importNotice && !labDataPanelOpen ? (
+          <ImportNoticeBlock
+            message={importNotice}
+            className="select-research__import-notice"
+            bugInitial={importNoticeBugInitial}
+          />
         ) : null}
       </div>
       </nav>
@@ -828,6 +879,8 @@ export function SelectResearch({
               if (playerSaveImporting) return
               setLabDataPanelOpen(false)
             }}
+            importNotice={importNotice}
+            importNoticeBugInitial={importNoticeBugInitial}
             sharePublishing={sharePublishing}
             playerSaveImporting={playerSaveImporting}
             playerSaveImportStage={playerSaveImportStage}

@@ -53,6 +53,14 @@ function minimalResearchData(): ResearchData {
 }
 
 describe('importPlayerInfo', () => {
+  it('rejects saves over 200 KB', async () => {
+    const r = await importPlayerInfoDat(
+      new Uint8Array(200 * 1024 + 1),
+      minimalResearchData(),
+    )
+    expect(r).toEqual({ ok: false, error: 'too_large' })
+  })
+
   it('decodes sample save when present', async () => {
     if (!existsSync(SAMPLE)) return
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE)))

@@ -10,6 +10,7 @@ import { useI18n, type AppLocale } from '../i18n'
 import { InstallAppPanel } from './InstallAppPanel'
 import { KeyboardShortcutsSection } from './settings/KeyboardShortcutsSection'
 import { WikiDataStampNotice } from './settings/WikiDataStampNotice'
+import { BugBusterTrigger } from './BugBusterTrigger'
 
 type SettingsPageProps = {
   onRefreshResearch?: () => void | Promise<void>
@@ -159,6 +160,11 @@ export function SettingsPage({
           {t('app_settings_relic_workshop_bonus_label')}
         </label>
         <p className="settings-page__hint">{t('app_settings_relic_workshop_bonus_hint')}</p>
+      </div>
+
+      <div className="settings-page__field">
+        <BugBusterTrigger />
+        <p className="settings-page__hint">{t('bug_buster_settings_hint')}</p>
       </div>
 
       <WikiDataStampNotice />

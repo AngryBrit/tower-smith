@@ -2,6 +2,7 @@ import { useCallback, useState } from 'react'
 import { buildPanelErrorReport } from '../panelErrorReport'
 import type { MainPanel } from '../mainPanelStorage'
 import { useI18n } from '../i18n'
+import { BugBusterTrigger } from './BugBusterTrigger'
 
 export type PanelErrorFallbackProps = {
   panelId: MainPanel
@@ -54,6 +55,17 @@ export function PanelErrorFallback({
         <button type="button" className="glow-btn" onClick={handleCopy}>
           {t('panel_error_copy')}
         </button>
+        <BugBusterTrigger
+          className="glow-btn"
+          labelKey="panel_error_report"
+          initial={{
+            category: 'crash',
+            panelId,
+            panelLabel,
+            error,
+            componentStack,
+          }}
+        />
       </div>
       {copyNotice ? (
         <p className="panel-error-fallback__notice" role="status">

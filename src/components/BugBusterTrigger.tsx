@@ -1,0 +1,43 @@
+import { useBugBuster } from '../bugBuster/BugBusterContext'
+import { useI18n, type StringId } from '../i18n'
+import type { BugBusterInitial } from '../bugBuster/BugBusterContext'
+
+type BugBusterTriggerProps = {
+  initial?: BugBusterInitial
+  className?: string
+  variant?: 'button' | 'link'
+  labelKey?: StringId
+}
+
+export function BugBusterTrigger({
+  initial,
+  className,
+  variant = 'button',
+  labelKey = 'bug_buster_open',
+}: BugBusterTriggerProps) {
+  const { t } = useI18n()
+  const { openBugBuster } = useBugBuster()
+  const label = t(labelKey)
+
+  if (variant === 'link') {
+    return (
+      <button
+        type="button"
+        className={className ?? 'select-research__footer-report-link'}
+        onClick={() => openBugBuster(initial)}
+      >
+        {label}
+      </button>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      className={className ?? 'glow-btn glow-btn--block'}
+      onClick={() => openBugBuster(initial)}
+    >
+      {label}
+    </button>
+  )
+}

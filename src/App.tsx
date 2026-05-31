@@ -9,6 +9,10 @@ import {
   useState,
 } from 'react'
 import { APP_VERSION, CHANGELOG_URL } from './appVersion'
+import { BugBusterProvider } from './bugBuster/BugBusterContext'
+import { BugBusterDialog } from './components/BugBusterDialog'
+import { BugBusterFab } from './components/BugBusterFab'
+import { BugBusterTrigger } from './components/BugBusterTrigger'
 import { BuyMeACoffeeButton } from './components/BuyMeACoffeeButton'
 import type { SelectResearchHandle } from './lab/labToolsTypes'
 import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1 } from './towerWorkspaceStorage'
@@ -225,6 +229,7 @@ export default function App() {
             onRequestResearchPanel={() => setMainPanel('research')}
           >
           <CommunityBuildProvider>
+          <BugBusterProvider mainPanel={mainPanel}>
           <LabToolsRefBinder labToolsRef={labToolsRef} />
           <InpanelPresetsPortal
             mount={inpanelPresetsMount}
@@ -463,6 +468,11 @@ export default function App() {
                         <a href="/privacy">{t('sr_footer_privacy')}</a>
                         <span aria-hidden="true">·</span>
                         <a href="/terms">{t('sr_footer_terms')}</a>
+                        <span aria-hidden="true">·</span>
+                        <BugBusterTrigger
+                          variant="link"
+                          labelKey="bug_buster_footer_link"
+                        />
                       </div>
                     </div>
                     <BuyMeACoffeeButton className="select-research__bmc-button" />
@@ -481,6 +491,9 @@ export default function App() {
               />
             </Suspense>
           ) : null}
+          <BugBusterDialog />
+          <BugBusterFab />
+          </BugBusterProvider>
           </CommunityBuildProvider>
           </LabToolsBridgeProvider>
           </WorkspaceUndoProvider>

@@ -5,14 +5,17 @@
 }
 
 html {
-  /* Dense UI was tuned for ~browser 200% zoom; lift default scale so 100% zoom is comfortable */
-  font-size: 200%;
+  /*
+   * Desktop/tablet root scale (rem-based UI). Was 200% when the app assumed ~200% browser zoom;
+   * 150% keeps type readable at 100% zoom on 1080p without dominating the viewport.
+   */
+  font-size: 150%;
   /* Keep author rem scale; avoid mobile browsers shrinking/growing text and breaking layout */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
 }
 
-/* Phones: browser-default root size so two-column layout fits; desktop stays at 200% */
+/* Phones: browser-default root size so two-column layout fits */
 @media (max-width: 36rem) {
   html {
     font-size: 100%;

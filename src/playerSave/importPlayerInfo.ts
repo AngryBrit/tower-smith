@@ -4,9 +4,11 @@ import type { ResearchData } from '../types/research'
 import type { TowerThemesSnapshot } from '../towerDataThemes'
 import { decodePlayerInfoFile } from './decodePlayerInfo'
 import { mapPlayerSaveToTower } from './mapPlayerDataToTower'
+import { validatePlayerInfoSize } from './playerInfoLimits'
 
 export type ImportPlayerInfoError =
   | 'empty'
+  | 'too_large'
   | 'read_failed'
   | 'invalid_save'
   | 'gzip_unsupported'
@@ -52,7 +54,8 @@ export async function importPlayerInfoDat(
   bytes: Uint8Array,
   data: ResearchData,
 ): Promise<ImportPlayerInfoResult> {
-  if (!bytes.length) return { ok: false, error: 'empty' }
+  const sizeError = validatePlayerInfoSize(bytes.length)
+  if (sizeError) return { ok: false, error: sizeError }
   try {
     const save = await decodePlayerInfoFile(bytes)
     const { overrides, workshop, themes } = mapPlayerSaveToTower(data, save)

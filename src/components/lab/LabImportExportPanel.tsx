@@ -1,5 +1,7 @@
 import { useRef, type ChangeEvent } from 'react'
+import type { BugBusterInitial } from '../../bugBuster/BugBusterContext'
 import { TOWER_ANDROID_SAVE_FOLDER } from '../../playerSave/playerInfoSavePath'
+import { ImportNoticeBlock } from '../ImportNoticeBlock'
 import { useI18n } from '../../i18n'
 import { labOverlayPortal } from './labOverlayPortal'
 
@@ -22,6 +24,9 @@ const PLAYER_SAVE_IMPORT_STAGE_KEYS = {
 export type LabImportExportPanelProps = {
   open: boolean
   onClose: () => void
+  /** Shown inside the dialog (import/export feedback). */
+  importNotice: string | null
+  importNoticeBugInitial?: BugBusterInitial | null
   sharePublishing: boolean
   playerSaveImporting: boolean
   playerSaveImportStage: PlayerSaveImportStage | null
@@ -38,6 +43,8 @@ export type LabImportExportPanelProps = {
 export function LabImportExportPanel({
   open,
   onClose,
+  importNotice,
+  importNoticeBugInitial = null,
   sharePublishing,
   playerSaveImporting,
   playerSaveImportStage,
@@ -170,6 +177,12 @@ export function LabImportExportPanel({
                 />
               </div>
             </div>
+          ) : null}
+          {importNotice ? (
+            <ImportNoticeBlock
+              message={importNotice}
+              bugInitial={importNoticeBugInitial}
+            />
           ) : null}
           <p className="select-research__lab-data-section-label">{t('sr_lab_data_share')}</p>
           <p className="select-research__lab-data-share-hint">{t('sr_lab_data_share_hint')}</p>

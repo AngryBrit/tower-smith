@@ -14,6 +14,7 @@ import { GalleryCategoryChips } from './GalleryCategoryChips'
 import { GalleryUnavailableCallout } from './GalleryUnavailableCallout'
 import { GalleryCategorySelect } from './GalleryCategorySelect'
 import { GalleryVisibilitySelect } from './GalleryVisibilitySelect'
+import { BugBusterTrigger } from './BugBusterTrigger'
 
 import { useAuth } from '../auth/useAuth'
 import { deferInEffect } from '../deferInEffect'
@@ -568,9 +569,21 @@ export function TowerGalleryPanel({
       ) : null}
 
       {listInteractive && listError && !loading && !showSetupCallout ? (
-        <p className="tower-gallery__error" role="alert">
-          {listError}
-        </p>
+        <div className="tower-gallery__error-block">
+          <p className="tower-gallery__error" role="alert">
+            {listError}
+          </p>
+          <BugBusterTrigger
+            variant="link"
+            labelKey="bug_buster_report_this"
+            className="tower-gallery__error-report"
+            initial={{
+              category: 'share_gallery',
+              description: listError,
+              panelId: 'gallery',
+            }}
+          />
+        </div>
       ) : null}
 
       {listInteractive && !loading && !listError && entries.length === 0 ? (
