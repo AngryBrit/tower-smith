@@ -263,21 +263,21 @@ export const GAME_MODULE_EFFECT_BY_INDEX: readonly GameModuleEffectDecode[] = [
   { slot: "core", effectId: "smart-missiles-quantity", rarity: "legendary" }, // 243
   { slot: "core", effectId: "smart-missiles-quantity", rarity: "legendary" }, // 244
   { slot: "core", effectId: "smart-missiles-quantity", rarity: "mythic" }, // 245
-  { slot: "core", effectId: "smart-missiles-cooldown-s", rarity: "legendary" }, // 246
-  { slot: "core", effectId: "smart-missiles-cooldown-s", rarity: "legendary" }, // 247
-  { slot: "core", effectId: "smart-missiles-cooldown-s", rarity: "mythic" }, // 248
-  { slot: "core", effectId: "death-wave-cooldown-s", rarity: "legendary" }, // 249
-  { slot: "core", effectId: "death-wave-cooldown-s", rarity: "legendary" }, // 250
-  { slot: "core", effectId: "death-wave-cooldown-s", rarity: "mythic" }, // 251
+  { slot: "core", effectId: "death-wave-damage-x", rarity: "legendary" }, // 246
+  { slot: "core", effectId: "death-wave-damage-x", rarity: "mythic" }, // 247
+  { slot: "core", effectId: "death-wave-damage-x", rarity: "ancestral" }, // 248
+  { slot: "core", effectId: "death-wave-damage-x", rarity: "epic" }, // 249
+  { slot: "core", effectId: "death-wave-damage-x", rarity: "legendary" }, // 250
+  { slot: "core", effectId: "death-wave-damage-x", rarity: "mythic" }, // 251
   { slot: "core", effectId: "death-wave-quantity", rarity: "legendary" }, // 252
   { slot: "core", effectId: "death-wave-quantity", rarity: "legendary" }, // 253
   { slot: "core", effectId: "death-wave-quantity", rarity: "mythic" }, // 254
-  { slot: "core", effectId: "death-wave-damage-x", rarity: "legendary" }, // 255
-  { slot: "core", effectId: "death-wave-damage-x", rarity: "mythic" }, // 256
-  { slot: "core", effectId: "death-wave-damage-x", rarity: "ancestral" }, // 257
-  { slot: "core", effectId: "death-wave-damage-x", rarity: "epic" }, // 258
-  { slot: "core", effectId: "death-wave-damage-x", rarity: "legendary" }, // 259
-  { slot: "core", effectId: "death-wave-damage-x", rarity: "mythic" }, // 260
+  { slot: "core", effectId: "smart-missiles-cooldown-s", rarity: "legendary" }, // 255
+  { slot: "core", effectId: "smart-missiles-cooldown-s", rarity: "legendary" }, // 256
+  { slot: "core", effectId: "smart-missiles-cooldown-s", rarity: "mythic" }, // 257
+  { slot: "core", effectId: "death-wave-cooldown-s", rarity: "legendary" }, // 258
+  { slot: "core", effectId: "death-wave-cooldown-s", rarity: "legendary" }, // 259
+  { slot: "core", effectId: "death-wave-cooldown-s", rarity: "mythic" }, // 260
   { slot: "core", effectId: "chrono-field-duration-s", rarity: "legendary" }, // 261
   { slot: "core", effectId: "chrono-field-duration-s", rarity: "legendary" }, // 262
   { slot: "core", effectId: "chrono-field-duration-s", rarity: "mythic" }, // 263

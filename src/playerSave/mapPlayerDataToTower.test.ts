@@ -10,6 +10,7 @@ import { gameWorkshopChassisModuleId } from './gameModuleIndex'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 
 const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
+const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
 
 function minimalSave(
   partial: Partial<DecodedPlayerSave> = {},
@@ -291,6 +292,18 @@ describe('playerSaveToWorkshop', () => {
       'death-wave-quantity': 'legendary',
       'golden-tower-bonus': 'legendary',
       'black-hole-duration-s': 'legendary',
+    })
+  })
+
+  it('imports Fudgyrella core submodule effects from sample save', async () => {
+    if (!existsSync(FUDGYRELLA_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(FUDGYRELLA_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simSubmoduleSelections.core.main).toEqual({
+      'death-wave-damage-x': 'legendary',
+      'spotlight-bonus': 'mythic',
+      'golden-tower-bonus': 'mythic',
+      'chain-lightning-damage-x': 'mythic',
     })
   })
 })

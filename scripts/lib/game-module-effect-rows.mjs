@@ -1,7 +1,7 @@
 /**
  * Row order for game `ModuleManager.effects` sparse table (330 entries).
  * Cannon/armor/generator follow wiki catalog order; core follows SubstatsCluster enum
- * with in-game row order verified against playerInfo.dat equipped indices 220/252/282/311.
+ * with in-game row order verified against playerInfo.dat and Fudgyrella.dat core effect indices.
  */
 import { WORKSHOP_SUBMODULE_SECTIONS } from '../../src/data/workshopSubmoduleCatalog.ts'
 
@@ -19,10 +19,10 @@ export const CORE_GAME_EFFECT_ROWS = [
   'Chain Lightning - Chance [%]',
   'Smart Missiles - Damage',
   'Smart Missiles - Quantity',
+  'Death Wave - Damage [x]',
+  'Death Wave - Quantity',
   'Smart Missiles - Cooldown [s]',
   'Death Wave - Cooldown [s]',
-  'Death Wave - Quantity',
-  'Death Wave - Damage [x]',
   'Chrono Field - Duration [s]*',
   'Chrono Field - Speed Reduction [%]*',
   'Chrono Field - Cooldown [s]*',

@@ -61,4 +61,23 @@ describe('gameModuleEffectIndex', () => {
       rarity: 'legendary',
     })
   })
+
+  it('maps Fudgyrella core effect indices to death wave damage, spotlight, golden tower, chain lightning', () => {
+    expect(gameModuleEffectByIndex(250)).toMatchObject({
+      effectId: 'death-wave-damage-x',
+      rarity: 'legendary',
+    })
+    expect(gameModuleEffectByIndex(321)).toMatchObject({
+      effectId: 'spotlight-bonus',
+      rarity: 'mythic',
+    })
+    expect(gameModuleEffectByIndex(283)).toMatchObject({
+      effectId: 'golden-tower-bonus',
+      rarity: 'mythic',
+    })
+    expect(gameModuleEffectByIndex(221)).toMatchObject({
+      effectId: 'chain-lightning-damage-x',
+      rarity: 'mythic',
+    })
+  })
 })
