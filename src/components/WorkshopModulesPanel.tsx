@@ -2,6 +2,7 @@ import { useCallback, useMemo, useState, type CSSProperties } from 'react'
 import {
   ASSIST_MODULE_LEVEL_KEY,
   WORKSHOP_ASSIST_MODULE_SLOTS,
+  clampWorkshopAssistModuleLevel,
   workshopAssistModuleLabPercentPoints,
   workshopAssistModuleLevel,
   workshopCannonModulePercentFromLabs,
@@ -432,7 +433,7 @@ export function WorkshopModulesPanel({
   const setModuleLevel = useCallback(
     (target: WorkshopAssistModuleSlot, level: number) => {
       const key = ASSIST_MODULE_LEVEL_KEY[target]
-      patch({ [key]: level })
+      patch({ [key]: clampWorkshopAssistModuleLevel(level) })
     },
     [patch],
   )

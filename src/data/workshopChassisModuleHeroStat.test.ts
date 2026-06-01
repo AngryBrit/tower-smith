@@ -26,9 +26,9 @@ type HeroStatCase = {
 
 const CANNON_ARMOR_CASES: HeroStatCase[] = [
   { merge: 'epic', level: 1, expected: 'x1.072' },
-  { merge: 'epic', level: 100, expected: 'x1.370' },
+  { merge: 'epic', level: 60, expected: 'x1.150' },
   { merge: 'epic_plus', level: 1, expected: 'x1.102' },
-  { merge: 'epic_plus', level: 100, expected: 'x1.640' },
+  { merge: 'epic_plus', level: 80, expected: 'x1.356' },
   { merge: 'legendary', level: 1, expected: 'x1.132' },
   { merge: 'legendary', level: 100, expected: 'x2.270' },
   { merge: 'legendary_plus', level: 1, expected: 'x1.162' },
@@ -74,6 +74,9 @@ const GENERATOR_CASES: HeroStatCase[] = [
   { merge: 'star_3', level: 1, expected: 'x1.046' },
   { merge: 'star_3', level: 100, expected: 'x1.325' },
   { merge: 'star_3', level: 160, expected: 'x1.750' },
+  { merge: 'star_4', level: 160, expected: 'x1.776' },
+  { merge: 'star_4', level: 200, expected: 'x2.241' },
+  { merge: 'star_5', level: 200, expected: 'x2.284' },
   { merge: 'star_5', level: 1, expected: 'x1.049' },
   { merge: 'star_5', level: 100, expected: 'x1.348' },
   { merge: 'star_5', level: 300, expected: 'x3.485' },
@@ -81,9 +84,9 @@ const GENERATOR_CASES: HeroStatCase[] = [
 
 const CORE_CASES: HeroStatCase[] = [
   { merge: 'epic', level: 1, expected: 'x1.130' },
-  { merge: 'epic', level: 100, expected: 'x2.170' },
+  { merge: 'epic', level: 60, expected: 'x1.539' },
   { merge: 'epic_plus', level: 1, expected: 'x1.160' },
-  { merge: 'epic_plus', level: 100, expected: 'x2.800' },
+  { merge: 'epic_plus', level: 80, expected: 'x2.178' },
   { merge: 'legendary', level: 1, expected: 'x1.210' },
   { merge: 'legendary', level: 100, expected: 'x3.850' },
   { merge: 'legendary_plus', level: 1, expected: 'x1.260' },
@@ -168,6 +171,22 @@ describe('formatWorkshopChassisModuleHeroStat', () => {
     expect(formatWorkshopChassisModuleHeroStatMilli(workshopChassisModuleHeroStatCommonMilli('generator', 20))).toBe(
       '1.030',
     )
+  })
+
+  it('clamps stored module level to merge max for hero stat display', () => {
+    const atCap = formatWorkshopChassisModuleHeroStat(
+      'generator',
+      WORKSHOP_GENERATOR_MODULES.blackHoleDigestor,
+      'epic',
+      { moduleLevel: 60 },
+    )
+    const aboveCap = formatWorkshopChassisModuleHeroStat(
+      'generator',
+      WORKSHOP_GENERATOR_MODULES.blackHoleDigestor,
+      'epic',
+      { moduleLevel: 200 },
+    )
+    expect(aboveCap).toBe(atCap)
   })
 
   it('shows x1.000 Coin Bonus for generator at module level 0', () => {

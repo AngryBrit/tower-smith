@@ -4,10 +4,11 @@
 
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import type { ResearchData } from '../types/research'
-import type {
-  WorkshopChassisModuleDef,
-  WorkshopChassisModuleEffectTier,
-  WorkshopChassisModuleMergeTier,
+import {
+  clampWorkshopChassisModuleLevel,
+  type WorkshopChassisModuleDef,
+  type WorkshopChassisModuleEffectTier,
+  type WorkshopChassisModuleMergeTier,
 } from './workshopChassisModuleShared'
 import {
   formatWorkshopChassisModuleHeroStatMilli,
@@ -63,13 +64,24 @@ function normalizeHeroStatMergeTier(
   return rarity as WorkshopChassisModuleMergeTier
 }
 
+function effectiveModuleLevelForHeroStat(
+  moduleLevel: number,
+  merge: WorkshopChassisModuleMergeTier,
+): number {
+  return clampWorkshopChassisModuleLevel(clampModuleLevel(moduleLevel), merge)
+}
+
 function formatSlotHeroStat(
   slot: WorkshopChassisModuleHeroStatSlot,
   merge: WorkshopChassisModuleMergeTier,
   moduleLevel: number,
   label: string,
 ): string {
-  const milli = workshopChassisModuleHeroStatMilli(slot, merge, clampModuleLevel(moduleLevel))
+  const milli = workshopChassisModuleHeroStatMilli(
+    slot,
+    merge,
+    effectiveModuleLevelForHeroStat(moduleLevel, merge),
+  )
   return `x${formatWorkshopChassisModuleHeroStatMilli(milli)} ${label}`
 }
 

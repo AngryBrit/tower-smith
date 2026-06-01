@@ -20,6 +20,8 @@ const INVENTORY_CHECKPOINTS: {
   { slot: 'generator', merge: 'star_1', level: 160, expected: 'x1.697' },
   { slot: 'generator', merge: 'star_2', level: 160, expected: 'x1.724' },
   { slot: 'generator', merge: 'star_3', level: 160, expected: 'x1.750' },
+  { slot: 'generator', merge: 'star_4', level: 200, expected: 'x2.241' },
+  { slot: 'generator', merge: 'star_5', level: 200, expected: 'x2.284' },
   { slot: 'cannon', merge: 'mythic_plus', level: 160, expected: 'x8.190' },
   { slot: 'cannon', merge: 'common', level: 20, expected: 'x1.050' },
   { slot: 'armor', merge: 'mythic_plus', level: 160, expected: 'x8.190' },

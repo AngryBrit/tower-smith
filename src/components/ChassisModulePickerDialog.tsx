@@ -19,7 +19,11 @@ import {
   CHASSIS_MODULE_ORDERS,
   workshopChassisModuleDefForSlot,
 } from '../data/workshopChassisModuleSelection'
-import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
+import {
+  clampWorkshopAssistModuleLevel,
+  WORKSHOP_ASSIST_MODULE_MAX_LEVEL,
+  type WorkshopAssistModuleSlot,
+} from '../data/workshopSimModules'
 import { MODULE_HUB_SLOT_ART } from '../data/workshopModuleArt'
 import {
   workshopChassisModuleBorderImageUrl,
@@ -153,7 +157,24 @@ function PickerModuleLevelInput({
       setDraft(String(value))
       return
     }
-    onCommit(clampWorkshopChassisModuleLevel(n, rarity))
+    const stored = clampWorkshopAssistModuleLevel(n)
+    setDraft(String(stored))
+    onCommit(stored)
+  }
+
+  const onDraftChange = (next: string) => {
+    const raw = next.replace(/,/g, '')
+    if (raw === '') {
+      setDraft('')
+      return
+    }
+    if (!/^\d+$/.test(raw)) return
+    const n = Number(raw)
+    if (n > WORKSHOP_ASSIST_MODULE_MAX_LEVEL) {
+      setDraft(String(WORKSHOP_ASSIST_MODULE_MAX_LEVEL))
+      return
+    }
+    setDraft(raw)
   }
 
   return (
@@ -167,7 +188,7 @@ function PickerModuleLevelInput({
         aria-label={`${t('ws_modules_level_input_aria')} ${t(SLOT_LABEL[slot])}`}
         value={draft}
         onClick={(e) => e.stopPropagation()}
-        onChange={(e) => setDraft(e.target.value)}
+        onChange={(e) => onDraftChange(e.target.value)}
         onBlur={commit}
         onKeyDown={(e) => {
           e.stopPropagation()
@@ -453,9 +474,6 @@ export function ChassisModulePickerDialog({
             onChange={(e) => {
               const rarity = e.target.value as WorkshopChassisModuleMergeTier
               setPickerRarity(rarity)
-              if (moduleLevel > workshopChassisModuleMaxLevel(rarity)) {
-                onModuleLevelCommit(clampWorkshopChassisModuleLevel(moduleLevel, rarity))
-              }
               if (pickerModuleId != null) {
                 applyModule(pickerModuleId, rarity)
               }
@@ -534,7 +552,8 @@ export function ChassisModulePickerDialog({
               const unlockAt = WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL[index] ?? 1
               const rarityMax = workshopChassisModuleMaxLevel(pickerRarity)
               const blockedByRarity = unlockAt > rarityMax
-              const unlocked = !blockedByRarity && moduleLevel >= unlockAt
+              const effectiveLevel = clampWorkshopChassisModuleLevel(moduleLevel, pickerRarity)
+              const unlocked = !blockedByRarity && effectiveLevel >= unlockAt
               const entry = selectedSubmodules[index]
               return (
                 <li

@@ -121,6 +121,26 @@ export const WORKSHOP_GENERATOR_HERO_LV100_BY_MERGE: Partial<
   star_5: m100(1.348),
 }
 
+/** Planner Effective Paths / Inventory at module Lv.200 (milli). */
+const WORKSHOP_GENERATOR_STAR_L200_MILLI_BY_MERGE: Partial<
+  Record<WorkshopChassisModuleMergeTier, number>
+> = {
+  star_4: 2241,
+  star_5: 2284,
+}
+
+/** Planner Effective Paths at module Lv.300 (milli). */
+const WORKSHOP_GENERATOR_STAR_L300_MILLI_BY_MERGE: Partial<
+  Record<WorkshopChassisModuleMergeTier, number>
+> = {
+  star_5: 3485,
+}
+
+const GENERATOR_STAR_L200_LEVEL = 200
+const GENERATOR_STAR_L300_LEVEL = 300
+
+const GENERATOR_STAR_L200_MERGE = new Set<WorkshopChassisModuleMergeTier>(['star_4', 'star_5'])
+
 export const WORKSHOP_CORE_HERO_LV100_BY_MERGE: Partial<
   Record<WorkshopChassisModuleMergeTier, WorkshopChassisModuleHeroStatAnchor>
 > = {
@@ -223,6 +243,25 @@ function tieredScaledToLv100Milli(
   return lv1 + Math.floor(((lv100 - lv1) * partial) / fullSpan)
 }
 
+/** Scale DVT Increase/lvl curve between two level anchors (e.g. Lv.100 → Lv.200). */
+function tieredScaledBetweenMilli(
+  slot: WorkshopChassisModuleHeroStatSlot,
+  fromLevel: number,
+  fromMilli: number,
+  toLevel: number,
+  toMilli: number,
+  level: number,
+): number {
+  if (level <= fromLevel) return fromMilli
+  if (level >= toLevel) return toMilli
+  const fullSpan = tieredIncreaseMilli(slot, fromLevel + 1, toLevel)
+  if (fullSpan <= 0) {
+    return fromMilli + Math.floor(((toMilli - fromMilli) * (level - fromLevel)) / (toLevel - fromLevel))
+  }
+  const partial = tieredIncreaseMilli(slot, fromLevel + 1, level)
+  return fromMilli + Math.floor(((toMilli - fromMilli) * partial) / fullSpan)
+}
+
 function lv100AnchorForSlot(
   slot: WorkshopChassisModuleHeroStatSlot,
   merge: WorkshopChassisModuleMergeTier,
@@ -277,7 +316,17 @@ function post100IncreaseMilli(
   merge: WorkshopChassisModuleMergeTier,
   level: number,
 ): number {
-  const raw = tieredIncreaseMilli(slot, HERO_STAT_LINEAR_HIGH + 1, level)
+  return postIncreaseRangeMilli(slot, merge, HERO_STAT_LINEAR_HIGH, level)
+}
+
+function postIncreaseRangeMilli(
+  slot: WorkshopChassisModuleHeroStatSlot,
+  merge: WorkshopChassisModuleMergeTier,
+  fromLevel: number,
+  level: number,
+): number {
+  if (level <= fromLevel) return 0
+  const raw = tieredIncreaseMilli(slot, fromLevel + 1, level)
   const scale = starPost100ScaleFactor(slot, merge)
   if (scale === 1) return raw
   return scaledPostIncreaseMilli(slot, raw, scale)
@@ -319,6 +368,38 @@ function generatorHeroStatMilli(
   }
 
   const at100 = tieredScaledToLv100Milli('generator', lv1, lv100, HERO_STAT_LINEAR_HIGH)
+
+  const at200 = WORKSHOP_GENERATOR_STAR_L200_MILLI_BY_MERGE[merge]
+  if (at200 != null && GENERATOR_STAR_L200_MERGE.has(merge)) {
+    if (level <= GENERATOR_STAR_L200_LEVEL) {
+      return tieredScaledBetweenMilli(
+        'generator',
+        HERO_STAT_LINEAR_HIGH,
+        at100,
+        GENERATOR_STAR_L200_LEVEL,
+        at200,
+        level,
+      )
+    }
+
+    const at300 = WORKSHOP_GENERATOR_STAR_L300_MILLI_BY_MERGE[merge]
+    if (at300 != null) {
+      if (level <= GENERATOR_STAR_L300_LEVEL) {
+        return tieredScaledBetweenMilli(
+          'generator',
+          GENERATOR_STAR_L200_LEVEL,
+          at200,
+          GENERATOR_STAR_L300_LEVEL,
+          at300,
+          level,
+        )
+      }
+      return at300 + postIncreaseRangeMilli('generator', merge, GENERATOR_STAR_L300_LEVEL, level)
+    }
+
+    return at200 + postIncreaseRangeMilli('generator', merge, GENERATOR_STAR_L200_LEVEL, level)
+  }
+
   return at100 + post100IncreaseMilli('generator', merge, level)
 }
 
@@ -338,7 +419,7 @@ function heroStatCommonMilli(
  * DVT main-effect mult (milli-units):
  * - Lv.1 = `1 + Base stat`
  * - **Generator** (merge max ≤100): pure DVT **Increase/lvl** tiered curve
- * - **Generator** (merge max >100): Lv.2–100 scaled to Lv.100 anchor; Lv.101+ raw steps
+ * - **Generator** (merge max >100): Lv.2–100 scaled to Lv.100; Lv.101–200 / Lv.201–300 scaled to Lv.200 / Lv.300 anchors (4★/5★); then star-scaled steps
  * - **Cannon / armor / core** Lv.2–100: scaled to Lv.100 anchor; Lv.101+ raw **Increase/lvl** steps
  * - **Ancestral 1★–5★** Lv.101+ steps scaled by Lv.100−Lv.1 span vs Mythic+ (2 dp; generator 4 dp scale, 0.75 floor rule on product)
  * - Rare / Rare+ = tiered **Increase/lvl** only
