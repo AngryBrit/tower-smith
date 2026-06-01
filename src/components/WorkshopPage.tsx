@@ -392,6 +392,25 @@ function discountedWorkshopMarginal(
   return applyWorkshopDiscountToCoins(raw, discountPercent)
 }
 
+/** Sum of discounted marginals for the next +/− click at `bulkStep` (capped at max level). */
+function discountedWorkshopBulkMarginal(
+  level: number,
+  maxLevel: number,
+  bulkStep: number,
+  nextAt: (completedLevels: number) => number | undefined,
+  discountPercent: number,
+): number | undefined {
+  if (level >= maxLevel) return undefined
+  const steps = Math.min(bulkStep, maxLevel - level)
+  let sum = 0
+  for (let L = level; L < level + steps; L += 1) {
+    const c = discountedWorkshopMarginal(nextAt(L), discountPercent)
+    if (c == null) return undefined
+    sum += c
+  }
+  return sum
+}
+
 function WorkshopDamageCard({
   level,
   draft,
@@ -414,8 +433,11 @@ function WorkshopDamageCard({
   const { t } = useI18n()
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
   const maxed = level >= WORKSHOP_DAMAGE_MAX_LEVEL
-  const nextCoins = discountedWorkshopMarginal(
-    workshopDamageNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_DAMAGE_MAX_LEVEL,
+    bulkStep,
+    workshopDamageNextMarginalCoins,
     coinDiscountPercent,
   )
   const statLabel = workshopDamageStatDisplay(level, damageDisplayOpts)
@@ -515,8 +537,11 @@ function WorkshopAttackSpeedCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_ATTACK_SPEED_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopAttackSpeedNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_ATTACK_SPEED_MAX_LEVEL,
+    bulkStep,
+    workshopAttackSpeedNextMarginalCoins,
     coinDiscountPercent,
   )
   const statLabel = workshopAttackSpeedStatDisplay(level, attackSpeedDisplayOpts)
@@ -611,8 +636,11 @@ function WorkshopCriticalChanceCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopCriticalChanceNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL,
+    bulkStep,
+    workshopCriticalChanceNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -711,8 +739,11 @@ function WorkshopCriticalFactorCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopCriticalFactorNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL,
+    bulkStep,
+    workshopCriticalFactorNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -812,8 +843,11 @@ function WorkshopAttackRangeCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_ATTACK_RANGE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopAttackRangeNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_ATTACK_RANGE_MAX_LEVEL,
+    bulkStep,
+    workshopAttackRangeNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -916,8 +950,11 @@ function WorkshopDamagePerMeterCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopDamagePerMeterNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL,
+    bulkStep,
+    workshopDamagePerMeterNextMarginalCoins,
     coinDiscountPercent,
   )
   const statLabel = workshopDamagePerMeterStatDisplay(level, damagePerMeterLabMultiplier)
@@ -1012,8 +1049,11 @@ function WorkshopMultishotChanceCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopMultishotChanceNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL,
+    bulkStep,
+    workshopMultishotChanceNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1112,8 +1152,11 @@ function WorkshopMultishotTargetsCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopMultishotTargetsNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL,
+    bulkStep,
+    workshopMultishotTargetsNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1212,8 +1255,11 @@ function WorkshopRapidFireChanceCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopRapidFireChanceNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL,
+    bulkStep,
+    workshopRapidFireChanceNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1312,8 +1358,11 @@ function WorkshopRapidFireDurationCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopRapidFireDurationNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL,
+    bulkStep,
+    workshopRapidFireDurationNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1412,8 +1461,11 @@ function WorkshopBounceShotChanceCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopBounceShotChanceNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL,
+    bulkStep,
+    workshopBounceShotChanceNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1512,8 +1564,11 @@ function WorkshopBounceShotTargetsCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopBounceShotTargetsNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL,
+    bulkStep,
+    workshopBounceShotTargetsNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1612,8 +1667,11 @@ function WorkshopBounceShotRangeCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopBounceShotRangeNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL,
+    bulkStep,
+    workshopBounceShotRangeNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1712,8 +1770,11 @@ function WorkshopSuperCritChanceCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopSuperCritChanceNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL,
+    bulkStep,
+    workshopSuperCritChanceNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1812,8 +1873,11 @@ function WorkshopSuperCritMultCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopSuperCritMultNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL,
+    bulkStep,
+    workshopSuperCritMultNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -1913,8 +1977,11 @@ function WorkshopRendArmorChanceCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopRendArmorChanceNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
+    bulkStep,
+    workshopRendArmorChanceNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -2013,8 +2080,11 @@ function WorkshopRendArmorMultCard({
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopRendArmorMultNextMarginalCoins(level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL,
+    bulkStep,
+    workshopRendArmorMultNextMarginalCoins,
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
@@ -2158,8 +2228,11 @@ function WorkshopDefenseUpgradeCard({
   const max = workshopDefenseMaxLevel(fieldKey)
   const maxed = level >= max
   const coinDiscountPercent = useDefenseWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopDefenseNextMarginalCoins(fieldKey, level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    max,
+    bulkStep,
+    (L) => workshopDefenseNextMarginalCoins(fieldKey, L),
     coinDiscountPercent,
   )
   const statLabel = workshopDefenseStatDisplay(fieldKey, level, statDisplayOpts)
@@ -2262,8 +2335,11 @@ function WorkshopUtilityUpgradeCard({
   const max = workshopUtilityMaxLevel(fieldKey)
   const maxed = level >= max
   const coinDiscountPercent = useUtilityWorkshopCoinDiscount()
-  const nextCoins = discountedWorkshopMarginal(
-    workshopUtilityNextMarginalCoins(fieldKey, level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    max,
+    bulkStep,
+    (L) => workshopUtilityNextMarginalCoins(fieldKey, L),
     coinDiscountPercent,
   )
   const statLabel = workshopUtilityStatDisplay(fieldKey, level, statDisplayOpts)
