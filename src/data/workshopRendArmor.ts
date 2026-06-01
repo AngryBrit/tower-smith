@@ -7,10 +7,50 @@
  *
  * Cumulative totals at milestones **10, 20, …, 299** match wiki **Total Cost**; first purchase **600M**;
  * interior of each segment uses an **equal split** of the remaining block (same pattern as Super Crit Mult).
+ *
+ * Displayed chance: **(Workshop + Submodule) × Enhancement** when enhancements are unlocked.
+ * In-game enhancement on the chance card caps at **+20%** (**×1.20**, first **20** enhance levels).
+ *
+ * Displayed mult: **(Workshop + Submodule) × Lab × Enhancement**; mult card caps at **+40%** (**×1.40**).
  */
 
+import { workshopEnhanceAttackTierMultiplier } from './workshopEnhanceAttackShared'
+
 export const WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL = 299 as const
+
+/** Enhancement levels counted on the workshop Rend Armor Chance card (caps at **×1.20**). */
+export const WORKSHOP_DISPLAYED_REND_ARMOR_CHANCE_ENHANCE_LEVEL_CAP = 20 as const
+
+/** Enhancement × multiplier for displayed rend armor chance (1 when locked). */
+export function workshopDisplayedRendArmorChanceEnhancementMultiplier(
+  enhanceRendArmorLevel: number,
+  enhancementsLabUnlocked: boolean,
+): number {
+  if (!enhancementsLabUnlocked || enhanceRendArmorLevel <= 0) return 1
+  const L = Math.min(
+    Math.max(0, Math.trunc(enhanceRendArmorLevel)),
+    WORKSHOP_DISPLAYED_REND_ARMOR_CHANCE_ENHANCE_LEVEL_CAP,
+  )
+  return workshopEnhanceAttackTierMultiplier(L)
+}
+
 export const WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL = 299 as const
+
+/** Enhancement levels counted on the workshop Rend Armor Mult card (caps at **×1.40**). */
+export const WORKSHOP_DISPLAYED_REND_ARMOR_MULT_ENHANCE_LEVEL_CAP = 40 as const
+
+/** Enhancement × multiplier for displayed rend armor mult (1 when locked). */
+export function workshopDisplayedRendArmorMultEnhancementMultiplier(
+  enhanceRendArmorLevel: number,
+  enhancementsLabUnlocked: boolean,
+): number {
+  if (!enhancementsLabUnlocked || enhanceRendArmorLevel <= 0) return 1
+  const L = Math.min(
+    Math.max(0, Math.trunc(enhanceRendArmorLevel)),
+    WORKSHOP_DISPLAYED_REND_ARMOR_MULT_ENHANCE_LEVEL_CAP,
+  )
+  return workshopEnhanceAttackTierMultiplier(L)
+}
 
 /** Milestone levels with known cumulative spend (coins). `C(1)` is implied by the first marginal (600M). */
 const CUMULATIVE_BY_LEVEL = new Map<number, bigint>([
@@ -146,9 +186,14 @@ export function workshopRendArmorChancePercent(completedLevels: number): number 
 export function workshopRendArmorChanceStatDisplay(
   completedLevels: number,
   extraPercentPoints = 0,
+  enhancementMultiplier = 1,
 ): string {
-  const pct = workshopRendArmorChancePercent(completedLevels) + extraPercentPoints
-  return `${pct.toFixed(2)}%`
+  let pct = workshopRendArmorChancePercent(completedLevels) + extraPercentPoints
+  if (enhancementMultiplier > 1 + 1e-9) {
+    pct *= enhancementMultiplier
+  }
+  const displayed = Math.floor(pct * 100 + 1e-9) / 100
+  return `${displayed.toFixed(2)}%`
 }
 
 /** Extra mult X (0.0010 … 0.3000) after `completedLevels` purchases (0 … 299). */
@@ -157,18 +202,24 @@ export function workshopRendArmorMultValue(completedLevels: number): number {
   return Math.round((0.001 + 0.001 * L) * 1_000_000) / 1_000_000
 }
 
-/** Display like wiki (`0.001X` … `0.3X`); trims redundant trailing **0** after four decimal places. */
+/** Display like in-game workshop card (`×0.001` … `×0.3`); trims redundant trailing **0** after four decimal places. */
 export function workshopRendArmorMultStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
   submodulePercentAdd = 0,
+  enhancementMultiplier = 1,
 ): string {
   let v = workshopRendArmorMultValue(completedLevels) + submodulePercentAdd / 100
   if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
     v = Math.round(v * labMultiplier * 1_000_000) / 1_000_000
   }
-  const s = v.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')
-  return `${s}X`
+  if (enhancementMultiplier > 1 + 1e-9) {
+    v = Math.round(v * enhancementMultiplier * 1_000_000) / 1_000_000
+  }
+  // In-game workshop card floors to **3** decimals (e.g. **×0.144**, not **×0.1442**).
+  const displayed = Math.floor(v * 1_000 + 1e-9) / 1_000
+  const s = displayed.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
+  return `×${s}`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

@@ -40,6 +40,7 @@ import {
   WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL,
   workshopCriticalFactorNextMarginalCoins,
   workshopCriticalFactorStatDisplay,
+  workshopDisplayedCritFactorEnhancementMultiplier,
 } from '../data/workshopCriticalFactor'
 import {
   WORKSHOP_DAMAGE_MAX_LEVEL,
@@ -101,6 +102,8 @@ import {
   WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL,
   workshopRendArmorChanceNextMarginalCoins,
   workshopRendArmorChanceStatDisplay,
+  workshopDisplayedRendArmorChanceEnhancementMultiplier,
+  workshopDisplayedRendArmorMultEnhancementMultiplier,
   workshopRendArmorMultNextMarginalCoins,
   workshopRendArmorMultStatDisplay,
 } from '../data/workshopRendArmor'
@@ -728,6 +731,7 @@ function WorkshopCriticalFactorCard({
   onBump,
   onCommitDraft,
   bulkStep,
+  enhancementMultiplier = 1,
 }: {
   level: number
   draft: string
@@ -735,6 +739,7 @@ function WorkshopCriticalFactorCard({
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
   bulkStep: WorkshopMultiplier
+  enhancementMultiplier?: number
 }) {
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL
@@ -751,6 +756,7 @@ function WorkshopCriticalFactorCard({
     level,
     attackLabOpts?.criticalFactorLabMultiplier,
     attackLabOpts?.submodule?.critFactorAdd ?? 0,
+    enhancementMultiplier,
   )
   const stepHint = `×${bulkStep}`
 
@@ -1966,6 +1972,7 @@ function WorkshopRendArmorChanceCard({
   onBump,
   onCommitDraft,
   bulkStep,
+  enhancementMultiplier = 1,
 }: {
   level: number
   draft: string
@@ -1973,6 +1980,7 @@ function WorkshopRendArmorChanceCard({
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
   bulkStep: WorkshopMultiplier
+  enhancementMultiplier?: number
 }) {
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL
@@ -1988,6 +1996,7 @@ function WorkshopRendArmorChanceCard({
   const statLabel = workshopRendArmorChanceStatDisplay(
     level,
     attackLabOpts?.submodule?.rendArmorChancePercentPoints ?? 0,
+    enhancementMultiplier,
   )
   const stepHint = `×${bulkStep}`
 
@@ -2069,6 +2078,7 @@ function WorkshopRendArmorMultCard({
   onBump,
   onCommitDraft,
   bulkStep,
+  enhancementMultiplier = 1,
 }: {
   level: number
   draft: string
@@ -2076,6 +2086,7 @@ function WorkshopRendArmorMultCard({
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
   bulkStep: WorkshopMultiplier
+  enhancementMultiplier?: number
 }) {
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL
@@ -2092,6 +2103,7 @@ function WorkshopRendArmorMultCard({
     level,
     attackLabOpts?.rendArmorMultLabMultiplier,
     attackLabOpts?.submodule?.rendArmorMultAdd ?? 0,
+    enhancementMultiplier,
   )
   const stepHint = `×${bulkStep}`
 
@@ -2654,6 +2666,7 @@ export function WorkshopPage({
       workshopPersisted,
       researchData,
       labLevelOverrides,
+      gameResearchLevel,
     )
     if (opts == null) return undefined
     return {
@@ -2663,11 +2676,38 @@ export function WorkshopPage({
         submoduleBonusContext,
       ),
     }
-  }, [researchData, labLevelOverrides, workshopPersisted, submoduleBonusContext])
+  }, [researchData, labLevelOverrides, gameResearchLevel, workshopPersisted, submoduleBonusContext])
 
   const workshopEnhancementsLabUnlockedFlag = useMemo(
     () => workshopEnhancementsLabUnlocked(researchData, labLevelOverrides),
     [researchData, labLevelOverrides],
+  )
+
+  const critFactorEnhancementMultiplier = useMemo(
+    () =>
+      workshopDisplayedCritFactorEnhancementMultiplier(
+        workshopPersisted.enhanceCritFactorLevel,
+        workshopEnhancementsLabUnlockedFlag,
+      ),
+    [workshopEnhancementsLabUnlockedFlag, workshopPersisted.enhanceCritFactorLevel],
+  )
+
+  const rendArmorChanceEnhancementMultiplier = useMemo(
+    () =>
+      workshopDisplayedRendArmorChanceEnhancementMultiplier(
+        workshopPersisted.enhanceRendArmorLevel,
+        workshopEnhancementsLabUnlockedFlag,
+      ),
+    [workshopEnhancementsLabUnlockedFlag, workshopPersisted.enhanceRendArmorLevel],
+  )
+
+  const rendArmorMultEnhancementMultiplier = useMemo(
+    () =>
+      workshopDisplayedRendArmorMultEnhancementMultiplier(
+        workshopPersisted.enhanceRendArmorLevel,
+        workshopEnhancementsLabUnlockedFlag,
+      ),
+    [workshopEnhancementsLabUnlockedFlag, workshopPersisted.enhanceRendArmorLevel],
   )
 
   const workshopCoinDiscountOpts = useMemo((): WorkshopCoinDiscountOpts => {
@@ -4025,6 +4065,7 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpCritFactor}
                 onCommitDraft={commitCritFactorDraft}
+                enhancementMultiplier={critFactorEnhancementMultiplier}
               />
             ) : null}
             {showAttackRangeCard ? (
@@ -4146,6 +4187,7 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpRendArmorChance}
                 onCommitDraft={commitRendArmorChanceDraft}
+                enhancementMultiplier={rendArmorChanceEnhancementMultiplier}
               />
             ) : null}
             {showRendArmorMultCard ? (
@@ -4156,6 +4198,7 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpRendArmorMult}
                 onCommitDraft={commitRendArmorMultDraft}
+                enhancementMultiplier={rendArmorMultEnhancementMultiplier}
               />
             ) : null}
             {category === 'defense'

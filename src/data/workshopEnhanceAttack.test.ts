@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { formatCoinAbbrev } from '../labCosts'
 import {
   WORKSHOP_ENHANCE_ATTACK_SPEED_MAX_LEVEL,
   WORKSHOP_ENHANCE_ATTACK_SPEED_UNLOCK_ATTACK_ENHANCE_SPENT_COINS,
@@ -31,15 +32,15 @@ describe('workshopEnhanceAttack tier stats', () => {
     expect(workshopEnhanceAttackTierMultiplier(10)).toBe(1.1)
     expect(workshopEnhanceAttackTierMultiplier(300)).toBe(4)
     expect(workshopEnhanceAttackTierMultiplier(400)).toBe(5)
-    expect(workshopEnhanceAttackStatDisplay('enhanceDamageLevel', 100)).toBe('2.00×')
-    expect(workshopEnhanceAttackStatDisplay('enhanceDamageLevel', 400)).toBe('5.00×')
+    expect(workshopEnhanceAttackStatDisplay('enhanceDamageLevel', 100)).toBe('x2.00')
+    expect(workshopEnhanceAttackStatDisplay('enhanceDamageLevel', 400)).toBe('x5.00')
   })
 
   it('attack speed enhancement caps at 75 / ×1.75', () => {
     expect(workshopEnhanceAttackSpeedMultiplier(0)).toBe(1)
     expect(workshopEnhanceAttackSpeedMultiplier(50)).toBe(1.5)
     expect(workshopEnhanceAttackSpeedMultiplier(75)).toBe(1.75)
-    expect(workshopEnhanceAttackStatDisplay('enhanceAttackSpeedLevel', 75)).toBe('1.75×')
+    expect(workshopEnhanceAttackStatDisplay('enhanceAttackSpeedLevel', 75)).toBe('x1.75')
     expect(WORKSHOP_ENHANCE_ATTACK_SPEED_MAX_LEVEL).toBe(75)
     expect(WORKSHOP_ENHANCE_DAMAGE_MAX_LEVEL).toBe(400)
     expect(WORKSHOP_ENHANCE_ATTACK_TIER_MAX_LEVEL).toBe(400)
@@ -47,6 +48,13 @@ describe('workshopEnhanceAttack tier stats', () => {
 })
 
 describe('workshopEnhanceAttack marginal coins', () => {
+  it('damage enhancement L40→41 matches in-game ~2.97T display', () => {
+    const raw = workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 40)!
+    expect(raw).toBeGreaterThanOrEqual(2.965e12)
+    expect(raw).toBeLessThan(2.975e12)
+    expect(formatCoinAbbrev(raw)).toBe('2.97T')
+  })
+
   it('damage enhancement uses extended ladder through L400', () => {
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 0)).toBe(5e9)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 9)).toBe(6.53e9)
@@ -60,14 +68,14 @@ describe('workshopEnhanceAttack marginal coins', () => {
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceRendArmorLevel', 0)).toBe(5e9)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceRendArmorLevel', 399)).toBe(330.8e18)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceRendArmorLevel', 400)).toBeUndefined()
-    expect(workshopEnhanceAttackStatDisplay('enhanceRendArmorLevel', 400)).toBe('5.00×')
+    expect(workshopEnhanceAttackStatDisplay('enhanceRendArmorLevel', 400)).toBe('x5.00')
   })
 
   it('critical factor enhancement uses extended ladder through L400', () => {
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceCritFactorLevel', 9)).toBe(6.53e9)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceCritFactorLevel', 399)).toBe(330.8e18)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceCritFactorLevel', 400)).toBeUndefined()
-    expect(workshopEnhanceAttackStatDisplay('enhanceCritFactorLevel', 400)).toBe('5.00×')
+    expect(workshopEnhanceAttackStatDisplay('enhanceCritFactorLevel', 400)).toBe('x5.00')
   })
 
   it('damage per meter enhancement uses extended ladder through L400', () => {
@@ -76,7 +84,7 @@ describe('workshopEnhanceAttack marginal coins', () => {
       330.8e18,
     )
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamagePerMeterLevel', 400)).toBeUndefined()
-    expect(workshopEnhanceAttackStatDisplay('enhanceDamagePerMeterLevel', 400)).toBe('5.00×')
+    expect(workshopEnhanceAttackStatDisplay('enhanceDamagePerMeterLevel', 400)).toBe('x5.00')
   })
 
   it('super crit mult enhancement uses extended ladder through L400', () => {
@@ -85,7 +93,7 @@ describe('workshopEnhanceAttack marginal coins', () => {
       330.8e18,
     )
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceSuperCritMultLevel', 400)).toBeUndefined()
-    expect(workshopEnhanceAttackStatDisplay('enhanceSuperCritMultLevel', 400)).toBe('5.00×')
+    expect(workshopEnhanceAttackStatDisplay('enhanceSuperCritMultLevel', 400)).toBe('x5.00')
   })
 
   it('attack speed enhancement uses per-level wiki costs', () => {

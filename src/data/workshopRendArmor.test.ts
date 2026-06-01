@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
+  workshopDisplayedRendArmorChanceEnhancementMultiplier,
+  workshopDisplayedRendArmorMultEnhancementMultiplier,
   workshopRendArmorChanceNextMarginalCoins,
   workshopRendArmorChancePercent,
   workshopRendArmorChanceStatDisplay,
@@ -38,9 +40,15 @@ describe('workshopRendArmor', () => {
     expect(workshopRendArmorChanceStatDisplay(299)).toBe('30.00%')
     expect(workshopRendArmorChancePercent(299)).toBe(30)
 
-    expect(workshopRendArmorMultStatDisplay(0)).toBe('0.001X')
-    expect(workshopRendArmorMultStatDisplay(110)).toBe('0.111X')
-    expect(workshopRendArmorMultStatDisplay(299)).toBe('0.3X')
+    expect(workshopDisplayedRendArmorChanceEnhancementMultiplier(49, true)).toBe(1.2)
+    expect(workshopRendArmorChanceStatDisplay(100, 0, 1.2)).toBe('12.12%')
+
+    expect(workshopRendArmorMultStatDisplay(0)).toBe('×0.001')
+    expect(workshopRendArmorMultStatDisplay(102)).toBe('×0.103')
+    expect(workshopDisplayedRendArmorMultEnhancementMultiplier(49, true)).toBe(1.4)
+    expect(workshopRendArmorMultStatDisplay(102, undefined, 0, 1.4)).toBe('×0.144')
+    expect(workshopRendArmorMultStatDisplay(110)).toBe('×0.111')
+    expect(workshopRendArmorMultStatDisplay(299)).toBe('×0.3')
     expect(workshopRendArmorMultValue(299)).toBe(0.3)
   })
 })

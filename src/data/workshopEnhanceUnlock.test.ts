@@ -44,6 +44,24 @@ describe('workshopEnhanceUnlock', () => {
     ).toBe(true)
   })
 
+  it('later attack unlock gates add extra rend spend toward progress (40/40/40/40 profile)', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      enhanceDamageLevel: 40,
+      enhanceRendArmorLevel: 40,
+      enhanceCritFactorLevel: 40,
+      enhanceDamagePerMeterLevel: 40,
+      enhanceSuperCritMultLevel: 0,
+      enhanceAttackSpeedLevel: 0,
+    }
+    const spent = workshopEnhanceAttackUnlockSpentCoins('enhanceAttackSpeedLevel', ws)
+    const remaining = 500_000_000_000_000 - spent
+    expect(spent).toBeGreaterThan(workshopEnhanceAttackCategorySpentCoins(ws))
+    expect(remaining).toBeLessThan(500_000_000_000_000 - workshopEnhanceAttackCategorySpentCoins(ws))
+    // In-game ~442.09T remaining at this profile (~57.91T spent).
+    expect(remaining / 1e12).toBeCloseTo(442.09, 0)
+  })
+
   it('crit factor uses cumulative attack enhancement spend', () => {
     const ws = defaultWorkshopPersisted()
     expect(workshopEnhanceAttackIsUnlocked('enhanceCritFactorLevel', 0)).toBe(false)

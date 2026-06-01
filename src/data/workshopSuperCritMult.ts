@@ -77,7 +77,7 @@ export function workshopSuperCritMultValue(completedLevels: number): number {
   return Math.round((1.2 + 0.1 * L) * 100) / 100
 }
 
-/** Display like wiki (`1.20×` … `13.20×`). */
+/** Display like in-game workshop card (`×1.20` … `×13.20`). */
 export function workshopSuperCritMultStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
@@ -88,7 +88,8 @@ export function workshopSuperCritMultStatDisplay(
     labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9
       ? base * labMultiplier
       : base
-  return `${v.toFixed(2)}×`
+  const displayed = Math.floor(v * 100 + 1e-9) / 100
+  return `×${displayed.toFixed(2)}`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

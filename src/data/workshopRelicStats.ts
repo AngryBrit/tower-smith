@@ -275,6 +275,29 @@ export function workshopRelicsDisplayedDamageBonusFraction(
   return pct / 100
 }
 
+/**
+ * Share of **Damage / Meter** relic % counted toward workshop **Displayed Attack Speed**
+ * **(1 + Relics)** (calibrated: +45% DPM relics → +0.28% on top of +10% attack speed).
+ */
+export const WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE = 0.28 / 45
+
+/** Summed relic % for displayed attack speed (attack speed + partial damage/meter). */
+export function workshopRelicsDisplayedAttackSpeedBonusPercent(
+  ownedIds: ReadonlySet<string>,
+): number {
+  const attackSpeed = workshopRelicsActiveBonusPercent(ownedIds, 'attackSpeed')
+  const damagePerMeter = workshopRelicsActiveBonusPercent(ownedIds, 'damagePerMeter')
+  if (damagePerMeter <= 0) return attackSpeed
+  return attackSpeed + damagePerMeter * WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE
+}
+
+export function workshopRelicsDisplayedAttackSpeedRelicMultiplier(
+  ownedIds: ReadonlySet<string>,
+): number {
+  const pct = workshopRelicsDisplayedAttackSpeedBonusPercent(ownedIds)
+  return pct > 0 ? 1 + pct / 100 : 1
+}
+
 export function workshopRelicsBonusTable(
   ownedIds: ReadonlySet<string>,
 ): RelicStatGroup[] {

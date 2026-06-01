@@ -19,6 +19,7 @@ import {
   workshopDamageDisplayOptsFromPersisted,
   workshopDisplayedDamageFromPersisted,
 } from '../data/workshopDisplayedDamage'
+import { workshopDisplayedAttackSpeedFromPersisted } from '../data/workshopDisplayedAttackSpeed'
 import { workshopDamageCardMultiplier } from '../data/workshopCardWorkshopDisplay'
 import { workshopDamageStatAtLevel } from '../data/workshopDamage'
 import { applyImportedLabAndBuild, defaultTowerWorkspace } from '../towerWorkspaceStorage'
@@ -143,6 +144,15 @@ describe('applyImportedWorkshop', () => {
     expect(displayed).toBeGreaterThan(workshop * labMult * cardMult * 0.9)
     expect(displayed).toBeGreaterThan(6e9)
     expect(displayed).toBeLessThan(6.25e9)
+
+    const attackSpeed = workshopDisplayedAttackSpeedFromPersisted(
+      ws,
+      data,
+      workspace.lab.levelOverrides,
+      workspace.lab.gameResearchLevel,
+    )
+    expect(attackSpeed).toBeGreaterThan(38.75)
+    expect(attackSpeed).toBeLessThan(38.85)
   })
 
   it('imports Fudgyrella generator module sub-effects into workspace modules domain', async () => {

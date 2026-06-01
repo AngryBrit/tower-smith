@@ -29,6 +29,42 @@ function logLerp(a: number, b: number, t: number): number {
   return Math.exp(Math.log(a) + u * (Math.log(b) - Math.log(a)))
 }
 
+/**
+ * Within a wiki decade segment, in-game marginal coins vs plain log-linear `t` vary by
+ * anchor ratio and position in the segment.
+ */
+const COIN_SEGMENT_LERP_T_EXPONENT_BY_SEGMENT: Readonly<Partial<Record<number, number>>> = {
+  4: 0.93, // L40–L50 (e.g. Damage + L40→41 ~2.97T)
+  6: 0.9373, // L60–L70 (e.g. Health Regen + L60→61 ~69.65T)
+}
+
+/** L10–L20 (ratio ~7.4): exponent rises through the decade. */
+const COIN_L10_L20_SEGMENT_BASE_EXPONENT = 1.58
+const COIN_L10_L20_SEGMENT_T_SLOPE = 2.3
+
+/** L20–L60 steep decades (ratio ~6–8): base at `t≈0.1`, higher `t` needs larger exponent. */
+const COIN_STEEP_SEGMENT_BASE_EXPONENT = 1.225
+const COIN_STEEP_SEGMENT_T_SLOPE = 0.136
+
+function coinSegmentLerpTExponent(
+  segmentIndex: number,
+  t: number,
+  v0: number,
+  v1: number,
+): number {
+  const manual = COIN_SEGMENT_LERP_T_EXPONENT_BY_SEGMENT[segmentIndex]
+  if (manual != null) return manual
+
+  const ratio = v1 / v0
+  if (segmentIndex === 1) {
+    return COIN_L10_L20_SEGMENT_BASE_EXPONENT + (t - 0.1) * COIN_L10_L20_SEGMENT_T_SLOPE
+  }
+  if (ratio < 4) return ratio >= 3.5 ? 0.94 : 0.93
+  if (ratio >= 8) return 1
+  if (ratio >= 6) return COIN_STEEP_SEGMENT_BASE_EXPONENT + (t - 0.1) * COIN_STEEP_SEGMENT_T_SLOPE
+  return 1
+}
+
 function segmentIndex(level: number): number {
   if (level <= ANCHOR_LEVELS[0]) return 0
   let i = 0
@@ -50,7 +86,8 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   if (targetLevel === L1) return v1
   if (L1 <= L0) return v0
   const t = (targetLevel - L0) / (L1 - L0)
-  return logLerp(v0, v1, t)
+  const curvedT = Math.pow(t, coinSegmentLerpTExponent(i, t, v0, v1))
+  return logLerp(v0, v1, curvedT)
 }
 
 /** Multiplier after `completedLevels` purchases: `1 + incrementPerLevel × level`. */
@@ -65,12 +102,19 @@ export function workshopEnhanceTier400Multiplier(
   return roundHundredth ? Math.round(raw * 100) / 100 : raw
 }
 
+/** Workshop Enhance tab **Value** label (wiki **x1.00** style, matches main workshop labs). */
+export function formatWorkshopEnhanceMultiplierDisplay(multiplier: number): string {
+  return `x${multiplier.toFixed(2)}`
+}
+
 export function workshopEnhanceTier400StatDisplay(
   completedLevels: number,
   maxLevel: number = WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   incrementPerLevel = 0.01,
 ): string {
-  return `${workshopEnhanceTier400Multiplier(completedLevels, maxLevel, incrementPerLevel).toFixed(2)}×`
+  return formatWorkshopEnhanceMultiplierDisplay(
+    workshopEnhanceTier400Multiplier(completedLevels, maxLevel, incrementPerLevel),
+  )
 }
 
 export function workshopEnhanceTier400NextMarginalCoins(

@@ -87,6 +87,19 @@ const ATTACK_UNLOCK_REQUIRED: Record<WorkshopEnhanceAttackUpgradeKey, number> = 
   enhanceAttackSpeedLevel: WORKSHOP_ENHANCE_ATTACK_SPEED_UNLOCK_ATTACK_ENHANCE_SPENT_COINS,
 }
 
+/**
+ * Rend Armor enhancements count once in {@link workshopEnhanceAttackCategorySpentCoins} and an extra
+ * **~13.2%** of rend spend toward later attack unlock gates (damage-enhancement route). Calibrated
+ * to in-game **Attack Speed** unlock progress at **40/40/40/40** on the four tier-400 attack rows
+ * (~**57.91T** spent, **442.09T** remaining on the **500T** gate).
+ */
+export const WORKSHOP_REND_ARMOR_ATTACK_UNLOCK_EXTRA_FRACTION = 0.132 as const
+
+function workshopEnhanceRendArmorSpentCoins(ws: WorkshopPersistedV1): number {
+  const level = ws.enhanceRendArmorLevel
+  return sumMarginalSteps(attackNextAt('enhanceRendArmorLevel'), 0, Math.max(0, level))
+}
+
 export function workshopEnhanceDefenseUnlockRequiredCoins(
   key: WorkshopEnhanceDefenseUpgradeKey,
 ): number {
@@ -127,7 +140,10 @@ export function workshopEnhanceAttackUnlockSpentCoins(
   if (key === 'enhanceRendArmorLevel') {
     return workshopEnhanceAttackDamageEnhanceSpentCoins(ws)
   }
-  return workshopEnhanceAttackCategorySpentCoins(ws)
+  const category = workshopEnhanceAttackCategorySpentCoins(ws)
+  const rendExtra =
+    workshopEnhanceRendArmorSpentCoins(ws) * WORKSHOP_REND_ARMOR_ATTACK_UNLOCK_EXTRA_FRACTION
+  return category + rendExtra
 }
 
 export function workshopEnhanceDefenseCategorySpentCoins(ws: WorkshopPersistedV1): number {

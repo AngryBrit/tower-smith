@@ -14,7 +14,7 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { workshopStatDomId } from '../appDeepLink'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
-import { applyWorkshopDiscountToCoins } from '../types/research'
+import { discountedWorkshopBulkMarginal } from '../data/workshopBulkMarginal'
 import {
   workshopEnhanceDefenseCategorySpentCoins,
   workshopEnhanceDefenseIsUnlocked,
@@ -41,15 +41,6 @@ const ENHANCE_DEFENSE_LEVEL_ARIA: Record<WorkshopEnhanceDefenseUpgradeKey, Strin
 }
 
 type WorkshopMultiplier = WorkshopPersistedV1['multiplier']
-
-function discountedMarginal(
-  raw: number | undefined,
-  discountPercent: number,
-): number | undefined {
-  if (raw == null) return undefined
-  if (!(discountPercent > 0)) return raw
-  return applyWorkshopDiscountToCoins(raw, discountPercent)
-}
 
 function defenseUnlockHint(
   t: (id: StringId) => string,
@@ -91,8 +82,11 @@ function WorkshopEnhanceDefenseCard({
   const { t } = useI18n()
   const max = workshopEnhanceDefenseMaxLevel(upgradeKey)
   const maxed = level >= max
-  const nextCoins = discountedMarginal(
-    workshopEnhanceDefenseNextMarginalCoins(upgradeKey, level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    max,
+    bulkStep,
+    (L) => workshopEnhanceDefenseNextMarginalCoins(upgradeKey, L),
     coinDiscountPercent,
   )
   const statLabel = workshopEnhanceDefenseStatDisplay(upgradeKey, level)

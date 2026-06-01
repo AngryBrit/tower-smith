@@ -19,6 +19,6 @@ describe('workshop lab display wiring', () => {
   })
 
   it('multiplies critical factor by lab', () => {
-    expect(workshopCriticalFactorStatDisplay(0, 1.3)).toBe('1.56×')
+    expect(workshopCriticalFactorStatDisplay(0, 1.3)).toBe('×1.56')
   })
 })

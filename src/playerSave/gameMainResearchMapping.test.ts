@@ -44,6 +44,30 @@ function mainResearchData(): ResearchData {
           { name: 'Workshop Respec', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Reroll Daily Mission', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Workshop Enhancements', level: '0', benefit: '', time: '', cost: '', state: 'default' },
+          {
+            name: 'Enhancement Attack - Coin Discount',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
+          {
+            name: 'Enhancement Defense - Coin Discount',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
+          {
+            name: 'Enhancement Utility - Coin Discount',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
         ],
       },
     ],
@@ -86,5 +110,16 @@ describe('mainLabsToOverrides', () => {
     const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
     expect(overrides['0-12']).toBeUndefined()
     expect(overrides['0-13']).toBe(1)
+  })
+
+  it('maps Enhancement coin discount labs from researchLevel ids 134–136', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[134] = 10
+    researchLevel[135] = 34
+    researchLevel[136] = 5
+    const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
+    expect(overrides['0-14']).toBe(10)
+    expect(overrides['0-15']).toBe(34)
+    expect(overrides['0-16']).toBe(5)
   })
 })

@@ -3577,17 +3577,17 @@ button.workshop__uw-plus-cost--display:hover {
   min-height: 0;
 }
 
-/* Uniform ultimate weapon card height (owned Golden Tower reference) */
+/* Ultimate workshop layout tokens (px so height does not scale with root rem). */
 #inpanel-panel-workshop .workshop__grid--ultimate {
-  --workshop-uw-card-height: 338px;
+  --workshop-uw-unlock-block-height: 150px;
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-card {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: var(--workshop-uw-card-height);
-  min-height: var(--workshop-uw-card-height);
+  height: auto;
+  min-height: 0;
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-head {
@@ -3620,7 +3620,6 @@ button.workshop__uw-plus-cost--display:hover {
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body,
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
-  flex: 1 1 auto;
   display: flex;
   align-self: stretch;
   width: 100%;
@@ -3629,7 +3628,12 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
+  flex: 0 0 auto;
   flex-direction: column;
+  box-sizing: border-box;
+  height: var(--workshop-uw-unlock-block-height);
+  min-height: var(--workshop-uw-unlock-block-height);
+  max-height: var(--workshop-uw-unlock-block-height);
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
@@ -3640,6 +3644,60 @@ button.workshop__uw-plus-cost--display:hover {
   height: 100%;
   min-height: 0;
   align-items: stretch;
+}
+
+#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
+  min-height: 0;
+  height: 100%;
+}
+
+#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body-unlock {
+  min-height: 0;
+  height: 100%;
+}
+
+/* Owned weapons: body height follows icon + stat row (no fixed min). */
+#inpanel-panel-workshop
+  .workshop__grid--ultimate
+  .workshop__uw-body:not(.workshop__uw-body--unlock) {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  align-items: center;
+}
+
+#inpanel-panel-workshop
+  .workshop__grid--ultimate
+  .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
+  flex: 1 1 auto;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  max-height: max-content;
+  min-height: 0;
+  align-items: start;
+  align-content: start;
+}
+
+#inpanel-panel-workshop
+  .workshop__grid--ultimate
+  .workshop__uw-stats:not(.workshop__uw-stats--unlock)
+  .workshop__uw-col {
+  height: auto;
+  min-height: 0;
+  align-self: start;
+}
+
+#inpanel-panel-workshop
+  .workshop__grid--ultimate
+  .workshop__uw-stats:not(.workshop__uw-stats--unlock)
+  .workshop__uw-col-top,
+#inpanel-panel-workshop
+  .workshop__grid--ultimate
+  .workshop__uw-stats:not(.workshop__uw-stats--unlock)
+  .workshop__uw-col-foot {
+  flex: 0 0 auto;
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-plus-bar {
@@ -3671,11 +3729,14 @@ button.workshop__uw-plus-cost--display:hover {
   #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body,
   #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
     flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
+    max-height: none;
   }
 
   #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats,
   #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
-    flex: 0 0 auto;
+    flex: 1 1 auto;
     height: auto;
     align-items: start;
   }
@@ -3692,7 +3753,7 @@ button.workshop__uw-plus-cost--display:hover {
   }
 
   #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body-unlock {
-    min-height: 5rem;
+    min-height: 3.25rem;
   }
 
   #inpanel-panel-bots .workshop__uw-card {

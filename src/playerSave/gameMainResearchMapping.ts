@@ -17,6 +17,9 @@ export const MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Card Presets': 40,
   'Workshop Respec': 41,
   'Workshop Enhancements': 133,
+  'Enhancement Attack - Coin Discount': 134,
+  'Enhancement Defense - Coin Discount': 135,
+  'Enhancement Utility - Coin Discount': 136,
 } as const satisfies Record<string, number>
 
 export type MainResearchLabName = keyof typeof MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME

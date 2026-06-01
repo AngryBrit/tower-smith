@@ -3,6 +3,8 @@
  * Per-level marginal **Coins** from wiki (decade anchors in `workshopEnhanceUtilityTier200WikiDecades.ts`).
  */
 
+import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
+
 export const WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL = 200 as const
 
 const MARGINAL_COINS: readonly number[] = [
@@ -39,7 +41,9 @@ export function workshopEnhanceUtilityTier200Multiplier(completedLevels: number)
 }
 
 export function workshopEnhanceUtilityTier200StatDisplay(completedLevels: number): string {
-  return `${workshopEnhanceUtilityTier200Multiplier(completedLevels).toFixed(2)}×`
+  return formatWorkshopEnhanceMultiplierDisplay(
+    workshopEnhanceUtilityTier200Multiplier(completedLevels),
+  )
 }
 
 export function workshopEnhanceUtilityTier200NextMarginalCoins(

@@ -6,6 +6,7 @@
  */
 
 import { workshopCardMultProduct } from './workshopCardWorkshopDisplay'
+import { mergeLabOverridesForDisplayedDamage } from './workshopLabOverridesForDamage'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { attackResearchAttackSpeedLabMultiplier, type ResearchData } from '../types/research'
 import { workshopEnhanceAttackSpeedMultiplier } from './workshopEnhanceAttack'
@@ -61,21 +62,27 @@ export function workshopAttackSpeedDisplayOptsFromPersisted(
   ws: WorkshopPersistedV1,
   research: ResearchData | null,
   labOverrides: Record<string, number>,
+  gameResearchLevel?: readonly number[] | null,
 ): WorkshopAttackSpeedDisplayOpts | undefined {
   if (research == null) return undefined
+  const merged = mergeLabOverridesForDisplayedDamage(
+    research,
+    labOverrides,
+    gameResearchLevel,
+  )
   const attackSpeedCardMultiplier = workshopCardMultProduct(
     ws,
     research,
-    labOverrides,
+    merged,
     'attackSpeed',
   )
   return enrichAttackSpeedDisplayOpts(
     {
-      labMultiplier: attackResearchAttackSpeedLabMultiplier(research, labOverrides),
+      labMultiplier: attackResearchAttackSpeedLabMultiplier(research, merged),
       attackSpeedCardMultiplier,
       moduleSubEffect: ws.simAttackSpeedModuleSubEffect,
       enhancementsMultiplier: workshopEnhanceAttackSpeedMultiplier(
-        workshopEnhancementsLabUnlocked(research, labOverrides)
+        workshopEnhancementsLabUnlocked(research, merged)
           ? ws.enhanceAttackSpeedLevel
           : 0,
       ),
@@ -88,9 +95,15 @@ export function workshopDisplayedAttackSpeedFromPersisted(
   ws: WorkshopPersistedV1,
   research: ResearchData | null,
   labOverrides: Record<string, number>,
+  gameResearchLevel?: readonly number[] | null,
 ): number {
   const workshop = workshopAttackSpeedStatValue(ws.attackSpeedLevel)
-  const opts = workshopAttackSpeedDisplayOptsFromPersisted(ws, research, labOverrides)
+  const opts = workshopAttackSpeedDisplayOptsFromPersisted(
+    ws,
+    research,
+    labOverrides,
+    gameResearchLevel,
+  )
   if (opts === undefined) return workshop
   return computeWorkshopDisplayedAttackSpeed(workshop, opts)
 }

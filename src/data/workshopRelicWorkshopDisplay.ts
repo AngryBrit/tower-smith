@@ -14,6 +14,7 @@ import type { WorkshopDefenseStatDisplayOpts } from './workshopDefense'
 import {
   workshopRelicsActiveBonus,
   workshopRelicsActiveBonusPercent,
+  workshopRelicsDisplayedAttackSpeedBonusPercent,
   workshopRelicsDisplayedDamageBonusFraction,
 } from './workshopRelicStats'
 
@@ -265,10 +266,10 @@ export function enrichAttackSpeedDisplayOpts(
   opts: WorkshopAttackSpeedDisplayOpts | undefined,
   ownedIds: ReadonlySet<string>,
 ): WorkshopAttackSpeedDisplayOpts | undefined {
-  const attackSpeed = workshopRelicsActiveBonusPercent(ownedIds, 'attackSpeed')
-  if (attackSpeed <= 0 && opts == null) return undefined
+  const relicPercent = workshopRelicsDisplayedAttackSpeedBonusPercent(ownedIds)
+  if (relicPercent <= 0 && opts == null) return undefined
   const base = opts ?? {}
-  const mult = mergeRelicMultiplier(1, attackSpeed)
+  const mult = mergeRelicMultiplier(1, relicPercent)
   if (mult === undefined) return opts
   return {
     ...base,

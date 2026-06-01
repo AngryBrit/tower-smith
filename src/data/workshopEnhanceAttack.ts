@@ -8,6 +8,7 @@ import {
   workshopEnhanceAttackTierNextMarginalCoins,
   workshopEnhanceAttackTierStatDisplay,
 } from './workshopEnhanceAttackShared'
+import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
 
 export {
   WORKSHOP_ENHANCE_ATTACK_TIER_MAX_LEVEL,
@@ -107,7 +108,9 @@ export function workshopEnhanceAttackSpeedMultiplier(completedLevels: number): n
 }
 
 export function workshopEnhanceAttackSpeedStatDisplay(completedLevels: number): string {
-  return `${workshopEnhanceAttackSpeedMultiplier(completedLevels).toFixed(2)}×`
+  return formatWorkshopEnhanceMultiplierDisplay(
+    workshopEnhanceAttackSpeedMultiplier(completedLevels),
+  )
 }
 
 function enhanceAttackSpeedNextMarginalCoins(completedLevels: number): number | undefined {

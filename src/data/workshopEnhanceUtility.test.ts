@@ -29,12 +29,12 @@ describe('workshopEnhanceUtility', () => {
   it('cash bonus enhancement matches wiki value and coin milestones (L1–L400)', () => {
     expect(WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL).toBe(400)
     expect(workshopEnhanceTier400Multiplier(0)).toBe(1)
-    expect(workshopEnhanceUtilityStatDisplay('enhanceCashBonusLevel', 0)).toBe('1.00×')
+    expect(workshopEnhanceUtilityStatDisplay('enhanceCashBonusLevel', 0)).toBe('x1.00')
 
     for (const { level, value, coins } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
       expect(workshopEnhanceTier400Multiplier(level)).toBe(value)
       expect(workshopEnhanceUtilityStatDisplay('enhanceCashBonusLevel', level)).toBe(
-        `${value.toFixed(2)}×`,
+        `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceCashBonusLevel', level - 1)).toBe(coins)
     }
@@ -45,12 +45,12 @@ describe('workshopEnhanceUtility', () => {
     expect(WORKSHOP_ENHANCE_COIN_BONUS_UNLOCK_UTILITY_ENHANCE_SPENT_COINS).toBe(50e9)
     expect(WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL).toBe(200)
     expect(workshopEnhanceUtilityTier200Multiplier(0)).toBe(1)
-    expect(workshopEnhanceUtilityStatDisplay('enhanceCoinBonusLevel', 0)).toBe('1.00×')
+    expect(workshopEnhanceUtilityStatDisplay('enhanceCoinBonusLevel', 0)).toBe('x1.00')
 
     for (const { level, value, coins } of WORKSHOP_ENHANCE_UTILITY_TIER_200_WIKI_DECADES) {
       expect(workshopEnhanceUtilityTier200Multiplier(level)).toBe(value)
       expect(workshopEnhanceUtilityStatDisplay('enhanceCoinBonusLevel', level)).toBe(
-        `${value.toFixed(2)}×`,
+        `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceCoinBonusLevel', level - 1)).toBe(coins)
     }
@@ -65,11 +65,11 @@ describe('workshopEnhanceUtility', () => {
 
   it('cells/kill bonus enhancement matches wiki decades and per-level coins (L1–L200)', () => {
     expect(WORKSHOP_ENHANCE_CELLS_KILL_BONUS_UNLOCK_UTILITY_ENHANCE_SPENT_COINS).toBe(500e9)
-    expect(workshopEnhanceUtilityStatDisplay('enhanceCellsKillBonusLevel', 0)).toBe('1.00×')
+    expect(workshopEnhanceUtilityStatDisplay('enhanceCellsKillBonusLevel', 0)).toBe('x1.00')
 
     for (const { level, value, coins } of WORKSHOP_ENHANCE_UTILITY_TIER_200_WIKI_DECADES) {
       expect(workshopEnhanceUtilityStatDisplay('enhanceCellsKillBonusLevel', level)).toBe(
-        `${value.toFixed(2)}×`,
+        `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceCellsKillBonusLevel', level - 1)).toBe(
         coins,
@@ -92,12 +92,12 @@ describe('workshopEnhanceUtility', () => {
     expect(WORKSHOP_ENHANCE_FREE_UPGRADES_UNLOCK_UTILITY_ENHANCE_SPENT_COINS).toBe(5e12)
     expect(WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL).toBe(100)
     expect(workshopEnhanceFreeUpgradesMultiplier(0)).toBe(1)
-    expect(workshopEnhanceUtilityStatDisplay('enhanceFreeUpgradesLevel', 0)).toBe('1.00×')
+    expect(workshopEnhanceUtilityStatDisplay('enhanceFreeUpgradesLevel', 0)).toBe('x1.00')
 
     for (const { level, value, coins } of WORKSHOP_ENHANCE_FREE_UPGRADES_WIKI_DECADES) {
       expect(workshopEnhanceFreeUpgradesMultiplier(level)).toBe(value)
       expect(workshopEnhanceUtilityStatDisplay('enhanceFreeUpgradesLevel', level)).toBe(
-        `${value.toFixed(2)}×`,
+        `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceFreeUpgradesLevel', level - 1)).toBe(
         coins,
@@ -116,12 +116,12 @@ describe('workshopEnhanceUtility', () => {
     expect(WORKSHOP_ENHANCE_RECOVERY_PACKAGE_UNLOCK_UTILITY_ENHANCE_SPENT_COINS).toBe(50e12)
     expect(WORKSHOP_ENHANCE_RECOVERY_PACKAGE_MAX_LEVEL).toBe(300)
     expect(WORKSHOP_ENHANCE_RECOVERY_PACKAGE_WIKI_DECADES).toHaveLength(31)
-    expect(workshopEnhanceUtilityStatDisplay('enhanceRecoveryPackageLevel', 0)).toBe('1.00×')
+    expect(workshopEnhanceUtilityStatDisplay('enhanceRecoveryPackageLevel', 0)).toBe('x1.00')
 
     for (const { level, value, coins } of WORKSHOP_ENHANCE_RECOVERY_PACKAGE_WIKI_DECADES) {
       expect(workshopEnhanceTier400Multiplier(level, 300)).toBe(value)
       expect(workshopEnhanceUtilityStatDisplay('enhanceRecoveryPackageLevel', level)).toBe(
-        `${value.toFixed(2)}×`,
+        `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceRecoveryPackageLevel', level - 1)).toBe(
         coins,
@@ -137,12 +137,12 @@ describe('workshopEnhanceUtility', () => {
     expect(WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS).toBe(500e12)
     expect(WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL).toBe(60)
     expect(workshopEnhanceEnemyLevelSkipMultiplier(0)).toBe(1)
-    expect(workshopEnhanceUtilityStatDisplay('enhanceEnemyLevelSkipLevel', 0)).toBe('1.00×')
+    expect(workshopEnhanceUtilityStatDisplay('enhanceEnemyLevelSkipLevel', 0)).toBe('x1.00')
 
     for (const { level, value, coins } of WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_WIKI_DECADES) {
       expect(workshopEnhanceEnemyLevelSkipMultiplier(level)).toBe(value)
       expect(workshopEnhanceUtilityStatDisplay('enhanceEnemyLevelSkipLevel', level)).toBe(
-        `${value.toFixed(2)}×`,
+        `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceEnemyLevelSkipLevel', level - 1)).toBe(
         coins,

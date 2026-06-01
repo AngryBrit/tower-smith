@@ -4,9 +4,30 @@
  * Wiki **Cost** at milestone levels (1, 10, …, 150) is the marginal coin price for that row.
  * Levels between milestones use **log-linear** interpolation (same approach as workshop damage).
  * Wiki **Total Cost** is abbreviated (e.g. `259.20B`); exact spend uses interpolated marginals.
+ *
+ * Displayed value: **(Workshop + Submodule) × Lab × Enhancement** when enhancements are unlocked.
+ * In-game enhancement on this card caps at **+25%** (**×1.25**, first **25** enhance levels).
  */
 
+import { workshopEnhanceAttackTierMultiplier } from './workshopEnhanceAttackShared'
+
 export const WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL = 150 as const
+
+/** Enhancement levels counted on the workshop Critical Factor card (caps at **×1.25**). */
+export const WORKSHOP_DISPLAYED_CRIT_FACTOR_ENHANCE_LEVEL_CAP = 25 as const
+
+/** Enhancement × multiplier for displayed critical factor (0 when locked). */
+export function workshopDisplayedCritFactorEnhancementMultiplier(
+  enhanceCritFactorLevel: number,
+  enhancementsLabUnlocked: boolean,
+): number {
+  if (!enhancementsLabUnlocked || enhanceCritFactorLevel <= 0) return 1
+  const L = Math.min(
+    Math.max(0, Math.trunc(enhanceCritFactorLevel)),
+    WORKSHOP_DISPLAYED_CRIT_FACTOR_ENHANCE_LEVEL_CAP,
+  )
+  return workshopEnhanceAttackTierMultiplier(L)
+}
 
 const ANCHOR_LEVELS: readonly number[] = [
   1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150,
@@ -18,18 +39,24 @@ export function workshopCriticalFactorStatValue(completedLevels: number): number
   return Math.round((1.2 + 0.1 * L) * 100) / 100
 }
 
-/** Display like wiki **Value** (`1.30×` … `16.20×`). */
+/** Display like in-game workshop card (`×1.30` … `×16.20`). */
 export function workshopCriticalFactorStatDisplay(
   completedLevels: number,
   labMultiplier?: number,
   submoduleAdd = 0,
+  enhancementMultiplier = 1,
 ): string {
   const base = workshopCriticalFactorStatValue(completedLevels) + submoduleAdd
-  const v =
+  let v =
     labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9
       ? base * labMultiplier
       : base
-  return `${v.toFixed(2)}×`
+  if (enhancementMultiplier > 1 + 1e-9) {
+    v *= enhancementMultiplier
+  }
+  // In-game workshop card truncates to 2 decimals (does not round half up).
+  const displayed = Math.floor(v * 100 + 1e-9) / 100
+  return `×${displayed.toFixed(2)}`
 }
 
 /** Marginal **Cost** at each `ANCHOR_LEVELS` row (exact wiki values). */

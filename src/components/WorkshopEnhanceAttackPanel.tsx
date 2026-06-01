@@ -14,7 +14,7 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { workshopStatDomId } from '../appDeepLink'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
-import { applyWorkshopDiscountToCoins } from '../types/research'
+import { discountedWorkshopBulkMarginal } from '../data/workshopBulkMarginal'
 import {
   workshopEnhanceAttackIsUnlocked,
   workshopEnhanceAttackUnlockRemainingCoins,
@@ -41,15 +41,6 @@ const ENHANCE_ATTACK_LEVEL_ARIA: Record<WorkshopEnhanceAttackUpgradeKey, StringI
 }
 
 type WorkshopMultiplier = WorkshopPersistedV1['multiplier']
-
-function discountedMarginal(
-  raw: number | undefined,
-  discountPercent: number,
-): number | undefined {
-  if (raw == null) return undefined
-  if (!(discountPercent > 0)) return raw
-  return applyWorkshopDiscountToCoins(raw, discountPercent)
-}
 
 function attackUnlockHint(
   t: (id: StringId) => string,
@@ -96,8 +87,11 @@ function WorkshopEnhanceAttackCard({
   const { t } = useI18n()
   const max = workshopEnhanceAttackMaxLevel(upgradeKey)
   const maxed = level >= max
-  const nextCoins = discountedMarginal(
-    workshopEnhanceAttackNextMarginalCoins(upgradeKey, level),
+  const nextCoins = discountedWorkshopBulkMarginal(
+    level,
+    max,
+    bulkStep,
+    (L) => workshopEnhanceAttackNextMarginalCoins(upgradeKey, L),
     coinDiscountPercent,
   )
   const statLabel = workshopEnhanceAttackStatDisplay(upgradeKey, level)

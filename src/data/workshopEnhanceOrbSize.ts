@@ -3,6 +3,8 @@
  * Dedicated coin ladder (wiki **Coins** at decade milestones, log-linear between).
  */
 
+import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
+
 export const WORKSHOP_ENHANCE_ORB_SIZE_MAX_LEVEL = 200 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -50,7 +52,7 @@ export function workshopEnhanceOrbSizeMultiplier(completedLevels: number): numbe
 }
 
 export function workshopEnhanceOrbSizeStatDisplay(completedLevels: number): string {
-  return `${workshopEnhanceOrbSizeMultiplier(completedLevels).toFixed(2)}×`
+  return formatWorkshopEnhanceMultiplierDisplay(workshopEnhanceOrbSizeMultiplier(completedLevels))
 }
 
 export function workshopEnhanceOrbSizeNextMarginalCoins(

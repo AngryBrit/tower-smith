@@ -8,7 +8,11 @@ import {
   enrichDefenseStatDisplayOpts,
   workshopRelicsLabSpeedMultiplier,
 } from './workshopRelicWorkshopDisplay'
-import { workshopRelicsDisplayedDamageBonusFraction } from './workshopRelicStats'
+import {
+  workshopRelicsDisplayedAttackSpeedBonusPercent,
+  workshopRelicsDisplayedAttackSpeedRelicMultiplier,
+  workshopRelicsDisplayedDamageBonusFraction,
+} from './workshopRelicStats'
 import { workshopRelicsDamageBonusFraction } from './workshopRelics'
 
 describe('workshopRelicWorkshopDisplay', () => {
@@ -64,5 +68,12 @@ describe('workshopRelicWorkshopDisplay', () => {
     const owned = new Set(['t_iv_harmonic', 't_viii_graviton'])
     expect(workshopRelicsDisplayedDamageBonusFraction(owned)).toBeCloseTo(0.07)
     expect(workshopRelicsDamageBonusFraction(owned)).toBeCloseTo(0.07)
+  })
+
+  it('adds partial damage/meter relic % to displayed attack speed relic term', () => {
+    expect(10 + 45 * (0.28 / 45)).toBeCloseTo(10.28, 4)
+    const owned = new Set(['t_iv_harmonic', 't_viii_graviton'])
+    expect(workshopRelicsDisplayedAttackSpeedBonusPercent(owned)).toBeGreaterThan(0)
+    expect(workshopRelicsDisplayedAttackSpeedRelicMultiplier(owned)).toBeGreaterThan(1)
   })
 })
