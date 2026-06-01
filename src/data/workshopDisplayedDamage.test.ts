@@ -62,7 +62,7 @@ describe('workshopDisplayedDamage', () => {
     expect(workshopDisplayedDamageFromWorkshopLevel(100, {})).toBe(workshop)
   })
 
-  it('applies Damage × DPM × Attack Speed labs from gameResearchLevel when research is null', () => {
+  it('applies Damage × partial DPM × Attack Speed labs from gameResearchLevel when research is null', () => {
     const ws = { ...defaultWorkshopPersisted(), damageLevel: 100 }
     const opts = workshopDamageDisplayOptsFromPersisted(ws, null, {}, [
       50,
@@ -73,7 +73,8 @@ describe('workshopDisplayedDamage', () => {
     ])
     const dmg = 1 + 0.02 * 50
     const as = 1 + 0.02 * 40
-    const dpm = 1 + 0.02 * 30
+    const dpmRaw = 1 + 0.02 * 30
+    const dpm = 1 + (dpmRaw - 1) * (0.226 / 0.28)
     expect(opts.labMultiplier).toBeCloseTo(dmg * as * dpm, 6)
     expect(opts.labDamageMultiplier).toBeCloseTo(dmg, 6)
     expect(opts.labDamagePerMeterMultiplier).toBeCloseTo(dpm, 6)

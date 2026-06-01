@@ -4,7 +4,8 @@
  * **Displayed damage** = Workshop × Lab × Damage Card × (1 + Relics) × (1 + Cannon Module %)
  * × Enhancements × Perk + Berserker
  *
- * **Lab** = Attack **Damage** × **Damage / Meter** × **Attack Speed** lab multipliers (damage-style +0.02/level).
+ * **Lab** = Attack **Damage** × partial **Damage / Meter** × **Attack Speed** labs
+ * (DPM uses a fraction of **(labMult − 1)**; Damage and Attack Speed use full damage-style ×).
  *
  * **Workshop** = workshop damage upgrade value × equipped cannon chassis **Tower Damage** (×1 if none).
  * No rounding until `formatCoinAbbrev` on the final value.

@@ -5,7 +5,7 @@
  * **Cost**: milestone marginals from the wiki; log-linear between milestones (same pattern as Critical Factor).
  * Workshop UI shows **`x1 / m`** … **`x1.059 / m`** (baseline **×1** per meter plus the wiki bonus as **1 + Value**).
  * Attack **Damage / Meter** research lab adds a **fraction** of **(labMult − 1)** to this card
- * (not the full damage-style × lab used in combat / **displayed damage**).
+ * (not the full damage-style × lab used in combat).
  */
 /**
  * Share of the attack DPM lab excess shown on the workshop ×/m card.

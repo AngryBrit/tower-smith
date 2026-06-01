@@ -2433,8 +2433,30 @@ export function attackResearchDamageLabMultiplier(
 }
 
 /**
- * Wiki **Displayed damage** **Lab** term: product of Attack **Damage**, **Damage / Meter**,
- * and **Attack Speed** labs (each uses the +0.02/level damage-style curve).
+ * Share of **Damage / Meter** lab excess in wiki **Displayed damage** **Lab**
+ * (calibrated: **×1.28** DPM lab → **×1.226** in the Lab product).
+ */
+export const WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION = 0.226 / 0.28
+
+/** DPM lab factor for displayed-damage **Lab** (not the ×/m workshop card). */
+export function attackResearchDisplayedDamageDpmLabMultiplier(
+  damagePerMeterLabMultiplier: number,
+): number {
+  if (
+    !Number.isFinite(damagePerMeterLabMultiplier) ||
+    damagePerMeterLabMultiplier <= 1 + 1e-9
+  ) {
+    return 1
+  }
+  return (
+    1 +
+    (damagePerMeterLabMultiplier - 1) * WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION
+  )
+}
+
+/**
+ * Wiki **Displayed damage** **Lab** term: Attack **Damage** × partial **Damage / Meter** ×
+ * **Attack Speed** (damage-style +0.02/level curves).
  */
 export function attackResearchDisplayedDamageLabMultiplier(
   data: ResearchData,
@@ -2442,7 +2464,9 @@ export function attackResearchDisplayedDamageLabMultiplier(
 ): number {
   return (
     attackResearchDamageLabMultiplier(data, overrides) *
-    attackResearchDamageStyleLabMultiplier(data, overrides, 'Damage / Meter') *
+    attackResearchDisplayedDamageDpmLabMultiplier(
+      attackResearchDamageStyleLabMultiplier(data, overrides, 'Damage / Meter'),
+    ) *
     attackResearchAttackSpeedLabMultiplier(data, overrides)
   )
 }

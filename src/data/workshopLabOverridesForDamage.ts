@@ -15,6 +15,7 @@ import {
   attackResearchAttackSpeedLabMultiplier,
   attackResearchDamageLabMultiplier,
   attackResearchDamageStyleLabMultiplier,
+  attackResearchDisplayedDamageDpmLabMultiplier,
   attackResearchDisplayedDamageLabMultiplier,
   damageStyleLabMultiplier,
   type ResearchData,
@@ -98,10 +99,12 @@ export function workshopDisplayedDamageLabOpts(
     )
     const attackSpeed = attackResearchAttackSpeedLabMultiplier(research, merged)
     const labMultiplier = attackResearchDisplayedDamageLabMultiplier(research, merged)
+    const dpmDisplayed = attackResearchDisplayedDamageDpmLabMultiplier(damagePerMeter)
     return {
       labMultiplier: labMultiplier > 1 + 1e-9 ? labMultiplier : undefined,
       labDamageMultiplier: damage > 1 + 1e-9 ? damage : undefined,
-      labDamagePerMeterMultiplier: damagePerMeter > 1 + 1e-9 ? damagePerMeter : undefined,
+      labDamagePerMeterMultiplier:
+        dpmDisplayed > 1 + 1e-9 ? dpmDisplayed : undefined,
       labAttackSpeedMultiplier: attackSpeed > 1 + 1e-9 ? attackSpeed : undefined,
     }
   }
@@ -109,11 +112,16 @@ export function workshopDisplayedDamageLabOpts(
   if (!gameResearchLevel?.length) return {}
   const { damage, damagePerMeter, attackSpeed } =
     displayedDamageLabFactorsFromRawSave(gameResearchLevel)
-  const labMultiplier = damage * damagePerMeter * attackSpeed
+  const labMultiplier =
+    damage *
+    attackResearchDisplayedDamageDpmLabMultiplier(damagePerMeter) *
+    attackSpeed
+  const dpmDisplayed = attackResearchDisplayedDamageDpmLabMultiplier(damagePerMeter)
   return {
     labMultiplier: labMultiplier > 1 + 1e-9 ? labMultiplier : undefined,
     labDamageMultiplier: damage > 1 + 1e-9 ? damage : undefined,
-    labDamagePerMeterMultiplier: damagePerMeter > 1 + 1e-9 ? damagePerMeter : undefined,
+    labDamagePerMeterMultiplier:
+      dpmDisplayed > 1 + 1e-9 ? dpmDisplayed : undefined,
     labAttackSpeedMultiplier: attackSpeed > 1 + 1e-9 ? attackSpeed : undefined,
   }
 }

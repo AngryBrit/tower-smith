@@ -114,7 +114,8 @@ describe('applyImportedWorkshop', () => {
       workspace.lab.levelOverrides,
     )
     const dmgLab = 1 + 0.02 * save.researchLevel[0]!
-    const dpmLab = 1 + 0.02 * save.researchLevel[4]!
+    const dpmRaw = 1 + 0.02 * save.researchLevel[4]!
+    const dpmLab = 1 + (dpmRaw - 1) * (0.226 / 0.28)
     const asLab = 1 + 0.02 * save.researchLevel[1]!
     expect(labMult).toBeCloseTo(dmgLab * dpmLab * asLab, 3)
     expect(workspace.lab.gameResearchLevel?.[0]).toBe(save.researchLevel[0])
@@ -140,6 +141,8 @@ describe('applyImportedWorkshop', () => {
     )
     expect(opts.damageCardMultiplier).toBeGreaterThan(3.9)
     expect(displayed).toBeGreaterThan(workshop * labMult * cardMult * 0.9)
+    expect(displayed).toBeGreaterThan(6e9)
+    expect(displayed).toBeLessThan(6.25e9)
   })
 
   it('imports Fudgyrella generator module sub-effects into workspace modules domain', async () => {
