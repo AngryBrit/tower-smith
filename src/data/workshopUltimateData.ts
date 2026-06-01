@@ -136,6 +136,12 @@ export const WORKSHOP_ULTIMATE_WEAPON_STATS: Record<
   ],
 }
 
+export const WORKSHOP_ULTIMATE_DAMAGE_UPGRADE_KEYS = new Set<WorkshopUltimateUpgradeKey>(
+  Object.values(WORKSHOP_ULTIMATE_WEAPON_STATS).flatMap((rows) =>
+    rows.filter((r) => r.stat === 'damage').map((r) => r.key),
+  ),
+)
+
 export const WORKSHOP_ULTIMATE_TRACKS: Record<WorkshopUltimateUpgradeKey, WorkshopUltimateTrack> = {
   goldenTowerBonusLevel: {
   valueKind: "mult",

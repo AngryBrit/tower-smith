@@ -221,6 +221,8 @@ export function workshopDefenseClampLevel(key: WorkshopDefenseUpgradeKey, n: num
 
 /** Optional simulated Defense labs for workshop **Value** display (coin costs unchanged). */
 export type WorkshopDefenseStatDisplayOpts = {
+  /** Equipped armor chassis main effect (Tower Health). */
+  armorTowerHealthMultiplier?: number
   healthLabMultiplier?: number
   healthRegenLabMultiplier?: number
   /** Additive **Garlic Thorns** lab % (percent points), summed with workshop Thorn Damage. */
@@ -255,9 +257,14 @@ export function workshopDefenseStatDisplay(
 ): string {
   switch (key) {
     case 'healthLevel': {
+      const chassis = opts?.armorTowerHealthMultiplier ?? 1
+      const base = workshopHealthStatValue(completedLevels) * chassis
       const m = opts?.healthLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 0) {
-        return formatWithHealthStyleLabMultiplier(workshopHealthStatValue(completedLevels), m)
+      if (
+        (m !== undefined && Number.isFinite(m) && m > 0) ||
+        chassis > 1 + 1e-9
+      ) {
+        return formatWithHealthStyleLabMultiplier(base, m ?? 1)
       }
       return workshopHealthStatDisplay(completedLevels)
     }

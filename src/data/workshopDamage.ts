@@ -17,6 +17,7 @@ import {
 export type { WorkshopDamageDisplayOpts } from './workshopDisplayedDamage'
 export {
   computeWorkshopDisplayedDamage,
+  formatWorkshopDisplayedDamageBreakdown,
   workshopDisplayedDamagePerkMultiplier,
 } from './workshopDisplayedDamage'
 

@@ -71,6 +71,7 @@ export function TowerWorkspaceProvider({
       setScratchWorkspace,
       labLevelOverrides: workspace.lab.levelOverrides,
       setLabLevelOverrides,
+      gameResearchLevel: workspace.lab.gameResearchLevel,
       towerBuild: workspace.build,
       setTowerBuild,
       scratchTowerBuild: scratchWorkspace.build,

@@ -1,5 +1,6 @@
 import {
   formatCoinAbbrev,
+  normalizeCoinAbbrevDisplay,
   toolkitMarginalCoinCost,
   toolkitUpgradeDurationSeconds,
 } from '../labCosts'
@@ -2431,6 +2432,21 @@ export function attackResearchDamageLabMultiplier(
   return attackResearchLabMultiplierByName(data, overrides, 'Damage')
 }
 
+/**
+ * Wiki **Displayed damage** **Lab** term: product of Attack **Damage**, **Damage / Meter**,
+ * and **Attack Speed** labs (each uses the +0.02/level damage-style curve).
+ */
+export function attackResearchDisplayedDamageLabMultiplier(
+  data: ResearchData,
+  overrides: Record<string, number>,
+): number {
+  return (
+    attackResearchDamageLabMultiplier(data, overrides) *
+    attackResearchDamageStyleLabMultiplier(data, overrides, 'Damage / Meter') *
+    attackResearchAttackSpeedLabMultiplier(data, overrides)
+  )
+}
+
 /** Simulated Attack **Attack Speed** lab multiplier (same **+0.02/level** curve as Damage). */
 export function attackResearchAttackSpeedLabMultiplier(
   data: ResearchData,
@@ -2792,5 +2808,12 @@ export function parseResearchSection(
     throw new Error('Invalid section file (need title + items[])')
   }
   const o = raw as Omit<ResearchSection, 'sectionSlug'>
-  return { title: o.title, items: o.items, sectionSlug }
+  const items = o.items.map((item) => ({
+    ...item,
+    cost: normalizeCoinAbbrevDisplay(item.cost),
+    ...(item.costPlusOne != null
+      ? { costPlusOne: normalizeCoinAbbrevDisplay(item.costPlusOne) }
+      : {}),
+  }))
+  return { title: o.title, items, sectionSlug }
 }

@@ -45,6 +45,7 @@ import {
   WORKSHOP_DAMAGE_MAX_LEVEL,
   workshopDamageNextMarginalCoins,
   workshopDamageStatDisplay,
+  formatWorkshopDisplayedDamageBreakdown,
   type WorkshopDamageDisplayOpts,
 } from '../data/workshopDamage'
 import {
@@ -196,6 +197,7 @@ import {
   enrichDefenseStatDisplayOptsWithSubmodules,
   enrichUtilityLabDisplayOptsWithSubmodules,
 } from '../data/workshopSubmoduleWorkshopDisplay'
+import { workshopChassisModuleHeroStatMultiplier } from '../data/workshopChassisModuleHeroStatWorkshop'
 import type { WorkshopSubmoduleBonusContext } from '../data/workshopAssistSubmoduleScale'
 import { totalCannonAttackSpeedFromSelections } from '../data/workshopSubmoduleSelection'
 import type { WorkshopGameCardId } from '../data/workshopGameCards'
@@ -207,6 +209,7 @@ import {
   resolveWorkshopAttackDiscountPercent,
   resolveWorkshopDefenseDiscountPercent,
   resolveWorkshopUtilityDiscountPercent,
+  attackResearchDamageStyleLabMultiplier,
   type ResearchData,
 } from '../types/research'
 
@@ -405,8 +408,8 @@ function WorkshopDamageCard({
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
   bulkStep: WorkshopMultiplier
-  /** Wiki displayed-damage factors (lab, enhancements, cards, …). */
-  damageDisplayOpts?: WorkshopDamageDisplayOpts
+  /** Wiki displayed-damage factors (always full product). */
+  damageDisplayOpts: WorkshopDamageDisplayOpts
 }) {
   const { t } = useI18n()
   const coinDiscountPercent = useAttackWorkshopCoinDiscount()
@@ -416,6 +419,7 @@ function WorkshopDamageCard({
     coinDiscountPercent,
   )
   const statLabel = workshopDamageStatDisplay(level, damageDisplayOpts)
+  const breakdownTitle = formatWorkshopDisplayedDamageBreakdown(damageDisplayOpts)
   const stepHint = `×${bulkStep}`
 
   return (
@@ -426,7 +430,9 @@ function WorkshopDamageCard({
     >
       <div className="workshop__card-damage-head">
         <span className="workshop__card-name">{t('ws_stat_damage')}</span>
-        <span className="workshop__card-value">{statLabel}</span>
+        <span className="workshop__card-value" title={breakdownTitle}>
+          {statLabel}
+        </span>
       </div>
       <div className="workshop__card-level-row">
         <button
@@ -896,6 +902,7 @@ function WorkshopDamagePerMeterCard({
   onBump,
   onCommitDraft,
   bulkStep,
+  damagePerMeterLabMultiplier,
 }: {
   level: number
   draft: string
@@ -903,6 +910,8 @@ function WorkshopDamagePerMeterCard({
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
   bulkStep: WorkshopMultiplier
+  /** Attack **Damage / Meter** lab only (no relic merge, no sub-module). */
+  damagePerMeterLabMultiplier?: number
 }) {
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL
@@ -911,12 +920,7 @@ function WorkshopDamagePerMeterCard({
     workshopDamagePerMeterNextMarginalCoins(level),
     coinDiscountPercent,
   )
-  const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopDamagePerMeterStatDisplay(
-    level,
-    attackLabOpts?.damagePerMeterLabMultiplier,
-    attackLabOpts?.submodule?.damagePerMeterMultAdd ?? 0,
-  )
+  const statLabel = workshopDamagePerMeterStatDisplay(level, damagePerMeterLabMultiplier)
   const stepHint = `×${bulkStep}`
 
   return (
@@ -2353,7 +2357,8 @@ export function WorkshopPage({
   researchData = null,
 }: WorkshopPageProps) {
   const { t, fmt } = useI18n()
-  const { workshopFlat, setTowerBuild, labLevelOverrides } = useTowerWorkspaceContext()
+  const { workshopFlat, setTowerBuild, labLevelOverrides, gameResearchLevel } =
+    useTowerWorkspaceContext()
   const workshopPersisted = workshopFlat
   const onWorkshopPersistedChange = useCallback(
     (next: WorkshopPersistedV1) => {
@@ -2413,8 +2418,12 @@ export function WorkshopPage({
     const cardAdd = (id: WorkshopGameCardId) =>
       workshopCardAddPercentPoints(workshopPersisted, researchData, labLevelOverrides, id)
     const extraDefense = cardAdd('extraDefense')
+    const armorChassis = workshopChassisModuleHeroStatMultiplier(workshopPersisted, 'armor')
+    const chassisDefense: Pick<WorkshopDefenseStatDisplayOpts, 'armorTowerHealthMultiplier'> =
+      armorChassis > 1 + 1e-9 ? { armorTowerHealthMultiplier: armorChassis } : {}
     const enriched: WorkshopDefenseStatDisplayOpts = {
       ...(lab ?? {}),
+      ...chassisDefense,
       healthLabMultiplier: mergeLabAndCardMult(lab?.healthLabMultiplier, cardMult('health')),
       healthRegenLabMultiplier: mergeLabAndCardMult(
         lab?.healthRegenLabMultiplier,
@@ -2431,7 +2440,8 @@ export function WorkshopPage({
       cardMult('health') === 1 &&
       cardMult('healthRegen') === 1 &&
       cardMult('fortress') === 1 &&
-      extraDefense === 0
+      extraDefense === 0 &&
+      Object.keys(chassisDefense).length === 0
     ) {
       return enrichDefenseStatDisplayOpts(
         enrichDefenseStatDisplayOptsWithSubmodules(
@@ -2497,8 +2507,17 @@ export function WorkshopPage({
     const coins = cardMult('coins')
     const freeUpgrades = cardAdd('freeUpgrades')
     const packageChance = cardAdd('recoveryPackageChance')
+    const generatorChassis = workshopChassisModuleHeroStatMultiplier(
+      workshopPersisted,
+      'generator',
+    )
+    const chassisUtility: Pick<WorkshopUtilityLabDisplayOpts, 'generatorCashBonusMultiplier'> =
+      generatorChassis > 1 + 1e-9
+        ? { generatorCashBonusMultiplier: generatorChassis }
+        : {}
     const enriched: WorkshopUtilityLabDisplayOpts = {
       ...(lab ?? {}),
+      ...chassisUtility,
       cashBonusLabMultiplier: mergeLabAndCardMult(lab?.cashBonusLabMultiplier, cash),
       cashPerWaveLabMultiplier: mergeLabAndCardMult(lab?.cashPerWaveLabMultiplier, cash),
       coinsKillBonusLabMultiplier: mergeLabAndCardMult(lab?.coinsKillBonusLabMultiplier, coins),
@@ -2511,7 +2530,8 @@ export function WorkshopPage({
       cash === 1 &&
       coins === 1 &&
       freeUpgrades === 0 &&
-      packageChance === 0
+      packageChance === 0 &&
+      Object.keys(chassisUtility).length === 0
     ) {
       return enrichUtilityLabDisplayOpts(
         enrichUtilityLabDisplayOptsWithSubmodules(
@@ -2533,14 +2553,25 @@ export function WorkshopPage({
   }, [researchData, labLevelOverrides, workshopPersisted, relicOwnedSet, submoduleBonusContext])
 
   const damageDisplayOpts = useMemo(
-    (): WorkshopDamageDisplayOpts | undefined =>
+    (): WorkshopDamageDisplayOpts =>
       workshopDamageDisplayOptsFromPersisted(
         workshopPersisted,
         researchData,
         labLevelOverrides,
+        gameResearchLevel,
       ),
-    [researchData, labLevelOverrides, workshopPersisted],
+    [researchData, labLevelOverrides, gameResearchLevel, workshopPersisted],
   )
+
+  const damagePerMeterLabMultiplier = useMemo(() => {
+    if (researchData == null) return undefined
+    const mult = attackResearchDamageStyleLabMultiplier(
+      researchData,
+      labLevelOverrides,
+      'Damage / Meter',
+    )
+    return mult > 1 + 1e-9 ? mult : undefined
+  }, [researchData, labLevelOverrides])
 
   const attackSpeedDisplayOpts = useMemo((): WorkshopAttackSpeedDisplayOpts | undefined => {
     const opts = workshopAttackSpeedDisplayOptsFromPersisted(
@@ -3938,6 +3969,7 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpDamagePerMeter}
                 onCommitDraft={commitDamagePerMeterDraft}
+                damagePerMeterLabMultiplier={damagePerMeterLabMultiplier}
               />
             ) : null}
             {showMultishotChanceCard ? (

@@ -4,8 +4,10 @@
 
 import type { StringId } from '../i18n/dictionary'
 import {
+  clampWorkshopCardEquipSlots,
   formatWorkshopGameCardStarEffect,
   formatWorkshopGameCardStarEffectWithMastery,
+  WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
   WORKSHOP_CARD_PRESET_COUNT,
   workshopGameCardWiki,
   type WorkshopGameCardRarity,
@@ -299,6 +301,8 @@ export type WorkshopCardLoadoutPersisted = {
   cardStars: WorkshopCardStarsState
   cardPresetLoadouts: WorkshopGameCardId[][]
   cardActivePresetIndex: number
+  /** Harmony equip slots; only the first N cards in the active preset apply in-game. */
+  cardEquipSlots?: number
 }
 
 export function clampWorkshopCardActivePresetIndex(n: number): number {
@@ -311,12 +315,28 @@ export function workshopActiveLoadout(ws: WorkshopCardLoadoutPersisted): Worksho
   return ws.cardPresetLoadouts[i] ?? []
 }
 
-/** Stars for a card only when it is equipped on the active preset (else 0). */
+/** Cards on the active preset that count as equipped (first `cardEquipSlots` slots). */
+export function workshopEffectiveEquippedLoadout(
+  ws: WorkshopCardLoadoutPersisted,
+): WorkshopGameCardId[] {
+  const slots = clampWorkshopCardEquipSlots(
+    ws.cardEquipSlots ?? WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
+  )
+  return workshopActiveLoadout(ws).slice(0, slots)
+}
+
+/**
+ * Stars for a card when it counts as equipped.
+ * **Damage** uses the full active preset (wiki **Damage Card** applies if that card is in the loadout).
+ * Other cards use the first `cardEquipSlots` harmony slots only.
+ */
 export function workshopEquippedCardStars(
   ws: WorkshopCardLoadoutPersisted,
   id: WorkshopGameCardId,
 ): number {
-  if (!workshopActiveLoadout(ws).includes(id)) return 0
+  const loadout =
+    id === 'damage' ? workshopActiveLoadout(ws) : workshopEffectiveEquippedLoadout(ws)
+  if (!loadout.includes(id)) return 0
   return ws.cardStars[id]
 }
 
@@ -348,6 +368,7 @@ export function workshopCardMirrorsPatch(
     cardStars: partial.cardStars ?? ws.cardStars,
     cardPresetLoadouts: partial.cardPresetLoadouts ?? ws.cardPresetLoadouts,
     cardActivePresetIndex: partial.cardActivePresetIndex ?? ws.cardActivePresetIndex,
+    cardEquipSlots: partial.cardEquipSlots ?? ws.cardEquipSlots,
   }
   return {
     ...partial,

@@ -1,3 +1,4 @@
+import { sanitizeGameResearchLevel } from './data/workshopLabOverridesForDamage'
 import { DEFAULT_THEME_SELECTION } from './data/gameThemes'
 import { readTowerThemesSnapshot, type TowerThemesSnapshot } from './towerDataThemes'
 import {
@@ -11,6 +12,8 @@ import type { ThemeSelectionState } from './themeSelectionStorage'
 
 export type LabPersistedV1 = {
   levelOverrides: Record<string, number>
+  /** Last imported save `researchLevel` (250 slots) for displayed-damage lab merge. */
+  gameResearchLevel?: number[]
 }
 
 export type ThemesPersistedV1 = {
@@ -82,7 +85,8 @@ export function sanitizeLabPersisted(raw: unknown): LabPersistedV1 {
     const n = Number(val)
     if (Number.isFinite(n)) levelOverrides[key] = Math.trunc(n)
   }
-  return { levelOverrides }
+  const gameResearchLevel = sanitizeGameResearchLevel(o.gameResearchLevel)
+  return gameResearchLevel ? { levelOverrides, gameResearchLevel } : { levelOverrides }
 }
 
 export function isNestedTowerWorkspace(raw: unknown): raw is TowerWorkspaceV1 {
@@ -121,8 +125,12 @@ export function applyImportedLabAndBuild(
   workspace: TowerWorkspaceV1,
   levelOverrides: Record<string, number>,
   build: TowerBuildPersistedV1,
+  gameResearchLevel?: number[],
 ): TowerWorkspaceV1 {
-  return mergeWorkspaceBuild(mergeWorkspaceLab(workspace, { levelOverrides }), build)
+  const lab: LabPersistedV1 = { levelOverrides }
+  const sanitizedLevels = sanitizeGameResearchLevel(gameResearchLevel)
+  if (sanitizedLevels) lab.gameResearchLevel = sanitizedLevels
+  return mergeWorkspaceBuild(mergeWorkspaceLab(workspace, lab), build)
 }
 
 export function mergeWorkspaceBuild(

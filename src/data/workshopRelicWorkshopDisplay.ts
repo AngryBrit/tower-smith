@@ -276,15 +276,17 @@ export function enrichAttackSpeedDisplayOpts(
   }
 }
 
+/** Always returns opts (never drops the wiki formula factors). */
 export function enrichDamageDisplayOpts(
   opts: WorkshopDamageDisplayOpts | undefined,
   ownedIds: ReadonlySet<string>,
-): WorkshopDamageDisplayOpts | undefined {
+): WorkshopDamageDisplayOpts {
   const fraction = workshopRelicsDisplayedDamageBonusFraction(ownedIds)
-  if (fraction <= 0 && opts == null) return undefined
   const base = opts ?? {}
+  const relicsBonus =
+    ownedIds.size > 0 ? fraction : (base.relicsBonus ?? fraction)
   return {
     ...base,
-    relicsBonus: fraction,
+    relicsBonus,
   }
 }

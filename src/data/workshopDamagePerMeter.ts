@@ -4,7 +4,14 @@
  * from the L=70 anchor (**0.033**).
  * **Cost**: milestone marginals from the wiki; log-linear between milestones (same pattern as Critical Factor).
  * Workshop UI shows **`x1 / m`** … **`x1.059 / m`** (baseline **×1** per meter plus the wiki bonus as **1 + Value**).
+ * Attack **Damage / Meter** research lab adds a **fraction** of **(labMult − 1)** to this card
+ * (not the full damage-style × lab used in combat / **displayed damage**).
  */
+/**
+ * Share of the attack DPM lab excess shown on the workshop ×/m card.
+ * Calibrated: workshop DPM **+5.5%** (L180) + lab **×1.28** (L14) → in-game **×1.1429 / m**.
+ */
+export const WORKSHOP_DAMAGE_PER_METER_LAB_EXCESS_FRACTION = 0.0879 / (1.28 - 1)
 
 export const WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL = 200 as const
 
@@ -72,22 +79,41 @@ export function workshopDamagePerMeterStatMultiplier(completedLevels: number): n
 }
 
 /**
+ * Additive **Damage / Meter** research lab bonus for the workshop ×/m card (not full × lab).
+ */
+export function workshopDamagePerMeterResearchLabDisplayAdd(
+  damagePerMeterLabMultiplier: number | undefined,
+): number {
+  if (
+    damagePerMeterLabMultiplier == null ||
+    !Number.isFinite(damagePerMeterLabMultiplier) ||
+    damagePerMeterLabMultiplier <= 1 + 1e-9
+  ) {
+    return 0
+  }
+  return (damagePerMeterLabMultiplier - 1) * WORKSHOP_DAMAGE_PER_METER_LAB_EXCESS_FRACTION
+}
+
+function formatDamagePerMeterMultiplier(n: number): string {
+  // In-game uses up to four decimals on the ×/m multiplier (e.g. **×1.1429 / m**).
+  const s = n.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')
+  return `x${s}`
+}
+
+/**
  * Workshop card: effective multiplier on damage **per meter** vs baseline (**×1** at Lv.0),
- * wiki-style **`x1.00079 / m`** … **`x1.059 / m`** (raw bonus `v` is `×(1+v)` here).
+ * wiki-style **`x1.00079 / m`** … **`x1.059 / m`** plus partial Attack **Damage / Meter** lab.
+ * Sub-module **Damage / Meter [m]** is not shown on this card in-game (combat only).
  */
 export function workshopDamagePerMeterStatDisplay(
   completedLevels: number,
-  labMultiplier?: number,
-  submoduleMultAdd = 0,
+  damagePerMeterLabMultiplier?: number,
 ): string {
-  const v = workshopDamagePerMeterStatMultiplier(completedLevels) + submoduleMultAdd
-  let n = v === 0 ? 1 : 1 + v
-  if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
-    n *= labMultiplier
-  }
-  if (v === 0 && (labMultiplier == null || labMultiplier <= 1 + 1e-9)) return 'x1 / m'
-  const s = n.toFixed(6).replace(/0+$/, '').replace(/\.$/, '')
-  return `x${s} / m`
+  const workshopBonus = workshopDamagePerMeterStatMultiplier(completedLevels)
+  const labAdd = workshopDamagePerMeterResearchLabDisplayAdd(damagePerMeterLabMultiplier)
+  const n = 1 + workshopBonus + labAdd
+  if (workshopBonus <= 0 && labAdd <= 0) return 'x1 / m'
+  return `${formatDamagePerMeterMultiplier(n)} / m`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

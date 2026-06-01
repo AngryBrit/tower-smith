@@ -949,22 +949,24 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
       const cardActivePresetIndex = clampWorkshopCardActivePresetIndex(
         Number(o.cardActivePresetIndex),
       )
+      const cardEquipSlots = clampWorkshopCardEquipSlots(
+        o.cardEquipSlots != null && o.cardEquipSlots !== ''
+          ? Number(o.cardEquipSlots)
+          : WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
+      )
       return {
         cardStars,
         cardPresetLoadouts,
         cardActivePresetIndex,
+        cardEquipSlots,
         ...workshopCardStarMirrorsForPersisted({
           cardStars,
           cardPresetLoadouts,
           cardActivePresetIndex,
+          cardEquipSlots,
         }),
       }
     })(),
-    cardEquipSlots: clampWorkshopCardEquipSlots(
-      o.cardEquipSlots != null && o.cardEquipSlots !== ''
-        ? Number(o.cardEquipSlots)
-        : WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
-    ),
     ...(() => {
       const simSubmoduleSelections = parseSubmoduleSelectionsJson(o.simSubmoduleSelections)
       const attackFromSub = totalCannonAttackSpeedFromSelections(simSubmoduleSelections)

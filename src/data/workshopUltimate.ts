@@ -3,6 +3,7 @@
  */
 
 import {
+  WORKSHOP_ULTIMATE_DAMAGE_UPGRADE_KEYS,
   WORKSHOP_ULTIMATE_TRACKS,
   WORKSHOP_ULTIMATE_UPGRADE_ORDER,
   WORKSHOP_ULTIMATE_WEAPON_ORDER,
@@ -54,12 +55,19 @@ export function workshopUltimateStatDisplay(
   key: WorkshopUltimateUpgradeKey,
   completedLevels: number,
   submoduleAdd = 0,
+  coreUltimateDamageMultiplier = 1,
 ): string {
   const track = WORKSHOP_ULTIMATE_TRACKS[key]
-  if (submoduleAdd === 0) {
+  let value = workshopUltimateTrackStatValue(track, completedLevels) + submoduleAdd
+  if (
+    WORKSHOP_ULTIMATE_DAMAGE_UPGRADE_KEYS.has(key) &&
+    coreUltimateDamageMultiplier > 1 + 1e-9
+  ) {
+    value *= coreUltimateDamageMultiplier
+  }
+  if (submoduleAdd === 0 && coreUltimateDamageMultiplier <= 1 + 1e-9) {
     return workshopUltimateTrackStatDisplay(track, completedLevels)
   }
-  const value = workshopUltimateTrackStatValue(track, completedLevels) + submoduleAdd
   return formatWorkshopUltimateValue(track.valueKind, value)
 }
 

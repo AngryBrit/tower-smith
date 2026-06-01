@@ -29,7 +29,8 @@ export function workshopAttackSpeedCardMultiplier(stars: number): number {
   return WORKSHOP_ATTACK_SPEED_CARD_STAR_MULTIPLIERS[s - 1]!
 }
 
-export function workshopDamageCardMultiplier(stars: number): number {
+/** Star table only (no equip / mastery); prefer {@link workshopDamageCardMultiplier} in workshopCardWorkshopDisplay. */
+export function workshopDamageCardMultiplierFromStars(stars: number): number {
   const s = Math.trunc(stars)
   if (s <= 0) return 1
   if (s >= WORKSHOP_DAMAGE_CARD_STAR_MULTIPLIERS.length) {

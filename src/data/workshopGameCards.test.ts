@@ -4,6 +4,7 @@ import {
   WORKSHOP_GAME_CARD_ORDER,
   workshopCardStarMirrorsForPersisted,
   workshopCardStarsFromLegacy,
+  workshopEquippedCardStars,
   workshopGameCardGlow,
   workshopGameCardImage,
   type WorkshopGameCardId,
@@ -48,6 +49,36 @@ describe('workshopCardStarsFromLegacy', () => {
   })
 })
 
+describe('workshopEffectiveEquippedLoadout', () => {
+  it('only includes the first cardEquipSlots cards from the active preset', () => {
+    const cardStars = { ...defaultWorkshopCardStars(), damage: 7, attackSpeed: 3 }
+    const cardPresetLoadouts = Array.from({ length: 5 }, () => [] as WorkshopGameCardId[])
+    cardPresetLoadouts[0] = ['attackSpeed', 'damage']
+    expect(
+      workshopEquippedCardStars(
+        {
+          cardStars,
+          cardPresetLoadouts,
+          cardActivePresetIndex: 0,
+          cardEquipSlots: 1,
+        },
+        'attackSpeed',
+      ),
+    ).toBe(3)
+    expect(
+      workshopEquippedCardStars(
+        {
+          cardStars,
+          cardPresetLoadouts,
+          cardActivePresetIndex: 0,
+          cardEquipSlots: 1,
+        },
+        'damage',
+      ),
+    ).toBe(7)
+  })
+})
+
 describe('workshopCardStarMirrorsForPersisted', () => {
   it('counts stars only for workshop cards equipped on the active preset', () => {
     const cardStars = {
@@ -59,10 +90,14 @@ describe('workshopCardStarMirrorsForPersisted', () => {
     const cardPresetLoadouts = Array.from({ length: 5 }, () => [] as WorkshopGameCardId[])
     cardPresetLoadouts[0] = ['damage', 'berserker']
     cardPresetLoadouts[1] = ['attackSpeed']
+    const loadoutCtx = {
+      cardStars,
+      cardPresetLoadouts,
+      cardEquipSlots: 28,
+    }
     expect(
       workshopCardStarMirrorsForPersisted({
-        cardStars,
-        cardPresetLoadouts,
+        ...loadoutCtx,
         cardActivePresetIndex: 0,
       }),
     ).toEqual({
@@ -72,8 +107,7 @@ describe('workshopCardStarMirrorsForPersisted', () => {
     })
     expect(
       workshopCardStarMirrorsForPersisted({
-        cardStars,
-        cardPresetLoadouts,
+        ...loadoutCtx,
         cardActivePresetIndex: 1,
       }),
     ).toEqual({

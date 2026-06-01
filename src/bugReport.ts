@@ -3,6 +3,7 @@ import {
   BUG_REPORT_ISSUES_URL,
   BUG_REPORT_SUPPORT_EMAIL,
 } from './appVersion'
+import type { BugReportCsvAttachment } from './bugReportCsvAttachment'
 import {
   formatSaveBytes,
   type BugReportSaveAttachment,
@@ -47,6 +48,7 @@ export type BugReportInput = {
   mainPanelLabel?: string
   errorContext?: BugReportErrorContext
   saveAttachment?: BugReportSaveAttachment
+  csvAttachment?: BugReportCsvAttachment
 }
 
 export type BugReportEnvironment = {

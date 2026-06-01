@@ -62,33 +62,52 @@ export function downloadBugReportSaveFile(file: File, downloadName?: string): vo
   }
 }
 
-export function canShareBugReportWithFiles(file: File): boolean {
+export function canShareBugReportWithFiles(files: File | File[]): boolean {
+  const list = Array.isArray(files) ? files : [files]
+  if (list.length === 0) return false
   if (typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') {
     return false
   }
   try {
-    return navigator.canShare({ files: [file] })
+    return navigator.canShare({ files: list })
   } catch {
     return false
   }
 }
 
-/** Share report text + save via the Web Share API (common on mobile). */
-export async function shareBugReportWithSave(
+/** Share report text + attached files via the Web Share API (common on mobile). */
+export async function shareBugReportWithFiles(
   reportText: string,
-  file: File,
+  files: File | File[],
   title: string,
 ): Promise<'shared' | 'aborted' | 'failed'> {
-  if (!canShareBugReportWithFiles(file)) return 'failed'
+  const list = Array.isArray(files) ? files : [files]
+  if (!canShareBugReportWithFiles(list)) return 'failed'
   try {
     await navigator.share({
       title,
       text: reportText,
-      files: [file],
+      files: list,
     })
     return 'shared'
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') return 'aborted'
     return 'failed'
+  }
+}
+
+/** @deprecated Use shareBugReportWithFiles */
+export async function shareBugReportWithSave(
+  reportText: string,
+  file: File,
+  title: string,
+): Promise<'shared' | 'aborted' | 'failed'> {
+  return shareBugReportWithFiles(reportText, file, title)
+}
+
+/** Trigger downloads for each attached file (email / GitHub fallback). */
+export function downloadBugReportAttachedFiles(files: File[]): void {
+  for (const file of files) {
+    downloadBugReportSaveFile(file)
   }
 }

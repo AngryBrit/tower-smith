@@ -132,7 +132,7 @@ export function toolkitUpgradeDurationSeconds(
   return typeof d === 'number' && Number.isFinite(d) ? d : undefined
 }
 
-/** Inverse of `formatCoinAbbrev` for snapshot strings like `12.91 M`, `300`, `1.1 q`, `2.18 s`. */
+/** Inverse of `formatCoinAbbrev` for snapshot strings like `12.91M`, `300`, `1.1q`, `2.18s`. */
 export function parseAbbreviatedCoinsToNumber(input: string): number | undefined {
   const t = String(input).trim().replace(/,/g, '')
   if (!t || t === '—' || /^max$/i.test(t)) return undefined
@@ -166,19 +166,26 @@ export function parseAbbreviatedCoinsToNumber(input: string): number | undefined
   return Number.isFinite(v) ? v : undefined
 }
 
-/** Abbreviated coin display (K/M/B/T/q/Q/s): always two decimals (e.g. `197.60 K`). */
+/** Strip optional space before K/M/B/T/q/Q/s suffix (legacy snapshot strings). */
+export function normalizeCoinAbbrevDisplay(s: string): string {
+  const t = String(s).trim()
+  if (!t || t === '—' || /^max$/i.test(t)) return t
+  return t.replace(/ (?=[KMBTqQs]$)/, '')
+}
+
+/** Abbreviated coin display (K/M/B/T/q/Q/s): always two decimals (e.g. `197.60K`). */
 export function formatCoinAbbrev(n: number): string {
   if (!Number.isFinite(n) || n < 0) return '—'
   if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
   const abs = n
-  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)} s`
-  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)} Q`
+  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
+  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
   // Wiki uses q (1e15) from ~0.1 q upward; 250 T = 0.25 q (Assist Module labs, etc.)
-  if (abs >= 1e14) return `${(n / 1e15).toFixed(2)} q`
-  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)} T`
-  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)} B`
-  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)} M`
-  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)} K`
+  if (abs >= 1e14) return `${(n / 1e15).toFixed(2)}q`
+  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}T`
+  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
+  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
+  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
   return String(Math.round(n))
 }
 
@@ -190,12 +197,12 @@ export function formatCoinAbbrevPreferT(n: number): string {
   if (!Number.isFinite(n) || n < 0) return '—'
   if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
   const abs = n
-  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)} s`
-  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)} Q`
-  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)} T`
-  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)} B`
-  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)} M`
-  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)} K`
+  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
+  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
+  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}T`
+  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
+  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
+  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
   return String(Math.round(n))
 }
 

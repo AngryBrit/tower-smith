@@ -476,7 +476,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Armor', 0)).toBe(
         250_000_000_000_000,
       )
-      expect(marginalCostForNextUpgrade(bonus!, 0, max, 0)).toBe('0.25 q')
+      expect(marginalCostForNextUpgrade(bonus!, 0, max, 0)).toBe('0.25q')
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Armor', 0)).toBe(
         933_060,
       )
@@ -787,7 +787,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       const lab = enemies.items.find((i) => i.name === 'Ray Enemy Health')
       expect(lab).toBeDefined()
       expect(lab!.benefit).toBe('T19 60')
-      expect(lab!.cost).toBe('0.25 q')
+      expect(lab!.cost).toBe('0.25q')
       const max = lab!.maxLevel ?? 30
       expect(benefitDisplayForCard(lab!, 5, max)).toBe('-2.00%')
       expect(toolkitMarginalCoinCost('Ray Enemy Health', 0)).toBe(
@@ -817,7 +817,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       const lab = enemies.items.find((i) => i.name === 'Vampire Enemy Health')
       expect(lab).toBeDefined()
       expect(lab!.benefit).toBe('T19 60')
-      expect(lab!.cost).toBe('0.25 q')
+      expect(lab!.cost).toBe('0.25q')
       const max = lab!.maxLevel ?? 30
       expect(benefitDisplayForCard(lab!, 15, max)).toBe('-6.00%')
       expect(toolkitMarginalCoinCost('Vampire Enemy Health', 29)).toBe(

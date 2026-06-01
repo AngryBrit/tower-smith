@@ -6,6 +6,7 @@ import {
   WORKSHOP_GAME_CARD_COUNT,
   WORKSHOP_GAME_CARD_ORDER,
   workshopCardMirrorsPatch,
+  workshopEffectiveEquippedLoadout,
   workshopGameCardArtVariant,
   workshopGameCardGlow,
   workshopGameCardDescription,
@@ -485,6 +486,11 @@ export function WorkshopCardsPanel({
     [presetIndex, workshopPersisted.cardPresetLoadouts],
   )
 
+  const effectiveEquipped = useMemo(
+    () => workshopEffectiveEquippedLoadout(workshopPersisted),
+    [workshopPersisted],
+  )
+
   const equippedSet = useMemo(() => new Set(presetLoadout), [presetLoadout])
 
   const setPresetLoadout = useCallback(
@@ -577,7 +583,7 @@ export function WorkshopCardsPanel({
             {t('ws_cards_active')}
           </h3>
           <p className="cards-zone__count cards-zone__count--slots" aria-live="polite">
-            <span className="cards-zone__count-equipped">{presetLoadout.length}</span>
+            <span className="cards-zone__count-equipped">{effectiveEquipped.length}</span>
             <span className="cards-zone__count-sep" aria-hidden>
               /
             </span>
@@ -596,8 +602,8 @@ export function WorkshopCardsPanel({
             />
           </p>
         </header>
-        <CardsActiveScroller cardCount={presetLoadout.length} scrollKey={presetIndex}>
-          {presetLoadout.map((id) => renderCardTile(id, { active: true }))}
+        <CardsActiveScroller cardCount={effectiveEquipped.length} scrollKey={presetIndex}>
+          {effectiveEquipped.map((id) => renderCardTile(id, { active: true }))}
         </CardsActiveScroller>
       </section>
 

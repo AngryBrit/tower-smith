@@ -14,8 +14,15 @@ import {
   parseResearchSection,
   type ResearchData,
 } from '../types/research'
+import { attackResearchDisplayedDamageLabMultiplier } from '../types/research'
+import {
+  workshopDamageDisplayOptsFromPersisted,
+  workshopDisplayedDamageFromPersisted,
+} from '../data/workshopDisplayedDamage'
+import { workshopDamageCardMultiplier } from '../data/workshopCardWorkshopDisplay'
+import { workshopDamageStatAtLevel } from '../data/workshopDamage'
 import { applyImportedLabAndBuild, defaultTowerWorkspace } from '../towerWorkspaceStorage'
-import { splitTowerBuild } from '../towerBuildStorage'
+import { flattenTowerBuild, splitTowerBuild } from '../towerBuildStorage'
 
 const srcDir = dirname(fileURLToPath(import.meta.url))
 const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
@@ -45,6 +52,7 @@ async function applyPlayerSaveImportFromDecoded(
     defaultTowerWorkspace(),
     overrides,
     splitTowerBuild(workshop),
+    save.researchLevel,
   )
   return { save, overrides, workspace }
 }
@@ -91,6 +99,47 @@ describe('applyImportedWorkshop', () => {
       (i) => i.name === 'Reroll Shards',
     )
     expect(overrides[`${modulesSi}-${rerollShardsIi}`]).toBe(save.researchLevel[139])
+  })
+
+  it('displayed damage after import uses Damage lab from save researchLevel', async () => {
+    if (!existsSync(SAMPLE_SAVE)) return
+    const data = loadResearchDataSync()
+    const { save, workspace } = await applyPlayerSaveImportFromDecoded(
+      data,
+      await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE))),
+    )
+    const ws = flattenTowerBuild(workspace.build)
+    const labMult = attackResearchDisplayedDamageLabMultiplier(
+      data,
+      workspace.lab.levelOverrides,
+    )
+    const dmgLab = 1 + 0.02 * save.researchLevel[0]!
+    const dpmLab = 1 + 0.02 * save.researchLevel[4]!
+    const asLab = 1 + 0.02 * save.researchLevel[1]!
+    expect(labMult).toBeCloseTo(dmgLab * dpmLab * asLab, 3)
+    expect(workspace.lab.gameResearchLevel?.[0]).toBe(save.researchLevel[0])
+    const workshop = workshopDamageStatAtLevel(ws.damageLevel)
+    const displayed = workshopDisplayedDamageFromPersisted(
+      ws,
+      data,
+      workspace.lab.levelOverrides,
+      workspace.lab.gameResearchLevel,
+    )
+    expect(displayed).toBeGreaterThan(workshop * labMult * 0.95)
+    const cardMult = workshopDamageCardMultiplier(
+      ws,
+      data,
+      workspace.lab.levelOverrides,
+    )
+    expect(cardMult).toBeGreaterThan(3.9)
+    const opts = workshopDamageDisplayOptsFromPersisted(
+      ws,
+      data,
+      workspace.lab.levelOverrides,
+      workspace.lab.gameResearchLevel,
+    )
+    expect(opts.damageCardMultiplier).toBeGreaterThan(3.9)
+    expect(displayed).toBeGreaterThan(workshop * labMult * cardMult * 0.9)
   })
 
   it('imports Fudgyrella generator module sub-effects into workspace modules domain', async () => {

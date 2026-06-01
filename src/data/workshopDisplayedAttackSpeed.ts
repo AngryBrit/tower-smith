@@ -63,10 +63,12 @@ export function workshopAttackSpeedDisplayOptsFromPersisted(
   labOverrides: Record<string, number>,
 ): WorkshopAttackSpeedDisplayOpts | undefined {
   if (research == null) return undefined
-  const attackSpeedCardMultiplier =
-    ws.simAttackSpeedCardStars > 0
-      ? workshopCardMultProduct(ws, research, labOverrides, 'attackSpeed')
-      : 1
+  const attackSpeedCardMultiplier = workshopCardMultProduct(
+    ws,
+    research,
+    labOverrides,
+    'attackSpeed',
+  )
   return enrichAttackSpeedDisplayOpts(
     {
       labMultiplier: attackResearchAttackSpeedLabMultiplier(research, labOverrides),

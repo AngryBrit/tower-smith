@@ -17,6 +17,7 @@ export type ImportPlayerInfoResult =
   | {
       ok: true
       overrides: Record<string, number>
+      gameResearchLevel: number[]
       workshop: ReturnType<typeof mapPlayerSaveToTower>['workshop']
       themes: TowerThemesSnapshot
       guild: string | null
@@ -62,6 +63,7 @@ export async function importPlayerInfoDat(
     return {
       ok: true,
       overrides: sanitizeLevelOverrides(data, overrides),
+      gameResearchLevel: [...save.researchLevel],
       workshop,
       themes,
       guild: sanitizeImportedGuild(save.lastGuildID),

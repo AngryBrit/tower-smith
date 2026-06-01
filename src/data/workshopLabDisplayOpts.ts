@@ -100,6 +100,8 @@ export type WorkshopAttackLabDisplayOpts = {
 }
 
 export type WorkshopUtilityLabDisplayOpts = {
+  /** Equipped generator chassis main effect (Coin Bonus). */
+  generatorCashBonusMultiplier?: number
   cashBonusLabMultiplier?: number
   cashPerWaveLabMultiplier?: number
   coinsKillBonusLabMultiplier?: number

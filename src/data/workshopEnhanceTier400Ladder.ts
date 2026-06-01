@@ -58,9 +58,11 @@ export function workshopEnhanceTier400Multiplier(
   completedLevels: number,
   maxLevel: number = WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   incrementPerLevel = 0.01,
+  roundHundredth = true,
 ): number {
   const L = Math.min(Math.max(0, completedLevels), maxLevel)
-  return Math.round((1 + incrementPerLevel * L) * 100) / 100
+  const raw = 1 + incrementPerLevel * L
+  return roundHundredth ? Math.round(raw * 100) / 100 : raw
 }
 
 export function workshopEnhanceTier400StatDisplay(

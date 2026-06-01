@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useState, type ReactNode } from 'react'
+import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { useI18n } from '../i18n'
+import { parseLabPresetsFile, type LabPreset } from '../labPresetsStorage'
 import type { ResearchData } from '../types/research'
 import {
   buildLabPresetsPayloadWithWorkspace,
   TOWER_LAB_PRESETS_STORAGE_KEY,
 } from '../towerWorkspacePresets'
+import type { LabPersistedV1 } from '../towerWorkspaceStorage'
 import { syncWorkspaceThemesFromStorage } from '../towerWorkspaceStorage'
 import { LabHydrationContext } from './labHydrationContext'
 import { hydrateWorkspaceFromStorage } from './workspaceHydration'
@@ -22,14 +24,24 @@ export function LabHydrationProvider({
     useTowerWorkspaceContext()
   const [hydrated, setHydrated] = useState(false)
   const [importNotice, setImportNotice] = useState<string | null>(null)
+  const fmtRef = useRef(fmt)
+  fmtRef.current = fmt
+
+  function shouldKeepLabStateDuringHydrate(lab: LabPersistedV1): boolean {
+    return Boolean(lab.gameResearchLevel?.length) || Object.keys(lab.levelOverrides).length > 0
+  }
 
   useEffect(() => {
     let cancelled = false
 
-    void hydrateWorkspaceFromStorage(data, fmt).then((result) => {
+    void hydrateWorkspaceFromStorage(data, fmtRef.current).then((result) => {
       if (cancelled) return
-      setWorkspace(result.workspace)
-      setScratchWorkspace(result.scratchWorkspace)
+      setWorkspace((prev) =>
+        shouldKeepLabStateDuringHydrate(prev.lab) ? prev : result.workspace,
+      )
+      setScratchWorkspace((prev) =>
+        shouldKeepLabStateDuringHydrate(prev.lab) ? prev : result.scratchWorkspace,
+      )
       if (result.importNotice) setImportNotice(result.importNotice)
       setHydrated(true)
     })
@@ -37,14 +49,24 @@ export function LabHydrationProvider({
     return () => {
       cancelled = true
     }
-  }, [data, fmt, setScratchWorkspace, setWorkspace])
+  }, [data, setScratchWorkspace, setWorkspace])
 
   useEffect(() => {
     if (!hydrated) return
     try {
+      let activePresetId: string | null = null
+      let presets: readonly LabPreset[] = []
+      const raw = localStorage.getItem(TOWER_LAB_PRESETS_STORAGE_KEY)
+      if (raw) {
+        const parsed = parseLabPresetsFile(JSON.parse(raw))
+        if (parsed) {
+          activePresetId = parsed.activePresetId
+          presets = parsed.presets
+        }
+      }
       const payload = buildLabPresetsPayloadWithWorkspace(
-        null,
-        [],
+        activePresetId,
+        presets,
         syncWorkspaceThemesFromStorage(workspace),
         syncWorkspaceThemesFromStorage(scratchWorkspace),
       )

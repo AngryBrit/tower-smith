@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   workshopAttackSpeedCardMultiplier,
   workshopBerserkerDisplayedDamageAdd,
-  workshopDamageCardMultiplier,
+  workshopDamageCardMultiplierFromStars,
 } from './workshopSimCards'
 
 describe('workshopSimCards', () => {
@@ -13,9 +13,9 @@ describe('workshopSimCards', () => {
   })
 
   it('damage card stars match wiki multipliers', () => {
-    expect(workshopDamageCardMultiplier(0)).toBe(1)
-    expect(workshopDamageCardMultiplier(1)).toBe(1.5)
-    expect(workshopDamageCardMultiplier(7)).toBe(4)
+    expect(workshopDamageCardMultiplierFromStars(0)).toBe(1)
+    expect(workshopDamageCardMultiplierFromStars(1)).toBe(1.5)
+    expect(workshopDamageCardMultiplierFromStars(7)).toBe(4)
   })
 
   it('berserker add respects +700% cap (7× pre-berserker product)', () => {

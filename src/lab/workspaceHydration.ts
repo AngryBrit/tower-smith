@@ -15,6 +15,7 @@ import {
 import {
   defaultTowerWorkspace,
   mergeWorkspaceBuild,
+  sanitizeLabPersisted,
   type TowerWorkspaceV1,
 } from '../towerWorkspaceStorage'
 import { splitTowerBuild } from '../towerBuildStorage'
@@ -99,12 +100,13 @@ function sanitizeWorkspaceLab(
 ): TowerWorkspaceV1 {
   return {
     ...ws,
-    lab: {
+    lab: sanitizeLabPersisted({
+      ...ws.lab,
       levelOverrides: sanitizeLevelOverrides(
         data,
         ws.lab.levelOverrides as Record<string, unknown>,
       ),
-    },
+    }),
   }
 }
 

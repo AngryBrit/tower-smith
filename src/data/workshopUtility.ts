@@ -176,13 +176,14 @@ export function workshopUtilityStatDisplay(
 ): string {
   switch (key) {
     case 'cashBonusLevel': {
+      const chassis = opts?.generatorCashBonusMultiplier ?? 1
+      const base = workshopCashBonusStatMultiplier(completedLevels) * chassis
       const m = opts?.cashBonusLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) {
-        return formatWithDamageStyleLabMultiplier(
-          workshopCashBonusStatMultiplier(completedLevels),
-          m,
-          (v) => `x${v.toFixed(2)}`,
-        )
+      if (
+        (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) ||
+        chassis > 1 + 1e-9
+      ) {
+        return formatWithDamageStyleLabMultiplier(base, m ?? 1, (v) => `x${v.toFixed(2)}`)
       }
       return workshopCashBonusStatDisplay(completedLevels)
     }

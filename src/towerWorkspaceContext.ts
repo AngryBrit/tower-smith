@@ -24,6 +24,8 @@ export type TowerWorkspaceContextValue = {
   setScratchWorkspace: Dispatch<SetStateAction<TowerWorkspaceV1>>
   labLevelOverrides: Record<string, number>
   setLabLevelOverrides: Dispatch<SetStateAction<Record<string, number>>>
+  /** Last imported save `researchLevel` (250 slots); merged into displayed-damage lab overrides. */
+  gameResearchLevel?: number[]
   towerBuild: TowerBuildPersistedV1
   setTowerBuild: Dispatch<SetStateAction<TowerBuildPersistedV1>>
   scratchTowerBuild: TowerBuildPersistedV1

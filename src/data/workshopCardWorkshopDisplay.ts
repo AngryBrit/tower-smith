@@ -17,7 +17,17 @@ function loadoutFromPersisted(ws: WorkshopPersistedV1): WorkshopCardLoadoutPersi
     cardStars: ws.cardStars,
     cardPresetLoadouts: ws.cardPresetLoadouts,
     cardActivePresetIndex: ws.cardActivePresetIndex,
+    cardEquipSlots: ws.cardEquipSlots,
   }
+}
+
+/** Wiki **Damage Card** × multiplier (in active preset + Card Mastery). */
+export function workshopDamageCardMultiplier(
+  ws: WorkshopPersistedV1,
+  research: ResearchData | null,
+  overrides: Record<string, number>,
+): number {
+  return workshopCardMultProduct(ws, research, overrides, 'damage')
 }
 
 /** × multiplier from equipped card stars (mult kind only) × mastery. */

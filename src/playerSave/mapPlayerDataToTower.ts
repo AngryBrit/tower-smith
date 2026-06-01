@@ -27,6 +27,7 @@ import {
   WORKSHOP_BOT_SPECIAL_LEVEL_BY_BOT,
   botSaveLevelIndex,
 } from './gameBotPresetMapping'
+import { workshopRelicsDamageBonusFraction } from '../data/workshopRelics'
 import { workshopRelicIdAtGameIndex } from './gameRelicMapping'
 import { mapUltimateWeaponsFromSave } from './gameUltimateWeaponMapping'
 import { clampWorkshopAssistModuleLevel } from '../data/workshopSimModules'
@@ -145,12 +146,13 @@ export function attackLabsToOverrides(
   if (si < 0) return overrides
   const section = data.sections[si]!
 
-  for (const [name, researchId] of Object.entries(ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+  for (const [name, fallbackId] of Object.entries(ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
     keyof typeof ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME,
     number,
   ][]) {
     const ii = findItemIndex(section, name)
     if (ii < 0) continue
+    const researchId = gameResearchIdForManifest(data, si, ii) ?? fallbackId
     const level = researchLevel[researchId]
     if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
       overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
@@ -324,6 +326,28 @@ export function botLabsToOverrides(
     const ii = findItemIndex(section, name)
     if (ii < 0) continue
     const level = save.researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
+/** Map card-mastery labs from save `researchLevel` (section skipped by {@link researchLevelsToOverrides}). */
+export function cardMasteryLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'card-mastery')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (let ii = 0; ii < section.items.length; ii++) {
+    const researchId = gameResearchIdForManifest(data, si, ii)
+    if (researchId == null) continue
+    const level = researchLevel[researchId]
     if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
       overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
     }
@@ -591,6 +615,7 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   }
 
   ws.relicOwnedIds = relicIndicesToOwnedIds(save.relicsUnlocked)
+  ws.simRelicsBonusFraction = workshopRelicsDamageBonusFraction(new Set(ws.relicOwnedIds))
 
   applyModuleEquipped(ws, save.moduleEquipped)
   if (save.assistModulesAvailable) {
@@ -618,6 +643,7 @@ export function mapPlayerSaveToTower(
     ...utilityLabsToOverrides(data, save.researchLevel),
     ...ultimateLabsToOverrides(data, save.researchLevel),
     ...cardsLabsToOverrides(data, save.researchLevel),
+    ...cardMasteryLabsToOverrides(data, save.researchLevel),
     ...modulesLabsToOverrides(data, save.researchLevel),
     ...botLabsToOverrides(data, save),
   }

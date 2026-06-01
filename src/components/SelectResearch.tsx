@@ -46,6 +46,7 @@ import {
   mergeWorkspaceBuild,
 } from '../towerWorkspaceStorage'
 import { splitTowerBuild } from '../towerBuildStorage'
+import { mergeLabOverridesForDisplayedDamage } from '../data/workshopLabOverridesForDamage'
 import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
 import type { ResearchData } from '../types/research'
 import { combinedLabsSpeedMultiplier } from '../data/workshopRelicWorkshopDisplay'
@@ -531,10 +532,25 @@ export function SelectResearch({
         }
         setPlayerSaveImportStage('applying')
         const sanitized = imported.overrides
+        const mergedOverrides = mergeLabOverridesForDisplayedDamage(
+          data,
+          sanitized,
+          imported.gameResearchLevel,
+        )
         const build = splitTowerBuild(imported.workshop)
         applyTowerThemes(imported.themes)
-        const nextWorkspace = applyImportedLabAndBuild(workspace, sanitized, build)
-        const nextScratch = applyImportedLabAndBuild(scratchWorkspace, sanitized, build)
+        const nextWorkspace = applyImportedLabAndBuild(
+          workspace,
+          mergedOverrides,
+          build,
+          imported.gameResearchLevel,
+        )
+        const nextScratch = applyImportedLabAndBuild(
+          scratchWorkspace,
+          mergedOverrides,
+          build,
+          imported.gameResearchLevel,
+        )
         setWorkspace(nextWorkspace)
         setScratchWorkspace(nextScratch)
         persistLabWorkspacesToLocalStorage(nextWorkspace, nextScratch)

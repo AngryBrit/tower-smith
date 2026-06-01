@@ -180,7 +180,13 @@ function buildAttackBonuses(
     critChancePercentPoints: p('Crit Chance [%]') || undefined,
     critFactorAdd: p('Crit Factor') || undefined,
     attackRangeMetersAdd: p('Attack Range [m]') || undefined,
-    damagePerMeterMultAdd: p('Damage / Meter [m]') || undefined,
+    // Workshop **Damage / Meter** card uses main cannon sub-module only (not assist copy).
+    damagePerMeterMultAdd:
+      submoduleValueForEffectId(
+        slotSelections.main,
+        'cannon',
+        submoduleEffectId('Damage / Meter [m]'),
+      ) || undefined,
     multishotChancePercentPoints: p('Multishot Chance [%]') || undefined,
     multishotTargetsCount: p('Multishot Targets') || undefined,
     rapidFireChancePercentPoints: p('Rapid Fire Chance [%]') || undefined,
