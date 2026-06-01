@@ -58,6 +58,18 @@ describe('workshopChassisModuleHeroStatAnchors (DVT_Modules)', () => {
     expect(formatWorkshopChassisModuleHeroStatMilli(workshopChassisModuleHeroStatMilli('generator', 'star_5', 200))).toBe(
       '2.284',
     )
+    expect(formatWorkshopChassisModuleHeroStatMilli(workshopChassisModuleHeroStatMilli('generator', 'star_2', 240))).toBe(
+      '2.588',
+    )
+    expect(formatWorkshopChassisModuleHeroStatMilli(workshopChassisModuleHeroStatMilli('generator', 'star_3', 260))).toBe(
+      '2.870',
+    )
+    expect(formatWorkshopChassisModuleHeroStatMilli(workshopChassisModuleHeroStatMilli('generator', 'star_4', 280))).toBe(
+      '3.169',
+    )
+    expect(formatWorkshopChassisModuleHeroStatMilli(workshopChassisModuleHeroStatMilli('generator', 'star_5', 300))).toBe(
+      '3.484',
+    )
   })
 
   it('adds Increase/lvl steps above Lv.100 (Planner Mythic+ cannon Lv.101)', () => {

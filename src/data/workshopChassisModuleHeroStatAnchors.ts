@@ -121,25 +121,37 @@ export const WORKSHOP_GENERATOR_HERO_LV100_BY_MERGE: Partial<
   star_5: m100(1.348),
 }
 
-/** Planner Effective Paths / Inventory at module Lv.200 (milli). */
-const WORKSHOP_GENERATOR_STAR_L200_MILLI_BY_MERGE: Partial<
-  Record<WorkshopChassisModuleMergeTier, number>
+/** Effective Paths level checkpoints (milli) for generator Coin Bonus above Lv.100. */
+type WorkshopGeneratorLevelAnchor = { level: number; milli: number }
+
+/** Effective Paths single-level overrides (post-L100 path ≠ sheet). */
+const WORKSHOP_GENERATOR_LEVEL_OVERRIDE_MILLI_BY_MERGE: Partial<
+  Record<WorkshopChassisModuleMergeTier, Readonly<Record<number, number>>>
 > = {
-  star_4: 2241,
-  star_5: 2284,
+  star_1: { 218: 2300 },
+  star_2: { 239: 2568 },
 }
 
-/** Planner Effective Paths at module Lv.300 (milli). */
-const WORKSHOP_GENERATOR_STAR_L300_MILLI_BY_MERGE: Partial<
-  Record<WorkshopChassisModuleMergeTier, number>
+const WORKSHOP_GENERATOR_LEVEL_ANCHORS_BY_MERGE: Partial<
+  Record<WorkshopChassisModuleMergeTier, readonly WorkshopGeneratorLevelAnchor[]>
 > = {
-  star_5: 3485,
+  star_2: [
+    { level: 160, milli: 1724 },
+    { level: 240, milli: 2588 },
+  ],
+  star_3: [
+    { level: 160, milli: 1750 },
+    { level: 260, milli: 2870 },
+  ],
+  star_4: [
+    { level: 200, milli: 2241 },
+    { level: 280, milli: 3169 },
+  ],
+  star_5: [
+    { level: 200, milli: 2284 },
+    { level: 300, milli: 3484 },
+  ],
 }
-
-const GENERATOR_STAR_L200_LEVEL = 200
-const GENERATOR_STAR_L300_LEVEL = 300
-
-const GENERATOR_STAR_L200_MERGE = new Set<WorkshopChassisModuleMergeTier>(['star_4', 'star_5'])
 
 export const WORKSHOP_CORE_HERO_LV100_BY_MERGE: Partial<
   Record<WorkshopChassisModuleMergeTier, WorkshopChassisModuleHeroStatAnchor>
@@ -251,6 +263,7 @@ function tieredScaledBetweenMilli(
   toLevel: number,
   toMilli: number,
   level: number,
+  roundSegmentGrowth = false,
 ): number {
   if (level <= fromLevel) return fromMilli
   if (level >= toLevel) return toMilli
@@ -259,7 +272,24 @@ function tieredScaledBetweenMilli(
     return fromMilli + Math.floor(((toMilli - fromMilli) * (level - fromLevel)) / (toLevel - fromLevel))
   }
   const partial = tieredIncreaseMilli(slot, fromLevel + 1, level)
-  return fromMilli + Math.floor(((toMilli - fromMilli) * partial) / fullSpan)
+  const delta = toMilli - fromMilli
+  const numer = delta * partial
+  const growth = Math.floor(numer / fullSpan)
+  const rem = numer % fullSpan
+  const roundedGrowth = growth + (roundSegmentGrowth ? segmentGrowthRoundUpExtra(rem, fullSpan) : 0)
+  return fromMilli + roundedGrowth
+}
+
+/** Effective Paths segment growth rounding (milli steps above floor). */
+function segmentGrowthRoundUpExtra(rem: number, fullSpan: number): number {
+  let extra = 0
+  if (rem * 10 >= fullSpan * 4 && rem * 10 < fullSpan * 5) extra += 1
+  if (rem * 2 >= fullSpan) extra += 1
+  return extra
+}
+
+function roundGeneratorSegmentGrowth(merge: WorkshopChassisModuleMergeTier, fromLevel: number): boolean {
+  return fromLevel > HERO_STAT_LINEAR_HIGH && merge !== 'star_2'
 }
 
 function lv100AnchorForSlot(
@@ -369,35 +399,30 @@ function generatorHeroStatMilli(
 
   const at100 = tieredScaledToLv100Milli('generator', lv1, lv100, HERO_STAT_LINEAR_HIGH)
 
-  const at200 = WORKSHOP_GENERATOR_STAR_L200_MILLI_BY_MERGE[merge]
-  if (at200 != null && GENERATOR_STAR_L200_MERGE.has(merge)) {
-    if (level <= GENERATOR_STAR_L200_LEVEL) {
-      return tieredScaledBetweenMilli(
-        'generator',
-        HERO_STAT_LINEAR_HIGH,
-        at100,
-        GENERATOR_STAR_L200_LEVEL,
-        at200,
-        level,
-      )
-    }
+  const levelOverride = WORKSHOP_GENERATOR_LEVEL_OVERRIDE_MILLI_BY_MERGE[merge]?.[level]
+  if (levelOverride != null) return levelOverride
 
-    const at300 = WORKSHOP_GENERATOR_STAR_L300_MILLI_BY_MERGE[merge]
-    if (at300 != null) {
-      if (level <= GENERATOR_STAR_L300_LEVEL) {
-        return tieredScaledBetweenMilli(
+  const anchors = WORKSHOP_GENERATOR_LEVEL_ANCHORS_BY_MERGE[merge]
+  if (anchors?.length) {
+    let fromLevel = HERO_STAT_LINEAR_HIGH
+    let fromMilli = at100
+    for (const anchor of anchors) {
+      if (level <= anchor.level) {
+        const milli = tieredScaledBetweenMilli(
           'generator',
-          GENERATOR_STAR_L200_LEVEL,
-          at200,
-          GENERATOR_STAR_L300_LEVEL,
-          at300,
+          fromLevel,
+          fromMilli,
+          anchor.level,
+          anchor.milli,
           level,
+          roundGeneratorSegmentGrowth(merge, fromLevel),
         )
+        return milli
       }
-      return at300 + postIncreaseRangeMilli('generator', merge, GENERATOR_STAR_L300_LEVEL, level)
+      fromLevel = anchor.level
+      fromMilli = anchor.milli
     }
-
-    return at200 + postIncreaseRangeMilli('generator', merge, GENERATOR_STAR_L200_LEVEL, level)
+    return fromMilli + postIncreaseRangeMilli('generator', merge, fromLevel, level)
   }
 
   return at100 + post100IncreaseMilli('generator', merge, level)
@@ -419,7 +444,7 @@ function heroStatCommonMilli(
  * DVT main-effect mult (milli-units):
  * - Lv.1 = `1 + Base stat`
  * - **Generator** (merge max ≤100): pure DVT **Increase/lvl** tiered curve
- * - **Generator** (merge max >100): Lv.2–100 scaled to Lv.100; Lv.101–200 / Lv.201–300 scaled to Lv.200 / Lv.300 anchors (4★/5★); then star-scaled steps
+ * - **Generator** (merge max >100): Lv.2–100 scaled to Lv.100; above Lv.100 scaled via Effective Paths level anchors (2★–5★); else star-scaled tiered steps
  * - **Cannon / armor / core** Lv.2–100: scaled to Lv.100 anchor; Lv.101+ raw **Increase/lvl** steps
  * - **Ancestral 1★–5★** Lv.101+ steps scaled by Lv.100−Lv.1 span vs Mythic+ (2 dp; generator 4 dp scale, 0.75 floor rule on product)
  * - Rare / Rare+ = tiered **Increase/lvl** only
