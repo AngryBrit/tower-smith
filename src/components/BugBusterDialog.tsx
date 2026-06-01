@@ -17,11 +17,15 @@ import {
   type BugReportCategory,
 } from '../bugReport'
 import {
-  analyzeBugReportSaveFile,
+  analyzeBugReportAttachment,
+  type BugReportAttachFileError,
+} from '../bugReportAttachFiles'
+import { formatCsvBytes, type BugReportCsvAttachment } from '../bugReportCsvAttachment'
+import {
   canShareBugReportWithFiles,
-  downloadBugReportSaveFile,
+  downloadBugReportAttachedFiles,
   formatSaveBytes,
-  shareBugReportWithSave,
+  shareBugReportWithFiles,
   type BugReportSaveAttachment,
 } from '../bugReportSaveAttachment'
 import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
@@ -63,6 +67,15 @@ function mainPanelLabelKey(panel: MainPanel): StringId {
   }
 }
 
+const ATTACH_ERROR_KEYS: Record<BugReportAttachFileError, StringId> = {
+  save_empty: 'bug_buster_save_empty',
+  save_too_large: 'bug_buster_save_too_large',
+  csv_empty: 'bug_buster_csv_empty',
+  csv_too_large: 'bug_buster_csv_too_large',
+  csv_invalid: 'bug_buster_csv_invalid',
+  unrecognized: 'bug_buster_attach_unrecognized',
+}
+
 function bugBusterFormDefaults(initial: BugBusterInitial | null): {
   category: BugReportCategory
   description: string
@@ -84,7 +97,7 @@ type BugBusterDialogBodyProps = {
 function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDialogBodyProps) {
   const { t } = useI18n()
   const { user } = useAuth()
-  const saveInputRef = useRef<HTMLInputElement>(null)
+  const attachInputRef = useRef<HTMLInputElement>(null)
   const formDefaults = bugBusterFormDefaults(initial)
 
   const [category, setCategory] = useState<BugReportCategory>(formDefaults.category)
@@ -93,8 +106,10 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
   const [notice, setNotice] = useState<string | null>(null)
   const [saveFile, setSaveFile] = useState<File | null>(null)
   const [saveAttachment, setSaveAttachment] = useState<BugReportSaveAttachment | null>(null)
-  const [saveError, setSaveError] = useState<StringId | null>(null)
-  const [saveBusy, setSaveBusy] = useState(false)
+  const [csvFile, setCsvFile] = useState<File | null>(null)
+  const [csvAttachment, setCsvAttachment] = useState<BugReportCsvAttachment | null>(null)
+  const [attachError, setAttachError] = useState<StringId | null>(null)
+  const [attachBusy, setAttachBusy] = useState(false)
 
   const activePanel = initial?.panelId ?? mainPanel
   const mainPanelLabel = t(mainPanelLabelKey(activePanel))
@@ -119,6 +134,7 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
       mainPanel: activePanel,
       mainPanelLabel,
       saveAttachment: saveAttachment ?? undefined,
+      csvAttachment: csvAttachment ?? undefined,
       errorContext:
         initial?.error != null
           ? {
@@ -137,10 +153,18 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
       initial,
       mainPanelLabel,
       saveAttachment,
+      csvAttachment,
       steps,
       user,
     ],
   )
+
+  const attachedFiles = useMemo(() => {
+    const files: File[] = []
+    if (saveFile) files.push(saveFile)
+    if (csvFile) files.push(csvFile)
+    return files
+  }, [csvFile, saveFile])
 
   const buildEnv = useCallback(
     () =>
@@ -161,52 +185,77 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
     return false
   }, [description, t])
 
-  const handleSaveFileChange = useCallback(
-    (e: ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0] ?? null
-      setSaveError(null)
-      setSaveAttachment(null)
-      setSaveFile(null)
-      if (!file) return
+  const handleAttachFilesChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
+    const picked = [...(e.target.files ?? [])]
+    if (attachInputRef.current) attachInputRef.current.value = ''
+    if (picked.length === 0) return
 
-      setSaveBusy(true)
-      void analyzeBugReportSaveFile(file).then((result) => {
-        setSaveBusy(false)
-        if (!result.ok) {
-          setSaveError(
-            result.error === 'too_large'
-              ? 'bug_buster_save_too_large'
-              : 'bug_buster_save_empty',
-          )
-          if (saveInputRef.current) saveInputRef.current.value = ''
-          return
+    setAttachError(null)
+    setAttachBusy(true)
+    void Promise.all(picked.map((file) => analyzeBugReportAttachment(file))).then(
+      (results) => {
+        setAttachBusy(false)
+        let added = false
+        let lastError: StringId | null = null
+
+        for (const result of results) {
+          if (!result.ok) {
+            lastError = ATTACH_ERROR_KEYS[result.error]
+            continue
+          }
+          added = true
+          if (result.kind === 'save') {
+            setSaveFile(result.file)
+            setSaveAttachment(result.attachment)
+          } else {
+            setCsvFile(result.file)
+            setCsvAttachment(result.attachment)
+          }
         }
-        setSaveFile(file)
-        setSaveAttachment(result.attachment)
-      })
-    },
-    [],
-  )
+
+        if (lastError) setAttachError(lastError)
+        if (!added && lastError) return
+      },
+    )
+  }, [])
 
   const clearSaveFile = useCallback(() => {
     setSaveFile(null)
     setSaveAttachment(null)
-    setSaveError(null)
-    if (saveInputRef.current) saveInputRef.current.value = ''
+    setAttachError(null)
   }, [])
 
-  const offerSaveDownload = useCallback(
+  const clearCsvFile = useCallback(() => {
+    setCsvFile(null)
+    setCsvAttachment(null)
+    setAttachError(null)
+  }, [])
+
+  const clearAllAttachments = useCallback(() => {
+    clearSaveFile()
+    clearCsvFile()
+  }, [clearCsvFile, clearSaveFile])
+
+  const offerAttachedFilesDownload = useCallback(
     (context: 'email' | 'github') => {
-      if (!saveFile) return
-      downloadBugReportSaveFile(saveFile)
-      setNotice(
-        context === 'email'
-          ? t('bug_buster_email_save_downloaded')
-          : t('bug_buster_github_save_downloaded'),
-      )
+      if (attachedFiles.length === 0) return
+      downloadBugReportAttachedFiles(attachedFiles)
+      const noticeKey: StringId =
+        attachedFiles.length > 1
+          ? context === 'email'
+            ? 'bug_buster_email_files_downloaded'
+            : 'bug_buster_github_files_downloaded'
+          : saveFile
+            ? context === 'email'
+              ? 'bug_buster_email_save_downloaded'
+              : 'bug_buster_github_save_downloaded'
+            : context === 'email'
+              ? 'bug_buster_email_csv_downloaded'
+              : 'bug_buster_github_csv_downloaded'
+      setNotice(t(noticeKey))
       window.setTimeout(() => setNotice(null), 6000)
     },
-    [saveFile, t],
+    [attachedFiles, saveFile, t],
   )
 
   const handleCopy = useCallback(() => {
@@ -225,33 +274,49 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
     if (!requireDescription()) return
     const url = buildGitHubIssueUrl(reportInput, buildEnv())
     window.open(url, '_blank', 'noopener,noreferrer')
-    offerSaveDownload('github')
-  }, [buildEnv, offerSaveDownload, reportInput, requireDescription])
+    offerAttachedFilesDownload('github')
+  }, [buildEnv, offerAttachedFilesDownload, reportInput, requireDescription])
 
   const handleEmail = useCallback(() => {
     if (!requireDescription()) return
     const env = buildEnv()
     const reportText = buildBugReport(reportInput, env)
 
-    if (saveFile && canShareBugReportWithFiles(saveFile)) {
-      void shareBugReportWithSave(reportText, saveFile, t('bug_buster_title')).then(
+    if (attachedFiles.length > 0 && canShareBugReportWithFiles(attachedFiles)) {
+      void shareBugReportWithFiles(reportText, attachedFiles, t('bug_buster_title')).then(
         (result) => {
           if (result === 'shared') {
-            setNotice(t('bug_buster_share_ok'))
+            setNotice(
+              t(
+                attachedFiles.length > 1
+                  ? 'bug_buster_share_ok_files'
+                  : saveFile
+                    ? 'bug_buster_share_ok'
+                    : 'bug_buster_share_ok_csv',
+              ),
+            )
             window.setTimeout(() => setNotice(null), 4000)
             return
           }
           if (result === 'aborted') return
           window.location.href = buildBugReportMailtoUrl(reportInput, env)
-          offerSaveDownload('email')
+          offerAttachedFilesDownload('email')
         },
       )
       return
     }
 
     window.location.href = buildBugReportMailtoUrl(reportInput, env)
-    offerSaveDownload('email')
-  }, [buildEnv, offerSaveDownload, reportInput, requireDescription, saveFile, t])
+    offerAttachedFilesDownload('email')
+  }, [
+    attachedFiles,
+    buildEnv,
+    offerAttachedFilesDownload,
+    reportInput,
+    requireDescription,
+    saveFile,
+    t,
+  ])
 
   return (
     <div
@@ -319,47 +384,84 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
         </div>
 
         <div className="bug-buster-dialog__field">
-          <span className="bug-buster-dialog__label" id="bug-buster-save-label">
-            {t('bug_buster_save_label')}
+          <span className="bug-buster-dialog__label" id="bug-buster-attach-label">
+            {t('bug_buster_attach_label')}
           </span>
-          <p className="bug-buster-dialog__save-hint">{t('bug_buster_save_hint')}</p>
+          <p className="bug-buster-dialog__save-hint">{t('bug_buster_attach_hint')}</p>
           <div className="bug-buster-dialog__save-row">
             <input
-              ref={saveInputRef}
-              id="bug-buster-save"
+              ref={attachInputRef}
+              id="bug-buster-attach"
               type="file"
+              multiple
               className="bug-buster-dialog__file-input"
-              accept=".dat,application/octet-stream"
-              aria-labelledby="bug-buster-save-label"
-              disabled={saveBusy}
-              onChange={handleSaveFileChange}
+              accept=".dat,.csv"
+              aria-labelledby="bug-buster-attach-label"
+              disabled={attachBusy}
+              onChange={handleAttachFilesChange}
             />
-            {saveFile ? (
+            {saveFile || csvFile ? (
               <button
                 type="button"
                 className="glow-btn bug-buster-dialog__save-clear"
-                onClick={clearSaveFile}
+                onClick={clearAllAttachments}
               >
-                {t('bug_buster_save_remove')}
+                {t('bug_buster_attach_clear')}
               </button>
             ) : null}
           </div>
-          {saveBusy ? (
+          {attachBusy ? (
             <p className="bug-buster-dialog__save-meta" role="status">
-              {t('bug_buster_save_analyzing')}
+              {t('bug_buster_attach_analyzing')}
             </p>
           ) : null}
-          {saveError ? (
+          {attachError ? (
             <p className="bug-buster-dialog__save-error" role="alert">
-              {t(saveError)}
+              {t(attachError)}
             </p>
           ) : null}
           {saveAttachment ? (
             <p className="bug-buster-dialog__save-meta" role="status">
-              {t('bug_buster_save_meta').replace('{{name}}', saveAttachment.fileName).replace(
-                '{{size}}',
-                formatSaveBytes(saveAttachment.sizeBytes),
-              ).replace('{{gzip}}', saveAttachment.gzip ? t('bug_buster_save_gzip_yes') : t('bug_buster_save_gzip_no'))}
+              {t('bug_buster_attach_save_meta')
+                .replace('{{name}}', saveAttachment.fileName)
+                .replace('{{size}}', formatSaveBytes(saveAttachment.sizeBytes))
+                .replace(
+                  '{{gzip}}',
+                  saveAttachment.gzip
+                    ? t('bug_buster_save_gzip_yes')
+                    : t('bug_buster_save_gzip_no'),
+                )}
+              {saveFile && csvFile ? (
+                <>
+                  {' '}
+                  <button
+                    type="button"
+                    className="bug-buster-dialog__attach-remove-one"
+                    onClick={clearSaveFile}
+                  >
+                    {t('bug_buster_attach_remove_save')}
+                  </button>
+                </>
+              ) : null}
+            </p>
+          ) : null}
+          {csvAttachment ? (
+            <p className="bug-buster-dialog__save-meta" role="status">
+              {t('bug_buster_attach_csv_meta')
+                .replace('{{name}}', csvAttachment.fileName)
+                .replace('{{size}}', formatCsvBytes(csvAttachment.sizeBytes))}
+              {saveFile && csvFile ? (
+                <>
+                  {' '}
+                  <button
+                    type="button"
+                    className="bug-buster-dialog__attach-remove-one"
+                    onClick={clearCsvFile}
+                  >
+                    {t('bug_buster_attach_remove_csv')}
+                  </button>
+                </>
+              ) : null}
             </p>
           ) : null}
         </div>

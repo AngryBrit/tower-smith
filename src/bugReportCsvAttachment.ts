@@ -21,11 +21,10 @@ function validateCsvSize(sizeBytes: number): 'empty' | 'too_large' | null {
   return null
 }
 
-async function readFirstCsvLine(file: File): Promise<string> {
+export async function readBugReportCsvFirstLine(file: File): Promise<string> {
   const head = file.slice(0, Math.min(file.size, 4096))
   const text = await head.text()
-  const line = text.split(/\r?\n/)[0]?.replace(/^\uFEFF/, '').trim() ?? ''
-  return line
+  return text.split(/\r?\n/)[0]?.replace(/^\uFEFF/, '').trim() ?? ''
 }
 
 export async function analyzeBugReportCsvFile(
@@ -34,7 +33,7 @@ export async function analyzeBugReportCsvFile(
   const sizeError = validateCsvSize(file.size)
   if (sizeError) return { ok: false, error: sizeError }
 
-  const firstLine = await readFirstCsvLine(file)
+  const firstLine = await readBugReportCsvFirstLine(file)
   if (firstLine !== TOWER_UNIFIED_CSV_MAGIC) {
     return { ok: false, error: 'invalid_magic' }
   }

@@ -148,6 +148,17 @@ function formatSaveAttachmentBlock(attachment: BugReportSaveAttachment): string[
   ]
 }
 
+function formatCsvAttachmentBlock(attachment: BugReportCsvAttachment): string[] {
+  return [
+    `File: ${attachment.fileName}`,
+    `Size: ${formatSaveBytes(attachment.sizeBytes)} (${attachment.sizeBytes} bytes)`,
+    `Format: ${attachment.towerCsv ? 'tower_csv_v1' : 'unknown'}`,
+    `SHA-256: ${attachment.sha256Hex}`,
+    '',
+    'Attach this same tower CSV export when sending email or opening a GitHub issue.',
+  ]
+}
+
 /** Full diagnostic text for clipboard (no raw save file bytes). */
 export function buildBugReport(
   input: BugReportInput,
@@ -181,6 +192,10 @@ export function buildBugReport(
 
   if (input.saveAttachment) {
     sections.push('', '--- Save attachment (metadata) ---', ...formatSaveAttachmentBlock(input.saveAttachment))
+  }
+
+  if (input.csvAttachment) {
+    sections.push('', '--- CSV export (metadata) ---', ...formatCsvAttachmentBlock(input.csvAttachment))
   }
 
   if (input.errorContext) {
@@ -228,6 +243,18 @@ function buildIssueBodyLines(
       `- **SHA-256:** \`${input.saveAttachment.sha256Hex}\``,
       '',
       '_Attach the same **playerInfo.dat** in this issue (drag-and-drop below)._',
+    )
+  }
+
+  if (input.csvAttachment) {
+    bodyLines.push(
+      '',
+      '### Tower CSV export',
+      `- **File:** ${input.csvAttachment.fileName} (${formatSaveBytes(input.csvAttachment.sizeBytes)})`,
+      `- **Format:** tower_csv_v1`,
+      `- **SHA-256:** \`${input.csvAttachment.sha256Hex}\``,
+      '',
+      '_Attach the same **tower CSV** in this issue (drag-and-drop below)._',
     )
   }
 
@@ -307,6 +334,15 @@ export function buildBugReportMailtoBody(
       'Save file (attach playerInfo.dat manually):',
       `- ${input.saveAttachment.fileName} (${formatSaveBytes(input.saveAttachment.sizeBytes)})`,
       `- SHA-256: ${input.saveAttachment.sha256Hex}`,
+    )
+  }
+
+  if (input.csvAttachment) {
+    lines.push(
+      '',
+      'Tower CSV (attach export manually):',
+      `- ${input.csvAttachment.fileName} (${formatSaveBytes(input.csvAttachment.sizeBytes)})`,
+      `- SHA-256: ${input.csvAttachment.sha256Hex}`,
     )
   }
 

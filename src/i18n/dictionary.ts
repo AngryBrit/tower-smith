@@ -25,7 +25,7 @@ export const STRINGS_EN = {
   bug_buster_open: 'Report a problem',
   bug_buster_footer_link: 'Report bug',
   bug_buster_privacy_hint:
-    'Diagnostics include version, tab, and browser info — not your save unless you attach playerInfo.dat below. Describe what went wrong.',
+    'Diagnostics include version, tab, and browser info — not your save or tower CSV unless you attach them below. Describe what went wrong.',
   bug_buster_category_label: 'Category',
   bug_buster_category_crash: 'Crash / error screen',
   bug_buster_category_wrong_stat: 'Wrong number or stat',
@@ -39,16 +39,38 @@ export const STRINGS_EN = {
   bug_buster_steps_label: 'Steps to reproduce (optional)',
   bug_buster_steps_placeholder: '1. Open … 2. Click …',
   bug_buster_diagnostics_label: 'Diagnostic report (preview)',
-  bug_buster_save_label: 'Attach playerInfo.dat (optional)',
-  bug_buster_save_hint:
-    'Helps reproduce import or stat bugs. The file stays on your device until you send it via email, share, or GitHub.',
-  bug_buster_save_analyzing: 'Reading save file…',
+  bug_buster_attach_label: 'Attach files (optional)',
+  bug_buster_attach_hint:
+    'playerInfo.dat and/or tower CSV (Lab → Export to CSV). Pick one or both in a single dialog. Files stay on your device until you send them.',
+  bug_buster_attach_analyzing: 'Reading files…',
+  bug_buster_attach_clear: 'Clear all',
+  bug_buster_attach_remove_save: 'Remove save',
+  bug_buster_attach_remove_csv: 'Remove CSV',
+  bug_buster_attach_save_meta: 'Save: {{name}} — {{size}} ({{gzip}})',
+  bug_buster_attach_csv_meta: 'CSV: {{name}} — {{size}}',
+  bug_buster_attach_unrecognized:
+    'Unrecognized file — use playerInfo.dat or a tower CSV export (tower_csv_v1).',
   bug_buster_save_meta: '{{name}} — {{size}} ({{gzip}})',
   bug_buster_save_gzip_yes: 'gzip',
   bug_buster_save_gzip_no: 'uncompressed',
   bug_buster_save_remove: 'Remove file',
   bug_buster_save_empty: 'That file is empty. Pick your playerInfo.dat backup.',
   bug_buster_save_too_large: 'That file is too large (max 200 KB).',
+  bug_buster_csv_meta: '{{name}} — {{size}}',
+  bug_buster_csv_empty: 'That file is empty. Pick a tower CSV export from this app.',
+  bug_buster_csv_too_large: 'That CSV is too large (max 2 MB).',
+  bug_buster_csv_invalid:
+    'Not a tower CSV — the first line must be tower_csv_v1 (use Export to CSV in Lab).',
+  bug_buster_email_csv_downloaded:
+    'Email opened — tower CSV was downloaded; attach it in your mail app if needed.',
+  bug_buster_github_csv_downloaded:
+    'GitHub opened — tower CSV was downloaded; drag it onto the issue if needed.',
+  bug_buster_email_files_downloaded:
+    'Email opened — your attached files were downloaded; add them in your mail app if needed.',
+  bug_buster_github_files_downloaded:
+    'GitHub opened — your attached files were downloaded; drag them onto the issue if needed.',
+  bug_buster_share_ok_csv: 'Shared report and tower CSV.',
+  bug_buster_share_ok_files: 'Shared report and attached files.',
   bug_buster_copy: 'Copy support',
   bug_buster_email: 'Email support',
   bug_buster_github: 'Open GitHub issue',

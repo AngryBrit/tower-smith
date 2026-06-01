@@ -23,7 +23,7 @@ export const STRINGS_ES = {
   bug_buster_open: 'Reportar un problema',
   bug_buster_footer_link: 'Reportar error',
   bug_buster_privacy_hint:
-    'Los diagnósticos incluyen versión, pestaña y navegador — no tu guardado salvo que adjuntes playerInfo.dat abajo. Describe qué falló.',
+    'Los diagnósticos incluyen versión, pestaña y navegador — no tu guardado ni CSV salvo que los adjuntes abajo. Describe qué falló.',
   bug_buster_category_label: 'Categoría',
   bug_buster_category_crash: 'Fallo / pantalla de error',
   bug_buster_category_wrong_stat: 'Número o stat incorrecto',
@@ -38,16 +38,38 @@ export const STRINGS_ES = {
   bug_buster_steps_label: 'Pasos para reproducir (opcional)',
   bug_buster_steps_placeholder: '1. Abre … 2. Pulsa …',
   bug_buster_diagnostics_label: 'Informe de diagnóstico (vista previa)',
-  bug_buster_save_label: 'Adjuntar playerInfo.dat (opcional)',
-  bug_buster_save_hint:
-    'Ayuda a reproducir errores de importación o stats. El archivo no sale de tu dispositivo hasta que lo envíes.',
-  bug_buster_save_analyzing: 'Leyendo guardado…',
+  bug_buster_attach_label: 'Adjuntar archivos (opcional)',
+  bug_buster_attach_hint:
+    'playerInfo.dat y/o CSV tower (Lab → Exportar a CSV). Elige uno o ambos en un solo diálogo. No salen del dispositivo hasta que los envíes.',
+  bug_buster_attach_analyzing: 'Leyendo archivos…',
+  bug_buster_attach_clear: 'Quitar todo',
+  bug_buster_attach_remove_save: 'Quitar guardado',
+  bug_buster_attach_remove_csv: 'Quitar CSV',
+  bug_buster_attach_save_meta: 'Guardado: {{name}} — {{size}} ({{gzip}})',
+  bug_buster_attach_csv_meta: 'CSV: {{name}} — {{size}}',
+  bug_buster_attach_unrecognized:
+    'Archivo no reconocido — usa playerInfo.dat o un CSV tower (tower_csv_v1).',
   bug_buster_save_meta: '{{name}} — {{size}} ({{gzip}})',
   bug_buster_save_gzip_yes: 'gzip',
   bug_buster_save_gzip_no: 'sin comprimir',
   bug_buster_save_remove: 'Quitar archivo',
   bug_buster_save_empty: 'El archivo está vacío. Elige tu copia playerInfo.dat.',
   bug_buster_save_too_large: 'Archivo demasiado grande (máx. 200 KB).',
+  bug_buster_csv_meta: '{{name}} — {{size}}',
+  bug_buster_csv_empty: 'El archivo está vacío. Elige un CSV tower exportado desde esta app.',
+  bug_buster_csv_too_large: 'CSV demasiado grande (máx. 2 MB).',
+  bug_buster_csv_invalid:
+    'No es un CSV tower — la primera línea debe ser tower_csv_v1 (usa Exportar a CSV en Lab).',
+  bug_buster_email_csv_downloaded:
+    'Correo abierto — se descargó el CSV tower; adjúntalo en tu app de correo si hace falta.',
+  bug_buster_github_csv_downloaded:
+    'GitHub abierto — se descargó el CSV tower; arrástralo al issue si hace falta.',
+  bug_buster_email_files_downloaded:
+    'Correo abierto — se descargaron los archivos adjuntos; añádelos en tu app de correo si hace falta.',
+  bug_buster_github_files_downloaded:
+    'GitHub abierto — se descargaron los archivos adjuntos; arrástralos al issue si hace falta.',
+  bug_buster_share_ok_csv: 'Informe y CSV tower compartidos.',
+  bug_buster_share_ok_files: 'Informe y archivos adjuntos compartidos.',
   bug_buster_copy: 'Copiar soporte',
   bug_buster_email: 'Correo al soporte',
   bug_buster_github: 'Abrir issue en GitHub',

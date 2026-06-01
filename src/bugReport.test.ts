@@ -43,6 +43,27 @@ describe('buildBugReport', () => {
     expect(report).not.toContain('SHA-256')
   })
 
+  it('includes csv metadata when attached', () => {
+    const report = buildBugReport(
+      {
+        category: 'wrong_stat',
+        categoryLabel: 'Wrong stat',
+        description: 'DPS mismatch',
+        csvAttachment: {
+          fileName: 'tower-export.csv',
+          sizeBytes: 2048,
+          sha256Hex: 'b'.repeat(64),
+          towerCsv: true,
+        },
+      },
+      env,
+    )
+    expect(report).toContain('CSV export (metadata)')
+    expect(report).toContain('tower-export.csv')
+    expect(report).toContain('tower_csv_v1')
+    expect(report).toContain('b'.repeat(64))
+  })
+
   it('includes save metadata when attached', () => {
     const report = buildBugReport(
       {

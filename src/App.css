@@ -743,6 +743,13 @@ html[data-color-scheme='high-contrast'] {
   max-width: 26rem;
 }
 
+.bug-buster-dialog > .select-research__preset-save-hint {
+  margin: 0 0 0.45rem;
+  font-size: 0.65rem;
+  line-height: 1.35;
+  color: var(--sr-muted);
+}
+
 .bug-buster-dialog__field {
   display: flex;
   flex-direction: column;
@@ -846,6 +853,22 @@ html[data-color-scheme='high-contrast'] {
   margin: 0.35rem 0 0;
   font-size: 0.68rem;
   color: var(--sr-error-soft, #fca5a5);
+}
+
+.bug-buster-dialog__attach-remove-one {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  font-size: inherit;
+  color: var(--sr-accent, #7dd3fc);
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.bug-buster-dialog__attach-remove-one:hover {
+  color: var(--sr-text, #e2e8f0);
 }
 
 .select-research__footer-report-link {
