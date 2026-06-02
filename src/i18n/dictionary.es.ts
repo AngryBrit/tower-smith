@@ -84,6 +84,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_300_headline: 'Novedades en v3.0.0',
+  whats_new_300_body:
+    'Importa playerInfo.dat desde The Tower, elige temas claro o alto contraste y publica builds en la galería tras iniciar sesión con Google, Discord o Twitch.',
   whats_new_2811_headline: 'Novedades en v2.8.11',
   whats_new_2811_body:
     'Los bonos de submódulos afectan ahora las estadísticas del taller — las elecciones principal y de asistencia se suman a laboratorios y reliquias.',

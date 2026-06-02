@@ -38,10 +38,10 @@ describe('appHintsStorage', () => {
 
   it('shows whats-new when version has copy and was not seen', () => {
     vi.stubGlobal('localStorage', createLocalStorageMock())
-    expect(shouldShowWhatsNewBanner('2.8.11')).toBe(true)
-    writeWhatsNewSeenVersion('2.8.11')
-    expect(readWhatsNewSeenVersion()).toBe('2.8.11')
-    expect(shouldShowWhatsNewBanner('2.8.11')).toBe(false)
+    expect(shouldShowWhatsNewBanner('3.0.0')).toBe(true)
+    writeWhatsNewSeenVersion('3.0.0')
+    expect(readWhatsNewSeenVersion()).toBe('3.0.0')
+    expect(shouldShowWhatsNewBanner('3.0.0')).toBe(false)
     expect(shouldShowWhatsNewBanner('9.9.9')).toBe(false)
   })
 

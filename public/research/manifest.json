@@ -1,5 +1,5 @@
 {
-  "dataVersion": "2.8.11",
+  "dataVersion": "3.0.0",
   "sectionFiles": [
     "research/sections/main-research.json",
     "research/sections/attack-research.json",

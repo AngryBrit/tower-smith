@@ -8,7 +8,7 @@ import {
 
 describe('buildBugReport', () => {
   const env = {
-    version: '2.8.11',
+    version: '3.0.0',
     mainPanel: 'relics' as const,
     locale: 'en',
     colorScheme: 'dark',
@@ -38,7 +38,7 @@ describe('buildBugReport', () => {
     expect(report).toContain('Wrong stat (wrong_stat)')
     expect(report).toContain('Damage looks too low')
     expect(report).toContain('Open workshop')
-    expect(report).toContain('TowerSmith v2.8.11')
+    expect(report).toContain('TowerSmith v3.0.0')
     expect(report).toContain('Active tab: WORKSHOP (workshop)')
     expect(report).not.toContain('SHA-256')
   })
@@ -114,7 +114,7 @@ describe('buildGitHubIssueUrl', () => {
         description: 'Button misaligned',
       },
       {
-        version: '2.8.11',
+        version: '3.0.0',
         mainPanel: 'research',
         locale: 'en',
         colorScheme: 'dark',

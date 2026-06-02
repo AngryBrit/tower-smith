@@ -7,6 +7,8 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 
 ## [Unreleased]
 
+## [3.0.0] - 2026-06-02
+
 ### Added
 
 - **playerInfo.dat import** — LAB tab imports gzip-compressed BinaryFormatter saves from The Tower: lab levels, workshop, bots, ultimates, modules, card stars/presets, relic ownership, and owned cosmetic themes ([`importPlayerInfo.ts`](src/playerSave/importPlayerInfo.ts), [`mapPlayerDataToTower.ts`](src/playerSave/mapPlayerDataToTower.ts)). Android path hints copy the save folder to the clipboard.
@@ -24,9 +26,13 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 - **Performance** — Lazy-loaded main panels; community build row restored on all tabs.
 - **Production research cache** — Stale-while-revalidate via service worker; manual refresh in Tools / Settings.
 
+### Fixed
+
+- **Gallery publish** — Access-token refresh, Supabase project mismatch detection, and clearer sign-in / session errors when submitting builds.
+
 ### Docs
 
-- README: reorganized features, player save import, appearance, deep links, keyboard shortcuts, maintainer `docs/` folder, save-mapping scripts, CI, and expanded npm script table.
+- README: reorganized features, player save import, appearance, deep links, keyboard shortcuts, maintainer `docs/` folder, save-mapping scripts, CI, Supabase env alignment note, and expanded npm script table.
 
 ## [2.8.11] - 2026-05-26
 

@@ -86,6 +86,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_300_headline: "What's new in v3.0.0",
+  whats_new_300_body:
+    'Import playerInfo.dat from The Tower, pick light or high-contrast themes, and publish community builds after signing in with Google, Discord, or Twitch.',
   whats_new_2811_headline: "What's new in v2.8.11",
   whats_new_2811_body:
     'Sub-module bonuses now affect workshop stat labels — equipped main and assist picks stack with labs and relics.',

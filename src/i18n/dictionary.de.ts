@@ -84,6 +84,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_300_headline: 'Neu in v3.0.0',
+  whats_new_300_body:
+    'Importiere playerInfo.dat aus The Tower, wähle helles oder High-Contrast-Theme und veröffentliche Community-Builds nach Anmeldung mit Google, Discord oder Twitch.',
   whats_new_2811_headline: 'Neu in v2.8.11',
   whats_new_2811_body:
     'Submodul-Boni wirken jetzt auf Werkstatt-Statlabels — gewählte Haupt- und Assist-Effekte addieren zu Labs und Relikten.',
