@@ -39,9 +39,9 @@ tmp-kept-en-keys.json
 # Local IL2CPP / asset extraction scratch (not for the repo)
 tools/
 
-# Local game research / field dumps (not for the repo)
-docs/*
-!docs/regenerate-player-save-dump.mjs
+# Sensitive player save dumps (never commit)
+docs/player-save-field-dump.json
+docs/player-save-field-dump.txt
 
 # Playwright
 test-results/
