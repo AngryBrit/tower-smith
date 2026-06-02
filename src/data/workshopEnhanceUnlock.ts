@@ -89,11 +89,11 @@ const ATTACK_UNLOCK_REQUIRED: Record<WorkshopEnhanceAttackUpgradeKey, number> = 
 
 /**
  * Rend Armor enhancements count once in {@link workshopEnhanceAttackCategorySpentCoins} and an extra
- * **~13.2%** of rend spend toward later attack unlock gates (damage-enhancement route). Calibrated
+ * **~31.6%** of rend spend toward later attack unlock gates (damage-enhancement route). Calibrated
  * to in-game **Attack Speed** unlock progress at **40/40/40/40** on the four tier-400 attack rows
  * (~**57.91T** spent, **442.09T** remaining on the **500T** gate).
  */
-export const WORKSHOP_REND_ARMOR_ATTACK_UNLOCK_EXTRA_FRACTION = 0.132 as const
+export const WORKSHOP_REND_ARMOR_ATTACK_UNLOCK_EXTRA_FRACTION = 0.3156624235836399 as const
 
 function workshopEnhanceRendArmorSpentCoins(ws: WorkshopPersistedV1): number {
   const level = ws.enhanceRendArmorLevel

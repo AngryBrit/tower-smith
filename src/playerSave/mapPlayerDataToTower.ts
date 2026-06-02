@@ -146,13 +146,12 @@ export function attackLabsToOverrides(
   if (si < 0) return overrides
   const section = data.sections[si]!
 
-  for (const [name, fallbackId] of Object.entries(ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+  for (const [name, researchId] of Object.entries(ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
     keyof typeof ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME,
     number,
   ][]) {
     const ii = findItemIndex(section, name)
     if (ii < 0) continue
-    const researchId = gameResearchIdForManifest(data, si, ii) ?? fallbackId
     const level = researchLevel[researchId]
     if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
       overrides[levelOverrideKey(si, ii)] = Math.trunc(level)

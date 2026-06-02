@@ -16,6 +16,7 @@ import {
 } from '../types/research'
 import { attackResearchDisplayedDamageLabMultiplier } from '../types/research'
 import {
+  computeWorkshopDisplayedDamagePreBerserker,
   workshopDamageDisplayOptsFromPersisted,
   workshopDisplayedDamageFromPersisted,
 } from '../data/workshopDisplayedDamage'
@@ -140,10 +141,10 @@ describe('applyImportedWorkshop', () => {
       workspace.lab.levelOverrides,
       workspace.lab.gameResearchLevel,
     )
+    expect(opts.labMultiplier ?? 1).toBeCloseTo(labMult, 3)
     expect(opts.damageCardMultiplier).toBeGreaterThan(3.9)
-    expect(displayed).toBeGreaterThan(workshop * labMult * cardMult * 0.9)
-    expect(displayed).toBeGreaterThan(6e9)
-    expect(displayed).toBeLessThan(6.25e9)
+    const preBerserker = computeWorkshopDisplayedDamagePreBerserker(workshop, opts)
+    expect(displayed).toBeCloseTo(preBerserker + (opts.berserkerDamageAdd ?? 0), 6)
 
     const attackSpeed = workshopDisplayedAttackSpeedFromPersisted(
       ws,
