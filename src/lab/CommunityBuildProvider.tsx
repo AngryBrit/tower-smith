@@ -37,6 +37,7 @@ import {
   workspaceThemesSnapshot,
 } from '../towerWorkspaceStorage'
 import { useI18n } from '../i18n'
+import type { StringId } from '../i18n/dictionary'
 import { CommunityBuildContext } from './communityBuildContext'
 
 const GalleryPublishDialog = lazy(() =>
@@ -57,7 +58,7 @@ type PublishFailureError = Extract<
 >['error']
 
 function publishFailureMessage(
-  t: (key: string) => string,
+  t: (id: StringId) => string,
   error: PublishFailureError,
 ): string {
   switch (error) {
@@ -164,9 +165,14 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     }
     const token = await getPublishAccessToken()
     if (token) return true
-    publishImportNotice(t('auth_required_publish'), 'error')
+    if (auth.user) {
+      publishImportNotice(t('auth_session_expired'), 'error')
+    } else {
+      setAuthSignInDialogOpen(true)
+      publishImportNotice(t('auth_required_publish'), 'error')
+    }
     return false
-  }, [getPublishAccessToken, publishImportNotice, t])
+  }, [auth.user, getPublishAccessToken, publishImportNotice, t])
 
   const ensurePublishCategorySelected = useCallback((): GalleryBuildCategory | null => {
     if (!publishCategory) {

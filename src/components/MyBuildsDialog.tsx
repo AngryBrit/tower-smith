@@ -100,6 +100,8 @@ export function MyBuildsDialog({
       invalid_visibility: t('gallery_error_unknown'),
       submissions_disabled: t('gallery_error_disabled'),
       auth_required: t('auth_required_publish'),
+      invalid_token: t('auth_session_expired'),
+      project_mismatch: t('gallery_error_project_mismatch'),
       cannot_vote_own: t('gallery_error_cannot_vote_own'),
       votes_unavailable: t('gallery_error_votes_unavailable'),
       not_found: t('gallery_error_not_found'),

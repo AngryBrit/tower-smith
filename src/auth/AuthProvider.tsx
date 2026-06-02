@@ -109,21 +109,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const getAccessToken = useCallback(async () => {
     const sb = getSupabaseBrowserClient()
     if (!sb) return null
-    const { data: userData, error: userError } = await sb.auth.getUser()
-    if (userError || !userData.user) return null
-    const { data: sessionData } = await sb.auth.getSession()
-    const session = sessionData.session
-    if (!session?.access_token) return null
 
-    const expiresAt = session.expires_at
-    if (expiresAt != null && expiresAt * 1000 < Date.now() + 30_000) {
-      const { data: refreshed, error: refreshError } = await sb.auth.refreshSession()
-      if (refreshError || !refreshed.session?.access_token) return null
-      return refreshed.session.access_token
+    let current = session?.access_token ? session : null
+    if (!current) {
+      const { data } = await sb.auth.getSession()
+      current = data.session
     }
+    if (!current?.access_token) return null
 
-    return session.access_token
-  }, [])
+    const expiresAt = current.expires_at
+    const needsRefresh =
+      expiresAt != null && expiresAt * 1000 < Date.now() + 30_000
+    if (!needsRefresh) return current.access_token
+
+    const { data: refreshed, error: refreshError } = await sb.auth.refreshSession()
+    if (refreshError || !refreshed.session?.access_token) return null
+    return refreshed.session.access_token
+  }, [session])
 
   const prefillProfileFromImport = useCallback(
     (hints: { displayName?: string | null; guild?: string | null }) => {
