@@ -158,6 +158,8 @@ The gallery uses Netlify Functions as the API layer and Supabase (Postgres + Sto
    - `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` (build + browser)
    - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (Functions only)
 
+   **Important:** All four values must come from the **same** Supabase project (same `ref` in the JWT). If the browser signs in to project A but Functions verify with project B, publish returns **401** while guild resolve still works. After changing `VITE_*` vars, trigger a **new production build** (not just a functions-only deploy).
+
 ### Optional env flags
 
 | Flag | Effect |

@@ -380,6 +380,10 @@ export const STRINGS_EN = {
   auth_sign_in_discord: 'Continue with Discord',
   auth_sign_in_twitch: 'Continue with Twitch',
   auth_required_publish: 'Sign in with Google, Discord, or Twitch to publish a build.',
+  auth_session_expired:
+    'Your sign-in expired. Sign out, sign in again, then try publishing.',
+  gallery_error_project_mismatch:
+    'Publish failed: the site’s sign-in and gallery backend use different Supabase projects. Align VITE_SUPABASE_* and SUPABASE_* on the host, then redeploy.',
   profile_settings_title: 'Your profile',
   profile_settings_intro:
     'Set the username, guild, and avatar shown on your community builds. Edit these in Tools & Settings anytime.',

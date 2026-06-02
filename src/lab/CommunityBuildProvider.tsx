@@ -23,7 +23,10 @@ import {
   resolveGuildNameById,
   towerGalleryApiAvailable,
 } from '../towerGallery/api'
-import { publishGalleryShareLink } from '../towerGallery/publishShareLink'
+import {
+  publishGalleryShareLink,
+  type PublishGalleryShareResult,
+} from '../towerGallery/publishShareLink'
 import type { GalleryBuildCategory } from '../towerGallery/buildCategories'
 import type { GalleryBuildVisibility } from '../towerGallery/types'
 import { updateUserGuildId } from '../profile/profileApi'
@@ -47,6 +50,39 @@ const LabGuildNamePromptDialog = lazy(() =>
     default: m.LabGuildNamePromptDialog,
   })),
 )
+
+type PublishFailureError = Extract<
+  PublishGalleryShareResult,
+  { ok: false }
+>['error']
+
+function publishFailureMessage(
+  t: (key: string) => string,
+  error: PublishFailureError,
+): string {
+  switch (error) {
+    case 'auth_required':
+      return t('auth_required_publish')
+    case 'invalid_token':
+      return t('auth_session_expired')
+    case 'project_mismatch':
+      return t('gallery_error_project_mismatch')
+    case 'invalid_title':
+      return t('gallery_error_invalid_title')
+    case 'invalid_guild':
+      return t('gallery_error_invalid_guild')
+    case 'invalid_category':
+      return t('gallery_error_invalid_category')
+    case 'submissions_disabled':
+      return t('gallery_error_disabled')
+    case 'gallery_unavailable':
+      return t('gallery_error_unavailable')
+    case 'network':
+      return t('gallery_error_network')
+    default:
+      return t('gallery_error_unknown')
+  }
+}
 
 export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   const { t, fmt } = useI18n()
@@ -177,8 +213,12 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
         { accessToken, visibility: 'unlisted' },
       )
       if (!result.ok) {
-        if (result.error === 'auth_required') {
-          publishImportNotice(t('auth_required_publish'), 'error')
+        if (
+          result.error === 'auth_required' ||
+          result.error === 'invalid_token' ||
+          result.error === 'project_mismatch'
+        ) {
+          publishImportNotice(publishFailureMessage(t, result.error), 'error')
           return false
         }
         return (await copyEmbeddedShareLink()) != null
@@ -241,6 +281,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
       publishImportNotice(t('gallery_error_invalid_category'), 'error')
       return
     }
+    if (!(await ensureSignedInForPublish())) return
     const payload = getLabsShareFileForGallery()
     if (!payload) return
     const accessToken = await getPublishAccessToken()
@@ -267,23 +308,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
         },
       )
       if (!result.ok) {
-        const msg =
-          result.error === 'auth_required'
-            ? t('auth_required_publish')
-            : result.error === 'invalid_title'
-              ? t('gallery_error_invalid_title')
-              : result.error === 'invalid_guild'
-                ? t('gallery_error_invalid_guild')
-                : result.error === 'invalid_category'
-                  ? t('gallery_error_invalid_category')
-                  : result.error === 'submissions_disabled'
-                    ? t('gallery_error_disabled')
-                    : result.error === 'gallery_unavailable'
-                      ? t('gallery_error_unavailable')
-                      : result.error === 'network'
-                        ? t('gallery_error_network')
-                        : t('gallery_error_unknown')
-        publishImportNotice(msg, 'error')
+        publishImportNotice(publishFailureMessage(t, result.error), 'error')
         return
       }
       await navigator.clipboard.writeText(result.url)
@@ -300,6 +325,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   }, [
     auth.user,
     fmt,
+    ensureSignedInForPublish,
     getLabsShareFileForGallery,
     getPublishAccessToken,
     publishCategory,
@@ -340,8 +366,12 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
         { accessToken, visibility: 'unlisted' },
       )
       if (!result.ok) {
-        if (result.error === 'auth_required') {
-          publishImportNotice(t('auth_required_publish'), 'error')
+        if (
+          result.error === 'auth_required' ||
+          result.error === 'invalid_token' ||
+          result.error === 'project_mismatch'
+        ) {
+          publishImportNotice(publishFailureMessage(t, result.error), 'error')
           return
         }
         if (await copyEmbeddedShareLink()) {
@@ -387,8 +417,12 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
         { accessToken, visibility: 'unlisted' },
       )
       if (!result.ok) {
-        if (result.error === 'auth_required') {
-          publishImportNotice(t('auth_required_publish'), 'error')
+        if (
+          result.error === 'auth_required' ||
+          result.error === 'invalid_token' ||
+          result.error === 'project_mismatch'
+        ) {
+          publishImportNotice(publishFailureMessage(t, result.error), 'error')
         } else {
           publishImportNotice(t('sr_notice_qr_fail'), 'error')
         }

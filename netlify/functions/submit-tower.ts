@@ -8,7 +8,7 @@ import {
   ensureProfileForUser,
   getSupabaseAdmin,
   isGalleryBackendConfigured,
-  verifySupabaseAccessToken,
+  verifySupabaseAccessTokenDetailed,
 } from './lib/supabaseAdmin'
 
 function submissionsDisabled(): boolean {
@@ -39,10 +39,15 @@ export default async (req: Request): Promise<Response> => {
   if (!token) {
     return jsonResponse(401, { error: 'auth_required' }, cors)
   }
-  const user = await verifySupabaseAccessToken(token)
-  if (!user) {
-    return jsonResponse(401, { error: 'invalid_token' }, cors)
+  const verified = await verifySupabaseAccessTokenDetailed(token)
+  if (!verified.ok) {
+    return jsonResponse(
+      401,
+      { error: verified.error },
+      cors,
+    )
   }
+  const user = verified.user
 
   let raw: unknown
   try {

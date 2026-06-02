@@ -16,6 +16,8 @@ export type PublishGalleryShareResult =
         | 'invalid_payload'
         | 'submissions_disabled'
         | 'auth_required'
+        | 'invalid_token'
+        | 'project_mismatch'
         | 'gallery_unavailable'
         | 'network'
         | 'unknown'
@@ -65,6 +67,8 @@ export async function publishGalleryShareLink(
       err === 'invalid_payload' ||
       err === 'submissions_disabled' ||
       err === 'auth_required' ||
+      err === 'invalid_token' ||
+      err === 'project_mismatch' ||
       err === 'gallery_unavailable' ||
       err === 'network' ||
       err === 'unknown'

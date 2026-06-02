@@ -21,6 +21,8 @@ export type TowerGalleryApiError =
   | 'invalid_visibility'
   | 'submissions_disabled'
   | 'auth_required'
+  | 'invalid_token'
+  | 'project_mismatch'
   | 'cannot_vote_own'
   | 'votes_unavailable'
   | 'not_found'
@@ -212,9 +214,9 @@ export async function submitGalleryTower(
     }
     if (res.status === 401) {
       const err = (parsed as { error?: string } | null)?.error
-      if (err === 'auth_required' || err === 'invalid_token') {
-        return { ok: false, error: 'auth_required' }
-      }
+      if (err === 'auth_required') return { ok: false, error: 'auth_required' }
+      if (err === 'invalid_token') return { ok: false, error: 'invalid_token' }
+      if (err === 'project_mismatch') return { ok: false, error: 'project_mismatch' }
       return { ok: false, error: 'unknown' }
     }
     if (res.status === 503) {

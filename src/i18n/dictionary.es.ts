@@ -378,6 +378,10 @@ export const STRINGS_ES = {
   auth_sign_in_discord: 'Continuar con Discord',
   auth_sign_in_twitch: 'Continuar con Twitch',
   auth_required_publish: 'Inicia sesión con Google, Discord o Twitch para publicar un build.',
+  auth_session_expired:
+    'Tu sesión caducó. Cierra sesión, vuelve a entrar e intenta publicar de nuevo.',
+  gallery_error_project_mismatch:
+    'No se pudo publicar: el inicio de sesión y la galería usan proyectos Supabase distintos. Iguala VITE_SUPABASE_* y SUPABASE_* en el hosting y vuelve a desplegar.',
   profile_settings_title: 'Tu perfil',
   profile_settings_intro:
     'Configura el nombre de usuario, gremio y avatar que se muestran en tus builds de la comunidad. Edítalos en Herramientas y ajustes.',

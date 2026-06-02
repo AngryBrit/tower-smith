@@ -375,6 +375,10 @@ export const STRINGS_DE = {
   auth_sign_in_discord: 'Mit Discord fortfahren',
   auth_sign_in_twitch: 'Mit Twitch fortfahren',
   auth_required_publish: 'Melde dich mit Google, Discord oder Twitch an, um einen Build zu veröffentlichen.',
+  auth_session_expired:
+    'Deine Anmeldung ist abgelaufen. Melde dich ab, erneut an und versuche es noch einmal.',
+  gallery_error_project_mismatch:
+    'Veröffentlichen fehlgeschlagen: Anmeldung und Galerie-Backend nutzen verschiedene Supabase-Projekte. Gleiche VITE_SUPABASE_* und SUPABASE_* auf dem Host ab und deploye neu.',
   profile_settings_title: 'Dein Profil',
   profile_settings_intro:
     'Lege Benutzername, Gilde und Avatar für deine Community-Builds fest. Bearbeiten unter Werkzeuge & Einstellungen.',
