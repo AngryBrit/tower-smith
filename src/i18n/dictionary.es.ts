@@ -34,7 +34,7 @@ export const STRINGS_ES = {
   bug_buster_description_label: '¿Qué pasó?',
   bug_buster_description_placeholder: '¿Qué esperabas y qué viste en su lugar?',
   bug_buster_description_required:
-    'Describe qué pasó antes de copiar o abrir GitHub.',
+    'Describe qué pasó antes de copiar, enviar por correo o abrir GitHub.',
   bug_buster_steps_label: 'Pasos para reproducir (opcional)',
   bug_buster_steps_placeholder: '1. Abre … 2. Pulsa …',
   bug_buster_diagnostics_label: 'Informe de diagnóstico (vista previa)',

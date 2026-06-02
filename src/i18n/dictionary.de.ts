@@ -34,7 +34,7 @@ export const STRINGS_DE = {
   bug_buster_description_label: 'Was ist passiert?',
   bug_buster_description_placeholder: 'Was hast du erwartet, und was ist stattdessen passiert?',
   bug_buster_description_required:
-    'Bitte beschreibe das Problem, bevor du kopierst oder GitHub öffnest.',
+    'Bitte beschreibe das Problem, bevor du kopierst, per E-Mail sendest oder GitHub öffnest.',
   bug_buster_steps_label: 'Schritte zum Reproduzieren (optional)',
   bug_buster_steps_placeholder: '1. Öffne … 2. Klicke …',
   bug_buster_diagnostics_label: 'Diagnosebericht (Vorschau)',

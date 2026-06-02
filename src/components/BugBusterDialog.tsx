@@ -81,11 +81,16 @@ function bugBusterFormDefaults(initial: BugBusterInitial | null): {
   description: string
   steps: string
 } {
+  const initialDescription = initial?.description?.trim()
   return {
     category: initial?.category ?? (initial?.error ? 'crash' : 'other'),
-    description: initial?.description ?? initial?.error?.message ?? '',
+    description: initialDescription || initial?.error?.message || '',
     steps: initial?.steps ?? '',
   }
+}
+
+function isBugReportDescriptionReady(value: string): boolean {
+  return value.trim().length > 0
 }
 
 type BugBusterDialogBodyProps = {
@@ -123,6 +128,7 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
   }, [closeBugBuster])
 
   const categoryLabel = t(CATEGORY_LABEL_KEYS[category])
+  const descriptionReady = isBugReportDescriptionReady(description)
 
   const reportInput = useMemo(
     () => ({
@@ -180,10 +186,10 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
   }, [buildEnv, reportInput])
 
   const requireDescription = useCallback((): boolean => {
-    if (description.trim()) return true
+    if (descriptionReady) return true
     setNotice(t('bug_buster_description_required'))
     return false
-  }, [description, t])
+  }, [descriptionReady, t])
 
   const handleAttachFilesChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
     const picked = [...(e.target.files ?? [])]
@@ -363,8 +369,13 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
             className="glow-input bug-buster-dialog__textarea"
             rows={4}
             required
+            aria-required="true"
+            aria-invalid={!descriptionReady}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => {
+              setDescription(e.target.value)
+              if (isBugReportDescriptionReady(e.target.value)) setNotice(null)
+            }}
             placeholder={t('bug_buster_description_placeholder')}
           />
         </div>
@@ -476,14 +487,29 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
             {t('sr_cancel')}
           </button>
           <div className="bug-buster-dialog__actions-row">
-            <button type="button" className="glow-btn glow-btn--block" onClick={handleCopy}>
+            <button
+              type="button"
+              className="glow-btn glow-btn--block"
+              disabled={!descriptionReady || attachBusy}
+              onClick={handleCopy}
+            >
               {t('bug_buster_copy')}
             </button>
-            <button type="button" className="glow-btn glow-btn--block" onClick={handleEmail}>
+            <button
+              type="button"
+              className="glow-btn glow-btn--block"
+              disabled={!descriptionReady || attachBusy}
+              onClick={handleEmail}
+            >
               {t('bug_buster_email')}
             </button>
           </div>
-          <button type="button" className="glow-btn glow-btn--block" onClick={handleGitHub}>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={!descriptionReady || attachBusy}
+            onClick={handleGitHub}
+          >
             {t('bug_buster_github')}
           </button>
         </div>

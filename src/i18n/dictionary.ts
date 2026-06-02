@@ -36,7 +36,8 @@ export const STRINGS_EN = {
   bug_buster_category_other: 'Other',
   bug_buster_description_label: 'What happened?',
   bug_buster_description_placeholder: 'What did you expect, and what did you see instead?',
-  bug_buster_description_required: 'Please describe what happened before copying or opening GitHub.',
+  bug_buster_description_required:
+    'Please describe what happened before copying, emailing, or opening GitHub.',
   bug_buster_steps_label: 'Steps to reproduce (optional)',
   bug_buster_steps_placeholder: '1. Open … 2. Click …',
   bug_buster_diagnostics_label: 'Diagnostic report (preview)',

@@ -178,11 +178,13 @@ export function SelectResearch({
     },
   })
 
+  const importNoticeBugInitialForUi = useMemo(
+    () => (importNotice?.variant === 'error' ? importNoticeBugInitial : null),
+    [importNotice, importNoticeBugInitial],
+  )
+
   useEffect(() => {
-    if (!importNotice) {
-      setImportNoticeBugInitial(null)
-      return
-    }
+    if (importNotice?.variant !== 'error') return
     const id = window.setTimeout(() => setImportNoticeBugInitial(null), 5000)
     return () => window.clearTimeout(id)
   }, [importNotice])
@@ -774,7 +776,7 @@ export function SelectResearch({
             }}
             importNotice={importNotice?.message ?? null}
             importNoticeVariant={importNotice?.variant ?? 'info'}
-            importNoticeBugInitial={importNoticeBugInitial}
+            importNoticeBugInitial={importNoticeBugInitialForUi}
             sharePublishing={sharePublishing}
             playerSaveImporting={playerSaveImporting}
             playerSaveImportStage={playerSaveImportStage}
