@@ -40,7 +40,8 @@ tmp-kept-en-keys.json
 tools/
 
 # Local game research / field dumps (not for the repo)
-docs/
+docs/*
+!docs/regenerate-player-save-dump.mjs
 
 # Playwright
 test-results/
