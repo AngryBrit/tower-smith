@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+import { deferInEffect } from '../deferInEffect'
 import { createPortal } from 'react-dom'
 import { useAuth } from '../auth/useAuth'
 import { GalleryAuthorLine } from './GalleryAuthorLine'
@@ -46,6 +47,12 @@ export function GalleryAdminPage({
 }: GalleryAdminPageProps) {
   const { t, fmt, locale } = useI18n()
   const auth = useAuth()
+  const [accessToken, setAccessToken] = useState<string | null>(null)
+
+  useEffect(() => {
+    void auth.getAccessToken().then(setAccessToken)
+  }, [auth, auth.session])
+
   const {
     loading: adminLoading,
     isAdmin,
@@ -74,11 +81,14 @@ export function GalleryAdminPage({
     loading,
     loadingMore,
     hasMore,
+    error: listError,
     loadFirstPage,
     loadMore,
   } = useGalleryList({
-    enabled: apiEnabled && isAdmin,
+    enabled: apiEnabled && isAdmin && Boolean(accessToken),
     refreshToken: listRefreshToken,
+    accessToken,
+    adminList: true,
   })
 
   const [notice, setNotice] = useState<string | null>(null)
@@ -96,10 +106,10 @@ export function GalleryAdminPage({
   useEffect(() => {
     if (!isActive) return
     void refreshAdminStatus()
-    if (isAdmin) {
-      void loadFirstPage()
+    if (isAdmin && accessToken) {
+      deferInEffect(() => void loadFirstPage())
     }
-  }, [isActive, isAdmin, loadFirstPage, refreshAdminStatus])
+  }, [isActive, isAdmin, accessToken, loadFirstPage, refreshAdminStatus])
 
   const performDelete = useCallback(async () => {
     if (!deleteTarget) return
@@ -209,13 +219,19 @@ export function GalleryAdminPage({
         </p>
       ) : null}
 
+      {listError ? (
+        <p className="tower-gallery__error" role="alert">
+          {t('gallery_error_unavailable')}
+        </p>
+      ) : null}
+
       {loading ? (
         <p className="tower-gallery__hint" role="status">
           {t('gallery_loading')}
         </p>
       ) : null}
 
-      {!loading && entries.length === 0 ? (
+      {!loading && !listError && entries.length === 0 ? (
         <p className="tower-gallery__hint">{t('gallery_empty')}</p>
       ) : null}
 
@@ -231,6 +247,11 @@ export function GalleryAdminPage({
                       category={entry.category}
                       className="tower-gallery__entry-category"
                     />
+                  ) : null}
+                  {entry.visibility === 'unlisted' ? (
+                    <span className="tower-gallery__visibility-badge tower-gallery__visibility-badge--private tower-gallery__entry-visibility">
+                      {t('gallery_visibility_private')}
+                    </span>
                   ) : null}
                   {entry.author ? (
                     <GalleryAuthorLine

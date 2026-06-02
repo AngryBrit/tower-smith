@@ -20,6 +20,8 @@ type UseGalleryListOptions = {
   accessToken?: string | null
   /** Only builds owned by the signed-in user (requires access token). */
   mineOnly?: boolean
+  /** Gallery admin list (public + unlisted); requires access token. */
+  adminList?: boolean
 }
 
 export function useGalleryList({
@@ -32,6 +34,7 @@ export function useGalleryList({
   sort = 'newest',
   accessToken = null,
   mineOnly = false,
+  adminList = false,
 }: UseGalleryListOptions) {
   const q = searchQuery.trim()
   const category = categoryFilter.trim()
@@ -55,6 +58,7 @@ export function useGalleryList({
         ...(category ? { category } : {}),
         ...(accessToken ? { accessToken } : {}),
         ...(mineOnly ? { mine: true } : {}),
+        ...(adminList ? { admin: true } : {}),
       })
       if (!result.ok) {
         setError(result.error)
@@ -72,7 +76,7 @@ export function useGalleryList({
       setNextCursor(result.page.nextCursor)
       return true
     },
-    [accessToken, category, mineOnly, pageSize, q, sort],
+    [accessToken, adminList, category, mineOnly, pageSize, q, sort],
   )
 
   const loadFirstPage = useCallback(async () => {

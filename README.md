@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.0.1-2ea44f)
+![Version](https://img.shields.io/badge/version-3.0.2-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -129,8 +129,8 @@ Requires Supabase env vars — copy `.env.example` to `.env` and fill in your ke
 | Path | Role |
 |------|------|
 | `public/research/` | Runtime research data: `manifest.json` and section JSON files. |
-| `src/data/` | Lab costs, workshop curves, bot/ultimate/relic/module tables, and generated data files. |
-| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. Golden Bot preset `levels[]` order is `[cooldown, range, bonus, duration]` (range before bonus; see [`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts)). |
+| `src/data/` | Lab costs (`tower-labs.json`), workshop curves, bot/ultimate/relic/module tables, and generated data files. Coin formatting rules: [`src/labCosts.ts`](src/labCosts.ts) (see [Lab coin display](#lab-coin-display)). |
+| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. Bot preset `levels[]` is `[cooldown, range, weaponStat2, weaponStat4]`; module chassis uses `infoIndex` → workshop id ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts), [`gameModuleIndex.ts`](src/playerSave/gameModuleIndex.ts)). Regenerate module index: `node scripts/gen-game-module-index.mjs`. |
 | `src/components/` | All UI — research browser, workshop, bots, modules, cards, relics, themes, settings, compare dialogs. |
 | `src/i18n/` | English, Spanish, and German UI strings and research overlays. |
 | `netlify/functions/` | Community gallery API (Netlify Functions + Supabase). |
@@ -166,7 +166,31 @@ The gallery uses Netlify Functions as the API layer and Supabase (Postgres + Sto
 |------|--------|
 | `TOWER_GALLERY_SUBMIT_DISABLED=1` | Reject new submissions. |
 | `VITE_TOWER_GALLERY_DISABLED=1` | Disable gallery API calls in the frontend build. |
-| `TOWER_GALLERY_ADMIN_USER_IDS` | Comma-separated Supabase user UUIDs with admin/delete access. |
+| `TOWER_GALLERY_ADMIN_USER_IDS` | Comma-separated Supabase user UUIDs allowed to use **Gallery admin** (see below). |
+
+### Gallery admin
+
+For allowlisted Supabase users, **Tools / Settings** includes a **Gallery admin** panel (requires `npm run dev:netlify` or a Netlify deploy with Functions).
+
+- **List** — Loads every row in `public.builds` (public and private/unlisted), 20 per page with **Load more**. The public **BUILDS** tab only lists `visibility = public` builds (signed-in users also see their own private builds in **My builds**).
+- **Delete** — Removes the `builds` row and storage payload; old `?build=` links stop working.
+- **Setup** — Sign in with the same provider used for publish, add your user UUID from the access-denied hint (or Supabase **Authentication → Users**) to `TOWER_GALLERY_ADMIN_USER_IDS` in Netlify (and `.env` for local Functions), then restart `dev:netlify`.
+
+List API: authenticated `GET /api/towers?admin=1` (see [`list-towers.ts`](netlify/functions/list-towers.ts)).
+
+---
+
+## Lab coin display
+
+Research card **cost** lines use marginal `COST` values from [`src/data/tower-labs.json`](src/data/tower-labs.json), formatted in [`src/labCosts.ts`](src/labCosts.ts):
+
+| Lab family | Function | Display rules (wiki-aligned) |
+|------------|----------|------------------------------|
+| **Assist Module** Substats / Bonus (8 cards) | `formatAssistModuleLabCoinDisplay` | Always **q**, never **T**. Raw ≥ 1e12 &lt; 1e15 → ÷ 1e12 (e.g. **250.00q**). Raw ≥ 1e15 → ÷ 1e15 (e.g. **3.75q**). All eight names alias to the `Assist Module Substats - Cannon` table. |
+| Other coin labs (e.g. Ultimate Weapon Durations) | `formatLabCoinDisplay` | **T** below 1e15; **q** from 1e15 up (e.g. **2.00q**, not **2000.00T**). |
+| Workshop medals / enhance panels | `formatCoinAbbrev` / `formatCoinAbbrevPreferT` | Workshop UI keeps **T** at trillion scale where the wiki does. |
+
+Legacy snapshot strings in `public/research/sections/*.json` (e.g. `0.25 q`) are normalized on load via `normalizeCoinAbbrevDisplay` (Assist Module cards pass `assistModuleLab: true`).
 
 ---
 

@@ -84,6 +84,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_302_headline: 'Neu in v3.0.2',
+  whats_new_302_body:
+    'Import-Fixes: Bot-Medaillen, Assist-Module-Lab-Kosten in q (z. B. 250,00q), übrige Labs T/q wie im Wiki, Kanonen-Module (z. B. Shrink Ray), Galerie-Admin zeigt alle Builds.',
   whats_new_301_headline: 'Neu in v3.0.1',
   whats_new_301_body:
     'Golden-Bot-Bonus und -Reichweite werden beim playerInfo.dat-Import jetzt korrekt übernommen — Spielstand erneut importieren, falls die Werte falsch wirkten.',
@@ -537,7 +540,7 @@ export const STRINGS_DE = {
   gallery_admin_your_user_id:
     'Deine Benutzer-ID: {{userId}} — füge sie zu TOWER_GALLERY_ADMIN_USER_IDS auf Netlify hinzu, um Zugriff zu erhalten.',
   gallery_admin_unlocked_hint:
-    'Löschen entfernt Kurzlink und Listeneintrag für diesen Build.',
+    'Zeigt alle Builds in der Datenbank (öffentlich und privat). Bei Bedarf „Mehr laden“. Löschen entfernt Kurzlink und Eintrag.',
   gallery_owner_make_public: 'Öffentlich machen',
   gallery_owner_make_unlisted: 'Ungelistet machen',
   gallery_owner_regenerate_link: 'Link neu erstellen',

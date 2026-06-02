@@ -84,6 +84,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_302_headline: 'Novedades en v3.0.2',
+  whats_new_302_body:
+    'Importación: medallas de bots, costes Assist Module en q (p. ej. 250,00q), otros labs T/q como la wiki, cañón (p. ej. Shrink Ray) con nombre e icono, admin de galería lista todos los builds.',
   whats_new_301_headline: 'Novedades en v3.0.1',
   whats_new_301_body:
     'El bono y el alcance del Golden Bot se importan bien desde playerInfo.dat — vuelve a importar tu guardado si esos valores estaban mal.',
@@ -539,7 +542,7 @@ export const STRINGS_ES = {
   gallery_admin_your_user_id:
     'Tu ID de usuario: {{userId}} — añádela a TOWER_GALLERY_ADMIN_USER_IDS en Netlify para obtener acceso.',
   gallery_admin_unlocked_hint:
-    'Eliminar quita el enlace corto y el listado de ese build.',
+    'Lista todos los builds en la base de datos (públicos y privados). Usa «Cargar más» si hace falta. Eliminar quita el enlace corto y el listado.',
   gallery_owner_make_public: 'Hacer público',
   gallery_owner_make_unlisted: 'Hacer no listado',
   gallery_owner_regenerate_link: 'Regenerar enlace',

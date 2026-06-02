@@ -51,7 +51,7 @@ export const GAME_MODULE_INFO_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] =
   "dimensionCore", // 38: dimensionCore
   "harmonyConductor", // 39: harmonyConductor
   "omChip", // 40: omChip
-  null, // 41: generic / unknown
+  "shrinkRay", // 41: shrinkRay
   "sharpFortitude", // 42: sharpFortitude
   "projectFunding", // 43: projectFunding
   "magneticHook", // 44: magneticHook

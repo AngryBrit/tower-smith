@@ -86,6 +86,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_302_headline: "What's new in v3.0.2",
+  whats_new_302_body:
+    'Save import fixes: bot medal order, Assist Module lab costs in q (e.g. 250.00q), other labs T/q like the wiki, cannon modules (e.g. Shrink Ray) name and icon, and gallery admin lists all builds.',
   whats_new_301_headline: "What's new in v3.0.1",
   whats_new_301_body:
     'Golden Bot Bonus and Range now import correctly from playerInfo.dat — re-import your save if those stats looked wrong.',
@@ -535,7 +538,8 @@ export const STRINGS_EN = {
   gallery_admin_access_denied: 'Your account is not an admin for this site.',
   gallery_admin_your_user_id:
     'Your user ID: {{userId}} — add it to TOWER_GALLERY_ADMIN_USER_IDS on Netlify to grant access.',
-  gallery_admin_unlocked_hint: 'Delete removes the short link and listing for that build.',
+  gallery_admin_unlocked_hint:
+    'Lists every build in the database (public and private). Use Load more if needed. Delete removes the short link and listing.',
   gallery_owner_make_public: 'Make public',
   gallery_owner_make_unlisted: 'Make Private',
   gallery_owner_regenerate_link: 'Regenerate link',

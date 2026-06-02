@@ -40,6 +40,8 @@ const MANUAL_OVERRIDES = {
   46: 'orbitalAugment',
   47: 'restorativeBonus',
   48: 'primordialCollapse',
+  /** James Wright.dat — equipped cannon legendary+ Shrink Ray (sub-stats decode; icon needs index). */
+  41: 'shrinkRay',
 }
 
 /**

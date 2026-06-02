@@ -4,6 +4,9 @@
  * rows still resolve through that table for durations and toolkit coin lookups; the **cost line** on
  * those cards uses `stoneUnlockCost` from `public/research/sections/card-mastery.json` instead of
  * abbreviated coin ladder amounts. Labs missing from the map show **—** in the app (no snapshot fallback).
+ *
+ * Display: Assist Module labs → {@link formatAssistModuleLabCoinDisplay}; other research cards →
+ * {@link formatLabCoinDisplay}. See README § Lab coin display.
  */
 
 import towerLabsJson from './data/tower-labs.json'
@@ -166,11 +169,69 @@ export function parseAbbreviatedCoinsToNumber(input: string): number | undefined
   return Number.isFinite(v) ? v : undefined
 }
 
-/** Strip optional space before K/M/B/T/q/Q/s suffix (legacy snapshot strings). */
-export function normalizeCoinAbbrevDisplay(s: string): string {
+export function isAssistModuleLabName(labDisplayName: string): boolean {
+  const n = labDisplayName.trim()
+  return (
+    n.startsWith('Assist Module Substats - ') ||
+    n.startsWith('Assist Module Bonus - ')
+  )
+}
+
+/**
+ * Assist Module lab coins (wiki): always **q**, never **T**.
+ * Below 1 q (1e15): **q** with 1e12 divisor (e.g. 247.00q for ~250T raw).
+ * From 1e15 up: **q** with 1e15 divisor (e.g. 3.75q for level 15 marginal).
+ */
+export function formatAssistModuleLabCoinDisplay(n: number): string {
+  if (!Number.isFinite(n) || n < 0) return '—'
+  if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
+  const abs = n
+  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
+  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
+  if (abs >= 1e15) return `${(n / 1e15).toFixed(2)}q`
+  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}q`
+  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
+  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
+  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
+  return String(Math.round(n))
+}
+
+/**
+ * Lab / research coin display: **T** below 1 q (1e15), **q** from 1e15 up (e.g. Ultimate Weapon Durations).
+ * Avoids `0.25q` for 250T and `1976T` for ~2q. Assist Module labs use {@link formatAssistModuleLabCoinDisplay}.
+ */
+export function formatLabCoinDisplay(n: number): string {
+  if (!Number.isFinite(n) || n < 0) return '—'
+  if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
+  const abs = n
+  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
+  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
+  if (abs >= 1e15) return `${(n / 1e15).toFixed(2)}q`
+  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}T`
+  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
+  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
+  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
+  return String(Math.round(n))
+}
+
+/**
+ * Strip optional space before K/M/B/T/q/Q/s suffix (legacy snapshot strings).
+ * Reformat coin amounts using {@link formatLabCoinDisplay}.
+ */
+export function normalizeCoinAbbrevDisplay(
+  s: string,
+  opts?: { assistModuleLab?: boolean },
+): string {
   const t = String(s).trim()
   if (!t || t === '—' || /^max$/i.test(t)) return t
-  return t.replace(/ (?=[KMBTqQs]$)/, '')
+  const compact = t.replace(/ (?=[KMBTqQs]$)/, '')
+  const n = parseAbbreviatedCoinsToNumber(compact)
+  if (n != null && n >= 1e12) {
+    return opts?.assistModuleLab
+      ? formatAssistModuleLabCoinDisplay(n)
+      : formatLabCoinDisplay(n)
+  }
+  return compact
 }
 
 /** Abbreviated coin display (K/M/B/T/q/Q/s): always two decimals (e.g. `197.60K`). */

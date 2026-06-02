@@ -11,6 +11,7 @@ import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 
 const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
 const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
+const JAMES_WRIGHT_SAVE = 'h:/The Tower/James Wright.dat'
 
 function minimalSave(
   partial: Partial<DecodedPlayerSave> = {},
@@ -204,6 +205,54 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.goldenBotRangeLevel).toBe(6)
   })
 
+  it('maps Amplify Bot range before bonus in save array (regression)', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        currentBotPreset: 0,
+        botPresets: {
+          amplify: [
+            {
+              unlocked: true,
+              active: true,
+              levels: [4, 10, 7, 12],
+              selectedLevels: [4, 10, 7, 12],
+              plusUnlocked: false,
+              plusLevel: 0,
+            },
+          ],
+        },
+      }),
+    )
+    expect(ws.amplifyBotCooldownLevel).toBe(4)
+    expect(ws.amplifyBotRangeLevel).toBe(10)
+    expect(ws.amplifyBotBonusLevel).toBe(7)
+    expect(ws.amplifyBotDurationLevel).toBe(12)
+  })
+
+  it('maps Flame Bot range before damage reduction in save array (regression)', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        currentBotPreset: 0,
+        botPresets: {
+          flame: [
+            {
+              unlocked: true,
+              active: true,
+              levels: [3, 8, 5, 10],
+              selectedLevels: [3, 8, 5, 10],
+              plusUnlocked: false,
+              plusLevel: 0,
+            },
+          ],
+        },
+      }),
+    )
+    expect(ws.flameBotCooldownLevel).toBe(3)
+    expect(ws.flameBotRangeLevel).toBe(8)
+    expect(ws.flameBotDamageLevel).toBe(5)
+    expect(ws.flameBotDamageReductionLevel).toBe(10)
+  })
+
   it('maps Golden Bot range before bonus in save array (regression)', () => {
     const ws = playerSaveToWorkshop(
       minimalSave({
@@ -341,6 +390,19 @@ describe('playerSaveToWorkshop', () => {
       'package-chance': 'mythic',
       'cash-wave': 'mythic',
       'max-recovery': 'mythic',
+    })
+  })
+
+  it('imports James Wright cannon Shrink Ray (infoIndex 41)', async () => {
+    if (!existsSync(JAMES_WRIGHT_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(JAMES_WRIGHT_SAVE)))
+    expect(save.moduleEquipped[0]?.infoIndex).toBe(41)
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simCannonChassisModuleId).toBe('shrinkRay')
+    expect(ws.simSubmoduleSelections.cannon?.main).toEqual({
+      'bounce-shot-chance': 'legendary',
+      'attack-speed': 'legendary',
+      'multishot-chance': 'legendary',
     })
   })
 })

@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+
+## [3.0.2] - 2026-06-02
+
+### Fixed
+
+- **All bot save imports** — Every `UserBotData.levels[]` uses `[cooldown, range, weaponStat2, weaponStat4]`, not workshop UI row order. v3.0.1 fixed Golden Bot only; Flame, Thunder, Amplify, and Bot Bot now use the same layout ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts)).
+- **Lab coin display** — Assist Module labs use wiki **q** scale (e.g. **250.00q**, not **T**). Other labs use **T** below 1 q (1e15) and **q** from 1e15 up (e.g. Ultimate Weapon Durations **2.00q**, not **2000.00T**) via [`formatAssistModuleLabCoinDisplay`](src/labCosts.ts) / [`formatLabCoinDisplay`](src/labCosts.ts).
+- **Cannon module import** — Map game `infoIndex` **41** to **Shrink Ray** so equipped cannon chassis name/icon import correctly (sub-stats were already decoded from `effects`).
+- **Gallery admin** — Admin list now requests all builds (public and private/unlisted) with your admin token; previously it used the anonymous public-only gallery query.
+
+### Docs
+
+- README: **Lab coin display** section (Assist Module **q** vs other labs **T**/**q**); module `infoIndex` and `gen-game-module-index.mjs`; **Gallery admin**; version **3.0.2**.
+- `.env.example`: `TOWER_GALLERY_ADMIN_USER_IDS` comment.
+- What's new banner (en/de/es): Assist Module lab costs use **q**.
+
 ## [3.0.1] - 2026-06-02
 
 ### Fixed

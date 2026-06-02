@@ -1,5 +1,7 @@
 import {
-  formatCoinAbbrev,
+  formatAssistModuleLabCoinDisplay,
+  formatLabCoinDisplay,
+  isAssistModuleLabName,
   normalizeCoinAbbrevDisplay,
   toolkitMarginalCoinCost,
   toolkitUpgradeDurationSeconds,
@@ -69,7 +71,9 @@ export function marginalCostForNextUpgrade(
     const discount =
       item.name === 'Labs Coin Discount' ? 0 : labsCoinDiscountPercent
     const discounted = applyLabsCoinDiscountToCoins(fromToolkit, discount)
-    return formatCoinAbbrev(discounted)
+    return isAssistModuleLabName(item.name)
+      ? formatAssistModuleLabCoinDisplay(discounted)
+      : formatLabCoinDisplay(discounted)
   }
 
   return '—'
@@ -2832,12 +2836,19 @@ export function parseResearchSection(
     throw new Error('Invalid section file (need title + items[])')
   }
   const o = raw as Omit<ResearchSection, 'sectionSlug'>
-  const items = o.items.map((item) => ({
-    ...item,
-    cost: normalizeCoinAbbrevDisplay(item.cost),
-    ...(item.costPlusOne != null
-      ? { costPlusOne: normalizeCoinAbbrevDisplay(item.costPlusOne) }
-      : {}),
-  }))
+  const items = o.items.map((item) => {
+    const assistModuleLab = isAssistModuleLabName(item.name)
+    return {
+      ...item,
+      cost: normalizeCoinAbbrevDisplay(item.cost, { assistModuleLab }),
+      ...(item.costPlusOne != null
+        ? {
+            costPlusOne: normalizeCoinAbbrevDisplay(item.costPlusOne, {
+              assistModuleLab,
+            }),
+          }
+        : {}),
+    }
+  })
   return { title: o.title, items, sectionSlug }
 }

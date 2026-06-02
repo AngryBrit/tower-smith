@@ -47,6 +47,11 @@ describe('gameModuleIndex', () => {
     expect(gameWorkshopChassisModuleId(40, 'core')).toBe('omChip')
   })
 
+  it('maps high-tier Shrink Ray on cannon (infoIndex 41)', () => {
+    expect(gameWorkshopChassisModuleId(41, 'cannon')).toBe('shrinkRay')
+    expect(gameWorkshopChassisModuleId(41, 'core')).toBeNull()
+  })
+
   it('maps named cannon, armor, generator, and core indices when slot matches', () => {
     expect(gameWorkshopChassisModuleId(45, 'cannon')).toBe('amplifyingStrike')
     expect(gameWorkshopChassisModuleId(42, 'armor')).toBe('sharpFortitude')

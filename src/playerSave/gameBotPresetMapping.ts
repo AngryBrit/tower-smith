@@ -20,40 +20,51 @@ export const BOT_PRESET_LIST_FIELD_BY_BOT_ID = {
   botBot: 'botBotPresets',
 } as const satisfies Record<WorkshopBotId, string>
 
-/** `levels[]` index order matches `WORKSHOP_BOT_WEAPON_STATS[botId]` (UI stat order). */
-export const BOT_SAVE_LEVEL_INDEX_BY_WORKSHOP_KEY: Partial<
-  Record<WorkshopBotId, Partial<Record<WorkshopBotUpgradeKey, number>>>
+/**
+ * `levels[]` / `selectedLevels[]` order for every bot (not workshop UI row order):
+ * `[cooldown, range, weaponStat2, weaponStat4]`.
+ */
+export const BOT_SAVE_LEVEL_INDEX = {
+  cooldown: 0,
+  range: 1,
+  weaponStat2: 2,
+  weaponStat4: 3,
+} as const
+
+/** Map workshop upgrade keys → save array index (all bots share the layout above). */
+export const BOT_SAVE_LEVEL_INDEX_BY_WORKSHOP_KEY: Record<
+  WorkshopBotId,
+  Partial<Record<WorkshopBotUpgradeKey, number>>
 > = {
   flame: {
-    flameBotDamageReductionLevel: 0,
-    flameBotCooldownLevel: 1,
-    flameBotDamageLevel: 2,
-    flameBotRangeLevel: 3,
+    flameBotCooldownLevel: BOT_SAVE_LEVEL_INDEX.cooldown,
+    flameBotRangeLevel: BOT_SAVE_LEVEL_INDEX.range,
+    flameBotDamageLevel: BOT_SAVE_LEVEL_INDEX.weaponStat2,
+    flameBotDamageReductionLevel: BOT_SAVE_LEVEL_INDEX.weaponStat4,
   },
   thunder: {
-    thunderBotDurationLevel: 0,
-    thunderBotCooldownLevel: 1,
-    thunderBotLingerLevel: 2,
-    thunderBotRangeLevel: 3,
+    thunderBotCooldownLevel: BOT_SAVE_LEVEL_INDEX.cooldown,
+    thunderBotRangeLevel: BOT_SAVE_LEVEL_INDEX.range,
+    thunderBotLingerLevel: BOT_SAVE_LEVEL_INDEX.weaponStat2,
+    thunderBotDurationLevel: BOT_SAVE_LEVEL_INDEX.weaponStat4,
+  },
+  golden: {
+    goldenBotCooldownLevel: BOT_SAVE_LEVEL_INDEX.cooldown,
+    goldenBotRangeLevel: BOT_SAVE_LEVEL_INDEX.range,
+    goldenBotBonusLevel: BOT_SAVE_LEVEL_INDEX.weaponStat2,
+    goldenBotDurationLevel: BOT_SAVE_LEVEL_INDEX.weaponStat4,
   },
   amplify: {
-    amplifyBotDurationLevel: 0,
-    amplifyBotCooldownLevel: 1,
-    amplifyBotBonusLevel: 2,
-    amplifyBotRangeLevel: 3,
+    amplifyBotCooldownLevel: BOT_SAVE_LEVEL_INDEX.cooldown,
+    amplifyBotRangeLevel: BOT_SAVE_LEVEL_INDEX.range,
+    amplifyBotBonusLevel: BOT_SAVE_LEVEL_INDEX.weaponStat2,
+    amplifyBotDurationLevel: BOT_SAVE_LEVEL_INDEX.weaponStat4,
   },
   botBot: {
-    botBotDurationLevel: 0,
-    botBotCooldownLevel: 1,
-    botBotBonusLevel: 2,
-    botBotRangeLevel: 3,
-  },
-  /** Save order differs from UI: [cooldown, range, bonus, duration] (bonus/range swapped vs Amplify). */
-  golden: {
-    goldenBotCooldownLevel: 0,
-    goldenBotRangeLevel: 1,
-    goldenBotBonusLevel: 2,
-    goldenBotDurationLevel: 3,
+    botBotCooldownLevel: BOT_SAVE_LEVEL_INDEX.cooldown,
+    botBotRangeLevel: BOT_SAVE_LEVEL_INDEX.range,
+    botBotBonusLevel: BOT_SAVE_LEVEL_INDEX.weaponStat2,
+    botBotDurationLevel: BOT_SAVE_LEVEL_INDEX.weaponStat4,
   },
 }
 

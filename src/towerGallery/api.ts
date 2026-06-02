@@ -70,6 +70,8 @@ export async function listGalleryTowersPage(
     sort?: GalleryListSort
     accessToken?: string | null
     mine?: boolean
+    /** Gallery admin: list every build (public + unlisted). Requires admin bearer token. */
+    admin?: boolean
   },
 ): Promise<
   | { ok: true; page: GalleryListPageResult }
@@ -97,6 +99,9 @@ export async function listGalleryTowersPage(
     if (options?.mine) {
       params.set('mine', '1')
     }
+    if (options?.admin) {
+      params.set('admin', '1')
+    }
     const headers: Record<string, string> = {}
     if (options?.accessToken) {
       headers.Authorization = `Bearer ${options.accessToken}`
@@ -109,6 +114,9 @@ export async function listGalleryTowersPage(
       return { ok: false, error: 'gallery_unavailable' }
     }
     if (res.status === 401) {
+      return { ok: false, error: 'auth_required' }
+    }
+    if (res.status === 403) {
       return { ok: false, error: 'auth_required' }
     }
     if (!res.ok) return { ok: false, error: 'unknown' }

@@ -3,6 +3,7 @@ import {
   TOWER_GALLERY_LIST_PAGE_DEFAULT,
   TOWER_GALLERY_LIST_PAGE_MAX,
 } from '../../src/towerGallery/types'
+import { adminUserIdsConfigured, isAdminAuthorized } from './lib/adminAuth'
 import { userFromBearer } from './lib/bearerAuth'
 import { corsHeaders, jsonResponse } from './lib/http'
 import { isGalleryBackendConfigured } from './lib/supabaseAdmin'
@@ -38,10 +39,20 @@ export default async (req: Request): Promise<Response> => {
   const category = url.searchParams.get('category')?.trim() || null
   const sort = url.searchParams.get('sort')?.trim() || null
   const mine = url.searchParams.get('mine') === '1'
+  const adminList = url.searchParams.get('admin') === '1'
   const viewer = await userFromBearer(req)
 
   if (mine && !viewer) {
     return jsonResponse(401, { error: 'auth_required' }, cors)
+  }
+
+  if (adminList) {
+    if (!adminUserIdsConfigured()) {
+      return jsonResponse(503, { error: 'admin_not_configured' }, cors)
+    }
+    if (!(await isAdminAuthorized(req))) {
+      return jsonResponse(403, { error: 'unauthorized' }, cors)
+    }
   }
 
   let page
@@ -54,6 +65,7 @@ export default async (req: Request): Promise<Response> => {
       sort,
       viewer?.id ?? null,
       mine,
+      adminList,
     )
   } catch (err) {
     console.error('[gallery] list-towers failed:', err)

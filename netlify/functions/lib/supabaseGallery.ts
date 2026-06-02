@@ -193,6 +193,7 @@ async function fetchBuildListPage(
   viewerUserId: string | null,
   mineOnly: boolean,
   includeVotes: boolean,
+  includeAllVisibilities = false,
 ): Promise<{ rows: BuildRow[]; effectiveSort: GalleryListSort }> {
   const sb = getSupabaseAdmin()
   const requestedSort = parseListSort(sortRaw)
@@ -206,10 +207,12 @@ async function fetchBuildListPage(
     .select(listSelectColumns(includeVotes))
     .limit(limit)
 
-  if (viewerUserId) {
-    request = request.or(`visibility.eq.public,user_id.eq.${viewerUserId}`)
-  } else {
-    request = request.eq('visibility', 'public')
+  if (!includeAllVisibilities) {
+    if (viewerUserId) {
+      request = request.or(`visibility.eq.public,user_id.eq.${viewerUserId}`)
+    } else {
+      request = request.eq('visibility', 'public')
+    }
   }
 
   if (effectiveSort === 'top') {
@@ -263,6 +266,7 @@ export async function listGalleryEntriesPaginated(
   sortRaw: string | null,
   viewerUserId: string | null,
   mineOnly = false,
+  includeAllVisibilities = false,
 ): Promise<GalleryListPage> {
   const includeVotes = votesSchemaAvailable !== false
   let rows: BuildRow[]
@@ -278,6 +282,7 @@ export async function listGalleryEntriesPaginated(
       viewerUserId,
       mineOnly,
       includeVotes,
+      includeAllVisibilities,
     )
     rows = page.rows
     effectiveSort = page.effectiveSort
@@ -300,6 +305,7 @@ export async function listGalleryEntriesPaginated(
         viewerUserId,
         mineOnly,
         false,
+        includeAllVisibilities,
       )
       rows = page.rows
       effectiveSort = page.effectiveSort
