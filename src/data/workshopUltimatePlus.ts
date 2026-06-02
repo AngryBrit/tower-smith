@@ -58,7 +58,7 @@ export function workshopUltimatePlusClampLevel(
 ): number {
   if (!Number.isFinite(level)) return ULTIMATE_PLUS_LEVEL_LOCKED
   const n = Math.trunc(level)
-  if (n < ULTIMATE_PLUS_LEVEL_LOCKED) return ULTIMATE_PLUS_LEVEL_LOCKED
+  if (n <= ULTIMATE_PLUS_LEVEL_LOCKED) return ULTIMATE_PLUS_LEVEL_LOCKED
   return Math.max(0, Math.min(ULTIMATE_PLUS_MAX_LEVEL, n))
 }
 

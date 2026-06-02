@@ -20,6 +20,7 @@ import {
   type WorkshopBotUpgradeKey,
 } from './data/workshopBots'
 import type { WorkshopUltimatePlusLevelKey } from './data/workshopUltimatePlus'
+import { WORKSHOP_ULTIMATE_PLUS_LEVEL_ORDER } from './data/workshopUltimatePlusData'
 import type { WorkshopModulePresetSnapshot } from './data/workshopModulePresets'
 import {
   clearBuildWorkspace as clearFlatBuildWorkspace,
@@ -226,8 +227,8 @@ function pickUltimates(flat: WorkshopPersistedV1): UltimatesPersistedV1 {
     out[`${id}Active`] = flat[`${id}Active` as keyof WorkshopPersistedV1]
     out[workshopUltimateOwnedKey(id)] = flat[workshopUltimateOwnedKey(id)]
   }
-  for (const key of Object.keys(flat)) {
-    if (key.endsWith('PlusLevel')) out[key] = flat[key as keyof WorkshopPersistedV1]
+  for (const key of WORKSHOP_ULTIMATE_PLUS_LEVEL_ORDER) {
+    out[key] = flat[key]
   }
   return out as UltimatesPersistedV1
 }

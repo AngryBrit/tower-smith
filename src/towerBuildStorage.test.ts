@@ -16,6 +16,19 @@ describe('towerBuildStorage', () => {
     expect(flattenTowerBuild(build)).toEqual(flat)
   })
 
+  it('round-trips ultimate plus levels through split and flatten', () => {
+    const flat = {
+      ...defaultWorkshopPersisted(),
+      ultimatePlusSpotlightLightRangeLevel: 0,
+      ultimatePlusDeathWaveKillWallLevel: 3,
+    }
+    const build = splitTowerBuild(flat)
+    expect(build.ultimates.ultimatePlusSpotlightLightRangeLevel).toBe(0)
+    expect(build.ultimates.ultimatePlusDeathWaveKillWallLevel).toBe(3)
+    expect(flattenTowerBuild(build).ultimatePlusSpotlightLightRangeLevel).toBe(0)
+    expect(flattenTowerBuild(build).ultimatePlusDeathWaveKillWallLevel).toBe(3)
+  })
+
   it('accepts nested build payloads', () => {
     const build = defaultTowerBuild()
     expect(sanitizeTowerBuild(build)).toEqual(build)

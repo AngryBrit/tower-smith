@@ -216,8 +216,8 @@ export function workshopRendArmorMultStatDisplay(
   if (enhancementMultiplier > 1 + 1e-9) {
     v = Math.round(v * enhancementMultiplier * 1_000_000) / 1_000_000
   }
-  // In-game workshop card floors to **3** decimals (e.g. **×0.144**, not **×0.1442**).
-  const displayed = Math.floor(v * 1_000 + 1e-9) / 1_000
+  // In-game workshop card rounds to **3** decimals (e.g. **×0.173** at raw **0.172788**).
+  const displayed = Math.round(v * 1_000) / 1_000
   const s = displayed.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
   return `×${s}`
 }

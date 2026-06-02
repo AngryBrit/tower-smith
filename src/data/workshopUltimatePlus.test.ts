@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  ULTIMATE_PLUS_LEVEL_LOCKED,
   ULTIMATE_PLUS_UNLOCK_COSTS,
+  workshopUltimatePlusClampLevel,
   workshopUltimatePlusNextMarginalStones,
   workshopUltimatePlusNextUnlockCost,
   workshopUltimatePlusStatDisplay,
@@ -12,6 +14,12 @@ import {
 } from './workshopUltimatePlus'
 
 describe('workshop ultimate plus wiki spot checks', () => {
+  it('keeps locked level -1 through clamp', () => {
+    expect(workshopUltimatePlusClampLevel('spotlightLightRange', ULTIMATE_PLUS_LEVEL_LOCKED)).toBe(
+      ULTIMATE_PLUS_LEVEL_LOCKED,
+    )
+  })
+
   it('unlock costs match wiki (9 purchases)', () => {
     expect([...ULTIMATE_PLUS_UNLOCK_COSTS]).toEqual([
       500, 625, 750, 975, 1250, 1650, 2200, 2900, 3800,

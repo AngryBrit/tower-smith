@@ -3537,7 +3537,8 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .workshop__uw-body--bots {
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 .workshop__uw-card--unowned {
@@ -3549,17 +3550,20 @@ button.workshop__uw-plus-cost--display:hover {
   pointer-events: none;
 }
 
-/* Uniform bot card height (matches owned Flame Bot card in bots panel) */
+/* Stat row + unlock bar share one min height (label block + control row). */
 #inpanel-panel-bots {
-  --workshop-bot-card-height: 378px;
+  --workshop-bot-stats-row-min-height: calc(
+    0.45rem + 0.4rem + (0.72rem * 1.2 * 2) + 0.2rem + (0.95rem * 1.2) + 0.28rem + 0.1rem + 1rem + 0.28rem +
+      0.1rem
+  );
 }
 
 #inpanel-panel-bots .workshop__uw-card {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: var(--workshop-bot-card-height);
-  min-height: var(--workshop-bot-card-height);
+  height: auto;
+  min-height: 0;
 }
 
 #inpanel-panel-bots .workshop__uw-head--bot {
@@ -3577,9 +3581,31 @@ button.workshop__uw-plus-cost--display:hover {
   min-height: 0;
 }
 
-/* Ultimate workshop layout tokens (px so height does not scale with root rem). */
+#inpanel-panel-bots .workshop__uw-body--bots:not(.workshop__uw-body--unlock) {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  justify-content: flex-start;
+  gap: 0;
+  padding: 0.5rem 0.7rem 0.45rem;
+}
+
+#inpanel-panel-bots .workshop__uw-body--bots.workshop__uw-body--unlock {
+  flex: 0 0 auto;
+  height: auto;
+  min-height: 0;
+  gap: 0;
+  padding: 0.5rem 0.7rem 0.45rem;
+}
+
+/* Ultimate workshop: unlock bar height matches owned icon + stat row (tallest stat column). */
 #inpanel-panel-workshop .workshop__grid--ultimate {
-  --workshop-uw-unlock-block-height: 150px;
+  --workshop-uw-stats-row-min-height: max(
+    3.25rem,
+    calc(
+      0.45rem + 0.4rem + (0.72rem * 1.2) + 0.2rem + (0.95rem * 1.2) + 1px + 0.28rem + 0.28rem + 1.125rem
+    )
+  );
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-card {
@@ -3630,28 +3656,46 @@ button.workshop__uw-plus-cost--display:hover {
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
   flex: 0 0 auto;
   flex-direction: column;
+  align-items: stretch;
+  gap: 0;
   box-sizing: border-box;
-  height: var(--workshop-uw-unlock-block-height);
-  min-height: var(--workshop-uw-unlock-block-height);
-  max-height: var(--workshop-uw-unlock-block-height);
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  padding: 0.65rem 0.7rem 0.75rem;
+  background: var(--sr-surface-72);
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
-  flex: 1 1 auto;
+  flex: 0 0 auto;
   align-self: stretch;
   width: 100%;
   min-width: 0;
-  height: 100%;
+  height: auto;
   min-height: 0;
   align-items: stretch;
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
-  min-height: 0;
-  height: 100%;
+  width: 100%;
+  height: auto;
+  min-height: var(--workshop-uw-stats-row-min-height);
+  max-height: var(--workshop-uw-stats-row-min-height);
+  align-self: stretch;
 }
 
 #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body-unlock {
+  flex: 1 1 auto;
+  align-self: stretch;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
+
+#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-label,
+#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-cost {
   min-height: 0;
   height: 100%;
 }
@@ -3664,20 +3708,28 @@ button.workshop__uw-plus-cost--display:hover {
   height: auto;
   min-height: 0;
   max-height: none;
-  align-items: center;
+  align-items: flex-start;
+}
+
+#inpanel-panel-workshop
+  .workshop__grid--ultimate
+  .workshop__uw-icon-wrap {
+  align-self: flex-start;
 }
 
 #inpanel-panel-workshop
   .workshop__grid--ultimate
   .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
   flex: 1 1 auto;
+  align-self: flex-start;
   width: 100%;
   min-width: 0;
   height: auto;
-  max-height: max-content;
+  max-height: none;
   min-height: 0;
   align-items: start;
   align-content: start;
+  grid-auto-rows: max-content;
 }
 
 #inpanel-panel-workshop
@@ -3687,6 +3739,7 @@ button.workshop__uw-plus-cost--display:hover {
   height: auto;
   min-height: 0;
   align-self: start;
+  justify-content: flex-start;
 }
 
 #inpanel-panel-workshop
@@ -3734,26 +3787,40 @@ button.workshop__uw-plus-cost--display:hover {
     max-height: none;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats,
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
+  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
     flex: 1 1 auto;
-    height: auto;
-    align-items: start;
-  }
-
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats .workshop__uw-col,
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
+    align-self: flex-start;
     height: auto;
     min-height: 0;
+    align-items: start;
+    grid-auto-rows: max-content;
+  }
+
+  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
+    flex: 0 0 auto;
+    height: auto;
+    min-height: 0;
+    align-items: stretch;
+  }
+
+  #inpanel-panel-workshop
+    .workshop__grid--ultimate
+    .workshop__uw-stats:not(.workshop__uw-stats--unlock)
+    .workshop__uw-col {
+    height: auto;
+    min-height: 0;
+    align-self: start;
+  }
+
+  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
+    height: auto;
+    min-height: var(--workshop-uw-stats-row-min-height);
+    max-height: var(--workshop-uw-stats-row-min-height);
     align-self: stretch;
   }
 
   #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col-top {
     flex: 0 0 auto;
-  }
-
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body-unlock {
-    min-height: 3.25rem;
   }
 
   #inpanel-panel-bots .workshop__uw-card {
@@ -3817,19 +3884,62 @@ button.workshop__uw-plus-cost--display:hover {
 
 }
 
-#inpanel-panel-bots .workshop__uw-stats--bots {
-  flex: 1 1 auto;
+#inpanel-panel-bots .workshop__uw-stats--bots.workshop__uw-stats--unlock {
+  flex: 0 0 auto;
   align-self: stretch;
   width: 100%;
   min-width: 0;
-  height: 100%;
+  height: auto;
   min-height: 0;
   align-items: stretch;
 }
 
-#inpanel-panel-bots .workshop__uw-stats--bots .workshop__uw-col {
-  min-height: 100%;
+#inpanel-panel-bots .workshop__uw-stats--bots.workshop__uw-stats--unlock .workshop__uw-col--uw-unlock {
+  height: auto;
+  min-height: var(--workshop-bot-stats-row-min-height);
+  align-self: stretch;
+}
+
+#inpanel-panel-bots .workshop__uw-stats--bots.workshop__uw-stats--unlock .workshop__uw-body-unlock {
+  flex: 1 1 auto;
   height: 100%;
+  min-height: 0;
+  max-height: 100%;
+}
+
+#inpanel-panel-bots .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-label,
+#inpanel-panel-bots .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-cost {
+  min-height: 0;
+}
+
+/* Owned bots: four equal stat columns; row height follows content (no stretch gap). */
+#inpanel-panel-bots .workshop__uw-stats--bots:not(.workshop__uw-stats--unlock) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  flex: 0 0 auto;
+  height: auto;
+  min-height: var(--workshop-bot-stats-row-min-height);
+  align-items: start;
+  align-content: start;
+}
+
+#inpanel-panel-bots .workshop__uw-stats--bots:not(.workshop__uw-stats--unlock) .workshop__uw-col {
+  height: auto;
+  min-height: 0;
+  align-self: start;
+}
+
+#inpanel-panel-bots .workshop__uw-stats--bots:not(.workshop__uw-stats--unlock) .workshop__uw-col-top {
+  flex: 0 0 auto;
+  justify-content: center;
+}
+
+#inpanel-panel-bots .workshop__uw-stats--bots:not(.workshop__uw-stats--unlock) .workshop__uw-stat-label {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(0.72rem * 1.2 * 2);
+  line-height: 1.2;
+  text-align: center;
 }
 
 #inpanel-panel-bots .workshop__uw-plus-bar {
@@ -4120,7 +4230,7 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .workshop__uw-stats--bots {
-  grid-template-columns: repeat(4, minmax(4.75rem, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   overflow-x: auto;
   overscroll-behavior-x: contain;
 }
