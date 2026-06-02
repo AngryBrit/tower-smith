@@ -1,5 +1,6 @@
 import { useRef, type ChangeEvent } from 'react'
 import type { BugBusterInitial } from '../../bugBuster/bugBusterTypes'
+import type { ImportNoticeVariant } from '../../importNotice'
 import { TOWER_ANDROID_SAVE_FOLDER } from '../../playerSave/playerInfoSavePath'
 import { ImportNoticeBlock } from '../ImportNoticeBlock'
 import { useI18n } from '../../i18n'
@@ -26,6 +27,7 @@ export type LabImportExportPanelProps = {
   onClose: () => void
   /** Shown inside the dialog (import/export feedback). */
   importNotice: string | null
+  importNoticeVariant?: ImportNoticeVariant
   importNoticeBugInitial?: BugBusterInitial | null
   sharePublishing: boolean
   playerSaveImporting: boolean
@@ -44,6 +46,7 @@ export function LabImportExportPanel({
   open,
   onClose,
   importNotice,
+  importNoticeVariant = 'info',
   importNoticeBugInitial = null,
   sharePublishing,
   playerSaveImporting,
@@ -181,6 +184,8 @@ export function LabImportExportPanel({
           {importNotice ? (
             <ImportNoticeBlock
               message={importNotice}
+              variant={importNoticeVariant}
+              className={`select-research__lab-data-import-notice select-research__lab-data-import-notice--${importNoticeVariant}`}
               bugInitial={importNoticeBugInitial}
             />
           ) : null}

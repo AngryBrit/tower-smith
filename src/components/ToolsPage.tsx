@@ -1,19 +1,18 @@
-import { useCallback, useEffect, useState, type ReactNode, type RefObject } from 'react'
+import { useCallback, useEffect, useState, type ReactNode } from 'react'
 import { createPortal } from 'react-dom'
-import type { SelectResearchHandle } from '../lab/labToolsTypes'
 import { performFullAppReset } from '../fullResetStorage'
 import { supabaseBrowserConfigured } from '../supabase/client'
 import { useI18n } from '../i18n'
 
 type ToolsPageProps = {
-  labToolsRef: RefObject<SelectResearchHandle | null>
+  onOpenTowerBackup: () => void
 }
 
 function toolsOverlayPortal(node: ReactNode) {
   return createPortal(node, document.body)
 }
 
-export function ToolsPage({ labToolsRef }: ToolsPageProps) {
+export function ToolsPage({ onOpenTowerBackup }: ToolsPageProps) {
   const { t } = useI18n()
   const showBackupInTools = !supabaseBrowserConfigured()
   const [fullResetConfirmOpen, setFullResetConfirmOpen] = useState(false)
@@ -45,7 +44,7 @@ export function ToolsPage({ labToolsRef }: ToolsPageProps) {
             <button
               type="button"
               className="glow-btn glow-btn--block"
-              onClick={() => labToolsRef.current?.openLabDataPanel()}
+              onClick={onOpenTowerBackup}
             >
               {t('auth_tower_backup')}
             </button>

@@ -28,21 +28,21 @@ import {
   clearGalleryBuildIdFromUrl,
   readGalleryBuildIdFromUrlSearchParams,
 } from '../towerGallery/shareLink'
-import { getGalleryTower } from '../towerGallery/api'
-type WorkspaceHydrationFmt = {
-  shareOpenedLevels: (
-    count: number,
-    workshopFromLink?: boolean,
-    buildName?: string,
-  ) => string
-}
+import { getGalleryTower, type TowerGalleryApiError } from '../towerGallery/api'
+import type { I18nFormatters } from '../i18n/dictionary'
+import { importNotice, type ImportNotice } from '../importNotice'
+
+type WorkspaceHydrationFmt = Pick<
+  I18nFormatters,
+  'shareOpenedLevels' | 'galleryShareLoadError'
+>
 
 const LEVEL_OVERRIDES_STORAGE_KEY = 'tower-export-level-overrides-v1'
 
 export type WorkspaceHydrationResult = {
   workspace: TowerWorkspaceV1
   scratchWorkspace: TowerWorkspaceV1
-  importNotice: string | null
+  importNotice: ImportNotice | null
 }
 
 function loadPersistedLabState(data: ResearchData): {
@@ -94,6 +94,38 @@ function loadPersistedLabState(data: ResearchData): {
   return empty
 }
 
+function persistedHydrationResult(
+  data: ResearchData,
+  persistedLabs: { workspace: TowerWorkspaceV1; scratchWorkspace: TowerWorkspaceV1 },
+  importNotice: ImportNotice | null,
+): WorkspaceHydrationResult {
+  return {
+    workspace: sanitizeWorkspaceLab(data, persistedLabs.workspace),
+    scratchWorkspace: sanitizeWorkspaceLab(data, persistedLabs.scratchWorkspace),
+    importNotice,
+  }
+}
+
+function clearGalleryBuildFromBrowserUrl(): void {
+  const url = new URL(window.location.href)
+  clearGalleryBuildIdFromUrl(url)
+  window.history.replaceState(null, '', url.pathname + url.search + url.hash)
+}
+
+function galleryShareLoadFailure(
+  data: ResearchData,
+  persistedLabs: { workspace: TowerWorkspaceV1; scratchWorkspace: TowerWorkspaceV1 },
+  fmt: WorkspaceHydrationFmt,
+  error: TowerGalleryApiError | 'invalid_payload',
+): WorkspaceHydrationResult {
+  clearGalleryBuildFromBrowserUrl()
+  return persistedHydrationResult(
+    data,
+    persistedLabs,
+    importNotice(fmt.galleryShareLoadError(error), 'error'),
+  )
+}
+
 function sanitizeWorkspaceLab(
   data: ResearchData,
   ws: TowerWorkspaceV1,
@@ -122,39 +154,44 @@ export async function hydrateWorkspaceFromStorage(
     const galleryBuildId = readGalleryBuildIdFromUrlSearchParams(params)
     if (galleryBuildId) {
       const gallery = await getGalleryTower(galleryBuildId)
-      const payload = gallery.ok ? gallery.record.payload : null
-      if (payload?.o) {
-        const sanitized = sanitizeLevelOverrides(data, payload.o as Record<string, unknown>)
-        const workshopFromLink = payload.w !== undefined
-        const sharedBuildName =
-          typeof payload.n === 'string'
-            ? payload.n.trim()
-            : gallery.ok
-              ? gallery.record.title
-              : undefined
-        let nextWorkspace = persistedLabs.workspace
-        let nextScratchWorkspace = persistedLabs.scratchWorkspace
-        if (workshopFromLink) {
-          const build = splitTowerBuild(sanitizeWorkshopPersisted(payload.w))
-          nextWorkspace = mergeWorkspaceBuild(nextWorkspace, build)
-          nextScratchWorkspace = mergeWorkspaceBuild(nextScratchWorkspace, build)
-        }
-        if (payload.t) {
-          applyTowerThemes({
-            ownedIds: sanitizeThemeOwnedIds(payload.t.owned),
-          })
-        }
-        const lab = { levelOverrides: sanitized }
-        const url = new URL(window.location.href)
-        clearGalleryBuildIdFromUrl(url)
-        clearShareEncodedFromUrl(url)
-        window.history.replaceState(null, '', url.pathname + url.search + url.hash)
-        const n = Object.keys(sanitized).length
-        return {
-          workspace: { ...nextWorkspace, lab },
-          scratchWorkspace: { ...nextScratchWorkspace, lab },
-          importNotice: fmt.shareOpenedLevels(n, workshopFromLink, sharedBuildName),
-        }
+      if (!gallery.ok) {
+        return galleryShareLoadFailure(data, persistedLabs, fmt, gallery.error)
+      }
+      const payload = gallery.record.payload
+      if (!payload?.o) {
+        return galleryShareLoadFailure(data, persistedLabs, fmt, 'invalid_payload')
+      }
+      const sanitized = sanitizeLevelOverrides(data, payload.o as Record<string, unknown>)
+      const workshopFromLink = payload.w !== undefined
+      const sharedBuildName =
+        typeof payload.n === 'string'
+          ? payload.n.trim()
+          : gallery.record.title
+      let nextWorkspace = persistedLabs.workspace
+      let nextScratchWorkspace = persistedLabs.scratchWorkspace
+      if (workshopFromLink) {
+        const build = splitTowerBuild(sanitizeWorkshopPersisted(payload.w))
+        nextWorkspace = mergeWorkspaceBuild(nextWorkspace, build)
+        nextScratchWorkspace = mergeWorkspaceBuild(nextScratchWorkspace, build)
+      }
+      if (payload.t) {
+        applyTowerThemes({
+          ownedIds: sanitizeThemeOwnedIds(payload.t.owned),
+        })
+      }
+      const lab = { levelOverrides: sanitized }
+      const url = new URL(window.location.href)
+      clearGalleryBuildIdFromUrl(url)
+      clearShareEncodedFromUrl(url)
+      window.history.replaceState(null, '', url.pathname + url.search + url.hash)
+      const n = Object.keys(sanitized).length
+      return {
+        workspace: { ...nextWorkspace, lab },
+        scratchWorkspace: { ...nextScratchWorkspace, lab },
+        importNotice: importNotice(
+          fmt.shareOpenedLevels(n, workshopFromLink, sharedBuildName),
+          'success',
+        ),
       }
     }
 
@@ -186,7 +223,10 @@ export async function hydrateWorkspaceFromStorage(
         return {
           workspace: { ...nextWorkspace, lab },
           scratchWorkspace: { ...nextScratchWorkspace, lab },
-          importNotice: fmt.shareOpenedLevels(n, workshopFromLink, sharedBuildName),
+          importNotice: importNotice(
+            fmt.shareOpenedLevels(n, workshopFromLink, sharedBuildName),
+            'success',
+          ),
         }
       }
     }
@@ -194,9 +234,5 @@ export async function hydrateWorkspaceFromStorage(
     /* ignore corrupt share payload */
   }
 
-  return {
-    workspace: sanitizeWorkspaceLab(data, persistedLabs.workspace),
-    scratchWorkspace: sanitizeWorkspaceLab(data, persistedLabs.scratchWorkspace),
-    importNotice: null,
-  }
+  return persistedHydrationResult(data, persistedLabs, null)
 }

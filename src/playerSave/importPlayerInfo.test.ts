@@ -97,7 +97,7 @@ describe('importPlayerInfo', () => {
     const rerollDailyMissionIi = data.sections[mainSi]!.items.findIndex(
       (i) => i.name === 'Reroll Daily Mission',
     )
-    expect(overrides[`${mainSi}-${rerollDailyMissionIi}`]).toBeUndefined()
+    expect(overrides[`${mainSi}-${rerollDailyMissionIi}`]).toBe(save.researchLevel[151])
     const attackSi = data.sections.findIndex((s) => s.sectionSlug === 'attack-research')
     expect(attackSi).toBeGreaterThanOrEqual(0)
     expect(overrides[`${attackSi}-0`]).toBe(46)
@@ -215,6 +215,9 @@ describe('importPlayerInfo', () => {
       ['Standard Perks Bonus', 17],
       ['Perk Option Quantity', 2],
       ['First Perk Choice', 1],
+      ['Ban Perks', 4],
+      ['Improve Trade-off Perks', 10],
+      ['Auto Pick Ranking', 5],
     ]
     for (const [name, level] of perkLabs) {
       const ii = data.sections[perksSi]!.items.findIndex((i) => i.name === name)

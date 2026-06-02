@@ -62,4 +62,28 @@ describe('ultimateLabsToOverrides', () => {
     expect(overrides['0-16']).toBe(20)
     expect(overrides['0-21']).toBe(2)
   })
+
+  it('maps Death Wave Cells Bonus from researchLevel id 190', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[190] = 20
+    const data: ResearchData = {
+      sections: [
+        {
+          title: 'ULTIMATE WEAPON RESEARCH',
+          sectionSlug: 'ultimate-weapon-research',
+          items: [
+            {
+              name: 'Death Wave Cells Bonus',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+          ],
+        },
+      ],
+    }
+    expect(ultimateLabsToOverrides(data, researchLevel)['0-0']).toBe(20)
+  })
 })

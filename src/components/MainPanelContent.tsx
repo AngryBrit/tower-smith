@@ -46,6 +46,8 @@ type PanelTabShellProps = {
   id: string
   labelledBy?: string
   ariaLabel?: string
+  /** Keep mounted for overlays (import/share) usable from other tabs. */
+  hidden?: boolean
   children: ReactNode
 }
 
@@ -57,12 +59,15 @@ function PanelTabShell({
   id,
   labelledBy,
   ariaLabel,
+  hidden = false,
   children,
 }: PanelTabShellProps) {
   return (
     <div
       id={id}
       role="tabpanel"
+      hidden={hidden ? true : undefined}
+      aria-hidden={hidden ? true : undefined}
       {...(labelledBy ? { 'aria-labelledby': labelledBy } : {})}
       {...(ariaLabel ? { 'aria-label': ariaLabel } : {})}
     >
@@ -85,6 +90,7 @@ type MainPanelContentProps = {
   inpanelWorkshopToolbarMount: HTMLDivElement | null
   galleryListRefreshToken: number
   onGalleryMutated: () => void
+  onOpenTowerBackup: () => void
   onRefreshResearch?: () => void | Promise<void>
   researchRefreshing?: boolean
 }
@@ -96,6 +102,7 @@ export function MainPanelContent({
   inpanelWorkshopToolbarMount,
   galleryListRefreshToken,
   onGalleryMutated,
+  onOpenTowerBackup,
   onRefreshResearch,
   researchRefreshing = false,
 }: MainPanelContentProps) {
@@ -124,17 +131,16 @@ export function MainPanelContent({
 
   return (
     <Suspense fallback={<PanelFallback />}>
-      {mainPanel === 'research' ? (
-        <PanelTabShell
-          panel="research"
-          panelLabel={t('app_nav_research')}
-          id="inpanel-panel-lab"
-          labelledBy="inpanel-tab-lab"
-          {...shellProps}
-        >
-          <SelectResearch data={data} embeddedInPanel />
-        </PanelTabShell>
-      ) : null}
+      <PanelTabShell
+        panel="research"
+        panelLabel={t('app_nav_research')}
+        id="inpanel-panel-lab"
+        labelledBy="inpanel-tab-lab"
+        hidden={mainPanel !== 'research'}
+        {...shellProps}
+      >
+        <SelectResearch data={data} embeddedInPanel />
+      </PanelTabShell>
 
       {mainPanel === 'workshop' ? (
         <PanelTabShell
@@ -233,7 +239,7 @@ export function MainPanelContent({
           {...shellProps}
         >
           <ToolsSettingsPage
-            labToolsRef={labToolsRef}
+            onOpenTowerBackup={onOpenTowerBackup}
             isActive
             galleryListRefreshToken={galleryListRefreshToken}
             onGalleryMutated={onGalleryMutated}

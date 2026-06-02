@@ -42,11 +42,11 @@ describe('gameCardsResearchMapping', () => {
     expect(overrides['0-5']).toBe(2)
   })
 
-  it('maps recharge cards labs from researchLevel ids 76–78', () => {
+  it('maps recharge cards labs from researchLevel ids 76, 146, 149', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[76] = 3
-    researchLevel[77] = 5
-    researchLevel[78] = 1
+    researchLevel[146] = 5
+    researchLevel[149] = 1
     const overrides = cardsLabsToOverrides(cardsResearchData(), researchLevel)
     expect(overrides['0-6']).toBe(3)
     expect(overrides['0-7']).toBe(5)

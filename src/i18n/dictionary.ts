@@ -1,5 +1,6 @@
 import { STRINGS_DE } from './dictionary.de'
 import { STRINGS_ES } from './dictionary.es'
+import type { TowerGalleryApiError } from '../towerGallery/api'
 
 /** UI string ids — English is the source of truth; locales in dictionary.*.ts must define every key. */
 export const STRINGS_EN = {
@@ -1451,6 +1452,7 @@ export type I18nFormatters = {
   importedTowerBuildNamed: (name: string) => string
   importedTowerBuilds: (count: number) => string
   galleryNoticeLoaded: (title: string) => string
+  galleryShareLoadError: (error: TowerGalleryApiError | 'invalid_payload') => string
   galleryNoticeSubmitted: (title: string) => string
   galleryByAuthor: (author: string) => string
   galleryAdminDeleteConfirmBody: (title: string) => string
@@ -1529,6 +1531,20 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     },
     galleryNoticeLoaded(title) {
       return replaceParams(s.gallery_notice_loaded, { title })
+    },
+    galleryShareLoadError(error) {
+      switch (error) {
+        case 'not_found':
+          return s.gallery_error_not_found
+        case 'network':
+          return s.gallery_error_network
+        case 'gallery_unavailable':
+          return s.gallery_error_unavailable
+        case 'invalid_payload':
+          return s.gallery_error_apply
+        default:
+          return s.sr_compare_parse_share_fail
+      }
     },
     galleryNoticeSubmitted(title) {
       return replaceParams(s.gallery_notice_submitted, { title })

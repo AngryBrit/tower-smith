@@ -1,6 +1,6 @@
 /**
  * Utility lab ↔ game `researchLevel[id]`.
- * First ten utility labs use sequential ids 20–29 (UI order).
+ * Cash Bonus–Package After Boss use ids 20–26; Recovery Package labs use 19, 28–29 (UI order).
  */
 export const UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Cash Bonus': 20,
@@ -10,7 +10,7 @@ export const UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   Interest: 24,
   'Max Interest': 25,
   'Package After Boss': 26,
-  'Recovery Package Amount': 27,
+  'Recovery Package Amount': 19,
   'Recovery Package Max': 28,
   'Recovery Package Chance': 29,
   'Enemy Attack Level Skip': 124,

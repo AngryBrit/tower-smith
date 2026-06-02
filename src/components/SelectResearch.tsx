@@ -9,7 +9,6 @@ import {
   useRef,
   useState,
 } from 'react'
-import { useAuth } from '../auth/useAuth'
 import { CommunityBuildRow } from './CommunityBuildRow'
 import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
 import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
@@ -21,15 +20,12 @@ import {
   formatSimulatorCoinAggregates,
   maxVisibleLabLevels,
 } from '../labBudgetAggregates'
-import { importPlayerInfoDat } from '../playerSave/importPlayerInfo'
-import { validatePlayerInfoSize } from '../playerSave/playerInfoLimits'
+import { usePlayerSaveImport } from '../playerSave/usePlayerSaveImport'
 import {
   isAndroidBrowser,
   isIosBrowser,
   TOWER_ANDROID_SAVE_FOLDER,
 } from '../playerSave/playerInfoSavePath'
-import { updateUserGuildId, updateUserPlayfabId } from '../profile/profileApi'
-import { resolveGuildNameById } from '../towerGallery/api'
 import {
   parseTowerUnifiedCsv,
   serializeTowerUnifiedCsv,
@@ -41,13 +37,8 @@ import {
 } from '../towerDataThemes'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
-import {
-  applyImportedLabAndBuild,
-  mergeWorkspaceBuild,
-} from '../towerWorkspaceStorage'
+import { mergeWorkspaceBuild } from '../towerWorkspaceStorage'
 import { splitTowerBuild } from '../towerBuildStorage'
-import { mergeLabOverridesForDisplayedDamage } from '../data/workshopLabOverridesForDamage'
-import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
 import type { ResearchData } from '../types/research'
 import { combinedLabsSpeedMultiplier } from '../data/workshopRelicWorkshopDisplay'
 import {
@@ -66,12 +57,10 @@ import { deferInEffect } from '../deferInEffect'
 import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
 import { LabToolbarQuick } from './lab/LabToolbarQuick'
 import { labOverlayPortal } from './lab/labOverlayPortal'
-import { ImportNoticeBlock } from './ImportNoticeBlock'
 
 const LabImportExportPanel = lazy(() =>
   import('./lab/LabImportExportPanel').then((m) => ({ default: m.LabImportExportPanel })),
 )
-import type { PlayerSaveImportStage } from './lab/LabImportExportPanel'
 const LabShareQrDialog = lazy(() =>
   import('./lab/LabShareQrDialog').then((m) => ({ default: m.LabShareQrDialog })),
 )
@@ -118,7 +107,7 @@ export function SelectResearch({
   embeddedInPanel = false,
 }: SelectResearchProps) {
   const { t, fmt, locale, setLocale } = useI18n()
-  const { hydrated, importNotice, setImportNotice } = useLabHydration()
+  const { hydrated, importNotice, publishImportNotice } = useLabHydration()
   const { registerResearchUi } = useLabToolsBridge()
   const { pushUndoSnapshot } = useWorkspaceUndo()
   const {
@@ -128,19 +117,14 @@ export function SelectResearch({
     clearWorkspace,
     copyCleanShareLink,
     publishForQrUrl,
-    prefillPublishGuildId,
-    resolveGuildNameForPublish,
   } = useCommunityBuild()
   const {
-    workspace,
     setWorkspace,
-    scratchWorkspace,
     setScratchWorkspace,
     labLevelOverrides: levelOverrides,
     setLabLevelOverrides: setLevelOverrides,
     workshopFlat,
   } = useTowerWorkspaceContext()
-  const auth = useAuth()
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const labBudgetBodyId = useId().replace(/:/g, '')
   const [search, setSearch] = useState('')
@@ -152,9 +136,6 @@ export function SelectResearch({
   } | null>(null)
   const [resetLevelsConfirmOpen, setResetLevelsConfirmOpen] = useState(false)
   const [labDataPanelOpen, setLabDataPanelOpen] = useState(false)
-  const [playerSaveImporting, setPlayerSaveImporting] = useState(false)
-  const [playerSaveImportStage, setPlayerSaveImportStage] =
-    useState<PlayerSaveImportStage | null>(null)
   const [labCompareOpen, setLabCompareOpen] = useState(false)
   const [labBudgetCollapsed, setLabBudgetCollapsed] = useState(() => {
     try {
@@ -174,7 +155,7 @@ export function SelectResearch({
 
   const reportImportProblem = useCallback(
     (message: string, partial?: Partial<BugBusterInitial>) => {
-      setImportNotice(message)
+      publishImportNotice(message, 'error')
       setImportNoticeBugInitial({
         category: 'import',
         description: message,
@@ -182,17 +163,29 @@ export function SelectResearch({
         ...partial,
       })
     },
-    [setImportNotice],
+    [publishImportNotice],
   )
 
-  useEffect(() => {
-    if (!importNotice) return
-    const id = window.setTimeout(() => {
-      setImportNotice(null)
+  const {
+    playerSaveImporting,
+    playerSaveImportStage,
+    handleImportPlayerInfoFileChange,
+  } = usePlayerSaveImport(data, {
+    reportImportProblem,
+    onImportSuccess: () => {
       setImportNoticeBugInitial(null)
-    }, 5000)
+      setLabDataPanelOpen(false)
+    },
+  })
+
+  useEffect(() => {
+    if (!importNotice) {
+      setImportNoticeBugInitial(null)
+      return
+    }
+    const id = window.setTimeout(() => setImportNoticeBugInitial(null), 5000)
     return () => window.clearTimeout(id)
-  }, [importNotice, setImportNotice])
+  }, [importNotice])
 
   useEffect(() => {
     try {
@@ -457,8 +450,8 @@ export function SelectResearch({
     setResetLevelsConfirmOpen(false)
     pushUndoSnapshot()
     setLevelOverrides({})
-    setImportNotice(t('sr_notice_reset_all'))
-  }, [pushUndoSnapshot, setImportNotice, setLevelOverrides, t])
+    publishImportNotice(t('sr_notice_reset_all'), 'success')
+  }, [pushUndoSnapshot, publishImportNotice, setLevelOverrides, t])
 
   const handleExportLevels = useCallback(() => {
     const date = new Date().toISOString().slice(0, 10)
@@ -493,129 +486,22 @@ export function SelectResearch({
       })
       setShareQr({ dataUrl, url })
     } catch {
-      setImportNotice(t('sr_notice_qr_fail'))
+      publishImportNotice(t('sr_notice_qr_fail'), 'error')
     }
-  }, [publishForQrUrl, setImportNotice, t])
-
-  const handleImportPlayerInfoFileChange = useCallback(
-    async (e: React.ChangeEvent<HTMLInputElement>) => {
-      const input = e.target
-      const file = input.files?.[0]
-      input.value = ''
-      if (!file) return
-      const sizeError = validatePlayerInfoSize(file.size)
-      if (sizeError === 'too_large') {
-        reportImportProblem(t('sr_notice_import_player_too_large'))
-        return
-      }
-      if (sizeError === 'empty') {
-        reportImportProblem(t('sr_notice_import_player_invalid'))
-        return
-      }
-      setPlayerSaveImporting(true)
-      setPlayerSaveImportStage('reading')
-      try {
-        const buf = new Uint8Array(await file.arrayBuffer())
-        setPlayerSaveImportStage('decoding')
-        const imported = await importPlayerInfoDat(buf, data)
-        if (!imported.ok) {
-          if (imported.error === 'gzip_unsupported') {
-            reportImportProblem(t('sr_notice_import_player_gzip_unsupported'))
-          } else if (imported.error === 'too_large') {
-            reportImportProblem(t('sr_notice_import_player_too_large'))
-          } else if (imported.error === 'empty') {
-            reportImportProblem(t('sr_notice_import_player_invalid'))
-          } else {
-            reportImportProblem(t('sr_notice_import_player_invalid'))
-          }
-          return
-        }
-        setPlayerSaveImportStage('applying')
-        const sanitized = imported.overrides
-        const mergedOverrides = mergeLabOverridesForDisplayedDamage(
-          data,
-          sanitized,
-          imported.gameResearchLevel,
-        )
-        const build = splitTowerBuild(imported.workshop)
-        applyTowerThemes(imported.themes)
-        const nextWorkspace = applyImportedLabAndBuild(
-          workspace,
-          mergedOverrides,
-          build,
-          imported.gameResearchLevel,
-        )
-        const nextScratch = applyImportedLabAndBuild(
-          scratchWorkspace,
-          mergedOverrides,
-          build,
-          imported.gameResearchLevel,
-        )
-        setWorkspace(nextWorkspace)
-        setScratchWorkspace(nextScratch)
-        persistLabWorkspacesToLocalStorage(nextWorkspace, nextScratch)
-        let shouldRefreshProfile = false
-        if (imported.guild) {
-          prefillPublishGuildId(imported.guild)
-          const knownGuild = await resolveGuildNameById(imported.guild)
-          if (!knownGuild && auth.user) {
-            await resolveGuildNameForPublish(imported.guild)
-          }
-          if (auth.user) {
-            setPlayerSaveImportStage('syncing')
-            const updated = await updateUserGuildId(auth.user.id, imported.guild)
-            if (updated.ok) shouldRefreshProfile = true
-          }
-        }
-        if (auth.user && imported.playfabId) {
-          setPlayerSaveImportStage('syncing')
-          await updateUserPlayfabId(auth.user.id, imported.playfabId)
-          shouldRefreshProfile = true
-        }
-        if (auth.user && shouldRefreshProfile) {
-          setPlayerSaveImportStage('syncing')
-          await auth.refreshProfile()
-        }
-        auth.prefillProfileFromImport({
-          displayName: imported.fakeUserName ?? imported.userName,
-        })
-        setImportNoticeBugInitial(null)
-        setImportNotice(t('sr_notice_import_player_ok'))
-        setLabDataPanelOpen(false)
-      } catch {
-        reportImportProblem(t('sr_notice_import_read_fail'))
-      } finally {
-        setPlayerSaveImporting(false)
-        setPlayerSaveImportStage(null)
-      }
-    },
-    [
-      auth,
-      data,
-      prefillPublishGuildId,
-      resolveGuildNameForPublish,
-      scratchWorkspace,
-      reportImportProblem,
-      setImportNotice,
-      setScratchWorkspace,
-      setWorkspace,
-      t,
-      workspace,
-    ],
-  )
+  }, [publishForQrUrl, publishImportNotice, t])
 
   const handleImportPlayerSaveClick = useCallback(() => {
     if (androidPlayerSaveImport) {
       void navigator.clipboard
         .writeText(TOWER_ANDROID_SAVE_FOLDER)
         .then(() => {
-          setImportNotice(t('sr_notice_import_player_android_path'))
+          publishImportNotice(t('sr_notice_import_player_android_path'), 'info')
         })
         .catch(() => {
-          setImportNotice(t('sr_notice_import_player_android_path_no_clip'))
+          publishImportNotice(t('sr_notice_import_player_android_path_no_clip'), 'info')
         })
     }
-  }, [androidPlayerSaveImport, setImportNotice, t])
+  }, [androidPlayerSaveImport, publishImportNotice, t])
 
   const handleImportLabCsvFileChange = useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -643,10 +529,11 @@ export function SelectResearch({
           setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
           const buildName = primary.name?.trim()
           setImportNoticeBugInitial(null)
-          setImportNotice(
+          publishImportNotice(
             buildName
               ? fmt.importedTowerBuildNamed(buildName)
               : t('sr_notice_import_tower_ok'),
+            'success',
           )
           setLabDataPanelOpen(false)
           return
@@ -659,8 +546,8 @@ export function SelectResearch({
     [
       data,
       fmt,
+      publishImportNotice,
       reportImportProblem,
-      setImportNotice,
       setLevelOverrides,
       setScratchWorkspace,
       setWorkspace,
@@ -811,13 +698,6 @@ export function SelectResearch({
               </button>
             </div>
           ) : null}
-        {importNotice && !labDataPanelOpen ? (
-          <ImportNoticeBlock
-            message={importNotice}
-            className="select-research__import-notice"
-            bugInitial={importNoticeBugInitial}
-          />
-        ) : null}
       </div>
       </nav>
 
@@ -892,7 +772,8 @@ export function SelectResearch({
               if (playerSaveImporting) return
               setLabDataPanelOpen(false)
             }}
-            importNotice={importNotice}
+            importNotice={importNotice?.message ?? null}
+            importNoticeVariant={importNotice?.variant ?? 'info'}
             importNoticeBugInitial={importNoticeBugInitial}
             sharePublishing={sharePublishing}
             playerSaveImporting={playerSaveImporting}
@@ -976,9 +857,9 @@ export function SelectResearch({
             onCopyLink={async () => {
               try {
                 await navigator.clipboard.writeText(shareQr.url)
-                setImportNotice(t('sr_notice_qr_link_copied'))
+                publishImportNotice(t('sr_notice_qr_link_copied'), 'success')
               } catch {
-                setImportNotice(t('sr_notice_copy_fail_short'))
+                publishImportNotice(t('sr_notice_copy_fail_short'), 'error')
               }
             }}
           />

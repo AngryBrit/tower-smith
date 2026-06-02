@@ -51,6 +51,7 @@ import { MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameModulesResearchMapp
 import { UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameUtilityResearchMapping'
 import { ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameUltimateResearchMapping'
 import { CARDS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameCardsResearchMapping'
+import { PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gamePerksResearchMapping'
 import {
   BOT_COOLDOWN_LAB_SAVE_FIELD,
   BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME,
@@ -355,6 +356,31 @@ export function cardMasteryLabsToOverrides(
   return overrides
 }
 
+/** Map perks labs with confirmed `researchLevel[id]` anchors (see gamePerksResearchMapping.ts). */
+export function perksLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'perks-research')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
 /** Map cards labs with confirmed `researchLevel[id]` anchors (see gameCardsResearchMapping.ts). */
 export function cardsLabsToOverrides(
   data: ResearchData,
@@ -396,6 +422,7 @@ export function researchLevelsToOverrides(
       section.sectionSlug === 'utility-research' ||
       section.sectionSlug === 'ultimate-weapon-research' ||
       section.sectionSlug === 'cards-research' ||
+      section.sectionSlug === 'perks-research' ||
       section.sectionSlug === 'modules'
     ) {
       continue
@@ -642,6 +669,7 @@ export function mapPlayerSaveToTower(
     ...utilityLabsToOverrides(data, save.researchLevel),
     ...ultimateLabsToOverrides(data, save.researchLevel),
     ...cardsLabsToOverrides(data, save.researchLevel),
+    ...perksLabsToOverrides(data, save.researchLevel),
     ...cardMasteryLabsToOverrides(data, save.researchLevel),
     ...modulesLabsToOverrides(data, save.researchLevel),
     ...botLabsToOverrides(data, save),

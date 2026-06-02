@@ -50,7 +50,7 @@ const LabGuildNamePromptDialog = lazy(() =>
 
 export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   const { t, fmt } = useI18n()
-  const { hydrated, setImportNotice } = useLabHydration()
+  const { hydrated, publishImportNotice } = useLabHydration()
   const {
     workspace,
     setWorkspace,
@@ -123,23 +123,23 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
 
   const ensureSignedInForPublish = useCallback(async (): Promise<boolean> => {
     if (!supabaseBrowserConfigured()) {
-      setImportNotice(t('gallery_error_unavailable'))
+      publishImportNotice(t('gallery_error_unavailable'), 'error')
       return false
     }
     const token = await getPublishAccessToken()
     if (token) return true
-    setImportNotice(t('auth_required_publish'))
+    publishImportNotice(t('auth_required_publish'), 'error')
     return false
-  }, [getPublishAccessToken, setImportNotice, t])
+  }, [getPublishAccessToken, publishImportNotice, t])
 
   const ensurePublishCategorySelected = useCallback((): GalleryBuildCategory | null => {
     if (!publishCategory) {
-      setImportNotice(t('gallery_error_invalid_category'))
+      publishImportNotice(t('gallery_error_invalid_category'), 'error')
       setCommunityPublishDialogOpen(true)
       return null
     }
     return publishCategory
-  }, [publishCategory, setImportNotice, t])
+  }, [publishCategory, publishImportNotice, t])
 
   const copyEmbeddedShareLink = useCallback(async (): Promise<string | null> => {
     try {
@@ -178,7 +178,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
       )
       if (!result.ok) {
         if (result.error === 'auth_required') {
-          setImportNotice(t('auth_required_publish'))
+          publishImportNotice(t('auth_required_publish'), 'error')
           return false
         }
         return (await copyEmbeddedShareLink()) != null
@@ -197,7 +197,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     getLabsShareFileForGallery,
     getPublishAccessToken,
     resolveShareTitle,
-    setImportNotice,
+    publishImportNotice,
     t,
   ])
 
@@ -211,7 +211,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   const openPublishDialog = useCallback(() => {
     void (async () => {
       if (!supabaseBrowserConfigured()) {
-        setImportNotice(t('gallery_error_unavailable'))
+        publishImportNotice(t('gallery_error_unavailable'), 'error')
         return
       }
       const token = await getPublishAccessToken()
@@ -224,7 +224,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
       setPublishVisibility('public')
       setCommunityPublishDialogOpen(true)
     })()
-  }, [auth.guildId, getPublishAccessToken, setImportNotice, t])
+  }, [auth.guildId, getPublishAccessToken, publishImportNotice, t])
 
   const closeCommunityPublishDialog = useCallback(() => {
     if (communityPublishSubmitting) return
@@ -234,11 +234,11 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
   const commitCommunityPublish = useCallback(async () => {
     const trimmedTitle = publishTitle.trim()
     if (!trimmedTitle) {
-      setImportNotice(t('gallery_error_invalid_title'))
+      publishImportNotice(t('gallery_error_invalid_title'), 'error')
       return
     }
     if (!publishCategory) {
-      setImportNotice(t('gallery_error_invalid_category'))
+      publishImportNotice(t('gallery_error_invalid_category'), 'error')
       return
     }
     const payload = getLabsShareFileForGallery()
@@ -283,17 +283,17 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
                       : result.error === 'network'
                         ? t('gallery_error_network')
                         : t('gallery_error_unknown')
-        setImportNotice(msg)
+        publishImportNotice(msg, 'error')
         return
       }
       await navigator.clipboard.writeText(result.url)
-      setImportNotice(fmt.galleryNoticeSubmitted(result.title))
+      publishImportNotice(fmt.galleryNoticeSubmitted(result.title), 'success')
       setCommunityPublishDialogOpen(false)
       setPublishTitle('')
       setPublishGuildId('')
       setPublishVisibility('public')
     } catch {
-      setImportNotice(t('gallery_error_unknown'))
+      publishImportNotice(t('gallery_error_unknown'), 'error')
     } finally {
       setCommunityPublishSubmitting(false)
     }
@@ -307,16 +307,16 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     publishTitle,
     publishVisibility,
     resolveGuildNameForPublish,
-    setImportNotice,
+    publishImportNotice,
     t,
   ])
 
   const copyCleanShareLink = useCallback(async () => {
     if (!towerGalleryApiAvailable()) {
       if (await copyEmbeddedShareLink()) {
-        setImportNotice(t('sr_notice_copy_gallery_fallback'))
+        publishImportNotice(t('sr_notice_copy_gallery_fallback'), 'info')
       } else {
-        setImportNotice(t('sr_notice_copy_short_fail'))
+        publishImportNotice(t('sr_notice_copy_short_fail'), 'error')
       }
       return
     }
@@ -328,7 +328,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     const payload = getLabsShareFileForGallery()
     if (!payload) {
       setSharePublishing(false)
-      setImportNotice(t('sr_notice_copy_short_fail'))
+      publishImportNotice(t('sr_notice_copy_short_fail'), 'error')
       return
     }
     try {
@@ -341,20 +341,20 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
       )
       if (!result.ok) {
         if (result.error === 'auth_required') {
-          setImportNotice(t('auth_required_publish'))
+          publishImportNotice(t('auth_required_publish'), 'error')
           return
         }
         if (await copyEmbeddedShareLink()) {
-          setImportNotice(t('sr_notice_copy_gallery_fail'))
+          publishImportNotice(t('sr_notice_copy_gallery_fail'), 'error')
         } else {
-          setImportNotice(t('sr_notice_copy_short_fail'))
+          publishImportNotice(t('sr_notice_copy_short_fail'), 'error')
         }
         return
       }
       await navigator.clipboard.writeText(result.url)
-      setImportNotice(t('sr_notice_copy_gallery_ok'))
+      publishImportNotice(t('sr_notice_copy_gallery_ok'), 'success')
     } catch {
-      setImportNotice(t('sr_notice_copy_short_fail'))
+      publishImportNotice(t('sr_notice_copy_short_fail'), 'error')
     } finally {
       setSharePublishing(false)
     }
@@ -365,7 +365,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     getLabsShareFileForGallery,
     getPublishAccessToken,
     resolveShareTitle,
-    setImportNotice,
+    publishImportNotice,
     t,
   ])
 
@@ -388,15 +388,15 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
       )
       if (!result.ok) {
         if (result.error === 'auth_required') {
-          setImportNotice(t('auth_required_publish'))
+          publishImportNotice(t('auth_required_publish'), 'error')
         } else {
-          setImportNotice(t('sr_notice_qr_fail'))
+          publishImportNotice(t('sr_notice_qr_fail'), 'error')
         }
         return null
       }
       return result.url
     } catch {
-      setImportNotice(t('sr_notice_qr_fail'))
+      publishImportNotice(t('sr_notice_qr_fail'), 'error')
       return null
     } finally {
       setSharePublishing(false)
@@ -407,7 +407,7 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     getLabsShareFileForGallery,
     getPublishAccessToken,
     resolveShareTitle,
-    setImportNotice,
+    publishImportNotice,
     t,
   ])
 
@@ -417,13 +417,13 @@ export function CommunityBuildProvider({ children }: { children: ReactNode }) {
     applyTowerThemes(workspaceThemesSnapshot(cleared))
     setWorkspace(cleared)
     setScratchWorkspace(clearTowerWorkspace(scratchWorkspace))
-    setImportNotice(t('sr_community_clear_done'))
+    publishImportNotice(t('sr_community_clear_done'), 'success')
   }, [
     pushUndoSnapshot,
     scratchWorkspace,
     setScratchWorkspace,
     setWorkspace,
-    setImportNotice,
+    publishImportNotice,
     t,
     workspace,
   ])

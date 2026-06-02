@@ -30,7 +30,7 @@ export function WorkspaceUndoProvider({ children }: { children: ReactNode }) {
   const { workspace, setWorkspace, scratchWorkspace, setScratchWorkspace } =
     useTowerWorkspaceContext()
   const { t } = useI18n()
-  const { setImportNotice } = useLabHydration()
+  const { publishImportNotice } = useLabHydration()
   const stackRef = useRef<WorkspacePairSnapshot[]>([])
   const [canUndo, setCanUndo] = useState(false)
 
@@ -79,12 +79,12 @@ export function WorkspaceUndoProvider({ children }: { children: ReactNode }) {
       if (stackRef.current.length === 0) return
       e.preventDefault()
       if (undo()) {
-        setImportNotice(t('workspace_undo_done'))
+        publishImportNotice(t('workspace_undo_done'), 'success')
       }
     }
     document.addEventListener('keydown', onKey)
     return () => document.removeEventListener('keydown', onKey)
-  }, [setImportNotice, t, undo])
+  }, [publishImportNotice, t, undo])
 
   const value = useMemo(
     () => ({ canUndo, pushUndoSnapshot, undo }),

@@ -55,8 +55,9 @@ function utilityResearchData(): ResearchData {
   }
 }
 
-/** Sample save: researchLevel[20..29] match first ten utility labs (UI order). */
+/** Sample save: utility ids 19–26, 28–29, 124–125 (see gameUtilityResearchMapping.ts). */
 const SAMPLE_UTILITY_LEVELS: Record<number, number> = {
+  19: 5,
   20: 27,
   21: 5,
   22: 89,
@@ -79,6 +80,7 @@ describe('utilityLabsToOverrides', () => {
     expect(overrides['0-3']).toBe(26)
     expect(overrides['0-4']).toBeUndefined()
     expect(overrides['0-6']).toBe(1)
+    expect(overrides['0-7']).toBe(5)
     expect(overrides['0-10']).toBe(20)
     expect(overrides['0-11']).toBe(19)
   })

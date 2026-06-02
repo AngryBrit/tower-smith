@@ -1,7 +1,3 @@
-import type { RefObject } from 'react'
-
-import type { SelectResearchHandle } from '../lab/labToolsTypes'
-
 import { GalleryAdminPage } from './GalleryAdminPage'
 import { ProfileSettings } from './ProfileSettings'
 import { SettingsPage } from './SettingsPage'
@@ -12,7 +8,7 @@ import { useGalleryAdmin } from '../towerGallery/useGalleryAdmin'
 import { useI18n } from '../i18n'
 
 type ToolsSettingsPageProps = {
-  labToolsRef: RefObject<SelectResearchHandle | null>
+  onOpenTowerBackup: () => void
   galleryListRefreshToken?: number
   onGalleryMutated?: () => void
   onRefreshResearch?: () => void | Promise<void>
@@ -21,7 +17,7 @@ type ToolsSettingsPageProps = {
 }
 
 export function ToolsSettingsPage({
-  labToolsRef,
+  onOpenTowerBackup,
   galleryListRefreshToken = 0,
   onGalleryMutated,
   onRefreshResearch,
@@ -45,7 +41,7 @@ export function ToolsSettingsPage({
           <hr className="tools-settings-page__divider" aria-hidden />
         </>
       ) : null}
-      <ToolsPage labToolsRef={labToolsRef} />
+      <ToolsPage onOpenTowerBackup={onOpenTowerBackup} />
       <hr className="tools-settings-page__divider" aria-hidden />
       <SettingsPage
         onRefreshResearch={onRefreshResearch}

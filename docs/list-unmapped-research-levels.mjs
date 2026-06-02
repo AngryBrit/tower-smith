@@ -20,6 +20,7 @@ import { DEFENSE_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameDef
 import { UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameUtilityResearchMapping.ts'
 import { ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameUltimateResearchMapping.ts'
 import { CARDS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameCardsResearchMapping.ts'
+import { PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gamePerksResearchMapping.ts'
 import { MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameModulesResearchMapping.ts'
 import {
   BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME,
@@ -125,6 +126,7 @@ function buildExplicitMap() {
   add(UTILITY_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'utility')
   add(ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'ultimate')
   add(CARDS_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'cards')
+  add(PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'perks')
   add(MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'modules')
   add(BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'bots')
   add(BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'bots')

@@ -17,11 +17,9 @@ import type { ResearchData } from '../types/research'
 
 export function LabToolsBridgeProvider({
   data,
-  onRequestResearchPanel,
   children,
 }: {
   data: ResearchData
-  onRequestResearchPanel: () => void
   children: ReactNode
 }) {
   const { hydrated } = useLabHydration()
@@ -72,8 +70,7 @@ export function LabToolsBridgeProvider({
       return
     }
     pendingUiRef.current = 'dataPanel'
-    onRequestResearchPanel()
-  }, [hydrated, onRequestResearchPanel])
+  }, [hydrated])
 
   const openCompareDialog = useCallback(() => {
     if (!hydrated) return
@@ -82,8 +79,7 @@ export function LabToolsBridgeProvider({
       return
     }
     pendingUiRef.current = 'compare'
-    onRequestResearchPanel()
-  }, [hydrated, onRequestResearchPanel])
+  }, [hydrated])
 
   const registerResearchUi = useCallback(
     (handle: Pick<SelectResearchHandle, 'openLabDataPanel' | 'openCompareDialog'> | null) => {

@@ -29,6 +29,8 @@ const MyBuildsDialog = lazy(() =>
 )
 import { LabToolsRefBinder } from './components/LabToolsRefBinder'
 import { AppHintsBanner } from './components/AppHintsBanner'
+import { LabImportNoticeBanner } from './components/LabImportNoticeBanner'
+import { PlayerSaveImportInput } from './components/PlayerSaveImportInput'
 import { MainPanelContent } from './components/MainPanelContent'
 import { useI18n } from './i18n'
 import { loadResearchData } from './loadResearchData'
@@ -64,6 +66,13 @@ export default function App() {
   const [inpanelWorkshopToolbarMount, setInpanelWorkshopToolbarMount] =
     useState<HTMLDivElement | null>(null)
   const labToolsRef = useRef<SelectResearchHandle | null>(null)
+  const playerSaveInputRef = useRef<HTMLInputElement>(null)
+  const openPlayerSaveImport = useCallback(() => {
+    playerSaveInputRef.current?.click()
+  }, [])
+  const openTowerBackupSharing = useCallback(() => {
+    labToolsRef.current?.openLabDataPanel()
+  }, [])
   const fmtRef = useRef(fmt)
   useLayoutEffect(() => {
     fmtRef.current = fmt
@@ -224,11 +233,9 @@ export default function App() {
           >
           <LabHydrationProvider data={data}>
           <WorkspaceUndoProvider>
-          <LabToolsBridgeProvider
-            data={data}
-            onRequestResearchPanel={() => setMainPanel('research')}
-          >
+          <LabToolsBridgeProvider data={data}>
           <CommunityBuildProvider>
+          <PlayerSaveImportInput data={data} inputRef={playerSaveInputRef} />
           <BugBusterProvider mainPanel={mainPanel}>
           <LabToolsRefBinder labToolsRef={labToolsRef} />
           <InpanelPresetsPortal
@@ -249,6 +256,7 @@ export default function App() {
                 className="select-research"
                 aria-label={t('app_inpanel_tabs_aria')}
               >
+                <LabImportNoticeBanner />
                 <div className="select-research__inpanel-header">
                 <nav
                   className={inpanelTabsClass}
@@ -407,7 +415,7 @@ export default function App() {
                 <div className="select-research__inpanel-auth">
                   <AuthButton
                     placement="nav"
-                    onOpenTowerBackup={() => labToolsRef.current?.openLabDataPanel()}
+                    onOpenTowerBackup={openTowerBackupSharing}
                     onOpenMyBuilds={() => setMyBuildsOpen(true)}
                     onOpenSettings={() => setMainPanel('toolsSettings')}
                   />
@@ -415,7 +423,7 @@ export default function App() {
                 </div>
 
                 <AppHintsBanner
-                  onImportSave={() => labToolsRef.current?.openLabDataPanel()}
+                  onImportSave={openPlayerSaveImport}
                   onBrowseBuilds={() => setMainPanel('gallery')}
                 />
 
@@ -444,6 +452,7 @@ export default function App() {
                   inpanelWorkshopToolbarMount={inpanelWorkshopToolbarMount}
                   galleryListRefreshToken={galleryListRefreshToken}
                   onGalleryMutated={() => setGalleryListRefreshToken((n) => n + 1)}
+                  onOpenTowerBackup={openTowerBackupSharing}
                   onRefreshResearch={() => void refreshResearchData()}
                   researchRefreshing={researchRefreshing}
                 />
