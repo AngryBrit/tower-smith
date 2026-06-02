@@ -204,6 +204,30 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.goldenBotRangeLevel).toBe(6)
   })
 
+  it('maps Golden Bot range before bonus in save array (regression)', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        currentBotPreset: 0,
+        botPresets: {
+          golden: [
+            {
+              unlocked: true,
+              active: true,
+              levels: [5, 13, 5, 6],
+              selectedLevels: [5, 13, 5, 6],
+              plusUnlocked: false,
+              plusLevel: 0,
+            },
+          ],
+        },
+      }),
+    )
+    expect(ws.goldenBotCooldownLevel).toBe(5)
+    expect(ws.goldenBotRangeLevel).toBe(13)
+    expect(ws.goldenBotBonusLevel).toBe(5)
+    expect(ws.goldenBotDurationLevel).toBe(6)
+  })
+
   it('maps slotsUnlocked to cardEquipSlots', () => {
     const ws = playerSaveToWorkshop(minimalSave({ slotsUnlocked: 18 }))
     expect(ws.cardEquipSlots).toBe(18)

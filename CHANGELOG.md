@@ -5,6 +5,16 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.1] - 2026-06-02
+
+### Fixed
+
+- **Golden Bot save import** — `playerInfo.dat` import mapped **Bonus** and **Range** medal levels from the wrong preset indices; Golden Bot save order is `[cooldown, range, bonus, duration]` (not the same as Amplify Bot). Workshop stats now match in-game values after import ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts)).
+
+### Docs
+
+- README: Golden Bot preset `levels[]` index order under `src/playerSave/`; version **3.0.1**.
+
 ## [3.0.0] - 2026-06-02
 
 ### Added

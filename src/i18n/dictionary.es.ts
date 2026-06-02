@@ -84,6 +84,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_301_headline: 'Novedades en v3.0.1',
+  whats_new_301_body:
+    'El bono y el alcance del Golden Bot se importan bien desde playerInfo.dat — vuelve a importar tu guardado si esos valores estaban mal.',
   whats_new_300_headline: 'Novedades en v3.0.0',
   whats_new_300_body:
     'Importa playerInfo.dat desde The Tower, elige temas claro o alto contraste y publica builds en la galería tras iniciar sesión con Google, Discord o Twitch.',

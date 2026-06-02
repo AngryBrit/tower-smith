@@ -84,6 +84,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_301_headline: 'Neu in v3.0.1',
+  whats_new_301_body:
+    'Golden-Bot-Bonus und -Reichweite werden beim playerInfo.dat-Import jetzt korrekt übernommen — Spielstand erneut importieren, falls die Werte falsch wirkten.',
   whats_new_300_headline: 'Neu in v3.0.0',
   whats_new_300_body:
     'Importiere playerInfo.dat aus The Tower, wähle helles oder High-Contrast-Theme und veröffentliche Community-Builds nach Anmeldung mit Google, Discord oder Twitch.',

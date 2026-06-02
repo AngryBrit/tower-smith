@@ -48,11 +48,11 @@ export const BOT_SAVE_LEVEL_INDEX_BY_WORKSHOP_KEY: Partial<
     botBotBonusLevel: 2,
     botBotRangeLevel: 3,
   },
-  /** Save order differs from UI sort: [6,6,6,20] = cooldown, bonus, range, duration. */
+  /** Save order differs from UI: [cooldown, range, bonus, duration] (bonus/range swapped vs Amplify). */
   golden: {
     goldenBotCooldownLevel: 0,
-    goldenBotBonusLevel: 1,
-    goldenBotRangeLevel: 2,
+    goldenBotRangeLevel: 1,
+    goldenBotBonusLevel: 2,
     goldenBotDurationLevel: 3,
   },
 }

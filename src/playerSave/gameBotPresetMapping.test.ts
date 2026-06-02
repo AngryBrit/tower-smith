@@ -2,10 +2,10 @@ import { describe, expect, it } from 'vitest'
 import { botSaveLevelIndex } from './gameBotPresetMapping'
 
 describe('botSaveLevelIndex', () => {
-  it('maps Golden Bot save levels [6,6,6,20] to workshop keys', () => {
+  it('maps Golden Bot save indices (cooldown, range, bonus, duration)', () => {
     expect(botSaveLevelIndex('golden', 'goldenBotCooldownLevel', 1)).toBe(0)
-    expect(botSaveLevelIndex('golden', 'goldenBotBonusLevel', 2)).toBe(1)
-    expect(botSaveLevelIndex('golden', 'goldenBotRangeLevel', 3)).toBe(2)
+    expect(botSaveLevelIndex('golden', 'goldenBotRangeLevel', 3)).toBe(1)
+    expect(botSaveLevelIndex('golden', 'goldenBotBonusLevel', 2)).toBe(2)
     expect(botSaveLevelIndex('golden', 'goldenBotDurationLevel', 0)).toBe(3)
   })
 
