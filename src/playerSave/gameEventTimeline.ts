@@ -34,7 +34,7 @@ export const BACKGROUND_SAVE_GAP_AFTER_PI_SLOT = 35
 export const BACKGROUND_KOI_POND_SAVE_INDEX =
   BACKGROUND_SAVE_INDEX_BY_THEME_ID['bg-koi-pond']!
 
-/** Last catalog background in save slot order (Neuron @ 51). */
+/** Last catalog background in save slot order (Magician @ 52). */
 export const BACKGROUND_LAST_EVENT_SAVE_INDEX = BACKGROUND_SAVE_MAX_INDEX
 
 export function backgroundSaveIndexForThemeId(id: string): number | undefined {
@@ -93,7 +93,7 @@ export function backgroundSaveIndexForEventBackgroundId(
 
 /**
  * `backgroundUnlocked` save index for guild season background (2–8).
- * Season 1 (Throne) and season 9 (Magician) have no save slot.
+ * Season 1 (Throne) has no save slot; season 9 (Magician) is index 52.
  */
 export function backgroundGuildSaveIndexForSeason(season: number): number | undefined {
   const theme = GAME_THEMES.find(

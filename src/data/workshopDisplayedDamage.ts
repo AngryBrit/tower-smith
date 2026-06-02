@@ -29,7 +29,6 @@ import { workshopCannonModulePercentFromLabs } from './workshopSimModules'
 import { workshopDamageStatAtLevel } from './workshopDamage'
 import { workshopChassisModuleHeroStatMultiplier } from './workshopChassisModuleHeroStatWorkshop'
 import {
-  damageLabMultiplierFromSave,
   mergeLabOverridesForDisplayedDamage,
   workshopDisplayedDamageLabOpts,
 } from './workshopLabOverridesForDamage'

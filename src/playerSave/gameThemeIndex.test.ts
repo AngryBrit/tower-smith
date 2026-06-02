@@ -95,7 +95,7 @@ describe('gameThemeIndex backgrounds', () => {
     expect(gameThemeIdAtIndex('background', 39)).toBe('bg-koi-pond')
     expect(gameThemeIdAtIndex('background', 50)).toBe('bg-guild-claw-machine')
     expect(gameThemeIdAtIndex('background', 51)).toBe('bg-neuron')
-    expect(gameThemeIdAtIndex('background', 52)).toBeUndefined()
+    expect(gameThemeIdAtIndex('background', 52)).toBe('bg-guild-magician')
   })
 
   it('imports mech world from save flag at index 36', () => {

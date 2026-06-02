@@ -25,7 +25,9 @@ export function LabHydrationProvider({
   const [hydrated, setHydrated] = useState(false)
   const [importNotice, setImportNotice] = useState<string | null>(null)
   const fmtRef = useRef(fmt)
-  fmtRef.current = fmt
+  useEffect(() => {
+    fmtRef.current = fmt
+  }, [fmt])
 
   function shouldKeepLabStateDuringHydrate(lab: LabPersistedV1): boolean {
     return Boolean(lab.gameResearchLevel?.length) || Object.keys(lab.levelOverrides).length > 0

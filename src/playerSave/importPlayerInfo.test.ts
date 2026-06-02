@@ -329,9 +329,10 @@ describe('importPlayerInfo', () => {
     expect(save.backgroundUnlocked[39]).toBe(true)
     expect(save.backgroundUnlocked[50]).toBe(true)
     expect(save.backgroundUnlocked[51]).toBe(true)
+    expect(save.backgroundUnlocked[52]).toBe(true)
     expect(themes.ownedIds).toContain('bg-guild-mech-world')
     expect(themes.ownedIds).not.toContain('bg-guild-throne-room')
-    expect(themes.ownedIds).not.toContain('bg-guild-magician')
+    expect(themes.ownedIds).toContain('bg-guild-magician')
   })
 
   it('maps card stars from cardLevel/cardUnlocked save slot layout', async () => {

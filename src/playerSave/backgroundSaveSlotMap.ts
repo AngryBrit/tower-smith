@@ -53,6 +53,7 @@ export const BACKGROUND_SAVE_INDEX_BY_THEME_ID: Readonly<Record<string, number>>
   'bg-guild-supernova': 49,
   'bg-guild-claw-machine': 50,
   'bg-neuron': 51,
+  'bg-guild-magician': 52, // Guild S9 / Magician
 }
 
 /** Highest `backgroundUnlocked` index used by a catalog background. */

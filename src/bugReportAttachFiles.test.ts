@@ -19,8 +19,7 @@ describe('analyzeBugReportAttachment', () => {
     })
     const result = await analyzeBugReportAttachment(file)
     expect(result.ok).toBe(true)
-    if (!result.ok) return
-    expect(result.kind).toBe('save')
+    if (!result.ok || result.kind !== 'save') return
     expect(result.attachment.gzip).toBe(true)
   })
 

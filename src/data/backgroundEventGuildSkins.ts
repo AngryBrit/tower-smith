@@ -421,7 +421,7 @@ export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [
     id: 'bg-guild-magician',
     nameId: 'theme_bg_magician',
     icon: 'menu-magician',
-    guildSeason: 9,
+    guildSeason: 9, // `backgroundUnlocked` index 52
     image: '/themes/background/MagicianIcon.webp',
     ownedDefault: true,
   },
