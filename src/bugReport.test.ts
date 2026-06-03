@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   buildBugReport,
+  buildBugReportEmailClipboardText,
   buildBugReportMailtoUrl,
   buildGitHubIssueUrl,
   BUG_REPORT_SUPPORT_EMAIL,
@@ -135,6 +136,21 @@ describe('buildGitHubIssueUrl', () => {
   })
 })
 
+describe('buildBugReportEmailClipboardText', () => {
+  it('uses readable spaces (no plus encoding)', () => {
+    const text = buildBugReportEmailClipboardText({
+      category: 'wrong_stat',
+      categoryLabel: 'Wrong number or stat',
+      description: 'Bot tab is empty',
+      steps: '1. Import save',
+    })
+    expect(text).not.toContain('+')
+    expect(text).toContain('Subject: [TowerSmith]')
+    expect(text).toContain('Bot tab is empty')
+    expect(text).toContain('1. Import save')
+  })
+})
+
 describe('buildBugReportMailtoUrl', () => {
   it('targets support email with subject and body', () => {
     const url = buildBugReportMailtoUrl({
@@ -143,8 +159,9 @@ describe('buildBugReportMailtoUrl', () => {
       description: 'Something broke',
     })
     expect(url.startsWith(`mailto:${BUG_REPORT_SUPPORT_EMAIL}?`)).toBe(true)
-    const decoded = decodeURIComponent(url).replace(/\+/g, ' ')
-    expect(decoded).toContain('Something broke')
-    expect(decoded).toContain('[TowerSmith]')
+    const query = url.slice(url.indexOf('?') + 1)
+    expect(query).not.toContain('+')
+    expect(decodeURIComponent(query)).toContain('Something broke')
+    expect(decodeURIComponent(query)).toContain('[TowerSmith]')
   })
 })

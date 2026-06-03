@@ -3,6 +3,7 @@ import type { WorkshopBotId } from '../data/workshopBotsData'
 import {
   BOT_PRESET_LIST_FIELD_BY_BOT_ID,
 } from './gameBotPresetMapping'
+import { hydrateLegacyBotPresetFlatFields } from './gameBotLegacyPresetMapping'
 import {
   findPlayerDataContext,
   getBinaryBoolArray,
@@ -95,7 +96,7 @@ function decodeBotPresets(ctx: PlayerDataContext): Partial<Record<WorkshopBotId,
 }
 
 function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
-  return {
+  const save: DecodedPlayerSave = {
     researchLevel: getInt32Array(ctx, 'researchLevel'),
     upgradeWorkshopLevel: getInt32Array(ctx, 'upgradeWorkshopLevel'),
     upgradeWorkshopDefenseLevel: getInt32Array(ctx, 'upgradeWorkshopDefenseLevel'),
@@ -148,6 +149,8 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     fakeUserName: getString(ctx, 'fakeUserName'),
     playfabID: getString(ctx, 'playfabID'),
   }
+  hydrateLegacyBotPresetFlatFields(ctx, save)
+  return save
 }
 
 export async function gunzipPlayerInfo(raw: Uint8Array): Promise<Uint8Array> {

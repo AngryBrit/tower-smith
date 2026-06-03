@@ -4,7 +4,7 @@ import { encodeLabsShareQueryValue } from '../src/labsShareCodec'
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     localStorage.setItem('tower-export-first-run-hint-v1', '1')
-    localStorage.setItem('tower-export-whats-new-seen-v1', '3.0.2')
+    localStorage.setItem('tower-export-whats-new-seen-v1', '3.0.3')
   })
 })
 

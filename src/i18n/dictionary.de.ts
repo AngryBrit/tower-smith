@@ -74,6 +74,8 @@ export const STRINGS_DE = {
   bug_buster_email: 'E-Mail an Support',
   bug_buster_github: 'GitHub-Issue öffnen',
   bug_buster_copied: 'Bericht in die Zwischenablage kopiert.',
+  bug_buster_email_ready:
+    'E-Mail-Text kopiert — bei Pluszeichen (+) in die Nachricht einfügen.',
   bug_buster_copy_fail: 'Kopieren fehlgeschlagen — Vorschau oben manuell kopieren.',
   bug_buster_email_save_downloaded:
     'E-Mail geöffnet — playerInfo.dat wurde heruntergeladen; bei Bedarf in der Mail-App anhängen.',
@@ -84,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_303_headline: 'Neu in v3.0.3',
+  whats_new_303_body:
+    'Ältere playerInfo.dat-Dateien importieren Medaillen-Bots aus Legacy-Preset-Arrays. Bug-Buster-E-Mail nutzt normale Leerzeichen (keine Pluszeichen) und kopiert den Text in die Zwischenablage.',
   whats_new_302_headline: 'Neu in v3.0.2',
   whats_new_302_body:
     'Import-Fixes: Bot-Medaillen, Assist-Module-Lab-Kosten in q (z. B. 250,00q), übrige Labs T/q wie im Wiki, Kanonen-Module (z. B. Shrink Ray), Galerie-Admin zeigt alle Builds.',

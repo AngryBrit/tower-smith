@@ -74,6 +74,8 @@ export const STRINGS_ES = {
   bug_buster_email: 'Correo al soporte',
   bug_buster_github: 'Abrir issue en GitHub',
   bug_buster_copied: 'Informe copiado al portapapeles.',
+  bug_buster_email_ready:
+    'Texto del correo copiado — pégalo en el mensaje si ves signos más (+).',
   bug_buster_copy_fail: 'No se pudo copiar — usa la vista previa y copia manualmente.',
   bug_buster_email_save_downloaded:
     'Correo abierto — se descargó playerInfo.dat; adjúntalo en tu app de correo si hace falta.',
@@ -84,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_303_headline: 'Novedades en v3.0.3',
+  whats_new_303_body:
+    'Los playerInfo.dat antiguos importan bots de medalla desde arrays de presets legacy. El correo de Bug Buster usa espacios normales (no signos más) y copia el mensaje al portapapeles.',
   whats_new_302_headline: 'Novedades en v3.0.2',
   whats_new_302_body:
     'Importación: medallas de bots, costes Assist Module en q (p. ej. 250,00q), otros labs T/q como la wiki, cañón (p. ej. Shrink Ray) con nombre e icono, admin de galería lista todos los builds.',

@@ -213,6 +213,15 @@ function truncateForGitHub(text: string, max: number): string {
 
 const MAILTO_BODY_MAX = 1800
 
+/**
+ * mailto query strings: use %20 for spaces, not +.
+ * URLSearchParams uses application/x-www-form-urlencoded (+ for space);
+ * many mail clients (Outlook, Apple Mail, etc.) leave + literal in subject/body.
+ */
+function buildMailtoQueryString(params: Record<string, string>): string {
+  return new URLSearchParams(params).toString().replace(/\+/g, '%20')
+}
+
 function buildIssueBodyLines(
   input: BugReportInput,
   env: BugReportEnvironment,
@@ -355,6 +364,21 @@ export function buildBugReportMailtoBody(
   return body
 }
 
+/** Plain-text subject + body for pasting into webmail when mailto encoding fails. */
+export function buildBugReportEmailClipboardText(
+  input: BugReportInput,
+  env: BugReportEnvironment = collectBugReportEnvironment({
+    mainPanel: input.mainPanel,
+    signedIn: input.signedIn,
+  }),
+): string {
+  const subject = truncateForGitHub(
+    `[TowerSmith] ${buildIssueSubject(input)}`,
+    120,
+  )
+  return `Subject: ${subject}\n\n${buildBugReportMailtoBody(input, env)}`
+}
+
 /** Opens the default mail client with a prefilled support message. */
 export function buildBugReportMailtoUrl(
   input: BugReportInput,
@@ -367,11 +391,11 @@ export function buildBugReportMailtoUrl(
     `[TowerSmith] ${buildIssueSubject(input)}`,
     120,
   )
-  const params = new URLSearchParams({
+  const query = buildMailtoQueryString({
     subject,
     body: buildBugReportMailtoBody(input, env),
   })
-  return `mailto:${BUG_REPORT_SUPPORT_EMAIL}?${params.toString()}`
+  return `mailto:${BUG_REPORT_SUPPORT_EMAIL}?${query}`
 }
 
 export { BUG_REPORT_SUPPORT_EMAIL }

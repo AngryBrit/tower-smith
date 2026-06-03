@@ -6,6 +6,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.3] - 2026-06-03
+
+### Fixed
+
+- **Legacy bot save import** — Older `playerInfo.dat` files store medal bots in `botsUnlockedPresets`, `botsActivePresets`, and `botsLevelPresets` / `botsLevelSelectionPresets` instead of per-bot `*BotPresets` lists. Import now hydrates the Bots tab from the active preset row ([`gameBotLegacyPresetMapping.ts`](src/playerSave/gameBotLegacyPresetMapping.ts)).
+- **Bug Buster email** — `mailto:` subject and body use `%20` for spaces (not `+`), so Outlook and similar clients no longer show plus signs. **Email support** also copies clean text to the clipboard before opening the mail client.
+
+### Docs
+
+- README and [`src/playerSave/NOTICE.md`](src/playerSave/NOTICE.md): legacy bot preset arrays; version **3.0.3**.
+- What's new banner (en/de/es): legacy bot import and email report fixes.
+
 ## [3.0.2] - 2026-06-02
 
 ### Fixed

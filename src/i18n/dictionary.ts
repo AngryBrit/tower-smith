@@ -77,6 +77,8 @@ export const STRINGS_EN = {
   bug_buster_email: 'Email support',
   bug_buster_github: 'Open GitHub issue',
   bug_buster_copied: 'Report copied to clipboard.',
+  bug_buster_email_ready:
+    'Email text copied — paste over the message if you see plus signs (+).',
   bug_buster_copy_fail: 'Could not copy — use the preview above and copy manually.',
   bug_buster_email_save_downloaded:
     'Email opened — playerInfo.dat was downloaded; attach it in your mail app if needed.',
@@ -86,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_303_headline: "What's new in v3.0.3",
+  whats_new_303_body:
+    'Older playerInfo.dat saves now import medal bots from legacy preset arrays. Bug Buster email uses normal spaces (not plus signs) and copies the message to your clipboard.',
   whats_new_302_headline: "What's new in v3.0.2",
   whats_new_302_body:
     'Save import fixes: bot medal order, Assist Module lab costs in q (e.g. 250.00q), other labs T/q like the wiki, cannon modules (e.g. Shrink Ray) name and icon, and gallery admin lists all builds.',

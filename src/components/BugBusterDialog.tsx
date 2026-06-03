@@ -11,6 +11,7 @@ import { useAuth } from '../auth/useAuth'
 import {
   BUG_REPORT_CATEGORIES,
   buildBugReport,
+  buildBugReportEmailClipboardText,
   buildBugReportMailtoUrl,
   buildGitHubIssueUrl,
   collectBugReportEnvironment,
@@ -283,6 +284,25 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
     offerAttachedFilesDownload('github')
   }, [buildEnv, offerAttachedFilesDownload, reportInput, requireDescription])
 
+  const openBugReportEmail = useCallback(
+    (env: ReturnType<typeof buildEnv>) => {
+      const clipboardText = buildBugReportEmailClipboardText(reportInput, env)
+      const launchMailto = () => {
+        window.location.href = buildBugReportMailtoUrl(reportInput, env)
+        offerAttachedFilesDownload('email')
+      }
+      void navigator.clipboard.writeText(clipboardText).then(
+        () => {
+          setNotice(t('bug_buster_email_ready'))
+          window.setTimeout(() => setNotice(null), 5000)
+          launchMailto()
+        },
+        () => launchMailto(),
+      )
+    },
+    [offerAttachedFilesDownload, reportInput, t],
+  )
+
   const handleEmail = useCallback(() => {
     if (!requireDescription()) return
     const env = buildEnv()
@@ -305,18 +325,17 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
             return
           }
           if (result === 'aborted') return
-          window.location.href = buildBugReportMailtoUrl(reportInput, env)
-          offerAttachedFilesDownload('email')
+          openBugReportEmail(env)
         },
       )
       return
     }
 
-    window.location.href = buildBugReportMailtoUrl(reportInput, env)
-    offerAttachedFilesDownload('email')
+    openBugReportEmail(env)
   }, [
     attachedFiles,
     buildEnv,
+    openBugReportEmail,
     offerAttachedFilesDownload,
     reportInput,
     requireDescription,

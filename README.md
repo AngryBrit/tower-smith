@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.0.2-2ea44f)
+![Version](https://img.shields.io/badge/version-3.0.3-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -130,7 +130,7 @@ Requires Supabase env vars — copy `.env.example` to `.env` and fill in your ke
 |------|------|
 | `public/research/` | Runtime research data: `manifest.json` and section JSON files. |
 | `src/data/` | Lab costs (`tower-labs.json`), workshop curves, bot/ultimate/relic/module tables, and generated data files. Coin formatting rules: [`src/labCosts.ts`](src/labCosts.ts) (see [Lab coin display](#lab-coin-display)). |
-| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. Bot preset `levels[]` is `[cooldown, range, weaponStat2, weaponStat4]`; module chassis uses `infoIndex` → workshop id ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts), [`gameModuleIndex.ts`](src/playerSave/gameModuleIndex.ts)). Regenerate module index: `node scripts/gen-game-module-index.mjs`. |
+| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. Modern saves use per-bot `*BotPresets` (`levels[]` = `[cooldown, range, weaponStat2, weaponStat4]`); older saves use `bots*Presets` BinaryArrays ([`gameBotLegacyPresetMapping.ts`](src/playerSave/gameBotLegacyPresetMapping.ts)). Module chassis: `infoIndex` → workshop id ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts), [`gameModuleIndex.ts`](src/playerSave/gameModuleIndex.ts)). Regenerate module index: `node scripts/gen-game-module-index.mjs`. |
 | `src/components/` | All UI — research browser, workshop, bots, modules, cards, relics, themes, settings, compare dialogs. |
 | `src/i18n/` | English, Spanish, and German UI strings and research overlays. |
 | `netlify/functions/` | Community gallery API (Netlify Functions + Supabase). |

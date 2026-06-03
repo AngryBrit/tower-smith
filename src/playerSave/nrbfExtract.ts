@@ -97,6 +97,29 @@ export function getBinaryIntArray(ctx: PlayerDataContext, name: string): number[
   return out
 }
 
+/**
+ * Legacy bot preset rows: BinaryArray of boxed bool or single-element int arrays.
+ * Unlock layout: botIndex * 3 + presetIndex (12 rows).
+ * Level layout: presetIndex * 16 + upgradeIndex (48 rows).
+ */
+export function getBinaryPresetScalarArray(ctx: PlayerDataContext, name: string): number[] {
+  const raw = resolveValue(ctx, ctx.player.getValue(name))
+  if (!(raw instanceof BinaryArrayRecord)) return []
+  return raw.elementValues.map((el) => {
+    const v = resolveValue(ctx, el)
+    if (v === true) return 1
+    if (v === false) return 0
+    if (typeof v === 'number' && Number.isFinite(v)) return Math.trunc(v)
+    if (v instanceof ArraySinglePrimitiveRecord) {
+      const arr = v.getArray()
+      if (!arr.length) return 0
+      const first = arr[0]
+      return first === true ? 1 : first === false ? 0 : Number(first)
+    }
+    return 0
+  })
+}
+
 /** `bool[]` stored as BinaryArray (e.g. `slotPresetCardAssignedBool`). */
 export function getBinaryBoolArray(ctx: PlayerDataContext, name: string): boolean[] {
   const raw = resolveValue(ctx, ctx.player.getValue(name))

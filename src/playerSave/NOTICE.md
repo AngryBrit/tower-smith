@@ -5,6 +5,7 @@
 TowerSmith uses it to decode gzip-compressed **playerInfo.dat** saves from The Tower (Unity BinaryFormatter / NRBF). The import pipeline lives in this directory:
 
 - [`decodePlayerInfo.ts`](decodePlayerInfo.ts) — file decode and typed `PlayerData` extraction
+- [`gameBotLegacyPresetMapping.ts`](gameBotLegacyPresetMapping.ts) — legacy `bots*Presets` arrays (v28−) when `*BotPresets` lists are absent
 - [`mapPlayerDataToTower.ts`](mapPlayerDataToTower.ts) — maps save arrays to lab overrides and workshop state
 - [`importPlayerInfo.ts`](importPlayerInfo.ts) — public entry used by the LAB tab UI
 
