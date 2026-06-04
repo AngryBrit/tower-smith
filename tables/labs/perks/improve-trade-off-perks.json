@@ -1,0 +1,166 @@
+{
+  "name": "Improve Trade-off Perks",
+  "maxLevel": 10,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "1 day, 59m, 0s",
+        "seconds": 89940
+      },
+      "gems": 169,
+      "coins": 600000000,
+      "totalTime": {
+        "display": "1 day, 59m, 0s",
+        "seconds": 89940
+      },
+      "totalGems": 169,
+      "totalCoins": 600000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "1 day, 14h, 54m, 0s",
+        "seconds": 140040
+      },
+      "gems": 250,
+      "coins": 700030000,
+      "totalTime": {
+        "display": "2 days, 15h, 53m, 0s",
+        "seconds": 229980
+      },
+      "totalGems": 419,
+      "totalCoins": 1300000000
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": {
+        "display": "2 days, 5h, 0m, 0s",
+        "seconds": 190800
+      },
+      "gems": 332,
+      "coins": 801180000,
+      "totalTime": {
+        "display": "4 days, 20h, 53m, 0s",
+        "seconds": 420780
+      },
+      "totalGems": 751,
+      "totalCoins": 2100000000
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": {
+        "display": "2 days, 19h, 40m, 0s",
+        "seconds": 243600
+      },
+      "gems": 417,
+      "coins": 910140000,
+      "totalTime": {
+        "display": "7 days, 16h, 33m, 0s",
+        "seconds": 664380
+      },
+      "totalGems": 1170,
+      "totalCoins": 3010000000
+    },
+    {
+      "level": 5,
+      "value": 5,
+      "time": {
+        "display": "3 days, 11h, 24m, 0s",
+        "seconds": 300240
+      },
+      "gems": 509,
+      "coins": 1050000000,
+      "totalTime": {
+        "display": "11 days, 3h, 57m, 0s",
+        "seconds": 964620
+      },
+      "totalGems": 1680,
+      "totalCoins": 4060000000
+    },
+    {
+      "level": 6,
+      "value": 6,
+      "time": {
+        "display": "4 days, 4h, 49m, 0s",
+        "seconds": 362940
+      },
+      "gems": 610,
+      "coins": 1250000000,
+      "totalTime": {
+        "display": "15 days, 8h, 46m, 0s",
+        "seconds": 1327560
+      },
+      "totalGems": 2290,
+      "totalCoins": 5310000000
+    },
+    {
+      "level": 7,
+      "value": 7,
+      "time": {
+        "display": "5 days, 38m, 0s",
+        "seconds": 434280
+      },
+      "gems": 725,
+      "coins": 1600000000,
+      "totalTime": {
+        "display": "20 days, 9h, 24m, 0s",
+        "seconds": 1761840
+      },
+      "totalGems": 3010,
+      "totalCoins": 6910000000
+    },
+    {
+      "level": 8,
+      "value": 8,
+      "time": {
+        "display": "5 days, 23h, 39m, 0s",
+        "seconds": 517140
+      },
+      "gems": 859,
+      "coins": 2200000000,
+      "totalTime": {
+        "display": "26 days, 9h, 3m, 0s",
+        "seconds": 2278980
+      },
+      "totalGems": 3870,
+      "totalCoins": 9110000000
+    },
+    {
+      "level": 9,
+      "value": 9,
+      "time": {
+        "display": "7 days, 2h, 46m, 0s",
+        "seconds": 614760
+      },
+      "gems": 1010,
+      "coins": 3230000000,
+      "totalTime": {
+        "display": "33 days, 11h, 49m, 0s",
+        "seconds": 2893740
+      },
+      "totalGems": 4880,
+      "totalCoins": 12340000000
+    },
+    {
+      "level": 10,
+      "value": 10,
+      "time": {
+        "display": "8 days, 10h, 58m, 0s",
+        "seconds": 730680
+      },
+      "gems": 1160,
+      "coins": 4920000000,
+      "totalTime": {
+        "display": "41 days, 22h, 47m, 0s",
+        "seconds": 3624420
+      },
+      "totalGems": 6050,
+      "totalCoins": 17260000000
+    }
+  ]
+}

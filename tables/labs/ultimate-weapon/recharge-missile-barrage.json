@@ -1,0 +1,118 @@
+{
+  "name": "Recharge Missile Barrage",
+  "maxLevel": 7,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1500,
+      "time": {
+        "display": "5 days, 5h, 0m, 0s",
+        "seconds": 450000
+      },
+      "gems": 751,
+      "coins": 550000000000,
+      "totalTime": {
+        "display": "5 days, 5h, 0m, 0s",
+        "seconds": 450000
+      },
+      "totalGems": 751,
+      "totalCoins": 550000000000
+    },
+    {
+      "level": 2,
+      "value": 1250,
+      "time": {
+        "display": "6 days, 14h, 21m, 9s",
+        "seconds": 570069
+      },
+      "gems": 944,
+      "coins": 1050000000000,
+      "totalTime": {
+        "display": "11 days, 19h, 21m, 9s",
+        "seconds": 1020069
+      },
+      "totalGems": 1700,
+      "totalCoins": 1600000000000
+    },
+    {
+      "level": 3,
+      "value": 1000,
+      "time": {
+        "display": "8 days, 54m, 39s",
+        "seconds": 694479
+      },
+      "gems": 1120,
+      "coins": 1550000000000,
+      "totalTime": {
+        "display": "19 days, 20h, 15m, 48s",
+        "seconds": 1714548
+      },
+      "totalGems": 2810,
+      "totalCoins": 3150000000000
+    },
+    {
+      "level": 4,
+      "value": 750,
+      "time": {
+        "display": "9 days, 23h, 10m, 29s",
+        "seconds": 861029
+      },
+      "gems": 1330,
+      "coins": 2050000000000,
+      "totalTime": {
+        "display": "29 days, 19h, 26m, 17s",
+        "seconds": 2575577
+      },
+      "totalGems": 4140,
+      "totalCoins": 5200000000000
+    },
+    {
+      "level": 5,
+      "value": 500,
+      "time": {
+        "display": "14 days, 1h, 58m, 39s",
+        "seconds": 1216719
+      },
+      "gems": 1790,
+      "coins": 2560000000000,
+      "totalTime": {
+        "display": "43 days, 21h, 24m, 56s",
+        "seconds": 3792296
+      },
+      "totalGems": 5930,
+      "totalCoins": 7760000000000
+    },
+    {
+      "level": 6,
+      "value": 350,
+      "time": {
+        "display": "24 days, 19h, 29m, 9s",
+        "seconds": 2143749
+      },
+      "gems": 2980,
+      "coins": 3070000000000,
+      "totalTime": {
+        "display": "68 days, 16h, 54m, 5s",
+        "seconds": 5936045
+      },
+      "totalGems": 8900,
+      "totalCoins": 10830000000000
+    },
+    {
+      "level": 7,
+      "value": 200,
+      "time": {
+        "display": "51 days, 8h, 12m, 0s",
+        "seconds": 4435920
+      },
+      "gems": 5130,
+      "coins": 3600000000000,
+      "totalTime": {
+        "display": "120 days, 1h, 6m, 5s",
+        "seconds": 10371965
+      },
+      "totalGems": 14030,
+      "totalCoins": 14430000000000
+    }
+  ]
+}

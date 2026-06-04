@@ -1,11 +1,12 @@
 /**
  * List researchLevel[id] > 0 in the player save field dump that have no import mapping.
  *
- * Reads:  docs/player-save-field-dump.json (regenerate via scripts/regenerate-player-save-dump.mjs)
- * Writes: docs/research-level-unmapped.txt
+ * Reads:  docs/player-save-field-dump.json, or a raw playerInfo *.dat save
+ * Writes: docs/research-level-unmapped.txt (each slot includes player-save-field-dump.json:line when that dump exists)
  *
  * Usage (from repo root):
  *   npx tsx docs/list-unmapped-research-levels.mjs
+ *   npx tsx docs/list-unmapped-research-levels.mjs path/to/playerInfo.dat
  *   npx tsx docs/list-unmapped-research-levels.mjs path/to/dump.json path/to/output.txt
  *   npm run research-unmapped
  */
@@ -13,6 +14,8 @@
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
+import { gunzipSync } from 'node:zlib'
+import { decodePlayerInfoBytes } from '../src/playerSave/decodePlayerInfo.ts'
 import { GAME_RESEARCH_ID_TO_MANIFEST_FLAT } from '../src/playerSave/gameResearchIndex.ts'
 import { ATTACK_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameAttackResearchMapping.ts'
 import { MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameMainResearchMapping.ts'
@@ -22,6 +25,8 @@ import { ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameUl
 import { CARDS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameCardsResearchMapping.ts'
 import { PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gamePerksResearchMapping.ts'
 import { MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameModulesResearchMapping.ts'
+import { ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameEnemiesResearchMapping.ts'
+import { CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameCardMasteryResearchMapping.ts'
 import {
   BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME,
   BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME,
@@ -95,10 +100,51 @@ function parseResearchLevelValues(text) {
   }
 }
 
+/**
+ * Line numbers for each researchLevel[id] in docs/player-save-field-dump.json (if present).
+ * @param {string} jsonDumpPath
+ * @returns {{ lineById: number[], valuesBlockLine: number, dumpBase: string } | null}
+ */
+function loadJsonLineMap(jsonDumpPath) {
+  if (!existsSync(jsonDumpPath) || jsonDumpPath.toLowerCase().endsWith('.dat')) {
+    return null
+  }
+  try {
+    const text = readFileSync(jsonDumpPath, 'utf8')
+    const { lineById, valuesBlockLine } = parseResearchLevelValues(text)
+    return { lineById, valuesBlockLine, dumpBase: path.basename(jsonDumpPath) }
+  } catch {
+    return null
+  }
+}
+
+/** @param {string} datPath */
+function loadDatMeta(datPath) {
+  const raw = readFileSync(datPath)
+  const bytes = raw[0] === 0x1f && raw[1] === 0x8b ? gunzipSync(raw) : raw
+  const levels = decodePlayerInfoBytes(bytes).researchLevel
+  const nonzeroCount = levels.filter((lv) => lv > 0).length
+  const jsonLines = loadJsonLineMap(defaultDump)
+  return {
+    levels,
+    lineById: jsonLines?.lineById ?? levels.map((_, id) => id),
+    length: levels.length,
+    nonzeroCount,
+    decodedAt: '',
+    dumpBase: path.basename(datPath),
+    valuesBlockLine: jsonLines?.valuesBlockLine ?? null,
+    jsonDumpRef: jsonLines?.dumpBase ?? null,
+    fromDat: true,
+  }
+}
+
 /** @param {string} dumpPath */
 function loadDumpMeta(dumpPath) {
   if (!existsSync(dumpPath)) {
     throw new Error(`Dump not found: ${dumpPath}`)
+  }
+  if (dumpPath.toLowerCase().endsWith('.dat')) {
+    return loadDatMeta(dumpPath)
   }
   const text = readFileSync(dumpPath, 'utf8')
   let decodedAt = ''
@@ -107,7 +153,17 @@ function loadDumpMeta(dumpPath) {
   const { levels, lineById, length, nonzeroCount, valuesBlockLine } =
     parseResearchLevelValues(text)
   const dumpBase = path.basename(dumpPath)
-  return { levels, lineById, length, nonzeroCount, decodedAt, dumpBase, valuesBlockLine }
+  return {
+    levels,
+    lineById,
+    length,
+    nonzeroCount,
+    decodedAt,
+    dumpBase,
+    valuesBlockLine,
+    jsonDumpRef: dumpBase,
+    fromDat: false,
+  }
 }
 
 /** @returns {Map<number, string[]>} */
@@ -130,6 +186,8 @@ function buildExplicitMap() {
   add(MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'modules')
   add(BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'bots')
   add(BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'bots')
+  add(ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'enemies')
+  add(CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'card-mastery')
   return explicit
 }
 
@@ -160,8 +218,16 @@ function analyze(levels, lineById, dumpRef, explicit) {
   return { rows, unmapped, dumpRef }
 }
 
-/** @param {string} dumpRef @param {number} line */
-function dumpLoc(dumpRef, line) {
+/**
+ * @param {{ dumpRef: string, line: number, id: number, fromDat: boolean, jsonDumpRef: string | null }} loc
+ */
+function dumpLoc({ dumpRef, line, id, fromDat, jsonDumpRef }) {
+  if (jsonDumpRef && line > 0 && line !== id) {
+    const json = `${jsonDumpRef}:${line}`
+    if (fromDat) return `${json}  (${dumpRef} researchLevel[${id}])`
+    return json
+  }
+  if (fromDat) return `${dumpRef} researchLevel[${id}]`
   return `${dumpRef}:${line}`
 }
 
@@ -169,13 +235,16 @@ function formatReport({
   generatedAt,
   dumpPath,
   dumpRef,
+  jsonDumpRef,
   valuesBlockLine,
   decodedAt,
   slotCount,
   dumpNonzeroCount,
   rows,
   unmapped,
+  fromDat,
 }) {
+  const loc = (line, id) => dumpLoc({ dumpRef, line, id, fromDat, jsonDumpRef })
   const lines = []
   lines.push('researchLevel import coverage')
   lines.push('===========================')
@@ -188,9 +257,21 @@ function formatReport({
     `Mapped for import: ${rows.length - unmapped.length} (explicit lab map and/or gameResearchIndex)`,
   )
   lines.push(`Unmapped (level > 0): ${unmapped.length}`)
-  lines.push(
-    `researchLevel values: ${dumpRef} (block ~line ${valuesBlockLine}, array id N → values[N] on its line)`,
-  )
+  if (fromDat && jsonDumpRef && valuesBlockLine != null) {
+    lines.push(`researchLevel values: decoded from ${dumpRef}`)
+    lines.push(
+      `JSON line refs: ${jsonDumpRef} (block ~line ${valuesBlockLine}, id N → values[N] on that line)`,
+    )
+  } else if (fromDat) {
+    lines.push(`researchLevel values: decoded from ${dumpRef} (array index = researchLevel[id])`)
+    lines.push(
+      `JSON line refs: (none — regenerate ${path.basename(defaultDump)} for file:line locations)`,
+    )
+  } else {
+    lines.push(
+      `researchLevel values: ${dumpRef} (block ~line ${valuesBlockLine}, array id N → values[N] on its line)`,
+    )
+  }
   lines.push('')
   lines.push('Unmapped slots (not in gameResearchIndex, not in *BY_LAB_NAME maps)')
   lines.push('----------------------------------------------------------------')
@@ -198,7 +279,7 @@ function formatReport({
     lines.push('  (none)')
   } else {
     for (const { id, lv, dumpLine } of unmapped.sort((a, b) => a.id - b.id)) {
-      lines.push(`  [${id}] = ${lv}  @ ${dumpLoc(dumpRef, dumpLine)}`)
+      lines.push(`  [${id}] = ${lv}  @ ${loc(dumpLine, id)}`)
     }
   }
   lines.push('')
@@ -206,9 +287,7 @@ function formatReport({
   lines.push('-----------------')
   for (const { id, lv, dumpLine, status, detail } of rows.sort((a, b) => a.id - b.id)) {
     const tag = status === 'unmapped' ? 'UNMAPPED' : status === 'explicit' ? 'explicit' : 'index'
-    lines.push(
-      `  [${id}] = ${lv}  @ ${dumpLoc(dumpRef, dumpLine)}  ${tag}${detail ? `  (${detail})` : ''}`,
-    )
+    lines.push(`  [${id}] = ${lv}  @ ${loc(dumpLine, id)}  ${tag}${detail ? `  (${detail})` : ''}`)
   }
   lines.push('')
   lines.push('Regenerate dump: npx tsx scripts/regenerate-player-save-dump.mjs')
@@ -218,27 +297,40 @@ function formatReport({
 
 function main() {
   const explicit = buildExplicitMap()
-  const { levels, lineById, length, nonzeroCount, decodedAt, dumpBase, valuesBlockLine } =
-    loadDumpMeta(dumpPath)
+  const {
+    levels,
+    lineById,
+    length,
+    nonzeroCount,
+    decodedAt,
+    dumpBase,
+    valuesBlockLine,
+    jsonDumpRef,
+    fromDat,
+  } = loadDumpMeta(dumpPath)
   const dumpRef = dumpBase
   const { rows, unmapped } = analyze(levels, lineById, dumpRef, explicit)
   const report = formatReport({
     generatedAt: new Date().toISOString(),
     dumpPath,
     dumpRef,
+    jsonDumpRef: jsonDumpRef ?? null,
     valuesBlockLine,
     decodedAt,
     slotCount: length,
     dumpNonzeroCount: nonzeroCount,
     rows,
     unmapped,
+    fromDat,
   })
   writeFileSync(outPath, report, 'utf8')
   console.log(`Wrote ${outPath}`)
   console.log(`  nonzero: ${rows.length}, unmapped: ${unmapped.length}`)
   if (unmapped.length > 0) {
     for (const { id, lv, dumpLine } of unmapped) {
-      console.log(`  [${id}] = ${lv}  @ ${dumpLoc(dumpRef, dumpLine)}`)
+      console.log(
+        `  [${id}] = ${lv}  @ ${dumpLoc({ dumpRef, line: dumpLine, id, fromDat, jsonDumpRef: jsonDumpRef ?? null })}`,
+      )
     }
   }
 }

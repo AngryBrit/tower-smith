@@ -1,0 +1,22 @@
+{
+  "name": "Unlock Perks",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "3 days, 11h, 19m, 0s",
+        "seconds": 299940
+      },
+      "gems": 508,
+      "coins": 1500000,
+      "totalTime": {
+        "display": "3 days, 11h, 19m, 0s",
+        "seconds": 299940
+      },
+      "totalGems": 508,
+      "totalCoins": 1500000
+    }
+  ]
+}

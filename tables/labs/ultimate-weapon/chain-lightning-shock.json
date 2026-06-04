@@ -1,0 +1,22 @@
+{
+  "name": "Chain Lightning Shock",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "23h, 53m, 0s",
+        "seconds": 85980
+      },
+      "gems": 163,
+      "coins": 950000,
+      "totalTime": {
+        "display": "23h, 53m, 0s",
+        "seconds": 85980
+      },
+      "totalGems": 163,
+      "totalCoins": 950000
+    }
+  ]
+}

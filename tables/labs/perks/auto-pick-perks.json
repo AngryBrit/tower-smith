@@ -1,0 +1,22 @@
+{
+  "name": "Auto Pick Perks",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "4 days, 23h, 26m, 0s",
+        "seconds": 429960
+      },
+      "gems": 718,
+      "coins": 100000000,
+      "totalTime": {
+        "display": "4 days, 23h, 26m, 0s",
+        "seconds": 429960
+      },
+      "totalGems": 718,
+      "totalCoins": 100000000
+    }
+  ]
+}

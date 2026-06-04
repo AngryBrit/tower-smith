@@ -1,0 +1,22 @@
+{
+  "name": "Extra Black Hole",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "17 days, 8h, 39m, 0s",
+        "seconds": 1499940
+      },
+      "gems": 2150,
+      "coins": 15000000000,
+      "totalTime": {
+        "display": "17 days, 8h, 39m, 0s",
+        "seconds": 1499940
+      },
+      "totalGems": 2150,
+      "totalCoins": 15000000000
+    }
+  ]
+}

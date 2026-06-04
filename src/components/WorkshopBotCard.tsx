@@ -1,3 +1,4 @@
+import { HoldStepButton } from './HoldStepButton'
 import { MedalGlyph } from './MedalGlyph'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -64,9 +65,11 @@ export type WorkshopBotCardProps = {
   workshop: WorkshopPersistedV1
   botLabDisplayOpts?: WorkshopBotLabDisplayOpts
   onBump: (key: WorkshopBotUpgradeKey, direction: -1 | 1) => void
+  onSetLevel: (key: WorkshopBotUpgradeKey, level: number) => void
   onToggleActive: (botId: WorkshopBotId) => void
   onSpecialUnlock: (botId: WorkshopBotId) => void
   onSpecialBump: (botId: WorkshopBotId, direction: -1 | 1) => void
+  onSetSpecialLevel: (botId: WorkshopBotId, level: number) => void
   onUnlockBot?: (botId: WorkshopBotId) => void
 }
 
@@ -76,9 +79,11 @@ export function WorkshopBotCard({
   workshop,
   botLabDisplayOpts,
   onBump,
+  onSetLevel,
   onToggleActive,
   onSpecialUnlock,
   onSpecialBump,
+  onSetSpecialLevel,
   onUnlockBot,
 }: WorkshopBotCardProps) {
   const { t } = useI18n()
@@ -194,15 +199,16 @@ export function WorkshopBotCard({
                       </span>
                     </div>
                     <div className="workshop__uw-col-foot">
-                      <button
-                        type="button"
+                      <HoldStepButton
                         className="workshop__uw-level-step"
-                        aria-label={`${statName} — ${t('ws_defense_level_down_aria')}`}
+                        ariaLabel={`${statName} — ${t('ws_defense_level_down_aria')}`}
+                        holdVariant="min"
                         disabled={!runActive || level <= 0}
-                        onClick={() => onBump(key, -1)}
+                        onStep={() => onBump(key, -1)}
+                        onHold={() => onSetLevel(key, 0)}
                       >
                         −
-                      </button>
+                      </HoldStepButton>
                       <div
                         className={
                           maxed
@@ -223,15 +229,16 @@ export function WorkshopBotCard({
                           </>
                         )}
                       </div>
-                      <button
-                        type="button"
+                      <HoldStepButton
                         className="workshop__uw-level-step"
-                        aria-label={`${statName} — ${t('ws_defense_level_up_aria')}`}
+                        ariaLabel={`${statName} — ${t('ws_defense_level_up_aria')}`}
+                        holdVariant="max"
                         disabled={!runActive || maxed}
-                        onClick={() => onBump(key, 1)}
+                        onStep={() => onBump(key, 1)}
+                        onHold={() => onSetLevel(key, workshopBotMaxLevel(key))}
                       >
                         +
-                      </button>
+                      </HoldStepButton>
                     </div>
                   </div>
                 )
@@ -247,6 +254,7 @@ export function WorkshopBotCard({
             active={runActive}
             onUnlock={onSpecialUnlock}
             onBump={onSpecialBump}
+            onSetLevel={onSetSpecialLevel}
           />
         ) : (
           <div

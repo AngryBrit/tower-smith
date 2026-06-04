@@ -29,6 +29,7 @@ import {
   workshopBotSpecialUnlockStones,
   workshopBotStatDisplay,
   workshopBotUnlockCostForBot,
+  workshopBotUnlockSpentMedals,
 } from './workshopBots'
 import { workshopUltimateTrackTotalStonesToMax } from './workshopUltimateTable'
 
@@ -56,6 +57,18 @@ describe('workshopBots unlock', () => {
     )
     expect(workshopBotUnlockCostForBot(allOwned, 'botBot')).toBeNull()
     expect(WORKSHOP_BOT_UNLOCK_MEDAL_TOTAL).toBe(3100)
+  })
+
+  it('sums unlock medals spent from explicit owned flags', () => {
+    expect(workshopBotUnlockSpentMedals({})).toBe(0)
+    expect(workshopBotUnlockSpentMedals({ flameOwned: true })).toBe(100)
+    expect(
+      workshopBotUnlockSpentMedals({
+        flameOwned: true,
+        thunderOwned: true,
+        goldenOwned: true,
+      }),
+    ).toBe(100 + 300 + 600)
   })
 
   it('treats legacy upgrade levels as owned', () => {

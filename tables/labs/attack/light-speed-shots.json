@@ -1,0 +1,22 @@
+{
+  "name": "Light Speed Shots",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "19h, 59m, 0s",
+        "seconds": 71940
+      },
+      "gems": 136,
+      "coins": 3000000,
+      "totalTime": {
+        "display": "19h, 59m, 0s",
+        "seconds": 71940
+      },
+      "totalGems": 136,
+      "totalCoins": 3000000
+    }
+  ]
+}

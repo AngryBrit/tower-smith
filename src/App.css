@@ -8972,6 +8972,35 @@ button.workshop__uw-plus-cost--display:hover {
   min-width: 0;
 }
 
+.gallery-author-line__filter-btn {
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: none;
+  font: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  transition:
+    color 0.15s ease,
+    text-decoration-color 0.15s ease;
+}
+
+.gallery-author-line__filter-btn:hover,
+.gallery-author-line__filter-btn:focus-visible {
+  color: var(--sr-cyan-bright);
+  text-decoration-color: currentColor;
+}
+
+.gallery-author-line__filter-btn:focus-visible {
+  outline: 2px solid var(--sr-focus-outline);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
 .gallery-author-line__avatar {
   width: 1.25rem;
   height: 1.25rem;

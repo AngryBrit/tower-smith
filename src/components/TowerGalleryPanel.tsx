@@ -445,7 +445,13 @@ export function TowerGalleryPanel({
     setOwnerConfirm(null)
   }, [handleDeleteOwn, handleRegenerateOwn, ownerConfirm])
 
-
+  const handleGallerySearchFilter = useCallback((query: string) => {
+    const trimmed = query.trim()
+    if (!trimmed) return
+    setMineOnlyFilter(false)
+    setSearchDraft(trimmed)
+    setSearchQuery(trimmed)
+  }, [])
 
   return (
 
@@ -652,6 +658,12 @@ export function TowerGalleryPanel({
                       guild={entry.guild}
                       avatarUrl={entry.authorAvatarUrl}
                       className="tower-gallery__entry-author"
+                      onAuthorClick={
+                        listInteractive ? handleGallerySearchFilter : undefined
+                      }
+                      onGuildClick={
+                        listInteractive ? handleGallerySearchFilter : undefined
+                      }
                     />
                   ) : null}
 

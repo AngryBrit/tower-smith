@@ -21,6 +21,10 @@ export const MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Enhancement Attack - Coin Discount': 134,
   'Enhancement Defense - Coin Discount': 135,
   'Enhancement Utility - Coin Discount': 136,
+  'Dissonant Echo - Attack': 238,
+  'Dissonant Echo - Defense': 239,
+  'Dissonant Echo - Utility': 240,
+  'Dissonant Echo - Ultimate Weapons': 241,
 } as const satisfies Record<string, number>
 
 export type MainResearchLabName = keyof typeof MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME

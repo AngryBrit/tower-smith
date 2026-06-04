@@ -1,3 +1,4 @@
+import { HoldStepButton } from './HoldStepButton'
 import { MedalGlyph } from './MedalGlyph'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
@@ -29,6 +30,7 @@ export type WorkshopBotSpecialCardProps = {
   plusEnabled: boolean
   active: boolean
   onBump: (botId: WorkshopBotId, direction: -1 | 1) => void
+  onSetLevel: (botId: WorkshopBotId, level: number) => void
   onUnlock: (botId: WorkshopBotId) => void
 }
 
@@ -38,6 +40,7 @@ export function WorkshopBotSpecialCard({
   plusEnabled,
   active,
   onBump,
+  onSetLevel,
   onUnlock,
 }: WorkshopBotSpecialCardProps) {
   const { t } = useI18n()
@@ -127,15 +130,16 @@ export function WorkshopBotSpecialCard({
                 : 'workshop__uw-plus-controls'
             }
           >
-            <button
-              type="button"
+            <HoldStepButton
               className="workshop__uw-level-step"
-              aria-label={`${title} — ${t('ws_defense_level_down_aria')}`}
+              ariaLabel={`${title} — ${t('ws_defense_level_down_aria')}`}
+              holdVariant="min"
               disabled={!active || level <= 0}
-              onClick={() => handleBump(-1)}
+              onStep={() => handleBump(-1)}
+              onHold={() => onSetLevel(botId, 0)}
             >
               −
-            </button>
+            </HoldStepButton>
             <div
               className={
                 maxed
@@ -156,15 +160,16 @@ export function WorkshopBotSpecialCard({
                 </>
               )}
             </div>
-            <button
-              type="button"
+            <HoldStepButton
               className="workshop__uw-level-step"
-              aria-label={`${title} — ${t('ws_defense_level_up_aria')}`}
+              ariaLabel={`${title} — ${t('ws_defense_level_up_aria')}`}
+              holdVariant="max"
               disabled={!active || maxed}
-              onClick={() => handleBump(1)}
+              onStep={() => handleBump(1)}
+              onHold={() => onSetLevel(botId, workshopBotSpecialMaxLevel(botId))}
             >
               +
-            </button>
+            </HoldStepButton>
           </div>
         </>
       )}

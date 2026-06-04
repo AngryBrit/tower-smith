@@ -1261,7 +1261,7 @@ const SWAMP_REND_ADDITIONAL_ENEMY_LABELS: readonly string[] = [
 
 /**
  * Tower Lab calculator **Value**: **3% × lab level** (whole-number **`%`** only).
- * **Swamp Rend** (basic rend %) and **Chain Thunder** (max damage reduction vs health lost from Chain Lightning).
+ * **Swamp Rend - Basic Enemies** (basic rend %) and **Chain Thunder** (max damage reduction vs health lost from Chain Lightning).
  */
 export function threePercentTimesLabLevelPercentDisplay(
   effectiveLevel: number,
@@ -1275,7 +1275,7 @@ export function threePercentTimesLabLevelPercentDisplay(
 }
 
 /**
- * Swamp Rend (basic enemies) — same **Value** as {@link threePercentTimesLabLevelPercentDisplay}.
+ * Swamp Rend - Basic Enemies — same **Value** as {@link threePercentTimesLabLevelPercentDisplay}.
  */
 export function swampRendPercentDisplay(
   effectiveLevel: number,
@@ -1450,7 +1450,7 @@ function formatResearchDurationSeconds(seconds: number): string {
 
 /**
  * Starting Cash — wiki **Value**: **5 × lab level** dollars (Lv.0→**+$0**, Lv.1→**+$5** … Lv.99→**+$495**);
- * max **99** levels (Milestones tier 1 wave 30). Cost/time steps **1–99** come from `tower-labs.json`.
+ * max **99** levels (Milestones tier 1 wave 30). Cost/time steps **1–99** come from `tables/labs/main/starting-cash.json`.
  */
 export function startingCashValueDisplay(
   effectiveLevel: number,
@@ -1518,7 +1518,7 @@ const DISSONANT_ECHO_LABS = new Set([
 
 /**
  * Workshop Attack/Defense/Utility discount — wiki **Value**: **0.50% × lab level**
- * (Lv.1→0.50% … Lv.99→49.50%; Lv.0→0.00%). Max **99** levels; cost/time match **Starting Cash** ladder in `tower-labs.json`.
+ * (Lv.1→0.50% … Lv.99→49.50%; Lv.0→0.00%). Max **99** levels; cost/time from `tables/labs/main/workshop-*-discount.json`.
  * Unlock milestones differ by lab (wiki: **Attack** tier 1 wave 40; **Defense** tier 2 wave 50; **Utility** tier 2 wave 60).
  */
 /** Total Workshop Attack/Defense/Utility discount % at a given lab level. */
@@ -1895,7 +1895,7 @@ export function benefitDisplayForCard(
   if (item.name === 'Swamp Stun Time') {
     return swampStunTimeValueDisplay(effectiveLevel, maxLevelCap)
   }
-  if (item.name === 'Swamp Rend') {
+  if (item.name === 'Swamp Rend - Basic Enemies') {
     return threePercentTimesLabLevelPercentDisplay(effectiveLevel, maxLevelCap)
   }
   if (item.name === 'Swamp Rend - Additional Enemies') {
@@ -2133,8 +2133,9 @@ export function benefitLineWithNextUpgrade(
 }
 
 /**
- * Time for the next upgrade at `effectiveLevel`; from `tower-labs.json` `DURATION`, divided by
- * simulated **Labs Speed** (`labsSpeedMultiplier`) on all labs except **Labs Speed** itself.
+ * Time for the next upgrade at `effectiveLevel`; from `tables/labs/main/*.json` when available, otherwise
+ * `tower-labs.json` `DURATION`, divided by simulated **Labs Speed** (`labsSpeedMultiplier`) on all labs
+ * except **Labs Speed** itself.
  *
  * `labsSpeedMultiplier` should be **(Labs Speed research) × (1 + Σ relic lab-speed %)**
  * (multiplicative stacking; see {@link combinedLabsSpeedMultiplier}).

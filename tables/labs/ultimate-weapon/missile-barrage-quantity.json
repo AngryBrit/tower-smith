@@ -1,0 +1,102 @@
+{
+  "name": "Missile Barrage Quantity",
+  "maxLevel": 6,
+  "levels": [
+    {
+      "level": 1,
+      "value": 25,
+      "time": {
+        "display": "20h, 0m, 0s",
+        "seconds": 72000
+      },
+      "gems": 136,
+      "coins": 750000,
+      "totalTime": {
+        "display": "20h, 0m, 0s",
+        "seconds": 72000
+      },
+      "totalGems": 136,
+      "totalCoins": 750000
+    },
+    {
+      "level": 2,
+      "value": 30,
+      "time": {
+        "display": "1 day, 18h, 14m, 0s",
+        "seconds": 152040
+      },
+      "gems": 269,
+      "coins": 1660000,
+      "totalTime": {
+        "display": "2 days, 14h, 14m, 0s",
+        "seconds": 224040
+      },
+      "totalGems": 405,
+      "totalCoins": 2410000
+    },
+    {
+      "level": 3,
+      "value": 35,
+      "time": {
+        "display": "2 days, 16h, 46m, 0s",
+        "seconds": 233160
+      },
+      "gems": 400,
+      "coins": 2860000,
+      "totalTime": {
+        "display": "5 days, 7h, 0m, 0s",
+        "seconds": 457200
+      },
+      "totalGems": 805,
+      "totalCoins": 5270000
+    },
+    {
+      "level": 4,
+      "value": 40,
+      "time": {
+        "display": "3 days, 16h, 25m, 0s",
+        "seconds": 318300
+      },
+      "gems": 538,
+      "coins": 5750000,
+      "totalTime": {
+        "display": "8 days, 23h, 25m, 0s",
+        "seconds": 775500
+      },
+      "totalGems": 1340,
+      "totalCoins": 11020000
+    },
+    {
+      "level": 5,
+      "value": 45,
+      "time": {
+        "display": "4 days, 18h, 36m, 0s",
+        "seconds": 412560
+      },
+      "gems": 690,
+      "coins": 13900000,
+      "totalTime": {
+        "display": "13 days, 18h, 1m, 0s",
+        "seconds": 1188060
+      },
+      "totalGems": 2030,
+      "totalCoins": 24920000
+    },
+    {
+      "level": 6,
+      "value": 50,
+      "time": {
+        "display": "6 days, 1h, 23m, 0s",
+        "seconds": 523380
+      },
+      "gems": 869,
+      "coins": 34080000,
+      "totalTime": {
+        "display": "19 days, 19h, 24m, 0s",
+        "seconds": 1711440
+      },
+      "totalGems": 2900,
+      "totalCoins": 59000000
+    }
+  ]
+}

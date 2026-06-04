@@ -1,0 +1,22 @@
+{
+  "name": "Missile Barrage",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "6 days, 15h, 59m, 0s",
+        "seconds": 575940
+      },
+      "gems": 954,
+      "coins": 1500000,
+      "totalTime": {
+        "display": "6 days, 15h, 59m, 0s",
+        "seconds": 575940
+      },
+      "totalGems": 954,
+      "totalCoins": 1500000
+    }
+  ]
+}

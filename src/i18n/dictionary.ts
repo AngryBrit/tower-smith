@@ -81,9 +81,9 @@ export const STRINGS_EN = {
     'Email text copied — paste over the message if you see plus signs (+).',
   bug_buster_copy_fail: 'Could not copy — use the preview above and copy manually.',
   bug_buster_email_save_downloaded:
-    'Email opened — playerInfo.dat was downloaded; attach it in your mail app if needed.',
+    'Email opened — playerInfo.zip was downloaded; attach it in your mail app if needed.',
   bug_buster_github_save_downloaded:
-    'GitHub opened — playerInfo.dat was downloaded; drag it onto the issue if needed.',
+    'GitHub opened — playerInfo.zip was downloaded; drag it onto the issue if needed.',
   bug_buster_share_ok: 'Shared report and save file.',
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
@@ -521,6 +521,8 @@ export const STRINGS_EN = {
     'Publish and browse need the gallery API.',
   gallery_filter_mine: 'My builds only',
   gallery_filter_tags_aria: 'Filter by build category',
+  gallery_filter_author_aria: 'Filter builds by {{author}}',
+  gallery_filter_guild_aria: 'Filter builds by guild {{guild}}',
   gallery_error_invalid_title: 'Title must be 1–40 characters.',
   gallery_error_invalid_payload: 'Tower data was invalid or too large.',
   gallery_error_disabled: 'Submissions are temporarily disabled.',
@@ -983,6 +985,16 @@ export const STRINGS_EN = {
   ws_budget_stones_next_dt: 'Next upgrade (visible)',
   ws_budget_toggle_collapse: 'Collapse workshop budget',
   ws_budget_toggle_expand: 'Expand workshop budget',
+  ws_bot_budget_title: 'Bot medals',
+  ws_bot_budget_aria:
+    'Spent {{spent}} medals, to max {{toMax}} medals, next visible upgrades {{next}} medals.',
+  ws_bot_budget_footnote:
+    'Totals include event-shop bot unlocks and medal upgrade tracks (basic stats and Bot+ levels). Bot+ stone unlocks (power stones) are omitted. “Next upgrade” sums only visible rows on active bots.',
+  ws_bot_budget_spent_dt: 'Spent (all bot upgrades)',
+  ws_bot_budget_to_max_dt: 'To max (finite caps)',
+  ws_bot_budget_next_dt: 'Next upgrade (visible)',
+  ws_bot_budget_toggle_collapse: 'Collapse bot budget',
+  ws_bot_budget_toggle_expand: 'Expand bot budget',
   ws_section_attack: 'Attack Upgrades',
   ws_section_defense: 'Defense Upgrades',
   ws_section_utility: 'Utility Upgrades',
@@ -1424,8 +1436,10 @@ export const STRINGS_EN = {
 
   research_empty_filter: 'No research matches filters.',
 
-  researchCard_decrease_aria: 'Decrease level',
-  researchCard_increase_aria: 'Increase level',
+  researchCard_decrease_aria: 'Decrease level (hold to zero)',
+  researchCard_decrease_hold_title: 'Hold to set level to 0',
+  researchCard_increase_aria: 'Increase level (hold to max)',
+  researchCard_increase_hold_title: 'Hold to set max level',
   researchCard_level_aria: '{{name}} level',
   researchCard_level_title: 'Level 0–{{max}}',
   researchCard_researching: 'Researching…',
@@ -1466,6 +1480,7 @@ export type I18nFormatters = {
   simulatorBudgetAria: (spent: string, toMax: string, next: string) => string
   workshopBudgetAria: (spent: string, toMax: string, next: string) => string
   workshopStoneBudgetAria: (spent: string, toMax: string, next: string) => string
+  botsBudgetAria: (spent: string, toMax: string, next: string) => string
   versionAria: (version: string) => string
   compareDifferingLabsCount: (count: number) => string
   compareDifferingWorkshopFields: (count: number) => string
@@ -1475,6 +1490,8 @@ export type I18nFormatters = {
   galleryShareLoadError: (error: TowerGalleryApiError | 'invalid_payload') => string
   galleryNoticeSubmitted: (title: string) => string
   galleryByAuthor: (author: string) => string
+  galleryFilterAuthorAria: (author: string) => string
+  galleryFilterGuildAria: (guild: string) => string
   galleryAdminDeleteConfirmBody: (title: string) => string
   galleryAdminNoticeDeleted: (title: string) => string
   galleryAdminYourUserId: (userId: string) => string
@@ -1531,6 +1548,9 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     workshopStoneBudgetAria(spent, toMax, next) {
       return replaceParams(s.ws_budget_stones_aria, { spent, toMax, next })
     },
+    botsBudgetAria(spent, toMax, next) {
+      return replaceParams(s.ws_bot_budget_aria, { spent, toMax, next })
+    },
     versionAria(version) {
       return replaceParams(s.sr_version_aria, { version })
     },
@@ -1571,6 +1591,12 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     },
     galleryByAuthor(author) {
       return replaceParams(s.gallery_by_author, { author })
+    },
+    galleryFilterAuthorAria(author) {
+      return replaceParams(s.gallery_filter_author_aria, { author })
+    },
+    galleryFilterGuildAria(guild) {
+      return replaceParams(s.gallery_filter_guild_aria, { guild })
     },
     galleryAdminDeleteConfirmBody(title) {
       return replaceParams(s.gallery_admin_delete_confirm_body, { title })

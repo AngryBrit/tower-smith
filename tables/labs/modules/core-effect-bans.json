@@ -1,0 +1,118 @@
+{
+  "name": "Core Effect Bans",
+  "maxLevel": 7,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "16 days, 16h, 0m, 0s",
+        "seconds": 1440000
+      },
+      "gems": 2070,
+      "coins": 50000000000,
+      "totalTime": {
+        "display": "16 days, 16h, 0m, 0s",
+        "seconds": 1440000
+      },
+      "totalGems": 2070,
+      "totalCoins": 50000000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "62 days, 12h, 0m, 0s",
+        "seconds": 5400000
+      },
+      "gems": 5960,
+      "coins": 5000000000000,
+      "totalTime": {
+        "display": "79 days, 4h, 0m, 0s",
+        "seconds": 6840000
+      },
+      "totalGems": 8030,
+      "totalCoins": 5050000000000
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": {
+        "display": "91 days, 16h, 0m, 0s",
+        "seconds": 7920000
+      },
+      "gems": 8110,
+      "coins": 50000000000000,
+      "totalTime": {
+        "display": "170 days, 20h, 0m, 0s",
+        "seconds": 14760000
+      },
+      "totalGems": 16140,
+      "totalCoins": 55050000000000
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": {
+        "display": "125 days, 0s",
+        "seconds": 10800000
+      },
+      "gems": 10200,
+      "coins": 500000000000000,
+      "totalTime": {
+        "display": "295 days, 20h, 0m, 0s",
+        "seconds": 25560000
+      },
+      "totalGems": 26340,
+      "totalCoins": 555050000000000
+    },
+    {
+      "level": 5,
+      "value": 5,
+      "time": {
+        "display": "162 days, 12h, 0m, 0s",
+        "seconds": 14040000
+      },
+      "gems": 12570,
+      "coins": 5000000000000000,
+      "totalTime": {
+        "display": "1 year, 93 days, 8h, 0m, 0s",
+        "seconds": 39600000
+      },
+      "totalGems": 38910,
+      "totalCoins": 5560000000000000
+    },
+    {
+      "level": 6,
+      "value": 6,
+      "time": {
+        "display": "204 days, 4h, 0m, 0s",
+        "seconds": 17640000
+      },
+      "gems": 15190,
+      "coins": 50000000000000000,
+      "totalTime": {
+        "display": "1 year, 297 days, 12h, 0m, 0s",
+        "seconds": 57240000
+      },
+      "totalGems": 54100,
+      "totalCoins": 55560000000000000
+    },
+    {
+      "level": 7,
+      "value": 7,
+      "time": {
+        "display": "250 days, 0s",
+        "seconds": 21600000
+      },
+      "gems": 18080,
+      "coins": 500000000000000000,
+      "totalTime": {
+        "display": "2 years, 182 days, 12h, 0m, 0s",
+        "seconds": 78840000
+      },
+      "totalGems": 72170,
+      "totalCoins": 555559999999999940
+    }
+  ]
+}

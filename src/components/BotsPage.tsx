@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useId,
   useMemo,
   useRef,
   useState,
@@ -32,10 +33,17 @@ import {
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { resetTowerBuildBots, splitTowerBuild } from '../towerBuildStorage'
 import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
+import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { useI18n } from '../i18n'
 import { buildWorkshopBotLabDisplayOpts } from '../data/workshopLabDisplayOpts'
 import { enrichBotLabDisplayOpts } from '../data/workshopRelicWorkshopDisplay'
 import type { ResearchData } from '../types/research'
+import {
+  computeWorkshopBotMedalAggregates,
+  formatWorkshopBotMedalAggregates,
+} from '../workshopBotBudgetAggregates'
+
+const BOTS_BUDGET_COLLAPSED_STORAGE_KEY = 'tower-export-bots-budget-collapsed-v1'
 
 type BotsPageProps = {
   embeddedInPanel?: boolean
@@ -82,7 +90,17 @@ export function BotsPage({
   toolbarMount = null,
   researchData = null,
 }: BotsPageProps) {
-  const { t } = useI18n()
+  const { t, fmt } = useI18n()
+  const [budgetPanelsVisible] = useBudgetPanelsVisible()
+  const botsBudgetTitleId = useId().replace(/:/g, '')
+  const botsBudgetBodyId = useId().replace(/:/g, '')
+  const [botsBudgetCollapsed, setBotsBudgetCollapsed] = useState(() => {
+    try {
+      return localStorage.getItem(BOTS_BUDGET_COLLAPSED_STORAGE_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
   const { pushUndoSnapshot } = useWorkspaceUndo()
   const { workshopFlat, setTowerBuild, labLevelOverrides } = useTowerWorkspaceContext()
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
@@ -91,6 +109,26 @@ export function BotsPage({
   useEffect(() => {
     workshopPersistedRef.current = workshopFlat
   }, [workshopFlat])
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(
+        BOTS_BUDGET_COLLAPSED_STORAGE_KEY,
+        botsBudgetCollapsed ? '1' : '0',
+      )
+    } catch {
+      /* ignore quota / private mode */
+    }
+  }, [botsBudgetCollapsed])
+
+  const botsMedalAggregates = useMemo(
+    () => computeWorkshopBotMedalAggregates(workshopFlat),
+    [workshopFlat],
+  )
+  const botsMedalLabels = useMemo(
+    () => formatWorkshopBotMedalAggregates(botsMedalAggregates),
+    [botsMedalAggregates],
+  )
 
   const onWorkshopPersistedChange = useCallback(
     (next: WorkshopPersistedV1) => {
@@ -119,6 +157,16 @@ export function BotsPage({
       const cur = ws[key] ?? 0
       const nv = workshopBotClampLevel(key, cur + direction)
       if (nv === cur) return
+      onWorkshopPersistedChange({ ...ws, [key]: nv })
+    },
+    [onWorkshopPersistedChange],
+  )
+
+  const setBotLevel = useCallback(
+    (key: WorkshopBotUpgradeKey, level: number) => {
+      const ws = workshopPersistedRef.current
+      const nv = workshopBotClampLevel(key, level)
+      if (nv === (ws[key] ?? 0)) return
       onWorkshopPersistedChange({ ...ws, [key]: nv })
     },
     [onWorkshopPersistedChange],
@@ -180,6 +228,20 @@ export function BotsPage({
     [onWorkshopPersistedChange],
   )
 
+  const setBotSpecialLevel = useCallback(
+    (botId: WorkshopBotId, level: number) => {
+      const ws = workshopPersistedRef.current
+      if (!workshopBotIsActive(ws, botId)) return
+      const levelKey = workshopBotSpecialLevelKey(botId)
+      const cur = workshopBotSpecialLevel(ws, botId)
+      if (cur < 0) return
+      const nv = workshopBotSpecialClampLevel(botId, level)
+      if (nv === cur) return
+      onWorkshopPersistedChange({ ...ws, [levelKey]: nv })
+    },
+    [onWorkshopPersistedChange],
+  )
+
   const performReset = useCallback(() => {
     setResetConfirmOpen(false)
     pushUndoSnapshot()
@@ -221,6 +283,70 @@ export function BotsPage({
           )
         : null}
 
+      {budgetPanelsVisible ? (
+        <div
+          className={
+            botsBudgetCollapsed
+              ? 'select-research__budget select-research__budget--collapsed'
+              : 'select-research__budget'
+          }
+          role="region"
+          aria-labelledby={botsBudgetTitleId}
+        >
+          <div className="select-research__budget-head">
+            <h2 id={botsBudgetTitleId} className="select-research__budget-title">
+              {t('ws_bot_budget_title')}
+            </h2>
+            <button
+              type="button"
+              className="select-research__budget-toggle"
+              aria-expanded={!botsBudgetCollapsed}
+              aria-controls={botsBudgetBodyId}
+              aria-label={
+                botsBudgetCollapsed
+                  ? t('ws_bot_budget_toggle_expand')
+                  : t('ws_bot_budget_toggle_collapse')
+              }
+              onClick={() => setBotsBudgetCollapsed((c) => !c)}
+            >
+              <span className="select-research__budget-chevron" aria-hidden>
+                ▼
+              </span>
+            </button>
+          </div>
+          <div
+            id={botsBudgetBodyId}
+            className="select-research__budget-body"
+            hidden={botsBudgetCollapsed}
+          >
+            <p className="visually-hidden" aria-live="polite" aria-atomic="true">
+              {fmt.botsBudgetAria(
+                botsMedalLabels.spentLabel,
+                botsMedalLabels.toMaxLabel,
+                botsMedalLabels.nextVisibleLabel,
+              )}
+            </p>
+            <dl className="select-research__budget-stats">
+              <div className="select-research__budget-row">
+                <dt>{t('ws_bot_budget_spent_dt')}</dt>
+                <dd>{botsMedalLabels.spentLabel}</dd>
+              </div>
+              <div className="select-research__budget-row">
+                <dt>{t('ws_bot_budget_to_max_dt')}</dt>
+                <dd>{botsMedalLabels.toMaxLabel}</dd>
+              </div>
+              <div className="select-research__budget-row">
+                <dt>{t('ws_bot_budget_next_dt')}</dt>
+                <dd>{botsMedalLabels.nextVisibleLabel}</dd>
+              </div>
+            </dl>
+            <p className="select-research__budget-footnote">
+              {t('ws_bot_budget_footnote')}
+            </p>
+          </div>
+        </div>
+      ) : null}
+
       <div className="workshop__body">
         <ul className="workshop__grid workshop__grid--ultimate">
           {WORKSHOP_BOT_ORDER.map((botId) => (
@@ -231,9 +357,11 @@ export function BotsPage({
               workshop={workshopFlat}
               botLabDisplayOpts={botLabDisplayOpts}
               onBump={bumpBot}
+              onSetLevel={setBotLevel}
               onToggleActive={toggleBotActive}
               onSpecialUnlock={unlockBotSpecial}
               onSpecialBump={bumpBotSpecial}
+              onSetSpecialLevel={setBotSpecialLevel}
               onUnlockBot={unlockBot}
             />
           ))}

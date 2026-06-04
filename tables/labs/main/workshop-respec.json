@@ -1,0 +1,16 @@
+{
+  "name": "Workshop Respec",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": { "display": "2 days, 13h, 6m, 0s", "seconds": 219960 },
+      "gems": 379,
+      "coins": 3000000,
+      "totalTime": { "display": "2 days, 13h, 6m, 0s", "seconds": 219960 },
+      "totalGems": 379,
+      "totalCoins": 3000000
+    }
+  ]
+}

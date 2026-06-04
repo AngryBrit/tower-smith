@@ -21,6 +21,7 @@ import {
   WORKSHOP_ENHANCE_FREE_UPGRADES_UNLOCK_UTILITY_ENHANCE_SPENT_COINS,
   WORKSHOP_ENHANCE_RECOVERY_PACKAGE_UNLOCK_UTILITY_ENHANCE_SPENT_COINS,
   WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS,
+  WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS_IN_GAME,
   type WorkshopEnhanceUtilityUpgradeKey,
 } from './workshopEnhanceUtility'
 import {
@@ -76,6 +77,15 @@ const UTILITY_UNLOCK_REQUIRED: Record<WorkshopEnhanceUtilityUpgradeKey, number> 
   enhanceFreeUpgradesLevel: WORKSHOP_ENHANCE_FREE_UPGRADES_UNLOCK_UTILITY_ENHANCE_SPENT_COINS,
   enhanceRecoveryPackageLevel: WORKSHOP_ENHANCE_RECOVERY_PACKAGE_UNLOCK_UTILITY_ENHANCE_SPENT_COINS,
   enhanceEnemyLevelSkipLevel: WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS,
+}
+
+function utilityUnlockEffectiveSpentCoins(
+  key: WorkshopEnhanceUtilityUpgradeKey,
+): number {
+  if (key === 'enhanceEnemyLevelSkipLevel') {
+    return WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS_IN_GAME
+  }
+  return UTILITY_UNLOCK_REQUIRED[key]
 }
 
 const ATTACK_UNLOCK_REQUIRED: Record<WorkshopEnhanceAttackUpgradeKey, number> = {
@@ -179,7 +189,7 @@ export function workshopEnhanceUtilityIsUnlocked(
   labEnhancementsUnlocked = true,
 ): boolean {
   if (!labEnhancementsUnlocked) return false
-  return categorySpentCoins >= UTILITY_UNLOCK_REQUIRED[key]
+  return categorySpentCoins >= utilityUnlockEffectiveSpentCoins(key)
 }
 
 export function workshopEnhanceAttackIsUnlocked(

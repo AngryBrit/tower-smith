@@ -1,0 +1,166 @@
+{
+  "name": "Garlic Thorns",
+  "maxLevel": 10,
+  "levels": [
+    {
+      "level": 1,
+      "value": 0.5,
+      "time": {
+        "display": "1 day, 3h, 13m, 19s",
+        "seconds": 97999
+      },
+      "gems": 182,
+      "coins": 4500,
+      "totalTime": {
+        "display": "1 day, 3h, 13m, 19s",
+        "seconds": 97999
+      },
+      "totalGems": 182,
+      "totalCoins": 4500
+    },
+    {
+      "level": 2,
+      "value": 1,
+      "time": {
+        "display": "1 day, 6h, 5m, 0s",
+        "seconds": 108300
+      },
+      "gems": 199,
+      "coins": 7100,
+      "totalTime": {
+        "display": "2 days, 9h, 18m, 19s",
+        "seconds": 206299
+      },
+      "totalGems": 381,
+      "totalCoins": 11600
+    },
+    {
+      "level": 3,
+      "value": 1.5,
+      "time": {
+        "display": "1 day, 9h, 49m, 8s",
+        "seconds": 121748
+      },
+      "gems": 221,
+      "coins": 13300,
+      "totalTime": {
+        "display": "3 days, 19h, 7m, 27s",
+        "seconds": 328047
+      },
+      "totalGems": 602,
+      "totalCoins": 24900
+    },
+    {
+      "level": 4,
+      "value": 2,
+      "time": {
+        "display": "1 day, 14h, 59m, 53s",
+        "seconds": 140393
+      },
+      "gems": 251,
+      "coins": 26700,
+      "totalTime": {
+        "display": "5 days, 10h, 7m, 20s",
+        "seconds": 468440
+      },
+      "totalGems": 853,
+      "totalCoins": 51600
+    },
+    {
+      "level": 5,
+      "value": 2.5,
+      "time": {
+        "display": "1 day, 22h, 5m, 56s",
+        "seconds": 165956
+      },
+      "gems": 292,
+      "coins": 50900,
+      "totalTime": {
+        "display": "7 days, 8h, 13m, 16s",
+        "seconds": 634396
+      },
+      "totalGems": 1150,
+      "totalCoins": 102500
+    },
+    {
+      "level": 6,
+      "value": 3,
+      "time": {
+        "display": "2 days, 7h, 33m, 10s",
+        "seconds": 199990
+      },
+      "gems": 347,
+      "coins": 89500,
+      "totalTime": {
+        "display": "9 days, 15h, 46m, 26s",
+        "seconds": 834386
+      },
+      "totalGems": 1490,
+      "totalCoins": 192000
+    },
+    {
+      "level": 7,
+      "value": 3.5,
+      "time": {
+        "display": "2 days, 19h, 45m, 29s",
+        "seconds": 243929
+      },
+      "gems": 418,
+      "coins": 146100,
+      "totalTime": {
+        "display": "12 days, 11h, 31m, 55s",
+        "seconds": 1078315
+      },
+      "totalGems": 1910,
+      "totalCoins": 338100
+    },
+    {
+      "level": 8,
+      "value": 4,
+      "time": {
+        "display": "3 days, 11h, 5m, 25s",
+        "seconds": 299125
+      },
+      "gems": 507,
+      "coins": 224300,
+      "totalTime": {
+        "display": "15 days, 22h, 37m, 20s",
+        "seconds": 1377440
+      },
+      "totalGems": 2420,
+      "totalCoins": 562400
+    },
+    {
+      "level": 9,
+      "value": 4.5,
+      "time": {
+        "display": "4 days, 5h, 54m, 21s",
+        "seconds": 366861
+      },
+      "gems": 616,
+      "coins": 327700,
+      "totalTime": {
+        "display": "20 days, 4h, 31m, 41s",
+        "seconds": 1744301
+      },
+      "totalGems": 3030,
+      "totalCoins": 890100
+    },
+    {
+      "level": 10,
+      "value": 5,
+      "time": {
+        "display": "5 days, 4h, 32m, 48s",
+        "seconds": 448368
+      },
+      "gems": 748,
+      "coins": 459900,
+      "totalTime": {
+        "display": "25 days, 9h, 4m, 29s",
+        "seconds": 2192669
+      },
+      "totalGems": 3780,
+      "totalCoins": 1350000
+    }
+  ]
+}

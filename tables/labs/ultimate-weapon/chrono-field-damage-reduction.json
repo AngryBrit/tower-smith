@@ -1,0 +1,22 @@
+{
+  "name": "Chrono Field Damage Reduction",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "16h, 39m, 0s",
+        "seconds": 59940
+      },
+      "gems": 114,
+      "coins": 750000,
+      "totalTime": {
+        "display": "16h, 39m, 0s",
+        "seconds": 59940
+      },
+      "totalGems": 114,
+      "totalCoins": 750000
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+{
+  "name": "Death Wave Armor Stripping",
+  "maxLevel": 10,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "8 days, 8h, 0m, 0s",
+        "seconds": 720000
+      },
+      "gems": 1150,
+      "coins": 100000000000,
+      "totalTime": {
+        "display": "8 days, 8h, 0m, 0s",
+        "seconds": 720000
+      },
+      "totalGems": 1150,
+      "totalCoins": 100000000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "10 days, 10h, 52m, 48s",
+        "seconds": 903168
+      },
+      "gems": 1380,
+      "coins": 225000000000,
+      "totalTime": {
+        "display": "18 days, 18h, 52m, 48s",
+        "seconds": 1623168
+      },
+      "totalGems": 2530,
+      "totalCoins": 325000000000
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": {
+        "display": "13 days, 2h, 42m, 13s",
+        "seconds": 1132933
+      },
+      "gems": 1680,
+      "coins": 506250000000,
+      "totalTime": {
+        "display": "31 days, 21h, 35m, 1s",
+        "seconds": 2756101
+      },
+      "totalGems": 4210,
+      "totalCoins": 831250000000
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": {
+        "display": "16 days, 10h, 45m, 52s",
+        "seconds": 1421152
+      },
+      "gems": 2050,
+      "coins": 1140000000000,
+      "totalTime": {
+        "display": "48 days, 8h, 20m, 53s",
+        "seconds": 4177253
+      },
+      "totalGems": 6260,
+      "totalCoins": 1970000000000
+    },
+    {
+      "level": 5,
+      "value": 5,
+      "time": {
+        "display": "20 days, 15h, 11m, 33s",
+        "seconds": 1782693
+      },
+      "gems": 2510,
+      "coins": 2560000000000,
+      "totalTime": {
+        "display": "68 days, 23h, 32m, 26s",
+        "seconds": 5959946
+      },
+      "totalGems": 8770,
+      "totalCoins": 4530000000000
+    },
+    {
+      "level": 6,
+      "value": 6,
+      "time": {
+        "display": "25 days, 21h, 10m, 10s",
+        "seconds": 2236210
+      },
+      "gems": 3090,
+      "coins": 5770000000000,
+      "totalTime": {
+        "display": "94 days, 20h, 42m, 36s",
+        "seconds": 8196156
+      },
+      "totalGems": 11860,
+      "totalCoins": 10300000000000
+    },
+    {
+      "level": 7,
+      "value": 7,
+      "time": {
+        "display": "32 days, 11h, 11m, 42s",
+        "seconds": 2805102
+      },
+      "gems": 3730,
+      "coins": 12970000000000,
+      "totalTime": {
+        "display": "127 days, 7h, 54m, 18s",
+        "seconds": 11001258
+      },
+      "totalGems": 15600,
+      "totalCoins": 23270000000000
+    },
+    {
+      "level": 8,
+      "value": 8,
+      "time": {
+        "display": "40 days, 17h, 25m, 20s",
+        "seconds": 3518720
+      },
+      "gems": 4350,
+      "coins": 29190000000000,
+      "totalTime": {
+        "display": "168 days, 1h, 19m, 38s",
+        "seconds": 14519978
+      },
+      "totalGems": 19940,
+      "totalCoins": 52460000000000
+    },
+    {
+      "level": 9,
+      "value": 9,
+      "time": {
+        "display": "51 days, 2h, 4m, 43s",
+        "seconds": 4413883
+      },
+      "gems": 5110,
+      "coins": 65680000000000,
+      "totalTime": {
+        "display": "219 days, 3h, 24m, 21s",
+        "seconds": 18933861
+      },
+      "totalGems": 25060,
+      "totalCoins": 118140000000000
+    },
+    {
+      "level": 10,
+      "value": 10,
+      "time": {
+        "display": "64 days, 1h, 59m, 35s",
+        "seconds": 5536775
+      },
+      "gems": 6080,
+      "coins": 147790000000000,
+      "totalTime": {
+        "display": "283 days, 5h, 23m, 56s",
+        "seconds": 24470636
+      },
+      "totalGems": 31130,
+      "totalCoins": 265930000000000
+    }
+  ]
+}

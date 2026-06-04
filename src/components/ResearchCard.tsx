@@ -1,4 +1,5 @@
 import { useEffect, useId, useState } from 'react'
+import { HoldStepButton } from './HoldStepButton'
 import {
   benefitLineWithNextUpgrade,
   isCardMasteryResearchItem,
@@ -115,15 +116,16 @@ export function ResearchCard({
           {displayName}
         </div>
         <div className="research-card__levelRow">
-          <button
-            type="button"
+          <HoldStepButton
             className="research-card__step"
-            aria-label={t('researchCard_decrease_aria')}
+            ariaLabel={t('researchCard_decrease_aria')}
+            holdVariant="min"
             disabled={!canDec}
-            onClick={() => onLevelDelta(-1)}
+            onStep={() => onLevelDelta(-1)}
+            onHold={() => onLevelSet(0)}
           >
             −
-          </button>
+          </HoldStepButton>
           <input
             type="number"
             className="research-card__level research-card__levelInput"
@@ -148,15 +150,16 @@ export function ResearchCard({
               }
             }}
           />
-          <button
-            type="button"
+          <HoldStepButton
             className="research-card__step"
-            aria-label={t('researchCard_increase_aria')}
+            ariaLabel={t('researchCard_increase_aria')}
+            holdVariant="max"
             disabled={!canInc}
-            onClick={() => onLevelDelta(1)}
+            onStep={() => onLevelDelta(1)}
+            onHold={() => onLevelSet(maxLevelCap)}
           >
             +
-          </button>
+          </HoldStepButton>
         </div>
         <div className="research-card__benefit">
           {researchBenefitLine(benefitDisplay)}

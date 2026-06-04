@@ -1,0 +1,22 @@
+{
+  "name": "Extra Orb Adjuster",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "2 days, 1h, 59m, 0s",
+        "seconds": 179940
+      },
+      "gems": 315,
+      "coins": 1500000,
+      "totalTime": {
+        "display": "2 days, 1h, 59m, 0s",
+        "seconds": 179940
+      },
+      "totalGems": 315,
+      "totalCoins": 1500000
+    }
+  ]
+}

@@ -1,4 +1,7 @@
+import { prepareBugReportFilesForTransfer, zipPlayerInfoSaveFile } from './bugReportZip'
 import { PLAYER_INFO_MAX_BYTES, validatePlayerInfoSize } from './playerSave/playerInfoLimits'
+
+export { isPlayerInfoSaveFile, zipPlayerInfoSaveFile, prepareBugReportFilesForTransfer } from './bugReportZip'
 
 /** @deprecated Use PLAYER_INFO_MAX_BYTES from playerSave/playerInfoLimits */
 export const BUG_REPORT_MAX_SAVE_BYTES = PLAYER_INFO_MAX_BYTES
@@ -48,18 +51,23 @@ export function formatSaveBytes(sizeBytes: number): string {
   return `${(sizeBytes / (1024 * 1024)).toFixed(2)} MB`
 }
 
-/** Trigger a download of the selected save so the user can attach it in email or GitHub. */
-export function downloadBugReportSaveFile(file: File, downloadName?: string): void {
+function downloadPreparedFile(file: File, downloadName?: string): void {
   const url = URL.createObjectURL(file)
   try {
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = downloadName ?? (file.name || 'playerInfo.dat')
+    anchor.download = downloadName ?? file.name
     anchor.rel = 'noopener'
     anchor.click()
   } finally {
     URL.revokeObjectURL(url)
   }
+}
+
+/** Trigger a download of the selected save (zipped) for email or GitHub attachment. */
+export async function downloadBugReportSaveFile(file: File, downloadName?: string): Promise<void> {
+  const zipFile = await zipPlayerInfoSaveFile(file)
+  downloadPreparedFile(zipFile, downloadName ?? zipFile.name)
 }
 
 export function canShareBugReportWithFiles(files: File | File[]): boolean {
@@ -81,7 +89,7 @@ export async function shareBugReportWithFiles(
   files: File | File[],
   title: string,
 ): Promise<'shared' | 'aborted' | 'failed'> {
-  const list = Array.isArray(files) ? files : [files]
+  const list = await prepareBugReportFilesForTransfer(Array.isArray(files) ? files : [files])
   if (!canShareBugReportWithFiles(list)) return 'failed'
   try {
     await navigator.share({
@@ -105,9 +113,10 @@ export async function shareBugReportWithSave(
   return shareBugReportWithFiles(reportText, file, title)
 }
 
-/** Trigger downloads for each attached file (email / GitHub fallback). */
-export function downloadBugReportAttachedFiles(files: File[]): void {
-  for (const file of files) {
-    downloadBugReportSaveFile(file)
+/** Trigger downloads for each attached file (email / GitHub fallback). Saves are zipped. */
+export async function downloadBugReportAttachedFiles(files: File[]): Promise<void> {
+  const prepared = await prepareBugReportFilesForTransfer(files)
+  for (const file of prepared) {
+    downloadPreparedFile(file)
   }
 }

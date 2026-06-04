@@ -1,0 +1,16 @@
+{
+  "name": "Workshop Enhancements",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": { "display": "6 days, 15h, 59m, 59s", "seconds": 575999 },
+      "gems": 954,
+      "coins": 5000000000,
+      "totalTime": { "display": "6 days, 15h, 59m, 59s", "seconds": 575999 },
+      "totalGems": 954,
+      "totalCoins": 5000000000
+    }
+  ]
+}

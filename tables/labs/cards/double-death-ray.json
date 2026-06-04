@@ -1,0 +1,486 @@
+{
+  "name": "Double Death Ray",
+  "maxLevel": 30,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "59m, 59s",
+        "seconds": 3599
+      },
+      "gems": 8,
+      "coins": 2500000,
+      "totalTime": {
+        "display": "59m, 59s",
+        "seconds": 3599
+      },
+      "totalGems": 8,
+      "totalCoins": 2500000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "9h, 21m, 0s",
+        "seconds": 33660
+      },
+      "gems": 64,
+      "coins": 2810000,
+      "totalTime": {
+        "display": "10h, 20m, 59s",
+        "seconds": 37259
+      },
+      "totalGems": 72,
+      "totalCoins": 5310000
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": {
+        "display": "17h, 53m, 0s",
+        "seconds": 64380
+      },
+      "gems": 122,
+      "coins": 3420000,
+      "totalTime": {
+        "display": "1 day, 4h, 13m, 59s",
+        "seconds": 101639
+      },
+      "totalGems": 194,
+      "totalCoins": 8730000
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": {
+        "display": "1 day, 2h, 54m, 0s",
+        "seconds": 96840
+      },
+      "gems": 180,
+      "coins": 5830000,
+      "totalTime": {
+        "display": "2 days, 7h, 7m, 59s",
+        "seconds": 198479
+      },
+      "totalGems": 374,
+      "totalCoins": 14560000
+    },
+    {
+      "level": 5,
+      "value": 5,
+      "time": {
+        "display": "1 day, 12h, 49m, 0s",
+        "seconds": 132540
+      },
+      "gems": 238,
+      "coins": 13940000,
+      "totalTime": {
+        "display": "3 days, 19h, 56m, 59s",
+        "seconds": 331019
+      },
+      "totalGems": 612,
+      "totalCoins": 28500000
+    },
+    {
+      "level": 6,
+      "value": 6,
+      "time": {
+        "display": "2 days, 6m, 0s",
+        "seconds": 173160
+      },
+      "gems": 304,
+      "coins": 35250000,
+      "totalTime": {
+        "display": "5 days, 20h, 2m, 59s",
+        "seconds": 504179
+      },
+      "totalGems": 916,
+      "totalCoins": 63750000
+    },
+    {
+      "level": 7,
+      "value": 7,
+      "time": {
+        "display": "2 days, 13h, 17m, 0s",
+        "seconds": 220620
+      },
+      "gems": 380,
+      "coins": 82060000,
+      "totalTime": {
+        "display": "8 days, 9h, 19m, 59s",
+        "seconds": 724799
+      },
+      "totalGems": 1300,
+      "totalCoins": 145810000
+    },
+    {
+      "level": 8,
+      "value": 8,
+      "time": {
+        "display": "3 days, 4h, 58m, 0s",
+        "seconds": 277080
+      },
+      "gems": 471,
+      "coins": 172670000,
+      "totalTime": {
+        "display": "11 days, 14h, 17m, 59s",
+        "seconds": 1001879
+      },
+      "totalGems": 1770,
+      "totalCoins": 318480000
+    },
+    {
+      "level": 9,
+      "value": 9,
+      "time": {
+        "display": "3 days, 23h, 49m, 0s",
+        "seconds": 344940
+      },
+      "gems": 581,
+      "coins": 332580000,
+      "totalTime": {
+        "display": "15 days, 14h, 6m, 59s",
+        "seconds": 1346819
+      },
+      "totalGems": 2350,
+      "totalCoins": 651060000
+    },
+    {
+      "level": 10,
+      "value": 10,
+      "time": {
+        "display": "4 days, 22h, 31m, 0s",
+        "seconds": 426660
+      },
+      "gems": 713,
+      "coins": 595690000,
+      "totalTime": {
+        "display": "20 days, 12h, 37m, 59s",
+        "seconds": 1773479
+      },
+      "totalGems": 3060,
+      "totalCoins": 1250000000
+    },
+    {
+      "level": 11,
+      "value": 11,
+      "time": {
+        "display": "6 days, 1h, 49m, 0s",
+        "seconds": 524940
+      },
+      "gems": 872,
+      "coins": 1010000000,
+      "totalTime": {
+        "display": "26 days, 14h, 26m, 59s",
+        "seconds": 2298419
+      },
+      "totalGems": 3930,
+      "totalCoins": 2260000000
+    },
+    {
+      "level": 12,
+      "value": 12,
+      "time": {
+        "display": "7 days, 10h, 30m, 0s",
+        "seconds": 642600
+      },
+      "gems": 1050,
+      "coins": 1620000000,
+      "totalTime": {
+        "display": "34 days, 56m, 59s",
+        "seconds": 2941019
+      },
+      "totalGems": 4980,
+      "totalCoins": 3880000000
+    },
+    {
+      "level": 13,
+      "value": 13,
+      "time": {
+        "display": "9 days, 1h, 23m, 0s",
+        "seconds": 782580
+      },
+      "gems": 1230,
+      "coins": 2490000000,
+      "totalTime": {
+        "display": "43 days, 2h, 19m, 59s",
+        "seconds": 3723599
+      },
+      "totalGems": 6210,
+      "totalCoins": 6370000000
+    },
+    {
+      "level": 14,
+      "value": 14,
+      "time": {
+        "display": "10 days, 23h, 21m, 0s",
+        "seconds": 948060
+      },
+      "gems": 1440,
+      "coins": 3720000000,
+      "totalTime": {
+        "display": "54 days, 1h, 40m, 59s",
+        "seconds": 4671659
+      },
+      "totalGems": 7650,
+      "totalCoins": 10090000000
+    },
+    {
+      "level": 15,
+      "value": 15,
+      "time": {
+        "display": "13 days, 5h, 18m, 0s",
+        "seconds": 1142280
+      },
+      "gems": 1690,
+      "coins": 5380000000,
+      "totalTime": {
+        "display": "67 days, 6h, 58m, 59s",
+        "seconds": 5813939
+      },
+      "totalGems": 9340,
+      "totalCoins": 15470000000
+    },
+    {
+      "level": 16,
+      "value": 16,
+      "time": {
+        "display": "15 days, 20h, 9m, 0s",
+        "seconds": 1368540
+      },
+      "gems": 1980,
+      "coins": 7600000000,
+      "totalTime": {
+        "display": "83 days, 3h, 7m, 59s",
+        "seconds": 7182479
+      },
+      "totalGems": 11320,
+      "totalCoins": 23070000000
+    },
+    {
+      "level": 17,
+      "value": 17,
+      "time": {
+        "display": "18 days, 20h, 54m, 0s",
+        "seconds": 1630440
+      },
+      "gems": 2320,
+      "coins": 10490000000,
+      "totalTime": {
+        "display": "102 days, 1m, 59s",
+        "seconds": 8812919
+      },
+      "totalGems": 13640,
+      "totalCoins": 33560000000
+    },
+    {
+      "level": 18,
+      "value": 18,
+      "time": {
+        "display": "22 days, 8h, 32m, 0s",
+        "seconds": 1931520
+      },
+      "gems": 2700,
+      "coins": 14210000000,
+      "totalTime": {
+        "display": "124 days, 8h, 33m, 59s",
+        "seconds": 10744439
+      },
+      "totalGems": 16340,
+      "totalCoins": 47770000000
+    },
+    {
+      "level": 19,
+      "value": 19,
+      "time": {
+        "display": "26 days, 8h, 6m, 0s",
+        "seconds": 2275560
+      },
+      "gems": 3140,
+      "coins": 18900000000,
+      "totalTime": {
+        "display": "150 days, 16h, 39m, 59s",
+        "seconds": 13019999
+      },
+      "totalGems": 19490,
+      "totalCoins": 66670000000
+    },
+    {
+      "level": 20,
+      "value": 20,
+      "time": {
+        "display": "30 days, 20h, 40m, 0s",
+        "seconds": 2666400
+      },
+      "gems": 3610,
+      "coins": 24770000000,
+      "totalTime": {
+        "display": "181 days, 13h, 19m, 59s",
+        "seconds": 15686399
+      },
+      "totalGems": 23100,
+      "totalCoins": 91440000000
+    },
+    {
+      "level": 21,
+      "value": 21,
+      "time": {
+        "display": "35 days, 23h, 19m, 0s",
+        "seconds": 3107940
+      },
+      "gems": 3990,
+      "coins": 32010000000,
+      "totalTime": {
+        "display": "217 days, 12h, 38m, 59s",
+        "seconds": 18794339
+      },
+      "totalGems": 27090,
+      "totalCoins": 123450000000
+    },
+    {
+      "level": 22,
+      "value": 22,
+      "time": {
+        "display": "41 days, 17h, 12m, 0s",
+        "seconds": 3604320
+      },
+      "gems": 4420,
+      "coins": 40850000000,
+      "totalTime": {
+        "display": "259 days, 5h, 50m, 59s",
+        "seconds": 22398659
+      },
+      "totalGems": 31510,
+      "totalCoins": 164300000000
+    },
+    {
+      "level": 23,
+      "value": 23,
+      "time": {
+        "display": "48 days, 3h, 27m, 0s",
+        "seconds": 4159620
+      },
+      "gems": 4900,
+      "coins": 51550000000,
+      "totalTime": {
+        "display": "307 days, 9h, 17m, 59s",
+        "seconds": 26558279
+      },
+      "totalGems": 36410,
+      "totalCoins": 215850000000
+    },
+    {
+      "level": 24,
+      "value": 24,
+      "time": {
+        "display": "55 days, 7h, 16m, 0s",
+        "seconds": 4778160
+      },
+      "gems": 5430,
+      "coins": 64370000000,
+      "totalTime": {
+        "display": "362 days, 16h, 33m, 59s",
+        "seconds": 31336439
+      },
+      "totalGems": 41840,
+      "totalCoins": 280220000000
+    },
+    {
+      "level": 25,
+      "value": 25,
+      "time": {
+        "display": "63 days, 5h, 50m, 0s",
+        "seconds": 5464200
+      },
+      "gems": 6020,
+      "coins": 79640000000,
+      "totalTime": {
+        "display": "1 year, 60 days, 22h, 23m, 59s",
+        "seconds": 36800639
+      },
+      "totalGems": 47850,
+      "totalCoins": 359860000000
+    },
+    {
+      "level": 26,
+      "value": 26,
+      "time": {
+        "display": "72 days, 25m, 0s",
+        "seconds": 6222300
+      },
+      "gems": 6670,
+      "coins": 97670000000,
+      "totalTime": {
+        "display": "1 year, 132 days, 22h, 48m, 59s",
+        "seconds": 43022939
+      },
+      "totalGems": 54520,
+      "totalCoins": 457530000000
+    },
+    {
+      "level": 27,
+      "value": 27,
+      "time": {
+        "display": "81 days, 16h, 17m, 0s",
+        "seconds": 7057020
+      },
+      "gems": 7380,
+      "coins": 118820000000,
+      "totalTime": {
+        "display": "1 year, 214 days, 15h, 5m, 59s",
+        "seconds": 50079959
+      },
+      "totalGems": 61900,
+      "totalCoins": 576350000000
+    },
+    {
+      "level": 28,
+      "value": 28,
+      "time": {
+        "display": "92 days, 6h, 41m, 0s",
+        "seconds": 7972860
+      },
+      "gems": 8140,
+      "coins": 143500000000,
+      "totalTime": {
+        "display": "1 year, 306 days, 21h, 46m, 59s",
+        "seconds": 58052819
+      },
+      "totalGems": 70050,
+      "totalCoins": 719850000000
+    },
+    {
+      "level": 29,
+      "value": 29,
+      "time": {
+        "display": "103 days, 20h, 58m, 0s",
+        "seconds": 8974680
+      },
+      "gems": 8870,
+      "coins": 172110000000,
+      "totalTime": {
+        "display": "2 years, 45 days, 18h, 44m, 59s",
+        "seconds": 67027499
+      },
+      "totalGems": 78920,
+      "totalCoins": 891960000000
+    },
+    {
+      "level": 30,
+      "value": 30,
+      "time": {
+        "display": "116 days, 12h, 28m, 0s",
+        "seconds": 10067280
+      },
+      "gems": 9670,
+      "coins": 205120000000,
+      "totalTime": {
+        "display": "2 years, 162 days, 7h, 12m, 59s",
+        "seconds": 77094779
+      },
+      "totalGems": 88590,
+      "totalCoins": 1100000000000
+    }
+  ]
+}

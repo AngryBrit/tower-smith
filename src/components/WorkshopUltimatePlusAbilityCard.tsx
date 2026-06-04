@@ -1,3 +1,4 @@
+import { HoldStepButton } from './HoldStepButton'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -35,6 +36,7 @@ export type WorkshopUltimatePlusAbilityCardProps = {
   workshop: WorkshopPersistedV1
   plusEnabled: boolean
   onBump: (abilityId: WorkshopUltimatePlusAbilityId, direction: -1 | 1) => void
+  onSetLevel: (abilityId: WorkshopUltimatePlusAbilityId, level: number) => void
   onUnlock: (abilityId: WorkshopUltimatePlusAbilityId) => void
 }
 
@@ -43,6 +45,7 @@ export function WorkshopUltimatePlusAbilityCard({
   workshop,
   plusEnabled,
   onBump,
+  onSetLevel,
   onUnlock,
 }: WorkshopUltimatePlusAbilityCardProps) {
   const { t } = useI18n()
@@ -124,15 +127,16 @@ export function WorkshopUltimatePlusAbilityCard({
                 : 'workshop__uw-plus-controls'
             }
           >
-            <button
-              type="button"
+            <HoldStepButton
               className="workshop__uw-level-step"
-              aria-label={`${barTitle} — ${t('ws_defense_level_down_aria')}`}
+              ariaLabel={`${barTitle} — ${t('ws_defense_level_down_aria')}`}
+              holdVariant="min"
               disabled={level <= 0}
-              onClick={() => handleBump(-1)}
+              onStep={() => handleBump(-1)}
+              onHold={() => onSetLevel(abilityId, 0)}
             >
               −
-            </button>
+            </HoldStepButton>
             <div
               className={
                 maxed
@@ -153,15 +157,16 @@ export function WorkshopUltimatePlusAbilityCard({
                 </>
               )}
             </div>
-            <button
-              type="button"
+            <HoldStepButton
               className="workshop__uw-level-step"
-              aria-label={`${barTitle} — ${t('ws_defense_level_up_aria')}`}
+              ariaLabel={`${barTitle} — ${t('ws_defense_level_up_aria')}`}
+              holdVariant="max"
               disabled={maxed}
-              onClick={() => handleBump(1)}
+              onStep={() => handleBump(1)}
+              onHold={() => onSetLevel(abilityId, ULTIMATE_PLUS_MAX_LEVEL)}
             >
               +
-            </button>
+            </HoldStepButton>
           </div>
         </>
       )}

@@ -1,0 +1,166 @@
+{
+  "name": "Orb Boss Hit",
+  "maxLevel": 10,
+  "levels": [
+    {
+      "level": 1,
+      "value": 0.2,
+      "time": {
+        "display": "1 day, 3h, 46m, 0s",
+        "seconds": 99960
+      },
+      "gems": 185,
+      "coins": 800000000,
+      "totalTime": {
+        "display": "1 day, 3h, 46m, 0s",
+        "seconds": 99960
+      },
+      "totalGems": 185,
+      "totalCoins": 800000000
+    },
+    {
+      "level": 2,
+      "value": 0.4,
+      "time": {
+        "display": "1 day, 12h, 7m, 0s",
+        "seconds": 130020
+      },
+      "gems": 234,
+      "coins": 1210000000,
+      "totalTime": {
+        "display": "2 days, 15h, 53m, 0s",
+        "seconds": 229980
+      },
+      "totalGems": 419,
+      "totalCoins": 2010000000
+    },
+    {
+      "level": 3,
+      "value": 0.6,
+      "time": {
+        "display": "1 day, 20h, 40m, 0s",
+        "seconds": 160800
+      },
+      "gems": 284,
+      "coins": 1670000000,
+      "totalTime": {
+        "display": "4 days, 12h, 33m, 0s",
+        "seconds": 390780
+      },
+      "totalGems": 703,
+      "totalCoins": 3680000000
+    },
+    {
+      "level": 4,
+      "value": 0.8,
+      "time": {
+        "display": "2 days, 5h, 47m, 0s",
+        "seconds": 193620
+      },
+      "gems": 337,
+      "coins": 2330000000,
+      "totalTime": {
+        "display": "6 days, 18h, 20m, 0s",
+        "seconds": 584400
+      },
+      "totalGems": 1040,
+      "totalCoins": 6010000000
+    },
+    {
+      "level": 5,
+      "value": 1,
+      "time": {
+        "display": "2 days, 15h, 58m, 0s",
+        "seconds": 230280
+      },
+      "gems": 396,
+      "coins": 3370000000,
+      "totalTime": {
+        "display": "9 days, 10h, 18m, 0s",
+        "seconds": 814680
+      },
+      "totalGems": 1440,
+      "totalCoins": 9380000000
+    },
+    {
+      "level": 6,
+      "value": 1.2,
+      "time": {
+        "display": "3 days, 3h, 49m, 0s",
+        "seconds": 272940
+      },
+      "gems": 465,
+      "coins": 5060000000,
+      "totalTime": {
+        "display": "12 days, 14h, 7m, 0s",
+        "seconds": 1087620
+      },
+      "totalGems": 1900,
+      "totalCoins": 14440000000
+    },
+    {
+      "level": 7,
+      "value": 1.4,
+      "time": {
+        "display": "3 days, 18h, 5m, 0s",
+        "seconds": 324300
+      },
+      "gems": 548,
+      "coins": 7730000000,
+      "totalTime": {
+        "display": "16 days, 8h, 12m, 0s",
+        "seconds": 1411920
+      },
+      "totalGems": 2450,
+      "totalCoins": 22170000000
+    },
+    {
+      "level": 8,
+      "value": 1.6,
+      "time": {
+        "display": "4 days, 11h, 32m, 0s",
+        "seconds": 387120
+      },
+      "gems": 649,
+      "coins": 11730000000,
+      "totalTime": {
+        "display": "20 days, 19h, 44m, 0s",
+        "seconds": 1799040
+      },
+      "totalGems": 3100,
+      "totalCoins": 33900000000
+    },
+    {
+      "level": 9,
+      "value": 1.8,
+      "time": {
+        "display": "5 days, 9h, 6m, 0s",
+        "seconds": 464760
+      },
+      "gems": 774,
+      "coins": 17510000000,
+      "totalTime": {
+        "display": "26 days, 4h, 50m, 0s",
+        "seconds": 2263800
+      },
+      "totalGems": 3870,
+      "totalCoins": 51410000000
+    },
+    {
+      "level": 10,
+      "value": 2,
+      "time": {
+        "display": "6 days, 11h, 45m, 0s",
+        "seconds": 560700
+      },
+      "gems": 929,
+      "coins": 25540000000,
+      "totalTime": {
+        "display": "32 days, 16h, 35m, 0s",
+        "seconds": 2824500
+      },
+      "totalGems": 4800,
+      "totalCoins": 76950000000
+    }
+  ]
+}

@@ -35,8 +35,11 @@ function logLerp(a: number, b: number, t: number): number {
  */
 const COIN_SEGMENT_LERP_T_EXPONENT_BY_SEGMENT: Readonly<Partial<Record<number, number>>> = {
   4: 0.93, // L40–L50 (e.g. Damage + L40→41 ~2.97T)
-  6: 0.9373, // L60–L70 (e.g. Health Regen + L60→61 ~69.65T)
 }
+
+/** L60–L70: flat ~0.9373 matches L61 (~69.65T) but undershoots L63 (~92.14T). */
+const COIN_L60_L70_SEGMENT_BASE_EXPONENT = 0.9373
+const COIN_L60_L70_SEGMENT_T_SLOPE = -0.1335
 
 /** L10–L20 (ratio ~7.4): exponent rises through the decade. */
 const COIN_L10_L20_SEGMENT_BASE_EXPONENT = 1.58
@@ -54,6 +57,10 @@ function coinSegmentLerpTExponent(
 ): number {
   const manual = COIN_SEGMENT_LERP_T_EXPONENT_BY_SEGMENT[segmentIndex]
   if (manual != null) return manual
+
+  if (segmentIndex === 6) {
+    return COIN_L60_L70_SEGMENT_BASE_EXPONENT + (t - 0.1) * COIN_L60_L70_SEGMENT_T_SLOPE
+  }
 
   const ratio = v1 / v0
   if (segmentIndex === 1) {

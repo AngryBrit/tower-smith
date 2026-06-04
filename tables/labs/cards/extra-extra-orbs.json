@@ -1,0 +1,38 @@
+{
+  "name": "Extra Extra Orbs",
+  "maxLevel": 2,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "1 day, 14h, 53m, 0s",
+        "seconds": 139980
+      },
+      "gems": 250,
+      "coins": 25000000,
+      "totalTime": {
+        "display": "1 day, 14h, 53m, 0s",
+        "seconds": 139980
+      },
+      "totalGems": 250,
+      "totalCoins": 25000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "5 days, 18h, 53m, 0s",
+        "seconds": 499980
+      },
+      "gems": 831,
+      "coins": 900000000,
+      "totalTime": {
+        "display": "7 days, 9h, 46m, 0s",
+        "seconds": 639960
+      },
+      "totalGems": 1080,
+      "totalCoins": 925000000
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Unmerge Module",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "2 days, 0s",
+        "seconds": 172800
+      },
+      "gems": 303,
+      "coins": 10000000,
+      "totalTime": {
+        "display": "2 days, 0s",
+        "seconds": 172800
+      },
+      "totalGems": 303,
+      "totalCoins": 10000000
+    }
+  ]
+}

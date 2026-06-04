@@ -1,0 +1,22 @@
+{
+  "name": "First Perk Choice",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "4 days, 15h, 6m, 0s",
+        "seconds": 399960
+      },
+      "gems": 670,
+      "coins": 1000000000,
+      "totalTime": {
+        "display": "4 days, 15h, 6m, 0s",
+        "seconds": 399960
+      },
+      "totalGems": 670,
+      "totalCoins": 1000000000
+    }
+  ]
+}

@@ -60,11 +60,18 @@ export const WORKSHOP_ENHANCE_RECOVERY_PACKAGE_UNLOCK_UTILITY_ENHANCE_SPENT_COIN
   50_000_000_000_000 as const
 
 /**
- * Wiki: **Enemy Level Skips** unlocks after **500T** utility-enhancement spend.
+ * Wiki / UI: **Enemy Level Skip +** unlocks after **500T** utility-enhancement spend.
  * Buffs enemy health and enemy damage level skip multipliers (× display only).
  */
 export const WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS =
   500_000_000_000_000 as const
+
+/**
+ * In-game unlock when list-price utility spend reaches cash bonus **L62** (~496T);
+ * the workshop still labels the gate **500T**.
+ */
+export const WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_UNLOCK_UTILITY_ENHANCE_SPENT_COINS_IN_GAME =
+  496_000_000_000_000 as const
 
 /**
  * Wiki: **Cash Bonus** unlocks free after **Workshop Enhancement Labs** (no utility-enhancement

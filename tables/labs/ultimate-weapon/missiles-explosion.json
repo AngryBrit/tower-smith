@@ -1,0 +1,22 @@
+{
+  "name": "Missiles Explosion",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "22h, 23m, 0s",
+        "seconds": 80580
+      },
+      "gems": 153,
+      "coins": 900000,
+      "totalTime": {
+        "display": "22h, 23m, 0s",
+        "seconds": 80580
+      },
+      "totalGems": 153,
+      "totalCoins": 900000
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "Buy Multiplier",
+  "maxLevel": 4,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": { "display": "59m, 59s", "seconds": 3599 },
+      "gems": 8,
+      "coins": 2500,
+      "totalTime": { "display": "59m, 59s", "seconds": 3599 },
+      "totalGems": 8,
+      "totalCoins": 2500
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": { "display": "5h, 33m, 0s", "seconds": 19980 },
+      "gems": 39,
+      "coins": 10000,
+      "totalTime": { "display": "6h, 32m, 59s", "seconds": 23579 },
+      "totalGems": 47,
+      "totalCoins": 12500
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": { "display": "1 day, 3h, 46m, 0s", "seconds": 99960 },
+      "gems": 185,
+      "coins": 50000,
+      "totalTime": { "display": "1 day, 10h, 18m, 59s", "seconds": 123539 },
+      "totalGems": 232,
+      "totalCoins": 62500
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": { "display": "2 days, 7h, 33m, 0s", "seconds": 199980 },
+      "gems": 347,
+      "coins": 500000,
+      "totalTime": { "display": "3 days, 17h, 51m, 59s", "seconds": 323519 },
+      "totalGems": 579,
+      "totalCoins": 562500
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "Energy Shield Extra Hit",
+  "maxLevel": 2,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "11 days, 13h, 46m, 0s",
+        "seconds": 999960
+      },
+      "gems": 1510,
+      "coins": 40000000000,
+      "totalTime": {
+        "display": "11 days, 13h, 46m, 0s",
+        "seconds": 999960
+      },
+      "totalGems": 1510,
+      "totalCoins": 40000000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "32 days, 9h, 46m, 0s",
+        "seconds": 2799960
+      },
+      "gems": 3730,
+      "coins": 850000000000,
+      "totalTime": {
+        "display": "43 days, 23h, 32m, 0s",
+        "seconds": 3799920
+      },
+      "totalGems": 5240,
+      "totalCoins": 890000000000
+    }
+  ]
+}

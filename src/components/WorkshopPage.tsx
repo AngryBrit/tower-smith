@@ -20,6 +20,7 @@ import {
   workshopStatDomId,
 } from '../appDeepLink'
 import { CoinGlyph } from './CoinGlyph'
+import { WorkshopLevelStepRow } from './WorkshopLevelStepRow'
 import { WorkshopDemoToolbar } from './workshop/WorkshopDemoToolbar'
 import {
   WORKSHOP_ATTACK_RANGE_MAX_LEVEL,
@@ -392,6 +393,7 @@ function WorkshopDamageCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   damageDisplayOpts,
 }: {
@@ -401,6 +403,7 @@ function WorkshopDamageCard({
   /** Direction only; parent applies `bulkStep` from the workshop multiplier. */
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   /** Wiki displayed-damage factors (always full product). */
   damageDisplayOpts: WorkshopDamageDisplayOpts
@@ -431,44 +434,35 @@ function WorkshopDamageCard({
           {statLabel}
         </span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_damage_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_DAMAGE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_damage_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_damage_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_damage_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_damage_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_DAMAGE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_damage_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -498,6 +492,7 @@ function WorkshopAttackSpeedCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   attackSpeedDisplayOpts,
 }: {
@@ -506,6 +501,7 @@ function WorkshopAttackSpeedCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   attackSpeedDisplayOpts?: WorkshopAttackSpeedDisplayOpts
 }) {
@@ -532,44 +528,35 @@ function WorkshopAttackSpeedCard({
         <span className="workshop__card-name">{t('ws_stat_attackSpeed')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_attack_speed_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_ATTACK_SPEED_MAX_LEVEL}
+          downAriaLabel={`${t('ws_attack_speed_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_attack_speed_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_attack_speed_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_attack_speed_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_ATTACK_SPEED_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_attack_speed_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -599,6 +586,7 @@ function WorkshopCriticalChanceCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -606,6 +594,7 @@ function WorkshopCriticalChanceCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -635,44 +624,35 @@ function WorkshopCriticalChanceCard({
         <span className="workshop__card-name">{t('ws_stat_critChance')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_crit_chance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_crit_chance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_crit_chance_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_crit_chance_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_crit_chance_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_crit_chance_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -702,6 +682,7 @@ function WorkshopCriticalFactorCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   enhancementMultiplier = 1,
 }: {
@@ -710,6 +691,7 @@ function WorkshopCriticalFactorCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   enhancementMultiplier?: number
 }) {
@@ -742,44 +724,35 @@ function WorkshopCriticalFactorCard({
         <span className="workshop__card-name">{t('ws_stat_critFactor')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_crit_factor_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL}
+          downAriaLabel={`${t('ws_crit_factor_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_crit_factor_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_crit_factor_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_crit_factor_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_crit_factor_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -809,6 +782,7 @@ function WorkshopAttackRangeCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -816,6 +790,7 @@ function WorkshopAttackRangeCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -846,44 +821,35 @@ function WorkshopAttackRangeCard({
         <span className="workshop__card-name">{t('ws_stat_attackRange')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_attack_range_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_ATTACK_RANGE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_attack_range_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_attack_range_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_attack_range_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_attack_range_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_ATTACK_RANGE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_attack_range_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -913,6 +879,7 @@ function WorkshopDamagePerMeterCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   damagePerMeterLabMultiplier,
 }: {
@@ -921,6 +888,7 @@ function WorkshopDamagePerMeterCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   /** Attack **Damage / Meter** lab only (no relic merge, no sub-module). */
   damagePerMeterLabMultiplier?: number
@@ -948,44 +916,35 @@ function WorkshopDamagePerMeterCard({
         <span className="workshop__card-name">{t('ws_stat_damagePerMeter')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_damage_per_meter_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL}
+          downAriaLabel={`${t('ws_damage_per_meter_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_damage_per_meter_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_damage_per_meter_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_damage_per_meter_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_damage_per_meter_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1015,6 +974,7 @@ function WorkshopMultishotChanceCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1022,6 +982,7 @@ function WorkshopMultishotChanceCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1051,44 +1012,35 @@ function WorkshopMultishotChanceCard({
         <span className="workshop__card-name">{t('ws_stat_multishotChance')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_multishot_chance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_multishot_chance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_multishot_chance_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_multishot_chance_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_multishot_chance_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_multishot_chance_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1118,6 +1070,7 @@ function WorkshopMultishotTargetsCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1125,6 +1078,7 @@ function WorkshopMultishotTargetsCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1154,44 +1108,35 @@ function WorkshopMultishotTargetsCard({
         <span className="workshop__card-name">{t('ws_stat_multishotTargets')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_multishot_targets_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL}
+          downAriaLabel={`${t('ws_multishot_targets_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_multishot_targets_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_multishot_targets_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_multishot_targets_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_multishot_targets_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1221,6 +1166,7 @@ function WorkshopRapidFireChanceCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1228,6 +1174,7 @@ function WorkshopRapidFireChanceCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1257,44 +1204,35 @@ function WorkshopRapidFireChanceCard({
         <span className="workshop__card-name">{t('ws_stat_rapidFireChance')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rapid_fire_chance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_rapid_fire_chance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_rapid_fire_chance_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_rapid_fire_chance_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rapid_fire_chance_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_rapid_fire_chance_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1324,6 +1262,7 @@ function WorkshopRapidFireDurationCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1331,6 +1270,7 @@ function WorkshopRapidFireDurationCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1360,44 +1300,35 @@ function WorkshopRapidFireDurationCard({
         <span className="workshop__card-name">{t('ws_stat_rapidFireDuration')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rapid_fire_duration_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL}
+          downAriaLabel={`${t('ws_rapid_fire_duration_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_rapid_fire_duration_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_rapid_fire_duration_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rapid_fire_duration_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_rapid_fire_duration_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1427,6 +1358,7 @@ function WorkshopBounceShotChanceCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1434,6 +1366,7 @@ function WorkshopBounceShotChanceCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1463,44 +1396,35 @@ function WorkshopBounceShotChanceCard({
         <span className="workshop__card-name">{t('ws_stat_bounceChance')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_bounce_shot_chance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_bounce_shot_chance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_bounce_shot_chance_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_bounce_shot_chance_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_bounce_shot_chance_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_bounce_shot_chance_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1530,6 +1454,7 @@ function WorkshopBounceShotTargetsCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1537,6 +1462,7 @@ function WorkshopBounceShotTargetsCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1566,44 +1492,35 @@ function WorkshopBounceShotTargetsCard({
         <span className="workshop__card-name">{t('ws_stat_bounceTargets')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_bounce_shot_targets_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL}
+          downAriaLabel={`${t('ws_bounce_shot_targets_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_bounce_shot_targets_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_bounce_shot_targets_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_bounce_shot_targets_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_bounce_shot_targets_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1633,6 +1550,7 @@ function WorkshopBounceShotRangeCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1640,6 +1558,7 @@ function WorkshopBounceShotRangeCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1669,44 +1588,35 @@ function WorkshopBounceShotRangeCard({
         <span className="workshop__card-name">{t('ws_stat_bounceShotRange')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_bounce_shot_range_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_bounce_shot_range_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_bounce_shot_range_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_bounce_shot_range_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_bounce_shot_range_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_bounce_shot_range_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1736,6 +1646,7 @@ function WorkshopSuperCritChanceCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1743,6 +1654,7 @@ function WorkshopSuperCritChanceCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1772,44 +1684,35 @@ function WorkshopSuperCritChanceCard({
         <span className="workshop__card-name">{t('ws_stat_superCritChance')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_super_crit_chance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_super_crit_chance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_super_crit_chance_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_super_crit_chance_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_super_crit_chance_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_super_crit_chance_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1839,6 +1742,7 @@ function WorkshopSuperCritMultCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
 }: {
   level: number
@@ -1846,6 +1750,7 @@ function WorkshopSuperCritMultCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
 }) {
   const { t } = useI18n()
@@ -1876,44 +1781,35 @@ function WorkshopSuperCritMultCard({
         <span className="workshop__card-name">{t('ws_stat_superCritMult')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_super_crit_mult_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL}
+          downAriaLabel={`${t('ws_super_crit_mult_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_super_crit_mult_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_super_crit_mult_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_super_crit_mult_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_super_crit_mult_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -1943,6 +1839,7 @@ function WorkshopRendArmorChanceCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   enhancementMultiplier = 1,
 }: {
@@ -1951,6 +1848,7 @@ function WorkshopRendArmorChanceCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   enhancementMultiplier?: number
 }) {
@@ -1982,44 +1880,35 @@ function WorkshopRendArmorChanceCard({
         <span className="workshop__card-name">{t('ws_stat_rendArmorChance')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rend_armor_chance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL}
+          downAriaLabel={`${t('ws_rend_armor_chance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_rend_armor_chance_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_rend_armor_chance_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rend_armor_chance_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_rend_armor_chance_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -2049,6 +1938,7 @@ function WorkshopRendArmorMultCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   enhancementMultiplier = 1,
 }: {
@@ -2057,6 +1947,7 @@ function WorkshopRendArmorMultCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   enhancementMultiplier?: number
 }) {
@@ -2089,44 +1980,35 @@ function WorkshopRendArmorMultCard({
         <span className="workshop__card-name">{t('ws_stat_rendArmorMult')}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rend_armor_mult_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL}
+          downAriaLabel={`${t('ws_rend_armor_mult_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_rend_armor_mult_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t('ws_rend_armor_mult_level_input_aria')}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_rend_armor_mult_level_up_aria')} (${stepHint})`}
-          disabled={level >= WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={t('ws_rend_armor_mult_level_input_aria')}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -2195,6 +2077,7 @@ function WorkshopDefenseUpgradeCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   statDisplayOpts,
 }: {
@@ -2205,6 +2088,7 @@ function WorkshopDefenseUpgradeCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   statDisplayOpts?: WorkshopDefenseStatDisplayOpts
 }) {
@@ -2233,44 +2117,35 @@ function WorkshopDefenseUpgradeCard({
         <span className="workshop__card-name">{statName}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${statName} — ${t('ws_defense_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={max}
+          downAriaLabel={`${statName} — ${t('ws_defense_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${statName} — ${t('ws_defense_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={`${statName} — ${t('ws_defense_level_input_aria')}`}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${statName} — ${t('ws_defense_level_up_aria')} (${stepHint})`}
-          disabled={level >= max}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={`${statName} — ${t('ws_defense_level_input_aria')}`}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -2302,6 +2177,7 @@ function WorkshopUtilityUpgradeCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   statDisplayOpts,
 }: {
@@ -2312,6 +2188,7 @@ function WorkshopUtilityUpgradeCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   statDisplayOpts?: WorkshopUtilityLabDisplayOpts
 }) {
@@ -2340,44 +2217,35 @@ function WorkshopUtilityUpgradeCard({
         <span className="workshop__card-name">{statName}</span>
         <span className="workshop__card-value">{statLabel}</span>
       </div>
-      <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${statName} — ${t('ws_defense_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+            <div className="workshop__card-level-row">
+        <WorkshopLevelStepRow
+          level={level}
+          max={max}
+          downAriaLabel={`${statName} — ${t('ws_defense_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${statName} — ${t('ws_defense_level_up_aria')} (${stepHint})`}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={`${statName} — ${t('ws_defense_level_input_aria')}`}
-            value={draft}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${statName} — ${t('ws_defense_level_up_aria')} (${stepHint})`}
-          disabled={level >= max}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+                    <input
+                      className="workshop__level-input"
+                      type="text"
+                      inputMode="numeric"
+                      autoComplete="off"
+                      aria-label={`${statName} — ${t('ws_defense_level_input_aria')}`}
+                      value={draft}
+                      onChange={(e) => setDraft(e.target.value)}
+                      onBlur={() => onCommitDraft()}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.preventDefault()
+                          onCommitDraft()
+                          ;(e.target as HTMLInputElement).blur()
+                        }
+                      }}
+                    />
+                  </div>
+        </WorkshopLevelStepRow>
       </div>
       <div className="workshop__card-damage-footer">
         <span className="workshop__damage-max-caps">
@@ -3334,6 +3202,15 @@ export function WorkshopPage({
     [onWorkshopPersistedChange, workshopPersisted],
   )
 
+  const setUltimateLevel = useCallback(
+    (key: WorkshopUltimateUpgradeKey, level: number) => {
+      const nv = workshopUltimateClampLevel(key, level)
+      if (nv === workshopPersisted[key]) return
+      onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
+    },
+    [onWorkshopPersistedChange, workshopPersisted],
+  )
+
   const toggleUltimateActive = useCallback(
     (weaponId: WorkshopUltimateWeaponId) => {
       if (!workshopUltimateWeaponIsOwned(workshopPersisted, weaponId)) return
@@ -3369,6 +3246,18 @@ export function WorkshopPage({
       const cur = workshopPersisted[key] ?? -1
       if (!workshopUltimatePlusIsUnlocked(cur)) return
       const nv = workshopUltimatePlusClampLevel(abilityId, cur + direction)
+      if (nv === cur) return
+      onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
+    },
+    [onWorkshopPersistedChange, workshopPersisted],
+  )
+
+  const setUltimatePlusLevel = useCallback(
+    (abilityId: WorkshopUltimatePlusAbilityId, level: number) => {
+      const key = workshopUltimatePlusLevelKey(abilityId)
+      const cur = workshopPersisted[key] ?? -1
+      if (!workshopUltimatePlusIsUnlocked(cur)) return
+      const nv = workshopUltimatePlusClampLevel(abilityId, level)
       if (nv === cur) return
       onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
     },
@@ -3987,12 +3876,14 @@ export function WorkshopPage({
                     active={workshopUltimateIsActive(workshopPersisted, weaponId)}
                     levels={workshopPersisted}
                     onBump={bumpUltimate}
+                    onSetLevel={setUltimateLevel}
                     onToggleActive={toggleUltimateActive}
                     onUnlockWeapon={unlockUltimateWeapon}
                     workshop={workshopPersisted}
                     submoduleBonusContext={submoduleBonusContext}
                     plusEnabled={plusEnabled}
                     onPlusBump={bumpUltimatePlus}
+                    onSetPlusLevel={setUltimatePlusLevel}
                     onPlusUnlock={unlockUltimatePlus}
                   />
                 ))
@@ -4005,6 +3896,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpDamage}
                 onCommitDraft={commitDamageDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    damageLevel: clampWorkshopDamageLevel(n),
+                  })}
                 damageDisplayOpts={damageDisplayOpts}
               />
             ) : null}
@@ -4016,6 +3912,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpAttackSpeed}
                 onCommitDraft={commitAttackSpeedDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    attackSpeedLevel: clampWorkshopAttackSpeedLevel(n),
+                  })}
                 attackSpeedDisplayOpts={attackSpeedDisplayOpts}
               />
             ) : null}
@@ -4027,6 +3928,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpCritChance}
                 onCommitDraft={commitCritChanceDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    critChanceLevel: clampWorkshopCriticalChanceLevel(n),
+                  })}
               />
             ) : null}
             {showCritFactorCard ? (
@@ -4037,6 +3943,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpCritFactor}
                 onCommitDraft={commitCritFactorDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    critFactorLevel: clampWorkshopCriticalFactorLevel(n),
+                  })}
                 enhancementMultiplier={critFactorEnhancementMultiplier}
               />
             ) : null}
@@ -4048,6 +3959,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpAttackRange}
                 onCommitDraft={commitAttackRangeDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    attackRangeLevel: clampWorkshopAttackRangeLevel(n),
+                  })}
               />
             ) : null}
             {showDamagePerMeterCard ? (
@@ -4058,6 +3974,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpDamagePerMeter}
                 onCommitDraft={commitDamagePerMeterDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    damagePerMeterLevel: clampWorkshopDamagePerMeterLevel(n),
+                  })}
                 damagePerMeterLabMultiplier={damagePerMeterLabMultiplier}
               />
             ) : null}
@@ -4069,6 +3990,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpMultishotChance}
                 onCommitDraft={commitMultishotChanceDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    multishotChanceLevel: clampWorkshopMultishotChanceLevel(n),
+                  })}
               />
             ) : null}
             {showMultishotTargetsCard ? (
@@ -4079,6 +4005,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpMultishotTargets}
                 onCommitDraft={commitMultishotTargetsDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    multishotTargetsLevel: clampWorkshopMultishotTargetsLevel(n),
+                  })}
               />
             ) : null}
             {showRapidFireChanceCard ? (
@@ -4089,6 +4020,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpRapidFireChance}
                 onCommitDraft={commitRapidFireChanceDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    rapidFireChanceLevel: clampWorkshopRapidFireChanceLevel(n),
+                  })}
               />
             ) : null}
             {showRapidFireDurationCard ? (
@@ -4099,6 +4035,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpRapidFireDuration}
                 onCommitDraft={commitRapidFireDurationDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    rapidFireDurationLevel: clampWorkshopRapidFireDurationLevel(n),
+                  })}
               />
             ) : null}
             {showBounceShotChanceCard ? (
@@ -4109,6 +4050,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpBounceShotChance}
                 onCommitDraft={commitBounceShotChanceDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    bounceShotChanceLevel: clampWorkshopBounceShotChanceLevel(n),
+                  })}
               />
             ) : null}
             {showBounceShotTargetsCard ? (
@@ -4119,6 +4065,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpBounceShotTargets}
                 onCommitDraft={commitBounceShotTargetsDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    bounceShotTargetsLevel: clampWorkshopBounceShotTargetsLevel(n),
+                  })}
               />
             ) : null}
             {showBounceShotRangeCard ? (
@@ -4129,6 +4080,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpBounceShotRange}
                 onCommitDraft={commitBounceShotRangeDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    bounceShotRangeLevel: clampWorkshopBounceShotRangeLevel(n),
+                  })}
               />
             ) : null}
             {showSuperCritChanceCard ? (
@@ -4139,6 +4095,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpSuperCritChance}
                 onCommitDraft={commitSuperCritChanceDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    superCritChanceLevel: clampWorkshopSuperCritChanceLevel(n),
+                  })}
               />
             ) : null}
             {showSuperCritMultCard ? (
@@ -4149,6 +4110,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpSuperCritMult}
                 onCommitDraft={commitSuperCritMultDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    superCritMultLevel: clampWorkshopSuperCritMultLevel(n),
+                  })}
               />
             ) : null}
             {showRendArmorChanceCard ? (
@@ -4159,6 +4125,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpRendArmorChance}
                 onCommitDraft={commitRendArmorChanceDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    rendArmorChanceLevel: clampWorkshopRendArmorChanceLevel(n),
+                  })}
                 enhancementMultiplier={rendArmorChanceEnhancementMultiplier}
               />
             ) : null}
@@ -4170,6 +4141,11 @@ export function WorkshopPage({
                 bulkStep={multiplier}
                 onBump={bumpRendArmorMult}
                 onCommitDraft={commitRendArmorMultDraft}
+                onSetLevel={(n) =>
+                  onWorkshopPersistedChange({
+                    ...workshopPersisted,
+                    rendArmorMultLevel: clampWorkshopRendArmorMultLevel(n),
+                  })}
                 enhancementMultiplier={rendArmorMultEnhancementMultiplier}
               />
             ) : null}
@@ -4189,6 +4165,11 @@ export function WorkshopPage({
                       bulkStep={multiplier}
                       onBump={(dir) => bumpDefense(key, dir)}
                       onCommitDraft={() => commitDefenseDraft(key)}
+                      onSetLevel={(n) =>
+                        onWorkshopPersistedChange({
+                          ...workshopPersisted,
+                          [key]: workshopDefenseClampLevel(key, n),
+                        })}
                       statDisplayOpts={defenseStatLabDisplayOpts}
                     />
                   )
@@ -4210,6 +4191,11 @@ export function WorkshopPage({
                       bulkStep={multiplier}
                       onBump={(dir) => bumpUtility(key, dir)}
                       onCommitDraft={() => commitUtilityDraft(key)}
+                      onSetLevel={(n) =>
+                        onWorkshopPersistedChange({
+                          ...workshopPersisted,
+                          [key]: workshopUtilityClampLevel(key, n),
+                        })}
                       statDisplayOpts={utilityStatLabDisplayOpts}
                     />
                   )

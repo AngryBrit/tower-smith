@@ -25,6 +25,7 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { patchWorkshopModules } from '../data/workshopModulePresets'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
+import { HoldStepButton } from './HoldStepButton'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 
 const SLOT_LABEL: Record<WorkshopAssistModuleSlot, StringId> = {
@@ -73,6 +74,8 @@ type AssistUnlockColProps = {
   active: boolean
   onDecrease: () => void
   onIncrease: () => void
+  onHoldMin?: () => void
+  onHoldMax?: () => void
   decreaseDisabled?: boolean
   increaseDisabled?: boolean
 }
@@ -86,6 +89,8 @@ function AssistUnlockCol({
   active,
   onDecrease,
   onIncrease,
+  onHoldMin,
+  onHoldMax,
   decreaseDisabled,
   increaseDisabled,
 }: AssistUnlockColProps) {
@@ -102,15 +107,16 @@ function AssistUnlockCol({
         </span>
       </div>
       <div className="workshop__uw-col-foot">
-        <button
-          type="button"
+        <HoldStepButton
           className="workshop__uw-level-step"
-          aria-label={`${label} — ${t('ws_defense_level_down_aria')}`}
+          ariaLabel={`${label} — ${t('ws_defense_level_down_aria')}`}
+          holdVariant="min"
           disabled={!active || decreaseDisabled}
-          onClick={onDecrease}
+          onStep={onDecrease}
+          onHold={onHoldMin ?? onDecrease}
         >
           −
-        </button>
+        </HoldStepButton>
         <div
           className={
             maxed ? 'workshop__uw-col-cost workshop__card-cost--max' : 'workshop__uw-col-cost'
@@ -129,15 +135,16 @@ function AssistUnlockCol({
             </>
           )}
         </div>
-        <button
-          type="button"
+        <HoldStepButton
           className="workshop__uw-level-step"
-          aria-label={`${label} — ${t('ws_defense_level_up_aria')}`}
+          ariaLabel={`${label} — ${t('ws_defense_level_up_aria')}`}
+          holdVariant="max"
           disabled={!active || increaseDisabled}
-          onClick={onIncrease}
+          onStep={onIncrease}
+          onHold={onHoldMax ?? onIncrease}
         >
           +
-        </button>
+        </HoldStepButton>
       </div>
     </div>
   )
@@ -170,6 +177,20 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
       onPatch(assistStoneEfficiencyPatch(slot, track, current + delta))
     },
     [assist.mainStoneEfficiency, assist.subStoneEfficiency, onPatch, slot],
+  )
+
+  const setRarityTo = useCallback(
+    (rarity: typeof assist.uniqueRarity) => {
+      onPatch({ [uniqueRarityKey]: rarity })
+    },
+    [onPatch, uniqueRarityKey],
+  )
+
+  const setEfficiencyTo = useCallback(
+    (track: 'main' | 'sub', value: number) => {
+      onPatch(assistStoneEfficiencyPatch(slot, track, value))
+    },
+    [onPatch, slot],
   )
 
   const unlock = useCallback(() => {
@@ -261,6 +282,8 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
               increaseDisabled={rarityMaxed}
               onDecrease={() => setRarity(-1)}
               onIncrease={() => setRarity(1)}
+              onHoldMin={() => setRarityTo('epic')}
+              onHoldMax={() => setRarityTo('ancestral')}
             />
             <AssistUnlockCol
               label={t('ws_assist_unlocks_multiplier')}
@@ -272,6 +295,8 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
               increaseDisabled={mainMaxed}
               onDecrease={() => setEfficiency('main', -1)}
               onIncrease={() => setEfficiency('main', 1)}
+              onHoldMin={() => setEfficiencyTo('main', 1)}
+              onHoldMax={() => setEfficiencyTo('main', 70)}
             />
             <AssistUnlockCol
               label={t('ws_assist_unlocks_substat')}
@@ -283,6 +308,8 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
               increaseDisabled={subMaxed}
               onDecrease={() => setEfficiency('sub', -1)}
               onIncrease={() => setEfficiency('sub', 1)}
+              onHoldMin={() => setEfficiencyTo('sub', 1)}
+              onHoldMax={() => setEfficiencyTo('sub', 70)}
             />
           </div>
         </div>

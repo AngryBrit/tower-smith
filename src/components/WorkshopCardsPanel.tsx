@@ -30,6 +30,7 @@ import {
 } from '../data/workshopCardMastery'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { useI18n } from '../i18n'
+import { HoldStepButton } from './HoldStepButton'
 import type { StringId } from '../i18n/dictionary'
 import type { ResearchData } from '../types/research'
 
@@ -252,15 +253,16 @@ function CardsTileStepper({
 
   return (
     <div className="cards-tile__stepper">
-      <button
-        type="button"
+      <HoldStepButton
         className="cards-tile__step"
-        aria-label={t('ws_sim_stars_down_aria')}
+        ariaLabel={t('ws_sim_stars_down_aria')}
+        holdVariant="min"
         disabled={value <= min}
-        onClick={() => onBump(-1)}
+        onStep={() => onBump(-1)}
+        onHold={() => onCommit(min)}
       >
         −
-      </button>
+      </HoldStepButton>
       <input
         className="cards-tile__input"
         type="text"
@@ -278,15 +280,16 @@ function CardsTileStepper({
           }
         }}
       />
-      <button
-        type="button"
+      <HoldStepButton
         className="cards-tile__step"
-        aria-label={t('ws_sim_stars_up_aria')}
+        ariaLabel={t('ws_sim_stars_up_aria')}
+        holdVariant="max"
         disabled={value >= max}
-        onClick={() => onBump(1)}
+        onStep={() => onBump(1)}
+        onHold={() => onCommit(max)}
       >
         +
-      </button>
+      </HoldStepButton>
     </div>
   )
 }

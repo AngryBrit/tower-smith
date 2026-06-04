@@ -78,9 +78,9 @@ export const STRINGS_ES = {
     'Texto del correo copiado — pégalo en el mensaje si ves signos más (+).',
   bug_buster_copy_fail: 'No se pudo copiar — usa la vista previa y copia manualmente.',
   bug_buster_email_save_downloaded:
-    'Correo abierto — se descargó playerInfo.dat; adjúntalo en tu app de correo si hace falta.',
+    'Correo abierto — se descargó playerInfo.zip; adjúntalo en tu app de correo si hace falta.',
   bug_buster_github_save_downloaded:
-    'GitHub abierto — se descargó playerInfo.dat; arrástralo al issue si hace falta.',
+    'GitHub abierto — se descargó playerInfo.zip; arrástralo al issue si hace falta.',
   bug_buster_share_ok: 'Informe y guardado compartidos.',
   bug_buster_settings_hint:
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
@@ -524,6 +524,8 @@ export const STRINGS_ES = {
     'Publicar y explorar requieren la API de la galería.',
   gallery_filter_mine: 'Solo mis builds',
   gallery_filter_tags_aria: 'Filtrar por categoría de build',
+  gallery_filter_author_aria: 'Filtrar builds de {{author}}',
+  gallery_filter_guild_aria: 'Filtrar builds del gremio {{guild}}',
   gallery_error_invalid_title: 'El título debe tener entre 1 y 40 caracteres.',
   gallery_error_invalid_payload: 'Los datos de la torre no son válidos o son demasiado grandes.',
   gallery_error_disabled: 'Los envíos están desactivados temporalmente.',
@@ -992,6 +994,16 @@ export const STRINGS_ES = {
   ws_budget_stones_next_dt: 'Siguiente mejora (visible)',
   ws_budget_toggle_collapse: 'Contraer presupuesto del taller',
   ws_budget_toggle_expand: 'Expandir presupuesto del taller',
+  ws_bot_budget_title: 'Medallas de bots',
+  ws_bot_budget_aria:
+    'Gastadas {{spent}} medallas, hasta el máximo {{toMax}} medallas, siguientes mejoras visibles {{next}} medallas.',
+  ws_bot_budget_footnote:
+    'Los totales incluyen desbloqueos de bots en la tienda de eventos y mejoras con medallas (stats básicos y niveles Bot+). Las compras Bot+ con power stones están omitidas. «Siguiente mejora» suma solo filas visibles en bots activos.',
+  ws_bot_budget_spent_dt: 'Gastado (todas las mejoras de bots)',
+  ws_bot_budget_to_max_dt: 'Hasta el máximo (topes finitos)',
+  ws_bot_budget_next_dt: 'Siguiente mejora (visible)',
+  ws_bot_budget_toggle_collapse: 'Contraer presupuesto de bots',
+  ws_bot_budget_toggle_expand: 'Expandir presupuesto de bots',
   ws_section_attack: 'Mejoras de ataque',
   ws_section_defense: 'Mejoras de defensa',
   ws_section_utility: 'Mejoras de utilidad',
@@ -1442,8 +1454,10 @@ export const STRINGS_ES = {
 
   research_empty_filter: 'Ninguna investigación coincide con los filtros.',
 
-  researchCard_decrease_aria: 'Disminuir nivel',
-  researchCard_increase_aria: 'Aumentar nivel',
+  researchCard_decrease_aria: 'Disminuir nivel (mantener para cero)',
+  researchCard_decrease_hold_title: 'Mantener pulsado para nivel 0',
+  researchCard_increase_aria: 'Aumentar nivel (mantener para máximo)',
+  researchCard_increase_hold_title: 'Mantener pulsado para nivel máximo',
   researchCard_level_aria: 'Nivel de {{name}}',
   researchCard_level_title: 'Nivel 0–{{max}}',
   researchCard_researching: 'Investigando…',

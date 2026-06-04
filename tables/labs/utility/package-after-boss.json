@@ -1,0 +1,22 @@
+{
+  "name": "Package After Boss",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "8 days, 2h, 26m, 0s",
+        "seconds": 699960
+      },
+      "gems": 1120,
+      "coins": 1000000000,
+      "totalTime": {
+        "display": "8 days, 2h, 26m, 0s",
+        "seconds": 699960
+      },
+      "totalGems": 1120,
+      "totalCoins": 1000000000
+    }
+  ]
+}

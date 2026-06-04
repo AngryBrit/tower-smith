@@ -1,0 +1,983 @@
+{
+  "name": "Enemy Level Skip +",
+  "maxLevel": 60,
+  "levels": [
+    {
+      "level": 0,
+      "value": 1,
+      "nextCoins": {
+        "display": "5.00B",
+        "coins": 5000000000
+      },
+      "additionalCoins": {
+        "display": "0.00",
+        "coins": 0
+      },
+      "totalCoins": {
+        "display": "0.00",
+        "coins": 0
+      }
+    },
+    {
+      "level": 1,
+      "value": 1.01,
+      "nextCoins": {
+        "display": "15.50B",
+        "coins": 15500000000
+      },
+      "additionalCoins": {
+        "display": "5.00B",
+        "coins": 5000000000
+      },
+      "totalCoins": {
+        "display": "5.00B",
+        "coins": 5000000000
+      }
+    },
+    {
+      "level": 2,
+      "value": 1.02,
+      "nextCoins": {
+        "display": "202.98B",
+        "coins": 202980000000
+      },
+      "additionalCoins": {
+        "display": "20.50B",
+        "coins": 20500000000
+      },
+      "totalCoins": {
+        "display": "20.50B",
+        "coins": 20500000000
+      }
+    },
+    {
+      "level": 3,
+      "value": 1.03,
+      "nextCoins": {
+        "display": "1.13T",
+        "coins": 1130000000000
+      },
+      "additionalCoins": {
+        "display": "223.48B",
+        "coins": 223480000000
+      },
+      "totalCoins": {
+        "display": "223.48B",
+        "coins": 223480000000
+      }
+    },
+    {
+      "level": 4,
+      "value": 1.04,
+      "nextCoins": {
+        "display": "3.89T",
+        "coins": 3890000000000
+      },
+      "additionalCoins": {
+        "display": "1.36T",
+        "coins": 1360000000000
+      },
+      "totalCoins": {
+        "display": "1.36T",
+        "coins": 1360000000000
+      }
+    },
+    {
+      "level": 5,
+      "value": 1.05,
+      "nextCoins": {
+        "display": "10.14T",
+        "coins": 10140000000000
+      },
+      "additionalCoins": {
+        "display": "5.24T",
+        "coins": 5240000000000
+      },
+      "totalCoins": {
+        "display": "5.24T",
+        "coins": 5240000000000
+      }
+    },
+    {
+      "level": 6,
+      "value": 1.06,
+      "nextCoins": {
+        "display": "22.19T",
+        "coins": 22190000000000
+      },
+      "additionalCoins": {
+        "display": "15.38T",
+        "coins": 15380000000000
+      },
+      "totalCoins": {
+        "display": "15.38T",
+        "coins": 15380000000000
+      }
+    },
+    {
+      "level": 7,
+      "value": 1.07,
+      "nextCoins": {
+        "display": "43.05T",
+        "coins": 43050000000000
+      },
+      "additionalCoins": {
+        "display": "37.57T",
+        "coins": 37570000000000
+      },
+      "totalCoins": {
+        "display": "37.57T",
+        "coins": 37570000000000
+      }
+    },
+    {
+      "level": 8,
+      "value": 1.08,
+      "nextCoins": {
+        "display": "76.44T",
+        "coins": 76440000000000
+      },
+      "additionalCoins": {
+        "display": "80.63T",
+        "coins": 80630000000000
+      },
+      "totalCoins": {
+        "display": "80.63T",
+        "coins": 80630000000000
+      }
+    },
+    {
+      "level": 9,
+      "value": 1.09,
+      "nextCoins": {
+        "display": "126.85T",
+        "coins": 126850000000000
+      },
+      "additionalCoins": {
+        "display": "157.07T",
+        "coins": 157070000000000
+      },
+      "totalCoins": {
+        "display": "157.07T",
+        "coins": 157070000000000
+      }
+    },
+    {
+      "level": 10,
+      "value": 1.1,
+      "nextCoins": {
+        "display": "199.54T",
+        "coins": 199540000000000
+      },
+      "additionalCoins": {
+        "display": "283.91T",
+        "coins": 283910000000000
+      },
+      "totalCoins": {
+        "display": "283.91T",
+        "coins": 283910000000000
+      }
+    },
+    {
+      "level": 11,
+      "value": 1.11,
+      "nextCoins": {
+        "display": "300.61T",
+        "coins": 300610000000000
+      },
+      "additionalCoins": {
+        "display": "483.45T",
+        "coins": 483450000000000
+      },
+      "totalCoins": {
+        "display": "483.45T",
+        "coins": 483450000000000
+      }
+    },
+    {
+      "level": 12,
+      "value": 1.12,
+      "nextCoins": {
+        "display": "437.01T",
+        "coins": 437010000000000
+      },
+      "additionalCoins": {
+        "display": "784.06T",
+        "coins": 784060000000000
+      },
+      "totalCoins": {
+        "display": "784.06T",
+        "coins": 784060000000000
+      }
+    },
+    {
+      "level": 13,
+      "value": 1.13,
+      "nextCoins": {
+        "display": "616.54T",
+        "coins": 616540000000000
+      },
+      "additionalCoins": {
+        "display": "1.22q",
+        "coins": 1220000000000000
+      },
+      "totalCoins": {
+        "display": "1.22q",
+        "coins": 1220000000000000
+      }
+    },
+    {
+      "level": 14,
+      "value": 1.14,
+      "nextCoins": {
+        "display": "847.92T",
+        "coins": 847920000000000
+      },
+      "additionalCoins": {
+        "display": "1.84q",
+        "coins": 1840000000000000
+      },
+      "totalCoins": {
+        "display": "1.84q",
+        "coins": 1840000000000000
+      }
+    },
+    {
+      "level": 15,
+      "value": 1.15,
+      "nextCoins": {
+        "display": "1.14q",
+        "coins": 1140000000000000
+      },
+      "additionalCoins": {
+        "display": "2.69q",
+        "coins": 2690000000000000
+      },
+      "totalCoins": {
+        "display": "2.69q",
+        "coins": 2690000000000000
+      }
+    },
+    {
+      "level": 16,
+      "value": 1.16,
+      "nextCoins": {
+        "display": "1.51q",
+        "coins": 1510000000000000
+      },
+      "additionalCoins": {
+        "display": "3.83q",
+        "coins": 3830000000000000
+      },
+      "totalCoins": {
+        "display": "3.83q",
+        "coins": 3830000000000000
+      }
+    },
+    {
+      "level": 17,
+      "value": 1.17,
+      "nextCoins": {
+        "display": "3.91q",
+        "coins": 3910000000000000
+      },
+      "additionalCoins": {
+        "display": "5.33q",
+        "coins": 5330000000000000
+      },
+      "totalCoins": {
+        "display": "5.33q",
+        "coins": 5330000000000000
+      }
+    },
+    {
+      "level": 18,
+      "value": 1.18,
+      "nextCoins": {
+        "display": "7.50q",
+        "coins": 7500000000000000
+      },
+      "additionalCoins": {
+        "display": "9.24q",
+        "coins": 9240000000000000
+      },
+      "totalCoins": {
+        "display": "9.24q",
+        "coins": 9240000000000000
+      }
+    },
+    {
+      "level": 19,
+      "value": 1.19,
+      "nextCoins": {
+        "display": "12.61q",
+        "coins": 12610000000000000
+      },
+      "additionalCoins": {
+        "display": "16.74q",
+        "coins": 16739999999999998
+      },
+      "totalCoins": {
+        "display": "16.74q",
+        "coins": 16739999999999998
+      }
+    },
+    {
+      "level": 20,
+      "value": 1.2,
+      "nextCoins": {
+        "display": "19.65q",
+        "coins": 19650000000000000
+      },
+      "additionalCoins": {
+        "display": "29.35q",
+        "coins": 29350000000000000
+      },
+      "totalCoins": {
+        "display": "29.35q",
+        "coins": 29350000000000000
+      }
+    },
+    {
+      "level": 21,
+      "value": 1.21,
+      "nextCoins": {
+        "display": "29.09q",
+        "coins": 29090000000000000
+      },
+      "additionalCoins": {
+        "display": "49.00q",
+        "coins": 49000000000000000
+      },
+      "totalCoins": {
+        "display": "49.00q",
+        "coins": 49000000000000000
+      }
+    },
+    {
+      "level": 22,
+      "value": 1.22,
+      "nextCoins": {
+        "display": "41.45q",
+        "coins": 41450000000000000
+      },
+      "additionalCoins": {
+        "display": "78.08q",
+        "coins": 78080000000000000
+      },
+      "totalCoins": {
+        "display": "78.08q",
+        "coins": 78080000000000000
+      }
+    },
+    {
+      "level": 23,
+      "value": 1.23,
+      "nextCoins": {
+        "display": "57.35q",
+        "coins": 57350000000000000
+      },
+      "additionalCoins": {
+        "display": "119.53q",
+        "coins": 119530000000000000
+      },
+      "totalCoins": {
+        "display": "119.53q",
+        "coins": 119530000000000000
+      }
+    },
+    {
+      "level": 24,
+      "value": 1.24,
+      "nextCoins": {
+        "display": "77.47q",
+        "coins": 77470000000000000
+      },
+      "additionalCoins": {
+        "display": "176.88q",
+        "coins": 176880000000000000
+      },
+      "totalCoins": {
+        "display": "176.88q",
+        "coins": 176880000000000000
+      }
+    },
+    {
+      "level": 25,
+      "value": 1.25,
+      "nextCoins": {
+        "display": "102.60q",
+        "coins": 102600000000000000
+      },
+      "additionalCoins": {
+        "display": "254.35q",
+        "coins": 254350000000000000
+      },
+      "totalCoins": {
+        "display": "254.35q",
+        "coins": 254350000000000000
+      }
+    },
+    {
+      "level": 26,
+      "value": 1.26,
+      "nextCoins": {
+        "display": "133.59q",
+        "coins": 133590000000000000
+      },
+      "additionalCoins": {
+        "display": "356.95q",
+        "coins": 356950000000000000
+      },
+      "totalCoins": {
+        "display": "356.95q",
+        "coins": 356950000000000000
+      }
+    },
+    {
+      "level": 27,
+      "value": 1.27,
+      "nextCoins": {
+        "display": "171.41q",
+        "coins": 171410000000000000
+      },
+      "additionalCoins": {
+        "display": "490.55q",
+        "coins": 490550000000000000
+      },
+      "totalCoins": {
+        "display": "490.55q",
+        "coins": 490550000000000000
+      }
+    },
+    {
+      "level": 28,
+      "value": 1.28,
+      "nextCoins": {
+        "display": "217.13q",
+        "coins": 217130000000000000
+      },
+      "additionalCoins": {
+        "display": "661.96q",
+        "coins": 661960000000000000
+      },
+      "totalCoins": {
+        "display": "661.96q",
+        "coins": 661960000000000000
+      }
+    },
+    {
+      "level": 29,
+      "value": 1.29,
+      "nextCoins": {
+        "display": "271.92q",
+        "coins": 271920000000000000
+      },
+      "additionalCoins": {
+        "display": "879.09q",
+        "coins": 879090000000000000
+      },
+      "totalCoins": {
+        "display": "879.09q",
+        "coins": 879090000000000000
+      }
+    },
+    {
+      "level": 30,
+      "value": 1.3,
+      "nextCoins": {
+        "display": "337.06q",
+        "coins": 337060000000000000
+      },
+      "additionalCoins": {
+        "display": "1.15Q",
+        "coins": 1149999999999999900
+      },
+      "totalCoins": {
+        "display": "1.15Q",
+        "coins": 1149999999999999900
+      }
+    },
+    {
+      "level": 31,
+      "value": 1.31,
+      "nextCoins": {
+        "display": "496.77q",
+        "coins": 496770000000000000
+      },
+      "additionalCoins": {
+        "display": "1.49Q",
+        "coins": 1490000000000000000
+      },
+      "totalCoins": {
+        "display": "1.49Q",
+        "coins": 1490000000000000000
+      }
+    },
+    {
+      "level": 32,
+      "value": 1.32,
+      "nextCoins": {
+        "display": "705.87q",
+        "coins": 705870000000000000
+      },
+      "additionalCoins": {
+        "display": "1.98Q",
+        "coins": 1980000000000000000
+      },
+      "totalCoins": {
+        "display": "1.98Q",
+        "coins": 1980000000000000000
+      }
+    },
+    {
+      "level": 33,
+      "value": 1.33,
+      "nextCoins": {
+        "display": "975.00q",
+        "coins": 975000000000000000
+      },
+      "additionalCoins": {
+        "display": "2.69Q",
+        "coins": 2690000000000000000
+      },
+      "totalCoins": {
+        "display": "2.69Q",
+        "coins": 2690000000000000000
+      }
+    },
+    {
+      "level": 34,
+      "value": 1.34,
+      "nextCoins": {
+        "display": "1.32Q",
+        "coins": 1320000000000000000
+      },
+      "additionalCoins": {
+        "display": "3.67Q",
+        "coins": 3670000000000000000
+      },
+      "totalCoins": {
+        "display": "3.67Q",
+        "coins": 3670000000000000000
+      }
+    },
+    {
+      "level": 35,
+      "value": 1.35,
+      "nextCoins": {
+        "display": "1.74Q",
+        "coins": 1740000000000000000
+      },
+      "additionalCoins": {
+        "display": "4.98Q",
+        "coins": 4980000000000000000
+      },
+      "totalCoins": {
+        "display": "4.98Q",
+        "coins": 4980000000000000000
+      }
+    },
+    {
+      "level": 36,
+      "value": 1.36,
+      "nextCoins": {
+        "display": "2.27Q",
+        "coins": 2270000000000000000
+      },
+      "additionalCoins": {
+        "display": "6.73Q",
+        "coins": 6730000000000000000
+      },
+      "totalCoins": {
+        "display": "6.73Q",
+        "coins": 6730000000000000000
+      }
+    },
+    {
+      "level": 37,
+      "value": 1.37,
+      "nextCoins": {
+        "display": "2.92Q",
+        "coins": 2920000000000000000
+      },
+      "additionalCoins": {
+        "display": "9.00Q",
+        "coins": 9000000000000000000
+      },
+      "totalCoins": {
+        "display": "9.00Q",
+        "coins": 9000000000000000000
+      }
+    },
+    {
+      "level": 38,
+      "value": 1.38,
+      "nextCoins": {
+        "display": "3.71Q",
+        "coins": 3710000000000000000
+      },
+      "additionalCoins": {
+        "display": "11.92Q",
+        "coins": 11920000000000000000
+      },
+      "totalCoins": {
+        "display": "11.92Q",
+        "coins": 11920000000000000000
+      }
+    },
+    {
+      "level": 39,
+      "value": 1.39,
+      "nextCoins": {
+        "display": "4.67Q",
+        "coins": 4670000000000000000
+      },
+      "additionalCoins": {
+        "display": "15.64Q",
+        "coins": 15640000000000000000
+      },
+      "totalCoins": {
+        "display": "15.64Q",
+        "coins": 15640000000000000000
+      }
+    },
+    {
+      "level": 40,
+      "value": 1.4,
+      "nextCoins": {
+        "display": "5.81Q",
+        "coins": 5810000000000000000
+      },
+      "additionalCoins": {
+        "display": "20.30Q",
+        "coins": 20300000000000000000
+      },
+      "totalCoins": {
+        "display": "20.30Q",
+        "coins": 20300000000000000000
+      }
+    },
+    {
+      "level": 41,
+      "value": 1.41,
+      "nextCoins": {
+        "display": "7.16Q",
+        "coins": 7160000000000000000
+      },
+      "additionalCoins": {
+        "display": "26.11Q",
+        "coins": 26110000000000000000
+      },
+      "totalCoins": {
+        "display": "26.11Q",
+        "coins": 26110000000000000000
+      }
+    },
+    {
+      "level": 42,
+      "value": 1.42,
+      "nextCoins": {
+        "display": "8.77Q",
+        "coins": 8770000000000000000
+      },
+      "additionalCoins": {
+        "display": "33.27Q",
+        "coins": 33270000000000004000
+      },
+      "totalCoins": {
+        "display": "33.27Q",
+        "coins": 33270000000000004000
+      }
+    },
+    {
+      "level": 43,
+      "value": 1.43,
+      "nextCoins": {
+        "display": "10.65Q",
+        "coins": 10650000000000000000
+      },
+      "additionalCoins": {
+        "display": "42.04Q",
+        "coins": 42040000000000000000
+      },
+      "totalCoins": {
+        "display": "42.04Q",
+        "coins": 42040000000000000000
+      }
+    },
+    {
+      "level": 44,
+      "value": 1.44,
+      "nextCoins": {
+        "display": "12.85Q",
+        "coins": 12850000000000000000
+      },
+      "additionalCoins": {
+        "display": "52.69Q",
+        "coins": 52690000000000000000
+      },
+      "totalCoins": {
+        "display": "52.69Q",
+        "coins": 52690000000000000000
+      }
+    },
+    {
+      "level": 45,
+      "value": 1.45,
+      "nextCoins": {
+        "display": "15.42Q",
+        "coins": 15420000000000000000
+      },
+      "additionalCoins": {
+        "display": "65.54Q",
+        "coins": 65540000000000010000
+      },
+      "totalCoins": {
+        "display": "65.54Q",
+        "coins": 65540000000000010000
+      }
+    },
+    {
+      "level": 46,
+      "value": 1.46,
+      "nextCoins": {
+        "display": "18.39Q",
+        "coins": 18390000000000000000
+      },
+      "additionalCoins": {
+        "display": "80.96Q",
+        "coins": 80960000000000000000
+      },
+      "totalCoins": {
+        "display": "80.96Q",
+        "coins": 80960000000000000000
+      }
+    },
+    {
+      "level": 47,
+      "value": 1.47,
+      "nextCoins": {
+        "display": "21.81Q",
+        "coins": 21810000000000000000
+      },
+      "additionalCoins": {
+        "display": "99.35Q",
+        "coins": 99350000000000000000
+      },
+      "totalCoins": {
+        "display": "99.35Q",
+        "coins": 99350000000000000000
+      }
+    },
+    {
+      "level": 48,
+      "value": 1.48,
+      "nextCoins": {
+        "display": "25.74Q",
+        "coins": 25740000000000000000
+      },
+      "additionalCoins": {
+        "display": "121.15Q",
+        "coins": 121150000000000000000
+      },
+      "totalCoins": {
+        "display": "121.15Q",
+        "coins": 121150000000000000000
+      }
+    },
+    {
+      "level": 49,
+      "value": 1.49,
+      "nextCoins": {
+        "display": "30.24Q",
+        "coins": 30240000000000000000
+      },
+      "additionalCoins": {
+        "display": "146.89Q",
+        "coins": 146889999999999980000
+      },
+      "totalCoins": {
+        "display": "146.89Q",
+        "coins": 146889999999999980000
+      }
+    },
+    {
+      "level": 50,
+      "value": 1.5,
+      "nextCoins": {
+        "display": "35.37Q",
+        "coins": 35369999999999996000
+      },
+      "additionalCoins": {
+        "display": "177.13Q",
+        "coins": 177130000000000000000
+      },
+      "totalCoins": {
+        "display": "177.13Q",
+        "coins": 177130000000000000000
+      }
+    },
+    {
+      "level": 51,
+      "value": 1.51,
+      "nextCoins": {
+        "display": "47.38Q",
+        "coins": 47380000000000000000
+      },
+      "additionalCoins": {
+        "display": "212.50Q",
+        "coins": 212500000000000000000
+      },
+      "totalCoins": {
+        "display": "212.50Q",
+        "coins": 212500000000000000000
+      }
+    },
+    {
+      "level": 52,
+      "value": 1.52,
+      "nextCoins": {
+        "display": "62.14Q",
+        "coins": 62140000000000000000
+      },
+      "additionalCoins": {
+        "display": "259.88Q",
+        "coins": 259880000000000000000
+      },
+      "totalCoins": {
+        "display": "259.88Q",
+        "coins": 259880000000000000000
+      }
+    },
+    {
+      "level": 53,
+      "value": 1.53,
+      "nextCoins": {
+        "display": "80.12Q",
+        "coins": 80120000000000000000
+      },
+      "additionalCoins": {
+        "display": "322.01Q",
+        "coins": 322010000000000000000
+      },
+      "totalCoins": {
+        "display": "322.01Q",
+        "coins": 322010000000000000000
+      }
+    },
+    {
+      "level": 54,
+      "value": 1.54,
+      "nextCoins": {
+        "display": "101.84Q",
+        "coins": 101840000000000000000
+      },
+      "additionalCoins": {
+        "display": "402.13Q",
+        "coins": 402130000000000000000
+      },
+      "totalCoins": {
+        "display": "402.13Q",
+        "coins": 402130000000000000000
+      }
+    },
+    {
+      "level": 55,
+      "value": 1.55,
+      "nextCoins": {
+        "display": "127.88Q",
+        "coins": 127880000000000000000
+      },
+      "additionalCoins": {
+        "display": "503.97Q",
+        "coins": 503970000000000000000
+      },
+      "totalCoins": {
+        "display": "503.97Q",
+        "coins": 503970000000000000000
+      }
+    },
+    {
+      "level": 56,
+      "value": 1.56,
+      "nextCoins": {
+        "display": "158.91Q",
+        "coins": 158910000000000000000
+      },
+      "additionalCoins": {
+        "display": "631.85Q",
+        "coins": 631850000000000100000
+      },
+      "totalCoins": {
+        "display": "631.85Q",
+        "coins": 631850000000000100000
+      }
+    },
+    {
+      "level": 57,
+      "value": 1.57,
+      "nextCoins": {
+        "display": "195.63Q",
+        "coins": 195630000000000000000
+      },
+      "additionalCoins": {
+        "display": "790.75Q",
+        "coins": 790750000000000000000
+      },
+      "totalCoins": {
+        "display": "790.75Q",
+        "coins": 790750000000000000000
+      }
+    },
+    {
+      "level": 58,
+      "value": 1.58,
+      "nextCoins": {
+        "display": "238.88Q",
+        "coins": 238880000000000000000
+      },
+      "additionalCoins": {
+        "display": "986.39Q",
+        "coins": 986389999999999900000
+      },
+      "totalCoins": {
+        "display": "986.39Q",
+        "coins": 986389999999999900000
+      }
+    },
+    {
+      "level": 59,
+      "value": 1.59,
+      "nextCoins": {
+        "display": "289.53Q",
+        "coins": 289529999999999970000
+      },
+      "additionalCoins": {
+        "display": "1.23s",
+        "coins": 1.23e+21
+      },
+      "totalCoins": {
+        "display": "1.23s",
+        "coins": 1.23e+21
+      }
+    },
+    {
+      "level": 60,
+      "value": 1.6,
+      "nextCoins": {
+        "display": "Maxed",
+        "coins": null,
+        "maxed": true
+      },
+      "additionalCoins": {
+        "display": "1.51s",
+        "coins": 1.51e+21
+      },
+      "totalCoins": {
+        "display": "1.51s",
+        "coins": 1.51e+21
+      }
+    }
+  ]
+}

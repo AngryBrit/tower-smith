@@ -1,0 +1,70 @@
+{
+  "name": "Armor Effect Bans",
+  "maxLevel": 4,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "37 days, 12h, 0m, 0s",
+        "seconds": 3240000
+      },
+      "gems": 4110,
+      "coins": 500000000000,
+      "totalTime": {
+        "display": "37 days, 12h, 0m, 0s",
+        "seconds": 3240000
+      },
+      "totalGems": 4110,
+      "totalCoins": 500000000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "91 days, 16h, 0m, 0s",
+        "seconds": 7920000
+      },
+      "gems": 8110,
+      "coins": 50000000000000,
+      "totalTime": {
+        "display": "129 days, 4h, 0m, 0s",
+        "seconds": 11160000
+      },
+      "totalGems": 12210,
+      "totalCoins": 50500000000000
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": {
+        "display": "162 days, 12h, 0m, 0s",
+        "seconds": 14040000
+      },
+      "gems": 12570,
+      "coins": 5000000000000000,
+      "totalTime": {
+        "display": "291 days, 16h, 0m, 0s",
+        "seconds": 25200000
+      },
+      "totalGems": 24780,
+      "totalCoins": 5050000000000000
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": {
+        "display": "204 days, 4h, 0m, 0s",
+        "seconds": 17640000
+      },
+      "gems": 15190,
+      "coins": 50000000000000000,
+      "totalTime": {
+        "display": "1 year, 130 days, 20h, 0m, 0s",
+        "seconds": 42840000
+      },
+      "totalGems": 39970,
+      "totalCoins": 55050000000000000
+    }
+  ]
+}

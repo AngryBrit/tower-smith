@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { HoldStepButton } from './HoldStepButton'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -86,12 +87,14 @@ export type WorkshopUltimateWeaponCardProps = {
   active: boolean
   levels: Record<WorkshopUltimateUpgradeKey, number>
   onBump: (key: WorkshopUltimateUpgradeKey, direction: -1 | 1) => void
+  onSetLevel: (key: WorkshopUltimateUpgradeKey, level: number) => void
   onToggleActive: (weaponId: WorkshopUltimateWeaponId) => void
   onUnlockWeapon?: (weaponId: WorkshopUltimateWeaponId) => void
   workshop?: WorkshopPersistedV1
   submoduleBonusContext?: WorkshopSubmoduleBonusContext
   plusEnabled?: boolean
   onPlusBump?: (abilityId: WorkshopUltimatePlusAbilityId, direction: -1 | 1) => void
+  onSetPlusLevel?: (abilityId: WorkshopUltimatePlusAbilityId, level: number) => void
   onPlusUnlock?: (abilityId: WorkshopUltimatePlusAbilityId) => void
 }
 
@@ -100,19 +103,25 @@ export function WorkshopUltimateWeaponCard({
   active,
   levels,
   onBump,
+  onSetLevel,
   onToggleActive,
   onUnlockWeapon,
   workshop,
   submoduleBonusContext,
   plusEnabled = false,
   onPlusBump,
+  onSetPlusLevel,
   onPlusUnlock,
 }: WorkshopUltimateWeaponCardProps) {
   const { t } = useI18n()
   const stats = WORKSHOP_ULTIMATE_WEAPON_STATS[weaponId]
   const title = t(ULTIMATE_WEAPON_TITLE[weaponId])
   const plusAbilityId = workshopUltimatePlusAbilityForWeapon(weaponId)
-  const showPlus = workshop != null && onPlusBump != null && onPlusUnlock != null
+  const showPlus =
+    workshop != null &&
+    onPlusBump != null &&
+    onSetPlusLevel != null &&
+    onPlusUnlock != null
   const owned = workshop != null && workshopUltimateWeaponIsOwned(workshop, weaponId)
   const runActive = owned && active
   const ultimateSubmoduleBonuses = useMemo(
@@ -239,15 +248,16 @@ export function WorkshopUltimateWeaponCard({
                       </span>
                     </div>
                     <div className="workshop__uw-col-foot">
-                      <button
-                        type="button"
+                      <HoldStepButton
                         className="workshop__uw-level-step"
-                        aria-label={`${statName} — ${t('ws_defense_level_down_aria')}`}
+                        ariaLabel={`${statName} — ${t('ws_defense_level_down_aria')}`}
+                        holdVariant="min"
                         disabled={!runActive || level <= 0}
-                        onClick={() => onBump(key, -1)}
+                        onStep={() => onBump(key, -1)}
+                        onHold={() => onSetLevel(key, 0)}
                       >
                         −
-                      </button>
+                      </HoldStepButton>
                       <div
                         className={
                           maxed
@@ -270,15 +280,16 @@ export function WorkshopUltimateWeaponCard({
                           </>
                         )}
                       </div>
-                      <button
-                        type="button"
+                      <HoldStepButton
                         className="workshop__uw-level-step"
-                        aria-label={`${statName} — ${t('ws_defense_level_up_aria')}`}
+                        ariaLabel={`${statName} — ${t('ws_defense_level_up_aria')}`}
+                        holdVariant="max"
                         disabled={!runActive || maxed}
-                        onClick={() => onBump(key, 1)}
+                        onStep={() => onBump(key, 1)}
+                        onHold={() => onSetLevel(key, workshopUltimateMaxLevel(key))}
                       >
                         +
-                      </button>
+                      </HoldStepButton>
                     </div>
                   </div>
                 )
@@ -293,6 +304,7 @@ export function WorkshopUltimateWeaponCard({
               workshop={workshop}
               plusEnabled={plusEnabled}
               onBump={onPlusBump}
+              onSetLevel={onSetPlusLevel!}
               onUnlock={onPlusUnlock}
             />
           ) : (

@@ -1,0 +1,22 @@
+{
+  "name": "Inner Mine Stun",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "13 days, 21h, 19m, 0s",
+        "seconds": 1199940
+      },
+      "gems": 1760,
+      "coins": 250000000,
+      "totalTime": {
+        "display": "13 days, 21h, 19m, 0s",
+        "seconds": 1199940
+      },
+      "totalGems": 1760,
+      "totalCoins": 250000000
+    }
+  ]
+}

@@ -144,7 +144,7 @@ function formatSaveAttachmentBlock(attachment: BugReportSaveAttachment): string[
     `Gzip: ${attachment.gzip ? 'yes' : 'no'}`,
     `SHA-256: ${attachment.sha256Hex}`,
     '',
-    'Attach this same playerInfo.dat file when sending email or opening a GitHub issue.',
+    'Attach the downloaded playerInfo.zip (contains your save) when sending email or opening a GitHub issue.',
   ]
 }
 
@@ -251,7 +251,7 @@ function buildIssueBodyLines(
       `- **Gzip:** ${input.saveAttachment.gzip ? 'yes' : 'no'}`,
       `- **SHA-256:** \`${input.saveAttachment.sha256Hex}\``,
       '',
-      '_Attach the same **playerInfo.dat** in this issue (drag-and-drop below)._',
+      '_Attach the downloaded **playerInfo.zip** in this issue (drag-and-drop below)._',
     )
   }
 

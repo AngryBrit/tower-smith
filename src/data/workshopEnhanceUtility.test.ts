@@ -1,4 +1,12 @@
 import { describe, expect, it } from 'vitest'
+import { formatCoinAbbrev, formatCoinAbbrevPreferT } from '../labCosts'
+import { defaultWorkshopPersisted } from '../labPresetsStorage'
+import {
+  workshopEnhanceUtilityCategorySpentCoins,
+  workshopEnhanceUtilityIsUnlocked,
+  workshopEnhanceUtilityUnlockRemainingCoins,
+  workshopEnhanceUtilityUnlockRequiredCoins,
+} from './workshopEnhanceUnlock'
 import {
   WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   workshopEnhanceTier400Multiplier,
@@ -39,6 +47,37 @@ describe('workshopEnhanceUtility', () => {
       expect(workshopEnhanceUtilityNextMarginalCoins('enhanceCashBonusLevel', level - 1)).toBe(coins)
     }
     expect(workshopEnhanceUtilityNextMarginalCoins('enhanceCashBonusLevel', 400)).toBeUndefined()
+  })
+
+  it('cash bonus L62→63 matches in-game ~92.14T display', () => {
+    const raw = workshopEnhanceUtilityNextMarginalCoins('enhanceCashBonusLevel', 62)!
+    expect(formatCoinAbbrev(raw)).toBe('92.14T')
+  })
+
+  it('enemy level skip locked card shows wiki 500T gate', () => {
+    expect(
+      workshopEnhanceUtilityUnlockRequiredCoins('enhanceEnemyLevelSkipLevel'),
+    ).toBe(500e12)
+    expect(
+      formatCoinAbbrevPreferT(
+        workshopEnhanceUtilityUnlockRemainingCoins('enhanceEnemyLevelSkipLevel', 0),
+      ),
+    ).toBe('500.00T')
+  })
+
+  it('enemy level skip unlocks at cash bonus L62 (in-game gate ~496T list-price spend)', () => {
+    const ws = { ...defaultWorkshopPersisted(), enhanceCashBonusLevel: 62 }
+    const spent = workshopEnhanceUtilityCategorySpentCoins(ws)
+    expect(spent).toBeGreaterThanOrEqual(496e12)
+    expect(spent).toBeLessThan(500e12)
+    expect(workshopEnhanceUtilityIsUnlocked('enhanceEnemyLevelSkipLevel', spent)).toBe(true)
+    const ws61 = { ...defaultWorkshopPersisted(), enhanceCashBonusLevel: 61 }
+    expect(
+      workshopEnhanceUtilityIsUnlocked(
+        'enhanceEnemyLevelSkipLevel',
+        workshopEnhanceUtilityCategorySpentCoins(ws61),
+      ),
+    ).toBe(false)
   })
 
   it('coin bonus enhancement matches wiki decades and per-level coins (L1–L200)', () => {

@@ -59,6 +59,9 @@ import {
   type BotCooldownLabName,
   type BotResearchLabName,
 } from './gameBotLabMapping'
+import { ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameEnemiesResearchMapping'
+import type { EnemiesResearchLabName } from './gameEnemiesResearchMapping'
+import { CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameCardMasteryResearchMapping'
 import { gameResearchIdForManifest } from './gameResearchIndex'
 import { gameModuleRarityToMergeTier } from './gameModuleRarity'
 import {
@@ -334,7 +337,7 @@ export function botLabsToOverrides(
   return overrides
 }
 
-/** Map card-mastery labs from save `researchLevel` (section skipped by {@link researchLevelsToOverrides}). */
+/** Map card-mastery labs with confirmed `researchLevel[id]` anchors (see gameCardMasteryResearchMapping.ts). */
 export function cardMasteryLabsToOverrides(
   data: ResearchData,
   researchLevel: number[],
@@ -344,9 +347,12 @@ export function cardMasteryLabsToOverrides(
   if (si < 0) return overrides
   const section = data.sections[si]!
 
-  for (let ii = 0; ii < section.items.length; ii++) {
-    const researchId = gameResearchIdForManifest(data, si, ii)
-    if (researchId == null) continue
+  for (const [name, researchId] of Object.entries(CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    keyof typeof CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
     const level = researchLevel[researchId]
     if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
       overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
@@ -406,6 +412,31 @@ export function cardsLabsToOverrides(
   return overrides
 }
 
+/** Map enemies labs with confirmed `researchLevel[id]` anchors (see gameEnemiesResearchMapping.ts). */
+export function enemiesLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'enemies')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME) as [
+    EnemiesResearchLabName,
+    number,
+  ][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
 /** Map game `researchLevel[researchId]` → TowerSmith `sectionIndex-itemIndex` overrides. */
 export function researchLevelsToOverrides(
   data: ResearchData,
@@ -423,7 +454,8 @@ export function researchLevelsToOverrides(
       section.sectionSlug === 'ultimate-weapon-research' ||
       section.sectionSlug === 'cards-research' ||
       section.sectionSlug === 'perks-research' ||
-      section.sectionSlug === 'modules'
+      section.sectionSlug === 'modules' ||
+      section.sectionSlug === 'enemies'
     ) {
       continue
     }
@@ -672,6 +704,7 @@ export function mapPlayerSaveToTower(
     ...perksLabsToOverrides(data, save.researchLevel),
     ...cardMasteryLabsToOverrides(data, save.researchLevel),
     ...modulesLabsToOverrides(data, save.researchLevel),
+    ...enemiesLabsToOverrides(data, save.researchLevel),
     ...botLabsToOverrides(data, save),
   }
   return {

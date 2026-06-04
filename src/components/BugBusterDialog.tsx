@@ -26,6 +26,7 @@ import {
   canShareBugReportWithFiles,
   downloadBugReportAttachedFiles,
   formatSaveBytes,
+  prepareBugReportFilesForTransfer,
   shareBugReportWithFiles,
   type BugReportSaveAttachment,
 } from '../bugReportSaveAttachment'
@@ -246,21 +247,22 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
   const offerAttachedFilesDownload = useCallback(
     (context: 'email' | 'github') => {
       if (attachedFiles.length === 0) return
-      downloadBugReportAttachedFiles(attachedFiles)
-      const noticeKey: StringId =
-        attachedFiles.length > 1
-          ? context === 'email'
-            ? 'bug_buster_email_files_downloaded'
-            : 'bug_buster_github_files_downloaded'
-          : saveFile
+      void downloadBugReportAttachedFiles(attachedFiles).then(() => {
+        const noticeKey: StringId =
+          attachedFiles.length > 1
             ? context === 'email'
-              ? 'bug_buster_email_save_downloaded'
-              : 'bug_buster_github_save_downloaded'
-            : context === 'email'
-              ? 'bug_buster_email_csv_downloaded'
-              : 'bug_buster_github_csv_downloaded'
-      setNotice(t(noticeKey))
-      window.setTimeout(() => setNotice(null), 6000)
+              ? 'bug_buster_email_files_downloaded'
+              : 'bug_buster_github_files_downloaded'
+            : saveFile
+              ? context === 'email'
+                ? 'bug_buster_email_save_downloaded'
+                : 'bug_buster_github_save_downloaded'
+              : context === 'email'
+                ? 'bug_buster_email_csv_downloaded'
+                : 'bug_buster_github_csv_downloaded'
+        setNotice(t(noticeKey))
+        window.setTimeout(() => setNotice(null), 6000)
+      })
     },
     [attachedFiles, saveFile, t],
   )
@@ -308,26 +310,32 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
     const env = buildEnv()
     const reportText = buildBugReport(reportInput, env)
 
-    if (attachedFiles.length > 0 && canShareBugReportWithFiles(attachedFiles)) {
-      void shareBugReportWithFiles(reportText, attachedFiles, t('bug_buster_title')).then(
-        (result) => {
-          if (result === 'shared') {
-            setNotice(
-              t(
-                attachedFiles.length > 1
-                  ? 'bug_buster_share_ok_files'
-                  : saveFile
-                    ? 'bug_buster_share_ok'
-                    : 'bug_buster_share_ok_csv',
-              ),
-            )
-            window.setTimeout(() => setNotice(null), 4000)
-            return
-          }
-          if (result === 'aborted') return
-          openBugReportEmail(env)
-        },
-      )
+    if (attachedFiles.length > 0) {
+      void prepareBugReportFilesForTransfer(attachedFiles).then((prepared) => {
+        if (canShareBugReportWithFiles(prepared)) {
+          void shareBugReportWithFiles(reportText, attachedFiles, t('bug_buster_title')).then(
+            (result) => {
+              if (result === 'shared') {
+                setNotice(
+                  t(
+                    attachedFiles.length > 1
+                      ? 'bug_buster_share_ok_files'
+                      : saveFile
+                        ? 'bug_buster_share_ok'
+                        : 'bug_buster_share_ok_csv',
+                  ),
+                )
+                window.setTimeout(() => setNotice(null), 4000)
+                return
+              }
+              if (result === 'aborted') return
+              openBugReportEmail(env)
+            },
+          )
+          return
+        }
+        openBugReportEmail(env)
+      })
       return
     }
 
@@ -336,7 +344,6 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
     attachedFiles,
     buildEnv,
     openBugReportEmail,
-    offerAttachedFilesDownload,
     reportInput,
     requireDescription,
     saveFile,

@@ -1,0 +1,102 @@
+{
+  "name": "Swamp Rend - Additional Enemies",
+  "maxLevel": 6,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "8 days, 7h, 59m, 59s",
+        "seconds": 719999
+      },
+      "gems": 1150,
+      "coins": 100000000000,
+      "totalTime": {
+        "display": "8 days, 7h, 59m, 59s",
+        "seconds": 719999
+      },
+      "totalGems": 1150,
+      "totalCoins": 100000000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "9 days, 8h, 0m, 0s",
+        "seconds": 806400
+      },
+      "gems": 1260,
+      "coins": 150000000000,
+      "totalTime": {
+        "display": "17 days, 15h, 59m, 59s",
+        "seconds": 1526399
+      },
+      "totalGems": 2410,
+      "totalCoins": 250000000000
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "time": {
+        "display": "10 days, 10h, 52m, 47s",
+        "seconds": 903167
+      },
+      "gems": 1380,
+      "coins": 225000000000,
+      "totalTime": {
+        "display": "28 days, 2h, 52m, 46s",
+        "seconds": 2429566
+      },
+      "totalGems": 3790,
+      "totalCoins": 475000000000
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "time": {
+        "display": "11 days, 16h, 59m, 8s",
+        "seconds": 1011548
+      },
+      "gems": 1520,
+      "coins": 337500000000,
+      "totalTime": {
+        "display": "39 days, 19h, 51m, 54s",
+        "seconds": 3441114
+      },
+      "totalGems": 5310,
+      "totalCoins": 812500000000
+    },
+    {
+      "level": 5,
+      "value": 5,
+      "time": {
+        "display": "13 days, 2h, 42m, 13s",
+        "seconds": 1132933
+      },
+      "gems": 1680,
+      "coins": 506250000000,
+      "totalTime": {
+        "display": "52 days, 22h, 34m, 7s",
+        "seconds": 4574047
+      },
+      "totalGems": 6990,
+      "totalCoins": 1320000000000
+    },
+    {
+      "level": 6,
+      "value": 6,
+      "time": {
+        "display": "14 days, 16h, 28m, 5s",
+        "seconds": 1268885
+      },
+      "gems": 1850,
+      "coins": 759380000000,
+      "totalTime": {
+        "display": "67 days, 15h, 2m, 12s",
+        "seconds": 5842932
+      },
+      "totalGems": 8840,
+      "totalCoins": 2080000000000
+    }
+  ]
+}

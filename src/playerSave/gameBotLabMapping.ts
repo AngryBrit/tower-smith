@@ -14,10 +14,7 @@ export const BOT_COOLDOWN_LAB_SAVE_FIELD = {
 
 export type BotCooldownLabName = keyof typeof BOT_COOLDOWN_LAB_SAVE_FIELD
 
-/**
- * All ten bot labs use sequential `researchLevel[102..111]` (UI order).
- * Cooldown labs also mirror `*CooldownSelected` ints — import uses the higher level.
- */
+/** Cooldown labs use ids 102–106 (UI order). */
 export const BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Flame Bot - Cooldown': 102,
   'Thunder Bot - Cooldown': 103,
@@ -26,12 +23,13 @@ export const BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Bot Bot - Cooldown': 106,
 } as const satisfies Record<BotCooldownLabName, number>
 
+/**
+ * Bot duration labs use ids 107–109; ids 110–111 are enemies (see gameEnemiesResearchMapping.ts).
+ */
 export const BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Flame Bot - Burn Stack': 107,
   'Thunder Bot - Linger Time': 108,
   'Golden Bot - Duration': 109,
-  'Amplify Bot - Duration': 110,
-  'Bot Bot - Duration': 111,
 } as const satisfies Record<string, number>
 
 export type BotResearchLabName = keyof typeof BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME

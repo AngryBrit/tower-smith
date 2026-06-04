@@ -233,6 +233,23 @@ export function workshopBotExplicitOwnedCount(
   return WORKSHOP_BOT_ORDER.filter((id) => ws[workshopBotOwnedKey(id)] === true).length
 }
 
+/** Medals already spent on event-shop bot unlocks (explicit `*Owned` flags only). */
+export function workshopBotUnlockSpentMedals(
+  ws: Partial<Record<WorkshopBotOwnedKey, boolean>>,
+): number {
+  const count = workshopBotExplicitOwnedCount(ws)
+  return WORKSHOP_BOT_UNLOCK_MEDAL_COSTS.slice(0, count).reduce((sum, cost) => sum + cost, 0)
+}
+
+/** Medals still needed to unlock every bot not yet owned (includes legacy-owned bots). */
+export function workshopBotUnlockToMaxMedals(
+  ws: Partial<Record<WorkshopBotOwnedKey, boolean>> &
+    Partial<Record<WorkshopBotUpgradeKey, number>>,
+): number {
+  const count = workshopBotOwnedCount(ws)
+  return WORKSHOP_BOT_UNLOCK_MEDAL_COSTS.slice(count).reduce((sum, cost) => sum + cost, 0)
+}
+
 /** Medal cost to unlock the next bot (null when all five are owned). */
 export function workshopBotNextUnlockCost(
   ws: Partial<Record<WorkshopBotOwnedKey, boolean>> &

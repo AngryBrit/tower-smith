@@ -1,0 +1,86 @@
+{
+  "name": "Flame Bot - Burn Stack",
+  "maxLevel": 5,
+  "levels": [
+    {
+      "level": 1,
+      "value": 3,
+      "time": {
+        "display": "45 days, 15h, 0m, 0s",
+        "seconds": 3942000
+      },
+      "gems": 4710,
+      "coins": 43000000000000,
+      "totalTime": {
+        "display": "45 days, 15h, 0m, 0s",
+        "seconds": 3942000
+      },
+      "totalGems": 4710,
+      "totalCoins": 43000000000000
+    },
+    {
+      "level": 2,
+      "value": 4,
+      "time": {
+        "display": "52 days, 11h, 15m, 0s",
+        "seconds": 4533300
+      },
+      "gems": 5220,
+      "coins": 64500000000000,
+      "totalTime": {
+        "display": "98 days, 2h, 15m, 0s",
+        "seconds": 8475300
+      },
+      "totalGems": 9930,
+      "totalCoins": 107500000000000
+    },
+    {
+      "level": 3,
+      "value": 5,
+      "time": {
+        "display": "60 days, 8h, 8m, 14s",
+        "seconds": 5213294
+      },
+      "gems": 5800,
+      "coins": 96750000000000,
+      "totalTime": {
+        "display": "158 days, 10h, 23m, 14s",
+        "seconds": 13688594
+      },
+      "totalGems": 15730,
+      "totalCoins": 204250000000000
+    },
+    {
+      "level": 4,
+      "value": 6,
+      "time": {
+        "display": "69 days, 9h, 21m, 28s",
+        "seconds": 5995288
+      },
+      "gems": 6470,
+      "coins": 145130000000000,
+      "totalTime": {
+        "display": "227 days, 19h, 44m, 42s",
+        "seconds": 19683882
+      },
+      "totalGems": 22200,
+      "totalCoins": 349380000000000
+    },
+    {
+      "level": 5,
+      "value": 7,
+      "time": {
+        "display": "79 days, 19h, 9m, 41s",
+        "seconds": 6894581
+      },
+      "gems": 7240,
+      "coins": 217690000000000,
+      "totalTime": {
+        "display": "307 days, 14h, 54m, 23s",
+        "seconds": 26578463
+      },
+      "totalGems": 29440,
+      "totalCoins": 567070000000000
+    }
+  ]
+}

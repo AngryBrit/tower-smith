@@ -1,0 +1,16 @@
+{
+  "name": "Reroll Daily Mission",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": { "display": "1 day, 15h, 59m, 59s", "seconds": 143999 },
+      "gems": 256,
+      "coins": 20000000,
+      "totalTime": { "display": "1 day, 15h, 59m, 59s", "seconds": 143999 },
+      "totalGems": 256,
+      "totalCoins": 20000000
+    }
+  ]
+}

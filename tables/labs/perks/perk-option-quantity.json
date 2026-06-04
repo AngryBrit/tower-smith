@@ -1,0 +1,38 @@
+{
+  "name": "Perk Option Quantity",
+  "maxLevel": 2,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "4 days, 23h, 26m, 0s",
+        "seconds": 429960
+      },
+      "gems": 718,
+      "coins": 200000000,
+      "totalTime": {
+        "display": "4 days, 23h, 26m, 0s",
+        "seconds": 429960
+      },
+      "totalGems": 718,
+      "totalCoins": 200000000
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "time": {
+        "display": "10 days, 4h, 26m, 0s",
+        "seconds": 879960
+      },
+      "gems": 1350,
+      "coins": 2000000000,
+      "totalTime": {
+        "display": "15 days, 3h, 52m, 0s",
+        "seconds": 1309920
+      },
+      "totalGems": 2070,
+      "totalCoins": 2200000000
+    }
+  ]
+}

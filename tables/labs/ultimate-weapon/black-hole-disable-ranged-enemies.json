@@ -1,0 +1,22 @@
+{
+  "name": "Black Hole Disable Ranged Enemies",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": {
+        "display": "28 days, 22h, 26m, 40s",
+        "seconds": 2500000
+      },
+      "gems": 3430,
+      "coins": 550000000000,
+      "totalTime": {
+        "display": "28 days, 22h, 26m, 40s",
+        "seconds": 2500000
+      },
+      "totalGems": 3430,
+      "totalCoins": 550000000000
+    }
+  ]
+}

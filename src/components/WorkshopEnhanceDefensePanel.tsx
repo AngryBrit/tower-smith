@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { deferInEffect } from '../deferInEffect'
 import { CoinGlyph } from './CoinGlyph'
+import { WorkshopLevelStepRow } from './WorkshopLevelStepRow'
 import {
   WORKSHOP_ENHANCE_DEFENSE_UPGRADE_ORDER,
   workshopEnhanceDefenseClampLevel,
@@ -59,6 +60,7 @@ function WorkshopEnhanceDefenseCard({
   setDraft,
   onBump,
   onCommitDraft,
+  onSetLevel,
   bulkStep,
   coinDiscountPercent,
   locked,
@@ -72,6 +74,7 @@ function WorkshopEnhanceDefenseCard({
   setDraft: (s: string) => void
   onBump: (direction: -1 | 1) => void
   onCommitDraft: () => void
+  onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
   coinDiscountPercent: number
   locked: boolean
@@ -106,44 +109,37 @@ function WorkshopEnhanceDefenseCard({
         <span className="workshop__card-value">{statLabel}</span>
       </div>
       <div className="workshop__card-level-row">
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_enhance_level_down_aria')} (${stepHint})`}
-          disabled={level <= 0}
-          onClick={() => onBump(-1)}
+        <WorkshopLevelStepRow
+          level={level}
+          max={max}
+          downAriaLabel={`${t('ws_enhance_level_down_aria')} (${stepHint})`}
+          upAriaLabel={`${t('ws_enhance_level_up_aria')} (${stepHint})`}
+          downDisabled={locked || level <= 0}
+          upDisabled={locked || level >= max}
+          onBump={onBump}
+          onSetLevel={onSetLevel}
         >
-          −
-        </button>
-        <div className="workshop__level-field">
-          <input
-            className="workshop__level-input"
-            type="text"
-            inputMode="numeric"
-            autoComplete="off"
-            aria-label={t(ENHANCE_DEFENSE_LEVEL_ARIA[upgradeKey])}
-            value={draft}
-            readOnly={locked}
-            onChange={(e) => setDraft(e.target.value)}
-            onBlur={() => onCommitDraft()}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault()
-                onCommitDraft()
-                ;(e.target as HTMLInputElement).blur()
-              }
-            }}
-          />
-        </div>
-        <button
-          type="button"
-          className="workshop__level-step"
-          aria-label={`${t('ws_enhance_level_up_aria')} (${stepHint})`}
-          disabled={locked || level >= max}
-          onClick={() => onBump(1)}
-        >
-          +
-        </button>
+          <div className="workshop__level-field">
+            <input
+              className="workshop__level-input"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              aria-label={t(ENHANCE_DEFENSE_LEVEL_ARIA[upgradeKey])}
+              value={draft}
+              readOnly={locked}
+              onChange={(e) => setDraft(e.target.value)}
+              onBlur={() => onCommitDraft()}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault()
+                  onCommitDraft()
+                  ;(e.target as HTMLInputElement).blur()
+                }
+              }}
+            />
+          </div>
+        </WorkshopLevelStepRow>
       </div>
         <div className="workshop__card-damage-footer">
           <span className="workshop__damage-max-caps">
@@ -305,6 +301,11 @@ export function WorkshopEnhanceDefensePanel({
             setDraft={(s) => setDrafts((d) => ({ ...d, [key]: s }))}
             onBump={(dir) => bump(key, dir)}
             onCommitDraft={() => commitDraft(key)}
+            onSetLevel={(n) =>
+              onWorkshopPersistedChange({
+                ...workshopPersisted,
+                [key]: workshopEnhanceDefenseClampLevel(key, n),
+              })}
             bulkStep={multiplier}
             coinDiscountPercent={enhancementDefenseDiscountPercent}
             locked={locked}

@@ -1,0 +1,16 @@
+{
+  "name": "Card Presets",
+  "maxLevel": 1,
+  "levels": [
+    {
+      "level": 1,
+      "value": 1,
+      "time": { "display": "13h, 53m, 0s", "seconds": 49980 },
+      "gems": 95,
+      "coins": 350000,
+      "totalTime": { "display": "13h, 53m, 0s", "seconds": 49980 },
+      "totalGems": 95,
+      "totalCoins": 350000
+    }
+  ]
+}

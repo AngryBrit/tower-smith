@@ -1,14 +1,16 @@
 /**
- * Marginal lab costs and upgrade durations come from the bundled
- * `src/data/tower-labs.json` table (per lab, per target level: `COST`, `DURATION`). **Card Mastery**
- * rows still resolve through that table for durations and toolkit coin lookups; the **cost line** on
- * those cards uses `stoneUnlockCost` from `public/research/sections/card-mastery.json` instead of
- * abbreviated coin ladder amounts. Labs missing from the map show **—** in the app (no snapshot fallback).
+ * Marginal lab costs and upgrade durations come from `tables/labs/` JSON (e.g. `main/`, `attack/`) when a lab has a GOD table
+ * there (see {@link LAB_GOD_TABLES}), otherwise from bundled `src/data/tower-labs.json` (`COST`,
+ * `DURATION`). **Card Mastery** rows still resolve through `tower-labs.json` for durations and toolkit
+ * coin lookups; the **cost line** on those cards uses `stoneUnlockCost` from
+ * `public/research/sections/card-mastery.json` instead of abbreviated coin ladder amounts. Labs missing
+ * from both maps show **—** in the app (no snapshot fallback).
  *
  * Display: Assist Module labs → {@link formatAssistModuleLabCoinDisplay}; other research cards →
  * {@link formatLabCoinDisplay}. See README § Lab coin display.
  */
 
+import { labGodLevelEntry } from './data/labGodTables'
 import towerLabsJson from './data/tower-labs.json'
 
 export type ToolkitLabLevel = {
@@ -23,57 +25,12 @@ type ToolkitLabsFile = Record<
 
 const towerLabs = towerLabsJson as ToolkitLabsFile
 
-/** Display-name mismatches between our research JSON and Tower Data lab keys */
+/** Legacy display-name → tower-labs.json key only (no shared GOD ladders). */
 const LAB_NAME_ALIASES: Record<string, string> = {
   'Labs Speed': 'Lab Speed',
-  // Legacy research export name; canonical key in tower-labs.json is Super Crit Mult
   'Super Crit Multi': 'Super Crit Mult',
   'Black Hole Coin Bonus': 'Blackhole Coin Bonus',
-  'Lightning Amplifier - Scatter': 'Swamp Rend',
   'Extra Extra Orbs': 'Extra Inner Orbs',
-  // Thunder / Amplify / Bot duration: same marginal table as Golden Bot - Duration
-  'Thunder Bot - Linger Time': 'Golden Bot - Duration',
-  'Thunder Bot Linger Time': 'Golden Bot - Duration',
-  'Amplify Bot - Duration': 'Golden Bot - Duration',
-  'Amp Bot - Duration': 'Golden Bot - Duration',
-  'Amplify Bot Cooldown': 'Amplify Bot - Cooldown',
-  'Amp Bot - Cooldown': 'Amplify Bot - Cooldown',
-  'Amplify Bot Duration': 'Golden Bot - Duration',
-  'Bot Bot - Duration': 'Golden Bot - Duration',
-  'Bot Bot Duration': 'Golden Bot - Duration',
-  'Bot Bot Cooldown': 'Bot Bot - Cooldown',
-  'Gold Bot - Cooldown': 'Golden Bot - Cooldown',
-  'Gold Bot - Duration': 'Golden Bot - Duration',
-  'Thunder Bot Cooldown': 'Thunder Bot - Cooldown',
-  'Ray Enemy Health': 'Ray Enemy Attack',
-  'Vampire Enemy Attack': 'Ray Enemy Attack',
-  'Vampire Enemy Health': 'Ray Enemy Attack',
-  'Scatter Enemy Attack': 'Ray Enemy Attack',
-  'Scatter Enemy Health': 'Ray Enemy Attack',
-  // Assist Module labs (wiki): one shared marginal table for all eight variants
-  'Assist Module Substats - Armor': 'Assist Module Substats - Cannon',
-  'Assist Module Substats - Generator': 'Assist Module Substats - Cannon',
-  'Assist Module Substats - Core': 'Assist Module Substats - Cannon',
-  'Assist Module Bonus - Cannon': 'Assist Module Substats - Cannon',
-  'Assist Module Bonus - Armor': 'Assist Module Substats - Cannon',
-  'Assist Module Bonus - Generator': 'Assist Module Substats - Cannon',
-  'Assist Module Bonus - Core': 'Assist Module Substats - Cannon',
-  'Armor Effect Bans': 'Cannon Effect Bans',
-  'Thorns Resistance': 'Knockback Resistance',
-  'Orb Resistance': 'Knockback Resistance',
-  'Plasma Cannon Resistance': 'Knockback Resistance',
-  'Death Ray Resistance': 'Knockback Resistance',
-  'Enemy Speed': 'Armored Enemies',
-  'More Enemies': 'Armored Enemies',
-  'Enemy Attack Speed': 'Armored Enemies',
-  'Ranged Ultimate': 'Fast\'s Ultimate',
-  'Boss\'s Ultimate': 'Fast\'s Ultimate',
-  'Basic\'s Ultimate': 'Fast\'s Ultimate',
-  'Tank\'s Ultimate': 'Fast\'s Ultimate',
-  'Protector\'s Ultimate': 'Fast\'s Ultimate',
-  'Death Defy Down': 'Ultimate Weapon Durations',
-  'Energy Shields Down': 'Ultimate Weapon Durations',
-  'Enemy Level Skip Reduction': 'Ultimate Weapon Durations',
 }
 
 function resolveToolkitLabKey(displayName: string): string | undefined {
@@ -95,10 +52,27 @@ function resolveToolkitLabKey(displayName: string): string | undefined {
   return undefined
 }
 
+function canonicalLabDisplayName(displayName: string): string {
+  const trimmed = displayName.trim()
+  return LAB_NAME_ALIASES[trimmed] ?? trimmed
+}
+
+function getGodLevelEntry(
+  labDisplayName: string,
+  targetLevel: number,
+): ToolkitLabLevel | undefined {
+  const row = labGodLevelEntry(labDisplayName.trim(), targetLevel)
+  if (!row) return undefined
+  return { COST: row.coins, DURATION: row.time.seconds }
+}
+
 function getToolkitLevelEntry(
   labDisplayName: string,
   targetLevel: number,
 ): ToolkitLabLevel | undefined {
+  const fromGod = getGodLevelEntry(labDisplayName, targetLevel)
+  if (fromGod) return fromGod
+
   const key = resolveToolkitLabKey(labDisplayName)
   if (!key) return undefined
 
