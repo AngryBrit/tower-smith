@@ -142,11 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profileDisplayName ?? displayNameFromUser(user)
   const guild = profileGuild
   const guildId = profileGuildId
-  const avatarUrl = user
-    ? profileResolved
-      ? (profileAvatarUrl ?? avatarUrlFromUser(user))
-      : null
-    : null
+  const avatarUrl = resolveAuthAvatarUrl(user, profileResolved, profileAvatarUrl)
 
   const value = useMemo(
     (): AuthContextValue => ({
