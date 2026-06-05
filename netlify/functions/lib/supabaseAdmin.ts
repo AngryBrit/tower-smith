@@ -78,7 +78,10 @@ export async function ensureProfileForUser(user: User): Promise<void> {
     user.email?.split('@')[0] ||
     'Player'
   const avatarUrl =
-    typeof meta?.avatar_url === 'string' ? meta.avatar_url.trim() : null
+    (typeof meta?.avatar_url === 'string' && meta.avatar_url.trim()) ||
+    (typeof meta?.picture === 'string' && meta.picture.trim()) ||
+    (typeof meta?.photo_url === 'string' && meta.photo_url.trim()) ||
+    null
 
   const { error } = await sb.from('profiles').insert({
     id: user.id,

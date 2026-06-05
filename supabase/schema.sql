@@ -159,7 +159,11 @@ begin
       nullif(trim(new.raw_user_meta_data->>'user_name'), ''),
       split_part(coalesce(new.email, 'player'), '@', 1)
     ),
-    nullif(trim(new.raw_user_meta_data->>'avatar_url'), '')
+    coalesce(
+      nullif(trim(new.raw_user_meta_data->>'avatar_url'), ''),
+      nullif(trim(new.raw_user_meta_data->>'picture'), ''),
+      nullif(trim(new.raw_user_meta_data->>'photo_url'), '')
+    )
   )
   on conflict (id) do nothing;
   return new;

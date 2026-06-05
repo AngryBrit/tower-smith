@@ -10,7 +10,7 @@ import { fetchUserProfile } from '../profile/profileApi'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
 import { resolveGuildNameById } from '../towerGallery/api'
 import { deferInEffect } from '../deferInEffect'
-import { AuthContext, displayNameFromUser, avatarUrlFromUser, type AuthContextValue, type OAuthProvider } from './authContext'
+import { AuthContext, displayNameFromUser, resolveAuthAvatarUrl, type AuthContextValue, type OAuthProvider } from './authContext'
 import { oauthRedirectUrl } from './oauthRedirect'
 
 export type { OAuthProvider } from './authContext'

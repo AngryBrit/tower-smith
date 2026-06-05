@@ -43,3 +43,13 @@ export function avatarUrlFromUser(user: User | null): string | null {
     ''
   return fromMeta || null
 }
+
+/** Profile row is the source of truth once loaded; do not fall back to OAuth metadata. */
+export function resolveAuthAvatarUrl(
+  user: User | null,
+  profileResolved: boolean,
+  profileAvatarUrl: string | null,
+): string | null {
+  if (!user || !profileResolved) return null
+  return profileAvatarUrl
+}
