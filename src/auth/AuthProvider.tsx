@@ -10,7 +10,7 @@ import { fetchUserProfile } from '../profile/profileApi'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
 import { resolveGuildNameById } from '../towerGallery/api'
 import { deferInEffect } from '../deferInEffect'
-import { AuthContext, displayNameFromUser, avatarUrlFromUser, type AuthContextValue, type OAuthProvider } from './authContext'
+import { AuthContext, displayNameFromUser, resolveAuthAvatarUrl, type AuthContextValue, type OAuthProvider } from './authContext'
 import { oauthRedirectUrl } from './oauthRedirect'
 
 export type { OAuthProvider } from './authContext'
@@ -142,11 +142,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     profileDisplayName ?? displayNameFromUser(user)
   const guild = profileGuild
   const guildId = profileGuildId
-  const avatarUrl = user
-    ? profileResolved
-      ? (profileAvatarUrl ?? avatarUrlFromUser(user))
-      : null
-    : null
+  const avatarUrl = resolveAuthAvatarUrl(user, profileResolved, profileAvatarUrl)
 
   const value = useMemo(
     (): AuthContextValue => ({
