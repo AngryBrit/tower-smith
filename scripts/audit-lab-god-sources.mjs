@@ -15,6 +15,134 @@ const manifest = JSON.parse(
   fs.readFileSync(path.join(root, 'scripts/data/lab-god-manifest.json'), 'utf8'),
 )
 
+/**
+ * In-game calculator verified: all members share one marginal ladder.
+ * Screenshot source is maintained on `sourceRel` only; alias copies are GOD-correct.
+ */
+const VERIFIED_SHARED_LADDERS = [
+  {
+    id: 'bc-group1-resistances',
+    label: 'BC Group 1 resistances',
+    sourceRel: 'battle-condition/knockback-resistance.json',
+    sourceName: 'Knockback Resistance',
+    sourceScript: 'gen-knockback-resistance-lab-table.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'battle-condition/knockback-resistance.json',
+      'battle-condition/thorns-resistance.json',
+      'battle-condition/orb-resistance.json',
+      'battle-condition/plasma-cannon-resistance.json',
+      'battle-condition/death-ray-resistance.json',
+    ],
+  },
+  {
+    id: 'bc-group2-enemy-buffs',
+    label: 'BC Group 2 enemy buffs',
+    sourceRel: 'battle-condition/armored-enemies.json',
+    sourceName: 'Armored Enemies',
+    sourceScript: 'gen-armored-enemies-lab-table.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'battle-condition/armored-enemies.json',
+      'battle-condition/enemy-speed.json',
+      'battle-condition/more-enemies.json',
+      'battle-condition/enemy-attack-speed.json',
+    ],
+  },
+  {
+    id: 'bc-group3-enemy-ultimates',
+    label: 'BC Group 3 enemy ultimates',
+    sourceRel: 'battle-condition/fast-ultimate.json',
+    sourceName: "Fast's Ultimate",
+    sourceScript: 'gen-bc-group3-enemy-ultimate-labs.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'battle-condition/fast-ultimate.json',
+      'battle-condition/ranged-ultimate.json',
+      'battle-condition/boss-ultimate.json',
+      'battle-condition/basic-ultimate.json',
+      'battle-condition/tank-ultimate.json',
+      'battle-condition/protector-ultimate.json',
+    ],
+  },
+  {
+    id: 'bc-group4-uw-duration-cluster',
+    label: 'BC Group 4 UW duration cluster',
+    sourceRel: 'battle-condition/ultimate-weapon-durations.json',
+    sourceName: 'Ultimate Weapon Durations',
+    sourceScript: 'gen-ultimate-weapon-durations-lab-table.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'battle-condition/ultimate-weapon-durations.json',
+      'battle-condition/death-defy-down.json',
+      'battle-condition/energy-shields-down.json',
+      'battle-condition/enemy-level-skip-reduction.json',
+    ],
+  },
+  {
+    id: 'enemies-ray-scatter-vampire-cluster',
+    label: 'Enemies — Ray / Scatter / Vampire cluster',
+    sourceRel: 'enemies/ray-enemy-attack.json',
+    sourceName: 'Ray Enemy Attack',
+    sourceScript: 'gen-ray-enemy-attack-lab-table.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'enemies/ray-enemy-attack.json',
+      'enemies/ray-enemy-health.json',
+      'enemies/scatter-enemy-attack.json',
+      'enemies/scatter-enemy-health.json',
+      'enemies/vampire-enemy-attack.json',
+      'enemies/vampire-enemy-health.json',
+    ],
+  },
+  {
+    id: 'main-enhancement-coin-discount-cluster',
+    label: 'Main — Enhancement coin discount cluster',
+    sourceRel: 'main/enhancement-attack-coin-discount.json',
+    sourceName: 'Enhancement Attack - Coin Discount',
+    sourceScript: 'gen-enhancement-coin-discount-lab-table.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'main/enhancement-attack-coin-discount.json',
+      'main/enhancement-defense-coin-discount.json',
+      'main/enhancement-utility-coin-discount.json',
+    ],
+  },
+  {
+    id: 'modules-assist-module-cluster',
+    label: 'Modules — Assist Module Substats/Bonus cluster',
+    sourceRel: 'modules/assist-module-substats-cannon.json',
+    sourceName: 'Assist Module Substats - Cannon',
+    sourceScript: 'gen-assist-module-substats-cannon-lab-table.mjs',
+    verifiedAt: '2026-06-08',
+    members: [
+      'modules/assist-module-substats-cannon.json',
+      'modules/assist-module-substats-armor.json',
+      'modules/assist-module-substats-generator.json',
+      'modules/assist-module-substats-core.json',
+      'modules/assist-module-bonus-cannon.json',
+      'modules/assist-module-bonus-armor.json',
+      'modules/assist-module-bonus-generator.json',
+      'modules/assist-module-bonus-core.json',
+    ],
+  },
+]
+
+const verifiedRelMeta = new Map()
+for (const group of VERIFIED_SHARED_LADDERS) {
+  for (const rel of group.members) {
+    verifiedRelMeta.set(rel, {
+      groupId: group.id,
+      groupLabel: group.label,
+      isSource: rel === group.sourceRel,
+      sourceRel: group.sourceRel,
+      sourceName: group.sourceName,
+      sourceScript: group.sourceScript,
+      verifiedAt: group.verifiedAt,
+    })
+  }
+}
+
 function walkJson(dir, base = '') {
   const out = []
   for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -65,10 +193,14 @@ function ladderFingerprint(doc) {
   )
 }
 
-function classify(rel, script, scriptText, createdFrom) {
+function classify(rel, script, scriptText, createdFrom, verified) {
   const tags = []
   const head = scriptText.slice(0, 2500)
-  if (createdFrom) tags.push('alias-copy')
+  if (verified) {
+    tags.push(verified.isSource ? 'verified-shared-ladder-source' : 'verified-shared-ladder')
+  } else if (createdFrom) {
+    tags.push('alias-copy')
+  }
   if (/interpolat/i.test(scriptText)) tags.push('interpolated')
   if (/wiki/i.test(scriptText)) tags.push('wiki-sourced')
   if (
@@ -90,7 +222,9 @@ function classify(rel, script, scriptText, createdFrom) {
   }
 
   let primary
-  if (tags.includes('alias-copy')) primary = 'alias-copy'
+  if (tags.includes('verified-shared-ladder-source')) primary = 'verified-shared-ladder-source'
+  else if (tags.includes('verified-shared-ladder')) primary = 'verified-shared-ladder'
+  else if (tags.includes('alias-copy')) primary = 'alias-copy'
   else if (tags.includes('interpolated')) primary = 'interpolated'
   else if (tags.includes('wiki-sourced')) primary = 'wiki-sourced'
   else if (tags.includes('bc-group3-shared-rows')) primary = 'bc-group3-shared-rows'
@@ -109,7 +243,8 @@ const docs = rels.map((rel) => {
   const script = findGenScript(rel)
   const scriptText = script ? readScriptText(path.join(scriptsDir, script)) : ''
   const createdFrom = createdByRel.get(rel)
-  const { primary, tags } = classify(rel, script, scriptText, createdFrom)
+  const verified = verifiedRelMeta.get(rel)
+  const { primary, tags } = classify(rel, script, scriptText, createdFrom, verified)
   return {
     rel,
     name: doc.name,
@@ -117,6 +252,7 @@ const docs = rels.map((rel) => {
     primary,
     tags,
     createdFrom,
+    verified,
     fp: ladderFingerprint(doc),
   }
 })
@@ -162,9 +298,34 @@ lines.push(
 lines.push('| interpolated | Gen script documents interpolated cells |')
 lines.push('| wiki-sourced | Gen script uses wiki data for some columns |')
 lines.push('| bc-group3-shared-rows | BC Group 3 enemy ultimates share one row set |')
+lines.push(
+  '| verified-shared-ladder-source | Screenshot source for a user-verified shared in-game ladder |',
+)
+lines.push(
+  '| verified-shared-ladder | Alias copy; calculator confirmed identical to verified source |',
+)
 lines.push('| has-generator-unclassified | Has gen script but unclear header |')
 lines.push('| no-generator | No matching gen script |')
 lines.push('')
+lines.push('## Verified shared ladders (calculator-confirmed)')
+lines.push('')
+for (const group of VERIFIED_SHARED_LADDERS) {
+  lines.push(`### ${group.label}`)
+  lines.push('')
+  lines.push(`Verified: ${group.verifiedAt}. Screenshot source: **${group.sourceName}** (\`${group.sourceRel}\`, \`${group.sourceScript}\`).`)
+  lines.push('')
+  lines.push('No separate re-import needed for alias members.')
+  lines.push('')
+  for (const rel of group.members) {
+    const d = docs.find((x) => x.rel === rel)
+    const role =
+      rel === group.sourceRel
+        ? 'screenshot source'
+        : `alias ← ${group.sourceName}`
+    lines.push(`- \`${rel}\` — ${d?.name ?? rel} (${role})`)
+  }
+  lines.push('')
+}
 lines.push('## Interpolated (documented in generator)')
 lines.push('')
 for (const d of docs.filter((x) => x.tags.includes('interpolated'))) {
@@ -179,13 +340,15 @@ for (const d of docs.filter((x) => x.tags.includes('wiki-sourced'))) {
 }
 if (!docs.some((x) => x.tags.includes('wiki-sourced'))) lines.push('- (none)')
 lines.push('')
-lines.push('## Alias-copied (ensure-all-lab-god-json.mjs)')
+lines.push('## Alias-copied — needs review (ensure-all-lab-god-json.mjs)')
 lines.push('')
-for (const d of docs
+const aliasNeedsReview = docs
   .filter((x) => x.tags.includes('alias-copy'))
-  .sort((a, b) => a.rel.localeCompare(b.rel))) {
+  .sort((a, b) => a.rel.localeCompare(b.rel))
+for (const d of aliasNeedsReview) {
   lines.push(`- \`${d.rel}\` — ${d.name} ← **${d.createdFrom}**`)
 }
+if (!aliasNeedsReview.length) lines.push('- (none)')
 lines.push('')
 lines.push('## Shared-cost-ladder (documented in generator)')
 lines.push('')
@@ -200,9 +363,12 @@ lines.push('')
 for (const g of dupGroups.sort((a, b) => b.length - a.length)) {
   lines.push(`### Group of ${g.length}`)
   for (const d of g) {
-    lines.push(
-      `- \`${d.rel}\` — ${d.name}${d.createdFrom ? ` (alias from ${d.createdFrom})` : ''}`,
-    )
+    const aliasNote = d.verified
+      ? ` (verified shared ladder ← ${d.verified.sourceName})`
+      : d.createdFrom
+        ? ` (alias from ${d.createdFrom})`
+        : ''
+    lines.push(`- \`${d.rel}\` — ${d.name}${aliasNote}`)
   }
   lines.push('')
 }
@@ -212,7 +378,15 @@ lines.push('| File | Lab | Primary | Generator | Notes |')
 lines.push('|------|-----|---------|-----------|-------|')
 for (const d of docs) {
   const notes = []
-  if (d.createdFrom) notes.push(`alias←${d.createdFrom}`)
+  if (d.verified) {
+    notes.push(
+      d.verified.isSource
+        ? `verified shared ladder source (${d.verified.groupId})`
+        : `verified shared ladder←${d.verified.sourceName}`,
+    )
+  } else if (d.createdFrom) {
+    notes.push(`alias←${d.createdFrom}`)
+  }
   if (d.tags.includes('formula-value-column')) notes.push('formula value')
   if (d.tags.includes('interpolated')) notes.push('interpolated')
   if (d.tags.includes('wiki-sourced')) notes.push('wiki')
