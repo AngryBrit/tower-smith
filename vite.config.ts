@@ -34,6 +34,8 @@ export default defineConfig({
       ],
       manifest: false,
       workbox: {
+        // Main bundle (~2.4 MiB) exceeds Workbox default 2 MiB precache limit after GOD table imports.
+        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         // Precache the app shell only — public/ art and research JSON are runtime-cached on demand.
         globPatterns: ['index.html', 'assets/**'],
         navigateFallback: '/index.html',
