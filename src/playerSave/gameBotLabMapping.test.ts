@@ -104,17 +104,18 @@ describe('botLabsToOverrides', () => {
     expect(overrides['0-2']).toBe(2)
   })
 
-  it('maps secondary bot labs from researchLevel ids 107–111', () => {
+  it('maps secondary bot labs from researchLevel ids 107–109', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[107] = 1
     researchLevel[108] = 10
+    researchLevel[109] = 15
     researchLevel[110] = 20
     researchLevel[111] = 19
     const overrides = botLabsToOverrides(botsResearchData(), minimalSave({ researchLevel }))
     expect(overrides['0-5']).toBe(1)
     expect(overrides['0-6']).toBe(10)
-    expect(overrides['0-8']).toBe(20)
-    expect(overrides['0-9']).toBe(19)
-    expect(overrides['0-7']).toBeUndefined()
+    expect(overrides['0-7']).toBe(15)
+    expect(overrides['0-8']).toBeUndefined()
+    expect(overrides['0-9']).toBeUndefined()
   })
 })
