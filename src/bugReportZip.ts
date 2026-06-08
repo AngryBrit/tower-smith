@@ -90,7 +90,9 @@ export function createZipBlob(entries: ZipEntry[]): Blob {
   eocdView.setUint32(16, offset, true)
   eocdView.setUint16(20, 0, true)
 
-  return new Blob([...parts, ...centralDirectory, eocd], { type: 'application/zip' })
+  // STORE chunks are always `new Uint8Array(...)`; narrow for strict BlobPart DOM typings.
+  const blobParts = [...parts, ...centralDirectory, eocd] as BlobPart[]
+  return new Blob(blobParts, { type: 'application/zip' })
 }
 
 export function playerInfoSaveEntryName(datFileName: string): string {

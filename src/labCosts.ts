@@ -52,11 +52,6 @@ function resolveToolkitLabKey(displayName: string): string | undefined {
   return undefined
 }
 
-function canonicalLabDisplayName(displayName: string): string {
-  const trimmed = displayName.trim()
-  return LAB_NAME_ALIASES[trimmed] ?? trimmed
-}
-
 function getGodLevelEntry(
   labDisplayName: string,
   targetLevel: number,
