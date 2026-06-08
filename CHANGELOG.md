@@ -6,6 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.4] - 2026-06-08
+
+### Added
+
+- **Workshop MAX buy multiplier** — **MAX** chip on upgrade and enhance rails: **+** jumps to the stat cap, **−** resets to 0; next-cost shows the total to max ([`workshopBulkMarginal.ts`](src/data/workshopBulkMarginal.ts), [`WorkshopPage.tsx`](src/components/WorkshopPage.tsx)).
+- **Lab GOD tables** — cost/value JSON under `tables/labs/` (authoritative ground truth), wired through [`labGodTables.ts`](src/data/labGodTables.ts). Audit script: [`scripts/audit-lab-god-sources.mjs`](scripts/audit-lab-god-sources.mjs).
+- **researchLevel import** — Complete `researchLevel` slot → lab mappings from player save evidence (card mastery, ultimates, battle condition, modules, and related trees).
+
+### Fixed
+
+- **Bug Buster dialog** — No longer clips on 1080p viewports.
+- **Tower Backup dialog** — Removed unnecessary scrollbar.
+- **Profile avatar** — Removing a custom avatar no longer falls back to the Google OAuth picture.
+
+### Changed
+
+- Browser tab title: **TowerSmith**.
+
+### Docs
+
+- README: `tables/` GOD data, workshop **MAX** multiplier, `researchLevel` import; version **3.0.4**.
+- [`src/playerSave/NOTICE.md`](src/playerSave/NOTICE.md): `researchLevel` mapping index.
+- What's new banner (en/de/es).
+
 ## [3.0.3] - 2026-06-03
 
 ### Fixed

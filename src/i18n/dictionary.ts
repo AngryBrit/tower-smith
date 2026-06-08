@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_304_headline: "What's new in v3.0.4",
+  whats_new_304_body:
+    'Workshop buy multiplier now includes MAX (+ to cap, − to zero). playerInfo.dat import maps more labs from researchLevel slots. Lab costs use screenshot-derived GOD tables. Bug Buster and Tower Backup dialogs fit better on 1080p screens.',
   whats_new_303_headline: "What's new in v3.0.3",
   whats_new_303_body:
     'Older playerInfo.dat saves now import medal bots from legacy preset arrays. Bug Buster email uses normal spaces (not plus signs) and copies the message to your clipboard.',

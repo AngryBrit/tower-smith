@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.0.3-2ea44f)
+![Version](https://img.shields.io/badge/version-3.0.4-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -37,7 +37,7 @@
 |------|----------------|
 | **Research** | Browse every research tree (main, attack, defense, utility, cards, perks, bots, modules, and more) with costs and benefits shown where wiki data allows. |
 | **Labs** | Model upgrade costs and build times, compare configs side by side, save named presets, and use **Max All** to cap every visible lab at once. |
-| **Workshop** | Simulate attack, defense, utility, and ultimate-weapon upgrades with full coin and power-stone costs. The **Enhance** tab unlocks once Workshop Enhancements is researched. |
+| **Workshop** | Simulate attack, defense, utility, and ultimate-weapon upgrades with full coin and power-stone costs. Buy-multiplier rail includes **MAX** (+ to cap, − to zero). The **Enhance** tab unlocks once Workshop Enhancements is researched. |
 | **Bots** | Track the five event-shop bots (Flame, Thunder, Golden, Amplify, Bot Bot), medal unlock order, stat upgrades, and Bot+ abilities. BOTS lab levels update cooldown and duration live. |
 | **Cards** | Manage your full 31-card inventory, star levels (Lv.1–7), five preset loadouts, equip-slot limits, and Card Mastery scaling. |
 | **Modules** | Configure chassis modules (cannon / armor / core / generator) across epic→ancestral tiers, sub-module effects, assist unlocks, stone efficiency, and five saved module presets. |
@@ -129,8 +129,9 @@ Requires Supabase env vars — copy `.env.example` to `.env` and fill in your ke
 | Path | Role |
 |------|------|
 | `public/research/` | Runtime research data: `manifest.json` and section JSON files. |
+| `tables/` | Screenshot-derived **GOD** lab/workshop tables (authoritative cost/value ground truth). Consumed via [`src/data/labGodTables.ts`](src/data/labGodTables.ts); audit with `node scripts/audit-lab-god-sources.mjs`. |
 | `src/data/` | Lab costs (`tower-labs.json`), workshop curves, bot/ultimate/relic/module tables, and generated data files. Coin formatting rules: [`src/labCosts.ts`](src/labCosts.ts) (see [Lab coin display](#lab-coin-display)). |
-| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. Modern saves use per-bot `*BotPresets` (`levels[]` = `[cooldown, range, weaponStat2, weaponStat4]`); older saves use `bots*Presets` BinaryArrays ([`gameBotLegacyPresetMapping.ts`](src/playerSave/gameBotLegacyPresetMapping.ts)). Module chassis: `infoIndex` → workshop id ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts), [`gameModuleIndex.ts`](src/playerSave/gameModuleIndex.ts)). Regenerate module index: `node scripts/gen-game-module-index.mjs`. |
+| `src/playerSave/` | playerInfo.dat NRBF decoder, save-field mappings, and import pipeline. `researchLevel[]` slots map to lab names via `game*ResearchMapping.ts` (regenerate index: `node scripts/gen-game-research-index.mjs`). Modern saves use per-bot `*BotPresets` (`levels[]` = `[cooldown, range, weaponStat2, weaponStat4]`); older saves use `bots*Presets` BinaryArrays ([`gameBotLegacyPresetMapping.ts`](src/playerSave/gameBotLegacyPresetMapping.ts)). Module chassis: `infoIndex` → workshop id ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts), [`gameModuleIndex.ts`](src/playerSave/gameModuleIndex.ts)). Regenerate module index: `node scripts/gen-game-module-index.mjs`. |
 | `src/components/` | All UI — research browser, workshop, bots, modules, cards, relics, themes, settings, compare dialogs. |
 | `src/i18n/` | English, Spanish, and German UI strings and research overlays. |
 | `netlify/functions/` | Community gallery API (Netlify Functions + Supabase). |

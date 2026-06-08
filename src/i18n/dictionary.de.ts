@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_304_headline: 'Neu in v3.0.4',
+  whats_new_304_body:
+    'Werkstatt-Kauf-Multiplikator mit MAX (+ bis Maximum, − auf 0). playerInfo.dat-Import ordnet mehr Labs über researchLevel-Slots zu. Lab-Kosten aus Screenshot-GOD-Tabellen. Bug Buster und Tower-Backup passen besser auf 1080p.',
   whats_new_303_headline: 'Neu in v3.0.3',
   whats_new_303_body:
     'Ältere playerInfo.dat-Dateien importieren Medaillen-Bots aus Legacy-Preset-Arrays. Bug-Buster-E-Mail nutzt normale Leerzeichen (keine Pluszeichen) und kopiert den Text in die Zwischenablage.',

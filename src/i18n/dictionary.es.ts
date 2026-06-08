@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_304_headline: 'Novedades en v3.0.4',
+  whats_new_304_body:
+    'El multiplicador de compra del taller incluye MAX (+ al máximo, − a 0). La importación playerInfo.dat asigna más labs desde researchLevel. Costes de lab con tablas GOD de capturas. Bug Buster y Tower Backup encajan mejor en 1080p.',
   whats_new_303_headline: 'Novedades en v3.0.3',
   whats_new_303_body:
     'Los playerInfo.dat antiguos importan bots de medalla desde arrays de presets legacy. El correo de Bug Buster usa espacios normales (no signos más) y copia el mensaje al portapapeles.',

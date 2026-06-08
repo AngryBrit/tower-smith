@@ -2,7 +2,7 @@
   "name": "tower_export",
   "description": "TowerSmith — static web app for The Tower: workshop, bots, modules, relics, cards, labs, playerInfo.dat import, and shareable builds.",
   "private": true,
-  "version": "3.0.3",
+  "version": "3.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -17,7 +17,9 @@
     "wiki-stamp": "node scripts/touch-wiki-stamp.mjs",
     "icons": "node scripts/generate-app-icons.mjs",
     "og-banner": "node scripts/generate-og-banner.mjs",
-    "research-unmapped": "npx tsx docs/list-unmapped-research-levels.mjs"
+    "research-unmapped": "npx tsx docs/list-unmapped-research-levels.mjs",
+    "decode-wiki-html": "npx tsx scripts/decode-wiki-html.mjs",
+    "scrape-wiki-table": "npx tsx scripts/scrape-wiki-table.mjs"
   },
   "dependencies": {
     "@netlify/functions": "^5.2.2",
