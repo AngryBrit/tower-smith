@@ -180,7 +180,7 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
   )
 
   const setRarityTo = useCallback(
-    (rarity: typeof assist.uniqueRarity) => {
+    (rarity: WorkshopChassisModuleEffectTier) => {
       onPatch({ [uniqueRarityKey]: rarity })
     },
     [onPatch, uniqueRarityKey],

@@ -445,13 +445,16 @@ export function TowerGalleryPanel({
     setOwnerConfirm(null)
   }, [handleDeleteOwn, handleRegenerateOwn, ownerConfirm])
 
-  const handleGallerySearchFilter = useCallback((query: string) => {
-    const trimmed = query.trim()
-    if (!trimmed) return
-    setMineOnlyFilter(false)
-    setSearchDraft(trimmed)
-    setSearchQuery(trimmed)
-  }, [])
+  const handleGallerySearchFilter = useCallback(
+    (query: string) => {
+      const trimmed = query.trim()
+      if (!trimmed) return
+      setMineOnlyFilter(false)
+      setSearchDraft(trimmed)
+      setSearchQuery(trimmed)
+    },
+    [setMineOnlyFilter, setSearchDraft, setSearchQuery],
+  )
 
   return (
 
