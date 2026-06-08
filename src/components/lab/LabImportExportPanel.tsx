@@ -100,7 +100,7 @@ export function LabImportExportPanel({
       >
         <div
           id="lab-data-panel"
-          className="select-research__lab-data-dialog"
+          className="select-research__lab-data-dialog lab-import-export-dialog"
           role="dialog"
           aria-modal="true"
           aria-labelledby="lab-data-panel-title"

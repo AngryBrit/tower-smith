@@ -2281,6 +2281,23 @@ html[data-color-scheme='high-contrast'] {
   color: var(--sr-text);
 }
 
+.select-research__lab-data-dialog.lab-import-export-dialog {
+  max-height: 90svh;
+  padding: 0.875rem 1rem 0.75rem;
+}
+
+.select-research__lab-data-dialog.lab-import-export-dialog .select-research__lab-data-intro {
+  margin-bottom: 0.6rem;
+}
+
+.select-research__lab-data-dialog.lab-import-export-dialog .select-research__lab-data-section-label {
+  margin-top: 0.5rem;
+}
+
+.select-research__lab-data-dialog.lab-import-export-dialog .select-research__lab-data-close {
+  margin-top: 0.5rem;
+}
+
 .select-research__lab-data-title {
   margin: 0 0 0.5rem;
   font-size: 0.92rem;
