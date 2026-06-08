@@ -22,6 +22,7 @@ function defenseResearchData(): ResearchData {
           { name: 'Wall Rebuild', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Wall Regen', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Wall Thorns', level: '0', benefit: '', time: '', cost: '', state: 'default' },
+          { name: 'Wall Invincibility', level: '0', benefit: '', time: '', cost: '', state: 'default' },
           { name: 'Garlic Thorns', level: '0', benefit: '', time: '', cost: '', state: 'default' },
         ],
       },
@@ -41,6 +42,7 @@ const SAMPLE_DEFENSE_LEVELS: Record<number, number> = {
   127: 5,
   128: 18,
   129: 16,
+  130: 10,
   193: 10,
 }
 
@@ -63,5 +65,6 @@ describe('defenseLabsToOverrides', () => {
     expect(overrides['0-11']).toBe(18)
     expect(overrides['0-12']).toBe(16)
     expect(overrides['0-13']).toBe(10)
+    expect(overrides['0-14']).toBe(10)
   })
 })

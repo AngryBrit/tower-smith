@@ -61,6 +61,8 @@ import {
 } from './gameBotLabMapping'
 import { ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameEnemiesResearchMapping'
 import type { EnemiesResearchLabName } from './gameEnemiesResearchMapping'
+import { BATTLE_CONDITION_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameBattleConditionResearchMapping'
+import type { BattleConditionResearchLabName } from './gameBattleConditionResearchMapping'
 import { CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from './gameCardMasteryResearchMapping'
 import { gameResearchIdForManifest } from './gameResearchIndex'
 import { gameModuleRarityToMergeTier } from './gameModuleRarity'
@@ -437,6 +439,30 @@ export function enemiesLabsToOverrides(
   return overrides
 }
 
+/** Map battle condition labs with confirmed `researchLevel[id]` anchors. */
+export function battleConditionLabsToOverrides(
+  data: ResearchData,
+  researchLevel: number[],
+): Record<string, number> {
+  const overrides: Record<string, number> = {}
+  const si = findSectionIndex(data, 'battle-condition')
+  if (si < 0) return overrides
+  const section = data.sections[si]!
+
+  for (const [name, researchId] of Object.entries(
+    BATTLE_CONDITION_RESEARCH_LEVEL_ID_BY_LAB_NAME,
+  ) as [BattleConditionResearchLabName, number][]) {
+    const ii = findItemIndex(section, name)
+    if (ii < 0) continue
+    const level = researchLevel[researchId]
+    if (typeof level === 'number' && Number.isFinite(level) && level > 0) {
+      overrides[levelOverrideKey(si, ii)] = Math.trunc(level)
+    }
+  }
+
+  return overrides
+}
+
 /** Map game `researchLevel[researchId]` → TowerSmith `sectionIndex-itemIndex` overrides. */
 export function researchLevelsToOverrides(
   data: ResearchData,
@@ -455,7 +481,8 @@ export function researchLevelsToOverrides(
       section.sectionSlug === 'cards-research' ||
       section.sectionSlug === 'perks-research' ||
       section.sectionSlug === 'modules' ||
-      section.sectionSlug === 'enemies'
+      section.sectionSlug === 'enemies' ||
+      section.sectionSlug === 'battle-condition'
     ) {
       continue
     }
@@ -705,6 +732,7 @@ export function mapPlayerSaveToTower(
     ...cardMasteryLabsToOverrides(data, save.researchLevel),
     ...modulesLabsToOverrides(data, save.researchLevel),
     ...enemiesLabsToOverrides(data, save.researchLevel),
+    ...battleConditionLabsToOverrides(data, save.researchLevel),
     ...botLabsToOverrides(data, save),
   }
   return {

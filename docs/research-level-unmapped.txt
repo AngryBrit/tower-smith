@@ -1,27 +1,17 @@
 researchLevel import coverage
 ===========================
-Generated: 2026-06-04T23:28:45.694Z
-Dump: C:\Users\venar\OneDrive\Documents\Dev\tower_export\docs\player-save-field-dump.json
+Generated: 2026-06-08T16:28:32.050Z
+Dump: C:\Dev\towersmith\docs\player-save-field-dump.json
 Dump decodedAt: 2026-06-04T18:40:34.379Z
 Slots: 250 (game uses researchLevel[0..249])
 Nonzero in dump: 133 (dump header nonzeroCount: 133)
-Mapped for import: 122 (explicit lab map and/or gameResearchIndex)
-Unmapped (level > 0): 11
+Mapped for import: 133 (explicit lab map and/or gameResearchIndex)
+Unmapped (level > 0): 0
 researchLevel values: player-save-field-dump.json (block ~line 14512, array id N → values[N] on its line)
 
 Unmapped slots (not in gameResearchIndex, not in *BY_LAB_NAME maps)
 ----------------------------------------------------------------
-  [101] = 20  @ player-save-field-dump.json:14618
-  [130] = 10  @ player-save-field-dump.json:14647
-  [148] = 1  @ player-save-field-dump.json:14665
-  [152] = 5  @ player-save-field-dump.json:14669
-  [158] = 6  @ player-save-field-dump.json:14675
-  [159] = 12  @ player-save-field-dump.json:14676
-  [160] = 9  @ player-save-field-dump.json:14677
-  [163] = 9  @ player-save-field-dump.json:14680
-  [166] = 9  @ player-save-field-dump.json:14683
-  [173] = 9  @ player-save-field-dump.json:14690
-  [177] = 9  @ player-save-field-dump.json:14694
+  (none)
 
 All nonzero slots
 -----------------
@@ -101,7 +91,7 @@ All nonzero slots
   [96] = 20  @ player-save-field-dump.json:14613  explicit  (ultimate: Black Hole Coin Bonus)
   [97] = 20  @ player-save-field-dump.json:14614  explicit  (ultimate: Spotlight Coin Bonus)
   [98] = 18  @ player-save-field-dump.json:14615  explicit  (ultimate: Spotlight Missiles)
-  [101] = 20  @ player-save-field-dump.json:14618  UNMAPPED
+  [101] = 20  @ player-save-field-dump.json:14618  explicit  (utility: Recovery Package Chance)
   [104] = 25  @ player-save-field-dump.json:14621  explicit  (bots: Golden Bot - Cooldown)
   [108] = 20  @ player-save-field-dump.json:14625  explicit  (bots: Thunder Bot - Linger Time)
   [114] = 30  @ player-save-field-dump.json:14631  explicit  (enemies: Fast Enemy Speed)
@@ -112,7 +102,7 @@ All nonzero slots
   [127] = 20  @ player-save-field-dump.json:14644  explicit  (defense: Wall Rebuild)
   [128] = 30  @ player-save-field-dump.json:14645  explicit  (defense: Wall Regen)
   [129] = 20  @ player-save-field-dump.json:14646  explicit  (defense: Wall Thorns)
-  [130] = 10  @ player-save-field-dump.json:14647  UNMAPPED
+  [130] = 10  @ player-save-field-dump.json:14647  explicit  (defense: Wall Invincibility)
   [131] = 30  @ player-save-field-dump.json:14648  explicit  (attack: Max Rend Armor Multiplier)
   [132] = 1  @ player-save-field-dump.json:14649  explicit  (ultimate: Black Hole Disable Ranged Enemies)
   [133] = 1  @ player-save-field-dump.json:14650  explicit  (main: Workshop Enhancements)
@@ -126,33 +116,33 @@ All nonzero slots
   [145] = 7  @ player-save-field-dump.json:14662  explicit  (cards: Recharge Second Wind)
   [146] = 7  @ player-save-field-dump.json:14663  explicit  (cards: Recharge Demon Mode)
   [147] = 7  @ player-save-field-dump.json:14664  explicit  (ultimate: Recharge Missile Barrage)
-  [148] = 1  @ player-save-field-dump.json:14665  UNMAPPED
+  [148] = 1  @ player-save-field-dump.json:14665  explicit  (modules: Unmerge Module)
   [149] = 7  @ player-save-field-dump.json:14666  explicit  (cards: Recharge Nuke)
   [150] = 1  @ player-save-field-dump.json:14667  explicit  (attack: Light Speed Shots)
   [151] = 1  @ player-save-field-dump.json:14668  explicit  (main: Reroll Daily Mission)
-  [152] = 5  @ player-save-field-dump.json:14669  UNMAPPED
+  [152] = 5  @ player-save-field-dump.json:14669  explicit  (battle-condition: Battle Condition Reduction)
   [153] = 12  @ player-save-field-dump.json:14670  explicit  (perks: Auto Pick Ranking)
-  [158] = 6  @ player-save-field-dump.json:14675  UNMAPPED
-  [159] = 12  @ player-save-field-dump.json:14676  UNMAPPED
-  [160] = 9  @ player-save-field-dump.json:14677  UNMAPPED
-  [163] = 9  @ player-save-field-dump.json:14680  UNMAPPED
-  [166] = 9  @ player-save-field-dump.json:14683  UNMAPPED
-  [173] = 9  @ player-save-field-dump.json:14690  UNMAPPED
-  [177] = 9  @ player-save-field-dump.json:14694  UNMAPPED
+  [158] = 6  @ player-save-field-dump.json:14675  explicit  (ultimate: Chain Thunder)
+  [159] = 12  @ player-save-field-dump.json:14676  explicit  (ultimate: Lightning Amplifier - Scatter)
+  [160] = 9  @ player-save-field-dump.json:14677  explicit  (card-mastery: Damage Mastery)
+  [163] = 9  @ player-save-field-dump.json:14680  explicit  (card-mastery: Health Regen Mastery)
+  [166] = 9  @ player-save-field-dump.json:14683  explicit  (card-mastery: Coins Mastery)
+  [173] = 9  @ player-save-field-dump.json:14690  explicit  (card-mastery: Extra Orb Mastery)
+  [177] = 9  @ player-save-field-dump.json:14694  explicit  (card-mastery: Intro Sprint Mastery)
   [181] = 9  @ player-save-field-dump.json:14698  explicit  (card-mastery: Energy Net Mastery)
   [182] = 9  @ player-save-field-dump.json:14699  explicit  (card-mastery: Super Tower Mastery)
   [183] = 9  @ player-save-field-dump.json:14700  explicit  (card-mastery: Second Wind Mastery)
   [184] = 9  @ player-save-field-dump.json:14701  explicit  (card-mastery: Demon Mode Mastery)
-  [186] = 9  @ player-save-field-dump.json:14703  explicit  (card-mastery: Berserker Mastery)
+  [186] = 9  @ player-save-field-dump.json:14703  explicit  (card-mastery: Wave Accelerator Mastery)
   [190] = 20  @ player-save-field-dump.json:14707  explicit  (ultimate: Death Wave Cells Bonus)
-  [191] = 13  @ player-save-field-dump.json:14708  index  (manifest flat 156)
-  [192] = 10  @ player-save-field-dump.json:14709  index  (manifest flat 157)
+  [191] = 13  @ player-save-field-dump.json:14708  explicit  (ultimate: Death Wave Damage Amplifier)
+  [192] = 10  @ player-save-field-dump.json:14709  explicit  (ultimate: Death Wave Armor Stripping)
   [193] = 10  @ player-save-field-dump.json:14710  explicit  (defense: Garlic Thorns)
   [194] = 4  @ player-save-field-dump.json:14711  explicit  (modules: Cannon Effect Bans)
   [195] = 4  @ player-save-field-dump.json:14712  explicit  (modules: Armor Effect Bans)
   [196] = 3  @ player-save-field-dump.json:14713  explicit  (modules: Generator Effect Bans)
   [197] = 6  @ player-save-field-dump.json:14714  explicit  (modules: Core Effect Bans)
-  [199] = 5  @ player-save-field-dump.json:14716  index  (manifest flat 45)
+  [199] = 5  @ player-save-field-dump.json:14716  explicit  (modules: Shatter Shards)
   [226] = 23  @ player-save-field-dump.json:14743  explicit  (enemies: Ranged Enemy Range)
   [238] = 4  @ player-save-field-dump.json:14755  explicit  (main: Dissonant Echo - Attack)
   [239] = 4  @ player-save-field-dump.json:14756  explicit  (main: Dissonant Echo - Defense)

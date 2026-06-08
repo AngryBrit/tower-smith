@@ -55,7 +55,7 @@ function utilityResearchData(): ResearchData {
   }
 }
 
-/** Sample save: utility ids 19–26, 28–29, 124–125 (see gameUtilityResearchMapping.ts). */
+/** Sample save: utility ids 19–26, 28, 101, 124–125 (see gameUtilityResearchMapping.ts). */
 const SAMPLE_UTILITY_LEVELS: Record<number, number> = {
   19: 5,
   20: 27,
@@ -83,5 +83,12 @@ describe('utilityLabsToOverrides', () => {
     expect(overrides['0-7']).toBe(5)
     expect(overrides['0-10']).toBe(20)
     expect(overrides['0-11']).toBe(19)
+  })
+
+  it('maps Recovery Package Chance from researchLevel id 101', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[101] = 20
+    const overrides = utilityLabsToOverrides(utilityResearchData(), researchLevel)
+    expect(overrides['0-9']).toBe(20)
   })
 })

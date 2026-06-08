@@ -1,7 +1,7 @@
 /**
  * Defense lab ↔ game `researchLevel[id]`.
  * First nine defense labs use sequential ids 10–18 (UI order).
- * Wall labs (UI order): Wall Health 126, Wall Rebuild 127, Wall Regen 128, Wall Thorns 129.
+ * Wall labs (UI order): Wall Health 126 … Wall Thorns 129, Wall Invincibility 130.
  */
 export const DEFENSE_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   Health: 10,
@@ -17,6 +17,7 @@ export const DEFENSE_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Wall Rebuild': 127,
   'Wall Regen': 128,
   'Wall Thorns': 129,
+  'Wall Invincibility': 130,
   'Wall Fortification': 144,
   'Garlic Thorns': 193,
 } as const satisfies Record<string, number>

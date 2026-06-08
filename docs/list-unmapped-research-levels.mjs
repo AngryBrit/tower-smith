@@ -27,6 +27,7 @@ import { PERKS_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gamePerks
 import { MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameModulesResearchMapping.ts'
 import { ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameEnemiesResearchMapping.ts'
 import { CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameCardMasteryResearchMapping.ts'
+import { BATTLE_CONDITION_RESEARCH_LEVEL_ID_BY_LAB_NAME } from '../src/playerSave/gameBattleConditionResearchMapping.ts'
 import {
   BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME,
   BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME,
@@ -188,6 +189,7 @@ function buildExplicitMap() {
   add(BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'bots')
   add(ENEMIES_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'enemies')
   add(CARD_MASTERY_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'card-mastery')
+  add(BATTLE_CONDITION_RESEARCH_LEVEL_ID_BY_LAB_NAME, 'battle-condition')
   return explicit
 }
 

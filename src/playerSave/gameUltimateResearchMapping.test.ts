@@ -63,6 +63,76 @@ describe('ultimateLabsToOverrides', () => {
     expect(overrides['0-21']).toBe(2)
   })
 
+  it('maps Chain Thunder and Lightning Amplifier - Scatter from researchLevel ids 158–159', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[158] = 6
+    researchLevel[159] = 12
+    const data: ResearchData = {
+      sections: [
+        {
+          title: 'ULTIMATE WEAPON RESEARCH',
+          sectionSlug: 'ultimate-weapon-research',
+          items: [
+            {
+              name: 'Chain Thunder',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+            {
+              name: 'Lightning Amplifier - Scatter',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+          ],
+        },
+      ],
+    }
+    const overrides = ultimateLabsToOverrides(data, researchLevel)
+    expect(overrides['0-0']).toBe(6)
+    expect(overrides['0-1']).toBe(12)
+  })
+
+  it('maps Death Wave Damage Amplifier and Armor Stripping from researchLevel ids 191–192', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[191] = 13
+    researchLevel[192] = 10
+    const data: ResearchData = {
+      sections: [
+        {
+          title: 'ULTIMATE WEAPON RESEARCH',
+          sectionSlug: 'ultimate-weapon-research',
+          items: [
+            {
+              name: 'Death Wave Damage Amplifier',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+            {
+              name: 'Death Wave Armor Stripping',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+          ],
+        },
+      ],
+    }
+    const overrides = ultimateLabsToOverrides(data, researchLevel)
+    expect(overrides['0-0']).toBe(13)
+    expect(overrides['0-1']).toBe(10)
+  })
+
   it('maps Death Wave Cells Bonus from researchLevel id 190', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[190] = 20
