@@ -15,7 +15,11 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { workshopStatDomId } from '../appDeepLink'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
-import { discountedWorkshopBulkMarginal } from '../data/workshopBulkMarginal'
+import {
+  discountedWorkshopBulkMarginal,
+  formatWorkshopBulkStepLabel,
+  workshopBulkBumpDelta,
+} from '../data/workshopBulkMarginal'
 import {
   workshopEnhanceAttackIsUnlocked,
   workshopEnhanceAttackUnlockRemainingCoins,
@@ -98,7 +102,7 @@ function WorkshopEnhanceAttackCard({
     coinDiscountPercent,
   )
   const statLabel = workshopEnhanceAttackStatDisplay(upgradeKey, level)
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   const cardClass = locked
     ? 'workshop__card workshop__card--locked'
@@ -265,7 +269,8 @@ export function WorkshopEnhanceAttackPanel({
       const level = workshopPersisted[key]
       const nv = workshopEnhanceAttackClampLevel(
         key,
-        level + direction * multiplier,
+        level +
+          workshopBulkBumpDelta(direction, multiplier, level, workshopEnhanceAttackMaxLevel(key)),
       )
       onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
     },

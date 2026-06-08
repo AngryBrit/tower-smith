@@ -1008,7 +1008,7 @@ export const STRINGS_DE = {
   ws_reset_bots_confirm_body:
     'Setzt Bot-Besitz, Stufen, AN/AUS-Schalter und Spezial-Freischaltungen für diesen Build zurück.',
   ws_multiplier_group_aria: 'Kauf-Multiplikator',
-  ws_multiplier_toggle_expand: 'Multiplikator-Optionen anzeigen (×1, ×5, ×10, ×100)',
+  ws_multiplier_toggle_expand: 'Multiplikator-Optionen anzeigen (MAX, ×1, ×5, ×10, ×100)',
   ws_multiplier_toggle_collapse: 'Multiplikator-Optionen ausblenden',
   ws_cat_attack_aria: 'Kategorie Angriffs-Upgrades',
   ws_cat_defense_aria: 'Kategorie Verteidigungs-Upgrades',

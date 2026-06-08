@@ -1001,7 +1001,7 @@ export const STRINGS_EN = {
   ws_section_ultimate: 'Ultimate Upgrades',
   ws_section_bots: 'Bots',
   ws_multiplier_group_aria: 'Buy multiplier',
-  ws_multiplier_toggle_expand: 'Show multiplier options (×1, ×5, ×10, ×100)',
+  ws_multiplier_toggle_expand: 'Show multiplier options (MAX, ×1, ×5, ×10, ×100)',
   ws_multiplier_toggle_collapse: 'Hide multiplier options',
   ws_cat_attack_aria: 'Attack upgrades category',
   ws_cat_defense_aria: 'Defense upgrades category',

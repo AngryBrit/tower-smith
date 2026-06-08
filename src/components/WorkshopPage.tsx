@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, RefObject } from 'react'
 import {
   createContext,
   lazy,
@@ -43,7 +43,11 @@ import {
   workshopCriticalFactorStatDisplay,
   workshopDisplayedCritFactorEnhancementMultiplier,
 } from '../data/workshopCriticalFactor'
-import { discountedWorkshopBulkMarginal } from '../data/workshopBulkMarginal'
+import {
+  discountedWorkshopBulkMarginal,
+  formatWorkshopBulkStepLabel,
+  workshopBulkBumpDelta,
+} from '../data/workshopBulkMarginal'
 import {
   WORKSHOP_DAMAGE_MAX_LEVEL,
   workshopDamageNextMarginalCoins,
@@ -248,7 +252,79 @@ const WORKSHOP_CATEGORY_ICON_SRC: Record<WorkshopCategory, string> = {
 }
 
 const BULK_MULTIPLIERS = [100, 10, 5, 1] as const
-type WorkshopMultiplier = (typeof BULK_MULTIPLIERS)[number]
+type WorkshopMultiplier = WorkshopPersistedV1['multiplier']
+
+function WorkshopMultiplierRail({
+  railRef,
+  open,
+  multiplier,
+  onSelectMultiplier,
+  onAnchorClick,
+}: {
+  railRef: RefObject<HTMLDivElement | null>
+  open: boolean
+  multiplier: WorkshopMultiplier
+  onSelectMultiplier: (m: WorkshopMultiplier) => void
+  onAnchorClick: () => void
+}) {
+  const { t } = useI18n()
+  const anchorLabel = multiplier === 'max' ? 'MAX' : `×${multiplier}`
+
+  return (
+    <div ref={railRef} className={open ? 'workshop__mult workshop__mult--open' : 'workshop__mult'}>
+      <div
+        className="workshop__mult-rail"
+        role="group"
+        aria-label={t('ws_multiplier_group_aria')}
+      >
+        <div className="workshop__mult-track">
+          <div className="workshop__mult-opts" aria-hidden={!open}>
+            <button
+              type="button"
+              className={
+                multiplier === 'max'
+                  ? 'workshop__mult-chip workshop__mult-chip--selected'
+                  : 'workshop__mult-chip'
+              }
+              tabIndex={open ? 0 : -1}
+              aria-pressed={multiplier === 'max'}
+              onClick={() => onSelectMultiplier('max')}
+            >
+              MAX
+            </button>
+            {BULK_MULTIPLIERS.map((m) => (
+              <button
+                key={m}
+                type="button"
+                className={
+                  multiplier === m
+                    ? 'workshop__mult-chip workshop__mult-chip--selected'
+                    : 'workshop__mult-chip'
+                }
+                tabIndex={open ? 0 : -1}
+                aria-pressed={multiplier === m}
+                onClick={() => onSelectMultiplier(m)}
+              >
+                ×{m}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="workshop__mult-anchor"
+            aria-expanded={open}
+            aria-label={
+              open ? t('ws_multiplier_toggle_collapse') : t('ws_multiplier_toggle_expand')
+            }
+            onClick={onAnchorClick}
+          >
+            {anchorLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 type DemoRow = {
   labelId: StringId
@@ -420,7 +496,7 @@ function WorkshopDamageCard({
   )
   const statLabel = workshopDamageStatDisplay(level, damageDisplayOpts)
   const breakdownTitle = formatWorkshopDisplayedDamageBreakdown(damageDisplayOpts)
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -516,7 +592,7 @@ function WorkshopAttackSpeedCard({
     coinDiscountPercent,
   )
   const statLabel = workshopAttackSpeedStatDisplay(level, attackSpeedDisplayOpts)
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -612,7 +688,7 @@ function WorkshopCriticalChanceCard({
     level,
     attackLabOpts?.criticalChanceCardPercentPoints ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -712,7 +788,7 @@ function WorkshopCriticalFactorCard({
     attackLabOpts?.submodule?.critFactorAdd ?? 0,
     enhancementMultiplier,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -809,7 +885,7 @@ function WorkshopAttackRangeCard({
     attackLabOpts?.attackRangeLabMultiplier,
     attackLabOpts?.submodule?.attackRangeMetersAdd ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -904,7 +980,7 @@ function WorkshopDamagePerMeterCard({
     coinDiscountPercent,
   )
   const statLabel = workshopDamagePerMeterStatDisplay(level, damagePerMeterLabMultiplier)
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1000,7 +1076,7 @@ function WorkshopMultishotChanceCard({
     level,
     attackLabOpts?.submodule?.multishotChancePercentPoints ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1096,7 +1172,7 @@ function WorkshopMultishotTargetsCard({
     level,
     attackLabOpts?.submodule?.multishotTargetsCount ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1192,7 +1268,7 @@ function WorkshopRapidFireChanceCard({
     level,
     attackLabOpts?.submodule?.rapidFireChancePercentPoints ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1288,7 +1364,7 @@ function WorkshopRapidFireDurationCard({
     level,
     attackLabOpts?.submodule?.rapidFireDurationSeconds ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1384,7 +1460,7 @@ function WorkshopBounceShotChanceCard({
     level,
     attackLabOpts?.submodule?.bounceShotChancePercentPoints ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1480,7 +1556,7 @@ function WorkshopBounceShotTargetsCard({
     level,
     attackLabOpts?.submodule?.bounceShotTargetsCount ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1576,7 +1652,7 @@ function WorkshopBounceShotRangeCard({
     level,
     attackLabOpts?.submodule?.bounceShotRangeMeters ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1672,7 +1748,7 @@ function WorkshopSuperCritChanceCard({
     level,
     attackLabOpts?.superCritChanceLabPercentPoints,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1769,7 +1845,7 @@ function WorkshopSuperCritMultCard({
     attackLabOpts?.superCritMultLabMultiplier,
     attackLabOpts?.submodule?.superCritMultAdd ?? 0,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1868,7 +1944,7 @@ function WorkshopRendArmorChanceCard({
     attackLabOpts?.submodule?.rendArmorChancePercentPoints ?? 0,
     enhancementMultiplier,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -1968,7 +2044,7 @@ function WorkshopRendArmorMultCard({
     attackLabOpts?.submodule?.rendArmorMultAdd ?? 0,
     enhancementMultiplier,
   )
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
     <li
@@ -2104,7 +2180,7 @@ function WorkshopDefenseUpgradeCard({
     coinDiscountPercent,
   )
   const statLabel = workshopDefenseStatDisplay(fieldKey, level, statDisplayOpts)
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
   const statName = t(titleId)
 
   return (
@@ -2204,7 +2280,7 @@ function WorkshopUtilityUpgradeCard({
     coinDiscountPercent,
   )
   const statLabel = workshopUtilityStatDisplay(fieldKey, level, statDisplayOpts)
-  const stepHint = `×${bulkStep}`
+  const stepHint = formatWorkshopBulkStepLabel(bulkStep)
   const statName = t(titleId)
 
   return (
@@ -2775,7 +2851,10 @@ export function WorkshopPage({
 
   const bumpDamage = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopDamageLevel(damageLevel + direction * multiplier)
+      const nv = clampWorkshopDamageLevel(
+        damageLevel +
+          workshopBulkBumpDelta(direction, multiplier, damageLevel, WORKSHOP_DAMAGE_MAX_LEVEL),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, damageLevel: nv })
     },
     [damageLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2798,7 +2877,15 @@ export function WorkshopPage({
 
   const bumpAttackSpeed = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopAttackSpeedLevel(attackSpeedLevel + direction * multiplier)
+      const nv = clampWorkshopAttackSpeedLevel(
+        attackSpeedLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            attackSpeedLevel,
+            WORKSHOP_ATTACK_SPEED_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, attackSpeedLevel: nv })
     },
     [attackSpeedLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2821,7 +2908,15 @@ export function WorkshopPage({
 
   const bumpCritChance = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopCriticalChanceLevel(critChanceLevel + direction * multiplier)
+      const nv = clampWorkshopCriticalChanceLevel(
+        critChanceLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            critChanceLevel,
+            WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, critChanceLevel: nv })
     },
     [critChanceLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2844,7 +2939,15 @@ export function WorkshopPage({
 
   const bumpCritFactor = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopCriticalFactorLevel(critFactorLevel + direction * multiplier)
+      const nv = clampWorkshopCriticalFactorLevel(
+        critFactorLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            critFactorLevel,
+            WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, critFactorLevel: nv })
     },
     [critFactorLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2867,7 +2970,15 @@ export function WorkshopPage({
 
   const bumpAttackRange = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopAttackRangeLevel(attackRangeLevel + direction * multiplier)
+      const nv = clampWorkshopAttackRangeLevel(
+        attackRangeLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            attackRangeLevel,
+            WORKSHOP_ATTACK_RANGE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, attackRangeLevel: nv })
     },
     [attackRangeLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2890,7 +3001,15 @@ export function WorkshopPage({
 
   const bumpDamagePerMeter = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopDamagePerMeterLevel(damagePerMeterLevel + direction * multiplier)
+      const nv = clampWorkshopDamagePerMeterLevel(
+        damagePerMeterLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            damagePerMeterLevel,
+            WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, damagePerMeterLevel: nv })
     },
     [damagePerMeterLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2913,7 +3032,15 @@ export function WorkshopPage({
 
   const bumpMultishotChance = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopMultishotChanceLevel(multishotChanceLevel + direction * multiplier)
+      const nv = clampWorkshopMultishotChanceLevel(
+        multishotChanceLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            multishotChanceLevel,
+            WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, multishotChanceLevel: nv })
     },
     [multishotChanceLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2936,7 +3063,15 @@ export function WorkshopPage({
 
   const bumpMultishotTargets = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopMultishotTargetsLevel(multishotTargetsLevel + direction * multiplier)
+      const nv = clampWorkshopMultishotTargetsLevel(
+        multishotTargetsLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            multishotTargetsLevel,
+            WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, multishotTargetsLevel: nv })
     },
     [multishotTargetsLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2959,7 +3094,15 @@ export function WorkshopPage({
 
   const bumpRapidFireChance = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopRapidFireChanceLevel(rapidFireChanceLevel + direction * multiplier)
+      const nv = clampWorkshopRapidFireChanceLevel(
+        rapidFireChanceLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            rapidFireChanceLevel,
+            WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, rapidFireChanceLevel: nv })
     },
     [rapidFireChanceLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -2982,7 +3125,15 @@ export function WorkshopPage({
 
   const bumpRapidFireDuration = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopRapidFireDurationLevel(rapidFireDurationLevel + direction * multiplier)
+      const nv = clampWorkshopRapidFireDurationLevel(
+        rapidFireDurationLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            rapidFireDurationLevel,
+            WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, rapidFireDurationLevel: nv })
     },
     [rapidFireDurationLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3005,7 +3156,15 @@ export function WorkshopPage({
 
   const bumpBounceShotChance = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopBounceShotChanceLevel(bounceShotChanceLevel + direction * multiplier)
+      const nv = clampWorkshopBounceShotChanceLevel(
+        bounceShotChanceLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            bounceShotChanceLevel,
+            WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, bounceShotChanceLevel: nv })
     },
     [bounceShotChanceLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3028,7 +3187,15 @@ export function WorkshopPage({
 
   const bumpBounceShotTargets = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopBounceShotTargetsLevel(bounceShotTargetsLevel + direction * multiplier)
+      const nv = clampWorkshopBounceShotTargetsLevel(
+        bounceShotTargetsLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            bounceShotTargetsLevel,
+            WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, bounceShotTargetsLevel: nv })
     },
     [bounceShotTargetsLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3051,7 +3218,15 @@ export function WorkshopPage({
 
   const bumpBounceShotRange = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopBounceShotRangeLevel(bounceShotRangeLevel + direction * multiplier)
+      const nv = clampWorkshopBounceShotRangeLevel(
+        bounceShotRangeLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            bounceShotRangeLevel,
+            WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, bounceShotRangeLevel: nv })
     },
     [bounceShotRangeLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3074,7 +3249,15 @@ export function WorkshopPage({
 
   const bumpSuperCritChance = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopSuperCritChanceLevel(superCritChanceLevel + direction * multiplier)
+      const nv = clampWorkshopSuperCritChanceLevel(
+        superCritChanceLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            superCritChanceLevel,
+            WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, superCritChanceLevel: nv })
     },
     [superCritChanceLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3097,7 +3280,15 @@ export function WorkshopPage({
 
   const bumpSuperCritMult = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopSuperCritMultLevel(superCritMultLevel + direction * multiplier)
+      const nv = clampWorkshopSuperCritMultLevel(
+        superCritMultLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            superCritMultLevel,
+            WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, superCritMultLevel: nv })
     },
     [superCritMultLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3126,7 +3317,13 @@ export function WorkshopPage({
   const bumpRendArmorChance = useCallback(
     (direction: -1 | 1) => {
       const nv = clampWorkshopRendArmorChanceLevel(
-        rendArmorChanceLevel + direction * multiplier,
+        rendArmorChanceLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            rendArmorChanceLevel,
+            WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
+          ),
       )
       onWorkshopPersistedChange({ ...workshopPersisted, rendArmorChanceLevel: nv })
     },
@@ -3150,7 +3347,15 @@ export function WorkshopPage({
 
   const bumpRendArmorMult = useCallback(
     (direction: -1 | 1) => {
-      const nv = clampWorkshopRendArmorMultLevel(rendArmorMultLevel + direction * multiplier)
+      const nv = clampWorkshopRendArmorMultLevel(
+        rendArmorMultLevel +
+          workshopBulkBumpDelta(
+            direction,
+            multiplier,
+            rendArmorMultLevel,
+            WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL,
+          ),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, rendArmorMultLevel: nv })
     },
     [rendArmorMultLevel, multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3159,7 +3364,10 @@ export function WorkshopPage({
   const bumpDefense = useCallback(
     (key: WorkshopDefenseUpgradeKey, direction: -1 | 1) => {
       const cur = workshopPersisted[key]
-      const nv = workshopDefenseClampLevel(key, cur + direction * multiplier)
+      const nv = workshopDefenseClampLevel(
+        key,
+        cur + workshopBulkBumpDelta(direction, multiplier, cur, workshopDefenseMaxLevel(key)),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
     },
     [multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3186,7 +3394,10 @@ export function WorkshopPage({
   const bumpUtility = useCallback(
     (key: WorkshopUtilityUpgradeKey, direction: -1 | 1) => {
       const cur = workshopPersisted[key]
-      const nv = workshopUtilityClampLevel(key, cur + direction * multiplier)
+      const nv = workshopUtilityClampLevel(
+        key,
+        cur + workshopBulkBumpDelta(direction, multiplier, cur, workshopUtilityMaxLevel(key)),
+      )
       onWorkshopPersistedChange({ ...workshopPersisted, [key]: nv })
     },
     [multiplier, onWorkshopPersistedChange, workshopPersisted],
@@ -3708,58 +3919,16 @@ export function WorkshopPage({
           <>
             <div className="workshop__section-head">
               <h2 className="workshop__section-title">{t(sectionTitleId)}</h2>
-              <div
-                ref={multRailRef}
-                className={
-                  multiplierOpen ? 'workshop__mult workshop__mult--open' : 'workshop__mult'
-                }
-              >
-                <div
-                  className="workshop__mult-rail"
-                  role="group"
-                  aria-label={t('ws_multiplier_group_aria')}
-                >
-                  <div className="workshop__mult-track">
-                    <div className="workshop__mult-opts" aria-hidden={!multiplierOpen}>
-                      {BULK_MULTIPLIERS.map((m) => (
-                        <button
-                          key={m}
-                          type="button"
-                          className={
-                            multiplier === m
-                              ? 'workshop__mult-chip workshop__mult-chip--selected'
-                              : 'workshop__mult-chip'
-                          }
-                          tabIndex={multiplierOpen ? 0 : -1}
-                          aria-pressed={multiplier === m}
-                          onClick={() => {
-                            onWorkshopPersistedChange({
-                              ...workshopPersisted,
-                              multiplier: m,
-                            })
-                            setMultiplierOpen(false)
-                          }}
-                        >
-                          ×{m}
-                        </button>
-                      ))}
-                    </div>
-                    <button
-                      type="button"
-                      className="workshop__mult-anchor"
-                      aria-expanded={multiplierOpen}
-                      aria-label={
-                        multiplierOpen
-                          ? t('ws_multiplier_toggle_collapse')
-                          : t('ws_multiplier_toggle_expand')
-                      }
-                      onClick={() => setMultiplierOpen((o) => !o)}
-                    >
-                      ×{multiplier}
-                    </button>
-                  </div>
-                </div>
-              </div>
+              <WorkshopMultiplierRail
+                railRef={multRailRef}
+                open={multiplierOpen}
+                multiplier={multiplier}
+                onSelectMultiplier={(m) => {
+                  onWorkshopPersistedChange({ ...workshopPersisted, multiplier: m })
+                  setMultiplierOpen(false)
+                }}
+                onAnchorClick={() => setMultiplierOpen((o) => !o)}
+              />
             </div>
             <ul className="workshop__grid">
               <Suspense fallback={null}>
@@ -3806,58 +3975,16 @@ export function WorkshopPage({
           <div className="workshop__section-head">
             <h2 className="workshop__section-title">{t(sectionTitleId)}</h2>
             {category !== 'ultimate' ? (
-            <div
-              ref={multRailRef}
-              className={
-                multiplierOpen ? 'workshop__mult workshop__mult--open' : 'workshop__mult'
-              }
-            >
-              <div
-                className="workshop__mult-rail"
-                role="group"
-                aria-label={t('ws_multiplier_group_aria')}
-              >
-                <div className="workshop__mult-track">
-                  <div className="workshop__mult-opts" aria-hidden={!multiplierOpen}>
-                    {BULK_MULTIPLIERS.map((m) => (
-                      <button
-                        key={m}
-                        type="button"
-                        className={
-                          multiplier === m
-                            ? 'workshop__mult-chip workshop__mult-chip--selected'
-                            : 'workshop__mult-chip'
-                        }
-                        tabIndex={multiplierOpen ? 0 : -1}
-                        aria-pressed={multiplier === m}
-                        onClick={() => {
-                          onWorkshopPersistedChange({
-                            ...workshopPersisted,
-                            multiplier: m,
-                          })
-                          setMultiplierOpen(false)
-                        }}
-                      >
-                        ×{m}
-                      </button>
-                    ))}
-                  </div>
-                  <button
-                    type="button"
-                    className="workshop__mult-anchor"
-                    aria-expanded={multiplierOpen}
-                    aria-label={
-                      multiplierOpen
-                        ? t('ws_multiplier_toggle_collapse')
-                        : t('ws_multiplier_toggle_expand')
-                    }
-                    onClick={() => setMultiplierOpen((o) => !o)}
-                  >
-                    ×{multiplier}
-                  </button>
-                </div>
-              </div>
-            </div>
+            <WorkshopMultiplierRail
+              railRef={multRailRef}
+              open={multiplierOpen}
+              multiplier={multiplier}
+              onSelectMultiplier={(m) => {
+                onWorkshopPersistedChange({ ...workshopPersisted, multiplier: m })
+                setMultiplierOpen(false)
+              }}
+              onAnchorClick={() => setMultiplierOpen((o) => !o)}
+            />
             ) : (
               <div className="workshop__mult-spacer" aria-hidden />
             )}

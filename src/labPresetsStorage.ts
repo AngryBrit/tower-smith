@@ -248,7 +248,7 @@ export type WorkshopPersistedV1 = {
   hideMaxed: boolean
   mainTab: WorkshopMainTab
   category: WorkshopCategoryPersisted
-  multiplier: 1 | 5 | 10 | 100
+  multiplier: 1 | 5 | 10 | 100 | 'max'
   damageLevel: number
   attackSpeedLevel: number
   critChanceLevel: number
@@ -402,7 +402,7 @@ export type WorkshopPersistedV1 = {
   WorkshopBotSpecialLevels &
   WorkshopBotOwnedFlags
 
-const WORKSHOP_MULTIPLIERS = new Set<number>([1, 5, 10, 100])
+const WORKSHOP_NUMERIC_MULTIPLIERS = new Set<number>([1, 5, 10, 100])
 
 /**
  * Reset workshop upgrade / enhance / ultimate levels only.
@@ -722,9 +722,12 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     cat === 'defense' || cat === 'utility' || cat === 'ultimate' ? cat : 'attack'
 
   const m = o.multiplier
-  const multiplier = WORKSHOP_MULTIPLIERS.has(Number(m))
-    ? (Number(m) as WorkshopPersistedV1['multiplier'])
-    : d.multiplier
+  const multiplier =
+    m === 'max'
+      ? 'max'
+      : WORKSHOP_NUMERIC_MULTIPLIERS.has(Number(m))
+        ? (Number(m) as WorkshopPersistedV1['multiplier'])
+        : d.multiplier
 
   const base = {
     hideMaxed,

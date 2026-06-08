@@ -457,6 +457,10 @@ function parseWsRow(wsRaw: Record<string, unknown>, wsKey: keyof WorkshopPersist
     return true
   }
   if (wsKey === 'multiplier') {
+    if (valCell === 'max') {
+      wsRaw[wsKey] = 'max'
+      return true
+    }
     const n = Number(valCell)
     if (![1, 5, 10, 100].includes(n)) return false
     wsRaw[wsKey] = n

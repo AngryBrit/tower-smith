@@ -1046,7 +1046,7 @@ export const STRINGS_ES = {
     'Restablece posesión de bots, niveles, interruptores ON/OFF y desbloqueos especiales de este build.',
   ws_multiplier_group_aria: 'Multiplicador de compra',
   ws_multiplier_toggle_expand:
-    'Mostrar opciones de multiplicador (×1, ×5, ×10, ×100)',
+    'Mostrar opciones de multiplicador (MAX, ×1, ×5, ×10, ×100)',
   ws_multiplier_toggle_collapse: 'Ocultar opciones de multiplicador',
   ws_cat_attack_aria: 'Categoría de mejoras de ataque',
   ws_cat_defense_aria: 'Categoría de mejoras de defensa',
