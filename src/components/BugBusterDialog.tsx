@@ -393,7 +393,7 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
           <textarea
             id="bug-buster-description"
             className="glow-input bug-buster-dialog__textarea"
-            rows={4}
+            rows={3}
             required
             aria-required="true"
             aria-invalid={!descriptionReady}
@@ -413,7 +413,7 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
           <textarea
             id="bug-buster-steps"
             className="glow-input bug-buster-dialog__textarea"
-            rows={3}
+            rows={2}
             value={steps}
             onChange={(e) => setSteps(e.target.value)}
             placeholder={t('bug_buster_steps_placeholder')}

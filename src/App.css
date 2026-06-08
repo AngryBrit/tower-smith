@@ -742,44 +742,57 @@ html[data-color-scheme='high-contrast'] {
 
 .bug-buster-dialog {
   max-width: 26rem;
+  max-height: min(92svh, 100%);
+  overflow-y: auto;
+  padding: 0.75rem 0.875rem 0.7rem;
+}
+
+.bug-buster-dialog > .select-research__preset-save-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.78rem;
 }
 
 .bug-buster-dialog > .select-research__preset-save-hint {
-  margin: 0 0 0.45rem;
-  font-size: 0.65rem;
-  line-height: 1.35;
+  margin: 0 0 0.35rem;
+  font-size: 0.62rem;
+  line-height: 1.3;
   color: var(--sr-muted);
 }
 
 .bug-buster-dialog__field {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  margin-bottom: 0.65rem;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
 }
 
 .bug-buster-dialog__label {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   color: var(--sr-muted);
 }
 
 .bug-buster-dialog__select {
   width: 100%;
   box-sizing: border-box;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1.3;
 }
 
 .bug-buster-dialog__textarea {
   width: 100%;
   box-sizing: border-box;
-  min-height: 4.5rem;
+  min-height: 3.25rem;
+  margin-bottom: 0;
+  padding: 0.4rem 0.5rem;
   resize: vertical;
-  font-size: 0.8rem;
-  line-height: 1.4;
+  font-size: 0.72rem;
+  line-height: 1.35;
 }
 
 .bug-buster-dialog__diagnostics {
-  margin: 0 0 0.75rem;
-  font-size: 0.72rem;
+  margin: 0 0 0.55rem;
+  font-size: 0.68rem;
   color: var(--sr-muted);
 }
 
@@ -803,8 +816,13 @@ html[data-color-scheme='high-contrast'] {
 .bug-buster-dialog__actions {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  margin-top: 0.35rem;
+  gap: 0.35rem;
+  margin-top: 0.25rem;
+}
+
+.bug-buster-dialog__actions .glow-btn {
+  font-size: 0.72rem;
+  padding: 0.38rem 0.5rem;
 }
 
 .bug-buster-dialog__actions-row {
