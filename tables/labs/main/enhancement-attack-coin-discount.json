@@ -63,7 +63,7 @@
         "display": "10 days, 19h, 10m, 0s",
         "seconds": 933000
       },
-      "totalGems": 1603,
+      "totalGems": 1600,
       "totalCoins": 6190000000
     },
     {
@@ -80,7 +80,7 @@
         "seconds": 1399500
       },
       "totalGems": 2380,
-      "totalCoins": 9050000000
+      "totalCoins": 9040000000
     },
     {
       "level": 6,
@@ -95,7 +95,7 @@
         "display": "22 days, 16h, 15m, 0s",
         "seconds": 1959300
       },
-      "totalGems": 3308,
+      "totalGems": 3310,
       "totalCoins": 12760000000
     },
     {
@@ -111,8 +111,8 @@
         "display": "30 days, 5h, 40m, 0s",
         "seconds": 2612400
       },
-      "totalGems": 4368,
-      "totalCoins": 17590000000
+      "totalGems": 4370,
+      "totalCoins": 17580000000
     },
     {
       "level": 8,
@@ -127,7 +127,7 @@
         "display": "38 days, 21h, 1m, 0s",
         "seconds": 3358860
       },
-      "totalGems": 5548,
+      "totalGems": 5550,
       "totalCoins": 23860000000
     },
     {
@@ -143,8 +143,8 @@
         "display": "48 days, 14h, 17m, 0s",
         "seconds": 4198620
       },
-      "totalGems": 6848,
-      "totalCoins": 32020000000
+      "totalGems": 6850,
+      "totalCoins": 32010000000
     },
     {
       "level": 10,
@@ -159,7 +159,7 @@
         "display": "59 days, 9h, 28m, 0s",
         "seconds": 5131680
       },
-      "totalGems": 8268,
+      "totalGems": 8280,
       "totalCoins": 42620000000
     },
     {
@@ -175,7 +175,7 @@
         "display": "71 days, 6h, 34m, 0s",
         "seconds": 6158040
       },
-      "totalGems": 9808,
+      "totalGems": 9820,
       "totalCoins": 56410000000
     },
     {
@@ -191,14 +191,14 @@
         "display": "84 days, 5h, 35m, 0s",
         "seconds": 7277700
       },
-      "totalGems": 11468,
+      "totalGems": 11480,
       "totalCoins": 74330000000
     },
     {
       "level": 13,
       "value": 3.9,
       "time": {
-        "display": "14 days, 0h, 56m, 0s",
+        "display": "14 days, 56m, 0s",
         "seconds": 1212960
       },
       "gems": 1780,
@@ -207,7 +207,7 @@
         "display": "98 days, 6h, 31m, 0s",
         "seconds": 8490660
       },
-      "totalGems": 13248,
+      "totalGems": 13260,
       "totalCoins": 97630000000
     },
     {
@@ -223,8 +223,8 @@
         "display": "113 days, 9h, 22m, 0s",
         "seconds": 9796920
       },
-      "totalGems": 15148,
-      "totalCoins": 127920000000
+      "totalGems": 15160,
+      "totalCoins": 127910000000
     },
     {
       "level": 15,
@@ -239,7 +239,7 @@
         "display": "129 days, 14h, 8m, 0s",
         "seconds": 11196480
       },
-      "totalGems": 17168,
+      "totalGems": 17180,
       "totalCoins": 167290000000
     },
     {
@@ -255,8 +255,8 @@
         "display": "146 days, 20h, 50m, 0s",
         "seconds": 12689400
       },
-      "totalGems": 19308,
-      "totalCoins": 218480000000
+      "totalGems": 19320,
+      "totalCoins": 218470000000
     },
     {
       "level": 17,
@@ -271,8 +271,8 @@
         "display": "165 days, 5h, 27m, 0s",
         "seconds": 14275620
       },
-      "totalGems": 21568,
-      "totalCoins": 285020000000
+      "totalGems": 21580,
+      "totalCoins": 285010000000
     },
     {
       "level": 18,
@@ -287,7 +287,7 @@
         "display": "184 days, 15h, 59m, 0s",
         "seconds": 15955140
       },
-      "totalGems": 23948,
+      "totalGems": 23960,
       "totalCoins": 371520000000
     },
     {
@@ -303,8 +303,8 @@
         "display": "205 days, 4h, 26m, 0s",
         "seconds": 17727960
       },
-      "totalGems": 26448,
-      "totalCoins": 483980000000
+      "totalGems": 26460,
+      "totalCoins": 483970000000
     },
     {
       "level": 20,
@@ -319,7 +319,7 @@
         "display": "226 days, 18h, 48m, 0s",
         "seconds": 19594080
       },
-      "totalGems": 29068,
+      "totalGems": 29080,
       "totalCoins": 630170000000
     },
     {
@@ -335,7 +335,7 @@
         "display": "249 days, 11h, 5m, 0s",
         "seconds": 21553500
       },
-      "totalGems": 31808,
+      "totalGems": 31820,
       "totalCoins": 820220000000
     },
     {
@@ -351,8 +351,8 @@
         "display": "273 days, 5h, 17m, 0s",
         "seconds": 23606220
       },
-      "totalGems": 34668,
-      "totalCoins": 1067280000000
+      "totalGems": 34670,
+      "totalCoins": 1070000000000
     },
     {
       "level": 23,
@@ -367,8 +367,8 @@
         "display": "298 days, 1h, 25m, 0s",
         "seconds": 25752300
       },
-      "totalGems": 37648,
-      "totalCoins": 1388460000000
+      "totalGems": 37650,
+      "totalCoins": 1390000000000
     },
     {
       "level": 24,
@@ -383,8 +383,8 @@
         "display": "323 days, 23h, 28m, 0s",
         "seconds": 27991680
       },
-      "totalGems": 40748,
-      "totalCoins": 1806000000000
+      "totalGems": 40750,
+      "totalCoins": 1810000000000
     },
     {
       "level": 25,
@@ -399,8 +399,8 @@
         "display": "350 days, 23h, 26m, 0s",
         "seconds": 30324360
       },
-      "totalGems": 43968,
-      "totalCoins": 2348800000000
+      "totalGems": 43970,
+      "totalCoins": 2350000000000
     },
     {
       "level": 26,
@@ -415,8 +415,8 @@
         "display": "1 year, 14 days, 1h, 19m, 0s",
         "seconds": 32750340
       },
-      "totalGems": 47308,
-      "totalCoins": 3054440000000
+      "totalGems": 47310,
+      "totalCoins": 3050000000000
     },
     {
       "level": 27,
@@ -431,8 +431,8 @@
         "display": "1 year, 43 days, 5h, 7m, 0s",
         "seconds": 35269620
       },
-      "totalGems": 50768,
-      "totalCoins": 3971770000000
+      "totalGems": 50760,
+      "totalCoins": 3970000000000
     },
     {
       "level": 28,
@@ -447,8 +447,8 @@
         "display": "1 year, 73 days, 10h, 50m, 0s",
         "seconds": 37882200
       },
-      "totalGems": 54338,
-      "totalCoins": 5161770000000
+      "totalGems": 54330,
+      "totalCoins": 5160000000000
     },
     {
       "level": 29,
@@ -463,8 +463,8 @@
         "display": "1 year, 104 days, 18h, 28m, 0s",
         "seconds": 40588080
       },
-      "totalGems": 57988,
-      "totalCoins": 6711770000000
+      "totalGems": 57980,
+      "totalCoins": 6710000000000
     },
     {
       "level": 30,
@@ -479,8 +479,8 @@
         "display": "1 year, 137 days, 4h, 1m, 0s",
         "seconds": 43387260
       },
-      "totalGems": 61718,
-      "totalCoins": 8731770000000
+      "totalGems": 61710,
+      "totalCoins": 8730000000000
     },
     {
       "level": 31,
@@ -495,8 +495,8 @@
         "display": "1 year, 170 days, 15h, 30m, 0s",
         "seconds": 46279800
       },
-      "totalGems": 65528,
-      "totalCoins": 11351770000000
+      "totalGems": 65520,
+      "totalCoins": 11350000000000
     },
     {
       "level": 32,
@@ -511,8 +511,8 @@
         "display": "1 year, 205 days, 4h, 54m, 0s",
         "seconds": 49265640
       },
-      "totalGems": 69418,
-      "totalCoins": 14761770000000
+      "totalGems": 69400,
+      "totalCoins": 14760000000000
     },
     {
       "level": 33,
@@ -527,8 +527,8 @@
         "display": "1 year, 240 days, 20h, 13m, 0s",
         "seconds": 52344780
       },
-      "totalGems": 73388,
-      "totalCoins": 19191770000000
+      "totalGems": 73370,
+      "totalCoins": 19180000000000
     },
     {
       "level": 34,
@@ -543,8 +543,8 @@
         "display": "1 year, 277 days, 13h, 27m, 0s",
         "seconds": 55517220
       },
-      "totalGems": 77438,
-      "totalCoins": 24951770000000
+      "totalGems": 77420,
+      "totalCoins": 24940000000000
     },
     {
       "level": 35,
@@ -559,8 +559,8 @@
         "display": "1 year, 315 days, 8h, 36m, 0s",
         "seconds": 58782960
       },
-      "totalGems": 81568,
-      "totalCoins": 32431770000000
+      "totalGems": 81550,
+      "totalCoins": 32420000000000
     },
     {
       "level": 36,
@@ -575,8 +575,8 @@
         "display": "1 year, 354 days, 5h, 40m, 0s",
         "seconds": 62142000
       },
-      "totalGems": 85778,
-      "totalCoins": 42161770000000
+      "totalGems": 85760,
+      "totalCoins": 42150000000000
     },
     {
       "level": 37,
@@ -591,14 +591,14 @@
         "display": "2 years, 29 days, 4h, 39m, 0s",
         "seconds": 65594340
       },
-      "totalGems": 90068,
-      "totalCoins": 54811770000000
+      "totalGems": 90050,
+      "totalCoins": 54800000000000
     },
     {
       "level": 38,
       "value": 11.4,
       "time": {
-        "display": "41 days, 0h, 54m, 0s",
+        "display": "41 days, 54m, 0s",
         "seconds": 3545640
       },
       "gems": 4370,
@@ -607,8 +607,8 @@
         "display": "2 years, 70 days, 5h, 33m, 0s",
         "seconds": 69139980
       },
-      "totalGems": 94438,
-      "totalCoins": 71251770000000
+      "totalGems": 94420,
+      "totalCoins": 71240000000000
     },
     {
       "level": 39,
@@ -623,8 +623,8 @@
         "display": "2 years, 112 days, 8h, 23m, 0s",
         "seconds": 72778980
       },
-      "totalGems": 98888,
-      "totalCoins": 92621770000000
+      "totalGems": 98870,
+      "totalCoins": 92610000000000
     },
     {
       "level": 40,
@@ -639,8 +639,8 @@
         "display": "2 years, 155 days, 13h, 8m, 0s",
         "seconds": 76511280
       },
-      "totalGems": 103418,
-      "totalCoins": 120401770000000
+      "totalGems": 103400,
+      "totalCoins": 120390000000000
     },
     {
       "level": 41,
@@ -655,8 +655,8 @@
         "display": "2 years, 199 days, 19h, 48m, 0s",
         "seconds": 80336880
       },
-      "totalGems": 108028,
-      "totalCoins": 156521770000000
+      "totalGems": 108010,
+      "totalCoins": 156510000000000
     },
     {
       "level": 42,
@@ -671,8 +671,8 @@
         "display": "2 years, 245 days, 4h, 23m, 0s",
         "seconds": 84255780
       },
-      "totalGems": 112718,
-      "totalCoins": 203471770000000
+      "totalGems": 112700,
+      "totalCoins": 203470000000000
     },
     {
       "level": 43,
@@ -687,8 +687,8 @@
         "display": "2 years, 291 days, 14h, 53m, 0s",
         "seconds": 88267980
       },
-      "totalGems": 117488,
-      "totalCoins": 264511770000000
+      "totalGems": 117470,
+      "totalCoins": 264510000000000
     },
     {
       "level": 44,
@@ -703,8 +703,8 @@
         "display": "2 years, 339 days, 3h, 18m, 0s",
         "seconds": 92373480
       },
-      "totalGems": 122338,
-      "totalCoins": 343861770000000
+      "totalGems": 122320,
+      "totalCoins": 343860000000000
     },
     {
       "level": 45,
@@ -719,8 +719,8 @@
         "display": "3 years, 22 days, 17h, 38m, 0s",
         "seconds": 96572280
       },
-      "totalGems": 127268,
-      "totalCoins": 447021770000000
+      "totalGems": 127250,
+      "totalCoins": 447020000000000
     },
     {
       "level": 46,
@@ -735,8 +735,8 @@
         "display": "3 years, 72 days, 9h, 54m, 0s",
         "seconds": 100864440
       },
-      "totalGems": 132278,
-      "totalCoins": 581131770000000
+      "totalGems": 132260,
+      "totalCoins": 581130000000000
     },
     {
       "level": 47,
@@ -751,8 +751,8 @@
         "display": "3 years, 123 days, 4h, 5m, 0s",
         "seconds": 105249900
       },
-      "totalGems": 137368,
-      "totalCoins": 755471770000000
+      "totalGems": 137350,
+      "totalCoins": 755470000000000
     },
     {
       "level": 48,
@@ -767,8 +767,8 @@
         "display": "3 years, 175 days, 11m, 0s",
         "seconds": 109728660
       },
-      "totalGems": 142538,
-      "totalCoins": 982111770000000
+      "totalGems": 142510,
+      "totalCoins": 982110000000000
     },
     {
       "level": 49,
@@ -783,8 +783,8 @@
         "display": "3 years, 227 days, 22h, 12m, 0s",
         "seconds": 114300720
       },
-      "totalGems": 147788,
-      "totalCoins": 1276741770000000
+      "totalGems": 147760,
+      "totalCoins": 1280000000000000
     },
     {
       "level": 50,
@@ -799,8 +799,8 @@
         "display": "3 years, 281 days, 22h, 8m, 0s",
         "seconds": 118966080
       },
-      "totalGems": 153118,
-      "totalCoins": 1659761770000000
+      "totalGems": 153100,
+      "totalCoins": 1660000000000000
     },
     {
       "level": 51,
@@ -815,8 +815,8 @@
         "display": "3 years, 336 days, 23h, 59m, 0s",
         "seconds": 123724740
       },
-      "totalGems": 158528,
-      "totalCoins": 2157691770000000
+      "totalGems": 158510,
+      "totalCoins": 2160000000000000
     },
     {
       "level": 52,
@@ -831,8 +831,8 @@
         "display": "4 years, 28 days, 3h, 45m, 0s",
         "seconds": 128576700
       },
-      "totalGems": 164018,
-      "totalCoins": 2805001770000000
+      "totalGems": 164000,
+      "totalCoins": 2800000000000000
     },
     {
       "level": 53,
@@ -847,8 +847,8 @@
         "display": "4 years, 85 days, 9h, 26m, 0s",
         "seconds": 133521960
       },
-      "totalGems": 169588,
-      "totalCoins": 3646501770000000
+      "totalGems": 169570,
+      "totalCoins": 3650000000000000
     },
     {
       "level": 54,
@@ -863,8 +863,8 @@
         "display": "4 years, 143 days, 17h, 3m, 0s",
         "seconds": 138560580
       },
-      "totalGems": 175238,
-      "totalCoins": 4736501770000000
+      "totalGems": 175220,
+      "totalCoins": 4740000000000000
     },
     {
       "level": 55,
@@ -879,8 +879,8 @@
         "display": "4 years, 203 days, 2h, 35m, 0s",
         "seconds": 143692500
       },
-      "totalGems": 180968,
-      "totalCoins": 6156501770000000
+      "totalGems": 180950,
+      "totalCoins": 6160000000000000
     },
     {
       "level": 56,
@@ -895,8 +895,8 @@
         "display": "4 years, 263 days, 14h, 2m, 0s",
         "seconds": 148917720
       },
-      "totalGems": 186778,
-      "totalCoins": 8006501770000000
+      "totalGems": 186760,
+      "totalCoins": 8010000000000000
     },
     {
       "level": 57,
@@ -911,8 +911,8 @@
         "display": "4 years, 325 days, 3h, 24m, 0s",
         "seconds": 154236240
       },
-      "totalGems": 192668,
-      "totalCoins": 10406501770000000
+      "totalGems": 192650,
+      "totalCoins": 10410000000000000
     },
     {
       "level": 58,
@@ -927,8 +927,8 @@
         "display": "5 years, 22 days, 18h, 41m, 0s",
         "seconds": 159648060
       },
-      "totalGems": 198638,
-      "totalCoins": 13526501770000000
+      "totalGems": 198620,
+      "totalCoins": 13540000000000000
     },
     {
       "level": 59,
@@ -943,8 +943,8 @@
         "display": "5 years, 86 days, 11h, 53m, 0s",
         "seconds": 165153180
       },
-      "totalGems": 204688,
-      "totalCoins": 17586501770000000
+      "totalGems": 204670,
+      "totalCoins": 17600000000000002
     },
     {
       "level": 60,
@@ -956,11 +956,11 @@
       "gems": 6130,
       "coins": 5280000000000000,
       "totalTime": {
-        "display": "5 years, 151 days, 7h, 0s",
+        "display": "5 years, 151 days, 7h, 0m, 0s",
         "seconds": 170751600
       },
-      "totalGems": 210818,
-      "totalCoins": 22866501770000000
+      "totalGems": 210800,
+      "totalCoins": 22880000000000000
     },
     {
       "level": 61,
@@ -975,8 +975,8 @@
         "display": "5 years, 217 days, 4h, 2m, 0s",
         "seconds": 176443320
       },
-      "totalGems": 217028,
-      "totalCoins": 29726501770000000
+      "totalGems": 217010,
+      "totalCoins": 29750000000000000
     },
     {
       "level": 62,
@@ -988,17 +988,17 @@
       "gems": 6290,
       "coins": 8920000000000000,
       "totalTime": {
-        "display": "5 years, 284 days, 3h, 0s",
+        "display": "5 years, 284 days, 3h, 0m, 0s",
         "seconds": 182228400
       },
-      "totalGems": 223318,
-      "totalCoins": 38646501770000000
+      "totalGems": 223310,
+      "totalCoins": 38670000000000000
     },
     {
       "level": 63,
       "value": 18.9,
       "time": {
-        "display": "68 days, 0h, 53m, 0s",
+        "display": "68 days, 53m, 0s",
         "seconds": 5878380
       },
       "gems": 6370,
@@ -1007,8 +1007,8 @@
         "display": "5 years, 352 days, 3h, 53m, 0s",
         "seconds": 188106780
       },
-      "totalGems": 229688,
-      "totalCoins": 50246501770000000
+      "totalGems": 229680,
+      "totalCoins": 50270000000000000
     },
     {
       "level": 64,
@@ -1023,8 +1023,8 @@
         "display": "6 years, 56 days, 6h, 41m, 0s",
         "seconds": 194078460
       },
-      "totalGems": 236138,
-      "totalCoins": 65326501770000000
+      "totalGems": 236130,
+      "totalCoins": 65349999999999990
     },
     {
       "level": 65,
@@ -1039,8 +1039,8 @@
         "display": "6 years, 126 days, 11h, 24m, 0s",
         "seconds": 200143440
       },
-      "totalGems": 242668,
-      "totalCoins": 84936501770000000
+      "totalGems": 242660,
+      "totalCoins": 84960000000000000
     },
     {
       "level": 66,
@@ -1055,8 +1055,8 @@
         "display": "6 years, 197 days, 18h, 2m, 0s",
         "seconds": 206301720
       },
-      "totalGems": 249278,
-      "totalCoins": 110426501770000000
+      "totalGems": 249270,
+      "totalCoins": 110440000000000000
     },
     {
       "level": 67,
@@ -1071,8 +1071,8 @@
         "display": "6 years, 270 days, 2h, 35m, 0s",
         "seconds": 212553300
       },
-      "totalGems": 255968,
-      "totalCoins": 143556501770000000
+      "totalGems": 255970,
+      "totalCoins": 143580000000000020
     },
     {
       "level": 68,
@@ -1087,8 +1087,8 @@
         "display": "6 years, 343 days, 13h, 3m, 0s",
         "seconds": 218898180
       },
-      "totalGems": 262738,
-      "totalCoins": 186626501770000000
+      "totalGems": 262740,
+      "totalCoins": 186650000000000000
     },
     {
       "level": 69,
@@ -1103,8 +1103,8 @@
         "display": "7 years, 53 days, 1h, 27m, 0s",
         "seconds": 225336420
       },
-      "totalGems": 269588,
-      "totalCoins": 242616501770000000
+      "totalGems": 269590,
+      "totalCoins": 242640000000000000
     },
     {
       "level": 70,
@@ -1119,8 +1119,8 @@
         "display": "7 years, 128 days, 15h, 46m, 0s",
         "seconds": 231867960
       },
-      "totalGems": 276518,
-      "totalCoins": 315406501770000000
+      "totalGems": 276520,
+      "totalCoins": 315440000000000000
     },
     {
       "level": 71,
@@ -1132,11 +1132,11 @@
       "gems": 7010,
       "coins": 94630000000000000,
       "totalTime": {
-        "display": "7 years, 205 days, 8h, 0s",
+        "display": "7 years, 205 days, 8h, 0m, 0s",
         "seconds": 238492800
       },
-      "totalGems": 283528,
-      "totalCoins": 410036501770000000
+      "totalGems": 283530,
+      "totalCoins": 410070000000000000
     },
     {
       "level": 72,
@@ -1151,8 +1151,8 @@
         "display": "7 years, 283 days, 2h, 9m, 0s",
         "seconds": 245210940
       },
-      "totalGems": 290618,
-      "totalCoins": 533056501770000000
+      "totalGems": 290630,
+      "totalCoins": 533090000000000000
     },
     {
       "level": 73,
@@ -1167,8 +1167,8 @@
         "display": "7 years, 361 days, 22h, 13m, 0s",
         "seconds": 252022380
       },
-      "totalGems": 297788,
-      "totalCoins": 692986501770000000
+      "totalGems": 297800,
+      "totalCoins": 693020000000000000
     },
     {
       "level": 74,
@@ -1183,8 +1183,8 @@
         "display": "8 years, 76 days, 20h, 12m, 0s",
         "seconds": 258927120
       },
-      "totalGems": 305038,
-      "totalCoins": 900886501770000000
+      "totalGems": 305050,
+      "totalCoins": 900920000000000000
     },
     {
       "level": 75,
@@ -1199,8 +1199,8 @@
         "display": "8 years, 157 days, 20h, 6m, 0s",
         "seconds": 265925160
       },
-      "totalGems": 312368,
-      "totalCoins": 1171166501770000000
+      "totalGems": 312380,
+      "totalCoins": 1170000000000000000
     },
     {
       "level": 76,
@@ -1215,8 +1215,8 @@
         "display": "8 years, 239 days, 21h, 55m, 0s",
         "seconds": 273016500
       },
-      "totalGems": 319778,
-      "totalCoins": 1522526501770000000
+      "totalGems": 319800,
+      "totalCoins": 1520000000000000000
     },
     {
       "level": 77,
@@ -1231,8 +1231,8 @@
         "display": "8 years, 323 days, 1h, 40m, 0s",
         "seconds": 280201200
       },
-      "totalGems": 327268,
-      "totalCoins": 1979296501770000000
+      "totalGems": 327290,
+      "totalCoins": 1980000000000000000
     },
     {
       "level": 78,
@@ -1247,8 +1247,8 @@
         "display": "9 years, 42 days, 7h, 20m, 0s",
         "seconds": 287479200
       },
-      "totalGems": 334838,
-      "totalCoins": 2573096501770000000
+      "totalGems": 334860,
+      "totalCoins": 2570000000000000000
     },
     {
       "level": 79,
@@ -1263,8 +1263,8 @@
         "display": "9 years, 127 days, 14h, 55m, 0s",
         "seconds": 294850500
       },
-      "totalGems": 342488,
-      "totalCoins": 3345036501770000000
+      "totalGems": 342520,
+      "totalCoins": 3350000000000000000
     },
     {
       "level": 80,
@@ -1279,8 +1279,8 @@
         "display": "9 years, 214 days, 25m, 0s",
         "seconds": 302315100
       },
-      "totalGems": 350218,
-      "totalCoins": 4345036501770000000
+      "totalGems": 350250,
+      "totalCoins": 4349999999999999500
     },
     {
       "level": 81,
@@ -1295,8 +1295,8 @@
         "display": "9 years, 301 days, 11h, 50m, 0s",
         "seconds": 309873000
       },
-      "totalGems": 358028,
-      "totalCoins": 5645036501770000000
+      "totalGems": 358060,
+      "totalCoins": 5650000000000000000
     },
     {
       "level": 82,
@@ -1311,8 +1311,8 @@
         "display": "10 years, 25 days, 1h, 10m, 0s",
         "seconds": 317524200
       },
-      "totalGems": 365918,
-      "totalCoins": 7345036501770000000
+      "totalGems": 365960,
+      "totalCoins": 7350000000000000000
     },
     {
       "level": 83,
@@ -1327,8 +1327,8 @@
         "display": "10 years, 114 days, 16h, 25m, 0s",
         "seconds": 325268700
       },
-      "totalGems": 373888,
-      "totalCoins": 9545036501770000000
+      "totalGems": 373930,
+      "totalCoins": 9550000000000000000
     },
     {
       "level": 84,
@@ -1343,8 +1343,8 @@
         "display": "10 years, 205 days, 9h, 35m, 0s",
         "seconds": 333106500
       },
-      "totalGems": 381938,
-      "totalCoins": 12415036501770000000
+      "totalGems": 381970,
+      "totalCoins": 12420000000000000000
     },
     {
       "level": 85,
@@ -1359,8 +1359,8 @@
         "display": "10 years, 297 days, 4h, 41m, 0s",
         "seconds": 341037660
       },
-      "totalGems": 390048,
-      "totalCoins": 16145036501770000000
+      "totalGems": 390090,
+      "totalCoins": 16149999999999998000
     },
     {
       "level": 86,
@@ -1375,8 +1375,8 @@
         "display": "11 years, 25 days, 1h, 42m, 0s",
         "seconds": 349062120
       },
-      "totalGems": 398228,
-      "totalCoins": 20985036501770002000
+      "totalGems": 398270,
+      "totalCoins": 20990000000000000000
     },
     {
       "level": 87,
@@ -1391,14 +1391,14 @@
         "display": "11 years, 119 days, 38m, 0s",
         "seconds": 357179880
       },
-      "totalGems": 406478,
-      "totalCoins": 27285036501770002000
+      "totalGems": 406520,
+      "totalCoins": 27290000000000000000
     },
     {
       "level": 88,
       "value": 26.4,
       "time": {
-        "display": "95 days, 0h, 51m, 0s",
+        "display": "95 days, 51m, 0s",
         "seconds": 8211060
       },
       "gems": 8320,
@@ -1407,8 +1407,8 @@
         "display": "11 years, 214 days, 1h, 29m, 0s",
         "seconds": 365390940
       },
-      "totalGems": 414798,
-      "totalCoins": 35475036501770002000
+      "totalGems": 414840,
+      "totalCoins": 35470000000000000000
     },
     {
       "level": 89,
@@ -1423,8 +1423,8 @@
         "display": "11 years, 310 days, 4h, 15m, 0s",
         "seconds": 373695300
       },
-      "totalGems": 423188,
-      "totalCoins": 46115036501770000000
+      "totalGems": 423220,
+      "totalCoins": 46110000000000000000
     },
     {
       "level": 90,
@@ -1439,8 +1439,8 @@
         "display": "12 years, 42 days, 8h, 56m, 0s",
         "seconds": 382092960
       },
-      "totalGems": 431638,
-      "totalCoins": 59945036501770000000
+      "totalGems": 431680,
+      "totalCoins": 59950000000000000000
     },
     {
       "level": 91,
@@ -1455,8 +1455,8 @@
         "display": "12 years, 140 days, 15h, 32m, 0s",
         "seconds": 390583920
       },
-      "totalGems": 440158,
-      "totalCoins": 77925036501770010000
+      "totalGems": 440200,
+      "totalCoins": 77930000000000000000
     },
     {
       "level": 92,
@@ -1471,8 +1471,8 @@
         "display": "12 years, 240 days, 4m, 0s",
         "seconds": 399168240
       },
-      "totalGems": 448748,
-      "totalCoins": 101305036501770010000
+      "totalGems": 448790,
+      "totalCoins": 101310000000000000000
     },
     {
       "level": 93,
@@ -1487,8 +1487,8 @@
         "display": "12 years, 340 days, 10h, 31m, 0s",
         "seconds": 407845860
       },
-      "totalGems": 457408,
-      "totalCoins": 131695036501770010000
+      "totalGems": 457450,
+      "totalCoins": 131710000000000000000
     },
     {
       "level": 94,
@@ -1503,8 +1503,8 @@
         "display": "13 years, 76 days, 22h, 53m, 0s",
         "seconds": 416616780
       },
-      "totalGems": 466138,
-      "totalCoins": 171205036501770000000
+      "totalGems": 466170,
+      "totalCoins": 171220000000000000000
     },
     {
       "level": 95,
@@ -1519,8 +1519,8 @@
         "display": "13 years, 179 days, 13h, 10m, 0s",
         "seconds": 425481000
       },
-      "totalGems": 474928,
-      "totalCoins": 222575036501770000000
+      "totalGems": 474970,
+      "totalCoins": 222590000000000000000
     },
     {
       "level": 96,
@@ -1535,8 +1535,8 @@
         "display": "13 years, 283 days, 5h, 22m, 0s",
         "seconds": 434438520
       },
-      "totalGems": 483788,
-      "totalCoins": 289355036501770000000
+      "totalGems": 483830,
+      "totalCoins": 289360000000000000000
     },
     {
       "level": 97,
@@ -1551,8 +1551,8 @@
         "display": "14 years, 22 days, 23h, 29m, 0s",
         "seconds": 443489340
       },
-      "totalGems": 492718,
-      "totalCoins": 376165036501770040000
+      "totalGems": 492760,
+      "totalCoins": 376170000000000000000
     },
     {
       "level": 98,
@@ -1567,8 +1567,8 @@
         "display": "14 years, 128 days, 19h, 31m, 0s",
         "seconds": 452633460
       },
-      "totalGems": 501718,
-      "totalCoins": 489015036501770040000
+      "totalGems": 501760,
+      "totalCoins": 489020000000000000000
     },
     {
       "level": 99,
@@ -1583,8 +1583,8 @@
         "display": "14 years, 235 days, 17h, 28m, 0s",
         "seconds": 461870880
       },
-      "totalGems": 510788,
-      "totalCoins": 635725036501770000000
+      "totalGems": 510820,
+      "totalCoins": 635730000000000100000
     },
     {
       "level": 100,
@@ -1599,8 +1599,8 @@
         "display": "14 years, 343 days, 17h, 21m, 0s",
         "seconds": 471201660
       },
-      "totalGems": 519918,
-      "totalCoins": 826445036501770000000
+      "totalGems": 519960,
+      "totalCoins": 826450000000000100000
     }
   ]
 }

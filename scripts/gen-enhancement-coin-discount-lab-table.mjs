@@ -1,6 +1,6 @@
 /**
- * Builds tables/labs/main/enhancement-coin-discount.json from lab calculator screenshots.
- * Marginal time/coins match wiki ladder; marginal gems from screenshot; totals cumulated.
+ * Builds tables/labs/main/enhancement-attack-coin-discount.json from lab calculator screenshots.
+ * Sources: Enhancement Attack - Coin Discount screenshots (L1–29, L28–59, L58–89, L69–100).
  */
 import fs from 'fs'
 import path from 'path'
@@ -13,138 +13,111 @@ const outPath = path.join(
   'tables',
   'labs',
   'main',
-  'enhancement-coin-discount.json',
+  'enhancement-attack-coin-discount.json',
 )
 
-/** Marginal gems per level (screenshot L1–100). */
-const MARGINAL_GEMS = `
-175 325 476 627 777 928 1060 1180 1300 1420 1540 1660 1780 1900 2020 2140 2260 2380 2500 2620 2740 2860 2980 3100 3220 3340 3460 3570 3650 3730 3810 3890 3970 4050 4130 4210 4290 4370 4450 4530 4610 4690 4770 4850 4930 5010 5090 5170 5250 5330 5410 5490 5570 5650 5730 5810 5890 5970 6050 6130 6210 6290 6370 6450 6530 6610 6690 6770 6850 6930 7010 7090 7170 7250 7330 7410 7490 7570 7650 7730 7810 7890 7970 8050 8110 8180 8250 8320 8390 8450 8520 8590 8660 8730 8790 8860 8930 9000 9070 9130
-`
-  .trim()
-  .split(/\s+/)
-  .map(Number)
-
-const rows = `
-1	1d 1h 55m	1.00B	0.30%
-2	2d 3h 50m	1.30B	0.60%
-3	3d 5h 45m	1.69B	0.90%
-4	4d 7h 40m	2.20B	1.20%
-5	5d 9h 35m	2.86B	1.50%
-6	6d 11h 30m	3.71B	1.80%
-7	7d 13h 25m	4.83B	2.10%
-8	8d 15h 21m	6.27B	2.40%
-9	9d 17h 16m	8.16B	2.70%
-10	10d 19h 11m	10.60B	3.00%
-11	11d 21h 6m	13.79B	3.30%
-12	12d 23h 1m	17.92B	3.60%
-13	14d 0h 56m	23.30B	3.90%
-14	15d 2h 51m	30.29B	4.20%
-15	16d 4h 46m	39.37B	4.50%
-16	17d 6h 42m	51.19B	4.80%
-17	18d 8h 37m	66.54B	5.10%
-18	19d 10h 32m	86.50B	5.40%
-19	20d 12h 27m	112.46B	5.70%
-20	21d 14h 22m	146.19B	6.00%
-21	22d 16h 17m	190.05B	6.30%
-22	23d 18h 12m	247.06B	6.60%
-23	24d 20h 8m	321.18B	6.90%
-24	25d 22h 3m	417.54B	7.20%
-25	26d 23h 58m	542.80B	7.50%
-26	28d 1h 53m	705.64B	7.80%
-27	29d 3h 48m	917.33B	8.10%
-28	30d 5h 43m	1.19T	8.40%
-29	31d 7h 38m	1.55T	8.70%
-30	32d 9h 33m	2.02T	9.00%
-31	33d 11h 29m	2.62T	9.30%
-32	34d 13h 24m	3.41T	9.60%
-33	35d 15h 19m	4.43T	9.90%
-34	36d 17h 14m	5.76T	10.20%
-35	37d 19h 9m	7.48T	10.50%
-36	38d 21h 4m	9.73T	10.80%
-37	39d 22h 59m	12.65T	11.10%
-38	41d 0h 54m	16.44T	11.40%
-39	42d 2h 50m	21.37T	11.70%
-40	43d 4h 45m	27.78T	12.00%
-41	44d 6h 40m	36.12T	12.30%
-42	45d 8h 35m	46.95T	12.60%
-43	46d 10h 30m	61.04T	12.90%
-44	47d 12h 25m	79.35T	13.20%
-45	48d 14h 20m	103.16T	13.50%
-46	49d 16h 16m	134.11T	13.80%
-47	50d 18h 11m	174.34T	14.10%
-48	51d 20h 6m	226.64T	14.40%
-49	52d 22h 1m	294.63T	14.70%
-50	53d 23h 56m	383.02T	15.00%
-51	55d 1h 51m	497.93T	15.30%
-52	56d 3h 46m	647.31T	15.60%
-53	57d 5h 41m	841.50T	15.90%
-54	58d 7h 37m	1.09q	16.20%
-55	59d 9h 32m	1.42q	16.50%
-56	60d 11h 27m	1.85q	16.80%
-57	61d 13h 22m	2.40q	17.10%
-58	62d 15h 17m	3.12q	17.40%
-59	63d 17h 12m	4.06q	17.70%
-60	64d 19h 7m	5.28q	18.00%
-61	65d 21h 2m	6.86q	18.30%
-62	66d 22h 58m	8.92q	18.60%
-63	68d 0h 53m	11.60q	18.90%
-64	69d 2h 48m	15.08q	19.20%
-65	70d 4h 43m	19.61q	19.50%
-66	71d 6h 38m	25.49q	19.80%
-67	72d 8h 33m	33.13q	20.10%
-68	73d 10h 28m	43.07q	20.40%
-69	74d 12h 24m	55.99q	20.70%
-70	75d 14h 19m	72.79q	21.00%
-71	76d 16h 14m	94.63q	21.30%
-72	77d 18h 9m	123.02q	21.60%
-73	78d 20h 4m	159.93q	21.90%
-74	79d 21h 59m	207.90q	22.20%
-75	80d 23h 54m	270.28q	22.50%
-76	82d 1h 49m	351.36q	22.80%
-77	83d 3h 45m	456.77q	23.10%
-78	84d 5h 40m	593.80q	23.40%
-79	85d 7h 35m	771.94q	23.70%
-80	86d 9h 30m	1.00Q	24.00%
-81	87d 11h 25m	1.30Q	24.30%
-82	88d 13h 20m	1.70Q	24.60%
-83	89d 15h 15m	2.20Q	24.90%
-84	90d 17h 10m	2.87Q	25.20%
-85	91d 19h 6m	3.73Q	25.50%
-86	92d 21h 1m	4.84Q	25.80%
-87	93d 22h 56m	6.30Q	26.10%
-88	95d 0h 51m	8.19Q	26.40%
-89	96d 2h 46m	10.64Q	26.70%
-90	97d 4h 41m	13.83Q	27.00%
-91	98d 6h 36m	17.98Q	27.30%
-92	99d 8h 32m	23.38Q	27.60%
-93	100d 10h 27m	30.39Q	27.90%
-94	101d 12h 22m	39.51Q	28.20%
-95	102d 14h 17m	51.37Q	28.50%
-96	103d 16h 12m	66.78Q	28.80%
-97	104d 18h 7m	86.81Q	29.10%
-98	105d 20h 2m	112.85Q	29.40%
-99	106d 21h 57m	146.71Q	29.70%
-100	107d 23h 53m	190.72Q	30.00%
-`
-  .trim()
-  .split('\n')
-
-function parseDur(s) {
-  const m = /^(\d+)d (\d+)h (\d+)m$/.exec(s.trim())
-  if (!m) throw new Error(`bad dur ${s}`)
-  return (
-    parseInt(m[1], 10) * 86400 +
-    parseInt(m[2], 10) * 3600 +
-    parseInt(m[3], 10) * 60
-  )
-}
-
-function wikiDurToDisplay(s) {
-  const m = /^(\d+)d (\d+)h (\d+)m$/.exec(s.trim())
-  if (!m) throw new Error(`bad dur ${s}`)
-  const days = parseInt(m[1], 10)
-  const dayLabel = days === 1 ? '1 day' : `${days} days`
-  return `${dayLabel}, ${m[2]}h, ${m[3]}m, 0s`
+/** [value, time, gems, coins, totalTime, totalGems, totalCoins] — screenshots L1–100 */
+const BY_LEVEL = {
+  1: ['0.30', '1 day, 1h, 55m, 0s', '175', '1.00B', '1 day, 1h, 55m, 0s', '175', '1.00B'],
+  2: ['0.60', '2 days, 3h, 50m, 0s', '325', '1.30B', '3 days, 5h, 45m, 0s', '500', '2.30B'],
+  3: ['0.90', '3 days, 5h, 45m, 0s', '476', '1.69B', '6 days, 11h, 30m, 0s', '976', '3.99B'],
+  4: ['1.20', '4 days, 7h, 40m, 0s', '627', '2.20B', '10 days, 19h, 10m, 0s', '1.60K', '6.19B'],
+  5: ['1.50', '5 days, 9h, 35m, 0s', '777', '2.86B', '16 days, 4h, 45m, 0s', '2.38K', '9.04B'],
+  6: ['1.80', '6 days, 11h, 30m, 0s', '928', '3.71B', '22 days, 16h, 15m, 0s', '3.31K', '12.76B'],
+  7: ['2.10', '7 days, 13h, 25m, 0s', '1.06K', '4.83B', '30 days, 5h, 40m, 0s', '4.37K', '17.58B'],
+  8: ['2.40', '8 days, 15h, 21m, 0s', '1.18K', '6.27B', '38 days, 21h, 1m, 0s', '5.55K', '23.86B'],
+  9: ['2.70', '9 days, 17h, 16m, 0s', '1.30K', '8.16B', '48 days, 14h, 17m, 0s', '6.85K', '32.01B'],
+  10: ['3.00', '10 days, 19h, 11m, 0s', '1.42K', '10.60B', '59 days, 9h, 28m, 0s', '8.28K', '42.62B'],
+  11: ['3.30', '11 days, 21h, 6m, 0s', '1.54K', '13.79B', '71 days, 6h, 34m, 0s', '9.82K', '56.41B'],
+  12: ['3.60', '12 days, 23h, 1m, 0s', '1.66K', '17.92B', '84 days, 5h, 35m, 0s', '11.48K', '74.33B'],
+  13: ['3.90', '14 days, 56m, 0s', '1.78K', '23.30B', '98 days, 6h, 31m, 0s', '13.26K', '97.63B'],
+  14: ['4.20', '15 days, 2h, 51m, 0s', '1.90K', '30.29B', '113 days, 9h, 22m, 0s', '15.16K', '127.91B'],
+  15: ['4.50', '16 days, 4h, 46m, 0s', '2.02K', '39.37B', '129 days, 14h, 8m, 0s', '17.18K', '167.29B'],
+  16: ['4.80', '17 days, 6h, 42m, 0s', '2.14K', '51.19B', '146 days, 20h, 50m, 0s', '19.32K', '218.47B'],
+  17: ['5.10', '18 days, 8h, 37m, 0s', '2.26K', '66.54B', '165 days, 5h, 27m, 0s', '21.58K', '285.01B'],
+  18: ['5.40', '19 days, 10h, 32m, 0s', '2.38K', '86.50B', '184 days, 15h, 59m, 0s', '23.96K', '371.52B'],
+  19: ['5.70', '20 days, 12h, 27m, 0s', '2.50K', '112.46B', '205 days, 4h, 26m, 0s', '26.46K', '483.97B'],
+  20: ['6.00', '21 days, 14h, 22m, 0s', '2.62K', '146.19B', '226 days, 18h, 48m, 0s', '29.08K', '630.17B'],
+  21: ['6.30', '22 days, 16h, 17m, 0s', '2.74K', '190.05B', '249 days, 11h, 5m, 0s', '31.82K', '820.22B'],
+  22: ['6.60', '23 days, 18h, 12m, 0s', '2.86K', '247.06B', '273 days, 5h, 17m, 0s', '34.67K', '1.07T'],
+  23: ['6.90', '24 days, 20h, 8m, 0s', '2.98K', '321.18B', '298 days, 1h, 25m, 0s', '37.65K', '1.39T'],
+  24: ['7.20', '25 days, 22h, 3m, 0s', '3.10K', '417.54B', '323 days, 23h, 28m, 0s', '40.75K', '1.81T'],
+  25: ['7.50', '26 days, 23h, 58m, 0s', '3.22K', '542.80B', '350 days, 23h, 26m, 0s', '43.97K', '2.35T'],
+  26: ['7.80', '28 days, 1h, 53m, 0s', '3.34K', '705.64B', '1 year, 14 days, 1h, 19m, 0s', '47.31K', '3.05T'],
+  27: ['8.10', '29 days, 3h, 48m, 0s', '3.46K', '917.33B', '1 year, 43 days, 5h, 7m, 0s', '50.76K', '3.97T'],
+  28: ['8.40', '30 days, 5h, 43m, 0s', '3.57K', '1.19T', '1 year, 73 days, 10h, 50m, 0s', '54.33K', '5.16T'],
+  29: ['8.70', '31 days, 7h, 38m, 0s', '3.65K', '1.55T', '1 year, 104 days, 18h, 28m, 0s', '57.98K', '6.71T'],
+  30: ['9.00', '32 days, 9h, 33m, 0s', '3.73K', '2.02T', '1 year, 137 days, 4h, 1m, 0s', '61.71K', '8.73T'],
+  31: ['9.30', '33 days, 11h, 29m, 0s', '3.81K', '2.62T', '1 year, 170 days, 15h, 30m, 0s', '65.52K', '11.35T'],
+  32: ['9.60', '34 days, 13h, 24m, 0s', '3.89K', '3.41T', '1 year, 205 days, 4h, 54m, 0s', '69.40K', '14.76T'],
+  33: ['9.90', '35 days, 15h, 19m, 0s', '3.97K', '4.43T', '1 year, 240 days, 20h, 13m, 0s', '73.37K', '19.18T'],
+  34: ['10.20', '36 days, 17h, 14m, 0s', '4.05K', '5.76T', '1 year, 277 days, 13h, 27m, 0s', '77.42K', '24.94T'],
+  35: ['10.50', '37 days, 19h, 9m, 0s', '4.13K', '7.48T', '1 year, 315 days, 8h, 36m, 0s', '81.55K', '32.42T'],
+  36: ['10.80', '38 days, 21h, 4m, 0s', '4.21K', '9.73T', '1 year, 354 days, 5h, 40m, 0s', '85.76K', '42.15T'],
+  37: ['11.10', '39 days, 22h, 59m, 0s', '4.29K', '12.65T', '2 years, 29 days, 4h, 39m, 0s', '90.05K', '54.80T'],
+  38: ['11.40', '41 days, 54m, 0s', '4.37K', '16.44T', '2 years, 70 days, 5h, 33m, 0s', '94.42K', '71.24T'],
+  39: ['11.70', '42 days, 2h, 50m, 0s', '4.45K', '21.37T', '2 years, 112 days, 8h, 23m, 0s', '98.87K', '92.61T'],
+  40: ['12.00', '43 days, 4h, 45m, 0s', '4.53K', '27.78T', '2 years, 155 days, 13h, 8m, 0s', '103.40K', '120.39T'],
+  41: ['12.30', '44 days, 6h, 40m, 0s', '4.61K', '36.12T', '2 years, 199 days, 19h, 48m, 0s', '108.01K', '156.51T'],
+  42: ['12.60', '45 days, 8h, 35m, 0s', '4.69K', '46.95T', '2 years, 245 days, 4h, 23m, 0s', '112.70K', '203.47T'],
+  43: ['12.90', '46 days, 10h, 30m, 0s', '4.77K', '61.04T', '2 years, 291 days, 14h, 53m, 0s', '117.47K', '264.51T'],
+  44: ['13.20', '47 days, 12h, 25m, 0s', '4.85K', '79.35T', '2 years, 339 days, 3h, 18m, 0s', '122.32K', '343.86T'],
+  45: ['13.50', '48 days, 14h, 20m, 0s', '4.93K', '103.16T', '3 years, 22 days, 17h, 38m, 0s', '127.25K', '447.02T'],
+  46: ['13.80', '49 days, 16h, 16m, 0s', '5.01K', '134.11T', '3 years, 72 days, 9h, 54m, 0s', '132.26K', '581.13T'],
+  47: ['14.10', '50 days, 18h, 11m, 0s', '5.09K', '174.34T', '3 years, 123 days, 4h, 5m, 0s', '137.35K', '755.47T'],
+  48: ['14.40', '51 days, 20h, 6m, 0s', '5.17K', '226.64T', '3 years, 175 days, 11m, 0s', '142.51K', '982.11T'],
+  49: ['14.70', '52 days, 22h, 1m, 0s', '5.25K', '294.63T', '3 years, 227 days, 22h, 12m, 0s', '147.76K', '1.28q'],
+  50: ['15.00', '53 days, 23h, 56m, 0s', '5.33K', '383.02T', '3 years, 281 days, 22h, 8m, 0s', '153.10K', '1.66q'],
+  51: ['15.30', '55 days, 1h, 51m, 0s', '5.41K', '497.93T', '3 years, 336 days, 23h, 59m, 0s', '158.51K', '2.16q'],
+  52: ['15.60', '56 days, 3h, 46m, 0s', '5.49K', '647.31T', '4 years, 28 days, 3h, 45m, 0s', '164.00K', '2.80q'],
+  53: ['15.90', '57 days, 5h, 41m, 0s', '5.57K', '841.50T', '4 years, 85 days, 9h, 26m, 0s', '169.57K', '3.65q'],
+  54: ['16.20', '58 days, 7h, 37m, 0s', '5.65K', '1.09q', '4 years, 143 days, 17h, 3m, 0s', '175.22K', '4.74q'],
+  55: ['16.50', '59 days, 9h, 32m, 0s', '5.73K', '1.42q', '4 years, 203 days, 2h, 35m, 0s', '180.95K', '6.16q'],
+  56: ['16.80', '60 days, 11h, 27m, 0s', '5.81K', '1.85q', '4 years, 263 days, 14h, 2m, 0s', '186.76K', '8.01q'],
+  57: ['17.10', '61 days, 13h, 22m, 0s', '5.89K', '2.40q', '4 years, 325 days, 3h, 24m, 0s', '192.65K', '10.41q'],
+  58: ['17.40', '62 days, 15h, 17m, 0s', '5.97K', '3.12q', '5 years, 22 days, 18h, 41m, 0s', '198.62K', '13.54q'],
+  59: ['17.70', '63 days, 17h, 12m, 0s', '6.05K', '4.06q', '5 years, 86 days, 11h, 53m, 0s', '204.67K', '17.60q'],
+  60: ['18.00', '64 days, 19h, 7m, 0s', '6.13K', '5.28q', '5 years, 151 days, 7h, 0m, 0s', '210.80K', '22.88q'],
+  61: ['18.30', '65 days, 21h, 2m, 0s', '6.21K', '6.86q', '5 years, 217 days, 4h, 2m, 0s', '217.01K', '29.75q'],
+  62: ['18.60', '66 days, 22h, 58m, 0s', '6.29K', '8.92q', '5 years, 284 days, 3h, 0m, 0s', '223.31K', '38.67q'],
+  63: ['18.90', '68 days, 53m, 0s', '6.37K', '11.60q', '5 years, 352 days, 3h, 53m, 0s', '229.68K', '50.27q'],
+  64: ['19.20', '69 days, 2h, 48m, 0s', '6.45K', '15.08q', '6 years, 56 days, 6h, 41m, 0s', '236.13K', '65.35q'],
+  65: ['19.50', '70 days, 4h, 43m, 0s', '6.53K', '19.61q', '6 years, 126 days, 11h, 24m, 0s', '242.66K', '84.96q'],
+  66: ['19.80', '71 days, 6h, 38m, 0s', '6.61K', '25.49q', '6 years, 197 days, 18h, 2m, 0s', '249.27K', '110.44q'],
+  67: ['20.10', '72 days, 8h, 33m, 0s', '6.69K', '33.13q', '6 years, 270 days, 2h, 35m, 0s', '255.97K', '143.58q'],
+  68: ['20.40', '73 days, 10h, 28m, 0s', '6.77K', '43.07q', '6 years, 343 days, 13h, 3m, 0s', '262.74K', '186.65q'],
+  69: ['20.70', '74 days, 12h, 24m, 0s', '6.85K', '55.99q', '7 years, 53 days, 1h, 27m, 0s', '269.59K', '242.64q'],
+  70: ['21.00', '75 days, 14h, 19m, 0s', '6.93K', '72.79q', '7 years, 128 days, 15h, 46m, 0s', '276.52K', '315.44q'],
+  71: ['21.30', '76 days, 16h, 14m, 0s', '7.01K', '94.63q', '7 years, 205 days, 8h, 0m, 0s', '283.53K', '410.07q'],
+  72: ['21.60', '77 days, 18h, 9m, 0s', '7.09K', '123.02q', '7 years, 283 days, 2h, 9m, 0s', '290.63K', '533.09q'],
+  73: ['21.90', '78 days, 20h, 4m, 0s', '7.17K', '159.93q', '7 years, 361 days, 22h, 13m, 0s', '297.80K', '693.02q'],
+  74: ['22.20', '79 days, 21h, 59m, 0s', '7.25K', '207.90q', '8 years, 76 days, 20h, 12m, 0s', '305.05K', '900.92q'],
+  75: ['22.50', '80 days, 23h, 54m, 0s', '7.33K', '270.28q', '8 years, 157 days, 20h, 6m, 0s', '312.38K', '1.17Q'],
+  76: ['22.80', '82 days, 1h, 49m, 0s', '7.41K', '351.36q', '8 years, 239 days, 21h, 55m, 0s', '319.80K', '1.52Q'],
+  77: ['23.10', '83 days, 3h, 45m, 0s', '7.49K', '456.77q', '8 years, 323 days, 1h, 40m, 0s', '327.29K', '1.98Q'],
+  78: ['23.40', '84 days, 5h, 40m, 0s', '7.57K', '593.80q', '9 years, 42 days, 7h, 20m, 0s', '334.86K', '2.57Q'],
+  79: ['23.70', '85 days, 7h, 35m, 0s', '7.65K', '771.94q', '9 years, 127 days, 14h, 55m, 0s', '342.52K', '3.35Q'],
+  80: ['24.00', '86 days, 9h, 30m, 0s', '7.73K', '1.00Q', '9 years, 214 days, 25m, 0s', '350.25K', '4.35Q'],
+  81: ['24.30', '87 days, 11h, 25m, 0s', '7.81K', '1.30Q', '9 years, 301 days, 11h, 50m, 0s', '358.06K', '5.65Q'],
+  82: ['24.60', '88 days, 13h, 20m, 0s', '7.89K', '1.70Q', '10 years, 25 days, 1h, 10m, 0s', '365.96K', '7.35Q'],
+  83: ['24.90', '89 days, 15h, 15m, 0s', '7.97K', '2.20Q', '10 years, 114 days, 16h, 25m, 0s', '373.93K', '9.55Q'],
+  84: ['25.20', '90 days, 17h, 10m, 0s', '8.05K', '2.87Q', '10 years, 205 days, 9h, 35m, 0s', '381.97K', '12.42Q'],
+  85: ['25.50', '91 days, 19h, 6m, 0s', '8.11K', '3.73Q', '10 years, 297 days, 4h, 41m, 0s', '390.09K', '16.15Q'],
+  86: ['25.80', '92 days, 21h, 1m, 0s', '8.18K', '4.84Q', '11 years, 25 days, 1h, 42m, 0s', '398.27K', '20.99Q'],
+  87: ['26.10', '93 days, 22h, 56m, 0s', '8.25K', '6.30Q', '11 years, 119 days, 38m, 0s', '406.52K', '27.29Q'],
+  88: ['26.40', '95 days, 51m, 0s', '8.32K', '8.19Q', '11 years, 214 days, 1h, 29m, 0s', '414.84K', '35.47Q'],
+  89: ['26.70', '96 days, 2h, 46m, 0s', '8.39K', '10.64Q', '11 years, 310 days, 4h, 15m, 0s', '423.22K', '46.11Q'],
+  90: ['27.00', '97 days, 4h, 41m, 0s', '8.45K', '13.83Q', '12 years, 42 days, 8h, 56m, 0s', '431.68K', '59.95Q'],
+  91: ['27.30', '98 days, 6h, 36m, 0s', '8.52K', '17.98Q', '12 years, 140 days, 15h, 32m, 0s', '440.20K', '77.93Q'],
+  92: ['27.60', '99 days, 8h, 32m, 0s', '8.59K', '23.38Q', '12 years, 240 days, 4m, 0s', '448.79K', '101.31Q'],
+  93: ['27.90', '100 days, 10h, 27m, 0s', '8.66K', '30.39Q', '12 years, 340 days, 10h, 31m, 0s', '457.45K', '131.71Q'],
+  94: ['28.20', '101 days, 12h, 22m, 0s', '8.73K', '39.51Q', '13 years, 76 days, 22h, 53m, 0s', '466.17K', '171.22Q'],
+  95: ['28.50', '102 days, 14h, 17m, 0s', '8.79K', '51.37Q', '13 years, 179 days, 13h, 10m, 0s', '474.97K', '222.59Q'],
+  96: ['28.80', '103 days, 16h, 12m, 0s', '8.86K', '66.78Q', '13 years, 283 days, 5h, 22m, 0s', '483.83K', '289.36Q'],
+  97: ['29.10', '104 days, 18h, 7m, 0s', '8.93K', '86.81Q', '14 years, 22 days, 23h, 29m, 0s', '492.76K', '376.17Q'],
+  98: ['29.40', '105 days, 20h, 2m, 0s', '9.00K', '112.85Q', '14 years, 128 days, 19h, 31m, 0s', '501.76K', '489.02Q'],
+  99: ['29.70', '106 days, 21h, 57m, 0s', '9.07K', '146.71Q', '14 years, 235 days, 17h, 28m, 0s', '510.82K', '635.73Q'],
+  100: ['30.00', '107 days, 23h, 53m, 0s', '9.13K', '190.72Q', '14 years, 343 days, 17h, 21m, 0s', '519.96K', '826.45Q'],
 }
 
 function parseAbbrevNum(raw) {
@@ -153,37 +126,10 @@ function parseAbbrevNum(raw) {
   if (/q$/.test(s)) return Math.round(parseFloat(s) * 1e15)
   if (/T$/.test(s)) return Math.round(parseFloat(s) * 1e12)
   if (/B$/.test(s)) return Math.round(parseFloat(s) * 1e9)
+  if (/M$/.test(s)) return Math.round(parseFloat(s) * 1e6)
   if (/K$/.test(s)) return Math.round(parseFloat(s) * 1_000)
   const n = Number(s)
   return Number.isFinite(n) ? Math.round(n) : 0
-}
-
-function formatAbbrevNum(n) {
-  if (n >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
-  if (n >= 1e15) return `${(n / 1e15).toFixed(2)}q`
-  if (n >= 1e12) return `${(n / 1e12).toFixed(2)}T`
-  if (n >= 1e9) return `${(n / 1e9).toFixed(2)}B`
-  if (n >= 1e3) return `${(n / 1e3).toFixed(2)}K`
-  return String(Math.round(n))
-}
-
-function formatDurationFromSeconds(totalSec) {
-  let sec = totalSec
-  const years = Math.floor(sec / (365 * 86400))
-  sec -= years * 365 * 86400
-  const days = Math.floor(sec / 86400)
-  sec -= days * 86400
-  const hours = Math.floor(sec / 3600)
-  sec -= hours * 3600
-  const mins = Math.floor(sec / 60)
-  const secs = sec - mins * 60
-  const parts = []
-  if (years > 0) parts.push(`${years} year${years === 1 ? '' : 's'}`)
-  if (days > 0) parts.push(`${days} day${days === 1 ? '' : 's'}`)
-  if (hours > 0 || parts.length === 0) parts.push(`${hours}h`)
-  if (mins > 0 || (parts.length === 0 && hours === 0)) parts.push(`${mins}m`)
-  parts.push(`${secs}s`)
-  return parts.join(', ')
 }
 
 function parseTimeToSeconds(display) {
@@ -201,42 +147,20 @@ function parseTimeToSeconds(display) {
   return sec
 }
 
-if (MARGINAL_GEMS.length !== 100) {
-  throw new Error(`Expected 100 gem rows, got ${MARGINAL_GEMS.length}`)
-}
-
 const levels = []
-let totalSec = 0
-let totalGems = 0
-let totalCoins = 0
-
-for (let i = 0; i < rows.length; i++) {
-  const [lv, dur, cost, pct] = rows[i].split('\t')
-  const level = parseInt(lv, 10)
-  const timeDisplay = wikiDurToDisplay(dur)
-  const timeSec = parseDur(dur)
-  const coins = parseAbbrevNum(cost)
-  const gems = MARGINAL_GEMS[i]
-  const value = parseFloat(pct.replace('%', ''))
-
-  totalSec += timeSec
-  totalGems += gems
-  totalCoins += coins
-
-  const totalTimeDisplay = formatDurationFromSeconds(totalSec)
-
+for (let level = 1; level <= 100; level++) {
+  const row = BY_LEVEL[level]
+  if (!row) throw new Error(`Missing screenshot row for level ${level}`)
+  const [value, time, gems, coins, totalTime, totalGems, totalCoins] = row
   levels.push({
     level,
-    value,
-    time: { display: timeDisplay, seconds: timeSec },
-    gems,
-    coins,
-    totalTime: {
-      display: totalTimeDisplay,
-      seconds: totalSec,
-    },
-    totalGems,
-    totalCoins: totalCoins,
+    value: parseFloat(value),
+    time: { display: time, seconds: parseTimeToSeconds(time) },
+    gems: parseAbbrevNum(gems),
+    coins: parseAbbrevNum(coins),
+    totalTime: { display: totalTime, seconds: parseTimeToSeconds(totalTime) },
+    totalGems: parseAbbrevNum(totalGems),
+    totalCoins: parseAbbrevNum(totalCoins),
   })
 }
 
@@ -248,5 +172,4 @@ const doc = {
 
 fs.mkdirSync(path.dirname(outPath), { recursive: true })
 fs.writeFileSync(outPath, JSON.stringify(doc, null, 2) + '\n')
-console.log('Wrote', outPath, `(${levels.length} levels)`)
-console.log('L100 coins', levels[99].coins, 'totalCoins', levels[99].totalCoins)
+console.log('Wrote', outPath, `(${levels.length} levels, screenshot data only)`)

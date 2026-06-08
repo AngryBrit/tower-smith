@@ -934,7 +934,7 @@
     {
       "lab": 190,
       "name": "Enhancement Attack - Coin Discount",
-      "table": "main/enhancement-coin-discount.json"
+      "table": "main/enhancement-attack-coin-discount.json"
     },
     {
       "lab": 191,

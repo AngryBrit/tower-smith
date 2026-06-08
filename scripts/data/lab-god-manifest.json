@@ -82,7 +82,7 @@
     "Energy Shield Extra Hit": "cards/energy-shield-extra-hit.json",
     "Energy Shield Mastery": "card-mastery/energy-shield-mastery.json",
     "Energy Shields Down": "battle-condition/energy-shields-down.json",
-    "Enhancement Attack - Coin Discount": "main/enhancement-coin-discount.json",
+    "Enhancement Attack - Coin Discount": "main/enhancement-attack-coin-discount.json",
     "Enhancement Defense - Coin Discount": "main/enhancement-defense-coin-discount.json",
     "Enhancement Utility - Coin Discount": "main/enhancement-utility-coin-discount.json",
     "Extra Black Hole": "ultimate-weapon/extra-black-hole.json",

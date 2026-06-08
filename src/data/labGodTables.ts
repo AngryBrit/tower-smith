@@ -85,7 +85,7 @@ import energyNetMastery from '../../tables/labs/card-mastery/energy-net-mastery.
 import energyShieldExtraHit from '../../tables/labs/cards/energy-shield-extra-hit.json'
 import energyShieldMastery from '../../tables/labs/card-mastery/energy-shield-mastery.json'
 import energyShieldsDown from '../../tables/labs/battle-condition/energy-shields-down.json'
-import enhancementCoinDiscount from '../../tables/labs/main/enhancement-coin-discount.json'
+import enhancementAttackCoinDiscount from '../../tables/labs/main/enhancement-attack-coin-discount.json'
 import enhancementDefenseCoinDiscount from '../../tables/labs/main/enhancement-defense-coin-discount.json'
 import enhancementUtilityCoinDiscount from '../../tables/labs/main/enhancement-utility-coin-discount.json'
 import extraBlackHole from '../../tables/labs/ultimate-weapon/extra-black-hole.json'
@@ -326,7 +326,7 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Energy Shield Extra Hit': energyShieldExtraHit as LabGodTable,
   'Energy Shield Mastery': energyShieldMastery as LabGodTable,
   'Energy Shields Down': energyShieldsDown as LabGodTable,
-  'Enhancement Attack - Coin Discount': enhancementCoinDiscount as LabGodTable,
+  'Enhancement Attack - Coin Discount': enhancementAttackCoinDiscount as LabGodTable,
   'Enhancement Defense - Coin Discount': enhancementDefenseCoinDiscount as LabGodTable,
   'Enhancement Utility - Coin Discount': enhancementUtilityCoinDiscount as LabGodTable,
   'Extra Black Hole': extraBlackHole as LabGodTable,
