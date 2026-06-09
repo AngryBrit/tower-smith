@@ -54,3 +54,6 @@ public/tables/
 
 # Local Supabase incremental migrations (not for the repo)
 supabase/migrations/
+
+# Local Netlify folder
+.netlify
