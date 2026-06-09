@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.0.4-2ea44f)
+![Version](https://img.shields.io/badge/version-3.0.5-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -43,7 +43,7 @@
 | **Modules** | Configure chassis modules (cannon / armor / core / generator) across epic→ancestral tiers, sub-module effects, assist unlocks, stone efficiency, and five saved module presets. |
 | **Relics** | Catalog all 268 wiki relics with art, filter by unlock group, and have owned relics feed automatically into workshop stat formulas. |
 | **Themes** | Track owned tower skins, backgrounds, banners, music, and guardians — including coin-bonus rollups per category. |
-| **Displayed stats** | Workshop cards show wiki-aligned damage and attack speed folding in labs, enhancements, Card Mastery, relics, perks, and equipped sub-modules. |
+| **Displayed stats** | Workshop cards show in-game-aligned values: damage, DPM, health, defense, and utility rows fold in labs, cards, relics, sub-modules, and **Enhance** tiers (e.g. Recovery Package+ on Recovery Amount and Max Recovery). Stat values and upgrade costs come from GOD tables under `tables/`. |
 
 ---
 

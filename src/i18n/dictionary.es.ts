@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_305_headline: 'Novedades en v3.0.5',
+  whats_new_305_body:
+    'Las estadísticas del taller coinciden con el juego: daño, salud, utilidad, cantidad de recuperación y recuperación máxima con mejora Paquete de recuperación+. Costes de lab y taller con tablas GOD actualizadas.',
   whats_new_304_headline: 'Novedades en v3.0.4',
   whats_new_304_body:
     'El multiplicador de compra del taller incluye MAX (+ al máximo, − a 0). La importación playerInfo.dat asigna más labs desde researchLevel. Bug Buster y Tower Backup encajan mejor en 1080p.',

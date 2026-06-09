@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_305_headline: "What's new in v3.0.5",
+  whats_new_305_body:
+    'Workshop stat cards now match in-game values — damage, health, utility rows, Recovery Amount, and Max Recovery with Recovery Package+ enhancement. Lab and workshop costs use refreshed GOD tables.',
   whats_new_304_headline: "What's new in v3.0.4",
   whats_new_304_body:
     'Workshop buy multiplier now includes MAX (+ to cap, − to zero). playerInfo.dat import maps more labs from researchLevel slots. Bug Buster and Tower Backup dialogs fit better on 1080p screens.',

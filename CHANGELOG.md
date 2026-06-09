@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.5] - 2026-06-08
+
+### Added
+
+- **Workshop GOD tables** — Stat values and marginal upgrade coins from `tables/workshop/` ([`workshopGodTables.ts`](src/data/workshopGodTables.ts), [`workshopCosts.ts`](src/workshopCosts.ts)); removed legacy wiki ladder modules superseded by GOD JSON.
+- **Lab GOD refresh** — Regenerated lab cost/value tables from lab-calculator TSV scrape (`node scripts/sync-lab-god-tables.mjs`).
+- **Volcano (IV) relics** — New relic group entries and unlock mapping.
+- **Workshop display calibration** — Save-backed pipeline tests for utility cards (free upgrades, interest/wave, coins rows, recovery amount, max recovery).
+
+### Fixed
+
+- **Workshop card displays** — Attack (Damage, DPM, Damage/Meter relics), defense (Health, regen, wall health, land mine, etc.), and utility rows now match in-game stacking: labs, cards, relics, sub-modules, and enhancement tiers including **Recovery Package+** on Recovery Amount and Max Recovery ([`workshopUtility.ts`](src/data/workshopUtility.ts), [`workshopDefense.ts`](src/data/workshopDefense.ts), [`workshopDamage.ts`](src/data/workshopDamage.ts)).
+- **Coin abbreviations** — Unified **T** below 1 q and **q** from 1e15 app-wide ([`labCosts.ts`](src/labCosts.ts)).
+- **Lab coin import** — Uppercase **Q** in scraped values means quintillion (1e18), not quadrillion.
+- **Viral Outbreak (III)** — Correct relic unlock display names.
+- **Guild names** — Registered guild members can correct the guild name on file.
+
+### Changed
+
+- Removed the lab screenshot transcription pipeline (replaced by TSV scrape import).
+
+### Docs
+
+- README: workshop GOD tables and displayed-stat coverage; version **3.0.5**.
+- What's new banner (en/de/es).
+
 ## [3.0.4] - 2026-06-08
 
 ### Added

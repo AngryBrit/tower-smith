@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_305_headline: 'Neu in v3.0.5',
+  whats_new_305_body:
+    'Werkstatt-Statkarten entsprechen jetzt den Spielwerten — Schaden, Leben, Utility-Zeilen, Heilmenge und Max. Heilung mit Heilpaket+-Verstärkung. Lab- und Werkstatt-Kosten nutzen aktualisierte GOD-Tabellen.',
   whats_new_304_headline: 'Neu in v3.0.4',
   whats_new_304_body:
     'Werkstatt-Kauf-Multiplikator mit MAX (+ bis Maximum, − auf 0). playerInfo.dat-Import ordnet mehr Labs über researchLevel-Slots zu. Bug Buster und Tower-Backup passen besser auf 1080p.',
