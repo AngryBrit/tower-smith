@@ -4,10 +4,12 @@ import { researchTimeForNextUpgrade } from '../types/research'
 import type { ResearchItem } from '../types/research'
 import {
   combinedLabsSpeedMultiplier,
+  enrichAttackLabDisplayOpts,
   enrichBotLabDisplayOpts,
   enrichDefenseStatDisplayOpts,
   workshopRelicsLabSpeedMultiplier,
 } from './workshopRelicWorkshopDisplay'
+import { workshopDamagePerMeterStatDisplay } from './workshopDamagePerMeter'
 import {
   workshopRelicsDisplayedAttackSpeedBonusPercent,
   workshopRelicsDisplayedAttackSpeedRelicMultiplier,
@@ -68,6 +70,22 @@ describe('workshopRelicWorkshopDisplay', () => {
     const owned = new Set(['t_iv_harmonic', 't_viii_graviton'])
     expect(workshopRelicsDisplayedDamageBonusFraction(owned)).toBeCloseTo(0.07)
     expect(workshopRelicsDamageBonusFraction(owned)).toBeCloseTo(0.07)
+  })
+
+  it('merges damage/meter relic % into attack lab DPM multiplier for card display', () => {
+    const labOnly = enrichAttackLabDisplayOpts(
+      { damagePerMeterLabMultiplier: 1.1 },
+      new Set(),
+    )
+    const withRelic = enrichAttackLabDisplayOpts(
+      { damagePerMeterLabMultiplier: 1.1 },
+      new Set(['t_viii_graviton']),
+    )
+    expect(labOnly?.damagePerMeterLabMultiplier).toBeCloseTo(1.1)
+    expect(withRelic?.damagePerMeterLabMultiplier).toBeCloseTo(1.1 * 1.05)
+    expect(
+      workshopDamagePerMeterStatDisplay(0, withRelic?.damagePerMeterLabMultiplier),
+    ).not.toBe(workshopDamagePerMeterStatDisplay(0, labOnly?.damagePerMeterLabMultiplier))
   })
 
   it('adds partial damage/meter relic % to displayed attack speed relic term', () => {

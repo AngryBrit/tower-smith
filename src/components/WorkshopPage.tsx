@@ -217,7 +217,6 @@ import {
   resolveWorkshopAttackDiscountPercent,
   resolveWorkshopDefenseDiscountPercent,
   resolveWorkshopUtilityDiscountPercent,
-  attackResearchDamageStyleLabMultiplier,
   type ResearchData,
 } from '../types/research'
 
@@ -966,7 +965,7 @@ function WorkshopDamagePerMeterCard({
   onCommitDraft: () => void
   onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
-  /** Attack **Damage / Meter** lab only (no relic merge, no sub-module). */
+  /** Attack **Damage / Meter** lab × relic (no sub-module on this card). */
   damagePerMeterLabMultiplier?: number
 }) {
   const { t } = useI18n()
@@ -2567,16 +2566,6 @@ export function WorkshopPage({
     [researchData, labLevelOverrides, gameResearchLevel, workshopPersisted],
   )
 
-  const damagePerMeterLabMultiplier = useMemo(() => {
-    if (researchData == null) return undefined
-    const mult = attackResearchDamageStyleLabMultiplier(
-      researchData,
-      labLevelOverrides,
-      'Damage / Meter',
-    )
-    return mult > 1 + 1e-9 ? mult : undefined
-  }, [researchData, labLevelOverrides])
-
   const attackSpeedDisplayOpts = useMemo((): WorkshopAttackSpeedDisplayOpts | undefined => {
     const opts = workshopAttackSpeedDisplayOptsFromPersisted(
       workshopPersisted,
@@ -4106,7 +4095,9 @@ export function WorkshopPage({
                     ...workshopPersisted,
                     damagePerMeterLevel: clampWorkshopDamagePerMeterLevel(n),
                   })}
-                damagePerMeterLabMultiplier={damagePerMeterLabMultiplier}
+                damagePerMeterLabMultiplier={
+                  attackStatLabDisplayOpts?.damagePerMeterLabMultiplier
+                }
               />
             ) : null}
             {showMultishotChanceCard ? (
