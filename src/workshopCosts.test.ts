@@ -10,7 +10,11 @@ import {
   workshopToolkitMarginalCoins,
   workshopToolkitStatValue,
 } from './workshopCosts'
-import { WORKSHOP_GOD_TABLES, workshopGodMarginalCoins } from './data/workshopGodTables'
+import {
+  getWorkshopGodTables,
+  WORKSHOP_GOD_TABLE_COUNT,
+  workshopGodMarginalCoins,
+} from './data/workshopGodTables'
 
 describe('workshopCosts', () => {
   it('registers GOD tables for all mapped workshop stats', () => {
@@ -28,11 +32,11 @@ describe('workshopCosts', () => {
     for (const name of mapped) {
       expect(workshopHasGodTable(name), name).toBe(true)
     }
-    expect(Object.keys(WORKSHOP_GOD_TABLES).length).toBe(66)
+    expect(Object.keys(getWorkshopGodTables()).length).toBe(WORKSHOP_GOD_TABLE_COUNT)
   })
 
   it('marginal coins match GOD rows for every table', () => {
-    for (const table of Object.values(WORKSHOP_GOD_TABLES)) {
+    for (const table of Object.values(getWorkshopGodTables())) {
       for (const row of table.levels) {
         if (row.level >= table.maxLevel) continue
         const coins = row.nextCoins.coins
@@ -44,7 +48,7 @@ describe('workshopCosts', () => {
   })
 
   it('stat values match GOD rows for every table', () => {
-    for (const table of Object.values(WORKSHOP_GOD_TABLES)) {
+    for (const table of Object.values(getWorkshopGodTables())) {
       for (const row of table.levels) {
         const value = row.value
         if (typeof value !== 'number' || !Number.isFinite(value)) continue
@@ -55,7 +59,7 @@ describe('workshopCosts', () => {
 
   it('resolves slash aliases to calculator export names', () => {
     expect(workshopGodTableMaxLevel('Cash / Wave')).toBe(
-      WORKSHOP_GOD_TABLES['Cash - Wave'].maxLevel,
+      getWorkshopGodTables()['Cash - Wave'].maxLevel,
     )
     expect(workshopToolkitMarginalCoins('Thorn Damage', 0)).toBe(
       workshopToolkitMarginalCoins('Thorns', 0),

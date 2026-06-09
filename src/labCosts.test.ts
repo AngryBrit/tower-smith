@@ -54,24 +54,24 @@ describe('formatCoinAbbrev', () => {
 })
 
 describe('Assist Module labs coin display', () => {
-  it('uses same T/q rules as other labs', () => {
+  it('uses same T/q rules as other labs (GOD marginal coins)', () => {
     const level1 = toolkitMarginalCoinCost('Assist Module Substats - Cannon', 0)!
-    expect(level1).toBe(250_000_000_000_000)
-    expect(formatAssistModuleLabCoinDisplay(level1)).toBe('250.00T')
-    expect(formatLabCoinDisplay(level1)).toBe('250.00T')
+    expect(level1).toBe(250_000_000_000_000_000)
+    expect(formatAssistModuleLabCoinDisplay(level1)).toBe('250.00q')
+    expect(formatLabCoinDisplay(level1)).toBe('250.00q')
     expect(
       formatAssistModuleLabCoinDisplay(
         toolkitMarginalCoinCost('Assist Module Bonus - Cannon', 0)!,
       ),
-    ).toBe('250.00T')
+    ).toBe('250.00q')
     expect(
       formatLabCoinDisplay(toolkitMarginalCoinCost('Ultimate Weapon Durations', 0)!),
-    ).toBe('2.00q')
+    ).toBe('2.00Q')
   })
 
   it('shows q from 1 q upward', () => {
     const level15 = toolkitMarginalCoinCost('Assist Module Substats - Cannon', 14)!
-    expect(level15).toBe(3_750_000_000_000_000)
-    expect(formatAssistModuleLabCoinDisplay(level15)).toBe('3.75q')
+    expect(level15).toBe(3_750_000_000_000_000_000)
+    expect(formatAssistModuleLabCoinDisplay(level15)).toBe('3.75Q')
   })
 })

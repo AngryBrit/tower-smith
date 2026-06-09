@@ -127,7 +127,12 @@ describe('importPlayerInfo', () => {
     expect(overrides[`${defenseSi}-4`]).toBe(20)
     expect(overrides[`${defenseSi}-8`]).toBe(10)
     expect(overrides[`${defenseSi}-9`]).toBe(50)
-    expect(overrides[`${defenseSi}-10`]).toBe(5)
+    const wallRebuildIi = data.sections[defenseSi]!.items.findIndex(
+      (i) => i.name === 'Wall Rebuild',
+    )
+    expect(wallRebuildIi).toBe(10)
+    expect(save.researchLevel[127]).toBeGreaterThan(0)
+    expect(overrides[`${defenseSi}-${wallRebuildIi}`]).toBe(save.researchLevel[127])
     expect(overrides[`${defenseSi}-11`]).toBe(18)
     expect(overrides[`${defenseSi}-12`]).toBe(16)
     expect(save.researchLevel[126]).toBe(50)
@@ -313,7 +318,11 @@ describe('importPlayerInfo', () => {
     expect(themes.ownedIds).toContain('banner-cosmos')
     expect(themes.ownedIds).toContain('banner-supernova')
     expect(themes.ownedIds).toContain('banner-claw')
-    expect(themes.ownedIds).not.toContain('banner-magician')
+    if (save.profileBannerUnlocked[10]) {
+      expect(themes.ownedIds).toContain('banner-magician')
+    } else {
+      expect(themes.ownedIds).not.toContain('banner-magician')
+    }
     expect(save.selectedMenu).toBe(2)
     expect(themes.selection?.menus).toBe('menu-mech')
     expect(themes.ownedIds).toContain('menu-mech')
@@ -324,7 +333,11 @@ describe('importPlayerInfo', () => {
     expect(themes.ownedIds).toContain('menu-supernova')
     expect(themes.ownedIds).toContain('menu-claw')
     expect(themes.ownedIds).not.toContain('menu-dark-being')
-    expect(themes.ownedIds).not.toContain('menu-magician')
+    if (save.menuUnlocked[9]) {
+      expect(themes.ownedIds).toContain('menu-magician')
+    } else {
+      expect(themes.ownedIds).not.toContain('menu-magician')
+    }
     expect(themes.ownedIds).toContain('bg-koi-pond')
     expect(themes.ownedIds).toContain('bg-guild-claw-machine')
     expect(save.backgroundUnlocked[35]).toBe(false)

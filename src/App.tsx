@@ -33,6 +33,7 @@ import { LabImportNoticeBanner } from './components/LabImportNoticeBanner'
 import { PlayerSaveImportInput } from './components/PlayerSaveImportInput'
 import { MainPanelContent } from './components/MainPanelContent'
 import { useI18n } from './i18n'
+import { loadGodTables } from './loadGodTables'
 import { loadResearchData } from './loadResearchData'
 import {
   bumpResearchCacheBust,
@@ -74,6 +75,7 @@ export default function App() {
     labToolsRef.current?.openLabDataPanel()
   }, [])
   const fmtRef = useRef(fmt)
+  const godTablesLoadedRef = useRef(false)
   useLayoutEffect(() => {
     fmtRef.current = fmt
   }, [fmt])
@@ -171,8 +173,14 @@ export default function App() {
   useEffect(() => {
     let cancelled = false
     const base = import.meta.env.BASE_URL
-    loadResearchData(base, fmtRef.current)
-      .then((d) => {
+    const godTablesPromise = godTablesLoadedRef.current
+      ? Promise.resolve()
+      : loadGodTables(base).then(() => {
+          godTablesLoadedRef.current = true
+        })
+
+    Promise.all([loadResearchData(base, fmtRef.current), godTablesPromise])
+      .then(([d]) => {
         if (!cancelled) setData(d)
       })
       .catch((e: unknown) => {

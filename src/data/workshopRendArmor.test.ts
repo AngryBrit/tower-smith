@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { workshopToolkitMarginalCoins } from '../workshopCosts'
-import { WORKSHOP_GOD_TABLES } from './workshopGodTables'
+import { getWorkshopGodTables } from './workshopGodTables'
 import {
   workshopDisplayedRendArmorChanceEnhancementMultiplier,
   workshopDisplayedRendArmorMultEnhancementMultiplier,
@@ -28,7 +28,7 @@ describe('workshopRendArmor', () => {
   })
 
   it('GOD max row reports cumulative 418.97q total', () => {
-    const maxRow = WORKSHOP_GOD_TABLES['Rend Armor Chance'].levels[299]
+    const maxRow = getWorkshopGodTables()['Rend Armor Chance'].levels[299]
     expect(maxRow.totalCoins.coins).toBe(418_970_000_000_000_000)
     expect(workshopRendArmorChanceNextMarginalCoins(298)).toBe(
       workshopToolkitMarginalCoins('Rend Armor Chance', 298),

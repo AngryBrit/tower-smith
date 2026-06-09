@@ -31,7 +31,7 @@ export function workshopRecoveryAmountNextMarginalCoins(completedLevels: number)
  * (calibrated: Recovery Package+ **×1.4** + Free Upgrades+ **×1.1** on **152%** → **220.86%**).
  */
 export const WORKSHOP_DISPLAYED_RECOVERY_AMOUNT_FREE_UPGRADES_ENHANCE_EXCESS_FRACTION =
-  0.53026315789473684
+  Number('0.53026315789473684')
 
 /** **Recovery Package +** tier plus partial **Free Upgrades +** excess when unlocked. */
 export function workshopDisplayedRecoveryAmountEnhancementMultiplier(

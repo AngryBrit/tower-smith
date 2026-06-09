@@ -34,8 +34,8 @@ export default defineConfig({
       ],
       manifest: false,
       workbox: {
-        // Main bundle (~2.4 MiB) exceeds Workbox default 2 MiB precache limit after GOD table imports.
-        maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
+        // App shell only — research + GOD table JSON are runtime-cached on demand.
+        maximumFileSizeToCacheInBytes: 2 * 1024 * 1024,
         // Precache the app shell only — public/ art and research JSON are runtime-cached on demand.
         globPatterns: ['index.html', 'assets/**'],
         navigateFallback: '/index.html',
@@ -68,6 +68,19 @@ export default defineConfig({
             handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'tower-research-v1',
+              expiration: {
+                maxAgeSeconds: 60 * 60 * 24 * 7,
+              },
+            },
+          },
+          {
+            urlPattern: ({ url }) =>
+              /\/tables\/.+\.json$/i.test(url.pathname) ||
+              url.pathname.endsWith('/tables/workshop/manifest.json') ||
+              url.pathname.endsWith('/tables/labs/manifest.json'),
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'tower-god-tables-v1',
               expiration: {
                 maxAgeSeconds: 60 * 60 * 24 * 7,
               },

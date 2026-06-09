@@ -1,11 +1,11 @@
 /**
  * Workshop upgrade coins and stat values from `tables/workshop/` GOD JSON
- * (see {@link WORKSHOP_GOD_TABLES}). Lab/relic/submodule display overlays stay in `src/data/workshop*.ts`.
+ * (see {@link getWorkshopGodTables}). Lab/relic/submodule display overlays stay in `src/data/workshop*.ts`.
  */
 
 import {
-  WORKSHOP_GOD_TABLES,
-  WORKSHOP_GOD_UPGRADE_NAMES,
+  getWorkshopGodTables,
+  getWorkshopGodUpgradeNames,
   workshopGodLevelEntry,
   workshopGodMarginalCoins,
 } from './data/workshopGodTables'
@@ -98,7 +98,7 @@ function resolveGodTableName(upgradeDisplayName: string): string {
 /** Max workshop level for a GOD table, if present. */
 export function workshopGodTableMaxLevel(upgradeDisplayName: string): number | undefined {
   const name = resolveGodTableName(upgradeDisplayName)
-  return WORKSHOP_GOD_TABLES[name]?.maxLevel
+  return getWorkshopGodTables()[name]?.maxLevel
 }
 
 /**
@@ -117,7 +117,7 @@ export function workshopToolkitMarginalCoins(
 }
 
 export function workshopHasGodTable(upgradeDisplayName: string): boolean {
-  return WORKSHOP_GOD_UPGRADE_NAMES.has(resolveGodTableName(upgradeDisplayName))
+  return getWorkshopGodUpgradeNames().has(resolveGodTableName(upgradeDisplayName))
 }
 
 /**
@@ -129,7 +129,7 @@ export function workshopToolkitStatValue(
   completedLevels: number,
 ): number | undefined {
   const name = resolveGodTableName(upgradeDisplayName)
-  const table = WORKSHOP_GOD_TABLES[name]
+  const table = getWorkshopGodTables()[name]
   if (!table) return undefined
   const L = Math.min(Math.max(0, Math.trunc(completedLevels)), table.maxLevel)
   const row = workshopGodLevelEntry(name, L)

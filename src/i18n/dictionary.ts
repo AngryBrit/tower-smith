@@ -109,7 +109,7 @@ export const STRINGS_EN = {
   whats_new_2811_headline: "What's new in v2.8.11",
   whats_new_2811_body:
     'Sub-module bonuses now affect workshop stat labels — equipped main and assist picks stack with labs and relics.',
-  app_loadingResearch: 'Loading research…',
+  app_loadingResearch: 'Loading app data…',
   app_nav_main_aria: 'Primary pages',
   app_nav_research: 'LAB',
   app_nav_workshop: 'WORKSHOP',

@@ -107,7 +107,7 @@ export const STRINGS_DE = {
   whats_new_2811_headline: 'Neu in v2.8.11',
   whats_new_2811_body:
     'Submodul-Boni wirken jetzt auf Werkstatt-Statlabels — gewählte Haupt- und Assist-Effekte addieren zu Labs und Relikten.',
-  app_loadingResearch: 'Forschung wird geladen…',
+  app_loadingResearch: 'App-Daten werden geladen…',
   app_nav_main_aria: 'Hauptseiten',
   app_nav_research: 'LABOR',
   app_nav_workshop: 'WERKSTATT',

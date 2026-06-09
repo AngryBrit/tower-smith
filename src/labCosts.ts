@@ -1,6 +1,6 @@
 /**
  * Marginal lab costs and upgrade durations come from `tables/labs/` JSON (e.g. `main/`, `attack/`) when a lab has a GOD table
- * there (see {@link LAB_GOD_TABLES}), otherwise from bundled `src/data/tower-labs.json` (`COST`,
+ * there (see {@link getLabGodTables}), otherwise from bundled `src/data/tower-labs.json` (`COST`,
  * `DURATION`). **Card Mastery** rows still resolve through `tower-labs.json` for durations and toolkit
  * coin lookups; the **cost line** on those cards uses `stoneUnlockCost` from
  * `public/research/sections/card-mastery.json` instead of abbreviated coin ladder amounts. Labs missing

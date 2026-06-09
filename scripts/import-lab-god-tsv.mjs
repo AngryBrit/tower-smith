@@ -49,29 +49,23 @@ function slugify(name) {
 
 /** @returns {Map<string, string>} display name → `category/file.json` */
 function loadCanonicalPathsFromLabGodTables() {
-  const tsPath = path.join(root, 'src/data/labGodTables.ts')
-  if (!fs.existsSync(tsPath)) return new Map()
-  const ts = fs.readFileSync(tsPath, 'utf8')
-  /** @type {Map<string, string>} */
-  const idToRel = new Map()
-  for (const m of ts.matchAll(
-    /^import (\w+) from '\.\.\/\.\.\/tables\/labs\/(.+\.json)'/gm,
-  )) {
-    idToRel.set(m[1], m[2])
-  }
   /** @type {Map<string, string>} */
   const nameToRel = new Map()
-  const tableBody = ts.split('export const LAB_GOD_TABLES')[1]?.split(
-    'export const LAB_GOD_LAB_NAMES',
-  )[0]
-  if (!tableBody) return nameToRel
-  for (const m of tableBody.matchAll(
-    /^\s+(['"])((?:\\.|(?!\1).)*)\1: (\w+) as LabGodTable,/gm,
-  )) {
-    const name = m[2].replace(/\\'/g, "'").replace(/\\"/g, '"')
-    const rel = idToRel.get(m[3])
-    if (rel) nameToRel.set(name, rel)
+  const labsRoot = path.join(root, 'tables/labs')
+  function walk(dir, relPrefix = '') {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const rel = relPrefix ? `${relPrefix}/${ent.name}` : ent.name
+      const abs = path.join(dir, ent.name)
+      if (ent.isDirectory()) {
+        walk(abs, rel)
+        continue
+      }
+      if (!ent.name.endsWith('.json') || ent.name === 'lab-order.json') continue
+      const doc = JSON.parse(fs.readFileSync(abs, 'utf8'))
+      if (doc.name) nameToRel.set(doc.name, rel.replace(/\\/g, '/'))
+    }
   }
+  if (fs.existsSync(labsRoot)) walk(labsRoot)
   return nameToRel
 }
 

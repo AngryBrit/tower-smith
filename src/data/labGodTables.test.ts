@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
-  LAB_GOD_LAB_NAMES,
-  LAB_GOD_TABLES,
+  getLabGodLabNames,
+  getLabGodTables,
+  LAB_GOD_TABLE_COUNT,
   labGodLevelEntry,
 } from './labGodTables'
 import {
@@ -11,9 +12,9 @@ import {
 
 describe('labGodTables', () => {
   it('registers one GOD table per research card (217 labs)', () => {
-    expect(LAB_GOD_LAB_NAMES.size).toBe(217)
-    expect(Object.keys(LAB_GOD_TABLES).sort()).toEqual(
-      [...LAB_GOD_LAB_NAMES].sort(),
+    expect(getLabGodLabNames().size).toBe(LAB_GOD_TABLE_COUNT)
+    expect(Object.keys(getLabGodTables()).sort()).toEqual(
+      [...getLabGodLabNames()].sort(),
     )
     for (const name of [
       'Game Speed',
@@ -22,12 +23,12 @@ describe('labGodTables', () => {
       'Super Tower Bonus',
       'Workshop Attack Discount',
     ]) {
-      expect(LAB_GOD_LAB_NAMES.has(name)).toBe(true)
+      expect(getLabGodLabNames().has(name)).toBe(true)
     }
   })
 
   it('level rows match marginal coin and duration lookups', () => {
-    for (const table of Object.values(LAB_GOD_TABLES)) {
+    for (const table of Object.values(getLabGodTables())) {
       for (const row of table.levels) {
         const current = row.level - 1
         expect(toolkitMarginalCoinCost(table.name, current)).toBe(row.coins)

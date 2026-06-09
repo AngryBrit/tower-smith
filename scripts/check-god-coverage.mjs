@@ -2,15 +2,18 @@ import fs from 'fs'
 import path from 'path'
 
 const tower = JSON.parse(fs.readFileSync('src/data/tower-labs.json', 'utf8'))
-const godTs = fs.readFileSync('src/data/labGodTables.ts', 'utf8')
-const godBlock = godTs.split('export const LAB_GOD_TABLES')[1].split('export const LAB_GOD_LAB_NAMES')[0]
 const godKeys = new Set()
-for (const line of godBlock.split('\n')) {
-  const sq = line.match(/^\s+'((?:\\'|[^'])*)':/)
-  const dq = line.match(/^\s+"((?:\\"|[^"])*)":/)
-  if (sq) godKeys.add(sq[1].replace(/\\'/g, "'"))
-  if (dq) godKeys.add(dq[1].replace(/\\"/g, '"'))
+function collectGodNames(dir) {
+  for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+    const p = path.join(dir, ent.name)
+    if (ent.isDirectory()) collectGodNames(p)
+    else if (ent.name.endsWith('.json') && ent.name !== 'lab-order.json') {
+      const doc = JSON.parse(fs.readFileSync(p, 'utf8'))
+      if (doc.name) godKeys.add(doc.name)
+    }
+  }
 }
+collectGodNames('tables/labs')
 
 const aliases = {}
 for (const m of fs.readFileSync('src/labCosts.ts', 'utf8').matchAll(/'([^']+)': '([^']+)'/g)) {
@@ -54,7 +57,7 @@ const unique = [...new Set(cards)].sort()
 const noGod = unique.filter((n) => !resolveGod(n))
 
 console.log('GOD JSON files:', jsonFiles.length)
-console.log('LAB_GOD_TABLES registered:', godKeys.size)
+console.log('LAB GOD tables registered:', godKeys.size)
 console.log('tower-labs.json keys:', Object.keys(tower).length)
 console.log('Research card names:', unique.length)
 console.log('Cards with direct GOD key:', unique.length - noGod.length)

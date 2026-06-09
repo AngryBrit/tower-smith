@@ -39,6 +39,7 @@ import {
 import {
   WORKSHOP_RECOVERY_AMOUNT_MAX_LEVEL,
   workshopRecoveryAmountNextMarginalCoins,
+  workshopDisplayedRecoveryAmountEnhancementMultiplier,
 } from './workshopRecoveryAmount'
 import {
   WORKSHOP_ENEMY_ATTACK_LEVEL_SKIP_MAX_LEVEL,
@@ -227,10 +228,11 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 0)).toBe('14.00%')
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 1)).toBe('14.40%')
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 300)).toBe('134.00%')
+    const recoveryEnhMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 10, true)
     expect(
       workshopUtilityStatDisplay('recoveryAmountLevel', 300, {
         recoveryAmountLabPercentPoints: 18,
-        recoveryAmountEnhancementsMultiplier: 1.4530263157894737,
+        recoveryAmountEnhancementsMultiplier: recoveryEnhMult,
       }),
     ).toBe('220.86%')
     expect(workshopUtilityNextMarginalCoins('recoveryAmountLevel', 300)).toBeUndefined()

@@ -107,7 +107,7 @@ export const STRINGS_ES = {
   whats_new_2811_headline: 'Novedades en v2.8.11',
   whats_new_2811_body:
     'Los bonos de submódulos afectan ahora las estadísticas del taller — las elecciones principal y de asistencia se suman a laboratorios y reliquias.',
-  app_loadingResearch: 'Cargando investigación…',
+  app_loadingResearch: 'Cargando datos de la app…',
   app_nav_main_aria: 'Páginas principales',
   app_nav_research: 'Laboratorio',
   app_nav_workshop: 'Taller',
