@@ -246,6 +246,11 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('maxRecoveryLevel', 0)).toBe('x1.50')
     expect(workshopUtilityStatDisplay('maxRecoveryLevel', 1)).toBe('x1.53')
     expect(workshopUtilityStatDisplay('maxRecoveryLevel', 500)).toBe('x16.50')
+    expect(
+      workshopUtilityStatDisplay('maxRecoveryLevel', 500, {
+        maxRecoveryEnhancementsMultiplier: 1.4,
+      }),
+    ).toBe('x23.10')
     expect(workshopUtilityNextMarginalCoins('maxRecoveryLevel', 500)).toBeUndefined()
   })
 

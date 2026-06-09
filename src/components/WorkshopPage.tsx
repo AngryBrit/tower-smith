@@ -134,6 +134,7 @@ import { workshopDisplayedLandMineDamageEnhancementMultiplier } from '../data/wo
 import { workshopDisplayedCashBonusEnhancementAdditive } from '../data/workshopCashBonus'
 import { workshopDisplayedWallHealthEnhancementMultiplier } from '../data/workshopWallHealth'
 import { workshopDisplayedRecoveryAmountEnhancementMultiplier } from '../data/workshopRecoveryAmount'
+import { workshopDisplayedMaxRecoveryEnhancementMultiplier } from '../data/workshopMaxRecovery'
 import {
   WORKSHOP_UTILITY_UPGRADE_ORDER,
   workshopUtilityClampLevel,
@@ -2580,6 +2581,10 @@ export function WorkshopPage({
       workshopPersisted.enhanceFreeUpgradesLevel,
       enhancementsUnlocked,
     )
+    const maxRecoveryEnhanceMult = workshopDisplayedMaxRecoveryEnhancementMultiplier(
+      workshopPersisted.enhanceRecoveryPackageLevel,
+      enhancementsUnlocked,
+    )
     const generatorChassis = workshopChassisModuleHeroStatMultiplier(
       workshopPersisted,
       'generator',
@@ -2600,6 +2605,8 @@ export function WorkshopPage({
         cashBonusEnhanceAdd > 0 ? cashBonusEnhanceAdd : undefined,
       recoveryAmountEnhancementsMultiplier:
         recoveryAmountEnhanceMult > 1 + 1e-9 ? recoveryAmountEnhanceMult : undefined,
+      maxRecoveryEnhancementsMultiplier:
+        maxRecoveryEnhanceMult > 1 + 1e-9 ? maxRecoveryEnhanceMult : undefined,
       enhanceFreeUpgradesLevel: workshopPersisted.enhanceFreeUpgradesLevel,
       workshopEnhancementsLabUnlocked: enhancementsUnlocked,
     }
@@ -2611,6 +2618,7 @@ export function WorkshopPage({
       packageChance === 0 &&
       cashBonusEnhanceAdd <= 0 &&
       recoveryAmountEnhanceMult <= 1 + 1e-9 &&
+      maxRecoveryEnhanceMult <= 1 + 1e-9 &&
       workshopPersisted.enhanceFreeUpgradesLevel <= 0 &&
       Object.keys(chassisUtility).length === 0
     ) {

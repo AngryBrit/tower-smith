@@ -319,13 +319,11 @@ export function workshopUtilityStatDisplay(
     case 'maxRecoveryLevel': {
       const sub = utilitySub(opts).maxRecoveryAdd ?? 0
       const base = workshopMaxRecoveryStatMultiplier(completedLevels) + sub
-      const m = opts?.maxRecoveryLabMultiplier
-      if ((m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) || sub > 0) {
-        return formatWithDamageStyleLabMultiplier(
-          base,
-          m ?? 1,
-          (v) => `x${v.toFixed(2)}`,
-        )
+      const labMult = opts?.maxRecoveryLabMultiplier ?? 1
+      const enhanceMult = opts?.maxRecoveryEnhancementsMultiplier ?? 1
+      const combined = labMult * enhanceMult
+      if (combined > 1 + 1e-9 || sub > 0) {
+        return formatWithDamageStyleLabMultiplier(base, combined, (v) => `x${v.toFixed(2)}`)
       }
       return workshopMaxRecoveryStatDisplay(completedLevels)
     }

@@ -115,6 +115,8 @@ export type WorkshopUtilityLabDisplayOpts = {
   recoveryAmountLabPercentPoints?: number
   /** **Recovery Package +** (and partial **Free Upgrades +**) × on Recovery Amount card. */
   recoveryAmountEnhancementsMultiplier?: number
+  /** **Recovery Package +** × on Max Recovery card. */
+  maxRecoveryEnhancementsMultiplier?: number
   maxRecoveryLabMultiplier?: number
   packageChanceLabPercentPoints?: number
   enemyAttackLevelSkipLabPercentPoints?: number
