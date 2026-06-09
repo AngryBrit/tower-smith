@@ -62,19 +62,19 @@ patch('ebola', {
 })
 patch('viral_infection', {
   description: 'Increase health by 2%',
-  unlock: 'Event: Earn 350 medals during the "Viral Outbreak"',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak (III)"',
 })
 patch('immunization', {
   description: 'Increase critical chance by 1%',
-  unlock: 'Event Premium: Earn 550 medals during the "Viral Outbreak"',
+  unlock: 'Event Premium: Earn 550 medals during the "Viral Outbreak (III)"',
 })
 patch('personal_care', {
   description: 'Increase free defense upgrade by 2%',
-  unlock: 'Event: Earn 700 medals during the "Viral Outbreak"',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak (III)"',
 })
 patch('global_threat', {
   description: 'Increase critical factor by 5%',
-  unlock: 'Event Premium: Earn 1100 medals during the "Viral Outbreak"',
+  unlock: 'Event Premium: Earn 1100 medals during the "Viral Outbreak (III)"',
 })
 
 // —— Event name / tier fixes ——
@@ -392,6 +392,46 @@ const newRelics = [
     unlock: 'Guild: Spend 150 tokens in Guild Season 9',
     unlockGroup: 'guild',
     damagePct: 0,
+  },
+  {
+    order: 269,
+    id: 'magma_river',
+    name: 'Magma River',
+    rarity: 'rare',
+    description: 'Increase cash by 2%',
+    unlock: 'Event: Earn 350 medals during the "Volcano (IV)"',
+    unlockGroup: 'event',
+    damagePct: 0,
+  },
+  {
+    order: 270,
+    id: 'obsidian',
+    name: 'Obsidian',
+    rarity: 'rare',
+    description: 'Increase attack speed by 1%',
+    unlock: 'Event Premium: Earn 550 medals during the "Volcano (IV)"',
+    unlockGroup: 'event',
+    damagePct: 0,
+  },
+  {
+    order: 271,
+    id: 'new_island',
+    name: 'New Island',
+    rarity: 'epic',
+    description: 'Increase free attack upgrade by 2%',
+    unlock: 'Event: Earn 700 medals during the "Volcano (IV)"',
+    unlockGroup: 'event',
+    damagePct: 0,
+  },
+  {
+    order: 272,
+    id: 'geological_activity',
+    name: 'Geological Activity',
+    rarity: 'epic',
+    description: 'Increase tower damage by 5%',
+    unlock: 'Event Premium: Earn 1100 medals during the "Volcano (IV)"',
+    unlockGroup: 'event',
+    damagePct: 5,
   },
 ]
 

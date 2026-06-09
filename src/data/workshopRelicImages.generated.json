@@ -266,5 +266,9 @@
   "viral_infection": "rare/Viral_Infection.webp",
   "immunization": "rare/Immunization.webp",
   "personal_care": "epic/PersonalCare.webp",
-  "global_threat": "epic/GlobalThreat.webp"
+  "global_threat": "epic/GlobalThreat.webp",
+  "magma_river": "rare/MagmaRiver.webp",
+  "obsidian": "rare/Obsidian.webp",
+  "new_island": "epic/NewIsland.webp",
+  "geological_activity": "epic/GeologicalActivity.webp"
 }

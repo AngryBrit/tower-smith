@@ -276,10 +276,10 @@ export const GAME_RELIC_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] = [
   "personal_care", // PersonalCare
   "immunization", // Immunization
   "global_threat", // GlobalThreat
-  null, // MagmaRiver
-  null, // NewIsland
-  null, // Obsidian
-  null, // GeologicalActivity
+  "magma_river", // MagmaRiver
+  "new_island", // NewIsland
+  "obsidian", // Obsidian
+  "geological_activity", // GeologicalActivity
   "magic_cards", // MagicCards
   "dangerous_tricks", // DangerousTricks
 ] as const
