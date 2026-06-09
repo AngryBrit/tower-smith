@@ -11,7 +11,7 @@ and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.ht
 ### Added
 
 - **Workshop MAX buy multiplier** — **MAX** chip on upgrade and enhance rails: **+** jumps to the stat cap, **−** resets to 0; next-cost shows the total to max ([`workshopBulkMarginal.ts`](src/data/workshopBulkMarginal.ts), [`WorkshopPage.tsx`](src/components/WorkshopPage.tsx)).
-- **Lab GOD tables** — cost/value JSON under `tables/labs/` (authoritative ground truth), wired through [`labGodTables.ts`](src/data/labGodTables.ts). Audit script: [`scripts/audit-lab-god-sources.mjs`](scripts/audit-lab-god-sources.mjs).
+- **Lab GOD tables** — cost/value JSON under `tables/labs/` (authoritative ground truth), wired through [`labGodTables.ts`](src/data/labGodTables.ts). Refresh imports with `node scripts/sync-lab-god-tables.mjs`.
 - **researchLevel import** — Complete `researchLevel` slot → lab mappings from player save evidence (card mastery, ultimates, battle condition, modules, and related trees).
 
 ### Fixed
