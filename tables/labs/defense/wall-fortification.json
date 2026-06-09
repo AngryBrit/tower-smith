@@ -4,7 +4,7 @@
   "levels": [
     {
       "level": 1,
-      "value": 20,
+      "value": 1,
       "time": {
         "display": "2 days, 7h, 33m, 19s",
         "seconds": 199999
@@ -20,7 +20,7 @@
     },
     {
       "level": 2,
-      "value": 40,
+      "value": 2,
       "time": {
         "display": "2 days, 10h, 4m, 29s",
         "seconds": 209069
@@ -36,7 +36,7 @@
     },
     {
       "level": 3,
-      "value": 60,
+      "value": 3,
       "time": {
         "display": "2 days, 12h, 40m, 54s",
         "seconds": 218454
@@ -52,7 +52,7 @@
     },
     {
       "level": 4,
-      "value": 80,
+      "value": 4,
       "time": {
         "display": "2 days, 15h, 25m, 59s",
         "seconds": 228359
@@ -68,7 +68,7 @@
     },
     {
       "level": 5,
-      "value": 100,
+      "value": 5,
       "time": {
         "display": "2 days, 18h, 22m, 35s",
         "seconds": 238955
@@ -84,7 +84,7 @@
     },
     {
       "level": 6,
-      "value": 120,
+      "value": 6,
       "time": {
         "display": "2 days, 21h, 33m, 18s",
         "seconds": 250398
@@ -100,7 +100,7 @@
     },
     {
       "level": 7,
-      "value": 140,
+      "value": 7,
       "time": {
         "display": "3 days, 1h, 0m, 32s",
         "seconds": 262832
@@ -116,7 +116,7 @@
     },
     {
       "level": 8,
-      "value": 160,
+      "value": 8,
       "time": {
         "display": "3 days, 4h, 46m, 32s",
         "seconds": 276392
@@ -132,7 +132,7 @@
     },
     {
       "level": 9,
-      "value": 180,
+      "value": 9,
       "time": {
         "display": "3 days, 8h, 53m, 25s",
         "seconds": 291205
@@ -148,7 +148,7 @@
     },
     {
       "level": 10,
-      "value": 200,
+      "value": 10,
       "time": {
         "display": "3 days, 13h, 23m, 16s",
         "seconds": 307396
@@ -164,7 +164,7 @@
     },
     {
       "level": 11,
-      "value": 220,
+      "value": 11,
       "time": {
         "display": "3 days, 18h, 18m, 2s",
         "seconds": 325082
@@ -180,7 +180,7 @@
     },
     {
       "level": 12,
-      "value": 240,
+      "value": 12,
       "time": {
         "display": "3 days, 23h, 39m, 39s",
         "seconds": 344379
@@ -196,7 +196,7 @@
     },
     {
       "level": 13,
-      "value": 260,
+      "value": 13,
       "time": {
         "display": "4 days, 5h, 29m, 56s",
         "seconds": 365396
@@ -212,7 +212,7 @@
     },
     {
       "level": 14,
-      "value": 280,
+      "value": 14,
       "time": {
         "display": "4 days, 11h, 50m, 43s",
         "seconds": 388243
@@ -228,7 +228,7 @@
     },
     {
       "level": 15,
-      "value": 300,
+      "value": 15,
       "time": {
         "display": "4 days, 18h, 43m, 44s",
         "seconds": 413024
@@ -244,7 +244,7 @@
     },
     {
       "level": 16,
-      "value": 320,
+      "value": 16,
       "time": {
         "display": "5 days, 2h, 10m, 44s",
         "seconds": 439844
@@ -260,7 +260,7 @@
     },
     {
       "level": 17,
-      "value": 340,
+      "value": 17,
       "time": {
         "display": "5 days, 10h, 13m, 22s",
         "seconds": 468802
@@ -276,7 +276,7 @@
     },
     {
       "level": 18,
-      "value": 360,
+      "value": 18,
       "time": {
         "display": "5 days, 18h, 53m, 17s",
         "seconds": 499997
@@ -292,7 +292,7 @@
     },
     {
       "level": 19,
-      "value": 380,
+      "value": 19,
       "time": {
         "display": "6 days, 4h, 12m, 7s",
         "seconds": 533527
@@ -308,7 +308,7 @@
     },
     {
       "level": 20,
-      "value": 400,
+      "value": 20,
       "time": {
         "display": "6 days, 14h, 11m, 27s",
         "seconds": 569487
@@ -324,7 +324,7 @@
     },
     {
       "level": 21,
-      "value": 420,
+      "value": 21,
       "time": {
         "display": "7 days, 52m, 50s",
         "seconds": 607970
@@ -340,7 +340,7 @@
     },
     {
       "level": 22,
-      "value": 440,
+      "value": 22,
       "time": {
         "display": "7 days, 12h, 17m, 49s",
         "seconds": 649069
@@ -356,7 +356,7 @@
     },
     {
       "level": 23,
-      "value": 460,
+      "value": 23,
       "time": {
         "display": "8 days, 27m, 55s",
         "seconds": 692875
@@ -372,7 +372,7 @@
     },
     {
       "level": 24,
-      "value": 480,
+      "value": 24,
       "time": {
         "display": "8 days, 13h, 24m, 38s",
         "seconds": 739478
@@ -388,7 +388,7 @@
     },
     {
       "level": 25,
-      "value": 500,
+      "value": 25,
       "time": {
         "display": "9 days, 3h, 9m, 25s",
         "seconds": 788965
@@ -404,7 +404,7 @@
     },
     {
       "level": 26,
-      "value": 520,
+      "value": 26,
       "time": {
         "display": "9 days, 17h, 43m, 44s",
         "seconds": 841424
@@ -420,7 +420,7 @@
     },
     {
       "level": 27,
-      "value": 540,
+      "value": 27,
       "time": {
         "display": "10 days, 9h, 9m, 1s",
         "seconds": 896941
@@ -436,7 +436,7 @@
     },
     {
       "level": 28,
-      "value": 560,
+      "value": 28,
       "time": {
         "display": "11 days, 1h, 26m, 41s",
         "seconds": 955601
@@ -452,7 +452,7 @@
     },
     {
       "level": 29,
-      "value": 580,
+      "value": 29,
       "time": {
         "display": "11 days, 18h, 38m, 9s",
         "seconds": 1017489
@@ -468,7 +468,7 @@
     },
     {
       "level": 30,
-      "value": 600,
+      "value": 30,
       "time": {
         "display": "12 days, 12h, 44m, 47s",
         "seconds": 1082687
@@ -484,7 +484,7 @@
     },
     {
       "level": 31,
-      "value": 620,
+      "value": 31,
       "time": {
         "display": "13 days, 7h, 47m, 59s",
         "seconds": 1151279
@@ -500,7 +500,7 @@
     },
     {
       "level": 32,
-      "value": 640,
+      "value": 32,
       "time": {
         "display": "14 days, 3h, 49m, 5s",
         "seconds": 1223345
@@ -516,7 +516,7 @@
     },
     {
       "level": 33,
-      "value": 660,
+      "value": 33,
       "time": {
         "display": "15 days, 49m, 26s",
         "seconds": 1298966
@@ -532,7 +532,7 @@
     },
     {
       "level": 34,
-      "value": 680,
+      "value": 34,
       "time": {
         "display": "15 days, 22h, 50m, 22s",
         "seconds": 1378222
@@ -548,7 +548,7 @@
     },
     {
       "level": 35,
-      "value": 700,
+      "value": 35,
       "time": {
         "display": "16 days, 21h, 53m, 12s",
         "seconds": 1461192
@@ -564,7 +564,7 @@
     },
     {
       "level": 36,
-      "value": 720,
+      "value": 36,
       "time": {
         "display": "17 days, 21h, 59m, 15s",
         "seconds": 1547955
@@ -580,7 +580,7 @@
     },
     {
       "level": 37,
-      "value": 740,
+      "value": 37,
       "time": {
         "display": "18 days, 23h, 9m, 49s",
         "seconds": 1638589
@@ -596,7 +596,7 @@
     },
     {
       "level": 38,
-      "value": 760,
+      "value": 38,
       "time": {
         "display": "20 days, 1h, 26m, 9s",
         "seconds": 1733169
@@ -612,7 +612,7 @@
     },
     {
       "level": 39,
-      "value": 780,
+      "value": 39,
       "time": {
         "display": "21 days, 4h, 49m, 34s",
         "seconds": 1831774
@@ -628,7 +628,7 @@
     },
     {
       "level": 40,
-      "value": 800,
+      "value": 40,
       "time": {
         "display": "22 days, 9h, 21m, 18s",
         "seconds": 1934478
@@ -644,7 +644,7 @@
     },
     {
       "level": 41,
-      "value": 820,
+      "value": 41,
       "time": {
         "display": "23 days, 15h, 2m, 38s",
         "seconds": 2041358
@@ -660,7 +660,7 @@
     },
     {
       "level": 42,
-      "value": 840,
+      "value": 42,
       "time": {
         "display": "24 days, 21h, 54m, 46s",
         "seconds": 2152486
@@ -676,7 +676,7 @@
     },
     {
       "level": 43,
-      "value": 860,
+      "value": 43,
       "time": {
         "display": "26 days, 5h, 58m, 59s",
         "seconds": 2267939
@@ -692,7 +692,7 @@
     },
     {
       "level": 44,
-      "value": 880,
+      "value": 44,
       "time": {
         "display": "27 days, 15h, 16m, 29s",
         "seconds": 2387789
@@ -708,7 +708,7 @@
     },
     {
       "level": 45,
-      "value": 900,
+      "value": 45,
       "time": {
         "display": "29 days, 1h, 48m, 29s",
         "seconds": 2512109
@@ -724,7 +724,7 @@
     },
     {
       "level": 46,
-      "value": 920,
+      "value": 46,
       "time": {
         "display": "30 days, 13h, 36m, 12s",
         "seconds": 2640972
@@ -740,10 +740,10 @@
     },
     {
       "level": 47,
-      "value": 940,
+      "value": 47,
       "time": {
-        "display": "32 days, 2h, 49m, 50s",
-        "seconds": 2774990
+        "display": "32 days, 2h, 40m, 50s",
+        "seconds": 2774450
       },
       "gems": 3710,
       "coins": 5170000000000,
@@ -756,12 +756,12 @@
     },
     {
       "level": 48,
-      "value": 960,
+      "value": 48,
       "time": {
-        "display": "35 days, 17h, 5m, 34s",
-        "seconds": 3085534
+        "display": "33 days, 17h, 3m, 34s",
+        "seconds": 2912614
       },
-      "gems": 3850,
+      "gems": 3830,
       "coins": 5490000000000,
       "totalTime": {
         "display": "1 year, 213 days, 14h, 40m, 25s",
@@ -772,23 +772,23 @@
     },
     {
       "level": 49,
-      "value": 980,
+      "value": 49,
       "time": {
-        "display": "35 days, 8h, 45m, 25s",
-        "seconds": 3055525
+        "display": "35 days, 8h, 45m, 35s",
+        "seconds": 3055535
       },
       "gems": 3950,
       "coins": 5830000000000,
       "totalTime": {
-        "display": "1 year, 248 days, 22h, 26m, 0s",
-        "seconds": 53043960
+        "display": "1 year, 248 days, 23h, 26m, 0s",
+        "seconds": 53047560
       },
       "totalGems": 76890,
-      "totalCoins": 82880000000000
+      "totalCoins": 83880000000000
     },
     {
       "level": 50,
-      "value": 1000,
+      "value": 50,
       "time": {
         "display": "37 days, 1h, 48m, 5s",
         "seconds": 3203285
@@ -804,7 +804,7 @@
     },
     {
       "level": 51,
-      "value": 1020,
+      "value": 51,
       "time": {
         "display": "38 days, 20h, 12m, 13s",
         "seconds": 3355933
@@ -820,7 +820,7 @@
     },
     {
       "level": 52,
-      "value": 1040,
+      "value": 52,
       "time": {
         "display": "40 days, 15h, 59m, 9s",
         "seconds": 3513549
@@ -836,7 +836,7 @@
     },
     {
       "level": 53,
-      "value": 1060,
+      "value": 53,
       "time": {
         "display": "42 days, 13h, 10m, 2s",
         "seconds": 3676202
@@ -852,7 +852,7 @@
     },
     {
       "level": 54,
-      "value": 1080,
+      "value": 54,
       "time": {
         "display": "44 days, 11h, 46m, 2s",
         "seconds": 3843962
@@ -868,7 +868,7 @@
     },
     {
       "level": 55,
-      "value": 1100,
+      "value": 55,
       "time": {
         "display": "46 days, 11h, 48m, 17s",
         "seconds": 4016897
@@ -884,7 +884,7 @@
     },
     {
       "level": 56,
-      "value": 1120,
+      "value": 56,
       "time": {
         "display": "48 days, 13h, 17m, 54s",
         "seconds": 4195074
@@ -900,7 +900,7 @@
     },
     {
       "level": 57,
-      "value": 1140,
+      "value": 57,
       "time": {
         "display": "50 days, 16h, 16m, 3s",
         "seconds": 4378563
@@ -916,7 +916,7 @@
     },
     {
       "level": 58,
-      "value": 1160,
+      "value": 58,
       "time": {
         "display": "52 days, 20h, 43m, 50s",
         "seconds": 4567430
@@ -932,7 +932,7 @@
     },
     {
       "level": 59,
-      "value": 1180,
+      "value": 59,
       "time": {
         "display": "55 days, 2h, 42m, 22s",
         "seconds": 4761742
@@ -948,7 +948,7 @@
     },
     {
       "level": 60,
-      "value": 1200,
+      "value": 60,
       "time": {
         "display": "57 days, 10h, 12m, 46s",
         "seconds": 4961566

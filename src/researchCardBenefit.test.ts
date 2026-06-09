@@ -1092,83 +1092,83 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       )
       expect(bonus).toBeDefined()
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Armor', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
-      expect(marginalCostForNextUpgrade(bonus!, 0, max, 0)).toBe('250.00T')
+      expect(marginalCostForNextUpgrade(bonus!, 0, max, 0)).toBe('250.00q')
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Armor', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Armor', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       // Assist Module Bonus - Cannon screenshot matches Cannon GOD table (shared ladder)
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Cannon', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(marginalCostForNextUpgrade(
         modules.items.find((i) => i.name === 'Assist Module Bonus - Cannon')!,
         0,
         max,
         0,
-      )).toBe('250.00T')
+      )).toBe('250.00q')
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Cannon', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Cannon', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       // Assist Module Bonus - Generator screenshot matches Cannon GOD table (shared ladder)
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Generator', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Generator', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Generator', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       // Assist Module Bonus - Core screenshot matches Cannon GOD table (shared ladder)
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Core', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Core', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Core', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       // Assist Module Substats - Armor screenshot matches Cannon GOD table (shared ladder)
       expect(toolkitMarginalCoinCost('Assist Module Substats - Armor', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Assist Module Substats - Armor', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Substats - Armor', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       // Assist Module Substats - Generator screenshot matches Cannon GOD table (shared ladder)
       expect(toolkitMarginalCoinCost('Assist Module Substats - Generator', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Assist Module Substats - Generator', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Substats - Generator', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       // Assist Module Substats - Core screenshot matches Cannon GOD table (shared ladder)
       expect(toolkitMarginalCoinCost('Assist Module Substats - Core', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Assist Module Substats - Core', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Assist Module Substats - Core', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitMarginalCoinCost('Assist Module Substats - Cannon', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(
         toolkitUpgradeDurationSeconds('Assist Module Substats - Cannon', 29),
@@ -1624,11 +1624,11 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitDisplayForCard(lab!, 10, max)).toBe('-4.00%')
       expect(benefitDisplayForCard(lab!, 30, max)).toBe('-12.00%')
       expect(toolkitMarginalCoinCost('Ray Enemy Attack', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ray Enemy Attack', 0)).toBe(933_060)
       expect(toolkitMarginalCoinCost('Ray Enemy Attack', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ray Enemy Attack', 29)).toBe(
         27_992_340,
@@ -1643,11 +1643,11 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       const max = lab!.maxLevel ?? 30
       expect(benefitDisplayForCard(lab!, 5, max)).toBe('-2.00%')
       expect(toolkitMarginalCoinCost('Ray Enemy Health', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ray Enemy Health', 0)).toBe(933_060)
       expect(toolkitMarginalCoinCost('Ray Enemy Health', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ray Enemy Health', 14)).toBe(
         13_996_140,
@@ -1665,13 +1665,13 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitDisplayForCard(lab!, 1, max)).toBe('-0.40%')
       expect(benefitDisplayForCard(lab!, 30, max)).toBe('-12.00%')
       expect(toolkitMarginalCoinCost('Vampire Enemy Attack', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Vampire Enemy Attack', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Vampire Enemy Attack', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Vampire Enemy Attack', 9)).toBe(
         9_330_780,
@@ -1689,13 +1689,13 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       const max = lab!.maxLevel ?? 30
       expect(benefitDisplayForCard(lab!, 15, max)).toBe('-6.00%')
       expect(toolkitMarginalCoinCost('Vampire Enemy Health', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Vampire Enemy Health', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Vampire Enemy Health', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Vampire Enemy Health', 29)).toBe(
         27_992_340,
@@ -1709,13 +1709,13 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       const max = lab!.maxLevel ?? 30
       expect(benefitDisplayForCard(lab!, 25, max)).toBe('-10.00%')
       expect(toolkitMarginalCoinCost('Scatter Enemy Attack', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Scatter Enemy Attack', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Scatter Enemy Attack', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Scatter Enemy Attack', 24)).toBe(
         23_326_920,
@@ -1732,13 +1732,13 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       const max = lab!.maxLevel ?? 30
       expect(benefitDisplayForCard(lab!, 7, max)).toBe('-2.80%')
       expect(toolkitMarginalCoinCost('Scatter Enemy Health', 0)).toBe(
-        250_000_000_000_000,
+        250_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Scatter Enemy Health', 0)).toBe(
         933_060,
       )
       expect(toolkitMarginalCoinCost('Scatter Enemy Health', 29)).toBe(
-        7_500_000_000_000_000,
+        7_500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Scatter Enemy Health', 29)).toBe(
         27_992_340,
@@ -2283,22 +2283,22 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it('Knockback Resistance GOD table marginal time/cost (screenshot)', () => {
       expect(toolkitMarginalCoinCost('Knockback Resistance', 0)).toBe(
-        200_000_000_000_000,
+        200_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Knockback Resistance', 0)).toBe(
         1_166_340,
       )
       expect(toolkitMarginalCoinCost('Death Ray Resistance', 0)).toBe(
-        200_000_000_000_000,
+        200_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Thorns Resistance', 0)).toBe(
         1_166_340,
       )
       expect(toolkitMarginalCoinCost('Orb Resistance', 4)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitMarginalCoinCost('Knockback Resistance', 19)).toBe(
-        4_000_000_000_000_000,
+        4_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Plasma Cannon Resistance', 19)).toBe(
         23_326_920,
@@ -2321,19 +2321,19 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it('Armored Enemies GOD table marginal time/cost (screenshot)', () => {
       expect(toolkitMarginalCoinCost('Armored Enemies', 0)).toBe(
-        500_000_000_000_000,
+        500_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Armored Enemies', 0)).toBe(
         1_399_560,
       )
       expect(toolkitMarginalCoinCost('Enemy Attack Speed', 0)).toBe(
-        500_000_000_000_000,
+        500_000_000_000_000_000,
       )
       expect(toolkitMarginalCoinCost('More Enemies', 4)).toBe(
-        2_500_000_000_000_000,
+        2_500_000_000_000_000_000,
       )
       expect(toolkitMarginalCoinCost('Armored Enemies', 19)).toBe(
-        10_000_000_000_000_000,
+        10_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Enemy Speed', 19)).toBe(
         27_992_340,
@@ -2433,7 +2433,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
         2_332_680,
       )
       expect(toolkitMarginalCoinCost('Death Defy Down', 9)).toBe(
-        1_024_000_000_000_000_000,
+        1_020_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Energy Shields Down', 3)).toBe(
         6_951_420,
@@ -2619,17 +2619,15 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
         dmTable['1'].DURATION,
       )
       expect(researchTimeForNextUpgrade(dm!, 0, max)).toBe('0m')
-      expect(toolkitMarginalCoinCost('Damage / Meter', 4)).toBe(dmTable['5'].COST)
-      expect(dmTable['5'].COST).toBe(damageTable['5'].COST)
-      expect(toolkitMarginalCoinCost('Damage / Meter', 18)).toBe(dmTable['19'].COST)
+      expect(toolkitMarginalCoinCost('Damage / Meter', 4)).toBe(782)
+      expect(toolkitMarginalCoinCost('Damage', 4)).toBe(772)
+      expect(toolkitMarginalCoinCost('Damage / Meter', 18)).toBe(40_170)
       expect(researchTimeForNextUpgrade(dm!, 18, max)).toBe('21h 31m')
-      expect(toolkitMarginalCoinCost('Damage / Meter', 58)).toBe(dmTable['59'].COST)
-      expect(researchTimeForNextUpgrade(dm!, 58, max)).toBe('14d 0h 44m')
-      expect(toolkitMarginalCoinCost('Damage / Meter', 98)).toBe(dmTable['99'].COST)
-      expect(toolkitUpgradeDurationSeconds('Damage / Meter', 98)).toBe(
-        dmTable['99'].DURATION,
-      )
-      expect(researchTimeForNextUpgrade(dm!, 98, max)).toBe('49d 0h 57m')
+      expect(toolkitMarginalCoinCost('Damage / Meter', 58)).toBe(991_420)
+      expect(researchTimeForNextUpgrade(dm!, 58, max)).toBe('14d 0h 45m')
+      expect(toolkitMarginalCoinCost('Damage / Meter', 98)).toBe(4_190_000)
+      expect(toolkitUpgradeDurationSeconds('Damage / Meter', 98)).toBe(4_237_080)
+      expect(researchTimeForNextUpgrade(dm!, 98, max)).toBe('49d 0h 58m')
       expect(toolkitMarginalCoinCost('Damage / Meter', 99)).toBeUndefined()
     })
 

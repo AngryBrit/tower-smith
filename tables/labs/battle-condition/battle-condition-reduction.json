@@ -108,7 +108,7 @@
       "gems": 9680,
       "coins": 74200000000000000,
       "totalTime": {
-        "display": "1 year, 101 days, 16h, 0s",
+        "display": "1 year, 101 days, 16h, 0m, 0s",
         "seconds": 40320000
       },
       "totalGems": 42990,
@@ -156,7 +156,7 @@
       "gems": 12830,
       "coins": 639400000000000000,
       "totalTime": {
-        "display": "2 years, 186 days, 16h, 0s",
+        "display": "2 years, 186 days, 16h, 0m, 0s",
         "seconds": 79200000
       },
       "totalGems": 78330,

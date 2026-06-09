@@ -5,10 +5,16 @@
     {
       "level": 1,
       "value": 1,
-      "time": { "display": "11h, 59m, 0s", "seconds": 43140 },
+      "time": {
+        "display": "11h, 59m, 0s",
+        "seconds": 43140
+      },
       "gems": 82,
       "coins": 250000,
-      "totalTime": { "display": "11h, 59m, 0s", "seconds": 43140 },
+      "totalTime": {
+        "display": "11h, 59m, 0s",
+        "seconds": 43140
+      },
       "totalGems": 82,
       "totalCoins": 250000
     }

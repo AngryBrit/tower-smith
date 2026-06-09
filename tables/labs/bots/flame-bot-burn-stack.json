@@ -4,7 +4,7 @@
   "levels": [
     {
       "level": 1,
-      "value": 3,
+      "value": 1,
       "time": {
         "display": "45 days, 15h, 0m, 0s",
         "seconds": 3942000
@@ -20,7 +20,7 @@
     },
     {
       "level": 2,
-      "value": 4,
+      "value": 2,
       "time": {
         "display": "52 days, 11h, 15m, 0s",
         "seconds": 4533300
@@ -36,7 +36,7 @@
     },
     {
       "level": 3,
-      "value": 5,
+      "value": 3,
       "time": {
         "display": "60 days, 8h, 8m, 14s",
         "seconds": 5213294
@@ -52,7 +52,7 @@
     },
     {
       "level": 4,
-      "value": 6,
+      "value": 4,
       "time": {
         "display": "69 days, 9h, 21m, 28s",
         "seconds": 5995288
@@ -68,7 +68,7 @@
     },
     {
       "level": 5,
-      "value": 7,
+      "value": 5,
       "time": {
         "display": "79 days, 19h, 9m, 41s",
         "seconds": 6894581

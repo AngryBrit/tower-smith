@@ -4,7 +4,7 @@
   "levels": [
     {
       "level": 1,
-      "value": -10,
+      "value": 1,
       "time": {
         "display": "13h, 53m, 0s",
         "seconds": 49980
@@ -20,7 +20,7 @@
     },
     {
       "level": 2,
-      "value": -20,
+      "value": 2,
       "time": {
         "display": "1 day, 1h, 1m, 0s",
         "seconds": 90060
@@ -36,7 +36,7 @@
     },
     {
       "level": 3,
-      "value": -30,
+      "value": 3,
       "time": {
         "display": "1 day, 12h, 20m, 0s",
         "seconds": 130800
@@ -52,7 +52,7 @@
     },
     {
       "level": 4,
-      "value": -40,
+      "value": 4,
       "time": {
         "display": "2 days, 14m, 0s",
         "seconds": 173640
@@ -68,7 +68,7 @@
     },
     {
       "level": 5,
-      "value": -50,
+      "value": 5,
       "time": {
         "display": "2 days, 13h, 11m, 0s",
         "seconds": 220260
@@ -84,7 +84,7 @@
     },
     {
       "level": 6,
-      "value": -60,
+      "value": 6,
       "time": {
         "display": "3 days, 3h, 49m, 0s",
         "seconds": 272940
@@ -100,7 +100,7 @@
     },
     {
       "level": 7,
-      "value": -70,
+      "value": 7,
       "time": {
         "display": "3 days, 20h, 51m, 0s",
         "seconds": 334260
@@ -116,7 +116,7 @@
     },
     {
       "level": 8,
-      "value": -80,
+      "value": 8,
       "time": {
         "display": "4 days, 17h, 6m, 0s",
         "seconds": 407160
@@ -132,7 +132,7 @@
     },
     {
       "level": 9,
-      "value": -90,
+      "value": 9,
       "time": {
         "display": "5 days, 17h, 26m, 0s",
         "seconds": 494760
@@ -148,7 +148,7 @@
     },
     {
       "level": 10,
-      "value": -100,
+      "value": 10,
       "time": {
         "display": "6 days, 22h, 51m, 0s",
         "seconds": 600660
@@ -164,7 +164,7 @@
     },
     {
       "level": 11,
-      "value": -110,
+      "value": 11,
       "time": {
         "display": "8 days, 10h, 24m, 0s",
         "seconds": 728640
@@ -180,7 +180,7 @@
     },
     {
       "level": 12,
-      "value": -120,
+      "value": 12,
       "time": {
         "display": "10 days, 5h, 12m, 0s",
         "seconds": 882720
@@ -196,7 +196,7 @@
     },
     {
       "level": 13,
-      "value": -130,
+      "value": 13,
       "time": {
         "display": "12 days, 8h, 26m, 0s",
         "seconds": 1067160
@@ -212,7 +212,7 @@
     },
     {
       "level": 14,
-      "value": -140,
+      "value": 14,
       "time": {
         "display": "14 days, 21h, 23m, 0s",
         "seconds": 1286580
@@ -220,7 +220,7 @@
       "gems": 1880,
       "coins": 12080000000,
       "totalTime": {
-        "display": "78 days, 0h, 7m, 0s",
+        "display": "78 days, 7m, 0s",
         "seconds": 6739620
       },
       "totalGems": 10700,
@@ -228,7 +228,7 @@
     },
     {
       "level": 15,
-      "value": -150,
+      "value": 15,
       "time": {
         "display": "17 days, 21h, 22m, 0s",
         "seconds": 1545720
@@ -244,7 +244,7 @@
     },
     {
       "level": 16,
-      "value": -160,
+      "value": 16,
       "time": {
         "display": "21 days, 9h, 46m, 0s",
         "seconds": 1849560
@@ -260,7 +260,7 @@
     },
     {
       "level": 17,
-      "value": -170,
+      "value": 17,
       "time": {
         "display": "25 days, 12h, 1m, 0s",
         "seconds": 2203260
@@ -276,7 +276,7 @@
     },
     {
       "level": 18,
-      "value": -180,
+      "value": 18,
       "time": {
         "display": "30 days, 5h, 40m, 0s",
         "seconds": 2612400
@@ -284,7 +284,7 @@
       "gems": 3570,
       "coins": 20640000000,
       "totalTime": {
-        "display": "173 days, 0h, 56m, 0s",
+        "display": "173 days, 56m, 0s",
         "seconds": 14950560
       },
       "totalGems": 22120,
@@ -292,7 +292,7 @@
     },
     {
       "level": 19,
-      "value": -190,
+      "value": 19,
       "time": {
         "display": "35 days, 16h, 14m, 0s",
         "seconds": 3082440
@@ -308,7 +308,7 @@
     },
     {
       "level": 20,
-      "value": -200,
+      "value": 20,
       "time": {
         "display": "41 days, 21h, 23m, 0s",
         "seconds": 3619380

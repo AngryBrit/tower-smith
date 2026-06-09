@@ -144,7 +144,7 @@
         "seconds": 76418820
       },
       "totalGems": 74960,
-      "totalCoins": 1024000000000000000
+      "totalCoins": 1.02e+21
     },
     {
       "level": 10,
@@ -154,13 +154,13 @@
         "seconds": 16188900
       },
       "gems": 14130,
-      "coins": 1024000000000000000,
+      "coins": 1.02e+21,
       "totalTime": {
         "display": "2 years, 341 days, 20h, 22m, 0s",
         "seconds": 92607720
       },
       "totalGems": 89090,
-      "totalCoins": 2048000000000000000
+      "totalCoins": 2.0499999999999997e+21
     }
   ]
 }

@@ -22,15 +22,15 @@ import attackSpeedMastery from '../../tables/labs/card-mastery/attack-speed-mast
 import autoPickPerks from '../../tables/labs/perks/auto-pick-perks.json'
 import autoPickRanking from '../../tables/labs/perks/auto-pick-ranking.json'
 import banPerks from '../../tables/labs/perks/ban-perks.json'
-import basicUltimate from '../../tables/labs/battle-condition/basic-ultimate.json'
+import basicsUltimate from '../../tables/labs/battle-condition/basics-ultimate.json'
 import battleConditionReduction from '../../tables/labs/battle-condition/battle-condition-reduction.json'
 import berserkerMastery from '../../tables/labs/card-mastery/berserker-mastery.json'
 import blackHoleCoinBonus from '../../tables/labs/ultimate-weapon/black-hole-coin-bonus.json'
 import blackHoleDamage from '../../tables/labs/ultimate-weapon/black-hole-damage.json'
 import blackHoleDisableRangedEnemies from '../../tables/labs/ultimate-weapon/black-hole-disable-ranged-enemies.json'
 import bossEnemyAttack from '../../tables/labs/enemies/boss-enemy-attack.json'
-import bossEnemyHealth from '../../tables/labs/enemies/boss-enemy-health.json'
-import bossUltimate from '../../tables/labs/battle-condition/boss-ultimate.json'
+import bossHealth from '../../tables/labs/enemies/boss-health.json'
+import bosssUltimate from '../../tables/labs/battle-condition/bosss-ultimate.json'
 import botBotCooldown from '../../tables/labs/bots/bot-bot-cooldown.json'
 import botBotDuration from '../../tables/labs/bots/bot-bot-duration.json'
 import buyMultiplier from '../../tables/labs/main/buy-multiplier.json'
@@ -44,7 +44,7 @@ import chainThunder from '../../tables/labs/ultimate-weapon/chain-thunder.json'
 import chronoFieldDamageReduction from '../../tables/labs/ultimate-weapon/chrono-field-damage-reduction.json'
 import chronoFieldDuration from '../../tables/labs/ultimate-weapon/chrono-field-duration.json'
 import chronoFieldRange from '../../tables/labs/ultimate-weapon/chrono-field-range.json'
-import chronoFieldReductionPercent from '../../tables/labs/ultimate-weapon/chrono-field-reduction-percent.json'
+import chronoFieldReduction from '../../tables/labs/ultimate-weapon/chrono-field-reduction.json'
 import coinsKillBonus from '../../tables/labs/utility/coins-kill-bonus.json'
 import coinsWave from '../../tables/labs/utility/coins-wave.json'
 import coinsMastery from '../../tables/labs/card-mastery/coins-mastery.json'
@@ -67,7 +67,7 @@ import deathWaveCellsBonus from '../../tables/labs/ultimate-weapon/death-wave-ce
 import deathWaveCoinBonus from '../../tables/labs/ultimate-weapon/death-wave-coin-bonus.json'
 import deathWaveDamageAmplifier from '../../tables/labs/ultimate-weapon/death-wave-damage-amplifier.json'
 import deathWaveHealth from '../../tables/labs/ultimate-weapon/death-wave-health.json'
-import defensePercent from '../../tables/labs/defense/defense-percent.json'
+import defense from '../../tables/labs/defense/defense.json'
 import defenseAbsolute from '../../tables/labs/defense/defense-absolute.json'
 import demonModeMastery from '../../tables/labs/card-mastery/demon-mode-mastery.json'
 import dissonantEchoAttack from '../../tables/labs/main/dissonant-echo-attack.json'
@@ -96,7 +96,7 @@ import extraOrbMastery from '../../tables/labs/card-mastery/extra-orb-mastery.js
 import fastEnemyAttack from '../../tables/labs/enemies/fast-enemy-attack.json'
 import fastEnemyHealth from '../../tables/labs/enemies/fast-enemy-health.json'
 import fastEnemySpeed from '../../tables/labs/enemies/fast-enemy-speed.json'
-import fastUltimate from '../../tables/labs/battle-condition/fast-ultimate.json'
+import fastsUltimate from '../../tables/labs/battle-condition/fasts-ultimate.json'
 import firstPerkChoice from '../../tables/labs/perks/first-perk-choice.json'
 import flameBotBurnStack from '../../tables/labs/bots/flame-bot-burn-stack.json'
 import flameBotCooldown from '../../tables/labs/bots/flame-bot-cooldown.json'
@@ -149,9 +149,9 @@ import perkOptionQuantity from '../../tables/labs/perks/perk-option-quantity.jso
 import plasmaCannonMastery from '../../tables/labs/card-mastery/plasma-cannon-mastery.json'
 import plasmaCannonResistance from '../../tables/labs/battle-condition/plasma-cannon-resistance.json'
 import protectorDamageReduction from '../../tables/labs/enemies/protector-damage-reduction.json'
-import protectorEnemyHealth from '../../tables/labs/enemies/protector-enemy-health.json'
-import protectorEnemyRadius from '../../tables/labs/enemies/protector-enemy-radius.json'
-import protectorUltimate from '../../tables/labs/battle-condition/protector-ultimate.json'
+import protectorHealth from '../../tables/labs/enemies/protector-health.json'
+import protectorRadius from '../../tables/labs/enemies/protector-radius.json'
+import protectorsUltimate from '../../tables/labs/battle-condition/protectors-ultimate.json'
 import range from '../../tables/labs/attack/range.json'
 import rangeMastery from '../../tables/labs/card-mastery/range-mastery.json'
 import rangedEnemyAttack from '../../tables/labs/enemies/ranged-enemy-attack.json'
@@ -196,7 +196,7 @@ import swampStunChance from '../../tables/labs/ultimate-weapon/swamp-stun-chance
 import swampStunTime from '../../tables/labs/ultimate-weapon/swamp-stun-time.json'
 import tankEnemyAttack from '../../tables/labs/enemies/tank-enemy-attack.json'
 import tankEnemyHealth from '../../tables/labs/enemies/tank-enemy-health.json'
-import tankUltimate from '../../tables/labs/battle-condition/tank-ultimate.json'
+import tanksUltimate from '../../tables/labs/battle-condition/tanks-ultimate.json'
 import targetPriority from '../../tables/labs/main/target-priority.json'
 import thornsResistance from '../../tables/labs/battle-condition/thorns-resistance.json'
 import thunderBotCooldown from '../../tables/labs/bots/thunder-bot-cooldown.json'
@@ -263,15 +263,15 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Auto Pick Perks': autoPickPerks as LabGodTable,
   'Auto Pick Ranking': autoPickRanking as LabGodTable,
   'Ban Perks': banPerks as LabGodTable,
-  "Basic's Ultimate": basicUltimate as LabGodTable,
+  "Basic's Ultimate": basicsUltimate as LabGodTable,
   'Battle Condition Reduction': battleConditionReduction as LabGodTable,
   'Berserker Mastery': berserkerMastery as LabGodTable,
   'Black Hole Coin Bonus': blackHoleCoinBonus as LabGodTable,
   'Black Hole Damage': blackHoleDamage as LabGodTable,
   'Black Hole Disable Ranged Enemies': blackHoleDisableRangedEnemies as LabGodTable,
   'Boss Attack': bossEnemyAttack as LabGodTable,
-  'Boss Health': bossEnemyHealth as LabGodTable,
-  "Boss's Ultimate": bossUltimate as LabGodTable,
+  'Boss Health': bossHealth as LabGodTable,
+  "Boss's Ultimate": bosssUltimate as LabGodTable,
   'Bot Bot - Cooldown': botBotCooldown as LabGodTable,
   'Bot Bot - Duration': botBotDuration as LabGodTable,
   'Buy Multiplier': buyMultiplier as LabGodTable,
@@ -285,7 +285,7 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Chrono Field Damage Reduction': chronoFieldDamageReduction as LabGodTable,
   'Chrono Field Duration': chronoFieldDuration as LabGodTable,
   'Chrono Field Range': chronoFieldRange as LabGodTable,
-  'Chrono Field Reduction %': chronoFieldReductionPercent as LabGodTable,
+  'Chrono Field Reduction %': chronoFieldReduction as LabGodTable,
   'Coins / Kill Bonus': coinsKillBonus as LabGodTable,
   'Coins / Wave': coinsWave as LabGodTable,
   'Coins Mastery': coinsMastery as LabGodTable,
@@ -308,7 +308,7 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Death Wave Coin Bonus': deathWaveCoinBonus as LabGodTable,
   'Death Wave Damage Amplifier': deathWaveDamageAmplifier as LabGodTable,
   'Death Wave Health': deathWaveHealth as LabGodTable,
-  'Defense %': defensePercent as LabGodTable,
+  'Defense %': defense as LabGodTable,
   'Defense Absolute': defenseAbsolute as LabGodTable,
   'Demon Mode Mastery': demonModeMastery as LabGodTable,
   'Dissonant Echo - Attack': dissonantEchoAttack as LabGodTable,
@@ -337,7 +337,7 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Fast Enemy Attack': fastEnemyAttack as LabGodTable,
   'Fast Enemy Health': fastEnemyHealth as LabGodTable,
   'Fast Enemy Speed': fastEnemySpeed as LabGodTable,
-  "Fast's Ultimate": fastUltimate as LabGodTable,
+  "Fast's Ultimate": fastsUltimate as LabGodTable,
   'First Perk Choice': firstPerkChoice as LabGodTable,
   'Flame Bot - Burn Stack': flameBotBurnStack as LabGodTable,
   'Flame Bot - Cooldown': flameBotCooldown as LabGodTable,
@@ -390,9 +390,9 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Plasma Cannon Mastery': plasmaCannonMastery as LabGodTable,
   'Plasma Cannon Resistance': plasmaCannonResistance as LabGodTable,
   'Protector Damage Reduction': protectorDamageReduction as LabGodTable,
-  'Protector Health': protectorEnemyHealth as LabGodTable,
-  'Protector Radius': protectorEnemyRadius as LabGodTable,
-  "Protector's Ultimate": protectorUltimate as LabGodTable,
+  'Protector Health': protectorHealth as LabGodTable,
+  'Protector Radius': protectorRadius as LabGodTable,
+  "Protector's Ultimate": protectorsUltimate as LabGodTable,
   'Range': range as LabGodTable,
   'Range Mastery': rangeMastery as LabGodTable,
   'Ranged Enemy Attack': rangedEnemyAttack as LabGodTable,
@@ -437,7 +437,7 @@ export const LAB_GOD_TABLES: Record<string, LabGodTable> = {
   'Swamp Stun Time': swampStunTime as LabGodTable,
   'Tank Enemy Attack': tankEnemyAttack as LabGodTable,
   'Tank Enemy Health': tankEnemyHealth as LabGodTable,
-  "Tank's Ultimate": tankUltimate as LabGodTable,
+  "Tank's Ultimate": tanksUltimate as LabGodTable,
   'Target Priority': targetPriority as LabGodTable,
   'Thorns Resistance': thornsResistance as LabGodTable,
   'Thunder Bot - Cooldown': thunderBotCooldown as LabGodTable,

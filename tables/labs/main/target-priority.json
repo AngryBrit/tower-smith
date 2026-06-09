@@ -5,21 +5,33 @@
     {
       "level": 1,
       "value": 1,
-      "time": { "display": "1 day, 23h, 59m, 0s", "seconds": 172740 },
+      "time": {
+        "display": "1 day, 23h, 59m, 0s",
+        "seconds": 172740
+      },
       "gems": 303,
       "coins": 1000000,
-      "totalTime": { "display": "1 day, 23h, 59m, 0s", "seconds": 172740 },
+      "totalTime": {
+        "display": "1 day, 23h, 59m, 0s",
+        "seconds": 172740
+      },
       "totalGems": 303,
       "totalCoins": 1000000
     },
     {
       "level": 2,
       "value": 2,
-      "time": { "display": "8 days, 0s", "seconds": 691200 },
+      "time": {
+        "display": "8 days, 0s",
+        "seconds": 691200
+      },
       "gems": 1110,
       "coins": 1000000000,
-      "totalTime": { "display": "9 days, 23h, 59m, 0s", "seconds": 863940 },
-      "totalGems": 1413,
+      "totalTime": {
+        "display": "9 days, 23h, 59m, 0s",
+        "seconds": 863940
+      },
+      "totalGems": 1410,
       "totalCoins": 1000000000
     }
   ]
