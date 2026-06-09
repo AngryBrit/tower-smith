@@ -11,6 +11,12 @@ import {
   uploadUserAvatar,
   type ProfileError,
 } from '../profile/profileApi'
+import {
+  registerGuildNameById,
+  resolveGuildNameById,
+  updateGuildNameById,
+  type UpdateGuildNameError,
+} from '../towerGallery/api'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 
@@ -35,18 +41,42 @@ function profileErrorId(error: ProfileError): StringId {
   }
 }
 
+function guildNameErrorId(error: UpdateGuildNameError): StringId {
+  switch (error) {
+    case 'invalid_guild':
+      return 'profile_error_invalid_guild_name'
+    case 'forbidden':
+      return 'profile_error_guild_name_forbidden'
+    case 'not_found':
+      return 'profile_error_guild_name_not_found'
+    case 'auth_required':
+    case 'invalid_token':
+      return 'auth_session_expired'
+    case 'gallery_unavailable':
+      return 'gallery_error_unavailable'
+    case 'network':
+      return 'profile_error_network'
+    default:
+      return 'profile_error_unknown'
+  }
+}
+
 export function ProfileSettings() {
   const { t } = useI18n()
-  const { user, displayName, guildId, avatarUrl, refreshProfile } = useAuth()
+  const { user, displayName, guild, guildId, avatarUrl, getAccessToken, refreshProfile } =
+    useAuth()
   const nameInputId = useId()
   const guildInputId = useId()
+  const guildNameInputId = useId()
   const avatarInputId = useId()
   const avatarInputRef = useRef<HTMLInputElement>(null)
 
   const [nameDraft, setNameDraft] = useState('')
   const [guildDraft, setGuildDraft] = useState('')
+  const [guildNameDraft, setGuildNameDraft] = useState('')
   const [savingName, setSavingName] = useState(false)
   const [savingGuild, setSavingGuild] = useState(false)
+  const [savingGuildName, setSavingGuildName] = useState(false)
   const [uploadingAvatar, setUploadingAvatar] = useState(false)
   const [notice, setNotice] = useState<string | null>(null)
 
@@ -57,6 +87,17 @@ export function ProfileSettings() {
   useEffect(() => {
     deferInEffect(() => setGuildDraft(guildId ?? ''))
   }, [guildId])
+
+  useEffect(() => {
+    deferInEffect(() => {
+      if (!guildId) {
+        setGuildNameDraft('')
+        return
+      }
+      const resolved = guild && guild !== guildId ? guild : ''
+      setGuildNameDraft(resolved)
+    })
+  }, [guild, guildId])
 
   useEffect(() => {
     if (!notice) return
@@ -70,6 +111,8 @@ export function ProfileSettings() {
 
   const nameDirty = nameDraft.trim() !== (displayName ?? '').trim()
   const guildDirty = guildDraft.trim() !== (guildId ?? '').trim()
+  const savedGuildName = guildId && guild && guild !== guildId ? guild.trim() : ''
+  const guildNameDirty = Boolean(guildId) && guildNameDraft.trim() !== savedGuildName
   const avatarInitial = (displayName ?? user.email ?? '?').trim().charAt(0).toUpperCase()
 
   const handleSaveGuild = () => {
@@ -85,6 +128,42 @@ export function ProfileSettings() {
       }
       await refreshProfile()
       setNotice(t('profile_notice_guild_saved'))
+    })()
+  }
+
+  const handleSaveGuildName = () => {
+    void (async () => {
+      if (!guildNameDirty || !guildId) return
+      const name = guildNameDraft.trim()
+      if (name.length < 1) return
+      setSavingGuildName(true)
+      setNotice(null)
+      const token = await getAccessToken()
+      if (!token) {
+        setSavingGuildName(false)
+        setNotice(t('auth_session_expired'))
+        return
+      }
+      const existing = await resolveGuildNameById(guildId)
+      if (!existing) {
+        const registered = await registerGuildNameById(guildId, name, token)
+        setSavingGuildName(false)
+        if (!registered) {
+          setNotice(t('profile_error_network'))
+          return
+        }
+        await refreshProfile()
+        setNotice(t('profile_notice_guild_name_saved'))
+        return
+      }
+      const result = await updateGuildNameById(guildId, name, token)
+      setSavingGuildName(false)
+      if (!result.ok) {
+        setNotice(t(guildNameErrorId(result.error)))
+        return
+      }
+      await refreshProfile()
+      setNotice(t('profile_notice_guild_name_saved'))
     })()
   }
 
@@ -236,6 +315,33 @@ export function ProfileSettings() {
           {savingGuild ? t('profile_guild_saving') : t('profile_guild_save_btn')}
         </button>
       </div>
+
+      {guildId ? (
+        <div className="profile-settings__field">
+          <label className="profile-settings__label" htmlFor={guildNameInputId}>
+            {t('profile_guild_name_label')}
+          </label>
+          <input
+            id={guildNameInputId}
+            type="text"
+            className="glow-input profile-settings__input"
+            value={guildNameDraft}
+            maxLength={PROFILE_GUILD_MAX}
+            autoComplete="organization"
+            disabled={savingGuildName || guildDirty}
+            onChange={(e) => setGuildNameDraft(e.target.value)}
+          />
+          <p className="profile-settings__hint">{t('profile_guild_name_hint')}</p>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block profile-settings__save"
+            disabled={!guildNameDirty || savingGuildName || guildDirty || guildNameDraft.trim().length < 1}
+            onClick={handleSaveGuildName}
+          >
+            {savingGuildName ? t('profile_guild_name_saving') : t('profile_guild_name_save_btn')}
+          </button>
+        </div>
+      ) : null}
 
       {notice ? (
         <p className="profile-settings__notice" role="status">

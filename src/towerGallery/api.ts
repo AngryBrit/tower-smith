@@ -456,3 +456,54 @@ export async function registerGuildNameById(
     return null
   }
 }
+
+export type UpdateGuildNameError =
+  | 'invalid_guild'
+  | 'auth_required'
+  | 'invalid_token'
+  | 'forbidden'
+  | 'not_found'
+  | 'gallery_unavailable'
+  | 'network'
+  | 'unknown'
+
+export async function updateGuildNameById(
+  guildId: string,
+  guildName: string,
+  accessToken: string,
+): Promise<{ ok: true; name: string } | { ok: false; error: UpdateGuildNameError }> {
+  const id = guildId.trim()
+  const name = guildName.trim()
+  if (!id || id.length > 40 || !name || name.length > 40) {
+    return { ok: false, error: 'invalid_guild' }
+  }
+  try {
+    const res = await fetch(`${API_BASE}/guilds/update`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ id, name }),
+    })
+    if (res.status === 400) return { ok: false, error: 'invalid_guild' }
+    if (res.status === 401) {
+      const parsed = await parseJsonResponse(res)
+      const err = (parsed as { error?: string } | null)?.error
+      if (err === 'invalid_token') return { ok: false, error: 'invalid_token' }
+      return { ok: false, error: 'auth_required' }
+    }
+    if (res.status === 403) return { ok: false, error: 'forbidden' }
+    if (res.status === 404) return { ok: false, error: 'not_found' }
+    if (res.status === 503) return { ok: false, error: 'gallery_unavailable' }
+    if (!res.ok) return { ok: false, error: 'unknown' }
+    const parsed = await parseJsonResponse(res)
+    const resolved = (parsed as { name?: unknown } | null)?.name
+    if (typeof resolved !== 'string') return { ok: false, error: 'unknown' }
+    const trimmed = resolved.trim()
+    if (!trimmed) return { ok: false, error: 'unknown' }
+    return { ok: true, name: trimmed }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}

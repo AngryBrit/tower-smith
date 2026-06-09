@@ -412,7 +412,13 @@ export const STRINGS_ES = {
     'Opcional. Tu ID de gremio (p. ej. NTQDF9). Se usa para resolver el nombre al publicar.',
   profile_guild_save_btn: 'Guardar ID de gremio',
   profile_guild_saving: 'Guardando…',
+  profile_guild_name_label: 'Nombre del gremio',
+  profile_guild_name_hint:
+    'Nombre legible en tus builds. Puedes corregirlo aquí si se introdujo un nombre incorrecto.',
+  profile_guild_name_save_btn: 'Guardar nombre del gremio',
+  profile_guild_name_saving: 'Guardando…',
   profile_notice_guild_saved: 'Gremio guardado.',
+  profile_notice_guild_name_saved: 'Nombre del gremio guardado.',
   profile_avatar_upload_btn: 'Subir avatar',
   profile_avatar_uploading: 'Subiendo…',
   profile_avatar_remove_btn: 'Quitar avatar',
@@ -423,6 +429,11 @@ export const STRINGS_ES = {
   profile_error_invalid_display_name: 'El nombre debe tener 1–40 caracteres.',
   profile_error_display_name_taken: 'Ese nombre de usuario ya está en uso.',
   profile_error_invalid_guild: 'El gremio debe tener 1–40 caracteres, o déjalo vacío para borrarlo.',
+  profile_error_invalid_guild_name: 'El nombre del gremio debe tener 1–40 caracteres.',
+  profile_error_guild_name_forbidden:
+    'No se puede cambiar este nombre aquí. Guarda primero tu ID de gremio en el perfil o contacta a un administrador.',
+  profile_error_guild_name_not_found:
+    'Aún no hay un nombre registrado para este ID. Publica un build para establecerlo.',
   profile_error_invalid_avatar_type: 'Elige una imagen JPEG, PNG, WebP o GIF.',
   profile_error_avatar_too_large: 'El avatar debe ser de 512 KB o menos.',
   profile_error_network: 'No se pudo guardar el perfil. Inténtalo de nuevo.',

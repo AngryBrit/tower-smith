@@ -409,7 +409,13 @@ export const STRINGS_DE = {
     'Optional. Deine Gilden-ID (z. B. NTQDF9). Wird zum Auflösen des Gildennamens beim Veröffentlichen genutzt.',
   profile_guild_save_btn: 'Gilden-ID speichern',
   profile_guild_saving: 'Speichern…',
+  profile_guild_name_label: 'Gildenname',
+  profile_guild_name_hint:
+    'Lesbarer Name auf deinen Builds. Hier kannst du ihn korrigieren, falls ein falscher Name eingetragen wurde.',
+  profile_guild_name_save_btn: 'Gildenname speichern',
+  profile_guild_name_saving: 'Speichern…',
   profile_notice_guild_saved: 'Gilde gespeichert.',
+  profile_notice_guild_name_saved: 'Gildenname gespeichert.',
   profile_avatar_upload_btn: 'Avatar hochladen',
   profile_avatar_uploading: 'Hochladen…',
   profile_avatar_remove_btn: 'Avatar entfernen',
@@ -420,6 +426,11 @@ export const STRINGS_DE = {
   profile_error_invalid_display_name: 'Benutzername muss 1–40 Zeichen haben.',
   profile_error_display_name_taken: 'Dieser Benutzername ist bereits vergeben.',
   profile_error_invalid_guild: 'Gilde muss 1–40 Zeichen haben oder leer bleiben zum Entfernen.',
+  profile_error_invalid_guild_name: 'Gildenname muss 1–40 Zeichen haben.',
+  profile_error_guild_name_forbidden:
+    'Dieser Gildenname kann hier nicht geändert werden. Speichere zuerst deine Gilden-ID im Profil oder wende dich an einen Admin.',
+  profile_error_guild_name_not_found:
+    'Für diese ID ist noch kein Gildenname registriert. Veröffentliche einen Build, um ihn festzulegen.',
   profile_error_invalid_avatar_type: 'Wähle ein JPEG-, PNG-, WebP- oder GIF-Bild.',
   profile_error_avatar_too_large: 'Avatar darf höchstens 512 KB groß sein.',
   profile_error_network: 'Profil konnte nicht gespeichert werden. Bitte erneut versuchen.',
