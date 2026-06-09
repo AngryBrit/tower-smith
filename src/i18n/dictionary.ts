@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_307_headline: "What's new in v3.0.7",
+  whats_new_307_body:
+    'Golden Tower Golden Combo now upgrades to level 14 (0.45% bonus) with correct wiki stone costs — the Plus track was previously capped five levels early.',
   whats_new_306_headline: "What's new in v3.0.6",
   whats_new_306_body:
     'Assist module substat bonuses now include the full Assist Module Substats lab on top of sub-stone efficiency — ultimate weapon cooldown/duration and other assist sub-stats display correctly at 100% combined efficiency.',

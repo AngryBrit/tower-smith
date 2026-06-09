@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.7] - 2026-06-09
+
+### Fixed
+
+- **Golden Tower Golden Combo (Ultimate Plus)** — Track extended to wiki level 14 (0.45% bonus); was capped at level 10 (0.33%). Per-ability max level now follows each Plus track’s milestone table.
+
+### Docs
+
+- README: version **3.0.7**.
+- What's new banner (en/de/es).
+
 ## [3.0.6] - 2026-06-09
 
 ### Fixed

@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_307_headline: 'Neu in v3.0.7',
+  whats_new_307_body:
+    'Golden Tower Golden Combo lässt sich jetzt bis Stufe 14 (0,45 % Bonus) mit korrekten Wiki-Steinkosten verbessern — die Plus-Spur war zuvor fünf Stufen zu früh gedeckelt.',
   whats_new_306_headline: 'Neu in v3.0.6',
   whats_new_306_body:
     'Assist-Modul-Substat-Boni enthalten jetzt das volle Assist Module Substats-Lab zusätzlich zur Sub-Stein-Effizienz — Ultimate-Waffen-CD/Dauer und andere Assist-Substats werden bei 100 % kombinierter Effizienz korrekt angezeigt.',

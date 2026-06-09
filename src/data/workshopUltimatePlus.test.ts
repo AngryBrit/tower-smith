@@ -4,6 +4,7 @@ import {
   ULTIMATE_PLUS_UNLOCK_COSTS,
   workshopUltimatePlusClampLevel,
   workshopUltimatePlusNextMarginalStones,
+  workshopUltimatePlusMaxLevel,
   workshopUltimatePlusNextUnlockCost,
   workshopUltimatePlusStatDisplay,
   workshopUltimatePlusStonesToMaxFromLocked,
@@ -63,8 +64,21 @@ describe('workshop ultimate plus wiki spot checks', () => {
     expect(workshopUltimatePlusTotalStonesToMaxFrom('poisonSwampDeathCreep', 0)).toBe(10_000)
   })
 
-  it('18570 and 400-base tracks match 10-step marginal sums from L0', () => {
-    expect(workshopUltimatePlusTotalStonesToMaxFrom('goldenTowerGoldenCombo', 0)).toBe(7970)
+  it('Golden Combo L0 is 0.03% with next cost 300', () => {
+    expect(workshopUltimatePlusStatDisplay('goldenTowerGoldenCombo', 0)).toBe('0.03%')
+    expect(workshopUltimatePlusNextMarginalStones('goldenTowerGoldenCombo', 0)).toBe(300)
+  })
+
+  it('Golden Combo extends to L14 (0.45%) with wiki stone total 20,070', () => {
+    expect(workshopUltimatePlusMaxLevel('goldenTowerGoldenCombo')).toBe(14)
+    expect(workshopUltimatePlusStatDisplay('goldenTowerGoldenCombo', 14)).toBe('0.45%')
+    expect(workshopUltimatePlusNextMarginalStones('goldenTowerGoldenCombo', 14)).toBeUndefined()
+    expect(workshopUltimatePlusNextMarginalStones('goldenTowerGoldenCombo', 10)).toBe(2050)
+    expect(workshopUltimatePlusTotalStonesToMaxFrom('goldenTowerGoldenCombo', 0)).toBe(20_070)
+  })
+
+  it('18570-base and 400-base tracks match 10-step marginal sums from L0', () => {
+    expect(workshopUltimatePlusTotalStonesToMaxFrom('innerLandMinesChargedMines', 0)).toBe(7970)
     expect(workshopUltimatePlusTotalStonesToMaxFrom('deathWaveKillWall', 0)).toBe(9750)
   })
 })

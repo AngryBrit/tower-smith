@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_307_headline: 'Novedades en v3.0.7',
+  whats_new_307_body:
+    'Golden Tower Golden Combo ahora sube hasta el nivel 14 (0,45 % de bonus) con los costes de piedras del wiki; la pista Plus antes se limitaba cinco niveles antes.',
   whats_new_306_headline: 'Novedades en v3.0.6',
   whats_new_306_body:
     'Los bonus de subestadísticas del módulo assist ahora incluyen el lab Assist Module Substats completo además de la eficiencia de sub-piedras: CD/duración de armas definitivas y otras sub-stats assist se muestran correctamente al 100 % de eficiencia combinada.',

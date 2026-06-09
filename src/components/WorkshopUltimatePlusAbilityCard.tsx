@@ -3,8 +3,8 @@ import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import {
-  ULTIMATE_PLUS_MAX_LEVEL,
   workshopUltimatePlusIsUnlocked,
+  workshopUltimatePlusMaxLevel,
   workshopUltimatePlusNextMarginalStones,
   workshopUltimatePlusStatDisplay,
   workshopUltimatePlusStatLabelId,
@@ -55,7 +55,8 @@ export function WorkshopUltimatePlusAbilityCard({
   const fullTitle = t(WORKSHOP_ULTIMATE_PLUS_TITLE[abilityId])
   const barTitle = plusAbilityBarTitle(fullTitle)
   const prereqLocked = !plusEnabled
-  const maxed = abilityUnlocked && level >= ULTIMATE_PLUS_MAX_LEVEL
+  const maxLevel = workshopUltimatePlusMaxLevel(abilityId)
+  const maxed = abilityUnlocked && level >= maxLevel
   const unlockStones = workshopUltimatePlusUnlockCostForAbility(workshop, abilityId)
   const upgradeStones = abilityUnlocked
     ? workshopUltimatePlusNextMarginalStones(abilityId, level)
@@ -163,7 +164,7 @@ export function WorkshopUltimatePlusAbilityCard({
               holdVariant="max"
               disabled={maxed}
               onStep={() => handleBump(1)}
-              onHold={() => onSetLevel(abilityId, ULTIMATE_PLUS_MAX_LEVEL)}
+              onHold={() => onSetLevel(abilityId, maxLevel)}
             >
               +
             </HoldStepButton>

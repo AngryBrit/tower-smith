@@ -58,6 +58,11 @@ const COST_300_18570 = [
   300, 360, 430, 510, 620, 750, 900, 1100, 1350, 1650,
 ] as const
 
+/** Golden Combo — 14 upgrades (L0→L14), wiki total 20,070 stones. */
+const COST_GOLDEN_TOWER_GOLDEN_COMBO = [
+  300, 360, 430, 510, 620, 750, 900, 1100, 1350, 1650, 2050, 2600, 3300, 4150,
+] as const
+
 const COST_400_19050 = [
   400, 500, 610, 730, 860, 1000, 1150, 1300, 1500, 1700,
 ] as const
@@ -83,8 +88,11 @@ export const WORKSHOP_ULTIMATE_PLUS_TRACKS: Record<
   ),
   goldenTowerGoldenCombo: track(
     'percent',
-    [0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27, 0.3, 0.33],
-    COST_300_18570,
+    [
+      0.03, 0.06, 0.09, 0.12, 0.15, 0.18, 0.21, 0.24, 0.27, 0.3, 0.33, 0.36, 0.39,
+      0.42, 0.45,
+    ],
+    COST_GOLDEN_TOWER_GOLDEN_COMBO,
   ),
   innerLandMinesChargedMines: track(
     'mult',

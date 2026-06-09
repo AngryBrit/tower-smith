@@ -112,7 +112,6 @@ import {
   workshopUltimateWeaponIsOwned,
 } from './data/workshopUltimate'
 import {
-  ULTIMATE_PLUS_MAX_LEVEL,
   WORKSHOP_ULTIMATE_PLUS_ABILITY_ORDER,
   workshopAllUltimateWeaponsReadyForPlus,
   workshopUltimatePlusClampLevel,
@@ -616,7 +615,7 @@ export function computeWorkshopStoneAggregates(ws: WorkshopPersistedV1): Worksho
       for (const abilityId of WORKSHOP_ULTIMATE_PLUS_ABILITY_ORDER) {
         const levelKey = workshopUltimatePlusLevelKey(abilityId)
         const level = ws[levelKey] ?? -1
-        const max = ULTIMATE_PLUS_MAX_LEVEL
+        const max = workshopUltimatePlusMaxLevel(abilityId)
         const plusVisible =
           !hideMaxed || !workshopUltimatePlusIsUnlocked(level) || level < max
         if (!workshopUltimatePlusIsUnlocked(level)) {

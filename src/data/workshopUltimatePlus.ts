@@ -9,6 +9,7 @@ import {
 } from './workshopUltimateData'
 import {
   workshopUltimateTrackClampLevel,
+  workshopUltimateTrackMaxLevel,
   workshopUltimateTrackNextMarginalStones,
   workshopUltimateTrackStatDisplay,
   workshopUltimateTrackTotalStonesToMax,
@@ -48,18 +49,18 @@ export function workshopUltimatePlusAbilityForWeapon(
   return WORKSHOP_ULTIMATE_PLUS_ABILITY_BY_WEAPON[weaponId]
 }
 
-export function workshopUltimatePlusMaxLevel(_abilityId: WorkshopUltimatePlusAbilityId): number {
-  return ULTIMATE_PLUS_MAX_LEVEL
+export function workshopUltimatePlusMaxLevel(abilityId: WorkshopUltimatePlusAbilityId): number {
+  return workshopUltimateTrackMaxLevel(WORKSHOP_ULTIMATE_PLUS_TRACKS[abilityId])
 }
 
 export function workshopUltimatePlusClampLevel(
-  _abilityId: WorkshopUltimatePlusAbilityId,
+  abilityId: WorkshopUltimatePlusAbilityId,
   level: number,
 ): number {
   if (!Number.isFinite(level)) return ULTIMATE_PLUS_LEVEL_LOCKED
   const n = Math.trunc(level)
   if (n <= ULTIMATE_PLUS_LEVEL_LOCKED) return ULTIMATE_PLUS_LEVEL_LOCKED
-  return Math.max(0, Math.min(ULTIMATE_PLUS_MAX_LEVEL, n))
+  return Math.max(0, Math.min(workshopUltimatePlusMaxLevel(abilityId), n))
 }
 
 export function workshopUltimatePlusIsUnlocked(level: number): boolean {
@@ -116,7 +117,7 @@ export function workshopUltimatePlusNextMarginalStones(
   if (level < 0) return undefined
   const track = WORKSHOP_ULTIMATE_PLUS_TRACKS[abilityId]
   const L = workshopUltimateTrackClampLevel(track, level)
-  if (L >= ULTIMATE_PLUS_MAX_LEVEL) return undefined
+  if (L >= workshopUltimatePlusMaxLevel(abilityId)) return undefined
   return workshopUltimateTrackNextMarginalStones(track, L)
 }
 
@@ -193,17 +194,21 @@ export function defaultUltimatePlusLevels(): Record<WorkshopUltimatePlusLevelKey
   ) as Record<WorkshopUltimatePlusLevelKey, number>
 }
 
-export function sanitizeUltimatePlusLevel(raw: unknown): number {
-  return workshopUltimatePlusClampLevel('chainLightningSmite', Number(raw))
+export function sanitizeUltimatePlusLevel(
+  abilityId: WorkshopUltimatePlusAbilityId,
+  raw: unknown,
+): number {
+  return workshopUltimatePlusClampLevel(abilityId, Number(raw))
 }
 
 export function workshopUltimatePlusLevelsFromPersisted(
   o: Record<string, unknown>,
 ): Record<WorkshopUltimatePlusLevelKey, number> {
   const out = defaultUltimatePlusLevels()
-  for (const key of WORKSHOP_ULTIMATE_PLUS_LEVEL_ORDER) {
+  for (const abilityId of WORKSHOP_ULTIMATE_PLUS_ABILITY_ORDER) {
+    const key = workshopUltimatePlusLevelKey(abilityId)
     if (key in o) {
-      out[key] = sanitizeUltimatePlusLevel(o[key])
+      out[key] = sanitizeUltimatePlusLevel(abilityId, o[key])
     }
   }
   return out
