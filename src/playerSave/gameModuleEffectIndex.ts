@@ -5,7 +5,11 @@
 
 import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
 import type { WorkshopSubmoduleRarity } from '../data/workshopSubmoduleEffects'
-import type { WorkshopSubmoduleSelectionMap } from '../data/workshopSubmoduleSelection'
+import { WORKSHOP_SUBMODULE_SLOT_COUNT } from '../data/workshopSubmoduleCatalog'
+import type {
+  WorkshopSubmoduleOrderedSlots,
+  WorkshopSubmoduleSelectionMap,
+} from '../data/workshopSubmoduleSelection'
 
 export type GameModuleEffectDecode = {
   slot: WorkshopAssistModuleSlot
@@ -364,18 +368,71 @@ export function gameModuleEffectByIndex(
   return GAME_MODULE_EFFECT_BY_INDEX[i] ?? null
 }
 
+/** Decode save effect index for a chassis slot (assist may use primary module level offset). */
+export function gameModuleEffectByIndexForSlot(
+  index: number,
+  slot: WorkshopAssistModuleSlot,
+  moduleLevel = 0,
+  primaryModuleLevel = 0,
+): GameModuleEffectDecode | null {
+  const matchSlot = (decoded: GameModuleEffectDecode | null): GameModuleEffectDecode | null =>
+    decoded != null && decoded.slot === slot ? decoded : null
+
+  const direct = matchSlot(gameModuleEffectByIndex(index, moduleLevel))
+  if (direct != null) return direct
+
+  const primaryLevel = Number.isFinite(primaryModuleLevel)
+    ? Math.max(0, Math.trunc(primaryModuleLevel))
+    : 0
+  if (primaryLevel > 0) {
+    return matchSlot(gameModuleEffectByIndex(index - primaryLevel, 0))
+  }
+  return null
+}
+
+/** Map equipped module `effects` array (0 = empty slot) to workshop picks. */
+export function gameSubmoduleImportFromEffectIndices(
+  slot: WorkshopAssistModuleSlot,
+  effectIndices: readonly number[],
+  moduleLevel = 0,
+  primaryModuleLevel = 0,
+): {
+  map: WorkshopSubmoduleSelectionMap
+  ordered: WorkshopSubmoduleOrderedSlots
+} {
+  const ordered: WorkshopSubmoduleOrderedSlots = Array.from(
+    { length: WORKSHOP_SUBMODULE_SLOT_COUNT },
+    () => null,
+  )
+  const map: WorkshopSubmoduleSelectionMap = {}
+  for (let si = 0; si < effectIndices.length && si < ordered.length; si++) {
+    const raw = effectIndices[si]!
+    if (raw === 0) continue
+    const decoded = gameModuleEffectByIndexForSlot(
+      raw,
+      slot,
+      moduleLevel,
+      primaryModuleLevel,
+    )
+    if (decoded == null) continue
+    const pick = { effectId: decoded.effectId, rarity: decoded.rarity }
+    ordered[si] = pick
+    map[decoded.effectId] = decoded.rarity
+  }
+  return { map, ordered }
+}
+
 /** Map equipped module `effects` array (0 = empty slot) to workshop selection map. */
 export function gameSubmoduleSelectionFromEffectIndices(
   slot: WorkshopAssistModuleSlot,
   effectIndices: readonly number[],
   moduleLevel = 0,
+  primaryModuleLevel = 0,
 ): WorkshopSubmoduleSelectionMap {
-  const out: WorkshopSubmoduleSelectionMap = {}
-  for (const raw of effectIndices) {
-    if (raw === 0) continue
-    const decoded = gameModuleEffectByIndex(raw, moduleLevel)
-    if (decoded == null || decoded.slot !== slot) continue
-    out[decoded.effectId] = decoded.rarity
-  }
-  return out
+  return gameSubmoduleImportFromEffectIndices(
+    slot,
+    effectIndices,
+    moduleLevel,
+    primaryModuleLevel,
+  ).map
 }

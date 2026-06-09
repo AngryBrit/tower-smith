@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest'
-import { gameModuleEffectByIndex } from './gameModuleEffectIndex'
+import {
+  gameModuleEffectByIndex,
+  gameModuleEffectByIndexForSlot,
+  gameSubmoduleImportFromEffectIndices,
+} from './gameModuleEffectIndex'
 
 describe('gameModuleEffectIndex', () => {
   it('maps save indices to in-game EffectRarity tiers (not raw wiki column when Common is absent)', () => {
@@ -88,6 +92,31 @@ describe('gameModuleEffectIndex', () => {
   it('decodes level-offset effect index 330 as Package Chance mythic at 210', () => {
     expect(gameModuleEffectByIndex(330, 120)).toEqual(gameModuleEffectByIndex(210))
     expect(gameModuleEffectByIndex(330, 119)).toEqual(gameModuleEffectByIndex(211))
+  })
+
+  it('decodes assist generator effect with primary module level offset (petethered slot 3)', () => {
+    expect(
+      gameModuleEffectByIndexForSlot(328, 'generator', 66, 134),
+    ).toMatchObject({
+      effectId: 'free-utility-upgrade',
+      rarity: 'legendary',
+    })
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [207, 212, 216, 328, 0, 0, 0, 0],
+      66,
+      134,
+    )
+    expect(imported.map).toMatchObject({
+      'max-recovery': 'mythic',
+      'enemy-attack-level-skip': 'epic',
+      'enemy-health-level-skip': 'epic',
+      'free-utility-upgrade': 'legendary',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'free-utility-upgrade',
+      rarity: 'legendary',
+    })
   })
 
   it('maps Fudgyrella core effect indices to death wave damage, spotlight, golden tower, chain lightning', () => {

@@ -8,6 +8,7 @@ import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 import {
   parseSubmoduleCellNumber,
   WORKSHOP_SUBMODULE_SECTIONS,
+  WORKSHOP_SUBMODULE_SLOT_COUNT,
   submoduleEffectId,
 } from './workshopSubmoduleCatalog'
 import type { WorkshopSubmoduleRarity } from './workshopSubmoduleEffects'
@@ -24,10 +25,22 @@ export type WorkshopSubmoduleSelectionMap = Partial<
   Record<string, WorkshopSubmoduleRarity>
 >
 
+export type WorkshopSubmoduleEffectPick = {
+  effectId: string
+  rarity: WorkshopSubmoduleRarity
+}
+
+/** In-game sub-effect slot order (8 positions; null = empty). */
+export type WorkshopSubmoduleOrderedSlots = (WorkshopSubmoduleEffectPick | null)[]
+
 /** Sub-module picks for one hub slot (primary module + assist copy). */
 export type WorkshopSubmoduleSlotSelections = {
   main: WorkshopSubmoduleSelectionMap
   assist: WorkshopSubmoduleSelectionMap
+  /** Save slot order for main module picker (optional; legacy maps compact into slot 0…n). */
+  mainSlots?: WorkshopSubmoduleOrderedSlots
+  /** Save slot order for assist module picker. */
+  assistSlots?: WorkshopSubmoduleOrderedSlots
 }
 
 export type WorkshopSubmoduleSelections = Record<
@@ -41,6 +54,58 @@ export function emptySubmoduleSelectionMap(): WorkshopSubmoduleSelectionMap {
 
 export function defaultWorkshopSubmoduleSlotSelections(): WorkshopSubmoduleSlotSelections {
   return { main: {}, assist: {} }
+}
+
+export function emptySubmoduleOrderedSlots(): WorkshopSubmoduleOrderedSlots {
+  return Array.from({ length: WORKSHOP_SUBMODULE_SLOT_COUNT }, () => null)
+}
+
+export function selectionMapFromOrderedSlots(
+  ordered: WorkshopSubmoduleOrderedSlots,
+): WorkshopSubmoduleSelectionMap {
+  const out: WorkshopSubmoduleSelectionMap = {}
+  for (const pick of ordered) {
+    if (pick == null) continue
+    out[pick.effectId] = pick.rarity
+  }
+  return out
+}
+
+/** Legacy flat map → first N picker slots (no gaps). */
+export function orderedSlotsFromSelectionMap(
+  map: WorkshopSubmoduleSelectionMap,
+): WorkshopSubmoduleOrderedSlots {
+  const out = emptySubmoduleOrderedSlots()
+  let i = 0
+  for (const [effectId, rarity] of Object.entries(map)) {
+    if (rarity == null || i >= out.length) break
+    out[i++] = { effectId, rarity }
+  }
+  return out
+}
+
+function sanitizeOrderedSlots(
+  slot: WorkshopAssistModuleSlot,
+  raw: unknown,
+  map: WorkshopSubmoduleSelectionMap,
+): WorkshopSubmoduleOrderedSlots | undefined {
+  if (!Array.isArray(raw)) return undefined
+  const section = WORKSHOP_SUBMODULE_SECTIONS[slot]
+  const validIds = new Set(section.rows.map((row) => submoduleEffectId(row.label)))
+  const out = emptySubmoduleOrderedSlots()
+  let any = false
+  for (let i = 0; i < Math.min(raw.length, out.length); i++) {
+    const el = raw[i]
+    if (el == null || typeof el !== 'object' || Array.isArray(el)) continue
+    const effectId = (el as { effectId?: unknown }).effectId
+    const rarity = (el as { rarity?: unknown }).rarity
+    if (typeof effectId !== 'string' || !validIds.has(effectId) || !isSubmoduleRarity(rarity)) {
+      continue
+    }
+    out[i] = { effectId, rarity }
+    any = true
+  }
+  return any ? out : undefined
 }
 
 export function defaultWorkshopSubmoduleSelections(): WorkshopSubmoduleSelections {
@@ -99,9 +164,13 @@ function sanitizeSubmoduleSlotSelections(
       assist: {},
     }
   }
+  const main = sanitizeSubmoduleSelectionMap(slot, o.main)
+  const assist = sanitizeSubmoduleSelectionMap(slot, o.assist)
   return {
-    main: sanitizeSubmoduleSelectionMap(slot, o.main),
-    assist: sanitizeSubmoduleSelectionMap(slot, o.assist),
+    main,
+    assist,
+    mainSlots: sanitizeOrderedSlots(slot, o.mainSlots, main),
+    assistSlots: sanitizeOrderedSlots(slot, o.assistSlots, assist),
   }
 }
 
@@ -124,6 +193,18 @@ export function workshopSubmoduleSelections(
 ): WorkshopSubmoduleSelectionMap {
   const slotSelections = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
   return slotSelections[role] ?? {}
+}
+
+export function workshopSubmoduleOrderedSlots(
+  ws: Pick<WorkshopPersistedV1, 'simSubmoduleSelections'>,
+  slot: WorkshopAssistModuleSlot,
+  role: WorkshopSubmoduleModuleRole = 'main',
+): WorkshopSubmoduleOrderedSlots {
+  const slotSelections = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
+  const map = slotSelections[role] ?? {}
+  const ordered =
+    role === 'main' ? slotSelections.mainSlots : slotSelections.assistSlots
+  return ordered ?? orderedSlotsFromSelectionMap(map)
 }
 
 export function toggleSubmoduleSelection(
@@ -174,16 +255,51 @@ export function totalCannonAttackSpeedFromSelections(
   return main + assist
 }
 
+function orderedSlotsAfterToggle(
+  prevOrdered: WorkshopSubmoduleOrderedSlots | undefined,
+  prevMap: WorkshopSubmoduleSelectionMap,
+  nextMap: WorkshopSubmoduleSelectionMap,
+  toggledEffectId: string,
+): WorkshopSubmoduleOrderedSlots {
+  const ordered = prevOrdered ?? orderedSlotsFromSelectionMap(prevMap)
+  const next = emptySubmoduleOrderedSlots()
+  for (let i = 0; i < ordered.length; i++) {
+    const pick = ordered[i]
+    if (pick == null) continue
+    const rarity = nextMap[pick.effectId]
+    if (rarity != null) next[i] = { effectId: pick.effectId, rarity }
+  }
+  if (nextMap[toggledEffectId] != null) {
+    const already = next.some((pick) => pick?.effectId === toggledEffectId)
+    if (!already) {
+      const idx = next.findIndex((pick) => pick == null)
+      if (idx >= 0) {
+        next[idx] = { effectId: toggledEffectId, rarity: nextMap[toggledEffectId]! }
+      }
+    }
+  }
+  return next
+}
+
 export function workshopPersistedWithSubmoduleSelections(
   ws: WorkshopPersistedV1,
   slot: WorkshopAssistModuleSlot,
   role: WorkshopSubmoduleModuleRole,
   roleSelections: WorkshopSubmoduleSelectionMap,
+  toggledEffectId?: string,
 ): WorkshopPersistedV1 {
   const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
   const nextSlot: WorkshopSubmoduleSlotSelections = {
     main: role === 'main' ? roleSelections : prev.main,
     assist: role === 'assist' ? roleSelections : prev.assist,
+    mainSlots:
+      role === 'main' && toggledEffectId != null
+        ? orderedSlotsAfterToggle(prev.mainSlots, prev.main, roleSelections, toggledEffectId)
+        : prev.mainSlots,
+    assistSlots:
+      role === 'assist' && toggledEffectId != null
+        ? orderedSlotsAfterToggle(prev.assistSlots, prev.assist, roleSelections, toggledEffectId)
+        : prev.assistSlots,
   }
   const simSubmoduleSelections: WorkshopSubmoduleSelections = {
     ...ws.simSubmoduleSelections,

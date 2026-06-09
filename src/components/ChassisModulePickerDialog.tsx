@@ -39,7 +39,9 @@ import {
   submoduleEffectPickerSlotText,
 } from '../data/workshopSubmoduleCatalog'
 import type {
+  WorkshopSubmoduleEffectPick,
   WorkshopSubmoduleModuleRole,
+  WorkshopSubmoduleOrderedSlots,
   WorkshopSubmoduleSelectionMap,
 } from '../data/workshopSubmoduleSelection'
 import {
@@ -110,6 +112,7 @@ type ChassisModulePickerDialogProps = {
   onModuleLevelCommit: (level: number) => void
   heroStatContext: WorkshopChassisModuleHeroStatContext
   submoduleSelections: WorkshopSubmoduleSelectionMap
+  submoduleOrderedSlots?: WorkshopSubmoduleOrderedSlots
   onSelect: (moduleId: string, rarity: WorkshopChassisModuleMergeTier) => void
   onClear: (rarity: WorkshopChassisModuleMergeTier) => void
   onSelectEffect: (
@@ -229,26 +232,28 @@ function ModuleAbilityUniqueText({
   )
 }
 
-function selectedSubmoduleEntries(
+type SubmodulePickerEntry = {
+  effectId: string
+  rarity: WorkshopSubmoduleRarity
+  label: string
+  pickerText: string
+}
+
+function submodulePickerEntry(
   slot: WorkshopAssistModuleSlot,
-  selections: WorkshopSubmoduleSelectionMap,
-) {
+  pick: WorkshopSubmoduleEffectPick,
+): SubmodulePickerEntry | null {
   const section = WORKSHOP_SUBMODULE_SECTIONS[slot]
-  return Object.entries(selections)
-    .map(([effectId, rarity]) => {
-      if (rarity == null) return null
-      const row = section.rows.find((r) => submoduleEffectId(r.label) === effectId)
-      if (row == null) return null
-      const cell = row.cells[rarity]
-      if (cell == null) return null
-      return {
-        effectId,
-        rarity,
-        label: row.label,
-        pickerText: submoduleEffectPickerSlotText(cell, row.label),
-      }
-    })
-    .filter((e): e is NonNullable<typeof e> => e != null)
+  const row = section.rows.find((r) => submoduleEffectId(r.label) === pick.effectId)
+  if (row == null) return null
+  const cell = row.cells[pick.rarity]
+  if (cell == null) return null
+  return {
+    effectId: pick.effectId,
+    rarity: pick.rarity,
+    label: row.label,
+    pickerText: submoduleEffectPickerSlotText(cell, row.label),
+  }
 }
 
 export function ChassisModulePickerDialog({
@@ -262,6 +267,7 @@ export function ChassisModulePickerDialog({
   onModuleLevelCommit,
   heroStatContext,
   submoduleSelections,
+  submoduleOrderedSlots,
   onSelect,
   onClear,
   onSelectEffect,
@@ -289,11 +295,6 @@ export function ChassisModulePickerDialog({
   const borderUrl = workshopChassisModuleBorderImageUrl(
     slot,
     pickerModuleId == null ? 'empty' : pickerRarity,
-  )
-
-  const selectedSubmodules = useMemo(
-    () => selectedSubmoduleEntries(slot, submoduleSelections),
-    [slot, submoduleSelections],
   )
 
   const assignedEffectIds = useMemo(
@@ -552,9 +553,11 @@ export function ChassisModulePickerDialog({
               const unlockAt = WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL[index] ?? 1
               const rarityMax = workshopChassisModuleMaxLevel(pickerRarity)
               const blockedByRarity = unlockAt > rarityMax
-              const effectiveLevel = clampWorkshopChassisModuleLevel(moduleLevel, pickerRarity)
-              const unlocked = !blockedByRarity && effectiveLevel >= unlockAt
-              const entry = selectedSubmodules[index]
+              const rawLevel = clampWorkshopAssistModuleLevel(moduleLevel)
+              const pick = submoduleOrderedSlots?.[index] ?? null
+              const entry = pick != null ? submodulePickerEntry(slot, pick) : null
+              const unlocked =
+                entry != null || (!blockedByRarity && rawLevel >= unlockAt)
               return (
                 <li
                   key={index}

@@ -396,6 +396,12 @@ describe('playerSaveToWorkshop', () => {
   it('imports assist unlocks when assistModuleSlots has data even if assistModulesAvailable is false', () => {
     const ws = playerSaveToWorkshop(
       minimalSave({
+        moduleEquipped: [
+          { infoIndex: 41, level: 136, rarity: 14, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          { infoIndex: 46, level: 130, rarity: 10, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          { infoIndex: 43, level: 134, rarity: 13, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          { infoIndex: 38, level: 138, rarity: 10, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+        ],
         assistModulesAvailable: false,
         assistModuleSlots: [
           {
@@ -456,10 +462,26 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.simCoreAssistSubStoneEfficiency).toBe(19)
     expect(ws.simArmorAssistChassisModuleId).toBe('spaceDisplacer')
     expect(ws.simArmorModuleLevel).toBe(90)
+    expect(ws.simSubmoduleSelections.armor.assist).toMatchObject({
+      'land-mine-radius': 'mythic',
+      defense: 'epic',
+      'health-regen': 'rare',
+      'land-mine-damage': 'mythic',
+    })
+    expect(ws.simSubmoduleSelections.armor.assistSlots?.[3]).toMatchObject({
+      effectId: 'land-mine-damage',
+      rarity: 'mythic',
+    })
     expect(ws.simGeneratorAssistChassisModuleId).toBe(
       gameWorkshopChassisModuleId(28, 'generator'),
     )
     expect(ws.simGeneratorModuleLevel).toBe(66)
+    expect(ws.simSubmoduleSelections.generator.assist['free-utility-upgrade']).toBe(
+      'legendary',
+    )
+    expect(ws.simSubmoduleSelections.generator.assistSlots?.[3]?.effectId).toBe(
+      'free-utility-upgrade',
+    )
     expect(ws.simCoreAssistChassisModuleId).toBe(
       gameWorkshopChassisModuleId(48, 'core'),
     )

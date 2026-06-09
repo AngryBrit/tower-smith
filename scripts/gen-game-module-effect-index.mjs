@@ -113,17 +113,45 @@ export function gameModuleEffectByIndex(
   return GAME_MODULE_EFFECT_BY_INDEX[i] ?? null
 }
 
+/** Decode save effect index for a chassis slot (assist may use primary module level offset). */
+export function gameModuleEffectByIndexForSlot(
+  index: number,
+  slot: WorkshopAssistModuleSlot,
+  moduleLevel = 0,
+  primaryModuleLevel = 0,
+): GameModuleEffectDecode | null {
+  const matchSlot = (decoded: GameModuleEffectDecode | null): GameModuleEffectDecode | null =>
+    decoded != null && decoded.slot === slot ? decoded : null
+
+  const direct = matchSlot(gameModuleEffectByIndex(index, moduleLevel))
+  if (direct != null) return direct
+
+  const primaryLevel = Number.isFinite(primaryModuleLevel)
+    ? Math.max(0, Math.trunc(primaryModuleLevel))
+    : 0
+  if (primaryLevel > 0) {
+    return matchSlot(gameModuleEffectByIndex(index - primaryLevel, 0))
+  }
+  return null
+}
+
 /** Map equipped module \`effects\` array (0 = empty slot) to workshop selection map. */
 export function gameSubmoduleSelectionFromEffectIndices(
   slot: WorkshopAssistModuleSlot,
   effectIndices: readonly number[],
   moduleLevel = 0,
+  primaryModuleLevel = 0,
 ): WorkshopSubmoduleSelectionMap {
   const out: WorkshopSubmoduleSelectionMap = {}
   for (const raw of effectIndices) {
     if (raw === 0) continue
-    const decoded = gameModuleEffectByIndex(raw, moduleLevel)
-    if (decoded == null || decoded.slot !== slot) continue
+    const decoded = gameModuleEffectByIndexForSlot(
+      raw,
+      slot,
+      moduleLevel,
+      primaryModuleLevel,
+    )
+    if (decoded == null) continue
     out[decoded.effectId] = decoded.rarity
   }
   return out

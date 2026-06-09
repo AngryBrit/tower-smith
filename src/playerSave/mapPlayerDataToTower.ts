@@ -36,6 +36,7 @@ import {
   CHASSIS_MODULE_ID_KEY,
   CHASSIS_MODULE_LEVEL_KEY,
   CHASSIS_MODULE_RARITY_KEY,
+  workshopChassisModuleLevel,
 } from '../data/workshopChassisModuleSelection'
 import {
   GAME_ENHANCE_ATTACK_LEVEL_KEYS,
@@ -72,7 +73,7 @@ import {
   gameThemeOwnedIdsFromUnlockArrays,
 } from './gameThemeIndex'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
-import { gameSubmoduleSelectionFromEffectIndices } from './gameModuleEffectIndex'
+import { gameSubmoduleImportFromEffectIndices } from './gameModuleEffectIndex'
 import {
   defaultWorkshopSubmoduleSlotSelections,
   totalCannonAttackSpeedFromSelections,
@@ -618,12 +619,14 @@ function applyModuleEquipped(
     if (moduleId) {
       ws[CHASSIS_MODULE_ID_KEY[slot]] = moduleId
     }
+    const imported = gameSubmoduleImportFromEffectIndices(slot, item.effects, item.level)
     const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
     ws.simSubmoduleSelections = {
       ...ws.simSubmoduleSelections,
       [slot]: {
         ...prev,
-        main: gameSubmoduleSelectionFromEffectIndices(slot, item.effects, item.level),
+        main: imported.map,
+        mainSlots: imported.ordered,
       },
     }
   }
@@ -675,12 +678,19 @@ function applyAssistModuleSlots(
       ws[ASSIST_CHASSIS_MODULE_ID_KEY[slot]] = moduleId
     }
     setAssistModuleLevel(ws, slot, item.level)
+    const imported = gameSubmoduleImportFromEffectIndices(
+      slot,
+      item.effects,
+      item.level,
+      workshopChassisModuleLevel(ws, slot),
+    )
     const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
     ws.simSubmoduleSelections = {
       ...ws.simSubmoduleSelections,
       [slot]: {
         ...prev,
-        assist: gameSubmoduleSelectionFromEffectIndices(slot, item.effects, item.level),
+        assist: imported.map,
+        assistSlots: imported.ordered,
       },
     }
   }

@@ -37,6 +37,7 @@ import {
 import {
   toggleSubmoduleSelection,
   workshopPersistedWithSubmoduleSelections,
+  workshopSubmoduleOrderedSlots,
   workshopSubmoduleSelections,
 } from '../data/workshopSubmoduleSelection'
 import type { WorkshopSubmoduleRarity } from '../data/workshopSubmoduleEffects'
@@ -525,6 +526,7 @@ export function WorkshopModulesPanel({
           slot,
           role,
           nextRoleSelections,
+          effectId,
         ),
       )
     },
@@ -847,6 +849,11 @@ export function WorkshopModulesPanel({
             return { moduleLevel }
           })()}
           submoduleSelections={workshopSubmoduleSelections(
+            workshopPersisted,
+            pickerTarget.slot,
+            pickerTarget.role,
+          )}
+          submoduleOrderedSlots={workshopSubmoduleOrderedSlots(
             workshopPersisted,
             pickerTarget.slot,
             pickerTarget.role,
