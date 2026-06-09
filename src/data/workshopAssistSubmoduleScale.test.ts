@@ -4,6 +4,7 @@ import { loadResearchFixture } from '../test/researchFixture'
 import type { ResearchData } from '../types/research'
 import { submoduleEffectId } from './workshopSubmoduleCatalog'
 import {
+  assistSubmodulePickerSlotText,
   assistSubmoduleSubEfficiencyPercent,
   scaleAssistSubmoduleRawValue,
 } from './workshopAssistSubmoduleScale'
@@ -30,6 +31,129 @@ describe('workshopAssistSubmoduleScale', () => {
     expect(
       scaleAssistSubmoduleRawValue(3, submoduleEffectId('Crit Chance [%]'), 70),
     ).toBe(2)
+  })
+
+  it('formats Max Recovery assist picks as proportional × with 2 dp', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simGeneratorAssistUnlocked: true,
+      simGeneratorAssistChassisModuleId: 'pulsarHarvester',
+      simGeneratorAssistSubStoneEfficiency: 19,
+    }
+    const ctx = { ws, research: null, labOverrides: {} }
+    expect(
+      assistSubmodulePickerSlotText(
+        '0.4',
+        'Max Recovery',
+        submoduleEffectId('Max Recovery'),
+        ctx,
+        'generator',
+      ),
+    ).toBe('+0.08x Max Recovery')
+    expect(
+      scaleAssistSubmoduleRawValue(
+        0.4,
+        submoduleEffectId('Max Recovery'),
+        19,
+      ),
+    ).toBeCloseTo(0.076, 6)
+  })
+
+  it('formats assist picker percent lines with one decimal', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simGeneratorAssistUnlocked: true,
+      simGeneratorAssistChassisModuleId: 'pulsarHarvester',
+      simGeneratorAssistSubStoneEfficiency: 20,
+    }
+    const ctx = { ws, research: null, labOverrides: {} }
+    expect(
+      assistSubmodulePickerSlotText(
+        '11',
+        'Package Chance [%]',
+        submoduleEffectId('Package Chance [%]'),
+        ctx,
+        'generator',
+      ),
+    ).toBe('+2.2% Package Chance')
+    expect(
+      assistSubmodulePickerSlotText(
+        '11',
+        'Package Chance [%]',
+        submoduleEffectId('Package Chance [%]'),
+        {
+          ws: { ...ws, simGeneratorAssistSubStoneEfficiency: 19 },
+          research: null,
+          labOverrides: {},
+        },
+        'generator',
+      ),
+    ).toBe('+2.1% Package Chance')
+    expect(
+      assistSubmodulePickerSlotText(
+        '11',
+        'Package Chance [%]',
+        submoduleEffectId('Package Chance [%]'),
+        {
+          ws: {
+            ...ws,
+            simGeneratorAssistSubStoneEfficiency: 19,
+            simGeneratorAssistUniqueRarity: 'legendary',
+          },
+          research: null,
+          labOverrides: {},
+        },
+        'generator',
+      ),
+    ).toBe('+2.2% Package Chance')
+    expect(
+      assistSubmodulePickerSlotText(
+        '8',
+        'Enemy Attack Level Skip [%]',
+        submoduleEffectId('Enemy Attack Level Skip [%]'),
+        ctx,
+        'generator',
+      ),
+    ).toBe('+1.6% Enemy Attack Level Skip')
+  })
+
+  it('adds unique-effect tier level to assist picker scaling (petethered Pulsar Harvester)', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simGeneratorAssistUnlocked: true,
+      simGeneratorAssistChassisModuleId: 'pulsarHarvester',
+      simGeneratorAssistUniqueRarity: 'legendary',
+      simGeneratorAssistSubStoneEfficiency: 19,
+    }
+    const ctx = { ws, research: null, labOverrides: {} }
+    expect(assistSubmoduleSubEfficiencyPercent(ws, 'generator', null, {})).toBe(19)
+    expect(
+      assistSubmodulePickerSlotText(
+        '11',
+        'Package Chance [%]',
+        submoduleEffectId('Package Chance [%]'),
+        ctx,
+        'generator',
+      ),
+    ).toBe('+2.2% Package Chance')
+    expect(
+      assistSubmodulePickerSlotText(
+        '8',
+        'Enemy Attack Level Skip [%]',
+        submoduleEffectId('Enemy Attack Level Skip [%]'),
+        ctx,
+        'generator',
+      ),
+    ).toBe('+1.6% Enemy Attack Level Skip')
+    expect(
+      assistSubmodulePickerSlotText(
+        '8',
+        'Enemy Health Level Skip [%]',
+        submoduleEffectId('Enemy Health Level Skip [%]'),
+        ctx,
+        'generator',
+      ),
+    ).toBe('+1.6% Enemy Health Level Skip')
   })
 
   it('scales sub-stats by sub stone + substats lab %', () => {

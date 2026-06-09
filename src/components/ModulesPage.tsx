@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -14,6 +15,7 @@ import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { resetTowerBuildModules, splitTowerBuild } from '../towerBuildStorage'
 import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useI18n } from '../i18n'
+import { mergeLabOverridesForDisplayedDamage } from '../data/workshopLabOverridesForDamage'
 import type { ResearchData } from '../types/research'
 
 type ModulesPageProps = {
@@ -49,8 +51,24 @@ export function ModulesPage({
 }: ModulesPageProps) {
   const { t } = useI18n()
   const { pushUndoSnapshot } = useWorkspaceUndo()
-  const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides } =
-    useTowerWorkspaceContext()
+  const {
+    workshopFlat,
+    setTowerBuild,
+    setScratchTowerBuild,
+    labLevelOverrides,
+    gameResearchLevel,
+  } = useTowerWorkspaceContext()
+  const mergedLabLevelOverrides = useMemo(
+    () =>
+      researchData != null
+        ? mergeLabOverridesForDisplayedDamage(
+            researchData,
+            labLevelOverrides,
+            gameResearchLevel,
+          )
+        : labLevelOverrides,
+    [researchData, labLevelOverrides, gameResearchLevel],
+  )
   const [resetModulesConfirmOpen, setResetModulesConfirmOpen] = useState(false)
   const workshopPersistedRef = useRef(workshopFlat)
 
@@ -102,7 +120,7 @@ export function ModulesPage({
         workshopPersisted={workshopFlat}
         onWorkshopPersistedChange={onWorkshopPersistedChange}
         researchData={researchData}
-        labLevelOverrides={labLevelOverrides}
+        labLevelOverrides={mergedLabLevelOverrides}
       />
 
       {resetModulesConfirmOpen

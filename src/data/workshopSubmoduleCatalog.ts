@@ -64,21 +64,29 @@ export function formatSubmoduleCellDisplay(cell: string, effectLabel?: string): 
   const hasLeadingSign = /^[+-]/.test(trimmed)
   let display = hasLeadingSign ? trimmed : `+${trimmed}`
 
-  if (unit == null) return display
+  if (unit != null) {
+    const unitPattern =
+      unit === '%'
+        ? /%$/
+        : unit === 'm'
+          ? /m$/i
+          : unit === 's'
+            ? /s$/i
+            : unit === 'x'
+              ? /x$/i
+              : null
 
-  const unitPattern =
-    unit === '%'
-      ? /%$/
-      : unit === 'm'
-        ? /m$/i
-        : unit === 's'
-          ? /s$/i
-          : unit === 'x'
-            ? /x$/i
-            : null
+    if (unitPattern != null && !unitPattern.test(display)) {
+      display = `${display}${unit}`
+    }
+  }
 
-  if (unitPattern != null && !unitPattern.test(display)) {
-    display = `${display}${unit}`
+  if (
+    effectLabel != null &&
+    isSubmoduleMultiplierEffectLabel(effectLabel) &&
+    !/x$/i.test(display)
+  ) {
+    display = `${display}x`
   }
 
   return display
@@ -86,6 +94,13 @@ export function formatSubmoduleCellDisplay(cell: string, effectLabel?: string): 
 
 /** Wiki [%] rows that use in-game `+n% Stat %` (trailing % on the stat name). */
 const SUBMODULE_PICKER_PERCENT_TRAILING_NAME = new Set(['Defense'])
+
+/** Submodule rows whose wiki cells are additive × multipliers (`0.4` → `+0.4x`). */
+const SUBMODULE_MULTIPLIER_EFFECT_LABELS = new Set(['Max Recovery'])
+
+export function isSubmoduleMultiplierEffectLabel(label: string): boolean {
+  return SUBMODULE_MULTIPLIER_EFFECT_LABELS.has(submoduleEffectDisplayName(label))
+}
 
 /** In-game module picker slot (`Defense [%]` + `5` → `+5% Defense %`). */
 export function submoduleEffectPickerSlotText(cell: string, effectLabel: string): string {
@@ -130,6 +145,49 @@ export function parseSubmoduleCellNumber(cell: string | null): number | null {
   if (cell == null) return null
   const n = Number(cell.replace(/[^0-9.-]/g, ''))
   return Number.isFinite(n) ? n : null
+}
+
+function trimTrailingDisplayZeros(value: string): string {
+  if (!value.includes('.')) return value
+  return value.replace(/\.?0+$/, '')
+}
+
+/** Rebuild a wiki cell for assist picker display (`11` at 20% eff → `2.2%`). */
+export function submoduleCellFromScaledNumber(
+  scaled: number,
+  templateCell: string,
+  effectLabel?: string,
+): string {
+  const trimmed = templateCell.trim()
+  const suffix = trimmed.replace(/^[+-]?[0-9.]+/, '')
+  const templateNum = trimmed.replace(/[^0-9.-]/g, '')
+  const labelUnit = submoduleLabelUnit(effectLabel)
+  const isPercent = suffix === '%' || labelUnit === '%'
+
+  if (effectLabel != null && isSubmoduleMultiplierEffectLabel(effectLabel)) {
+    if (scaled === 0) return '0x'
+    return `${scaled < 0 ? '-' : ''}${Number(Math.abs(scaled).toFixed(2))}x`
+  }
+
+  if (scaled === 0) return isPercent ? '0%' : `0${suffix}`
+
+  const sign = scaled < 0 ? '-' : ''
+  const abs = Math.abs(scaled)
+
+  if (isPercent) {
+    return `${sign}${trimTrailingDisplayZeros(abs.toFixed(1))}%`
+  }
+
+  if (templateNum.includes('.') || suffix !== '') {
+    const decimals = suffix === 's' || suffix === 'm' ? 2 : 1
+    return `${sign}${trimTrailingDisplayZeros(abs.toFixed(decimals))}${suffix}`
+  }
+
+  if (Math.abs(abs - Math.round(abs)) < 1e-9) {
+    return `${sign}${Math.trunc(abs)}${suffix}`
+  }
+
+  return `${sign}${trimTrailingDisplayZeros(abs.toFixed(1))}${suffix}`
 }
 
 export const WORKSHOP_SUBMODULE_GLOBAL_INTRO: readonly string[] = [

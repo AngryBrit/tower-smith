@@ -31,6 +31,10 @@ import {
   workshopChassisModuleHasDedicatedArt,
 } from '../data/workshopModuleImages'
 import {
+  assistSubmodulePickerSlotText,
+  type WorkshopSubmoduleBonusContext,
+} from '../data/workshopAssistSubmoduleScale'
+import {
   WORKSHOP_SUBMODULE_SECTIONS,
   WORKSHOP_SUBMODULE_SLOT_COUNT,
   WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL,
@@ -113,6 +117,8 @@ type ChassisModulePickerDialogProps = {
   heroStatContext: WorkshopChassisModuleHeroStatContext
   submoduleSelections: WorkshopSubmoduleSelectionMap
   submoduleOrderedSlots?: WorkshopSubmoduleOrderedSlots
+  /** When `pickerRole` is assist, scales equipped sub-effect values by sub-stone + lab %. */
+  assistSubmoduleBonusContext?: WorkshopSubmoduleBonusContext
   onSelect: (moduleId: string, rarity: WorkshopChassisModuleMergeTier) => void
   onClear: (rarity: WorkshopChassisModuleMergeTier) => void
   onSelectEffect: (
@@ -242,18 +248,37 @@ type SubmodulePickerEntry = {
 function submodulePickerEntry(
   slot: WorkshopAssistModuleSlot,
   pick: WorkshopSubmoduleEffectPick,
+  assistScale?: WorkshopSubmoduleBonusContext,
 ): SubmodulePickerEntry | null {
   const section = WORKSHOP_SUBMODULE_SECTIONS[slot]
   const row = section.rows.find((r) => submoduleEffectId(r.label) === pick.effectId)
   if (row == null) return null
   const cell = row.cells[pick.rarity]
   if (cell == null) return null
+  const effectId = pick.effectId
   return {
-    effectId: pick.effectId,
+    effectId,
     rarity: pick.rarity,
     label: row.label,
-    pickerText: submoduleEffectPickerSlotText(cell, row.label),
+    pickerText:
+      assistScale != null
+        ? assistSubmodulePickerSlotText(cell, row.label, effectId, assistScale, slot)
+        : submoduleEffectPickerSlotText(cell, row.label),
   }
+}
+
+function submoduleCellDisplayForPicker(
+  cell: string,
+  effectLabel: string,
+  effectId: string,
+  slot: WorkshopAssistModuleSlot,
+  pickerRole: 'main' | 'assist',
+  assistScale?: WorkshopSubmoduleBonusContext,
+): string {
+  if (pickerRole === 'assist' && assistScale != null) {
+    return assistSubmodulePickerSlotText(cell, effectLabel, effectId, assistScale, slot)
+  }
+  return formatSubmoduleCellDisplay(cell, effectLabel)
 }
 
 export function ChassisModulePickerDialog({
@@ -268,6 +293,7 @@ export function ChassisModulePickerDialog({
   heroStatContext,
   submoduleSelections,
   submoduleOrderedSlots,
+  assistSubmoduleBonusContext,
   onSelect,
   onClear,
   onSelectEffect,
@@ -532,7 +558,14 @@ export function ChassisModulePickerDialog({
                     return (
                       <option key={rarity} value={rarity}>
                         {t(SUB_RARITY_LABEL[rarity])} (
-                        {formatSubmoduleCellDisplay(cell, optionsRow.label)})
+                        {submoduleCellDisplayForPicker(
+                          cell,
+                          optionsRow.label,
+                          optionsEffectId,
+                          slot,
+                          pickerRole,
+                          assistSubmoduleBonusContext,
+                        )})
                       </option>
                     )
                   })}
@@ -555,7 +588,14 @@ export function ChassisModulePickerDialog({
               const blockedByRarity = unlockAt > rarityMax
               const rawLevel = clampWorkshopAssistModuleLevel(moduleLevel)
               const pick = submoduleOrderedSlots?.[index] ?? null
-              const entry = pick != null ? submodulePickerEntry(slot, pick) : null
+              const entry =
+                pick != null
+                  ? submodulePickerEntry(
+                      slot,
+                      pick,
+                      pickerRole === 'assist' ? assistSubmoduleBonusContext : undefined,
+                    )
+                  : null
               const unlocked =
                 entry != null || (!blockedByRarity && rawLevel >= unlockAt)
               return (

@@ -619,7 +619,13 @@ function applyModuleEquipped(
     if (moduleId) {
       ws[CHASSIS_MODULE_ID_KEY[slot]] = moduleId
     }
-    const imported = gameSubmoduleImportFromEffectIndices(slot, item.effects, item.level)
+    const imported = gameSubmoduleImportFromEffectIndices(
+      slot,
+      item.effects,
+      item.level,
+      0,
+      merge,
+    )
     const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
     ws.simSubmoduleSelections = {
       ...ws.simSubmoduleSelections,
@@ -683,6 +689,7 @@ function applyAssistModuleSlots(
       item.effects,
       item.level,
       workshopChassisModuleLevel(ws, slot),
+      merge,
     )
     const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
     ws.simSubmoduleSelections = {

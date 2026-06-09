@@ -166,6 +166,7 @@ import {
 import { WorkshopUltimateWeaponCard } from './WorkshopUltimateWeaponCard'
 import { workshopAttackSpeedDisplayOptsFromPersisted } from '../data/workshopDisplayedAttackSpeed'
 import { workshopDamageDisplayOptsFromPersisted } from '../data/workshopDisplayedDamage'
+import { mergeLabOverridesForDisplayedDamage } from '../data/workshopLabOverridesForDamage'
 import type { WorkshopAttackSpeedDisplayOpts } from '../data/workshopAttackSpeed'
 import { workshopEnhancementsLabUnlocked } from '../data/workshopEnhanceResearch'
 const WorkshopEnhanceAttackPanel = lazy(() =>
@@ -2418,13 +2419,25 @@ export function WorkshopPage({
     [workshopPersisted.relicOwnedIds],
   )
 
+  const mergedLabLevelOverrides = useMemo(
+    () =>
+      researchData != null
+        ? mergeLabOverridesForDisplayedDamage(
+            researchData,
+            labLevelOverrides,
+            gameResearchLevel,
+          )
+        : labLevelOverrides,
+    [researchData, labLevelOverrides, gameResearchLevel],
+  )
+
   const submoduleBonusContext = useMemo(
     (): WorkshopSubmoduleBonusContext => ({
       ws: workshopPersisted,
       research: researchData,
-      labOverrides: labLevelOverrides,
+      labOverrides: mergedLabLevelOverrides,
     }),
-    [workshopPersisted, researchData, labLevelOverrides],
+    [workshopPersisted, researchData, mergedLabLevelOverrides],
   )
 
   const defenseStatLabDisplayOpts = useMemo((): WorkshopDefenseStatDisplayOpts | undefined => {

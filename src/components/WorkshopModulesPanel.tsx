@@ -858,6 +858,15 @@ export function WorkshopModulesPanel({
             pickerTarget.slot,
             pickerTarget.role,
           )}
+          assistSubmoduleBonusContext={
+            pickerTarget.role === 'assist'
+              ? {
+                  ws: workshopPersisted,
+                  research: researchData,
+                  labOverrides: labLevelOverrides,
+                }
+              : undefined
+          }
           onSelect={(moduleId, rarity) => {
             if (pickerTarget.role === 'main') {
               selectChassisModule(pickerTarget.slot, moduleId, rarity)

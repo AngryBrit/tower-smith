@@ -7,6 +7,7 @@ import {
   WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL,
   formatSubmoduleCellDisplay,
   parseSubmoduleCellNumber,
+  submoduleCellFromScaledNumber,
   submoduleEffectPickerSlotText,
 } from './workshopSubmoduleCatalog'
 
@@ -41,6 +42,17 @@ describe('workshopSubmoduleCatalog', () => {
     expect(formatSubmoduleCellDisplay('100', 'Health Regen [%]')).toBe('+100%')
     expect(formatSubmoduleCellDisplay('40', 'Wall Health [%]')).toBe('+40%')
     expect(formatSubmoduleCellDisplay('2%', 'Bounce Shot Chance')).toBe('+2%')
+  })
+
+  it('formats Max Recovery submodule cells with x multiplier suffix', () => {
+    expect(formatSubmoduleCellDisplay('0.4', 'Max Recovery')).toBe('+0.4x')
+    expect(submoduleCellFromScaledNumber(0.076, '0.4', 'Max Recovery')).toBe('0.08x')
+    expect(submoduleEffectPickerSlotText('0.4', 'Max Recovery')).toBe('+0.4x Max Recovery')
+  })
+
+  it('formats scaled assist percent cells with one decimal', () => {
+    expect(submoduleCellFromScaledNumber(2.2, '11', 'Package Chance [%]')).toBe('2.2%')
+    expect(submoduleCellFromScaledNumber(3, '6', 'Crit Chance [%]')).toBe('3%')
   })
 
   it('formats in-game picker slot text for percent effects', () => {

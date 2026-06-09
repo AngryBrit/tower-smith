@@ -464,8 +464,8 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.simArmorModuleLevel).toBe(90)
     expect(ws.simSubmoduleSelections.armor.assist).toMatchObject({
       'land-mine-radius': 'mythic',
-      defense: 'epic',
-      'health-regen': 'rare',
+      defense: 'rare',
+      'health-regen': 'common',
       'land-mine-damage': 'mythic',
     })
     expect(ws.simSubmoduleSelections.armor.assistSlots?.[3]).toMatchObject({
@@ -476,16 +476,50 @@ describe('playerSaveToWorkshop', () => {
       gameWorkshopChassisModuleId(28, 'generator'),
     )
     expect(ws.simGeneratorModuleLevel).toBe(66)
-    expect(ws.simSubmoduleSelections.generator.assist['free-utility-upgrade']).toBe(
-      'legendary',
-    )
-    expect(ws.simSubmoduleSelections.generator.assistSlots?.[3]?.effectId).toBe(
-      'free-utility-upgrade',
-    )
+    expect(ws.simSubmoduleSelections.generator.assist).toMatchObject({
+      'package-chance': 'mythic',
+      'enemy-attack-level-skip': 'ancestral',
+      'enemy-health-level-skip': 'ancestral',
+      'max-recovery': 'epic',
+    })
+    expect(ws.simSubmoduleSelections.generator.assistSlots?.[0]).toMatchObject({
+      effectId: 'package-chance',
+      rarity: 'mythic',
+    })
+    expect(ws.simSubmoduleSelections.generator.assistSlots?.[3]).toMatchObject({
+      effectId: 'max-recovery',
+      rarity: 'epic',
+    })
     expect(ws.simCoreAssistChassisModuleId).toBe(
       gameWorkshopChassisModuleId(48, 'core'),
     )
     expect(ws.simCoreModuleLevel).toBe(41)
+  })
+
+  it('imports Project Funding ancestral generator submodules from compressed save indices', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        moduleEquipped: [
+          { infoIndex: 0, level: 1, rarity: 4, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          { infoIndex: 0, level: 1, rarity: 4, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          {
+            infoIndex: 43,
+            level: 134,
+            rarity: 13,
+            effects: [216, 212, 191, 208, 0, 0, 0, 0],
+          },
+          { infoIndex: 0, level: 1, rarity: 4, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+        ],
+      }),
+    )
+    expect(ws.simGeneratorChassisModuleId).toBe('projectFunding')
+    expect(ws.simGeneratorChassisModuleRarity).toBe('star_3')
+    expect(ws.simSubmoduleSelections.generator.main).toMatchObject({
+      'enemy-health-level-skip': 'ancestral',
+      'enemy-attack-level-skip': 'ancestral',
+      'free-utility-upgrade': 'common',
+      'package-chance': 'ancestral',
+    })
   })
 
   it('imports James Wright cannon Shrink Ray (infoIndex 41)', async () => {

@@ -13,10 +13,17 @@ import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import type { ResearchData } from '../types/research'
 
 import { assistFlooredQuantity } from './workshopAssistModuleCatalog'
-import { submoduleEffectId } from './workshopSubmoduleCatalog'
+import {
+  parseSubmoduleCellNumber,
+  submoduleCellFromScaledNumber,
+  submoduleEffectId,
+  submoduleEffectPickerSlotText,
+} from './workshopSubmoduleCatalog'
 
+import type { WorkshopChassisModuleEffectTier } from './workshopChassisModuleShared'
 import {
   assistSubStoneEfficiencyFromPersisted,
+  assistUniqueRarityFromPersisted,
   clampAssistSubmoduleEfficiencyPercent,
   workshopAssistChassisModuleSelection,
 } from './workshopAssistChassisModule'
@@ -39,32 +46,49 @@ export type WorkshopSubmoduleBonusContext = {
 
 
 
-/** Sub stone % + Assist Module Substats lab % for this slot. */
-
+/** Sub stone % + Assist Module Substats lab % for this slot (wiki combined cap 100%). */
 export function assistSubmoduleSubEfficiencyPercent(
-
   ws: WorkshopPersistedV1,
-
   slot: WorkshopAssistModuleSlot,
-
   research: ResearchData | null,
-
   labOverrides: Record<string, number>,
-
 ): number {
-
   const stone = assistSubStoneEfficiencyFromPersisted(ws, slot)
-
   const lab =
-
     research != null
-
       ? workshopAssistModuleLabPercentPoints(research, labOverrides, slot).substatsPercent
-
       : 0
-
   return stone + lab
+}
 
+const ASSIST_UNIQUE_EFFECT_TIER_ORDER: readonly WorkshopChassisModuleEffectTier[] = [
+  'epic',
+  'legendary',
+  'mythic',
+  'ancestral',
+]
+
+/** Matches game `uniqueEffectEfficiencyLevel` (0…3) added to sub-stat picker scaling only. */
+function assistUniqueEffectLevelPickerBonus(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+): number {
+  const tier = assistUniqueRarityFromPersisted(ws, slot)
+  const idx = ASSIST_UNIQUE_EFFECT_TIER_ORDER.indexOf(tier)
+  return idx >= 0 ? idx : 0
+}
+
+/** In-game assist module picker combines sub stone, substats lab, and unique-effect tier level. */
+export function assistSubmodulePickerDisplayEfficiencyPercent(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+  research: ResearchData | null,
+  labOverrides: Record<string, number>,
+): number {
+  return clampAssistSubmoduleEfficiencyPercent(
+    assistSubmoduleSubEfficiencyPercent(ws, slot, research, labOverrides) +
+      assistUniqueEffectLevelPickerBonus(ws, slot),
+  )
 }
 
 
@@ -85,11 +109,10 @@ export function assistSubmoduleEffectsActive(
 
 
 
-/** Apply assist stone + lab scaling to a raw catalog cell value (floored). */
-
-/** Fractional submodule values (e.g. attack speed) scale proportionally; integer stats floor. */
+/** Fractional submodule values scale proportionally in sim; integer quantity stats floor. */
 const ASSIST_PROPORTIONAL_SUBMODULE_EFFECT_IDS = new Set([
   submoduleEffectId('Attack Speed'),
+  submoduleEffectId('Max Recovery'),
 ])
 
 export function scaleAssistSubmoduleRawValue(
@@ -103,6 +126,16 @@ export function scaleAssistSubmoduleRawValue(
     return (rawValue * eff) / 100
   }
   return assistFlooredQuantity(rawValue, eff)
+}
+
+/** Proportional scaled value for assist picker display (may show decimals; sim still floors). */
+export function assistSubmoduleDisplayScaledValue(
+  rawValue: number,
+  efficiencyPercent: number,
+): number {
+  if (rawValue === 0 || efficiencyPercent <= 0) return 0
+  const eff = clampAssistSubmoduleEfficiencyPercent(efficiencyPercent)
+  return (rawValue * eff) / 100
 }
 
 
@@ -129,6 +162,30 @@ export function scaleAssistSubmoduleValueForSlot(
 
   return scaleAssistSubmoduleRawValue(rawValue, effectId, eff)
 
+}
+
+/** In-game assist module picker line with sub-stone + lab scaling applied. */
+export function assistSubmodulePickerSlotText(
+  cell: string,
+  effectLabel: string,
+  effectId: string,
+  ctx: WorkshopSubmoduleBonusContext,
+  slot: WorkshopAssistModuleSlot,
+): string {
+  const raw = parseSubmoduleCellNumber(cell) ?? 0
+  const eff = assistSubmodulePickerDisplayEfficiencyPercent(
+    ctx.ws,
+    slot,
+    ctx.research,
+    ctx.labOverrides,
+  )
+  const scaled = assistSubmoduleEffectsActive(ctx.ws, slot)
+    ? assistSubmoduleDisplayScaledValue(raw, eff)
+    : 0
+  return submoduleEffectPickerSlotText(
+    submoduleCellFromScaledNumber(scaled, cell, effectLabel),
+    effectLabel,
+  )
 }
 
 

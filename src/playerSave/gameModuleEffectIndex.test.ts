@@ -87,6 +87,30 @@ describe('gameModuleEffectIndex', () => {
       effectId: 'enemy-attack-level-skip',
       rarity: 'epic',
     })
+    expect(gameModuleEffectByIndex(215)).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+    expect(gameModuleEffectByIndex(219)).toMatchObject({
+      effectId: 'enemy-health-level-skip',
+      rarity: 'ancestral',
+    })
+  })
+
+  it('imports compressed ancestral generator indices on Ancestral-tier Project Funding', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [216, 212, 191, 208, 0, 0, 0, 0],
+      134,
+      0,
+      'star_2',
+    )
+    expect(imported.map).toMatchObject({
+      'enemy-health-level-skip': 'ancestral',
+      'enemy-attack-level-skip': 'ancestral',
+      'free-utility-upgrade': 'common',
+      'package-chance': 'ancestral',
+    })
   })
 
   it('decodes level-offset effect index 330 as Package Chance mythic at 210', () => {
@@ -94,28 +118,52 @@ describe('gameModuleEffectIndex', () => {
     expect(gameModuleEffectByIndex(330, 119)).toEqual(gameModuleEffectByIndex(211))
   })
 
-  it('decodes assist generator effect with primary module level offset (petethered slot 3)', () => {
-    expect(
-      gameModuleEffectByIndexForSlot(328, 'generator', 66, 134),
-    ).toMatchObject({
-      effectId: 'free-utility-upgrade',
-      rarity: 'legendary',
+  it('maps crit chance index 7 to common (+2%)', () => {
+    expect(gameModuleEffectByIndex(7)).toMatchObject({
+      effectId: 'crit-chance',
+      rarity: 'common',
     })
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [7, 0, 0, 0, 0, 0, 0, 0],
+      136,
+    )
+    expect(imported.map['crit-chance']).toBe('common')
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'crit-chance',
+      rarity: 'common',
+    })
+  })
+
+  it('decodes Pulsar Harvester assist generator effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'generator',
       [207, 212, 216, 328, 0, 0, 0, 0],
       66,
       134,
+      'star_2',
     )
-    expect(imported.map).toMatchObject({
-      'max-recovery': 'mythic',
-      'enemy-attack-level-skip': 'epic',
-      'enemy-health-level-skip': 'epic',
-      'free-utility-upgrade': 'legendary',
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'package-chance',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'enemy-health-level-skip',
+      rarity: 'ancestral',
     })
     expect(imported.ordered[3]).toMatchObject({
-      effectId: 'free-utility-upgrade',
-      rarity: 'legendary',
+      effectId: 'max-recovery',
+      rarity: 'epic',
+    })
+    expect(imported.map).toMatchObject({
+      'package-chance': 'mythic',
+      'enemy-attack-level-skip': 'ancestral',
+      'enemy-health-level-skip': 'ancestral',
+      'max-recovery': 'epic',
     })
   })
 
