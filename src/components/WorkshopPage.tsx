@@ -133,6 +133,7 @@ import {
 import { workshopDisplayedLandMineDamageEnhancementMultiplier } from '../data/workshopLandMineDamage'
 import { workshopDisplayedCashBonusEnhancementAdditive } from '../data/workshopCashBonus'
 import { workshopDisplayedWallHealthEnhancementMultiplier } from '../data/workshopWallHealth'
+import { workshopDisplayedRecoveryAmountEnhancementMultiplier } from '../data/workshopRecoveryAmount'
 import {
   WORKSHOP_UTILITY_UPGRADE_ORDER,
   workshopUtilityClampLevel,
@@ -2574,6 +2575,11 @@ export function WorkshopPage({
       workshopPersisted.enhanceCashBonusLevel,
       enhancementsUnlocked,
     )
+    const recoveryAmountEnhanceMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(
+      workshopPersisted.enhanceRecoveryPackageLevel,
+      workshopPersisted.enhanceFreeUpgradesLevel,
+      enhancementsUnlocked,
+    )
     const generatorChassis = workshopChassisModuleHeroStatMultiplier(
       workshopPersisted,
       'generator',
@@ -2587,12 +2593,15 @@ export function WorkshopPage({
       ...chassisUtility,
       cashBonusLabMultiplier: mergeLabAndCardMult(lab?.cashBonusLabMultiplier, cash),
       cashPerWaveLabMultiplier: mergeLabAndCardMult(lab?.cashPerWaveLabMultiplier, cash),
-      coinsKillBonusLabMultiplier: mergeLabAndCardMult(lab?.coinsKillBonusLabMultiplier, coins),
-      coinsWaveLabMultiplier: mergeLabAndCardMult(lab?.coinsWaveLabMultiplier, coins),
+      coinsKillBonusCardMultiplier: coins > 1 + 1e-9 ? coins : undefined,
       freeUpgradesCardPercentPoints: freeUpgrades > 0 ? freeUpgrades : undefined,
       packageChanceCardPercentPoints: packageChance > 0 ? packageChance : undefined,
       cashBonusEnhanceAdditive:
         cashBonusEnhanceAdd > 0 ? cashBonusEnhanceAdd : undefined,
+      recoveryAmountEnhancementsMultiplier:
+        recoveryAmountEnhanceMult > 1 + 1e-9 ? recoveryAmountEnhanceMult : undefined,
+      enhanceFreeUpgradesLevel: workshopPersisted.enhanceFreeUpgradesLevel,
+      workshopEnhancementsLabUnlocked: enhancementsUnlocked,
     }
     if (
       lab == null &&
@@ -2601,6 +2610,8 @@ export function WorkshopPage({
       freeUpgrades === 0 &&
       packageChance === 0 &&
       cashBonusEnhanceAdd <= 0 &&
+      recoveryAmountEnhanceMult <= 1 + 1e-9 &&
+      workshopPersisted.enhanceFreeUpgradesLevel <= 0 &&
       Object.keys(chassisUtility).length === 0
     ) {
       return enrichUtilityLabDisplayOpts(

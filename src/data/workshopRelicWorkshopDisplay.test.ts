@@ -7,6 +7,7 @@ import {
   enrichAttackLabDisplayOpts,
   enrichBotLabDisplayOpts,
   enrichDefenseStatDisplayOpts,
+  enrichUtilityLabDisplayOpts,
   workshopRelicsLabSpeedMultiplier,
 } from './workshopRelicWorkshopDisplay'
 import { workshopDamagePerMeterStatDisplay } from './workshopDamagePerMeter'
@@ -34,6 +35,41 @@ describe('workshopRelicWorkshopDisplay', () => {
     const owned = new Set(['angler_fish'])
     const opts = enrichDefenseStatDisplayOpts(undefined, owned)
     expect(opts?.thornDamageRelicsPercentPoints).toBe(2)
+  })
+
+  it('merges cash relic into Cash Bonus lab mult but not Cash / Wave', () => {
+    const owned = new Set(['omniscience'])
+    const opts = enrichUtilityLabDisplayOpts(
+      { cashBonusLabMultiplier: 1.5, cashPerWaveLabMultiplier: 1.1 },
+      owned,
+    )
+    expect(opts?.cashBonusLabMultiplier).toBeCloseTo(1.5 * 1.05)
+    expect(opts?.cashPerWaveLabMultiplier).toBeCloseTo(1.1)
+  })
+
+  it('merges coins relic into Cash Bonus but not Coins / Kill Bonus lab mult', () => {
+    const owned = new Set(['omniscience'])
+    const opts = enrichUtilityLabDisplayOpts(
+      { cashBonusLabMultiplier: 1.5, coinsKillBonusLabMultiplier: 2.78 },
+      owned,
+    )
+    expect(opts?.cashBonusLabMultiplier).toBeCloseTo(1.5 * 1.05)
+    expect(opts?.coinsKillBonusLabMultiplier).toBeCloseTo(2.78)
+  })
+
+  it('does not merge coins relic into Coins / Wave lab mult', () => {
+    const owned = new Set(['omniscience'])
+    const opts = enrichUtilityLabDisplayOpts({ coinsWaveLabMultiplier: 1.52 }, owned)
+    expect(opts?.coinsWaveLabMultiplier).toBeCloseTo(1.52)
+  })
+
+  it('merges free attack relic % with submodule points instead of replacing', () => {
+    const owned = new Set(['rlyeh'])
+    const opts = enrichUtilityLabDisplayOpts(
+      { freeAttackUpgradeRelicPercentPoints: 6 },
+      owned,
+    )
+    expect(opts?.freeAttackUpgradeRelicPercentPoints).toBe(7)
   })
 
   it('stacks owned lab-speed relic % as a labs multiplier', () => {

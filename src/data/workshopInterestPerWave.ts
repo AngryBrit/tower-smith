@@ -6,6 +6,8 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import type { ResearchData } from '../types/research'
+import { utilityResearchDamageStyleLabMultiplier } from '../types/research'
 export const WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL = 99 as const
 
 /** One-time workshop unlock cost (before level purchases). */
@@ -30,6 +32,19 @@ export function workshopInterestPerWaveStatPercentPoints(completedLevels: number
 export function workshopInterestPerWaveStatDisplay(completedLevels: number): string {
   const pct = workshopInterestPerWaveStatPercentPoints(completedLevels)
   return `${pct.toFixed(2)}%`
+}
+
+/**
+ * **Interest / Wave** workshop card: × **Interest** lab × **Cash / Wave** lab (calibrated:
+ * workshop L99 + Cash / Wave L5 → **6.53%** in-game).
+ */
+export function workshopInterestPerWaveLabDisplayMultiplier(
+  research: ResearchData,
+  labOverrides: Record<string, number>,
+): number {
+  const interest = utilityResearchDamageStyleLabMultiplier(research, labOverrides, 'Interest')
+  const cashWave = utilityResearchDamageStyleLabMultiplier(research, labOverrides, 'Cash / Wave')
+  return interest * cashWave
 }
 
 export function workshopInterestPerWaveNextMarginalCoins(completedLevels: number): number | undefined {

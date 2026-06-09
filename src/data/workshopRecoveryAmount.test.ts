@@ -1,29 +1,33 @@
 import { describe, expect, it } from 'vitest'
 import {
-  WORKSHOP_RECOVERY_AMOUNT_MAX_LEVEL,
-  workshopRecoveryAmountNextMarginalCoins,
-  workshopRecoveryAmountStatDisplay,
-  workshopRecoveryAmountStatPercent,
+  WORKSHOP_DISPLAYED_RECOVERY_AMOUNT_FREE_UPGRADES_ENHANCE_EXCESS_FRACTION,
+  workshopDisplayedRecoveryAmountEnhancementMultiplier,
 } from './workshopRecoveryAmount'
-import { WORKSHOP_RECOVERY_UNLOCK_COINS } from './workshopRecoveryShared'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
+import { workshopEnhanceFreeUpgradesMultiplier } from './workshopEnhanceFreeUpgrades'
 
-describe('workshopRecoveryAmount', () => {
-  it('uses exact +0.40% per level and shared wiki marginal Cost', () => {
-    expect(WORKSHOP_RECOVERY_UNLOCK_COINS).toBe(1_500_000)
-    expect(workshopRecoveryAmountStatPercent(0)).toBe(14)
-    expect(workshopRecoveryAmountStatPercent(1)).toBe(14.4)
-    expect(workshopRecoveryAmountStatPercent(300)).toBe(134)
-    expect(workshopRecoveryAmountStatDisplay(0)).toBe('14.00%')
-    expect(workshopRecoveryAmountStatDisplay(1)).toBe('14.40%')
-    expect(workshopRecoveryAmountStatDisplay(300)).toBe('134.00%')
-
-    expect(workshopRecoveryAmountNextMarginalCoins(0)).toBe(1000)
-    expect(workshopRecoveryAmountNextMarginalCoins(9)).toBe(20_900)
-    expect(workshopRecoveryAmountNextMarginalCoins(299)).toBe(21_590_000_000)
-    expect(workshopRecoveryAmountNextMarginalCoins(300)).toBeUndefined()
+describe('workshopDisplayedRecoveryAmountEnhancementMultiplier', () => {
+  it('combines Recovery Package+ tier with partial Free Upgrades+ excess', () => {
+    const recoveryMult = workshopEnhanceTier400Multiplier(40, 'Recovery Package +')
+    const freeMult = workshopEnhanceFreeUpgradesMultiplier(10)
+    const enhance = workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 10, true)
+    expect(recoveryMult).toBe(1.4)
+    expect(freeMult).toBe(1.1)
+    expect(enhance).toBeCloseTo(
+      recoveryMult +
+        (freeMult - 1) * WORKSHOP_DISPLAYED_RECOVERY_AMOUNT_FREE_UPGRADES_ENHANCE_EXCESS_FRACTION,
+      12,
+    )
+    expect(152 * enhance).toBeCloseTo(220.86, 2)
+    expect(`${(152 * enhance).toFixed(2)}%`).toBe('220.86%')
   })
 
-  it('max level is 300', () => {
-    expect(WORKSHOP_RECOVERY_AMOUNT_MAX_LEVEL).toBe(300)
+  it('returns 1 when enhancements lab is locked or Recovery Package+ is 0', () => {
+    expect(workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 10, false)).toBe(1)
+    expect(workshopDisplayedRecoveryAmountEnhancementMultiplier(0, 10, true)).toBe(1)
+  })
+
+  it('uses Recovery Package+ alone when Free Upgrades+ is 0', () => {
+    expect(workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 0, true)).toBe(1.4)
   })
 })

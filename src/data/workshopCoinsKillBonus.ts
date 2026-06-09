@@ -25,6 +25,25 @@ export function workshopCoinsKillBonusStatDisplay(completedLevels: number): stri
   return `x${mult.toFixed(2)}`
 }
 
+/**
+ * Equipped **Coins** card on the workshop card (√ multiplier; combat benefit is squared in-game).
+ */
+export function workshopDisplayedCoinsKillBonusCardFactor(
+  coinsCardMultiplier: number,
+): number {
+  if (!Number.isFinite(coinsCardMultiplier) || coinsCardMultiplier <= 1 + 1e-9) return 1
+  return Math.sqrt(coinsCardMultiplier)
+}
+
+/** Research lab × √(Coins card) for the Coins / Kill Bonus workshop card (no coins relic). */
+export function workshopDisplayedCoinsKillBonusLabMultiplier(
+  researchLabMultiplier: number | undefined,
+  coinsCardMultiplier: number,
+): number {
+  const lab = researchLabMultiplier ?? 1
+  return lab * workshopDisplayedCoinsKillBonusCardFactor(coinsCardMultiplier)
+}
+
 
 export function workshopCoinsKillBonusNextMarginalCoins(completedLevels: number): number | undefined {
   return workshopToolkitMarginalCoins('Coins - Kill Bonus', completedLevels)

@@ -20,6 +20,7 @@ import {
   utilityResearchIncludePercentLabPoints,
 } from '../types/research'
 import type { WorkshopDefenseStatDisplayOpts } from './workshopDefense'
+import { workshopInterestPerWaveLabDisplayMultiplier } from './workshopInterestPerWave'
 import type {
   WorkshopAttackSubmoduleExtras,
   WorkshopUtilitySubmoduleExtras,
@@ -107,9 +108,13 @@ export type WorkshopUtilityLabDisplayOpts = {
   cashBonusEnhanceAdditive?: number
   cashPerWaveLabMultiplier?: number
   coinsKillBonusLabMultiplier?: number
+  /** Equipped **Coins** card raw × multiplier (√ applied in display). */
+  coinsKillBonusCardMultiplier?: number
   coinsWaveLabMultiplier?: number
   interestPerWaveLabMultiplier?: number
   recoveryAmountLabPercentPoints?: number
+  /** **Recovery Package +** (and partial **Free Upgrades +**) × on Recovery Amount card. */
+  recoveryAmountEnhancementsMultiplier?: number
   maxRecoveryLabMultiplier?: number
   packageChanceLabPercentPoints?: number
   enemyAttackLevelSkipLabPercentPoints?: number
@@ -118,6 +123,10 @@ export type WorkshopUtilityLabDisplayOpts = {
   freeUpgradesCardPercentPoints?: number
   /** Equipped Recovery Package Chance card (additive % points). */
   packageChanceCardPercentPoints?: number
+  /** Simulated **Free Upgrades +** enhancement level (Main Research lab gate). */
+  enhanceFreeUpgradesLevel?: number
+  /** Main Research **Workshop Enhancements** unlocked. */
+  workshopEnhancementsLabUnlocked?: boolean
   freeAttackUpgradeRelicPercentPoints?: number
   freeDefenseUpgradeRelicPercentPoints?: number
   freeUtilityUpgradeRelicPercentPoints?: number
@@ -231,10 +240,9 @@ export function buildWorkshopUtilityLabDisplayOpts(
       labOverrides,
       'Coins / Wave',
     ),
-    interestPerWaveLabMultiplier: utilityResearchDamageStyleLabMultiplier(
+    interestPerWaveLabMultiplier: workshopInterestPerWaveLabDisplayMultiplier(
       research,
       labOverrides,
-      'Interest',
     ),
     recoveryAmountLabPercentPoints: utilityResearchIncludePercentLabPoints(
       research,

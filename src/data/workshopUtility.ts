@@ -25,6 +25,7 @@ import {
   workshopCoinsWaveNextMarginalCoins,
   workshopCoinsWaveStatDisplay,
 } from './workshopCoinsWave'
+import { workshopDisplayedFreeUpgradesEnhancementWorkshopPercentPoints } from './workshopEnhanceFreeUpgrades'
 import {
   WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL,
   workshopFreeAttackUpgradeNextMarginalCoins,
@@ -77,6 +78,7 @@ import {
 } from './workshopEnemyHealthLevelSkip'
 import {
   formatPercentAfterLabAddition,
+  formatPercentAfterLabAdditionAndMultiplier,
   formatWithDamageStyleLabMultiplier,
 } from './workshopLabDisplayHelpers'
 import type { WorkshopUtilityLabDisplayOpts } from './workshopLabDisplayOpts'
@@ -84,7 +86,10 @@ import type { WorkshopUtilitySubmoduleExtras } from './workshopSubmoduleBonuses'
 import { WORKSHOP_UTILITY_GOD_NAMES, workshopToolkitMarginalCoins } from '../workshopCosts'
 import { workshopCashBonusStatMultiplier } from './workshopCashBonus'
 import { workshopCashPerWaveStatAmount } from './workshopCashPerWave'
-import { workshopCoinsKillBonusStatMultiplier } from './workshopCoinsKillBonus'
+import {
+  workshopCoinsKillBonusStatMultiplier,
+  workshopDisplayedCoinsKillBonusCardFactor,
+} from './workshopCoinsKillBonus'
 import { workshopCoinsWaveStatAmount } from './workshopCoinsWave'
 import { workshopEnemyAttackLevelSkipStatPercent } from './workshopEnemyAttackLevelSkip'
 import { workshopEnemyHealthLevelSkipStatPercent } from './workshopEnemyHealthLevelSkip'
@@ -170,6 +175,24 @@ function utilitySub(opts: WorkshopUtilityLabDisplayOpts | undefined): WorkshopUt
   return opts?.submodule ?? {}
 }
 
+function freeUpgradeDisplayExtraPercentPoints(
+  workshopPercentPoints: number,
+  opts: WorkshopUtilityLabDisplayOpts | undefined,
+  relicRelicPercentPoints: number,
+  submodulePercentPoints: number,
+): number {
+  const card = opts?.freeUpgradesCardPercentPoints ?? 0
+  const enhance = workshopDisplayedFreeUpgradesEnhancementWorkshopPercentPoints(
+    opts?.enhanceFreeUpgradesLevel ?? 0,
+    workshopPercentPoints,
+    card,
+    relicRelicPercentPoints,
+    submodulePercentPoints,
+    opts?.workshopEnhancementsLabUnlocked ?? false,
+  )
+  return card + relicRelicPercentPoints + submodulePercentPoints + enhance
+}
+
 export function workshopUtilityStatDisplay(
   key: WorkshopUtilityUpgradeKey,
   completedLevels: number,
@@ -204,8 +227,12 @@ export function workshopUtilityStatDisplay(
       return workshopCashPerWaveStatDisplay(completedLevels)
     }
     case 'coinsKillBonusLevel': {
-      const m = opts?.coinsKillBonusLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) {
+      const lab = opts?.coinsKillBonusLabMultiplier ?? 1
+      const cardFactor = workshopDisplayedCoinsKillBonusCardFactor(
+        opts?.coinsKillBonusCardMultiplier ?? 1,
+      )
+      const m = lab * cardFactor
+      if (m > 1 + 1e-9) {
         return formatWithDamageStyleLabMultiplier(
           workshopCoinsKillBonusStatMultiplier(completedLevels),
           m,
@@ -239,48 +266,53 @@ export function workshopUtilityStatDisplay(
       return workshopInterestPerWaveStatDisplay(completedLevels)
     }
     case 'freeAttackUpgradeLevel': {
-      const extra =
-        (opts?.freeUpgradesCardPercentPoints ?? 0) +
-        (opts?.freeAttackUpgradeRelicPercentPoints ?? 0)
+      const workshop = workshopFreeAttackUpgradeStatPercentPoints(completedLevels)
+      const sub = utilitySub(opts).freeAttackUpgradePercentPoints ?? 0
+      const extra = freeUpgradeDisplayExtraPercentPoints(
+        workshop,
+        opts,
+        opts?.freeAttackUpgradeRelicPercentPoints ?? 0,
+        sub,
+      )
       if (extra > 0) {
-        return formatPercentAfterLabAddition(
-          workshopFreeAttackUpgradeStatPercentPoints(completedLevels),
-          extra,
-        )
+        return formatPercentAfterLabAddition(workshop, extra)
       }
       return workshopFreeAttackUpgradeStatDisplay(completedLevels)
     }
     case 'freeDefenseUpgradeLevel': {
-      const extra =
-        (opts?.freeUpgradesCardPercentPoints ?? 0) +
-        (opts?.freeDefenseUpgradeRelicPercentPoints ?? 0)
+      const workshop = workshopFreeDefenseUpgradeStatPercentPoints(completedLevels)
+      const sub = utilitySub(opts).freeDefenseUpgradePercentPoints ?? 0
+      const extra = freeUpgradeDisplayExtraPercentPoints(
+        workshop,
+        opts,
+        opts?.freeDefenseUpgradeRelicPercentPoints ?? 0,
+        sub,
+      )
       if (extra > 0) {
-        return formatPercentAfterLabAddition(
-          workshopFreeDefenseUpgradeStatPercentPoints(completedLevels),
-          extra,
-        )
+        return formatPercentAfterLabAddition(workshop, extra)
       }
       return workshopFreeDefenseUpgradeStatDisplay(completedLevels)
     }
     case 'freeUtilityUpgradeLevel': {
-      const extra =
-        (opts?.freeUpgradesCardPercentPoints ?? 0) +
-        (opts?.freeUtilityUpgradeRelicPercentPoints ?? 0)
+      const workshop = workshopFreeUtilityUpgradeStatPercentPoints(completedLevels)
+      const sub = utilitySub(opts).freeUtilityUpgradePercentPoints ?? 0
+      const extra = freeUpgradeDisplayExtraPercentPoints(
+        workshop,
+        opts,
+        opts?.freeUtilityUpgradeRelicPercentPoints ?? 0,
+        sub,
+      )
       if (extra > 0) {
-        return formatPercentAfterLabAddition(
-          workshopFreeUtilityUpgradeStatPercentPoints(completedLevels),
-          extra,
-        )
+        return formatPercentAfterLabAddition(workshop, extra)
       }
       return workshopFreeUtilityUpgradeStatDisplay(completedLevels)
     }
     case 'recoveryAmountLevel': {
-      const lab = opts?.recoveryAmountLabPercentPoints
-      if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatPercentAfterLabAddition(
-          workshopRecoveryAmountStatPercent(completedLevels),
-          lab,
-        )
+      const base = workshopRecoveryAmountStatPercent(completedLevels)
+      const labPts = opts?.recoveryAmountLabPercentPoints ?? 0
+      const enhance = opts?.recoveryAmountEnhancementsMultiplier ?? 1
+      if (labPts > 0 || enhance > 1 + 1e-9) {
+        return formatPercentAfterLabAdditionAndMultiplier(base, labPts, enhance)
       }
       return workshopRecoveryAmountStatDisplay(completedLevels)
     }

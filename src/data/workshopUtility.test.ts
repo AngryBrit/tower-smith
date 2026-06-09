@@ -93,6 +93,14 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('cashPerWaveLevel', 149)).toBeUndefined()
   })
 
+  it('applies Cash / Wave research lab only (no cash relic on workshop card)', () => {
+    expect(
+      workshopUtilityStatDisplay('cashPerWaveLevel', 149, {
+        cashPerWaveLabMultiplier: 1.1,
+      }),
+    ).toBe('656')
+  })
+
   it('Coins / Kill Bonus uses workshop wiki ladder (149 levels)', () => {
     expect(WORKSHOP_COINS_KILL_BONUS_UNLOCK_COINS).toBe(100)
     expect(workshopUtilityMaxLevel('coinsKillBonusLevel')).toBe(WORKSHOP_COINS_KILL_BONUS_MAX_LEVEL)
@@ -105,6 +113,15 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('coinsKillBonusLevel', 1)).toBe('x1.01')
     expect(workshopUtilityStatDisplay('coinsKillBonusLevel', 149)).toBe('x2.49')
     expect(workshopUtilityNextMarginalCoins('coinsKillBonusLevel', 149)).toBeUndefined()
+  })
+
+  it('applies Coins / Kill Bonus research lab and sqrt(Coins card) on workshop card', () => {
+    expect(
+      workshopUtilityStatDisplay('coinsKillBonusLevel', 149, {
+        coinsKillBonusLabMultiplier: 2.78,
+        coinsKillBonusCardMultiplier: 1.45,
+      }),
+    ).toBe('x8.34')
   })
 
   it('Coins / Wave uses workshop wiki ladder (149 levels)', () => {
@@ -121,6 +138,14 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('coinsWaveLevel', 149)).toBeUndefined()
   })
 
+  it('applies Coins / Wave research lab only on workshop card', () => {
+    expect(
+      workshopUtilityStatDisplay('coinsWaveLevel', 149, {
+        coinsWaveLabMultiplier: 1.52,
+      }),
+    ).toBe('228')
+  })
+
   it('Free Attack Upgrade uses workshop wiki ladder (99 levels)', () => {
     expect(workshopUtilityMaxLevel('freeAttackUpgradeLevel')).toBe(WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL)
     expect(workshopUtilityNextMarginalCoins('freeAttackUpgradeLevel', 0)).toBe(75)
@@ -132,6 +157,18 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 1)).toBe('0.50%')
     expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 99)).toBe('49.50%')
     expect(workshopUtilityNextMarginalCoins('freeAttackUpgradeLevel', 99)).toBeUndefined()
+  })
+
+  it('applies Free Upgrades + enhancement and stacked relic/submodule on free attack row', () => {
+    expect(
+      workshopUtilityStatDisplay('freeAttackUpgradeLevel', 99, {
+        freeUpgradesCardPercentPoints: 10,
+        freeAttackUpgradeRelicPercentPoints: 6,
+        submodule: { freeAttackUpgradePercentPoints: 6 },
+        enhanceFreeUpgradesLevel: 10,
+        workshopEnhancementsLabUnlocked: true,
+      }),
+    ).toBe('76.37%')
   })
 
   it('Free Defense Upgrade uses workshop wiki ladder (99 levels)', () => {
@@ -171,6 +208,11 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('interestPerWaveLevel', 0)).toBe('0.00%')
     expect(workshopUtilityStatDisplay('interestPerWaveLevel', 1)).toBe('0.06%')
     expect(workshopUtilityStatDisplay('interestPerWaveLevel', 99)).toBe('5.94%')
+    expect(
+      workshopUtilityStatDisplay('interestPerWaveLevel', 99, {
+        interestPerWaveLabMultiplier: 1.1,
+      }),
+    ).toBe('6.53%')
     expect(workshopUtilityNextMarginalCoins('interestPerWaveLevel', 99)).toBeUndefined()
   })
 
@@ -185,6 +227,12 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 0)).toBe('14.00%')
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 1)).toBe('14.40%')
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 300)).toBe('134.00%')
+    expect(
+      workshopUtilityStatDisplay('recoveryAmountLevel', 300, {
+        recoveryAmountLabPercentPoints: 18,
+        recoveryAmountEnhancementsMultiplier: 1.4530263157894737,
+      }),
+    ).toBe('220.86%')
     expect(workshopUtilityNextMarginalCoins('recoveryAmountLevel', 300)).toBeUndefined()
   })
 

@@ -115,18 +115,6 @@ export function enrichUtilityLabDisplayOptsWithSubmodules(
     ...base,
     cashBonusLabMultiplier:
       cashAdd !== 0 ? (base.cashBonusLabMultiplier ?? 1) + cashAdd : base.cashBonusLabMultiplier,
-    freeAttackUpgradeRelicPercentPoints: mergeRelicPercentPoints(
-      base.freeAttackUpgradeRelicPercentPoints,
-      sub.freeAttackUpgradePercentPoints ?? 0,
-    ),
-    freeDefenseUpgradeRelicPercentPoints: mergeRelicPercentPoints(
-      base.freeDefenseUpgradeRelicPercentPoints,
-      sub.freeDefenseUpgradePercentPoints ?? 0,
-    ),
-    freeUtilityUpgradeRelicPercentPoints: mergeRelicPercentPoints(
-      base.freeUtilityUpgradeRelicPercentPoints,
-      sub.freeUtilityUpgradePercentPoints ?? 0,
-    ),
     interestPerWaveLabMultiplier:
       sub.interestPerWavePercentPoints != null && sub.interestPerWavePercentPoints !== 0
         ? (base.interestPerWaveLabMultiplier ?? 1) + sub.interestPerWavePercentPoints / 100

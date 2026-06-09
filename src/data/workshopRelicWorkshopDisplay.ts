@@ -190,15 +190,24 @@ export function enrichUtilityLabDisplayOpts(
   return {
     ...base,
     cashBonusLabMultiplier: mergeRelicMultiplier(base.cashBonusLabMultiplier, cash),
-    cashPerWaveLabMultiplier: mergeRelicMultiplier(base.cashPerWaveLabMultiplier, cash),
-    coinsKillBonusLabMultiplier: mergeRelicMultiplier(base.coinsKillBonusLabMultiplier, coins),
-    coinsWaveLabMultiplier: mergeRelicMultiplier(base.coinsWaveLabMultiplier, coins),
-    freeAttackUpgradeRelicPercentPoints:
-      freeAttack > 0 ? freeAttack : base.freeAttackUpgradeRelicPercentPoints,
-    freeDefenseUpgradeRelicPercentPoints:
-      freeDefense > 0 ? freeDefense : base.freeDefenseUpgradeRelicPercentPoints,
-    freeUtilityUpgradeRelicPercentPoints:
-      freeUtility > 0 ? freeUtility : base.freeUtilityUpgradeRelicPercentPoints,
+    // Cash / Wave workshop card: research lab only (cash relic affects combat, not the card).
+    cashPerWaveLabMultiplier: base.cashPerWaveLabMultiplier,
+    // Coins / Kill Bonus workshop card: research lab × √(Coins card) only (coins relic is combat-only).
+    coinsKillBonusLabMultiplier: base.coinsKillBonusLabMultiplier,
+    // Coins / Wave workshop card: research lab only (coins relic affects combat, not the card).
+    coinsWaveLabMultiplier: base.coinsWaveLabMultiplier,
+    freeAttackUpgradeRelicPercentPoints: mergeRelicPercentPoints(
+      base.freeAttackUpgradeRelicPercentPoints,
+      freeAttack,
+    ),
+    freeDefenseUpgradeRelicPercentPoints: mergeRelicPercentPoints(
+      base.freeDefenseUpgradeRelicPercentPoints,
+      freeDefense,
+    ),
+    freeUtilityUpgradeRelicPercentPoints: mergeRelicPercentPoints(
+      base.freeUtilityUpgradeRelicPercentPoints,
+      freeUtility,
+    ),
     recoveryAmountLabPercentPoints: mergeRelicPercentPoints(
       base.recoveryAmountLabPercentPoints,
       recovery,
