@@ -36,6 +36,8 @@ export const ULTIMATE_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Spotlight Missiles': 98,
   'Black Hole Disable Ranged Enemies': 132,
   'Recharge Missile Barrage': 147,
+  'Swamp Rend - Basic Enemies': 156,
+  'Swamp Rend - Additional Enemies': 157,
   'Chain Thunder': 158,
   'Lightning Amplifier - Scatter': 159,
   'Death Wave Cells Bonus': 190,

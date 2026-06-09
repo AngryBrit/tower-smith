@@ -63,6 +63,40 @@ describe('ultimateLabsToOverrides', () => {
     expect(overrides['0-21']).toBe(2)
   })
 
+  it('maps Swamp Rend labs from researchLevel ids 156–157', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[157] = 3
+    const data: ResearchData = {
+      sections: [
+        {
+          title: 'ULTIMATE WEAPON RESEARCH',
+          sectionSlug: 'ultimate-weapon-research',
+          items: [
+            {
+              name: 'Swamp Rend - Basic Enemies',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+            {
+              name: 'Swamp Rend - Additional Enemies',
+              level: '0',
+              benefit: '',
+              time: '',
+              cost: '',
+              state: 'default',
+            },
+          ],
+        },
+      ],
+    }
+    const overrides = ultimateLabsToOverrides(data, researchLevel)
+    expect(overrides['0-0']).toBeUndefined()
+    expect(overrides['0-1']).toBe(3)
+  })
+
   it('maps Chain Thunder and Lightning Amplifier - Scatter from researchLevel ids 158–159', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[158] = 6
