@@ -121,7 +121,6 @@ export function enrichAttackLabDisplayOpts(
 ): WorkshopAttackLabDisplayOpts | undefined {
   const critChance = workshopRelicsActiveBonusPercent(ownedIds, 'critChance')
   const critFactor = workshopRelicsActiveBonusPercent(ownedIds, 'critFactor')
-  const dpm = workshopRelicsActiveBonusPercent(ownedIds, 'damagePerMeter')
   const superCritChance = workshopRelicsActiveBonusPercent(ownedIds, 'superCritChance')
   const superCritMult = workshopRelicsActiveBonusPercent(ownedIds, 'superCritMult')
   const rendArmorMult = workshopRelicsActiveBonusPercent(ownedIds, 'rendArmorMult')
@@ -129,7 +128,6 @@ export function enrichAttackLabDisplayOpts(
   if (
     critChance <= 0 &&
     critFactor <= 0 &&
-    dpm <= 0 &&
     superCritChance <= 0 &&
     superCritMult <= 0 &&
     rendArmorMult <= 0 &&
@@ -149,10 +147,8 @@ export function enrichAttackLabDisplayOpts(
       base.criticalFactorLabMultiplier,
       critFactor,
     ),
-    damagePerMeterLabMultiplier: mergeRelicMultiplier(
-      base.damagePerMeterLabMultiplier,
-      dpm,
-    ),
+    // DPM relics apply to displayed damage **(1 + Relics)** only — not the ×/m workshop card.
+    damagePerMeterLabMultiplier: base.damagePerMeterLabMultiplier,
     superCritChanceLabPercentPoints: mergeRelicPercentPoints(
       base.superCritChanceLabPercentPoints,
       superCritChance,

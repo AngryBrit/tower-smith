@@ -2436,9 +2436,9 @@ export function attackResearchDamageLabMultiplier(
 
 /**
  * Share of **Damage / Meter** lab excess in wiki **Displayed damage** **Lab**
- * (calibrated: **×1.28** DPM lab → **×1.226** in the Lab product).
+ * (calibrated: **×1.28** DPM lab → **×1.231** in the Lab product).
  */
-export const WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION = 0.226 / 0.28
+export const WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION = 0.231 / 0.28
 
 /** DPM lab factor for displayed-damage **Lab** (not the ×/m workshop card). */
 export function attackResearchDisplayedDamageDpmLabMultiplier(

@@ -72,7 +72,7 @@ describe('workshopRelicWorkshopDisplay', () => {
     expect(workshopRelicsDamageBonusFraction(owned)).toBeCloseTo(0.07)
   })
 
-  it('merges damage/meter relic % into attack lab DPM multiplier for card display', () => {
+  it('does not merge damage/meter relic % into the workshop ×/m card (lab only)', () => {
     const labOnly = enrichAttackLabDisplayOpts(
       { damagePerMeterLabMultiplier: 1.1 },
       new Set(),
@@ -82,10 +82,13 @@ describe('workshopRelicWorkshopDisplay', () => {
       new Set(['t_viii_graviton']),
     )
     expect(labOnly?.damagePerMeterLabMultiplier).toBeCloseTo(1.1)
-    expect(withRelic?.damagePerMeterLabMultiplier).toBeCloseTo(1.1 * 1.05)
-    expect(
-      workshopDamagePerMeterStatDisplay(0, withRelic?.damagePerMeterLabMultiplier),
-    ).not.toBe(workshopDamagePerMeterStatDisplay(0, labOnly?.damagePerMeterLabMultiplier))
+    expect(withRelic?.damagePerMeterLabMultiplier).toBeCloseTo(1.1)
+    const label = workshopDamagePerMeterStatDisplay(
+      180,
+      withRelic?.damagePerMeterLabMultiplier,
+    )
+    expect(label).toBe(workshopDamagePerMeterStatDisplay(180, 1.1))
+    expect(label).not.toBe(workshopDamagePerMeterStatDisplay(180, 1.1 * 1.05))
   })
 
   it('adds partial damage/meter relic % to displayed attack speed relic term', () => {

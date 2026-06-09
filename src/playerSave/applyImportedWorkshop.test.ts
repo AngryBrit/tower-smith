@@ -14,7 +14,10 @@ import {
   parseResearchSection,
   type ResearchData,
 } from '../types/research'
-import { attackResearchDisplayedDamageLabMultiplier } from '../types/research'
+import {
+  WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION,
+  attackResearchDisplayedDamageLabMultiplier,
+} from '../types/research'
 import {
   computeWorkshopDisplayedDamagePreBerserker,
   workshopDamageDisplayOptsFromPersisted,
@@ -117,7 +120,8 @@ describe('applyImportedWorkshop', () => {
     )
     const dmgLab = 1 + 0.02 * save.researchLevel[0]!
     const dpmRaw = 1 + 0.02 * save.researchLevel[4]!
-    const dpmLab = 1 + (dpmRaw - 1) * (0.226 / 0.28)
+    const dpmLab =
+      1 + (dpmRaw - 1) * WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION
     const asLab = 1 + 0.02 * save.researchLevel[1]!
     expect(labMult).toBeCloseTo(dmgLab * dpmLab * asLab, 3)
     expect(workspace.lab.gameResearchLevel?.[0]).toBe(save.researchLevel[0])

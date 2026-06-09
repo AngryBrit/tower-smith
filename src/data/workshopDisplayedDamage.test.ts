@@ -11,6 +11,10 @@ import {
 } from './workshopDisplayedDamage'
 import { workshopBerserkerDisplayedDamageAdd } from './workshopSimCards'
 import { workshopDamageStatDisplay } from './workshopDamage'
+import {
+  WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION,
+  attackResearchDisplayedDamageDpmLabMultiplier,
+} from '../types/research'
 
 describe('workshopDisplayedDamage', () => {
   it('matches wiki product at max workshop + ×3 lab (213.33 M)', () => {
@@ -74,7 +78,7 @@ describe('workshopDisplayedDamage', () => {
     const dmg = 1 + 0.02 * 50
     const as = 1 + 0.02 * 40
     const dpmRaw = 1 + 0.02 * 30
-    const dpm = 1 + (dpmRaw - 1) * (0.226 / 0.28)
+    const dpm = 1 + (dpmRaw - 1) * WORKSHOP_DISPLAYED_DAMAGE_DPM_LAB_EXCESS_FRACTION
     expect(opts.labMultiplier).toBeCloseTo(dmg * as * dpm, 6)
     expect(opts.labDamageMultiplier).toBeCloseTo(dmg, 6)
     expect(opts.labDamagePerMeterMultiplier).toBeCloseTo(dpm, 6)
@@ -94,6 +98,30 @@ describe('workshopDisplayedDamage', () => {
     expect(opts.relicsBonus).toBe(0.1)
     const workshop = workshopDamageStatAtLevel(100)
     expect(computeWorkshopDisplayedDamage(workshop, opts)).toBeGreaterThan(workshop)
+  })
+
+  it('partial DPM lab at ×1.28 contributes ×1.231 to displayed-damage Lab', () => {
+    expect(attackResearchDisplayedDamageDpmLabMultiplier(1.28)).toBeCloseTo(1.231, 6)
+  })
+
+  it('in-game displayed damage at workshop L5500 with typical endgame overlays', () => {
+    const workshop = workshopDamageStatAtLevel(5500)
+    expect(workshop).toBe(47_060_000)
+    const dpm = attackResearchDisplayedDamageDpmLabMultiplier(1.28)
+    const lab = 1.92 * dpm * 2.68
+    const opts = {
+      chassisTowerDamageMultiplier: 2.46,
+      labMultiplier: lab,
+      labDamageMultiplier: 1.92,
+      labDamagePerMeterMultiplier: dpm,
+      labAttackSpeedMultiplier: 2.68,
+      damageCardMultiplier: 4,
+      relicsBonus: 0.95,
+      enhancementsMultiplier: 1.4,
+      perkDamageQuantity: 1,
+      standardPerkBonus: 0.0174,
+    }
+    expect(workshopDamageStatDisplay(5500, opts)).toBe('9.37B')
   })
 
   it('wiki berserker: product 1000 + capped add 7000', () => {
