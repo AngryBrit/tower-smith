@@ -275,6 +275,22 @@ export function workshopRelicsDisplayedDamageBonusFraction(
   return pct / 100
 }
 
+/** Relic stats summed into wiki displayed health **(1 + Relics)**. */
+export const WORKSHOP_RELIC_DISPLAYED_HEALTH_STAT_IDS: readonly RelicStatId[] = [
+  'health',
+  'healthRegen',
+]
+
+export function workshopRelicsDisplayedHealthBonusFraction(
+  ownedIds: ReadonlySet<string>,
+): number {
+  let pct = 0
+  for (const statId of WORKSHOP_RELIC_DISPLAYED_HEALTH_STAT_IDS) {
+    pct += workshopRelicsActiveBonusPercent(ownedIds, statId)
+  }
+  return pct / 100
+}
+
 /**
  * Share of **Damage / Meter** relic % counted toward workshop **Displayed Attack Speed**
  * **(1 + Relics)** (calibrated: +45% DPM relics → +0.28% on top of +10% attack speed).

@@ -52,7 +52,6 @@ export function enrichDefenseStatDisplayOpts(
   opts: WorkshopDefenseStatDisplayOpts | undefined,
   ownedIds: ReadonlySet<string>,
 ): WorkshopDefenseStatDisplayOpts | undefined {
-  const health = workshopRelicsActiveBonusPercent(ownedIds, 'health')
   const healthRegen = workshopRelicsActiveBonusPercent(ownedIds, 'healthRegen')
   const defenseAbsolute = workshopRelicsActiveBonusPercent(ownedIds, 'defenseAbsolute')
   const defensePercent = workshopRelicsActiveBonusPercent(ownedIds, 'defensePercent')
@@ -64,7 +63,6 @@ export function enrichDefenseStatDisplayOpts(
   const wallRebuildSec = workshopRelicsActiveBonus(ownedIds, 'wallRebuild')
 
   if (
-    health <= 0 &&
     healthRegen <= 0 &&
     defenseAbsolute <= 0 &&
     defensePercent <= 0 &&
@@ -82,7 +80,8 @@ export function enrichDefenseStatDisplayOpts(
   const base = opts ?? {}
   return {
     ...base,
-    healthLabMultiplier: mergeRelicMultiplier(base.healthLabMultiplier, health),
+    // Health relics apply to displayed health **(1 + Relics)** only — not the Health workshop card lab term.
+    healthLabMultiplier: base.healthLabMultiplier,
     healthRegenLabMultiplier: mergeRelicMultiplier(base.healthRegenLabMultiplier, healthRegen),
     defenseAbsoluteLabMultiplier: mergeRelicMultiplier(
       base.defenseAbsoluteLabMultiplier,

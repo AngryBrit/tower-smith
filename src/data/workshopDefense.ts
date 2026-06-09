@@ -25,6 +25,7 @@ import { workshopShockwaveSizeStatMultiplier } from './workshopShockwaveSize'
 import { workshopWallHealthStatPercent } from './workshopWallHealth'
 import { workshopWallRebuildStatSeconds } from './workshopWallRebuild'
 import { WORKSHOP_DEFENSE_GOD_NAMES, workshopToolkitMarginalCoins } from '../workshopCosts'
+import { workshopDisplayedHealthStatDisplay } from './workshopDisplayedHealth'
 import {
   WORKSHOP_HEALTH_REGEN_MAX_LEVEL,
   formatWorkshopHealthRegenPerSec,
@@ -227,6 +228,11 @@ export type WorkshopDefenseStatDisplayOpts = {
   /** Equipped armor chassis main effect (Tower Health). */
   armorTowerHealthMultiplier?: number
   healthLabMultiplier?: number
+  healthCardMultiplier?: number
+  /** Summed **Health** + **Health Regen** relic fraction for **(1 + Relics)**. */
+  healthRelicsBonus?: number
+  /** **Health +** + partial **Health Regen +** enhancement tier (omitted when ×1). */
+  healthEnhancementsMultiplier?: number
   healthRegenLabMultiplier?: number
   /** Additive **Garlic Thorns** lab % (percent points), summed with workshop Thorn Damage. */
   thornDamageLabPercentPoints?: number
@@ -260,14 +266,25 @@ export function workshopDefenseStatDisplay(
 ): string {
   switch (key) {
     case 'healthLevel': {
-      const chassis = opts?.armorTowerHealthMultiplier ?? 1
-      const base = workshopHealthStatValue(completedLevels) * chassis
-      const m = opts?.healthLabMultiplier
+      const lab = opts?.healthLabMultiplier
+      const card = opts?.healthCardMultiplier
+      const relics = opts?.healthRelicsBonus
+      const enhance = opts?.healthEnhancementsMultiplier
+      const chassis = opts?.armorTowerHealthMultiplier
       if (
-        (m !== undefined && Number.isFinite(m) && m > 0) ||
-        chassis > 1 + 1e-9
+        (lab !== undefined && Number.isFinite(lab) && lab > 0) ||
+        (card !== undefined && Number.isFinite(card) && card > 1 + 1e-9) ||
+        (relics !== undefined && relics > 0) ||
+        (enhance !== undefined && enhance > 1 + 1e-9) ||
+        (chassis !== undefined && chassis > 1 + 1e-9)
       ) {
-        return formatWithHealthStyleLabMultiplier(base, m ?? 1)
+        return workshopDisplayedHealthStatDisplay(completedLevels, {
+          armorTowerHealthMultiplier: chassis,
+          healthLabMultiplier: lab,
+          healthCardMultiplier: card,
+          relicsBonus: relics,
+          healthEnhancementsMultiplier: enhance,
+        })
       }
       return workshopHealthStatDisplay(completedLevels)
     }

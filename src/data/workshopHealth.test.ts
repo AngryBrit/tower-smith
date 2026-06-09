@@ -21,4 +21,5 @@ describe('workshopHealth', () => {
     expect(WORKSHOP_HEALTH_MAX_LEVEL).toBe(6000)
     expect(workshopHealthNextMarginalCoins(6000)).toBeUndefined()
   })
+
 })

@@ -354,4 +354,19 @@ describe('workshopDefenseStatDisplay', () => {
   it('shows Health lab multiplier when wiki HP is still 0', () => {
     expect(workshopDefenseStatDisplay('healthLevel', 0, { healthLabMultiplier: 1.03 })).toBe('5')
   })
+
+  it('applies displayed-health factors on the Health workshop card', () => {
+    const level = 5500
+    const labMult = 51.556
+    expect(workshopHealthStatValue(level)).toBe(2_500_000_000)
+    expect(
+      workshopDefenseStatDisplay('healthLevel', level, { healthLabMultiplier: labMult }),
+    ).toBe('128.89B')
+    expect(
+      workshopDefenseStatDisplay('healthLevel', level, {
+        healthLabMultiplier: labMult,
+        healthEnhancementsMultiplier: 1.687,
+      }),
+    ).toBe('217.44B')
+  })
 })

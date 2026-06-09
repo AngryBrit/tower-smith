@@ -123,6 +123,10 @@ import {
   type WorkshopDefenseUpgradeKey,
 } from '../data/workshopDefense'
 import {
+  workshopDisplayedHealthEnhancementMultiplier,
+  workshopHealthRelicsBonusFraction,
+} from '../data/workshopDisplayedHealth'
+import {
   WORKSHOP_UTILITY_UPGRADE_ORDER,
   workshopUtilityClampLevel,
   workshopUtilityMaxLevel,
@@ -2424,10 +2428,29 @@ export function WorkshopPage({
     const armorChassis = workshopChassisModuleHeroStatMultiplier(workshopPersisted, 'armor')
     const chassisDefense: Pick<WorkshopDefenseStatDisplayOpts, 'armorTowerHealthMultiplier'> =
       armorChassis > 1 + 1e-9 ? { armorTowerHealthMultiplier: armorChassis } : {}
+    const enhancementsUnlocked = workshopEnhancementsLabUnlocked(
+      researchData,
+      labLevelOverrides,
+    )
+    const healthEnhanceMult = workshopDisplayedHealthEnhancementMultiplier(
+      workshopPersisted.enhanceHealthLevel,
+      workshopPersisted.enhanceHealthRegenLevel,
+      enhancementsUnlocked,
+    )
+    const healthRelicsBonus = workshopHealthRelicsBonusFraction(relicOwnedSet)
+    const healthCard = cardMult('health')
+    const healthLab =
+      lab?.healthLabMultiplier != null && lab.healthLabMultiplier > 1 + 1e-9
+        ? lab.healthLabMultiplier
+        : undefined
     const enriched: WorkshopDefenseStatDisplayOpts = {
       ...(lab ?? {}),
       ...chassisDefense,
-      healthLabMultiplier: mergeLabAndCardMult(lab?.healthLabMultiplier, cardMult('health')),
+      healthLabMultiplier: healthLab,
+      healthCardMultiplier: healthCard > 1 + 1e-9 ? healthCard : undefined,
+      healthRelicsBonus: healthRelicsBonus > 0 ? healthRelicsBonus : undefined,
+      healthEnhancementsMultiplier:
+        healthEnhanceMult > 1 + 1e-9 ? healthEnhanceMult : undefined,
       healthRegenLabMultiplier: mergeLabAndCardMult(
         lab?.healthRegenLabMultiplier,
         cardMult('healthRegen'),
@@ -2440,7 +2463,9 @@ export function WorkshopPage({
     }
     if (
       lab == null &&
-      cardMult('health') === 1 &&
+      healthCard === 1 &&
+      healthRelicsBonus <= 0 &&
+      healthEnhanceMult <= 1 + 1e-9 &&
       cardMult('healthRegen') === 1 &&
       cardMult('fortress') === 1 &&
       extraDefense === 0 &&

@@ -18,10 +18,10 @@ import {
 import { workshopRelicsDamageBonusFraction } from './workshopRelics'
 
 describe('workshopRelicWorkshopDisplay', () => {
-  it('applies owned health relic % to workshop health display opts', () => {
+  it('does not merge health relic % into defense lab health multiplier', () => {
     const owned = new Set(['t_ix_fusion'])
-    const opts = enrichDefenseStatDisplayOpts(undefined, owned)
-    expect(opts?.healthLabMultiplier).toBeCloseTo(1.05)
+    const opts = enrichDefenseStatDisplayOpts({ healthLabMultiplier: 2 }, owned)
+    expect(opts?.healthLabMultiplier).toBeCloseTo(2)
   })
 
   it('stacks owned lab-speed relic % as a labs multiplier', () => {
