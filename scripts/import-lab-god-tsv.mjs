@@ -11,10 +11,7 @@
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
-import {
-  detectLabCoinSuffixMode,
-  parseLabCoinAmount,
-} from './lib/parse-lab-god-amount.mjs'
+import { parseLabCoinAmount } from './lib/parse-lab-god-amount.mjs'
 import { labTimeField, normalizeLabDisplayText } from './lib/parse-lab-god-duration.mjs'
 import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
@@ -113,9 +110,9 @@ function parseTsv(text) {
   return { headers, rows }
 }
 
-function parseLabAmount(raw, label, coinMode) {
+function parseLabAmount(raw, label) {
   try {
-    return parseLabCoinAmount(raw, coinMode)
+    return parseLabCoinAmount(raw)
   } catch {
     throw new Error(`bad ${label}: ${raw}`)
   }
@@ -138,7 +135,6 @@ function importTsvFile(tsvPath, category, outDir, canonicalPaths) {
   const baseName = path.basename(tsvPath, '.tsv')
   const displayName = displayNameFromTsvBasename(baseName)
   const tsvText = fs.readFileSync(tsvPath, 'utf8')
-  const coinMode = detectLabCoinSuffixMode(tsvText)
   const { rows } = parseTsv(tsvText)
 
   const levels = rows.map((row) => {
@@ -148,11 +144,11 @@ function importTsvFile(tsvPath, category, outDir, canonicalPaths) {
       level,
       value: parseLabValue(row.Value, level),
       time: labTimeField(row.Time),
-      gems: parseLabAmount(row.Gems, 'Gems', coinMode),
-      coins: parseLabAmount(row.Coins, 'Coins', coinMode),
+      gems: parseLabAmount(row.Gems, 'Gems'),
+      coins: parseLabAmount(row.Coins, 'Coins'),
       totalTime: labTimeField(row['Total Time']),
-      totalGems: parseLabAmount(row['Total Gems'], 'Total Gems', coinMode),
-      totalCoins: parseLabAmount(row['Total Coins'], 'Total Coins', coinMode),
+      totalGems: parseLabAmount(row['Total Gems'], 'Total Gems'),
+      totalCoins: parseLabAmount(row['Total Coins'], 'Total Coins'),
     }
   })
 

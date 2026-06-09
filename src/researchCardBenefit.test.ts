@@ -2354,13 +2354,13 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it("Fast's Ultimate GOD table marginal time/cost (screenshot)", () => {
       expect(toolkitMarginalCoinCost("Fast's Ultimate", 0)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds("Fast's Ultimate", 0)).toBe(
         2_332_680,
       )
       expect(toolkitMarginalCoinCost("Fast's Ultimate", 9)).toBe(
-        38_440_000_000_000_000,
+        38_440_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds("Fast's Ultimate", 9)).toBe(
         10_730_400,
@@ -2369,10 +2369,10 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it('Ranged Ultimate GOD table marginal time/cost (screenshot)', () => {
       expect(toolkitMarginalCoinCost('Ranged Ultimate', 0)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitMarginalCoinCost('Ranged Ultimate', 3)).toBe(
-        3_380_000_000_000_000,
+        3_380_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ranged Ultimate', 3)).toBe(
         5_131_920,
@@ -2381,7 +2381,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it("Boss's Ultimate GOD table marginal time/cost (screenshot)", () => {
       expect(toolkitMarginalCoinCost("Boss's Ultimate", 0)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds("Boss's Ultimate", 9)).toBe(
         10_730_400,
@@ -2390,7 +2390,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it("Basic's Ultimate GOD table marginal time/cost (screenshot)", () => {
       expect(toolkitMarginalCoinCost("Basic's Ultimate", 0)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds("Basic's Ultimate", 0)).toBe(
         2_332_680,
@@ -2399,7 +2399,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it("Tank's Ultimate GOD table marginal time/cost (screenshot)", () => {
       expect(toolkitMarginalCoinCost("Tank's Ultimate", 0)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds("Tank's Ultimate", 0)).toBe(
         2_332_680,
@@ -2408,7 +2408,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it("Protector's Ultimate GOD table marginal time/cost (screenshot)", () => {
       expect(toolkitMarginalCoinCost("Protector's Ultimate", 0)).toBe(
-        1_000_000_000_000_000,
+        1_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds("Protector's Ultimate", 0)).toBe(
         2_332_680,
@@ -2427,7 +2427,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
 
     it('Ultimate Weapon Durations GOD table marginal time/cost (screenshot)', () => {
       expect(toolkitMarginalCoinCost('Ultimate Weapon Durations', 0)).toBe(
-        2_000_000_000_000_000,
+        2_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ultimate Weapon Durations', 0)).toBe(
         2_332_680,
@@ -2439,7 +2439,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
         6_951_420,
       )
       expect(toolkitMarginalCoinCost('Enemy Level Skip Reduction', 4)).toBe(
-        32_000_000_000_000_000,
+        32_000_000_000_000_000_000,
       )
       expect(toolkitUpgradeDurationSeconds('Ultimate Weapon Durations', 9)).toBe(
         16_188_900,
