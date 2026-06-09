@@ -1,11 +1,5 @@
 /**
- * Workshop **defense** upgrades: **Health**, **Health Regen**, and **Defense %** use dedicated wiki
- * ladders (`workshopHealth`, `workshopHealthRegen`, `workshopDefensePercent`, `workshopDefenseAbsolute`,
- * `workshopThornDamage`, `workshopLifesteal`, `workshopKnockbackChance`, `workshopKnockbackForce`, `workshopOrbSpeed`,
- * `workshopOrbs`, `workshopShockwaveSize`, `workshopShockwaveFrequency`, `workshopLandMineChance`,
- * `workshopLandMineDamage`, `workshopLandMineRadius`, `workshopDeathDefy`, `workshopWallHealth`, `workshopWallRebuild`).
- * Other rows reuse the workshop damage marginal curve as
- * an interim placeholder.
+ * Workshop **defense** upgrades: stat display helpers per upgrade; values and costs from `tables/workshop/defense/`.
  */
 
 import {

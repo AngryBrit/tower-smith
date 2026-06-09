@@ -1,10 +1,8 @@
 /**
- * Workshop **Recovery Amount**: wiki milestone **Cost** (shared recovery ladder); max **300** levels.
- * **Value** is **14 + 0.40 × level** percent (base **14%** at level 0 → **134%** at level 300).
+ * Workshop **Recovery Amount**: stat and marginal coins from `tables/workshop/utility/recovery-amount.json`.
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
-import { workshopRecoverySharedMarginalCoins } from './workshopRecoveryShared'
 
 export const WORKSHOP_RECOVERY_AMOUNT_MAX_LEVEL = 300 as const
 

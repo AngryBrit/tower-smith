@@ -19,7 +19,7 @@ describe('workshopDefensePercent', () => {
 
   it('matches wiki spot checks', () => {
     expect(workshopDefensePercentStatPercentPoints(0)).toBe(0)
-    expect(workshopDefensePercentStatDisplay(50)).toBe('+25.00%')
+    expect(workshopDefensePercentStatDisplay(50)).toBe('25.00%')
     expect(workshopDefensePercentNextMarginalCoins(11)).toBe(898)
     expect(workshopDefensePercentNextMarginalCoins(98)).toBe(90_730)
     expect(workshopDefensePercentNextMarginalCoins(99)).toBeUndefined()
