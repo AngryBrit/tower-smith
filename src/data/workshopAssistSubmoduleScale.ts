@@ -17,7 +17,7 @@ import { submoduleEffectId } from './workshopSubmoduleCatalog'
 
 import {
   assistSubStoneEfficiencyFromPersisted,
-  clampAssistStoneEfficiency,
+  clampAssistSubmoduleEfficiencyPercent,
   workshopAssistChassisModuleSelection,
 } from './workshopAssistChassisModule'
 
@@ -98,7 +98,7 @@ export function scaleAssistSubmoduleRawValue(
   efficiencyPercent: number,
 ): number {
   if (rawValue === 0 || efficiencyPercent <= 0) return 0
-  const eff = clampAssistStoneEfficiency(efficiencyPercent)
+  const eff = clampAssistSubmoduleEfficiencyPercent(efficiencyPercent)
   if (ASSIST_PROPORTIONAL_SUBMODULE_EFFECT_IDS.has(effectId)) {
     return (rawValue * eff) / 100
   }

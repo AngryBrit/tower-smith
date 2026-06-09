@@ -4,7 +4,7 @@
 
 import {
   ASSIST_STONE_EFFICIENCY_MAX,
-  clampAssistStoneEfficiency,
+  clampAssistSubmoduleEfficiencyPercent,
 } from './workshopAssistChassisModule'
 import type { WorkshopChassisModuleEffectTier } from './workshopChassisModuleShared'
 
@@ -45,7 +45,7 @@ export function assistFlooredQuantity(
   baseQuantity: number,
   efficiencyPercent: number,
 ): number {
-  const eff = clampAssistStoneEfficiency(efficiencyPercent)
+  const eff = clampAssistSubmoduleEfficiencyPercent(efficiencyPercent)
   return Math.floor((baseQuantity * eff) / 100)
 }
 

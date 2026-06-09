@@ -5,6 +5,7 @@ import {
   mainModuleConflictsWithAssist,
   sanitizeAssistModuleIdAgainstMain,
   clampAssistStoneEfficiency,
+  clampAssistSubmoduleEfficiencyPercent,
   workshopAssistChassisModuleSelection,
 } from './workshopAssistChassisModule'
 
@@ -87,5 +88,12 @@ describe('workshopAssistChassisModule', () => {
     expect(clampAssistStoneEfficiency(0)).toBe(0)
     expect(clampAssistStoneEfficiency(71)).toBe(70)
     expect(clampAssistStoneEfficiency(34)).toBe(34)
+  })
+
+  it('clamps combined sub stone + SE lab efficiency to 0–100', () => {
+    expect(clampAssistSubmoduleEfficiencyPercent(0)).toBe(0)
+    expect(clampAssistSubmoduleEfficiencyPercent(70)).toBe(70)
+    expect(clampAssistSubmoduleEfficiencyPercent(100)).toBe(100)
+    expect(clampAssistSubmoduleEfficiencyPercent(101)).toBe(100)
   })
 })

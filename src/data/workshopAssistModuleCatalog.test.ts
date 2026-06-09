@@ -49,4 +49,9 @@ describe('workshopAssistModuleCatalog', () => {
     expect(assistFlooredQuantity(3, 33)).toBe(0)
     expect(assistFlooredQuantity(3, 34)).toBe(1)
   })
+
+  it('floors at full combined efficiency (70% sub stone + 30% SE lab)', () => {
+    expect(assistFlooredQuantity(10, 100)).toBe(10)
+    expect(assistFlooredQuantity(-10, 100)).toBe(-10)
+  })
 })

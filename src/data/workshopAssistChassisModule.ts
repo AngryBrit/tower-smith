@@ -19,6 +19,8 @@ import {
 import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
 export const ASSIST_STONE_EFFICIENCY_MAX = 70
+/** Sub stone (70%) + Assist Module Substats lab (30%). */
+export const ASSIST_SUBMODULE_EFFICIENCY_MAX = 100
 export const ASSIST_STONE_EFFICIENCY_DEFAULT = 1
 
 export const ASSIST_CHASSIS_UNLOCKED_KEY = {
@@ -95,6 +97,12 @@ export type WorkshopAssistChassisModulePersisted = WorkshopAssistChassisPersiste
 export function clampAssistStoneEfficiency(n: number): number {
   if (!Number.isFinite(n)) return ASSIST_STONE_EFFICIENCY_DEFAULT
   return Math.max(0, Math.min(ASSIST_STONE_EFFICIENCY_MAX, Math.trunc(n)))
+}
+
+/** Sub stone % plus Assist Module Substats lab % (wiki combined cap 100%). */
+export function clampAssistSubmoduleEfficiencyPercent(n: number): number {
+  if (!Number.isFinite(n)) return 0
+  return Math.max(0, Math.min(ASSIST_SUBMODULE_EFFICIENCY_MAX, Math.trunc(n)))
 }
 
 export function assistMainStoneEfficiencyFromPersisted(
