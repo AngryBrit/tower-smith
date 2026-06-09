@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 import { CommunityBuildRow } from './CommunityBuildRow'
-import { APP_VERSION, CHANGELOG_URL } from '../appVersion'
+import { APP_VERSION, CHANGELOG_URL, DISCORD_URL } from '../appVersion'
 import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { subscribeAppDeepLink } from '../appDeepLink'
@@ -883,16 +883,28 @@ export function SelectResearch({
           className="select-research__version-badge"
           aria-label={t('sr_footer_nav_aria')}
         >
-          <a
-            className="select-research__version-label"
-            href={CHANGELOG_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={t('sr_changelog_title')}
-            aria-label={`${fmt.versionAria(APP_VERSION)} — ${t('sr_changelog_title')}`}
-          >
-            v{APP_VERSION}
-          </a>
+          <div className="select-research__footer-top-row">
+            <a
+              className="select-research__version-label"
+              href={CHANGELOG_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={t('sr_changelog_title')}
+              aria-label={`${fmt.versionAria(APP_VERSION)} — ${t('sr_changelog_title')}`}
+            >
+              v{APP_VERSION}
+            </a>
+            <div className="select-research__footer-legal">
+              <a
+                href={DISCORD_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                title={t('sr_footer_discord_title')}
+              >
+                {t('sr_footer_discord')}
+              </a>
+            </div>
+          </div>
           <BuyMeACoffeeButton className="select-research__bmc-button" />
         </nav>
       </footer>

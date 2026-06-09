@@ -8,7 +8,7 @@ import {
   useRef,
   useState,
 } from 'react'
-import { APP_VERSION, CHANGELOG_URL } from './appVersion'
+import { APP_VERSION, CHANGELOG_URL, DISCORD_URL } from './appVersion'
 import { BugBusterProvider } from './bugBuster/BugBusterProvider'
 import { BugBusterDialog } from './components/BugBusterDialog'
 import { BugBusterFab } from './components/BugBusterFab'
@@ -482,6 +482,15 @@ export default function App() {
                         v{APP_VERSION}
                       </a>
                       <div className="select-research__footer-legal">
+                        <a
+                          href={DISCORD_URL}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title={t('sr_footer_discord_title')}
+                        >
+                          {t('sr_footer_discord')}
+                        </a>
+                        <span aria-hidden="true">·</span>
                         <a href="/privacy">{t('sr_footer_privacy')}</a>
                         <span aria-hidden="true">·</span>
                         <a href="/terms">{t('sr_footer_terms')}</a>

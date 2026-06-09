@@ -1402,7 +1402,9 @@ export const STRINGS_ES = {
   sr_reset_modules_confirm_body:
     'Borra niveles de módulos, módulos de chasis equipados y efectos de submódulos. No cambia mejoras del taller, cartas ni investigación del laboratorio.',
 
-  sr_footer_nav_aria: 'Versión de la app, registro de cambios, legal y patrocinio',
+  sr_footer_nav_aria: 'Versión de la app, registro de cambios, comunidad, legal y patrocinio',
+  sr_footer_discord: 'Discord',
+  sr_footer_discord_title: 'Comunidad de TowerSmith en Discord (se abre en una pestaña nueva)',
   sr_footer_privacy: 'Privacidad',
   sr_footer_terms: 'Términos',
   sr_version_aria: 'Versión {{version}}',

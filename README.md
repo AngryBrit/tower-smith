@@ -4,7 +4,7 @@
 
 > A browser-based companion for [**The Tower**](https://www.techtreegames.com/) — plan labs, model upgrades, import your save, compare builds, and share loadouts without touching the game.
 
-**[▶ Open TowerSmith](https://www.towersmith.com/)**
+**[▶ Open TowerSmith](https://www.towersmith.com/)** · [Discord](https://discord.gg/KBh4GK7P)
 
 **Get The Tower:** [Google Play](https://play.google.com/store/apps/details?id=com.TechTreeGames.TheTower&hl=en_GB) · [App Store](https://apps.apple.com/gb/app/the-tower-idle-tower-defense/id1575590830) · [TechTree Store](https://store.techtreegames.com/thetower/)
 

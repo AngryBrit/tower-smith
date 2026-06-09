@@ -1386,7 +1386,9 @@ export const STRINGS_EN = {
   sr_reset_modules_confirm_body:
     'Clears module levels, equipped chassis modules, and sub-module effect picks. Workshop upgrade levels, cards, and lab research are not changed.',
 
-  sr_footer_nav_aria: 'App version, changelog, legal, and sponsorship',
+  sr_footer_nav_aria: 'App version, changelog, community, legal, and sponsorship',
+  sr_footer_discord: 'Discord',
+  sr_footer_discord_title: 'TowerSmith community on Discord (opens in a new tab)',
   sr_footer_privacy: 'Privacy',
   sr_footer_terms: 'Terms',
   sr_version_aria: 'Version {{version}}',
