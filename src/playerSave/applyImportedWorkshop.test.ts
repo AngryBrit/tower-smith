@@ -92,7 +92,9 @@ describe('applyImportedWorkshop', () => {
 
     expect(workspace.build.relics.relicOwnedIds.length).toBeGreaterThan(0)
 
-    expect(workspace.build.modules.simCannonModuleLevel).toBe(save.moduleEquipped[0]!.level)
+    expect(workspace.build.modules.simCannonChassisModuleLevel).toBe(
+      save.moduleEquipped[0]!.level,
+    )
     expect(workspace.build.modules.simGeneratorChassisModuleId).toBeTruthy()
     expect(workspace.build.modules.simSubmoduleSelections.cannon.main).toBeTruthy()
 

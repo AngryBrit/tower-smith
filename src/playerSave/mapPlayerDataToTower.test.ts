@@ -322,10 +322,10 @@ describe('playerSaveToWorkshop', () => {
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE)))
     expect(save.moduleEquipped).toHaveLength(4)
     const ws = playerSaveToWorkshop(save)
-    expect(ws.simCannonModuleLevel).toBe(save.moduleEquipped[0]!.level)
-    expect(ws.simArmorModuleLevel).toBe(save.moduleEquipped[1]!.level)
-    expect(ws.simGeneratorModuleLevel).toBe(save.moduleEquipped[2]!.level)
-    expect(ws.simCoreModuleLevel).toBe(save.moduleEquipped[3]!.level)
+    expect(ws.simCannonChassisModuleLevel).toBe(save.moduleEquipped[0]!.level)
+    expect(ws.simArmorChassisModuleLevel).toBe(save.moduleEquipped[1]!.level)
+    expect(ws.simGeneratorChassisModuleLevel).toBe(save.moduleEquipped[2]!.level)
+    expect(ws.simCoreChassisModuleLevel).toBe(save.moduleEquipped[3]!.level)
     expect(ws.simCannonChassisModuleRarity).toBe('mythic_plus')
     expect(ws.simArmorChassisModuleRarity).toBe('legendary')
     expect(ws.simGeneratorChassisModuleRarity).toBe('epic')
@@ -391,6 +391,79 @@ describe('playerSaveToWorkshop', () => {
       'cash-wave': 'mythic',
       'max-recovery': 'mythic',
     })
+  })
+
+  it('imports assist unlocks when assistModuleSlots has data even if assistModulesAvailable is false', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        assistModulesAvailable: false,
+        assistModuleSlots: [
+          {
+            unlocked: false,
+            uniqueEffectEfficiencyLevel: 0,
+            mainEffectEfficiencyLevel: 0,
+            substatEfficiencyLevel: 0,
+            equipped: null,
+          },
+          {
+            unlocked: true,
+            uniqueEffectEfficiencyLevel: 2,
+            mainEffectEfficiencyLevel: 29,
+            substatEfficiencyLevel: 24,
+            equipped: {
+              infoIndex: 19,
+              level: 90,
+              rarity: 11,
+              effects: [142, 88, 81, 132, 0, 0, 0, 0],
+            },
+          },
+          {
+            unlocked: true,
+            uniqueEffectEfficiencyLevel: 1,
+            mainEffectEfficiencyLevel: 19,
+            substatEfficiencyLevel: 19,
+            equipped: {
+              infoIndex: 28,
+              level: 66,
+              rarity: 12,
+              effects: [207, 212, 216, 328, 0, 0, 0, 0],
+            },
+          },
+          {
+            unlocked: true,
+            uniqueEffectEfficiencyLevel: 0,
+            mainEffectEfficiencyLevel: 0,
+            substatEfficiencyLevel: 19,
+            equipped: {
+              infoIndex: 48,
+              level: 41,
+              rarity: 11,
+              effects: [315, 284, 326, 303, 0, 0, 0, 0],
+            },
+          },
+        ],
+      }),
+    )
+    expect(ws.simCannonAssistUnlocked).toBe(false)
+    expect(ws.simArmorAssistUnlocked).toBe(true)
+    expect(ws.simGeneratorAssistUnlocked).toBe(true)
+    expect(ws.simCoreAssistUnlocked).toBe(true)
+    expect(ws.simArmorAssistUniqueRarity).toBe('mythic')
+    expect(ws.simGeneratorAssistUniqueRarity).toBe('legendary')
+    expect(ws.simCoreAssistUniqueRarity).toBe('epic')
+    expect(ws.simArmorAssistMainStoneEfficiency).toBe(29)
+    expect(ws.simArmorAssistSubStoneEfficiency).toBe(24)
+    expect(ws.simCoreAssistSubStoneEfficiency).toBe(19)
+    expect(ws.simArmorAssistChassisModuleId).toBe('spaceDisplacer')
+    expect(ws.simArmorModuleLevel).toBe(90)
+    expect(ws.simGeneratorAssistChassisModuleId).toBe(
+      gameWorkshopChassisModuleId(28, 'generator'),
+    )
+    expect(ws.simGeneratorModuleLevel).toBe(66)
+    expect(ws.simCoreAssistChassisModuleId).toBe(
+      gameWorkshopChassisModuleId(48, 'core'),
+    )
+    expect(ws.simCoreModuleLevel).toBe(41)
   })
 
   it('imports James Wright cannon Shrink Ray (infoIndex 41)', async () => {

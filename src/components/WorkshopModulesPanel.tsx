@@ -28,8 +28,10 @@ import {
 } from '../data/workshopAssistChassisModule'
 import {
   CHASSIS_MODULE_ID_KEY,
+  CHASSIS_MODULE_LEVEL_KEY,
   CHASSIS_MODULE_RARITY_KEY,
   workshopChassisModuleDefForSlot,
+  workshopChassisModuleLevel,
   workshopChassisModuleSelection,
 } from '../data/workshopChassisModuleSelection'
 import {
@@ -430,10 +432,20 @@ export function WorkshopModulesPanel({
     [patch],
   )
 
-  const setModuleLevel = useCallback(
+  const setChassisModuleLevel = useCallback(
     (target: WorkshopAssistModuleSlot, level: number) => {
-      const key = ASSIST_MODULE_LEVEL_KEY[target]
-      patch({ [key]: clampWorkshopAssistModuleLevel(level) })
+      patch({
+        [CHASSIS_MODULE_LEVEL_KEY[target]]: clampWorkshopAssistModuleLevel(level),
+      })
+    },
+    [patch],
+  )
+
+  const setAssistModuleLevel = useCallback(
+    (target: WorkshopAssistModuleSlot, level: number) => {
+      patch({
+        [ASSIST_MODULE_LEVEL_KEY[target]]: clampWorkshopAssistModuleLevel(level),
+      })
     },
     [patch],
   )
@@ -541,7 +553,8 @@ export function WorkshopModulesPanel({
           <div className="modules-hub__grid">
           {WORKSHOP_ASSIST_MODULE_SLOTS.map((key) => {
             const art = MODULE_HUB_SLOT_ART[key]
-            const level = workshopAssistModuleLevel(workshopPersisted, key)
+            const mainLevel = workshopChassisModuleLevel(workshopPersisted, key)
+            const assistLevel = workshopAssistModuleLevel(workshopPersisted, key)
             const assistActive = slot === key
             const chassis = workshopChassisModuleSelection(workshopPersisted, key)
             const assistChassis = workshopAssistChassisModuleSelection(workshopPersisted, key)
@@ -597,6 +610,7 @@ export function WorkshopModulesPanel({
                         name={assistEquipped.name}
                         moduleRarity={assistChassis.rarity}
                         frameRole="assist"
+                        moduleLevel={assistLevel}
                       />
                       <AssistStoneEfficiencyDisplay
                         slot={key}
@@ -663,7 +677,7 @@ export function WorkshopModulesPanel({
                       name={equippedName}
                       moduleRarity={chassis.rarity}
                       frameRole="main"
-                      moduleLevel={level}
+                      moduleLevel={mainLevel}
                     />
                   ) : null}
                 </div>
@@ -797,10 +811,23 @@ export function WorkshopModulesPanel({
                   .uniqueRarity
               : undefined
           }
-          moduleLevel={workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)}
-          onModuleLevelCommit={(next) => setModuleLevel(pickerTarget.slot, next)}
+          moduleLevel={
+            pickerTarget.role === 'main'
+              ? workshopChassisModuleLevel(workshopPersisted, pickerTarget.slot)
+              : workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)
+          }
+          onModuleLevelCommit={(next) => {
+            if (pickerTarget.role === 'main') {
+              setChassisModuleLevel(pickerTarget.slot, next)
+            } else {
+              setAssistModuleLevel(pickerTarget.slot, next)
+            }
+          }}
           heroStatContext={(() => {
-            const moduleLevel = workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)
+            const moduleLevel =
+              pickerTarget.role === 'main'
+                ? workshopChassisModuleLevel(workshopPersisted, pickerTarget.slot)
+                : workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)
             if (pickerTarget.slot === 'cannon') {
               return buildTowerDamageHeroStatContext(
                 workshopPersisted,

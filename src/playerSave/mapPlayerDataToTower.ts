@@ -34,6 +34,7 @@ import { clampWorkshopAssistModuleLevel } from '../data/workshopSimModules'
 import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
 import {
   CHASSIS_MODULE_ID_KEY,
+  CHASSIS_MODULE_LEVEL_KEY,
   CHASSIS_MODULE_RARITY_KEY,
 } from '../data/workshopChassisModuleSelection'
 import {
@@ -82,8 +83,11 @@ import {
   ASSIST_CHASSIS_UNLOCKED_KEY,
   ASSIST_MAIN_STONE_EFFICIENCY_KEY,
   ASSIST_SUB_STONE_EFFICIENCY_KEY,
+  ASSIST_UNIQUE_RARITY_KEY,
   clampAssistStoneEfficiency,
 } from '../data/workshopAssistChassisModule'
+import { assistUniqueRarityFromGameLevel } from '../data/workshopAssistModuleCatalog'
+import { ASSIST_MODULE_LEVEL_KEY } from '../data/workshopSimModules'
 import type {
   DecodedAssistModuleSlot,
   DecodedPlayerSave,
@@ -581,22 +585,20 @@ export function playerSaveToThemes(save: DecodedPlayerSave): TowerThemesSnapshot
   }
 }
 
-function setModuleLevel(ws: WorkshopPersistedV1, slot: WorkshopAssistModuleSlot, level: number): void {
-  const v = clampWorkshopAssistModuleLevel(level)
-  switch (slot) {
-    case 'cannon':
-      ws.simCannonModuleLevel = v
-      break
-    case 'armor':
-      ws.simArmorModuleLevel = v
-      break
-    case 'generator':
-      ws.simGeneratorModuleLevel = v
-      break
-    case 'core':
-      ws.simCoreModuleLevel = v
-      break
-  }
+function setChassisModuleLevel(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+  level: number,
+): void {
+  ws[CHASSIS_MODULE_LEVEL_KEY[slot]] = clampWorkshopAssistModuleLevel(level)
+}
+
+function setAssistModuleLevel(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+  level: number,
+): void {
+  ws[ASSIST_MODULE_LEVEL_KEY[slot]] = clampWorkshopAssistModuleLevel(level)
 }
 
 function applyModuleEquipped(
@@ -607,7 +609,7 @@ function applyModuleEquipped(
     const slot = MODULE_SLOTS[i]!
     const item = equipped[i]
     if (!item) continue
-    setModuleLevel(ws, slot, item.level)
+    setChassisModuleLevel(ws, slot, item.level)
     const merge = gameModuleRarityToMergeTier(item.rarity)
     if (merge) {
       ws[CHASSIS_MODULE_RARITY_KEY[slot]] = merge
@@ -627,6 +629,17 @@ function applyModuleEquipped(
   }
 }
 
+function assistModuleSlotsHaveData(slots: DecodedAssistModuleSlot[]): boolean {
+  return slots.some(
+    (row) =>
+      row.unlocked ||
+      row.equipped != null ||
+      row.mainEffectEfficiencyLevel > 0 ||
+      row.substatEfficiencyLevel > 0 ||
+      row.uniqueEffectEfficiencyLevel > 0,
+  )
+}
+
 function applyAssistModuleSlots(
   ws: WorkshopPersistedV1,
   slots: DecodedAssistModuleSlot[],
@@ -636,6 +649,11 @@ function applyAssistModuleSlots(
     const row = slots[i]
     if (!row) continue
     ws[ASSIST_CHASSIS_UNLOCKED_KEY[slot]] = row.unlocked
+    if (row.unlocked) {
+      ws[ASSIST_UNIQUE_RARITY_KEY[slot]] = assistUniqueRarityFromGameLevel(
+        row.uniqueEffectEfficiencyLevel,
+      )
+    }
     if (row.mainEffectEfficiencyLevel > 0) {
       ws[ASSIST_MAIN_STONE_EFFICIENCY_KEY[slot]] = clampAssistStoneEfficiency(
         row.mainEffectEfficiencyLevel,
@@ -656,7 +674,7 @@ function applyAssistModuleSlots(
     if (moduleId) {
       ws[ASSIST_CHASSIS_MODULE_ID_KEY[slot]] = moduleId
     }
-    void row.uniqueEffectEfficiencyLevel
+    setAssistModuleLevel(ws, slot, item.level)
     const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
     ws.simSubmoduleSelections = {
       ...ws.simSubmoduleSelections,
@@ -703,7 +721,7 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   ws.simRelicsBonusFraction = workshopRelicsDamageBonusFraction(new Set(ws.relicOwnedIds))
 
   applyModuleEquipped(ws, save.moduleEquipped)
-  if (save.assistModulesAvailable) {
+  if (save.assistModulesAvailable || assistModuleSlotsHaveData(save.assistModuleSlots)) {
     applyAssistModuleSlots(ws, save.assistModuleSlots)
   }
   ws.simAttackSpeedModuleSubEffect = totalCannonAttackSpeedFromSelections(ws.simSubmoduleSelections)

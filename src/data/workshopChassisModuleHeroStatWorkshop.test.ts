@@ -22,7 +22,7 @@ describe('workshopChassisModuleHeroStatWorkshop', () => {
       ...defaultWorkshopPersisted(),
       simCannonChassisModuleId: 'astralDeliverance',
       simCannonChassisModuleRarity: 'legendary',
-      simCannonModuleLevel: 100,
+      simCannonChassisModuleLevel: 100,
     }
     expect(workshopChassisModuleHeroStatMultiplier(ws, 'cannon')).toBeCloseTo(2.27, 3)
   })

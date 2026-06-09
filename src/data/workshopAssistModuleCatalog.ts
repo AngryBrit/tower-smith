@@ -83,6 +83,17 @@ export const ASSIST_UNIQUE_RARITY_ROWS: readonly AssistUniqueRarityRow[] = [
 
 const ASSIST_UNIQUE_RARITY_ORDER = ASSIST_UNIQUE_RARITY_ROWS.map((r) => r.rarity)
 
+/** Game `uniqueEffectEfficiencyLevel` (0…3) → assist unique-effect tier. */
+export function assistUniqueRarityFromGameLevel(
+  level: number,
+): WorkshopChassisModuleEffectTier {
+  const idx = Math.max(
+    0,
+    Math.min(ASSIST_UNIQUE_RARITY_ORDER.length - 1, Math.trunc(level)),
+  )
+  return ASSIST_UNIQUE_RARITY_ORDER[idx] ?? 'epic'
+}
+
 /** Stone cost to raise unique-effect tier from current to the next rarity (null at max). */
 export function assistUniqueRarityUpgradeCost(
   current: WorkshopChassisModuleEffectTier,

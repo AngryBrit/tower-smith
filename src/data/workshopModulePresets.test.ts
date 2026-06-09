@@ -12,18 +12,18 @@ describe('workshopModulePresets', () => {
     const withCannon = patchWorkshopModules(base, {
       simCannonChassisModuleId: 'deathPenalty',
       simCannonChassisModuleRarity: 'mythic',
-      simCannonModuleLevel: 40,
+      simCannonChassisModuleLevel: 40,
     })
 
     const switched = selectWorkshopModulePreset(withCannon, 1)
     expect(switched.moduleActivePresetIndex).toBe(1)
     expect(switched.simCannonChassisModuleId).toBe('')
-    expect(switched.simCannonModuleLevel).toBe(0)
+    expect(switched.simCannonChassisModuleLevel).toBe(0)
 
     const back = selectWorkshopModulePreset(switched, 0)
     expect(back.simCannonChassisModuleId).toBe('deathPenalty')
     expect(back.simCannonChassisModuleRarity).toBe('mythic')
-    expect(back.simCannonModuleLevel).toBe(40)
+    expect(back.simCannonChassisModuleLevel).toBe(40)
   })
 
   it('patchWorkshopModules updates the active preset snapshot', () => {

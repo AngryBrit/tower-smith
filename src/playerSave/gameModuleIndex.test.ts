@@ -41,8 +41,8 @@ describe('gameModuleIndex', () => {
 
   it('maps unverified guess indices to the expected slot', () => {
     expect(gameWorkshopChassisModuleId(11, 'cannon')).toBe('shrinkRay')
-    expect(gameWorkshopChassisModuleId(19, 'armor')).toBe('wormholeRedirector')
-    expect(gameWorkshopChassisModuleId(21, 'armor')).toBe('spaceDisplacer')
+    expect(gameWorkshopChassisModuleId(19, 'armor')).toBe('spaceDisplacer')
+    expect(gameWorkshopChassisModuleId(21, 'armor')).toBe('wormholeRedirector')
     expect(gameWorkshopChassisModuleId(39, 'core')).toBe('harmonyConductor')
     expect(gameWorkshopChassisModuleId(40, 'core')).toBe('omChip')
   })

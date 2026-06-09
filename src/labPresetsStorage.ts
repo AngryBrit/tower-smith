@@ -346,6 +346,11 @@ export type WorkshopPersistedV1 = {
   simArmorModuleLevel: number
   simGeneratorModuleLevel: number
   simCoreModuleLevel: number
+  /** Equipped main chassis module levels (hub UI). */
+  simCannonChassisModuleLevel: number
+  simArmorChassisModuleLevel: number
+  simGeneratorChassisModuleLevel: number
+  simCoreChassisModuleLevel: number
   /** Equipped cannon chassis module id (`''` = none). */
   simCannonChassisModuleId: string
   simArmorChassisModuleId: string
@@ -548,6 +553,10 @@ export function resetWorkshopUpgradeLevels(
     simArmorModuleLevel: current.simArmorModuleLevel,
     simGeneratorModuleLevel: current.simGeneratorModuleLevel,
     simCoreModuleLevel: current.simCoreModuleLevel,
+    simCannonChassisModuleLevel: current.simCannonChassisModuleLevel,
+    simArmorChassisModuleLevel: current.simArmorChassisModuleLevel,
+    simGeneratorChassisModuleLevel: current.simGeneratorChassisModuleLevel,
+    simCoreChassisModuleLevel: current.simCoreChassisModuleLevel,
     simCannonChassisModuleId: current.simCannonChassisModuleId,
     simArmorChassisModuleId: current.simArmorChassisModuleId,
     simGeneratorChassisModuleId: current.simGeneratorChassisModuleId,
@@ -988,6 +997,26 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     simArmorModuleLevel: clampWorkshopAssistModuleLevel(Number(o.simArmorModuleLevel)),
     simGeneratorModuleLevel: clampWorkshopAssistModuleLevel(Number(o.simGeneratorModuleLevel)),
     simCoreModuleLevel: clampWorkshopAssistModuleLevel(Number(o.simCoreModuleLevel)),
+    simCannonChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simCannonChassisModuleLevel !== undefined
+        ? Number(o.simCannonChassisModuleLevel)
+        : Number(o.simCannonModuleLevel),
+    ),
+    simArmorChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simArmorChassisModuleLevel !== undefined
+        ? Number(o.simArmorChassisModuleLevel)
+        : Number(o.simArmorModuleLevel),
+    ),
+    simGeneratorChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simGeneratorChassisModuleLevel !== undefined
+        ? Number(o.simGeneratorChassisModuleLevel)
+        : Number(o.simGeneratorModuleLevel),
+    ),
+    simCoreChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simCoreChassisModuleLevel !== undefined
+        ? Number(o.simCoreChassisModuleLevel)
+        : Number(o.simCoreModuleLevel),
+    ),
     simCannonChassisModuleId:
       sanitizeChassisModuleId('cannon', o.simCannonChassisModuleId) ?? '',
     simArmorChassisModuleId:
@@ -997,19 +1026,35 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     simCoreChassisModuleId: sanitizeChassisModuleId('core', o.simCoreChassisModuleId) ?? '',
     simCannonChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
       sanitizeChassisModuleMergeTier(o.simCannonChassisModuleRarity),
-      clampWorkshopAssistModuleLevel(Number(o.simCannonModuleLevel)),
+      clampWorkshopAssistModuleLevel(
+        o.simCannonChassisModuleLevel !== undefined
+          ? Number(o.simCannonChassisModuleLevel)
+          : Number(o.simCannonModuleLevel),
+      ),
     ),
     simArmorChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
       sanitizeChassisModuleMergeTier(o.simArmorChassisModuleRarity),
-      clampWorkshopAssistModuleLevel(Number(o.simArmorModuleLevel)),
+      clampWorkshopAssistModuleLevel(
+        o.simArmorChassisModuleLevel !== undefined
+          ? Number(o.simArmorChassisModuleLevel)
+          : Number(o.simArmorModuleLevel),
+      ),
     ),
     simGeneratorChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
       sanitizeChassisModuleMergeTier(o.simGeneratorChassisModuleRarity),
-      clampWorkshopAssistModuleLevel(Number(o.simGeneratorModuleLevel)),
+      clampWorkshopAssistModuleLevel(
+        o.simGeneratorChassisModuleLevel !== undefined
+          ? Number(o.simGeneratorChassisModuleLevel)
+          : Number(o.simGeneratorModuleLevel),
+      ),
     ),
     simCoreChassisModuleRarity: coerceChassisMergeTierForModuleLevel(
       sanitizeChassisModuleMergeTier(o.simCoreChassisModuleRarity),
-      clampWorkshopAssistModuleLevel(Number(o.simCoreModuleLevel)),
+      clampWorkshopAssistModuleLevel(
+        o.simCoreChassisModuleLevel !== undefined
+          ? Number(o.simCoreChassisModuleLevel)
+          : Number(o.simCoreModuleLevel),
+      ),
     ),
     simCannonAssistUnlocked: o.simCannonAssistUnlocked === true,
     simArmorAssistUnlocked: o.simArmorAssistUnlocked === true,

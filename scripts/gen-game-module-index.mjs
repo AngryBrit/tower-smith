@@ -26,6 +26,8 @@ const MANUAL_OVERRIDES = {
   9: 'beingAnnihilator',
   10: 'astralDeliverance',
   18: 'negativeMassProjector',
+  /** petethered.dat — armor assist Space Displacer (land-mine sub-stats). */
+  19: 'spaceDisplacer',
   20: 'antiCubePortal',
   27: 'blackHoleDigestor',
   28: 'pulsarHarvester',
@@ -49,13 +51,12 @@ const MANUAL_OVERRIDES = {
  * Re-equip in-game to confirm; update MANUAL_OVERRIDES when verified.
  *
  * shrinkRay: continues cannon run 7–10; amplifyingStrike uses high index 45.
- * wormholeRedirector / spaceDisplacer: armor bookends around antiCube at 20 (19, 21).
+ * wormholeRedirector: armor index 21 (spaceDisplacer verified at 19 on petethered.dat).
  * harmonyConductor / omChip: core continues multiverse/dimension at 37–38 → 39–40.
  */
 const GUESS_OVERRIDES = {
   11: 'shrinkRay',
-  19: 'wormholeRedirector',
-  21: 'spaceDisplacer',
+  21: 'wormholeRedirector',
   39: 'harmonyConductor',
   40: 'omChip',
 }

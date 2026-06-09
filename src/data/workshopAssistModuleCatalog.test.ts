@@ -7,6 +7,7 @@ import {
   assistStoneEfficiencyCumulativeCost,
   assistStoneEfficiencyMarginalCost,
   assistStoneEfficiencyStonesToMax,
+  assistUniqueRarityFromGameLevel,
   assistUniqueRarityUpgradeCost,
   stepAssistUniqueRarity,
 } from './workshopAssistModuleCatalog'
@@ -16,6 +17,13 @@ describe('workshopAssistModuleCatalog', () => {
     expect(stepAssistUniqueRarity('epic', 1)).toBe('legendary')
     expect(assistUniqueRarityUpgradeCost('mythic')).toBe(1400)
     expect(assistUniqueRarityUpgradeCost('ancestral')).toBeNull()
+  })
+
+  it('maps game uniqueEffectEfficiencyLevel to assist unique rarity tier', () => {
+    expect(assistUniqueRarityFromGameLevel(0)).toBe('epic')
+    expect(assistUniqueRarityFromGameLevel(1)).toBe('legendary')
+    expect(assistUniqueRarityFromGameLevel(2)).toBe('mythic')
+    expect(assistUniqueRarityFromGameLevel(3)).toBe('ancestral')
   })
 
   it('matches wiki stone efficiency marginal costs', () => {

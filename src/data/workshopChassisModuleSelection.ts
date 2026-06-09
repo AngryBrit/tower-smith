@@ -31,7 +31,10 @@ import {
   workshopGeneratorModuleDef,
   type WorkshopGeneratorModuleId,
 } from './workshopGeneratorModules'
-import type { WorkshopAssistModuleSlot } from './workshopSimModules'
+import {
+  clampWorkshopAssistModuleLevel,
+  type WorkshopAssistModuleSlot,
+} from './workshopSimModules'
 
 export type WorkshopChassisModuleSelection = {
   moduleId: string | null
@@ -52,10 +55,26 @@ export const CHASSIS_MODULE_RARITY_KEY = {
   core: 'simCoreChassisModuleRarity',
 } as const
 
+export const CHASSIS_MODULE_LEVEL_KEY = {
+  cannon: 'simCannonChassisModuleLevel',
+  armor: 'simArmorChassisModuleLevel',
+  generator: 'simGeneratorChassisModuleLevel',
+  core: 'simCoreChassisModuleLevel',
+} as const
+
 export type WorkshopChassisModulePersisted = {
   [K in (typeof CHASSIS_MODULE_ID_KEY)[WorkshopAssistModuleSlot]]: string
 } & {
   [K in (typeof CHASSIS_MODULE_RARITY_KEY)[WorkshopAssistModuleSlot]]: string
+} & {
+  [K in (typeof CHASSIS_MODULE_LEVEL_KEY)[WorkshopAssistModuleSlot]]: number
+}
+
+export function workshopChassisModuleLevel(
+  ws: { [K in (typeof CHASSIS_MODULE_LEVEL_KEY)[WorkshopAssistModuleSlot]]: number },
+  slot: WorkshopAssistModuleSlot,
+): number {
+  return ws[CHASSIS_MODULE_LEVEL_KEY[slot]]
 }
 
 export const CHASSIS_MODULE_ORDERS: Record<WorkshopAssistModuleSlot, readonly string[]> = {

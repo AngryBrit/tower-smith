@@ -34,6 +34,10 @@ export type WorkshopModulePresetSnapshot = {
   simArmorModuleLevel: number
   simGeneratorModuleLevel: number
   simCoreModuleLevel: number
+  simCannonChassisModuleLevel: number
+  simArmorChassisModuleLevel: number
+  simGeneratorChassisModuleLevel: number
+  simCoreChassisModuleLevel: number
   simCannonChassisModuleId: string
   simArmorChassisModuleId: string
   simGeneratorChassisModuleId: string
@@ -98,6 +102,10 @@ export function defaultWorkshopModulePresetSnapshot(): WorkshopModulePresetSnaps
     simArmorModuleLevel: 0,
     simGeneratorModuleLevel: 0,
     simCoreModuleLevel: 0,
+    simCannonChassisModuleLevel: 0,
+    simArmorChassisModuleLevel: 0,
+    simGeneratorChassisModuleLevel: 0,
+    simCoreChassisModuleLevel: 0,
     simCannonChassisModuleId: '',
     simArmorChassisModuleId: '',
     simGeneratorChassisModuleId: '',
@@ -166,6 +174,10 @@ export function extractWorkshopModulePresetSnapshot(
     simArmorModuleLevel: ws.simArmorModuleLevel,
     simGeneratorModuleLevel: ws.simGeneratorModuleLevel,
     simCoreModuleLevel: ws.simCoreModuleLevel,
+    simCannonChassisModuleLevel: ws.simCannonChassisModuleLevel,
+    simArmorChassisModuleLevel: ws.simArmorChassisModuleLevel,
+    simGeneratorChassisModuleLevel: ws.simGeneratorChassisModuleLevel,
+    simCoreChassisModuleLevel: ws.simCoreChassisModuleLevel,
     simCannonChassisModuleId: ws.simCannonChassisModuleId,
     simArmorChassisModuleId: ws.simArmorChassisModuleId,
     simGeneratorChassisModuleId: ws.simGeneratorChassisModuleId,
@@ -222,6 +234,12 @@ export function applyWorkshopModulePresetSnapshot(
     simArmorModuleLevel: clampWorkshopAssistModuleLevel(snap.simArmorModuleLevel),
     simGeneratorModuleLevel: clampWorkshopAssistModuleLevel(snap.simGeneratorModuleLevel),
     simCoreModuleLevel: clampWorkshopAssistModuleLevel(snap.simCoreModuleLevel),
+    simCannonChassisModuleLevel: clampWorkshopAssistModuleLevel(snap.simCannonChassisModuleLevel),
+    simArmorChassisModuleLevel: clampWorkshopAssistModuleLevel(snap.simArmorChassisModuleLevel),
+    simGeneratorChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      snap.simGeneratorChassisModuleLevel,
+    ),
+    simCoreChassisModuleLevel: clampWorkshopAssistModuleLevel(snap.simCoreChassisModuleLevel),
     simCannonChassisModuleId: snap.simCannonChassisModuleId ?? '',
     simArmorChassisModuleId: snap.simArmorChassisModuleId ?? '',
     simGeneratorChassisModuleId: snap.simGeneratorChassisModuleId ?? '',
@@ -306,6 +324,26 @@ function sanitizeSnapshotFromUnknown(raw: unknown): WorkshopModulePresetSnapshot
     simArmorModuleLevel: clampWorkshopAssistModuleLevel(Number(o.simArmorModuleLevel)),
     simGeneratorModuleLevel: clampWorkshopAssistModuleLevel(Number(o.simGeneratorModuleLevel)),
     simCoreModuleLevel: clampWorkshopAssistModuleLevel(Number(o.simCoreModuleLevel)),
+    simCannonChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simCannonChassisModuleLevel !== undefined
+        ? Number(o.simCannonChassisModuleLevel)
+        : Number(o.simCannonModuleLevel),
+    ),
+    simArmorChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simArmorChassisModuleLevel !== undefined
+        ? Number(o.simArmorChassisModuleLevel)
+        : Number(o.simArmorModuleLevel),
+    ),
+    simGeneratorChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simGeneratorChassisModuleLevel !== undefined
+        ? Number(o.simGeneratorChassisModuleLevel)
+        : Number(o.simGeneratorModuleLevel),
+    ),
+    simCoreChassisModuleLevel: clampWorkshopAssistModuleLevel(
+      o.simCoreChassisModuleLevel !== undefined
+        ? Number(o.simCoreChassisModuleLevel)
+        : Number(o.simCoreModuleLevel),
+    ),
     simCannonChassisModuleId:
       typeof o.simCannonChassisModuleId === 'string' ? o.simCannonChassisModuleId : '',
     simArmorChassisModuleId:

@@ -8,17 +8,15 @@ import {
   type WorkshopChassisModuleHeroStatSlot,
 } from './workshopChassisModuleHeroStatAnchors'
 import {
+  CHASSIS_MODULE_LEVEL_KEY,
+  workshopChassisModuleLevel,
   workshopChassisModuleSelection,
   type WorkshopChassisModulePersisted,
 } from './workshopChassisModuleSelection'
-import {
-  ASSIST_MODULE_LEVEL_KEY,
-  workshopAssistModuleLevel,
-  type WorkshopAssistModuleSlot,
-} from './workshopSimModules'
+import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
 export type WorkshopChassisModuleLevelPersisted = {
-  [K in (typeof ASSIST_MODULE_LEVEL_KEY)[WorkshopAssistModuleSlot]]: number
+  [K in (typeof CHASSIS_MODULE_LEVEL_KEY)[WorkshopAssistModuleSlot]]: number
 }
 
 const HERO_STAT_SLOT: Record<WorkshopAssistModuleSlot, WorkshopChassisModuleHeroStatSlot> = {
@@ -35,7 +33,7 @@ export function workshopChassisModuleHeroStatMultiplier(
 ): number {
   const { moduleId, rarity } = workshopChassisModuleSelection(ws, slot)
   if (moduleId == null) return 1
-  const level = workshopAssistModuleLevel(ws, slot)
+  const level = workshopChassisModuleLevel(ws, slot)
   const clamped = clampWorkshopChassisModuleLevel(level, rarity)
   return workshopChassisModuleHeroStatMilli(HERO_STAT_SLOT[slot], rarity, clamped) / 1000
 }
