@@ -1,0 +1,297 @@
+{
+  "name": "Multishot Targets",
+  "category": "attack",
+  "maxLevel": 7,
+  "levels": [
+    {
+      "level": 0,
+      "value": 2,
+      "nextCoins": {
+        "display": "450.00",
+        "coins": 450
+      },
+      "nextCash": {
+        "display": "125.00",
+        "cash": 125
+      },
+      "additionalCoins": {
+        "display": "0.00",
+        "coins": 0
+      },
+      "additionalCash": {
+        "display": "0.00",
+        "cash": 0
+      },
+      "totalCoins": {
+        "display": "0.00",
+        "coins": 0
+      },
+      "totalCash": {
+        "display": "0.00",
+        "cash": 0
+      },
+      "cashToTarget": {
+        "display": "71.28K",
+        "cash": 71280
+      },
+      "cashToMax": {
+        "display": "71.28K",
+        "cash": 71280
+      }
+    },
+    {
+      "level": 1,
+      "value": 3,
+      "nextCoins": {
+        "display": "2.00K",
+        "coins": 2000
+      },
+      "nextCash": {
+        "display": "350.00",
+        "cash": 350
+      },
+      "additionalCoins": {
+        "display": "450.00",
+        "coins": 450
+      },
+      "additionalCash": {
+        "display": "125.00",
+        "cash": 125
+      },
+      "totalCoins": {
+        "display": "450.00",
+        "coins": 450
+      },
+      "totalCash": {
+        "display": "125.00",
+        "cash": 125
+      },
+      "cashToTarget": {
+        "display": "31.28K",
+        "cash": 31280
+      },
+      "cashToMax": {
+        "display": "31.28K",
+        "cash": 31280
+      }
+    },
+    {
+      "level": 2,
+      "value": 4,
+      "nextCoins": {
+        "display": "5.00K",
+        "coins": 5000
+      },
+      "nextCash": {
+        "display": "800.00",
+        "cash": 800
+      },
+      "additionalCoins": {
+        "display": "2.45K",
+        "coins": 2450
+      },
+      "additionalCash": {
+        "display": "475.00",
+        "cash": 475
+      },
+      "totalCoins": {
+        "display": "2.45K",
+        "coins": 2450
+      },
+      "totalCash": {
+        "display": "475.00",
+        "cash": 475
+      },
+      "cashToTarget": {
+        "display": "11.28K",
+        "cash": 11280
+      },
+      "cashToMax": {
+        "display": "11.28K",
+        "cash": 11280
+      }
+    },
+    {
+      "level": 3,
+      "value": 5,
+      "nextCoins": {
+        "display": "12.50K",
+        "coins": 12500
+      },
+      "nextCash": {
+        "display": "2.00K",
+        "cash": 2000
+      },
+      "additionalCoins": {
+        "display": "7.45K",
+        "coins": 7450
+      },
+      "additionalCash": {
+        "display": "1.27K",
+        "cash": 1270
+      },
+      "totalCoins": {
+        "display": "7.45K",
+        "coins": 7450
+      },
+      "totalCash": {
+        "display": "1.27K",
+        "cash": 1270
+      },
+      "cashToTarget": {
+        "display": "3.28K",
+        "cash": 3280
+      },
+      "cashToMax": {
+        "display": "3.28K",
+        "cash": 3280
+      }
+    },
+    {
+      "level": 4,
+      "value": 6,
+      "nextCoins": {
+        "display": "40.00K",
+        "coins": 40000
+      },
+      "nextCash": {
+        "display": "8.00K",
+        "cash": 8000
+      },
+      "additionalCoins": {
+        "display": "19.95K",
+        "coins": 19950
+      },
+      "additionalCash": {
+        "display": "3.28K",
+        "cash": 3280
+      },
+      "totalCoins": {
+        "display": "19.95K",
+        "coins": 19950
+      },
+      "totalCash": {
+        "display": "3.28K",
+        "cash": 3280
+      },
+      "cashToTarget": {
+        "display": "1.27K",
+        "cash": 1270
+      },
+      "cashToMax": {
+        "display": "1.27K",
+        "cash": 1270
+      }
+    },
+    {
+      "level": 5,
+      "value": 7,
+      "nextCoins": {
+        "display": "120.00K",
+        "coins": 120000
+      },
+      "nextCash": {
+        "display": "20.00K",
+        "cash": 20000
+      },
+      "additionalCoins": {
+        "display": "59.95K",
+        "coins": 59950
+      },
+      "additionalCash": {
+        "display": "11.28K",
+        "cash": 11280
+      },
+      "totalCoins": {
+        "display": "59.95K",
+        "coins": 59950
+      },
+      "totalCash": {
+        "display": "11.28K",
+        "cash": 11280
+      },
+      "cashToTarget": {
+        "display": "475.00",
+        "cash": 475
+      },
+      "cashToMax": {
+        "display": "475.00",
+        "cash": 475
+      }
+    },
+    {
+      "level": 6,
+      "value": 8,
+      "nextCoins": {
+        "display": "350.00K",
+        "coins": 350000
+      },
+      "nextCash": {
+        "display": "40.00K",
+        "cash": 40000
+      },
+      "additionalCoins": {
+        "display": "179.95K",
+        "coins": 179950
+      },
+      "additionalCash": {
+        "display": "31.28K",
+        "cash": 31280
+      },
+      "totalCoins": {
+        "display": "179.95K",
+        "coins": 179950
+      },
+      "totalCash": {
+        "display": "31.28K",
+        "cash": 31280
+      },
+      "cashToTarget": {
+        "display": "125.00",
+        "cash": 125
+      },
+      "cashToMax": {
+        "display": "125.00",
+        "cash": 125
+      }
+    },
+    {
+      "level": 7,
+      "value": 9,
+      "nextCoins": {
+        "display": "Maxed",
+        "coins": null,
+        "maxed": true
+      },
+      "nextCash": {
+        "display": "Maxed",
+        "cash": null,
+        "maxed": true
+      },
+      "additionalCoins": {
+        "display": "529.95K",
+        "coins": 529950
+      },
+      "additionalCash": {
+        "display": "71.28K",
+        "cash": 71280
+      },
+      "totalCoins": {
+        "display": "529.95K",
+        "coins": 529950
+      },
+      "totalCash": {
+        "display": "71.28K",
+        "cash": 71280
+      },
+      "cashToTarget": {
+        "display": "0.00",
+        "cash": 0
+      },
+      "cashToMax": {
+        "display": "0.00",
+        "cash": 0
+      }
+    }
+  ]
+}

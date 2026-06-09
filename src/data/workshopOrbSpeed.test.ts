@@ -18,8 +18,8 @@ describe('workshopOrbSpeed', () => {
   })
 
   it('matches wiki Value and Cost spot checks', () => {
-    expect(workshopOrbSpeedStatMultiplier(0)).toBe(0)
-    expect(workshopOrbSpeedStatDisplay(0)).toBe('0.00')
+    expect(workshopOrbSpeedStatMultiplier(0)).toBe(0.4)
+    expect(workshopOrbSpeedStatDisplay(0)).toBe('0.40')
     expect(workshopOrbSpeedStatDisplay(1)).toBe('0.55')
     expect(workshopOrbSpeedStatDisplay(38)).toBe('6.10')
     expect(workshopOrbSpeedNextMarginalCoins(0)).toBe(125)

@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…80). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_LIFESTEAL_MAX_LEVEL = 80 as const
 
 /** Wiki **Value** (% with two decimals) after exactly `level` purchases (`level` = 1…80). */
@@ -24,17 +25,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Lifesteal % (percent points, e.g. 0.1 for +0.10%) after `completedLevels` workshop purchases. */
 export function workshopLifestealStatPercentPoints(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_LIFESTEAL_MAX_LEVEL)
-  if (L === 0) return 0
-  return WIKI_STAT_PERCENT_AT_LEVEL[L - 1]!
+  return workshopToolkitStatValue('Lifesteal', completedLevels)!
 }
 
 export function workshopLifestealStatDisplay(completedLevels: number): string {
   const pct = workshopLifestealStatPercentPoints(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
 export function workshopLifestealNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_LIFESTEAL_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+  return workshopToolkitMarginalCoins('Lifesteal', completedLevels)
 }

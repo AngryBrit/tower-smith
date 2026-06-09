@@ -1,5 +1,5 @@
 /**
- * Builds tables/workshop/enemy-level-skip-plus.json from enhancement utility
+ * Builds tables/workshop/enhancements/utility/enemy-level-skip-plus.json from enhancement utility
  * calculator screenshots (Enemy Level Skip +).
  */
 import fs from 'fs'
@@ -7,7 +7,15 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const outPath = path.join(__dirname, '..', 'tables', 'workshop', 'enemy-level-skip-plus.json')
+const outPath = path.join(
+  __dirname,
+  '..',
+  'tables',
+  'workshop',
+  'enhancements',
+  'utility',
+  'enemy-level-skip-plus.json',
+)
 
 const MULT = { B: 1e9, T: 1e12, q: 1e15, Q: 1e18, s: 1e21 }
 

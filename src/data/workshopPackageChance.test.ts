@@ -11,9 +11,9 @@ describe('workshopPackageChance', () => {
     expect(workshopPackageChanceStatPercent(0)).toBe(6)
     expect(workshopPackageChanceStatPercent(1)).toBe(6.4)
     expect(workshopPackageChanceStatPercent(60)).toBe(30)
-    expect(workshopPackageChanceStatDisplay(0)).toBe('+6.00%')
-    expect(workshopPackageChanceStatDisplay(1)).toBe('+6.40%')
-    expect(workshopPackageChanceStatDisplay(60)).toBe('+30.00%')
+    expect(workshopPackageChanceStatDisplay(0)).toBe('6.00%')
+    expect(workshopPackageChanceStatDisplay(1)).toBe('6.40%')
+    expect(workshopPackageChanceStatDisplay(60)).toBe('30.00%')
 
     expect(workshopPackageChanceNextMarginalCoins(0)).toBe(1000)
     expect(workshopPackageChanceNextMarginalCoins(1)).toBe(1060)

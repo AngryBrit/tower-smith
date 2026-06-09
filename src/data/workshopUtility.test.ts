@@ -118,9 +118,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('freeAttackUpgradeLevel', 98)).toBe(
       workshopFreeAttackUpgradeNextMarginalCoins(98),
     )
-    expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 0)).toBe('+0.00%')
-    expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 1)).toBe('+0.50%')
-    expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 99)).toBe('+49.50%')
+    expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 0)).toBe('0.00%')
+    expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 1)).toBe('0.50%')
+    expect(workshopUtilityStatDisplay('freeAttackUpgradeLevel', 99)).toBe('49.50%')
     expect(workshopUtilityNextMarginalCoins('freeAttackUpgradeLevel', 99)).toBeUndefined()
   })
 
@@ -131,9 +131,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('freeDefenseUpgradeLevel', 98)).toBe(
       workshopFreeDefenseUpgradeNextMarginalCoins(98),
     )
-    expect(workshopUtilityStatDisplay('freeDefenseUpgradeLevel', 0)).toBe('+0.00%')
-    expect(workshopUtilityStatDisplay('freeDefenseUpgradeLevel', 1)).toBe('+0.50%')
-    expect(workshopUtilityStatDisplay('freeDefenseUpgradeLevel', 99)).toBe('+49.50%')
+    expect(workshopUtilityStatDisplay('freeDefenseUpgradeLevel', 0)).toBe('0.00%')
+    expect(workshopUtilityStatDisplay('freeDefenseUpgradeLevel', 1)).toBe('0.50%')
+    expect(workshopUtilityStatDisplay('freeDefenseUpgradeLevel', 99)).toBe('49.50%')
     expect(workshopUtilityNextMarginalCoins('freeDefenseUpgradeLevel', 99)).toBeUndefined()
   })
 
@@ -144,9 +144,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('freeUtilityUpgradeLevel', 98)).toBe(
       workshopFreeUtilityUpgradeNextMarginalCoins(98),
     )
-    expect(workshopUtilityStatDisplay('freeUtilityUpgradeLevel', 0)).toBe('+0.00%')
-    expect(workshopUtilityStatDisplay('freeUtilityUpgradeLevel', 1)).toBe('+0.50%')
-    expect(workshopUtilityStatDisplay('freeUtilityUpgradeLevel', 99)).toBe('+49.50%')
+    expect(workshopUtilityStatDisplay('freeUtilityUpgradeLevel', 0)).toBe('0.00%')
+    expect(workshopUtilityStatDisplay('freeUtilityUpgradeLevel', 1)).toBe('0.50%')
+    expect(workshopUtilityStatDisplay('freeUtilityUpgradeLevel', 99)).toBe('49.50%')
     expect(workshopUtilityNextMarginalCoins('freeUtilityUpgradeLevel', 99)).toBeUndefined()
   })
 
@@ -158,9 +158,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('interestPerWaveLevel', 98)).toBe(
       workshopInterestPerWaveNextMarginalCoins(98),
     )
-    expect(workshopUtilityStatDisplay('interestPerWaveLevel', 0)).toBe('+0.00%')
-    expect(workshopUtilityStatDisplay('interestPerWaveLevel', 1)).toBe('+0.06%')
-    expect(workshopUtilityStatDisplay('interestPerWaveLevel', 99)).toBe('+5.94%')
+    expect(workshopUtilityStatDisplay('interestPerWaveLevel', 0)).toBe('0.00%')
+    expect(workshopUtilityStatDisplay('interestPerWaveLevel', 1)).toBe('0.06%')
+    expect(workshopUtilityStatDisplay('interestPerWaveLevel', 99)).toBe('5.94%')
     expect(workshopUtilityNextMarginalCoins('interestPerWaveLevel', 99)).toBeUndefined()
   })
 
@@ -172,9 +172,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('recoveryAmountLevel', 299)).toBe(
       workshopRecoveryAmountNextMarginalCoins(299),
     )
-    expect(workshopUtilityStatDisplay('recoveryAmountLevel', 0)).toBe('+14.00%')
-    expect(workshopUtilityStatDisplay('recoveryAmountLevel', 1)).toBe('+14.40%')
-    expect(workshopUtilityStatDisplay('recoveryAmountLevel', 300)).toBe('+134.00%')
+    expect(workshopUtilityStatDisplay('recoveryAmountLevel', 0)).toBe('14.00%')
+    expect(workshopUtilityStatDisplay('recoveryAmountLevel', 1)).toBe('14.40%')
+    expect(workshopUtilityStatDisplay('recoveryAmountLevel', 300)).toBe('134.00%')
     expect(workshopUtilityNextMarginalCoins('recoveryAmountLevel', 300)).toBeUndefined()
   })
 
@@ -185,7 +185,7 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('maxRecoveryLevel', 499)).toBe(
       workshopMaxRecoveryNextMarginalCoins(499),
     )
-    expect(workshopUtilityStatDisplay('maxRecoveryLevel', 0)).toBe('x1.00')
+    expect(workshopUtilityStatDisplay('maxRecoveryLevel', 0)).toBe('x1.50')
     expect(workshopUtilityStatDisplay('maxRecoveryLevel', 1)).toBe('x1.53')
     expect(workshopUtilityStatDisplay('maxRecoveryLevel', 500)).toBe('x16.50')
     expect(workshopUtilityNextMarginalCoins('maxRecoveryLevel', 500)).toBeUndefined()
@@ -198,9 +198,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('packageChanceLevel', 59)).toBe(
       workshopPackageChanceNextMarginalCoins(59),
     )
-    expect(workshopUtilityStatDisplay('packageChanceLevel', 0)).toBe('+6.00%')
-    expect(workshopUtilityStatDisplay('packageChanceLevel', 1)).toBe('+6.40%')
-    expect(workshopUtilityStatDisplay('packageChanceLevel', 60)).toBe('+30.00%')
+    expect(workshopUtilityStatDisplay('packageChanceLevel', 0)).toBe('6.00%')
+    expect(workshopUtilityStatDisplay('packageChanceLevel', 1)).toBe('6.40%')
+    expect(workshopUtilityStatDisplay('packageChanceLevel', 60)).toBe('30.00%')
     expect(workshopUtilityNextMarginalCoins('packageChanceLevel', 60)).toBeUndefined()
   })
 
@@ -210,13 +210,15 @@ describe('workshopUtility', () => {
       WORKSHOP_ENEMY_ATTACK_LEVEL_SKIP_MAX_LEVEL,
     )
     expect(workshopUtilityNextMarginalCoins('enemyAttackLevelSkipLevel', 0)).toBe(300_000_000)
-    expect(workshopUtilityNextMarginalCoins('enemyAttackLevelSkipLevel', 698)).toBe(4.56e18)
+    expect(workshopUtilityNextMarginalCoins('enemyAttackLevelSkipLevel', 698)).toBe(
+      4_559_999_999_999_999_500,
+    )
     expect(workshopUtilityNextMarginalCoins('enemyAttackLevelSkipLevel', 698)).toBe(
       workshopEnemyAttackLevelSkipNextMarginalCoins(698),
     )
-    expect(workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 0)).toBe('+0.05%')
-    expect(workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 1)).toBe('+0.10%')
-    expect(workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 699)).toBe('+35.00%')
+    expect(workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 0)).toBe('0.05%')
+    expect(workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 1)).toBe('0.10%')
+    expect(workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 699)).toBe('35.00%')
     expect(workshopUtilityNextMarginalCoins('enemyAttackLevelSkipLevel', 699)).toBeUndefined()
   })
 
@@ -225,12 +227,14 @@ describe('workshopUtility', () => {
       WORKSHOP_ENEMY_HEALTH_LEVEL_SKIP_MAX_LEVEL,
     )
     expect(workshopUtilityNextMarginalCoins('enemyHealthLevelSkipLevel', 0)).toBe(300_000_000)
-    expect(workshopUtilityNextMarginalCoins('enemyHealthLevelSkipLevel', 698)).toBe(4.56e18)
+    expect(workshopUtilityNextMarginalCoins('enemyHealthLevelSkipLevel', 698)).toBe(
+      4_559_999_999_999_999_500,
+    )
     expect(workshopUtilityNextMarginalCoins('enemyHealthLevelSkipLevel', 698)).toBe(
       workshopEnemyHealthLevelSkipNextMarginalCoins(698),
     )
-    expect(workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 0)).toBe('+0.05%')
-    expect(workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 699)).toBe('+35.00%')
+    expect(workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 0)).toBe('0.05%')
+    expect(workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 699)).toBe('35.00%')
     expect(workshopUtilityNextMarginalCoins('enemyHealthLevelSkipLevel', 699)).toBeUndefined()
   })
 })

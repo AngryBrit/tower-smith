@@ -3,6 +3,7 @@
  * Between milestones, **Value** uses log-linear interpolation (wiki table); level 0 is **x1.00**.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import { workshopRecoverySharedMarginalCoins } from './workshopRecoveryShared'
 
 export const WORKSHOP_MAX_RECOVERY_MAX_LEVEL = 500 as const
@@ -36,18 +37,7 @@ function segmentIndex(level: number): number {
 
 /** Max recovery multiplier after `completedLevels` workshop purchases. */
 export function workshopMaxRecoveryStatMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_MAX_RECOVERY_MAX_LEVEL)
-  if (L === 0) return WORKSHOP_MAX_RECOVERY_BASE_MULTIPLIER
-  if (L === 1) return ANCHOR_STAT_MULTIPLIER[0]!
-
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT_MULTIPLIER[i]!
-  const v1 = ANCHOR_STAT_MULTIPLIER[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t) * 100) / 100
+  return workshopToolkitStatValue('Max Recovery', completedLevels)!
 }
 
 export function workshopMaxRecoveryStatDisplay(completedLevels: number): string {
@@ -56,6 +46,5 @@ export function workshopMaxRecoveryStatDisplay(completedLevels: number): string 
 }
 
 export function workshopMaxRecoveryNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_MAX_RECOVERY_MAX_LEVEL) return undefined
-  return workshopRecoverySharedMarginalCoins(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Max Recovery', completedLevels)
 }

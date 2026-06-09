@@ -3,6 +3,7 @@
  * max **149** levels. Between milestones, **Value** and marginal **Cost** use log-linear interpolation.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_CASH_BONUS_MAX_LEVEL = 149 as const
 
 /** Cash multiplier with zero workshop purchases (before wiki level 1). */
@@ -37,18 +38,7 @@ function segmentIndex(level: number): number {
 
 /** Cash multiplier after `completedLevels` workshop purchases. */
 export function workshopCashBonusStatMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_CASH_BONUS_MAX_LEVEL)
-  if (L === 0) return WORKSHOP_CASH_BONUS_BASE_MULTIPLIER
-  if (L === 1) return ANCHOR_STAT_MULTIPLIER[0]!
-
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT_MULTIPLIER[i]!
-  const v1 = ANCHOR_STAT_MULTIPLIER[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t) * 100) / 100
+  return workshopToolkitStatValue('Cash Bonus', completedLevels)!
 }
 
 export function workshopCashBonusStatDisplay(completedLevels: number): string {
@@ -73,6 +63,5 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
 }
 
 export function workshopCashBonusNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_CASH_BONUS_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Cash Bonus', completedLevels)
 }

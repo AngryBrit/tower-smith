@@ -3,6 +3,7 @@
  * max **1800** levels. Between milestones, **Value** (%) and marginal **Cost** use log-linear interpolation.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_WALL_HEALTH_MAX_LEVEL = 1800 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -34,23 +35,12 @@ function segmentIndex(level: number): number {
 
 /** Wall health bonus % after `completedLevels` workshop purchases (0 … 1800). */
 export function workshopWallHealthStatPercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_WALL_HEALTH_MAX_LEVEL)
-  if (L === 0) return 0
-  if (L === 1) return ANCHOR_STAT_PERCENT[0]!
-
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT_PERCENT[i]!
-  const v1 = ANCHOR_STAT_PERCENT[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t) * 100) / 100
+  return workshopToolkitStatValue('Wall Health', completedLevels)!
 }
 
 export function workshopWallHealthStatDisplay(completedLevels: number): string {
   const pct = workshopWallHealthStatPercent(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {
@@ -70,6 +60,5 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
 }
 
 export function workshopWallHealthNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_WALL_HEALTH_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Wall Health', completedLevels)
 }

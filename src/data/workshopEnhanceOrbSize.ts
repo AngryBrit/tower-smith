@@ -3,6 +3,7 @@
  * Dedicated coin ladder (wiki **Coins** at decade milestones, log-linear between).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_ENHANCE_ORB_SIZE_MAX_LEVEL = 200 as const
@@ -47,17 +48,13 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
 }
 
 export function workshopEnhanceOrbSizeMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ENHANCE_ORB_SIZE_MAX_LEVEL)
-  return Math.round((1 + 0.01 * L) * 100) / 100
+  return workshopToolkitStatValue('Orb Size', completedLevels)!
 }
 
 export function workshopEnhanceOrbSizeStatDisplay(completedLevels: number): string {
   return formatWorkshopEnhanceMultiplierDisplay(workshopEnhanceOrbSizeMultiplier(completedLevels))
 }
 
-export function workshopEnhanceOrbSizeNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_ENHANCE_ORB_SIZE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopEnhanceOrbSizeNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Orb Size', completedLevels)
 }

@@ -1,5 +1,6 @@
 {
   "name": "Enemy Level Skip +",
+  "category": "enhancements/utility",
   "maxLevel": 60,
   "levels": [
     {

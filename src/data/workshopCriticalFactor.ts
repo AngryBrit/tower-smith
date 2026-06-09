@@ -9,7 +9,11 @@
  * In-game enhancement on this card caps at **+25%** (**×1.25**, first **25** enhance levels).
  */
 
-import { workshopEnhanceAttackTierMultiplier } from './workshopEnhanceAttackShared'
+import {
+  workshopToolkitMarginalCoins,
+  workshopToolkitStatValue,
+} from '../workshopCosts'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL = 150 as const
 
@@ -26,7 +30,7 @@ export function workshopDisplayedCritFactorEnhancementMultiplier(
     Math.max(0, Math.trunc(enhanceCritFactorLevel)),
     WORKSHOP_DISPLAYED_CRIT_FACTOR_ENHANCE_LEVEL_CAP,
   )
-  return workshopEnhanceAttackTierMultiplier(L)
+  return workshopEnhanceTier400Multiplier(L, 'Critical Factor +')
 }
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -35,8 +39,7 @@ const ANCHOR_LEVELS: readonly number[] = [
 
 /** Multiplier after `completedLevels` workshop upgrades (0 … 150). */
 export function workshopCriticalFactorStatValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL)
-  return Math.round((1.2 + 0.1 * L) * 100) / 100
+  return workshopToolkitStatValue('Critical Factor', completedLevels)!
 }
 
 /** Display like in-game workshop card (`×1.30` … `×16.20`). */
@@ -98,9 +101,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
  * Coins for the next workshop critical factor upgrade when `completedLevels` purchases are done.
  * `undefined` when maxed (150) or out of range.
  */
-export function workshopCriticalFactorNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopCriticalFactorNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Critical Factor', completedLevels)
 }

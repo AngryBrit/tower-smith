@@ -13,9 +13,9 @@ describe('workshopInterestPerWave', () => {
     expect(workshopInterestPerWaveStatPercentPoints(0)).toBe(0)
     expect(workshopInterestPerWaveStatPercentPoints(1)).toBe(0.06)
     expect(workshopInterestPerWaveStatPercentPoints(99)).toBe(5.94)
-    expect(workshopInterestPerWaveStatDisplay(0)).toBe('+0.00%')
-    expect(workshopInterestPerWaveStatDisplay(1)).toBe('+0.06%')
-    expect(workshopInterestPerWaveStatDisplay(99)).toBe('+5.94%')
+    expect(workshopInterestPerWaveStatDisplay(0)).toBe('0.00%')
+    expect(workshopInterestPerWaveStatDisplay(1)).toBe('0.06%')
+    expect(workshopInterestPerWaveStatDisplay(99)).toBe('5.94%')
 
     expect(workshopInterestPerWaveNextMarginalCoins(0)).toBe(125)
     expect(workshopInterestPerWaveNextMarginalCoins(9)).toBe(1320)

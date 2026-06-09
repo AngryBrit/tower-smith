@@ -1,11 +1,9 @@
 /**
- * Shared **400-level** enhancement coin ladder (+0.01×/level value curve on the wiki **Value**
- * column). Used by Attack tier enhancements and Defense **Health**, **Health Regen**,
- * **Defense Absolute**, and **Wall Health** (identical **Coins** / **Value** tables).
- * **Land Mine Damage** shares the **Coins** ladder with **+0.06×** per level on **Value**.
- * Utility **Cash Bonus +** uses the full ladder; **Recovery Package +** through **L300**.
- * Wiki decade anchors: `workshopEnhanceTier400WikiDecades.ts`.
+ * Shared **400-level** enhancement helpers. Stat values and marginal coins come from GOD tables
+ * (`tables/workshop/enhancements/`). Wiki decade anchors: `workshopEnhanceTier400WikiDecades.ts`.
  */
+
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 
 export const WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL = 400 as const
 
@@ -97,16 +95,12 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return logLerp(v0, v1, curvedT)
 }
 
-/** Multiplier after `completedLevels` purchases: `1 + incrementPerLevel × level`. */
+/** Multiplier after `completedLevels` purchases (GOD **Value** column). */
 export function workshopEnhanceTier400Multiplier(
   completedLevels: number,
-  maxLevel: number = WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
-  incrementPerLevel = 0.01,
-  roundHundredth = true,
+  godName: string,
 ): number {
-  const L = Math.min(Math.max(0, completedLevels), maxLevel)
-  const raw = 1 + incrementPerLevel * L
-  return roundHundredth ? Math.round(raw * 100) / 100 : raw
+  return workshopToolkitStatValue(godName, completedLevels)!
 }
 
 /** Workshop Enhance tab **Value** label (wiki **x1.00** style, matches main workshop labs). */
@@ -116,18 +110,16 @@ export function formatWorkshopEnhanceMultiplierDisplay(multiplier: number): stri
 
 export function workshopEnhanceTier400StatDisplay(
   completedLevels: number,
-  maxLevel: number = WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
-  incrementPerLevel = 0.01,
+  godName: string,
 ): string {
   return formatWorkshopEnhanceMultiplierDisplay(
-    workshopEnhanceTier400Multiplier(completedLevels, maxLevel, incrementPerLevel),
+    workshopEnhanceTier400Multiplier(completedLevels, godName),
   )
 }
 
 export function workshopEnhanceTier400NextMarginalCoins(
   completedLevels: number,
-  maxLevel: number = WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
+  godName: string,
 ): number | undefined {
-  if (completedLevels < 0 || completedLevels >= maxLevel) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins(godName, completedLevels)
 }

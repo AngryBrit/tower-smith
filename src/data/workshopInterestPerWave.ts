@@ -5,6 +5,7 @@
  * `(Current Cash + Cash/Wave × Cash Bonus) × Interest/Wave %`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL = 99 as const
 
 /** One-time workshop unlock cost (before level purchases). */
@@ -23,25 +24,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Interest per wave (percent points, e.g. 0.06 for +0.06%) after `completedLevels` purchases. */
 export function workshopInterestPerWaveStatPercentPoints(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL)
-  return (6 * L) / 100
+  return workshopToolkitStatValue('Interest - Wave', completedLevels)!
 }
 
 export function workshopInterestPerWaveStatDisplay(completedLevels: number): string {
   const pct = workshopInterestPerWaveStatPercentPoints(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
-export function workshopInterestPerWaveNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL) return undefined
-  const costs = MARGINAL_COST_TO_NEXT_LEVEL
-  // Wiki export has 100 marginal rows for 99 levels; level 99 cost is the final row.
-  const idx =
-    costs.length === WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL + 1 &&
-    completedLevels === WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL - 1
-      ? completedLevels + 1
-      : completedLevels
-  return costs[idx]!
+export function workshopInterestPerWaveNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Interest - Wave', completedLevels)
 }

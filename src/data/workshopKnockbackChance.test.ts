@@ -19,8 +19,8 @@ describe('workshopKnockbackChance', () => {
 
   it('matches wiki spot checks', () => {
     expect(workshopKnockbackChanceStatPercentPoints(0)).toBe(0)
-    expect(workshopKnockbackChanceStatDisplay(1)).toBe('+1.00%')
-    expect(workshopKnockbackChanceStatDisplay(50)).toBe('+50.00%')
+    expect(workshopKnockbackChanceStatDisplay(1)).toBe('1.00%')
+    expect(workshopKnockbackChanceStatDisplay(50)).toBe('50.00%')
     expect(workshopKnockbackChanceNextMarginalCoins(0)).toBe(80)
     expect(workshopKnockbackChanceNextMarginalCoins(11)).toBe(1080)
     expect(workshopKnockbackChanceNextMarginalCoins(75)).toBe(59_120)

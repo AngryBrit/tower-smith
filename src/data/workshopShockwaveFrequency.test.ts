@@ -18,8 +18,8 @@ describe('workshopShockwaveFrequency', () => {
   })
 
   it('matches wiki Value and Cost spot checks', () => {
-    expect(workshopShockwaveFrequencyStatSeconds(0)).toBe(0)
-    expect(workshopShockwaveFrequencyStatDisplay(0)).toBe('0.00s')
+    expect(workshopShockwaveFrequencyStatSeconds(0)).toBeCloseTo(20)
+    expect(workshopShockwaveFrequencyStatDisplay(0)).toBe('20.00s')
     expect(workshopShockwaveFrequencyStatDisplay(1)).toBe('19.85s')
     expect(workshopShockwaveFrequencyStatDisplay(40)).toBe('14.00s')
     expect(workshopShockwaveFrequencyNextMarginalCoins(0)).toBe(250)

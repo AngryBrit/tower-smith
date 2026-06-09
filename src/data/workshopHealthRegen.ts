@@ -4,6 +4,7 @@
  * (same pattern as {@link ./workshopHealth}).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import { formatCoinAbbrev } from '../labCosts'
 
 export const WORKSHOP_HEALTH_REGEN_MAX_LEVEL = 6000 as const
@@ -50,18 +51,12 @@ function segmentIndex(level: number): number {
 
 /** **Value** after `completedLevels` workshop purchases (0 … 6000). */
 export function workshopHealthRegenStatValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_HEALTH_REGEN_MAX_LEVEL)
-  if (L === 0) return 0
-  if (L === 1) return ANCHOR_STAT[0]!
+  return workshopToolkitStatValue('Health Regen', completedLevels)!
+}
 
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT[i]!
-  const v1 = ANCHOR_STAT[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t))
+/** Workshop card **Value** (HP regen per second; in-game uses a `/sec` suffix). */
+export function formatWorkshopHealthRegenPerSec(n: number): string {
+  return `${formatCoinAbbrev(n)}/sec`
 }
 
 export function workshopHealthRegenStatDisplay(
@@ -73,7 +68,7 @@ export function workshopHealthRegenStatDisplay(
     dissonanceMultiplier !== 1 && Number.isFinite(dissonanceMultiplier)
       ? Math.round(base * dissonanceMultiplier)
       : base
-  return formatCoinAbbrev(scaled)
+  return formatWorkshopHealthRegenPerSec(scaled)
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {
@@ -92,9 +87,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return logLerp(v0, v1, t)
 }
 
-export function workshopHealthRegenNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_HEALTH_REGEN_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopHealthRegenNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Health Regen', completedLevels)
 }

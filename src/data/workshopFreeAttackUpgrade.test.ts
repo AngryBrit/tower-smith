@@ -11,8 +11,8 @@ describe('workshopFreeAttackUpgrade', () => {
     expect(workshopFreeAttackUpgradeStatPercentPoints(0)).toBe(0)
     expect(workshopFreeAttackUpgradeStatPercentPoints(1)).toBe(0.5)
     expect(workshopFreeAttackUpgradeStatPercentPoints(99)).toBe(49.5)
-    expect(workshopFreeAttackUpgradeStatDisplay(1)).toBe('+0.50%')
-    expect(workshopFreeAttackUpgradeStatDisplay(99)).toBe('+49.50%')
+    expect(workshopFreeAttackUpgradeStatDisplay(1)).toBe('0.50%')
+    expect(workshopFreeAttackUpgradeStatDisplay(99)).toBe('49.50%')
 
     expect(workshopFreeAttackUpgradeNextMarginalCoins(0)).toBe(75)
     expect(workshopFreeAttackUpgradeNextMarginalCoins(9)).toBe(941)

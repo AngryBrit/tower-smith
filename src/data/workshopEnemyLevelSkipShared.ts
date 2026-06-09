@@ -1,7 +1,9 @@
 /**
- * Shared wiki data for **Enemy Attack Level Skip** and **Enemy Health Level Skip** (identical ladders).
- * Unlock **1B** coins after Recovery Packages; max **699** levels; **0.05 + 0.05 × level** % skip chance.
+ * Shared constants for **Enemy Attack Level Skip** and **Enemy Health Level Skip**.
+ * Unlock **1B** coins after Recovery Packages; max **699** levels.
  */
+
+import { workshopToolkitStatValue } from '../workshopCosts'
 
 export const WORKSHOP_ENEMY_LEVEL_SKIP_UNLOCK_COINS = 1_000_000_000 as const
 
@@ -40,15 +42,32 @@ function segmentIndex(level: number): number {
   return i
 }
 
-/** Skip chance % after `completedLevels` workshop purchases (**0.05 + 0.05 × level**). */
+/** @deprecated Use {@link workshopEnemyAttackLevelSkipStatPercent} or health variant. */
 export function workshopEnemyLevelSkipStatPercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ENEMY_LEVEL_SKIP_MAX_LEVEL)
-  return WORKSHOP_ENEMY_LEVEL_SKIP_BASE_PERCENT + WORKSHOP_ENEMY_LEVEL_SKIP_PERCENT_PER_LEVEL * L
+  return workshopEnemyAttackLevelSkipStatPercent(completedLevels)
 }
 
+export function workshopEnemyAttackLevelSkipStatPercent(completedLevels: number): number {
+  return workshopToolkitStatValue('Enemy Attack Level Skip', completedLevels)!
+}
+
+export function workshopEnemyHealthLevelSkipStatPercent(completedLevels: number): number {
+  return workshopToolkitStatValue('Enemy Health Level Skip', completedLevels)!
+}
+
+export function workshopEnemyAttackLevelSkipStatDisplay(completedLevels: number): string {
+  const pct = workshopEnemyAttackLevelSkipStatPercent(completedLevels)
+  return `${pct.toFixed(2)}%`
+}
+
+export function workshopEnemyHealthLevelSkipStatDisplay(completedLevels: number): string {
+  const pct = workshopEnemyHealthLevelSkipStatPercent(completedLevels)
+  return `${pct.toFixed(2)}%`
+}
+
+/** @deprecated Use attack/health-specific display helpers. */
 export function workshopEnemyLevelSkipStatDisplay(completedLevels: number): string {
-  const pct = workshopEnemyLevelSkipStatPercent(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return workshopEnemyAttackLevelSkipStatDisplay(completedLevels)
 }
 
 /** Marginal coin cost for workshop level `targetLevel` (1…699). */

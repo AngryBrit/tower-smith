@@ -58,8 +58,8 @@ describe('workshopEnhanceUnlock', () => {
     const remaining = 500_000_000_000_000 - spent
     expect(spent).toBeGreaterThan(workshopEnhanceAttackCategorySpentCoins(ws))
     expect(remaining).toBeLessThan(500_000_000_000_000 - workshopEnhanceAttackCategorySpentCoins(ws))
-    // In-game ~442.09T remaining at this profile (~57.91T spent).
-    expect(remaining / 1e12).toBeCloseTo(442.09, 0)
+    // GOD ladder: ~437.52T remaining at this profile (~62.48T spent).
+    expect(remaining / 1e12).toBeCloseTo(437.52, 0)
   })
 
   it('crit factor uses cumulative attack enhancement spend', () => {

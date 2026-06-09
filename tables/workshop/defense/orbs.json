@@ -1,0 +1,189 @@
+{
+  "name": "Orbs",
+  "category": "defense",
+  "maxLevel": 4,
+  "levels": [
+    {
+      "level": 0,
+      "value": 0,
+      "nextCoins": {
+        "display": "3.00K",
+        "coins": 3000
+      },
+      "nextCash": {
+        "display": "300.00",
+        "cash": 300
+      },
+      "additionalCoins": {
+        "display": "0.00",
+        "coins": 0
+      },
+      "additionalCash": {
+        "display": "0.00",
+        "cash": 0
+      },
+      "totalCoins": {
+        "display": "0.00",
+        "coins": 0
+      },
+      "totalCash": {
+        "display": "0.00",
+        "cash": 0
+      },
+      "cashToTarget": {
+        "display": "14.55K",
+        "cash": 14550
+      },
+      "cashToMax": {
+        "display": "14.55K",
+        "cash": 14550
+      }
+    },
+    {
+      "level": 1,
+      "value": 1,
+      "nextCoins": {
+        "display": "20.00K",
+        "coins": 20000
+      },
+      "nextCash": {
+        "display": "1.25K",
+        "cash": 1250
+      },
+      "additionalCoins": {
+        "display": "3.00K",
+        "coins": 3000
+      },
+      "additionalCash": {
+        "display": "300.00",
+        "cash": 300
+      },
+      "totalCoins": {
+        "display": "3.00K",
+        "coins": 3000
+      },
+      "totalCash": {
+        "display": "300.00",
+        "cash": 300
+      },
+      "cashToTarget": {
+        "display": "5.55K",
+        "cash": 5550
+      },
+      "cashToMax": {
+        "display": "5.55K",
+        "cash": 5550
+      }
+    },
+    {
+      "level": 2,
+      "value": 2,
+      "nextCoins": {
+        "display": "120.00K",
+        "coins": 120000
+      },
+      "nextCash": {
+        "display": "4.00K",
+        "cash": 4000
+      },
+      "additionalCoins": {
+        "display": "23.00K",
+        "coins": 23000
+      },
+      "additionalCash": {
+        "display": "1.55K",
+        "cash": 1550
+      },
+      "totalCoins": {
+        "display": "23.00K",
+        "coins": 23000
+      },
+      "totalCash": {
+        "display": "1.55K",
+        "cash": 1550
+      },
+      "cashToTarget": {
+        "display": "1.55K",
+        "cash": 1550
+      },
+      "cashToMax": {
+        "display": "1.55K",
+        "cash": 1550
+      }
+    },
+    {
+      "level": 3,
+      "value": 3,
+      "nextCoins": {
+        "display": "350.00K",
+        "coins": 350000
+      },
+      "nextCash": {
+        "display": "9.00K",
+        "cash": 9000
+      },
+      "additionalCoins": {
+        "display": "143.00K",
+        "coins": 143000
+      },
+      "additionalCash": {
+        "display": "5.55K",
+        "cash": 5550
+      },
+      "totalCoins": {
+        "display": "143.00K",
+        "coins": 143000
+      },
+      "totalCash": {
+        "display": "5.55K",
+        "cash": 5550
+      },
+      "cashToTarget": {
+        "display": "300.00",
+        "cash": 300
+      },
+      "cashToMax": {
+        "display": "300.00",
+        "cash": 300
+      }
+    },
+    {
+      "level": 4,
+      "value": 4,
+      "nextCoins": {
+        "display": "Maxed",
+        "coins": null,
+        "maxed": true
+      },
+      "nextCash": {
+        "display": "Maxed",
+        "cash": null,
+        "maxed": true
+      },
+      "additionalCoins": {
+        "display": "493.00K",
+        "coins": 493000
+      },
+      "additionalCash": {
+        "display": "14.55K",
+        "cash": 14550
+      },
+      "totalCoins": {
+        "display": "493.00K",
+        "coins": 493000
+      },
+      "totalCash": {
+        "display": "14.55K",
+        "cash": 14550
+      },
+      "cashToTarget": {
+        "display": "0.00",
+        "cash": 0
+      },
+      "cashToMax": {
+        "display": "0.00",
+        "cash": 0
+      }
+    }
+  ]
+}

@@ -3,6 +3,7 @@
  * Marginal **Cost** from the published ladder (wiki **Cost** per row).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL = 99 as const
 
 const MARGINAL_COINS: readonly number[] = [
@@ -17,8 +18,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Chance percent (0 … 49.5) after `completedLevels` purchases (0 … 99). */
 export function workshopMultishotChancePercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL)
-  return Math.round(L * 5) / 10
+  return workshopToolkitStatValue('Multishot Chance', completedLevels)!
 }
 
 /** Display with two decimals to match in-game workshop UI (e.g. `56.50%`). */
@@ -35,9 +35,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopMultishotChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopMultishotChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Multishot Chance', completedLevels)
 }

@@ -3,6 +3,7 @@
  * **Cost** is marginal coins per wiki row (1…85).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL = 85 as const
 
 const MARGINAL_COINS: readonly number[] = [
@@ -16,8 +17,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Chance percent (0 … 68) after `completedLevels` purchases (0 … 85). */
 export function workshopBounceShotChancePercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL)
-  return Math.round(L * 0.8 * 100) / 100
+  return workshopToolkitStatValue('Bounce Shot Chance', completedLevels)!
 }
 
 /** Two decimals + `%` (e.g. `0.80%`, `68.00%`). */
@@ -34,9 +34,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopBounceShotChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopBounceShotChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Bounce Shot Chance', completedLevels)
 }

@@ -12,21 +12,22 @@ import {
   formatAdditiveCount,
   formatAdditiveNumeric,
   formatAdditivePercentPoints,
+  formatPercentAfterLabAddition,
   formatSecondsAfterLabReduction,
+  formatWithDamageStyleLabMultiplier,
   formatWithHealthStyleLabMultiplier,
 } from './workshopLabDisplayHelpers'
 import type { WorkshopDefenseSubmoduleExtras } from './workshopSubmoduleBonuses'
 import { workshopDefenseAbsoluteStatValue } from './workshopDefenseAbsolute'
-import { workshopLandMineDamageStatPercent } from './workshopLandMineDamage'
 import { workshopOrbSpeedStatMultiplier } from './workshopOrbSpeed'
 import { workshopOrbsStatCount } from './workshopOrbs'
 import { workshopShockwaveSizeStatMultiplier } from './workshopShockwaveSize'
 import { workshopWallHealthStatPercent } from './workshopWallHealth'
 import { workshopWallRebuildStatSeconds } from './workshopWallRebuild'
-import { workshopDamageNextMarginalCoins } from './workshopDamage'
-import { WORKSHOP_DAMAGE_MAX_LEVEL } from './workshopDamage'
+import { WORKSHOP_DEFENSE_GOD_NAMES, workshopToolkitMarginalCoins } from '../workshopCosts'
 import {
   WORKSHOP_HEALTH_REGEN_MAX_LEVEL,
+  formatWorkshopHealthRegenPerSec,
   workshopHealthRegenNextMarginalCoins,
   workshopHealthRegenStatDisplay,
   workshopHealthRegenStatValue,
@@ -101,8 +102,10 @@ import {
 } from './workshopLandMineChance'
 import {
   WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL,
+  formatWorkshopLandMineDamageMultiplier,
   workshopLandMineDamageNextMarginalCoins,
   workshopLandMineDamageStatDisplay,
+  workshopLandMineDamageStatPercent,
 } from './workshopLandMineDamage'
 import {
   WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL,
@@ -274,6 +277,7 @@ export function workshopDefenseStatDisplay(
         return formatWithHealthStyleLabMultiplier(
           workshopHealthRegenStatValue(completedLevels),
           m,
+          formatWorkshopHealthRegenPerSec,
         )
       }
       return workshopHealthRegenStatDisplay(completedLevels)
@@ -293,7 +297,7 @@ export function workshopDefenseStatDisplay(
       const cardPts = opts?.defensePercentCardPercentPoints ?? 0
       if (labPts !== 0 || cardPts !== 0) {
         const w = workshopDefensePercentStatPercentPoints(completedLevels)
-        return `+${(w + labPts + cardPts).toFixed(2)}%`
+        return `${(w + labPts + cardPts).toFixed(2)}%`
       }
       return workshopDefensePercentStatDisplay(completedLevels)
     }
@@ -301,14 +305,14 @@ export function workshopDefenseStatDisplay(
       const labPts = opts?.thornDamageLabPercentPoints
       if (labPts !== undefined && Number.isFinite(labPts)) {
         const w = workshopThornDamageStatPercentPoints(completedLevels)
-        return `+${(w + labPts).toFixed(2)}%`
+        return formatPercentAfterLabAddition(w, labPts)
       }
       return workshopThornDamageStatDisplay(completedLevels)
     }
     case 'lifestealLevel': {
       const sub = defenseSub(opts).lifestealPercentPoints ?? 0
       if (sub > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopLifestealStatPercentPoints(completedLevels),
           sub,
         )
@@ -318,7 +322,7 @@ export function workshopDefenseStatDisplay(
     case 'knockbackChanceLevel': {
       const sub = defenseSub(opts).knockbackChancePercentPoints ?? 0
       if (sub > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopKnockbackChanceStatPercentPoints(completedLevels),
           sub,
         )
@@ -381,7 +385,7 @@ export function workshopDefenseStatDisplay(
     case 'landMineChanceLevel': {
       const sub = defenseSub(opts).landMineChancePercentPoints ?? 0
       if (sub > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopLandMineChanceStatPercentPoints(completedLevels),
           sub,
         )
@@ -391,8 +395,11 @@ export function workshopDefenseStatDisplay(
     case 'landMineDamageLevel': {
       const lab = opts?.landMineDamageLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        const w = workshopLandMineDamageStatPercent(completedLevels)
-        return `+${Math.round(w + lab)}%`
+        return formatWithDamageStyleLabMultiplier(
+          workshopLandMineDamageStatPercent(completedLevels),
+          1 + lab / 100,
+          formatWorkshopLandMineDamageMultiplier,
+        )
       }
       return workshopLandMineDamageStatDisplay(completedLevels)
     }
@@ -406,14 +413,14 @@ export function workshopDefenseStatDisplay(
     case 'deathDefyLevel': {
       const sub = defenseSub(opts).deathDefyPercentPoints ?? 0
       if (sub > 0) {
-        return `${workshopDeathDefyStatPercent(completedLevels) + sub}%`
+        return formatPercentAfterLabAddition(workshopDeathDefyStatPercent(completedLevels), sub)
       }
       return workshopDeathDefyStatDisplay(completedLevels)
     }
     case 'wallHealthLevel': {
       const lab = opts?.wallHealthLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatAdditivePercentPoints(workshopWallHealthStatPercent(completedLevels), lab)
+        return formatPercentAfterLabAddition(workshopWallHealthStatPercent(completedLevels), lab)
       }
       return workshopWallHealthStatDisplay(completedLevels)
     }
@@ -430,74 +437,10 @@ export function workshopDefenseStatDisplay(
   }
 }
 
-/**
- * Coins for the next purchase when `completedLevels` upgrades are already done.
- * **Health** / **Health Regen** / **Defense %** / **Defense Absolute** / **Thorn Damage** / **Lifesteal** /
- * **Knockback Chance** / **Knockback Force** / **Orb Speed** / **Orbs** / **Shockwave Size** / **Shockwave
- * Frequency** / **Land Mine Chance** / **Land Mine Damage** / **Land Mine Radius** / **Death Defy** / **Wall
- * Health** / **Wall Rebuild**: dedicated workshop ladders; others: workshop
- * damage curve (placeholder) for rows not listed above.
- */
+/** Coins for the next purchase when `completedLevels` upgrades are already done (GOD tables). */
 export function workshopDefenseNextMarginalCoins(
   key: WorkshopDefenseUpgradeKey,
   completedLevels: number,
 ): number | undefined {
-  const max = workshopDefenseMaxLevel(key)
-  if (completedLevels < 0 || completedLevels >= max) return undefined
-  if (key === 'healthLevel') {
-    return workshopHealthNextMarginalCoins(completedLevels)
-  }
-  if (key === 'healthRegenLevel') {
-    return workshopHealthRegenNextMarginalCoins(completedLevels)
-  }
-  if (key === 'defensePercentLevel') {
-    return workshopDefensePercentNextMarginalCoins(completedLevels)
-  }
-  if (key === 'defenseAbsoluteLevel') {
-    return workshopDefenseAbsoluteNextMarginalCoins(completedLevels)
-  }
-  if (key === 'thornDamageLevel') {
-    return workshopThornDamageNextMarginalCoins(completedLevels)
-  }
-  if (key === 'lifestealLevel') {
-    return workshopLifestealNextMarginalCoins(completedLevels)
-  }
-  if (key === 'knockbackChanceLevel') {
-    return workshopKnockbackChanceNextMarginalCoins(completedLevels)
-  }
-  if (key === 'knockbackForceLevel') {
-    return workshopKnockbackForceNextMarginalCoins(completedLevels)
-  }
-  if (key === 'orbSpeedLevel') {
-    return workshopOrbSpeedNextMarginalCoins(completedLevels)
-  }
-  if (key === 'orbsLevel') {
-    return workshopOrbsNextMarginalCoins(completedLevels)
-  }
-  if (key === 'shockwaveSizeLevel') {
-    return workshopShockwaveSizeNextMarginalCoins(completedLevels)
-  }
-  if (key === 'shockwaveFrequencyLevel') {
-    return workshopShockwaveFrequencyNextMarginalCoins(completedLevels)
-  }
-  if (key === 'landMineChanceLevel') {
-    return workshopLandMineChanceNextMarginalCoins(completedLevels)
-  }
-  if (key === 'landMineDamageLevel') {
-    return workshopLandMineDamageNextMarginalCoins(completedLevels)
-  }
-  if (key === 'landMineRadiusLevel') {
-    return workshopLandMineRadiusNextMarginalCoins(completedLevels)
-  }
-  if (key === 'deathDefyLevel') {
-    return workshopDeathDefyNextMarginalCoins(completedLevels)
-  }
-  if (key === 'wallHealthLevel') {
-    return workshopWallHealthNextMarginalCoins(completedLevels)
-  }
-  if (key === 'wallRebuildLevel') {
-    return workshopWallRebuildNextMarginalCoins(completedLevels)
-  }
-  const idx = Math.min(completedLevels, WORKSHOP_DAMAGE_MAX_LEVEL - 1)
-  return workshopDamageNextMarginalCoins(idx)
+  return workshopToolkitMarginalCoins(WORKSHOP_DEFENSE_GOD_NAMES[key], completedLevels)
 }

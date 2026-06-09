@@ -8,11 +8,14 @@ import {
 
 describe('workshopLandMineDamage', () => {
   it('matches wiki milestone Value and marginal Cost', () => {
-    expect(workshopLandMineDamageStatPercent(0)).toBe(0)
-    expect(workshopLandMineDamageStatPercent(1)).toBe(110)
-    expect(workshopLandMineDamageStatPercent(10)).toBe(200)
-    expect(workshopLandMineDamageStatPercent(200)).toBe(2100)
-    expect(workshopLandMineDamageStatDisplay(50)).toBe('+600.00%')
+    expect(workshopLandMineDamageStatPercent(0)).toBe(1)
+    expect(workshopLandMineDamageStatPercent(1)).toBe(1.1)
+    expect(workshopLandMineDamageStatPercent(10)).toBe(2)
+    expect(workshopLandMineDamageStatPercent(200)).toBe(21)
+    expect(workshopLandMineDamageStatDisplay(0)).toBe('x1.0')
+    expect(workshopLandMineDamageStatDisplay(1)).toBe('x1.1')
+    expect(workshopLandMineDamageStatDisplay(50)).toBe('x6.0')
+    expect(workshopLandMineDamageStatDisplay(200)).toBe('x21.0')
 
     expect(workshopLandMineDamageNextMarginalCoins(0)).toBe(500)
     expect(workshopLandMineDamageNextMarginalCoins(9)).toBe(8240)

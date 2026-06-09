@@ -2,6 +2,7 @@
  * Utility **Free Upgrades +**: **100** levels, +0.01x per level to x2.00.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL = 100 as const
@@ -23,8 +24,7 @@ const MARGINAL_COINS: readonly number[] = [
 ]
 
 export function workshopEnhanceFreeUpgradesMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL)
-  return Math.round((1 + 0.01 * L) * 100) / 100
+  return workshopToolkitStatValue('Free Upgrades +', completedLevels)!
 }
 
 export function workshopEnhanceFreeUpgradesStatDisplay(completedLevels: number): string {
@@ -33,11 +33,6 @@ export function workshopEnhanceFreeUpgradesStatDisplay(completedLevels: number):
   )
 }
 
-export function workshopEnhanceFreeUpgradesNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL) {
-    return undefined
-  }
-  return MARGINAL_COINS[completedLevels]
+export function workshopEnhanceFreeUpgradesNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Free Upgrades +', completedLevels)
 }

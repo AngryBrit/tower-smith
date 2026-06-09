@@ -4,6 +4,7 @@
  * (same pattern as {@link ./workshopHealth}).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import { formatCoinAbbrev } from '../labCosts'
 
 export const WORKSHOP_DEFENSE_ABSOLUTE_MAX_LEVEL = 5000 as const
@@ -47,17 +48,7 @@ function segmentIndex(level: number): number {
 
 /** **Value** after `completedLevels` workshop purchases (0 … 5000). */
 export function workshopDefenseAbsoluteStatValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_DEFENSE_ABSOLUTE_MAX_LEVEL)
-  if (L === 0) return 0
-
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT[i]!
-  const v1 = ANCHOR_STAT[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t))
+  return workshopToolkitStatValue('Defense Absolute', completedLevels)!
 }
 
 export function workshopDefenseAbsoluteStatDisplay(completedLevels: number): string {
@@ -80,9 +71,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return logLerp(v0, v1, t)
 }
 
-export function workshopDefenseAbsoluteNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_DEFENSE_ABSOLUTE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopDefenseAbsoluteNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Defense Absolute', completedLevels)
 }

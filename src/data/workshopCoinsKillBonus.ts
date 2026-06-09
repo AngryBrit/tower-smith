@@ -4,6 +4,7 @@
  * between milestones. One-time workshop unlock: **100** coins after **Cash Bonus** and **Cash / Wave** are available.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_COINS_KILL_BONUS_MAX_LEVEL = 149 as const
 
 /** One-time workshop unlock cost (before level purchases). */
@@ -39,8 +40,7 @@ function segmentIndex(level: number): number {
 
 /** Workshop coins/kill multiplier after `completedLevels` purchases (exact **1 + 0.01 × level**). */
 export function workshopCoinsKillBonusStatMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_COINS_KILL_BONUS_MAX_LEVEL)
-  return (100 + L) / 100
+  return workshopToolkitStatValue('Coins - Kill Bonus', completedLevels)!
 }
 
 export function workshopCoinsKillBonusStatDisplay(completedLevels: number): string {
@@ -64,11 +64,8 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return logLerp(v0, v1, t)
 }
 
-export function workshopCoinsKillBonusNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_COINS_KILL_BONUS_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopCoinsKillBonusNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Coins - Kill Bonus', completedLevels)
 }
 
 /** Wiki milestone multipliers (for tests); equals {@link workshopCoinsKillBonusStatMultiplier} at anchor levels. */

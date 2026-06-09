@@ -53,7 +53,7 @@ describe('workshopSubmoduleBonuses', () => {
     expect(enriched?.criticalChanceCardPercentPoints).toBe(2)
     expect(
       workshopCriticalChanceStatDisplay(10, enriched?.criticalChanceCardPercentPoints ?? 0),
-    ).toBe('13%')
+    ).toBe('13.00%')
   })
 
   it('maps core golden tower cooldown to ultimate display', () => {

@@ -7,6 +7,8 @@
  * sums here use exact marginal integers.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import { formatPercentAfterLabAddition } from './workshopLabDisplayHelpers'
 export const WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL = 79 as const
 
 /** Marginal coins for upgrade ending at workshop level L (1…79), i.e. wiki **Cost** on that row. */
@@ -20,18 +22,16 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Workshop crit chance as a percent (1 … 80) after `completedLevels` purchases (0 … 79). */
 export function workshopCriticalChancePercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL)
-  return 1 + L
+  return workshopToolkitStatValue('Critical Chance', completedLevels)!
 }
 
-/** Same as wiki **Value**, shown with a **`%`** suffix (`1%` … `80%`). */
+/** Same as wiki **Value** / GOD `valueDisplay` (`1.00%` … `80.00%`). */
 export function workshopCriticalChanceStatDisplay(
   completedLevels: number,
   extraPercentPoints = 0,
 ): string {
   const extra = Number.isFinite(extraPercentPoints) ? extraPercentPoints : 0
-  const total = workshopCriticalChancePercent(completedLevels) + extra
-  return `${total}%`
+  return formatPercentAfterLabAddition(workshopCriticalChancePercent(completedLevels), extra)
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {
@@ -43,9 +43,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
  * Coins for the next workshop critical chance upgrade when `completedLevels` purchases are done.
  * `undefined` when maxed (79) or out of range.
  */
-export function workshopCriticalChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopCriticalChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Critical Chance', completedLevels)
 }

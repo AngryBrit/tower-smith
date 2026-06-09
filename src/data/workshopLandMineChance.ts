@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…50). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_LAND_MINE_CHANCE_MAX_LEVEL = 50 as const
 
 const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
@@ -14,18 +15,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Land mine chance % (percent points) after `completedLevels` workshop purchases. */
 export function workshopLandMineChanceStatPercentPoints(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_LAND_MINE_CHANCE_MAX_LEVEL)
-  return 0.6 * L
+  return workshopToolkitStatValue('Land Mine Chance', completedLevels)!
 }
 
 export function workshopLandMineChanceStatDisplay(completedLevels: number): string {
   const pct = workshopLandMineChanceStatPercentPoints(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
-export function workshopLandMineChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_LAND_MINE_CHANCE_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+export function workshopLandMineChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Land Mine Chance', completedLevels)
 }

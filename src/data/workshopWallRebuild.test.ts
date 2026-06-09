@@ -11,9 +11,9 @@ describe('workshopWallRebuild', () => {
   it('matches wiki milestone Value and marginal Cost', () => {
     expect(workshopWallRebuildStatSeconds(0)).toBe(WORKSHOP_WALL_REBUILD_BASE_SECONDS)
     expect(workshopWallRebuildStatDisplay(0)).toBe('1200s')
-    expect(workshopWallRebuildStatSeconds(1)).toBe(1198)
-    expect(workshopWallRebuildStatSeconds(10)).toBe(1180)
-    expect(workshopWallRebuildStatSeconds(300)).toBe(600)
+    expect(workshopWallRebuildStatSeconds(1)).toBeCloseTo(1198)
+    expect(workshopWallRebuildStatSeconds(10)).toBeCloseTo(1180)
+    expect(workshopWallRebuildStatSeconds(300)).toBeCloseTo(600)
     expect(workshopWallRebuildStatDisplay(1)).toBe('1198s')
 
     expect(workshopWallRebuildNextMarginalCoins(0)).toBe(16e6)

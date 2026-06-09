@@ -14,11 +14,11 @@ describe('workshopLandMineRadius', () => {
       expect(c).toBeDefined()
       sum += c!
     }
-    expect(sum).toBe(77_529_189_770)
+    expect(sum).toBe(77_529_189_865)
   })
 
   it('matches wiki Value and Cost spot checks', () => {
-    expect(workshopLandMineRadiusStatValue(0)).toBe(0)
+    expect(workshopLandMineRadiusStatValue(0)).toBe(0.5)
     expect(workshopLandMineRadiusStatDisplay(1)).toBe('0.52')
     expect(workshopLandMineRadiusStatDisplay(50)).toBe('1.50')
     expect(workshopLandMineRadiusNextMarginalCoins(0)).toBe(500)

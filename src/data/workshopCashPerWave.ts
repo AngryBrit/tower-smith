@@ -3,6 +3,7 @@
  * max **149** levels. Between milestones, **Value** and marginal **Cost** use log-linear interpolation.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_CASH_PER_WAVE_MAX_LEVEL = 149 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -34,18 +35,7 @@ function segmentIndex(level: number): number {
 
 /** Cash per wave after `completedLevels` workshop purchases (0 before any purchase). */
 export function workshopCashPerWaveStatAmount(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_CASH_PER_WAVE_MAX_LEVEL)
-  if (L === 0) return 0
-  if (L === 1) return ANCHOR_STAT_CASH_PER_WAVE[0]!
-
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT_CASH_PER_WAVE[i]!
-  const v1 = ANCHOR_STAT_CASH_PER_WAVE[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t))
+  return workshopToolkitStatValue('Cash - Wave', completedLevels)!
 }
 
 export function workshopCashPerWaveStatDisplay(completedLevels: number): string {
@@ -69,6 +59,5 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
 }
 
 export function workshopCashPerWaveNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_CASH_PER_WAVE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Cash - Wave', completedLevels)
 }

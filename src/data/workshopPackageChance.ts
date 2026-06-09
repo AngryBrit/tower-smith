@@ -3,6 +3,7 @@
  * Base **6%** at level 0 → **30%** at level 60.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_PACKAGE_CHANCE_MAX_LEVEL = 60 as const
 
 export const WORKSHOP_PACKAGE_CHANCE_BASE_PERCENT = 6 as const
@@ -21,16 +22,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Package spawn chance % after `completedLevels` workshop purchases (exact **6 + 0.40 × level**). */
 export function workshopPackageChanceStatPercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_PACKAGE_CHANCE_MAX_LEVEL)
-  return WORKSHOP_PACKAGE_CHANCE_BASE_PERCENT + WORKSHOP_PACKAGE_CHANCE_PERCENT_PER_LEVEL * L
+  return workshopToolkitStatValue('Package Chance', completedLevels)!
 }
 
 export function workshopPackageChanceStatDisplay(completedLevels: number): string {
   const pct = workshopPackageChanceStatPercent(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
 export function workshopPackageChanceNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_PACKAGE_CHANCE_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+  return workshopToolkitMarginalCoins('Package Chance', completedLevels)
 }

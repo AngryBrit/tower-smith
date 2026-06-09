@@ -11,6 +11,7 @@
  * Share of the attack DPM lab excess shown on the workshop ×/m card.
  * Calibrated: workshop DPM **+5.5%** (L180) + lab **×1.28** (L14) → in-game **×1.1429 / m**.
  */
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_DAMAGE_PER_METER_LAB_EXCESS_FRACTION = 0.0879 / (1.28 - 1)
 
 export const WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL = 200 as const
@@ -54,28 +55,12 @@ function segmentIndexCost(level: number): number {
   return i
 }
 
+/** GOD **Value** is bonus ×1000 (e.g. **59** → **0.059** bonus → **×1.059 / m** display). */
+const DAMAGE_PER_METER_GOD_VALUE_SCALE = 1 / 1000
+
 /** Damage/meter multiplier after `completedLevels` workshop purchases (0 … 200). */
 export function workshopDamagePerMeterStatMultiplier(completedLevels: number): number {
-  const L = Math.min(
-    Math.max(0, completedLevels),
-    WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL,
-  )
-  if (L === 0) return 0
-  if (L >= 70) {
-    const v = 0.033 + (L - 70) * 0.0002
-    return Math.round(v * 1_000_000) / 1_000_000
-  }
-
-  const i = segmentIndexStat(L)
-  const L0 = STAT_ANCHOR_LEVELS[i]
-  const L1 = STAT_ANCHOR_LEVELS[i + 1]
-  const v0 = STAT_ANCHOR_MULT[i]
-  const v1 = STAT_ANCHOR_MULT[i + 1]
-  if (L1 <= L0) return v0
-  if (L === L0) return v0
-  if (L === L1) return v1
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t) * 1_000_000) / 1_000_000
+  return workshopToolkitStatValue('Damage - Meter', completedLevels)! * DAMAGE_PER_METER_GOD_VALUE_SCALE
 }
 
 /**
@@ -95,7 +80,8 @@ export function workshopDamagePerMeterResearchLabDisplayAdd(
 }
 
 function formatDamagePerMeterMultiplier(n: number): string {
-  // In-game uses up to four decimals on the ×/m multiplier (e.g. **×1.1429 / m**).
+  // In-game baseline is **×1.000 / m**; higher levels use up to four decimals (e.g. **×1.1429 / m**).
+  if (Math.abs(n - 1) < 1e-9) return 'x1.000'
   const s = n.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')
   return `x${s}`
 }
@@ -112,7 +98,6 @@ export function workshopDamagePerMeterStatDisplay(
   const workshopBonus = workshopDamagePerMeterStatMultiplier(completedLevels)
   const labAdd = workshopDamagePerMeterResearchLabDisplayAdd(damagePerMeterLabMultiplier)
   const n = 1 + workshopBonus + labAdd
-  if (workshopBonus <= 0 && labAdd <= 0) return 'x1 / m'
   return `${formatDamagePerMeterMultiplier(n)} / m`
 }
 
@@ -136,9 +121,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
  * Coins for the next workshop damage/meter upgrade when `completedLevels` purchases are done.
  * `undefined` when maxed (200) or out of range.
  */
-export function workshopDamagePerMeterNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopDamagePerMeterNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Damage - Meter', completedLevels)
 }

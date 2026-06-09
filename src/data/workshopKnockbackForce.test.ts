@@ -18,8 +18,8 @@ describe('workshopKnockbackForce', () => {
   })
 
   it('matches wiki Value and Cost spot checks', () => {
-    expect(workshopKnockbackForceStatMultiplier(0)).toBe(0)
-    expect(workshopKnockbackForceStatDisplay(0)).toBe('0.00')
+    expect(workshopKnockbackForceStatMultiplier(0)).toBe(0.4)
+    expect(workshopKnockbackForceStatDisplay(0)).toBe('0.40')
     expect(workshopKnockbackForceStatDisplay(1)).toBe('0.55')
     expect(workshopKnockbackForceStatMultiplier(30)).toBe(4.66)
     expect(workshopKnockbackForceStatDisplay(40)).toBe('6.08')

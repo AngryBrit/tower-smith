@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { formatCoinAbbrev } from '../labCosts'
+import { workshopToolkitMarginalCoins } from '../workshopCosts'
 import {
   WORKSHOP_ENHANCE_ATTACK_SPEED_MAX_LEVEL,
   WORKSHOP_ENHANCE_ATTACK_SPEED_UNLOCK_ATTACK_ENHANCE_SPENT_COINS,
@@ -27,11 +28,11 @@ describe('workshopEnhanceAttack unlock thresholds', () => {
 
 describe('workshopEnhanceAttack tier stats', () => {
   it('damage enhancement multiplier matches wiki milestones', () => {
-    expect(workshopEnhanceAttackTierMultiplier(0)).toBe(1)
-    expect(workshopEnhanceAttackTierMultiplier(1)).toBe(1.01)
-    expect(workshopEnhanceAttackTierMultiplier(10)).toBe(1.1)
-    expect(workshopEnhanceAttackTierMultiplier(300)).toBe(4)
-    expect(workshopEnhanceAttackTierMultiplier(400)).toBe(5)
+    expect(workshopEnhanceAttackTierMultiplier(0, 'Damage +')).toBe(1)
+    expect(workshopEnhanceAttackTierMultiplier(1, 'Damage +')).toBe(1.01)
+    expect(workshopEnhanceAttackTierMultiplier(10, 'Damage +')).toBe(1.1)
+    expect(workshopEnhanceAttackTierMultiplier(300, 'Damage +')).toBe(4)
+    expect(workshopEnhanceAttackTierMultiplier(400, 'Damage +')).toBe(5)
     expect(workshopEnhanceAttackStatDisplay('enhanceDamageLevel', 100)).toBe('x2.00')
     expect(workshopEnhanceAttackStatDisplay('enhanceDamageLevel', 400)).toBe('x5.00')
   })
@@ -58,9 +59,15 @@ describe('workshopEnhanceAttack marginal coins', () => {
   it('damage enhancement uses extended ladder through L400', () => {
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 0)).toBe(5e9)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 9)).toBe(6.53e9)
-    expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 299)).toBe(34.88e18)
-    expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 309)).toBe(45.82e18)
-    expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 399)).toBe(330.8e18)
+    expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 299)).toBe(
+      workshopToolkitMarginalCoins('Damage +', 299),
+    )
+    expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 309)).toBe(
+      workshopToolkitMarginalCoins('Damage +', 309),
+    )
+    expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 399)).toBe(
+      workshopToolkitMarginalCoins('Damage +', 399),
+    )
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceDamageLevel', 400)).toBeUndefined()
   })
 
@@ -99,9 +106,15 @@ describe('workshopEnhanceAttack marginal coins', () => {
   it('attack speed enhancement uses per-level wiki costs', () => {
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 0)).toBe(5e9)
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 1)).toBe(6.1e9)
-    expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 48)).toBe(1.75e18)
-    expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 49)).toBe(2.05e18)
-    expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 74)).toBe(188.63e18)
+    expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 48)).toBe(
+      workshopToolkitMarginalCoins('Attack Speed +', 48),
+    )
+    expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 49)).toBe(
+      workshopToolkitMarginalCoins('Attack Speed +', 49),
+    )
+    expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 74)).toBe(
+      workshopToolkitMarginalCoins('Attack Speed +', 74),
+    )
     expect(workshopEnhanceAttackNextMarginalCoins('enhanceAttackSpeedLevel', 75)).toBeUndefined()
   })
 })

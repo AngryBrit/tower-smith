@@ -3,30 +3,32 @@
  */
 
 import {
+  WORKSHOP_ENHANCE_UTILITY_GOD_NAMES,
+  workshopToolkitMarginalCoins,
+} from '../workshopCosts'
+import {
   WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL,
-  workshopEnhanceEnemyLevelSkipNextMarginalCoins,
   workshopEnhanceEnemyLevelSkipStatDisplay,
 } from './workshopEnhanceEnemyLevelSkip'
 import {
   WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL,
-  workshopEnhanceFreeUpgradesNextMarginalCoins,
   workshopEnhanceFreeUpgradesStatDisplay,
 } from './workshopEnhanceFreeUpgrades'
 import {
   WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
-  workshopEnhanceTier400NextMarginalCoins,
   workshopEnhanceTier400StatDisplay,
 } from './workshopEnhanceTier400Ladder'
 import {
   WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL,
-  workshopEnhanceUtilityTier200NextMarginalCoins,
   workshopEnhanceUtilityTier200StatDisplay,
 } from './workshopEnhanceUtilityTier200'
 
-export { WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL } from './workshopEnhanceTier400Ladder'
-export { WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL } from './workshopEnhanceUtilityTier200'
-export { WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL } from './workshopEnhanceFreeUpgrades'
-export { WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL } from './workshopEnhanceEnemyLevelSkip'
+export {
+  WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
+  WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL,
+  WORKSHOP_ENHANCE_FREE_UPGRADES_MAX_LEVEL,
+  WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL,
+}
 
 /**
  * Wiki **Recovery Package +** (Packages): **300** levels → **×4.00** on max recovery package and recovery amount.
@@ -131,19 +133,23 @@ export function workshopEnhanceUtilityStatDisplay(
 ): string {
   switch (key) {
     case 'enhanceCoinBonusLevel':
+      return workshopEnhanceUtilityTier200StatDisplay(completedLevels, 'Coin Bonus +')
     case 'enhanceCellsKillBonusLevel':
-      return workshopEnhanceUtilityTier200StatDisplay(completedLevels)
+      return workshopEnhanceUtilityTier200StatDisplay(completedLevels, 'Cells - Kill Bonus')
     case 'enhanceFreeUpgradesLevel':
       return workshopEnhanceFreeUpgradesStatDisplay(completedLevels)
     case 'enhanceRecoveryPackageLevel':
       return workshopEnhanceTier400StatDisplay(
         completedLevels,
-        WORKSHOP_ENHANCE_RECOVERY_PACKAGE_MAX_LEVEL,
+        WORKSHOP_ENHANCE_UTILITY_GOD_NAMES.enhanceRecoveryPackageLevel,
       )
     case 'enhanceEnemyLevelSkipLevel':
       return workshopEnhanceEnemyLevelSkipStatDisplay(completedLevels)
     default:
-      return workshopEnhanceTier400StatDisplay(completedLevels, tierMaxForKey(key))
+      return workshopEnhanceTier400StatDisplay(
+        completedLevels,
+        WORKSHOP_ENHANCE_UTILITY_GOD_NAMES[key],
+      )
   }
 }
 
@@ -151,20 +157,8 @@ export function workshopEnhanceUtilityNextMarginalCoins(
   key: WorkshopEnhanceUtilityUpgradeKey,
   completedLevels: number,
 ): number | undefined {
-  switch (key) {
-    case 'enhanceCoinBonusLevel':
-    case 'enhanceCellsKillBonusLevel':
-      return workshopEnhanceUtilityTier200NextMarginalCoins(completedLevels)
-    case 'enhanceFreeUpgradesLevel':
-      return workshopEnhanceFreeUpgradesNextMarginalCoins(completedLevels)
-    case 'enhanceRecoveryPackageLevel':
-      return workshopEnhanceTier400NextMarginalCoins(
-        completedLevels,
-        WORKSHOP_ENHANCE_RECOVERY_PACKAGE_MAX_LEVEL,
-      )
-    case 'enhanceEnemyLevelSkipLevel':
-      return workshopEnhanceEnemyLevelSkipNextMarginalCoins(completedLevels)
-    default:
-      return workshopEnhanceTier400NextMarginalCoins(completedLevels, tierMaxForKey(key))
-  }
+  return workshopToolkitMarginalCoins(
+    WORKSHOP_ENHANCE_UTILITY_GOD_NAMES[key],
+    completedLevels,
+  )
 }

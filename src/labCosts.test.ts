@@ -10,6 +10,11 @@ import {
 } from './labCosts'
 
 describe('formatCoinAbbrev', () => {
+  it('formats zero as 0 (not 0.00)', () => {
+    expect(formatCoinAbbrev(0)).toBe('0')
+    expect(formatCoinAbbrevPreferT(0)).toBe('0')
+  })
+
   it('shows quadrillion q from 0.1 q (1e14), not T', () => {
     expect(formatCoinAbbrev(250_000_000_000_000)).toBe('0.25q')
     expect(formatCoinAbbrev(100_000_000_000_000)).toBe('0.10q')

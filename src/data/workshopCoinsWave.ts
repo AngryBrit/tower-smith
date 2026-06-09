@@ -4,6 +4,7 @@
  * log-linear interpolation between milestones. One-time workshop unlock: **100** coins after **Coins / Kill Bonus**.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_COINS_WAVE_MAX_LEVEL = 149 as const
 
 /** One-time workshop unlock cost (before level purchases). */
@@ -36,8 +37,7 @@ function segmentIndex(level: number): number {
 
 /** Coins per wave after `completedLevels` workshop purchases (exact **1 + level**). */
 export function workshopCoinsWaveStatAmount(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_COINS_WAVE_MAX_LEVEL)
-  return WORKSHOP_COINS_WAVE_BASE_AMOUNT + L
+  return workshopToolkitStatValue('Coins - Wave', completedLevels)!
 }
 
 export function workshopCoinsWaveStatDisplay(completedLevels: number): string {
@@ -61,6 +61,5 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
 }
 
 export function workshopCoinsWaveNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_COINS_WAVE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Coins - Wave', completedLevels)
 }

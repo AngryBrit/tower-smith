@@ -3,6 +3,7 @@
  * Rows **1…85** match both wiki tables; rows **86…99** apply to duration only.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL = 85 as const
 export const WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL = 99 as const
 
@@ -19,8 +20,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Chance percent (0 … 34) after `completedLevels` purchases (0 … 85). */
 export function workshopRapidFireChancePercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL)
-  return Math.round(L * 0.4 * 100) / 100
+  return workshopToolkitStatValue('Rapid Fire Chance', completedLevels)!
 }
 
 /** Two decimals + `%` (e.g. `0.40%`, `34.00%`). */
@@ -37,17 +37,19 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopRapidFireChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopRapidFireChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Rapid Fire Chance', completedLevels)
 }
 
-/** Duration in seconds after `completedLevels` purchases (0 … 99): **0.60 + 0.05×L**. */
+/** GOD **Value** stores seconds ×1e21 (import parses trailing `s` as septillion suffix). */
+const RAPID_FIRE_DURATION_GOD_VALUE_SCALE = 1e-21
+
+/** Duration in seconds after `completedLevels` purchases (0 … 99). */
 export function workshopRapidFireDurationSeconds(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL)
-  return Math.round((0.6 + 0.05 * L) * 100) / 100
+  const raw =
+    workshopToolkitStatValue('Rapid Fire Duration', completedLevels)! *
+    RAPID_FIRE_DURATION_GOD_VALUE_SCALE
+  return Math.round(raw * 100) / 100
 }
 
 /** Display like wiki (`0.65s` … `5.55s`). */
@@ -59,9 +61,6 @@ export function workshopRapidFireDurationStatDisplay(
   return `${sec.toFixed(2)}s`
 }
 
-export function workshopRapidFireDurationNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopRapidFireDurationNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Rapid Fire Duration', completedLevels)
 }

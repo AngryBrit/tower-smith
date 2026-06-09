@@ -3,13 +3,15 @@
  */
 
 import {
+  WORKSHOP_ENHANCE_DEFENSE_GOD_NAMES,
+  workshopToolkitMarginalCoins,
+} from '../workshopCosts'
+import {
   WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
-  workshopEnhanceTier400NextMarginalCoins,
   workshopEnhanceTier400StatDisplay,
 } from './workshopEnhanceTier400Ladder'
 import {
   WORKSHOP_ENHANCE_ORB_SIZE_MAX_LEVEL,
-  workshopEnhanceOrbSizeNextMarginalCoins,
   workshopEnhanceOrbSizeStatDisplay,
 } from './workshopEnhanceOrbSize'
 
@@ -93,22 +95,18 @@ export function workshopEnhanceDefenseStatDisplay(
   if (key === 'enhanceOrbSizeLevel') {
     return workshopEnhanceOrbSizeStatDisplay(completedLevels)
   }
-  if (key === 'enhanceLandMineDamageLevel') {
-    return workshopEnhanceTier400StatDisplay(
-      completedLevels,
-      WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
-      WORKSHOP_ENHANCE_LAND_MINE_DAMAGE_INCREMENT_PER_LEVEL,
-    )
-  }
-  return workshopEnhanceTier400StatDisplay(completedLevels, tierMaxForKey(key))
+  return workshopEnhanceTier400StatDisplay(
+    completedLevels,
+    WORKSHOP_ENHANCE_DEFENSE_GOD_NAMES[key],
+  )
 }
 
 export function workshopEnhanceDefenseNextMarginalCoins(
   key: WorkshopEnhanceDefenseUpgradeKey,
   completedLevels: number,
 ): number | undefined {
-  if (key === 'enhanceOrbSizeLevel') {
-    return workshopEnhanceOrbSizeNextMarginalCoins(completedLevels)
-  }
-  return workshopEnhanceTier400NextMarginalCoins(completedLevels, tierMaxForKey(key))
+  return workshopToolkitMarginalCoins(
+    WORKSHOP_ENHANCE_DEFENSE_GOD_NAMES[key],
+    completedLevels,
+  )
 }

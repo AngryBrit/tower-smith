@@ -14,7 +14,11 @@
  * Displayed mult: **(Workshop + Submodule) × Lab × Enhancement**; mult card caps at **+40%** (**×1.40**).
  */
 
-import { workshopEnhanceAttackTierMultiplier } from './workshopEnhanceAttackShared'
+import {
+  workshopToolkitMarginalCoins,
+  workshopToolkitStatValue,
+} from '../workshopCosts'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL = 299 as const
 
@@ -31,7 +35,7 @@ export function workshopDisplayedRendArmorChanceEnhancementMultiplier(
     Math.max(0, Math.trunc(enhanceRendArmorLevel)),
     WORKSHOP_DISPLAYED_REND_ARMOR_CHANCE_ENHANCE_LEVEL_CAP,
   )
-  return workshopEnhanceAttackTierMultiplier(L)
+  return workshopEnhanceTier400Multiplier(L, 'Rend Armor Max')
 }
 
 export const WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL = 299 as const
@@ -49,7 +53,7 @@ export function workshopDisplayedRendArmorMultEnhancementMultiplier(
     Math.max(0, Math.trunc(enhanceRendArmorLevel)),
     WORKSHOP_DISPLAYED_REND_ARMOR_MULT_ENHANCE_LEVEL_CAP,
   )
-  return workshopEnhanceAttackTierMultiplier(L)
+  return workshopEnhanceTier400Multiplier(L, 'Rend Armor Max')
 }
 
 /** Milestone levels with known cumulative spend (coins). `C(1)` is implied by the first marginal (600M). */
@@ -176,11 +180,7 @@ const MARGINAL_COINS: readonly number[] = MARGINAL_COINS_BIG.map((x) => Number(x
 
 /** Chance percent (0.10 … 30.00) after `completedLevels` purchases (0 … 299). */
 export function workshopRendArmorChancePercent(completedLevels: number): number {
-  const L = Math.min(
-    Math.max(0, completedLevels),
-    WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
-  )
-  return Math.round((0.1 + 0.1 * L) * 100) / 100
+  return workshopToolkitStatValue('Rend Armor Chance', completedLevels)!
 }
 
 export function workshopRendArmorChanceStatDisplay(
@@ -196,10 +196,14 @@ export function workshopRendArmorChanceStatDisplay(
   return `${displayed.toFixed(2)}%`
 }
 
-/** Extra mult X (0.0010 … 0.3000) after `completedLevels` purchases (0 … 299). */
+/**
+ * Extra mult X (0.0010 … 0.3000) after `completedLevels` purchases (0 … 299).
+ * GOD `value` is the wiki **Value** column rounded to **2** decimals (`0.00x` … `0.30x`);
+ * gameplay uses **0.001 × (level + 1)** (matches L299 **0.3** and per-level **+0.001**).
+ */
 export function workshopRendArmorMultValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL)
-  return Math.round((0.001 + 0.001 * L) * 1_000_000) / 1_000_000
+  const L = Math.min(Math.max(0, Math.trunc(completedLevels)), WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL)
+  return 0.001 * (L + 1)
 }
 
 /** Display like in-game workshop card (`×0.001` … `×0.3`); trims redundant trailing **0** after four decimal places. */
@@ -218,7 +222,10 @@ export function workshopRendArmorMultStatDisplay(
   }
   // In-game workshop card rounds to **3** decimals (e.g. **×0.173** at raw **0.172788**).
   const displayed = Math.round(v * 1_000) / 1_000
-  const s = displayed.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
+  const s =
+    displayed > 0 && displayed < 0.01
+      ? displayed.toFixed(3)
+      : displayed.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
   return `×${s}`
 }
 
@@ -227,15 +234,10 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopRendArmorChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopRendArmorChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Rend Armor Chance', completedLevels)
 }
 
-export function workshopRendArmorMultNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  return workshopRendArmorChanceNextMarginalCoins(completedLevels)
+export function workshopRendArmorMultNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Rend Armor Mult', completedLevels)
 }

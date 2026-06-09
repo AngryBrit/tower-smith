@@ -1,10 +1,17 @@
 /**
- * Workshop **Enemy Attack Level Skip** — same ladder as **Enemy Health Level Skip** (`workshopEnemyLevelSkipShared.ts`).
+ * Workshop **Enemy Attack Level Skip** — stat curve shared with health skip; coins from GOD table.
  */
+
+import { workshopToolkitMarginalCoins } from '../workshopCosts'
 
 export {
   WORKSHOP_ENEMY_LEVEL_SKIP_MAX_LEVEL as WORKSHOP_ENEMY_ATTACK_LEVEL_SKIP_MAX_LEVEL,
-  workshopEnemyLevelSkipNextMarginalCoins as workshopEnemyAttackLevelSkipNextMarginalCoins,
-  workshopEnemyLevelSkipStatDisplay as workshopEnemyAttackLevelSkipStatDisplay,
-  workshopEnemyLevelSkipStatPercent as workshopEnemyAttackLevelSkipStatPercent,
+  workshopEnemyAttackLevelSkipStatDisplay,
+  workshopEnemyAttackLevelSkipStatPercent,
 } from './workshopEnemyLevelSkipShared'
+
+export function workshopEnemyAttackLevelSkipNextMarginalCoins(
+  completedLevels: number,
+): number | undefined {
+  return workshopToolkitMarginalCoins('Enemy Attack Level Skip', completedLevels)
+}

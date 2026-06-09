@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…99). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL = 99 as const
 
 /** Marginal coin cost for purchase `k` → `k+1` completed levels (`k` = 0…98); wiki **Cost** at Level `k + 1`. */
@@ -18,18 +19,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Free attack upgrade chance (percent points, e.g. 0.5 for +0.50%) after `completedLevels` purchases. */
 export function workshopFreeAttackUpgradeStatPercentPoints(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL)
-  return 0.5 * L
+  return workshopToolkitStatValue('Free Attack Upgrade', completedLevels)!
 }
 
 export function workshopFreeAttackUpgradeStatDisplay(completedLevels: number): string {
   const pct = workshopFreeAttackUpgradeStatPercentPoints(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
-export function workshopFreeAttackUpgradeNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+export function workshopFreeAttackUpgradeNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Free Attack Upgrade', completedLevels)
 }

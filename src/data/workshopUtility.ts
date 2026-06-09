@@ -76,11 +76,12 @@ import {
   workshopEnemyHealthLevelSkipStatDisplay,
 } from './workshopEnemyHealthLevelSkip'
 import {
-  formatAdditivePercentPoints,
+  formatPercentAfterLabAddition,
   formatWithDamageStyleLabMultiplier,
 } from './workshopLabDisplayHelpers'
 import type { WorkshopUtilityLabDisplayOpts } from './workshopLabDisplayOpts'
 import type { WorkshopUtilitySubmoduleExtras } from './workshopSubmoduleBonuses'
+import { WORKSHOP_UTILITY_GOD_NAMES, workshopToolkitMarginalCoins } from '../workshopCosts'
 import { workshopCashBonusStatMultiplier } from './workshopCashBonus'
 import { workshopCashPerWaveStatAmount } from './workshopCashPerWave'
 import { workshopCoinsKillBonusStatMultiplier } from './workshopCoinsKillBonus'
@@ -230,7 +231,7 @@ export function workshopUtilityStatDisplay(
         return formatWithDamageStyleLabMultiplier(
           workshopInterestPerWaveStatPercentPoints(completedLevels),
           m,
-          (v) => `+${v.toFixed(2)}%`,
+          (v) => `${v.toFixed(2)}%`,
         )
       }
       return workshopInterestPerWaveStatDisplay(completedLevels)
@@ -240,7 +241,7 @@ export function workshopUtilityStatDisplay(
         (opts?.freeUpgradesCardPercentPoints ?? 0) +
         (opts?.freeAttackUpgradeRelicPercentPoints ?? 0)
       if (extra > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopFreeAttackUpgradeStatPercentPoints(completedLevels),
           extra,
         )
@@ -252,7 +253,7 @@ export function workshopUtilityStatDisplay(
         (opts?.freeUpgradesCardPercentPoints ?? 0) +
         (opts?.freeDefenseUpgradeRelicPercentPoints ?? 0)
       if (extra > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopFreeDefenseUpgradeStatPercentPoints(completedLevels),
           extra,
         )
@@ -264,7 +265,7 @@ export function workshopUtilityStatDisplay(
         (opts?.freeUpgradesCardPercentPoints ?? 0) +
         (opts?.freeUtilityUpgradeRelicPercentPoints ?? 0)
       if (extra > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopFreeUtilityUpgradeStatPercentPoints(completedLevels),
           extra,
         )
@@ -274,7 +275,7 @@ export function workshopUtilityStatDisplay(
     case 'recoveryAmountLevel': {
       const lab = opts?.recoveryAmountLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopRecoveryAmountStatPercent(completedLevels),
           lab,
         )
@@ -298,7 +299,7 @@ export function workshopUtilityStatDisplay(
       const lab = opts?.packageChanceLabPercentPoints ?? 0
       const card = opts?.packageChanceCardPercentPoints ?? 0
       if (lab > 0 || card > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopPackageChanceStatPercent(completedLevels),
           lab + card,
         )
@@ -308,7 +309,7 @@ export function workshopUtilityStatDisplay(
     case 'enemyAttackLevelSkipLevel': {
       const lab = opts?.enemyAttackLevelSkipLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopEnemyAttackLevelSkipStatPercent(completedLevels),
           lab,
         )
@@ -318,7 +319,7 @@ export function workshopUtilityStatDisplay(
     case 'enemyHealthLevelSkipLevel': {
       const lab = opts?.enemyHealthLevelSkipLabPercentPoints
       if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatAdditivePercentPoints(
+        return formatPercentAfterLabAddition(
           workshopEnemyHealthLevelSkipStatPercent(completedLevels),
           lab,
         )
@@ -332,46 +333,5 @@ export function workshopUtilityNextMarginalCoins(
   key: WorkshopUtilityUpgradeKey,
   completedLevels: number,
 ): number | undefined {
-  const max = workshopUtilityMaxLevel(key)
-  if (completedLevels < 0 || completedLevels >= max) return undefined
-  if (key === 'cashBonusLevel') {
-    return workshopCashBonusNextMarginalCoins(completedLevels)
-  }
-  if (key === 'cashPerWaveLevel') {
-    return workshopCashPerWaveNextMarginalCoins(completedLevels)
-  }
-  if (key === 'coinsKillBonusLevel') {
-    return workshopCoinsKillBonusNextMarginalCoins(completedLevels)
-  }
-  if (key === 'coinsWaveLevel') {
-    return workshopCoinsWaveNextMarginalCoins(completedLevels)
-  }
-  if (key === 'freeAttackUpgradeLevel') {
-    return workshopFreeAttackUpgradeNextMarginalCoins(completedLevels)
-  }
-  if (key === 'freeDefenseUpgradeLevel') {
-    return workshopFreeDefenseUpgradeNextMarginalCoins(completedLevels)
-  }
-  if (key === 'freeUtilityUpgradeLevel') {
-    return workshopFreeUtilityUpgradeNextMarginalCoins(completedLevels)
-  }
-  if (key === 'interestPerWaveLevel') {
-    return workshopInterestPerWaveNextMarginalCoins(completedLevels)
-  }
-  if (key === 'recoveryAmountLevel') {
-    return workshopRecoveryAmountNextMarginalCoins(completedLevels)
-  }
-  if (key === 'maxRecoveryLevel') {
-    return workshopMaxRecoveryNextMarginalCoins(completedLevels)
-  }
-  if (key === 'packageChanceLevel') {
-    return workshopPackageChanceNextMarginalCoins(completedLevels)
-  }
-  if (key === 'enemyAttackLevelSkipLevel') {
-    return workshopEnemyAttackLevelSkipNextMarginalCoins(completedLevels)
-  }
-  if (key === 'enemyHealthLevelSkipLevel') {
-    return workshopEnemyHealthLevelSkipNextMarginalCoins(completedLevels)
-  }
-  return undefined
+  return workshopToolkitMarginalCoins(WORKSHOP_UTILITY_GOD_NAMES[key], completedLevels)
 }

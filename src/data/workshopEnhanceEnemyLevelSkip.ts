@@ -2,6 +2,7 @@
  * Utility **Enemy Level Skip +**: **60** levels, +0.01x per level to x1.60.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL = 60 as const
@@ -18,8 +19,7 @@ const MARGINAL_COINS: readonly number[] = [
 ]
 
 export function workshopEnhanceEnemyLevelSkipMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL)
-  return Math.round((1 + 0.01 * L) * 100) / 100
+  return workshopToolkitStatValue('Enemy Level Skip +', completedLevels)!
 }
 
 export function workshopEnhanceEnemyLevelSkipStatDisplay(completedLevels: number): string {
@@ -28,11 +28,6 @@ export function workshopEnhanceEnemyLevelSkipStatDisplay(completedLevels: number
   )
 }
 
-export function workshopEnhanceEnemyLevelSkipNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_ENHANCE_ENEMY_LEVEL_SKIP_MAX_LEVEL) {
-    return undefined
-  }
-  return MARGINAL_COINS[completedLevels]
+export function workshopEnhanceEnemyLevelSkipNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Enemy Level Skip +', completedLevels)
 }

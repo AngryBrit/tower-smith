@@ -18,8 +18,8 @@ describe('workshopShockwaveSize', () => {
   })
 
   it('matches wiki Value and Cost spot checks', () => {
-    expect(workshopShockwaveSizeStatMultiplier(0)).toBe(0)
-    expect(workshopShockwaveSizeStatDisplay(0)).toBe('0.00')
+    expect(workshopShockwaveSizeStatMultiplier(0)).toBe(0.6)
+    expect(workshopShockwaveSizeStatDisplay(0)).toBe('0.60')
     expect(workshopShockwaveSizeStatDisplay(1)).toBe('0.65')
     expect(workshopShockwaveSizeStatDisplay(35)).toBe('2.35')
     expect(workshopShockwaveSizeNextMarginalCoins(0)).toBe(250)

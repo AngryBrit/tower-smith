@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { formatCoinAbbrev } from '../labCosts'
+import { workshopToolkitMarginalCoins } from '../workshopCosts'
 import {
   WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   workshopEnhanceTier400Multiplier,
@@ -55,22 +56,24 @@ describe('workshopEnhanceDefense', () => {
     expect(formatCoinAbbrev(raw)).toBe('7.28B')
   })
 
-  it('defense absolute enhancement L27→28 matches in-game ~194B display', () => {
+  it('defense absolute enhancement L27→28 matches GOD table display', () => {
     const raw = workshopEnhanceDefenseNextMarginalCoins('enhanceDefenseAbsoluteLevel', 27)!
-    expect(formatCoinAbbrev(raw)).toBe('194.32B')
+    expect(formatCoinAbbrev(raw)).toBe('238.83B')
   })
 
   it('health enhancement matches wiki value and coin milestones (L1–L400)', () => {
     expect(WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL).toBe(400)
-    expect(workshopEnhanceTier400Multiplier(0)).toBe(1)
+    expect(workshopEnhanceTier400Multiplier(0, 'Health +')).toBe(1)
     expect(workshopEnhanceDefenseStatDisplay('enhanceHealthLevel', 0)).toBe('x1.00')
 
-    for (const { level, value, coins } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
-      expect(workshopEnhanceTier400Multiplier(level)).toBe(value)
+    for (const { level, value } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
+      expect(workshopEnhanceTier400Multiplier(level, 'Health +')).toBe(value)
       expect(workshopEnhanceDefenseStatDisplay('enhanceHealthLevel', level)).toBe(
         `x${value.toFixed(2)}`,
       )
-      expect(workshopEnhanceDefenseNextMarginalCoins('enhanceHealthLevel', level - 1)).toBe(coins)
+      expect(workshopEnhanceDefenseNextMarginalCoins('enhanceHealthLevel', level - 1)).toBe(
+        workshopToolkitMarginalCoins('Health +', level - 1),
+      )
     }
     expect(workshopEnhanceDefenseNextMarginalCoins('enhanceHealthLevel', 400)).toBeUndefined()
   })
@@ -79,12 +82,12 @@ describe('workshopEnhanceDefense', () => {
     expect(WORKSHOP_ENHANCE_HEALTH_REGEN_UNLOCK_DEFENSE_ENHANCE_SPENT_COINS).toBe(50e9)
     expect(workshopEnhanceDefenseStatDisplay('enhanceHealthRegenLevel', 0)).toBe('x1.00')
 
-    for (const { level, value, coins } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
+    for (const { level, value } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
       expect(workshopEnhanceDefenseStatDisplay('enhanceHealthRegenLevel', level)).toBe(
         `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceDefenseNextMarginalCoins('enhanceHealthRegenLevel', level - 1)).toBe(
-        coins,
+        workshopToolkitMarginalCoins('Health Regen +', level - 1),
       )
     }
     expect(workshopEnhanceDefenseNextMarginalCoins('enhanceHealthRegenLevel', 400)).toBeUndefined()
@@ -94,12 +97,12 @@ describe('workshopEnhanceDefense', () => {
     expect(WORKSHOP_ENHANCE_DEFENSE_ABSOLUTE_UNLOCK_DEFENSE_ENHANCE_SPENT_COINS).toBe(500e9)
     expect(workshopEnhanceDefenseStatDisplay('enhanceDefenseAbsoluteLevel', 0)).toBe('x1.00')
 
-    for (const { level, value, coins } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
+    for (const { level, value } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
       expect(workshopEnhanceDefenseStatDisplay('enhanceDefenseAbsoluteLevel', level)).toBe(
         `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceDefenseNextMarginalCoins('enhanceDefenseAbsoluteLevel', level - 1)).toBe(
-        coins,
+        workshopToolkitMarginalCoins('Defense Absolute +', level - 1),
       )
     }
     expect(
@@ -112,12 +115,12 @@ describe('workshopEnhanceDefense', () => {
     expect(WORKSHOP_ENHANCE_LAND_MINE_DAMAGE_INCREMENT_PER_LEVEL).toBe(0.06)
     expect(workshopEnhanceDefenseStatDisplay('enhanceLandMineDamageLevel', 0)).toBe('x1.00')
 
-    for (const { level, value, coins } of LAND_MINE_DAMAGE_WIKI_DECADES) {
+    for (const { level, value } of LAND_MINE_DAMAGE_WIKI_DECADES) {
       expect(workshopEnhanceDefenseStatDisplay('enhanceLandMineDamageLevel', level)).toBe(
         `x${value.toFixed(2)}`,
       )
       expect(workshopEnhanceDefenseNextMarginalCoins('enhanceLandMineDamageLevel', level - 1)).toBe(
-        coins,
+        workshopToolkitMarginalCoins('Land Mine Damage +', level - 1),
       )
     }
     expect(workshopEnhanceDefenseNextMarginalCoins('enhanceLandMineDamageLevel', 400)).toBeUndefined()
@@ -127,11 +130,13 @@ describe('workshopEnhanceDefense', () => {
     expect(WORKSHOP_ENHANCE_WALL_HEALTH_UNLOCK_DEFENSE_ENHANCE_SPENT_COINS).toBe(50e12)
     expect(workshopEnhanceDefenseStatDisplay('enhanceWallHealthLevel', 0)).toBe('x1.00')
 
-    for (const { level, value, coins } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
+    for (const { level, value } of WORKSHOP_ENHANCE_TIER_400_WIKI_DECADES) {
       expect(workshopEnhanceDefenseStatDisplay('enhanceWallHealthLevel', level)).toBe(
         `x${value.toFixed(2)}`,
       )
-      expect(workshopEnhanceDefenseNextMarginalCoins('enhanceWallHealthLevel', level - 1)).toBe(coins)
+      expect(workshopEnhanceDefenseNextMarginalCoins('enhanceWallHealthLevel', level - 1)).toBe(
+        workshopToolkitMarginalCoins('Wall Health +', level - 1),
+      )
     }
     expect(workshopEnhanceDefenseNextMarginalCoins('enhanceWallHealthLevel', 400)).toBeUndefined()
   })
@@ -141,11 +146,13 @@ describe('workshopEnhanceDefense', () => {
     expect(WORKSHOP_ENHANCE_ORB_SIZE_MAX_LEVEL).toBe(200)
     expect(workshopEnhanceDefenseStatDisplay('enhanceOrbSizeLevel', 0)).toBe('x1.00')
 
-    for (const { level, value, coins } of WORKSHOP_ENHANCE_UTILITY_TIER_200_WIKI_DECADES) {
+    for (const { level, value } of WORKSHOP_ENHANCE_UTILITY_TIER_200_WIKI_DECADES) {
       expect(workshopEnhanceDefenseStatDisplay('enhanceOrbSizeLevel', level)).toBe(
         `x${value.toFixed(2)}`,
       )
-      expect(workshopEnhanceDefenseNextMarginalCoins('enhanceOrbSizeLevel', level - 1)).toBe(coins)
+      expect(workshopEnhanceDefenseNextMarginalCoins('enhanceOrbSizeLevel', level - 1)).toBe(
+        workshopToolkitMarginalCoins('Orb Size', level - 1),
+      )
     }
     expect(workshopEnhanceDefenseNextMarginalCoins('enhanceOrbSizeLevel', 200)).toBeUndefined()
   })

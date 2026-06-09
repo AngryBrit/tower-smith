@@ -206,6 +206,7 @@ export function normalizeCoinAbbrevDisplay(
 /** Abbreviated coin display (K/M/B/T/q/Q/s): always two decimals (e.g. `197.60K`). */
 export function formatCoinAbbrev(n: number): string {
   if (!Number.isFinite(n) || n < 0) return '—'
+  if (n === 0) return '0'
   if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
   const abs = n
   if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
@@ -225,6 +226,7 @@ export function formatCoinAbbrev(n: number): string {
  */
 export function formatCoinAbbrevPreferT(n: number): string {
   if (!Number.isFinite(n) || n < 0) return '—'
+  if (n === 0) return '0'
   if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
   const abs = n
   if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`

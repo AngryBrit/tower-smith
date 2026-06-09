@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…38). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_ORB_SPEED_MAX_LEVEL = 38 as const
 
 /** Wiki **Value** (multiplier) after exactly `level` purchases (`level` = 1…38). */
@@ -19,9 +20,7 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Multiplier **Value** after `completedLevels` workshop purchases (0 before any purchase). */
 export function workshopOrbSpeedStatMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ORB_SPEED_MAX_LEVEL)
-  if (L === 0) return 0
-  return WIKI_VALUE_AT_LEVEL[L - 1]!
+  return workshopToolkitStatValue('Orb Speed', completedLevels)!
 }
 
 /** Two-decimal multiplier string for the workshop card (no `x` prefix). */
@@ -31,6 +30,5 @@ export function workshopOrbSpeedStatDisplay(completedLevels: number): string {
 }
 
 export function workshopOrbSpeedNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_ORB_SPEED_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+  return workshopToolkitMarginalCoins('Orb Speed', completedLevels)
 }

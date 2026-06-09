@@ -3,6 +3,7 @@
  * Per-level marginal **Coins** from wiki (decade anchors in `workshopEnhanceUtilityTier200WikiDecades.ts`).
  */
 
+import { workshopToolkitStatValue } from '../workshopCosts'
 import { formatWorkshopEnhanceMultiplierDisplay } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL = 200 as const
@@ -35,14 +36,19 @@ const MARGINAL_COINS: readonly number[] = [
   326040e15, 336930e15, 348120e15, 359620e15, 371420e15, 383540e15, 395990e15, 408770e15,
 ]
 
-export function workshopEnhanceUtilityTier200Multiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ENHANCE_UTILITY_TIER_200_MAX_LEVEL)
-  return Math.round((1 + 0.01 * L) * 100) / 100
+export function workshopEnhanceUtilityTier200Multiplier(
+  completedLevels: number,
+  godName: string,
+): number {
+  return workshopToolkitStatValue(godName, completedLevels)!
 }
 
-export function workshopEnhanceUtilityTier200StatDisplay(completedLevels: number): string {
+export function workshopEnhanceUtilityTier200StatDisplay(
+  completedLevels: number,
+  godName: string,
+): string {
   return formatWorkshopEnhanceMultiplierDisplay(
-    workshopEnhanceUtilityTier200Multiplier(completedLevels),
+    workshopEnhanceUtilityTier200Multiplier(completedLevels, godName),
   )
 }
 

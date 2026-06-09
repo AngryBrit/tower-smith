@@ -5,6 +5,11 @@ import {
 } from './workshopDamagePerMeter'
 
 describe('workshopDamagePerMeter', () => {
+  it('shows x1.000 / m at level 0 (in-game baseline format)', () => {
+    expect(workshopDamagePerMeterStatDisplay(0)).toBe('x1.000 / m')
+    expect(workshopDamagePerMeterStatMultiplier(0)).toBe(0)
+  })
+
   it('wiki workshop ladder tops at x1.059 / m without research lab', () => {
     expect(workshopDamagePerMeterStatMultiplier(200)).toBeCloseTo(0.059, 6)
     expect(workshopDamagePerMeterStatDisplay(200)).toBe('x1.059 / m')

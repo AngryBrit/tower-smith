@@ -7,7 +7,7 @@ import {
 
 describe('workshopHealth', () => {
   it('matches wiki milestone Value and marginal Cost', () => {
-    expect(workshopHealthStatValue(0)).toBe(0)
+    expect(workshopHealthStatValue(0)).toBe(5)
     expect(workshopHealthStatValue(1)).toBe(10)
     expect(workshopHealthStatValue(100)).toBe(21_560)
     expect(workshopHealthStatValue(6000)).toBe(6.71e9)

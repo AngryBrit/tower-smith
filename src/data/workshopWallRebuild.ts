@@ -3,6 +3,7 @@
  * max **300** levels. Between milestones, **Value** and marginal **Cost** use log-linear interpolation.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_WALL_REBUILD_MAX_LEVEL = 300 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -38,20 +39,13 @@ function segmentIndex(level: number): number {
   return i
 }
 
-/** Rebuild time (seconds) after `completedLevels` workshop purchases (0 before any purchase). */
-export function workshopWallRebuildStatSeconds(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_WALL_REBUILD_MAX_LEVEL)
-  if (L === 0) return WORKSHOP_WALL_REBUILD_BASE_SECONDS
-  if (L === 1) return ANCHOR_STAT_SECONDS[0]!
+/** GOD **Value** stores seconds ×1e21 (import parses trailing `s` as septillion suffix). */
+const WALL_REBUILD_GOD_VALUE_SCALE = 1e-21
 
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT_SECONDS[i]!
-  const v1 = ANCHOR_STAT_SECONDS[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t))
+/** Rebuild time (seconds) after `completedLevels` workshop purchases. */
+export function workshopWallRebuildStatSeconds(completedLevels: number): number {
+  const raw = workshopToolkitStatValue('Wall Rebuild', completedLevels)! * WALL_REBUILD_GOD_VALUE_SCALE
+  return Math.round(raw)
 }
 
 export function workshopWallRebuildStatDisplay(completedLevels: number): string {
@@ -76,6 +70,5 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
 }
 
 export function workshopWallRebuildNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_WALL_REBUILD_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Wall Rebuild', completedLevels)
 }

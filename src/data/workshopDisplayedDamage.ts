@@ -149,9 +149,7 @@ export function workshopDamageDisplayOptsWorkshopSimOnly(
     cannonModulePercent: 0,
     enhancementsMultiplier: workshopEnhanceAttackTierMultiplier(
       ws.enhanceDamageLevel,
-      undefined,
-      undefined,
-      false,
+      'Damage +',
     ),
     perkDamageQuantity: ws.simPerkDamageQuantity,
     standardPerkBonus: 0,
@@ -223,9 +221,7 @@ export function workshopDamageDisplayOptsFromPersisted(
     ),
     enhancementsMultiplier: workshopEnhanceAttackTierMultiplier(
       enhanceLevel,
-      undefined,
-      undefined,
-      false,
+      'Damage +',
     ),
     perkDamageQuantity: ws.simPerkDamageQuantity,
     standardPerkBonus: attackResearchStandardPerkBonusFraction(

@@ -8,12 +8,12 @@ import {
 
 describe('workshopMaxRecovery', () => {
   it('uses wiki milestone Value and shared marginal Cost', () => {
-    expect(workshopMaxRecoveryStatMultiplier(0)).toBe(1)
+    expect(workshopMaxRecoveryStatMultiplier(0)).toBe(1.5)
     expect(workshopMaxRecoveryStatMultiplier(1)).toBe(1.53)
     expect(workshopMaxRecoveryStatMultiplier(10)).toBe(1.8)
     expect(workshopMaxRecoveryStatMultiplier(300)).toBe(10.5)
     expect(workshopMaxRecoveryStatMultiplier(500)).toBe(16.5)
-    expect(workshopMaxRecoveryStatDisplay(0)).toBe('x1.00')
+    expect(workshopMaxRecoveryStatDisplay(0)).toBe('x1.50')
     expect(workshopMaxRecoveryStatDisplay(1)).toBe('x1.53')
     expect(workshopMaxRecoveryStatDisplay(500)).toBe('x16.50')
 

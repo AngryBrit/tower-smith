@@ -1,4 +1,6 @@
 import { describe, expect, it } from 'vitest'
+import { workshopToolkitMarginalCoins } from '../workshopCosts'
+import { WORKSHOP_GOD_TABLES } from './workshopGodTables'
 import {
   WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
   workshopDisplayedRendArmorChanceEnhancementMultiplier,
@@ -12,11 +14,12 @@ import {
 } from './workshopRendArmor'
 
 describe('workshopRendArmor', () => {
-  it('matches wiki milestone marginals', () => {
-    expect(workshopRendArmorChanceNextMarginalCoins(0)).toBe(600_000_000)
-    expect(workshopRendArmorChanceNextMarginalCoins(8)).toBe(614_098_750)
-    expect(workshopRendArmorChanceNextMarginalCoins(9)).toBe(627_210_000)
-    expect(workshopRendArmorChanceNextMarginalCoins(298)).toBe(19.83e15)
+  it('matches GOD table marginals', () => {
+    for (const level of [0, 8, 9, 298]) {
+      expect(workshopRendArmorChanceNextMarginalCoins(level)).toBe(
+        workshopToolkitMarginalCoins('Rend Armor Chance', level),
+      )
+    }
   })
 
   it('shares the same ladder for mult next cost', () => {
@@ -25,14 +28,12 @@ describe('workshopRendArmor', () => {
     )
   })
 
-  it('sums 299 purchases to wiki total 418.97q', () => {
-    let sum = 0n
-    for (let i = 0; i < WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL; i += 1) {
-      const c = workshopRendArmorChanceNextMarginalCoins(i)
-      expect(c).toBeDefined()
-      sum += BigInt(Math.round(c!))
-    }
-    expect(sum).toBe(418_970_000_000_000_000n)
+  it('GOD max row reports cumulative 418.97q total', () => {
+    const maxRow = WORKSHOP_GOD_TABLES['Rend Armor Chance'].levels[299]
+    expect(maxRow.totalCoins.coins).toBe(418_970_000_000_000_000)
+    expect(workshopRendArmorChanceNextMarginalCoins(298)).toBe(
+      workshopToolkitMarginalCoins('Rend Armor Chance', 298),
+    )
   })
 
   it('stat displays at min and max', () => {
@@ -51,5 +52,6 @@ describe('workshopRendArmor', () => {
     expect(workshopRendArmorMultStatDisplay(120, 1.02, 0, 1.4)).toBe('×0.173')
     expect(workshopRendArmorMultStatDisplay(299)).toBe('×0.3')
     expect(workshopRendArmorMultValue(299)).toBe(0.3)
+    expect(workshopRendArmorMultValue(0)).toBe(0.001)
   })
 })

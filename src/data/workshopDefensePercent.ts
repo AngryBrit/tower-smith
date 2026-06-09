@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…99). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_DEFENSE_PERCENT_MAX_LEVEL = 99 as const
 
 /** Marginal coin cost for purchase `k` → `k+1` completed levels (`k` = 0…98); wiki **Cost** at Level `k + 1`. */
@@ -18,18 +19,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Total Defense % bonus after `completedLevels` purchases (percent points, e.g. 0.5 for +0.50%). */
 export function workshopDefensePercentStatPercentPoints(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_DEFENSE_PERCENT_MAX_LEVEL)
-  return 0.5 * L
+  return workshopToolkitStatValue('Defense Percent', completedLevels)!
 }
 
 export function workshopDefensePercentStatDisplay(completedLevels: number): string {
   const pct = workshopDefensePercentStatPercentPoints(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
-export function workshopDefensePercentNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_DEFENSE_PERCENT_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+export function workshopDefensePercentNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Defense Percent', completedLevels)
 }

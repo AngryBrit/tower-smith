@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…50). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL = 50 as const
 
 /** Wiki **Value** (radius) after exactly `level` purchases (`level` = 1…50). */
@@ -22,9 +23,7 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Blast radius **Value** after `completedLevels` workshop purchases (0 before any purchase). */
 export function workshopLandMineRadiusStatValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL)
-  if (L === 0) return 0
-  return WIKI_VALUE_AT_LEVEL[L - 1]!
+  return workshopToolkitStatValue('Land Mine Radius', completedLevels)!
 }
 
 /** Two-decimal radius string for the workshop card (no `+` prefix). */
@@ -33,9 +32,6 @@ export function workshopLandMineRadiusStatDisplay(completedLevels: number): stri
   return v.toFixed(2)
 }
 
-export function workshopLandMineRadiusNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+export function workshopLandMineRadiusNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Land Mine Radius', completedLevels)
 }

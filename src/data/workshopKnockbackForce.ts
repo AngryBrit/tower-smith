@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…40). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_KNOCKBACK_FORCE_MAX_LEVEL = 40 as const
 
 /** Wiki **Value** (multiplier) after exactly `level` purchases (`level` = 1…40). */
@@ -19,9 +20,7 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Multiplier **Value** after `completedLevels` workshop purchases (0 before any purchase). */
 export function workshopKnockbackForceStatMultiplier(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_KNOCKBACK_FORCE_MAX_LEVEL)
-  if (L === 0) return 0
-  return WIKI_VALUE_AT_LEVEL[L - 1]!
+  return workshopToolkitStatValue('Knockback Force', completedLevels)!
 }
 
 /** Two-decimal multiplier string for the workshop card (no `x` prefix). */
@@ -31,6 +30,5 @@ export function workshopKnockbackForceStatDisplay(completedLevels: number): stri
 }
 
 export function workshopKnockbackForceNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_KNOCKBACK_FORCE_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+  return workshopToolkitMarginalCoins('Knockback Force', completedLevels)
 }

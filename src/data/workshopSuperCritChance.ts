@@ -3,6 +3,7 @@
  * **Cost** is marginal coins per wiki row (1…100).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL = 100 as const
 
 const MARGINAL_COINS: readonly number[] = [
@@ -22,8 +23,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Chance percent (0 … 20) after `completedLevels` purchases (0 … 100). */
 export function workshopSuperCritChancePercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL)
-  return Math.round(L * 0.2 * 100) / 100
+  return workshopToolkitStatValue('Super Crit Chance', completedLevels)!
 }
 
 /** Two decimals + `%` (e.g. `0.20%`, `20.00%`). */
@@ -43,9 +43,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopSuperCritChanceNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopSuperCritChanceNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Super Crit Chance', completedLevels)
 }

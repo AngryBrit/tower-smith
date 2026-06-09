@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…99). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_THORN_DAMAGE_MAX_LEVEL = 99 as const
 
 /** Marginal coin cost for purchase `k` → `k+1` completed levels (`k` = 0…98); wiki **Cost** at Level `k + 1`. */
@@ -18,18 +19,14 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Thorn damage bonus % after `completedLevels` purchases (whole percent points, e.g. 1 for +1.00%). */
 export function workshopThornDamageStatPercentPoints(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_THORN_DAMAGE_MAX_LEVEL)
-  return L
+  return workshopToolkitStatValue('Thorns', completedLevels)!
 }
 
 export function workshopThornDamageStatDisplay(completedLevels: number): string {
   const pct = workshopThornDamageStatPercentPoints(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return `${pct.toFixed(2)}%`
 }
 
-export function workshopThornDamageNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_THORN_DAMAGE_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+export function workshopThornDamageNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Thorns', completedLevels)
 }

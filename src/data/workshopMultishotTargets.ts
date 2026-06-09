@@ -3,6 +3,7 @@
  * Marginal **Cost** from the published ladder (wiki **Cost** per row).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL = 7 as const
 
 const MARGINAL_COINS: readonly number[] = [
@@ -11,8 +12,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Target count after `completedLevels` workshop purchases (0 … 7). */
 export function workshopMultishotTargetsCount(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL)
-  return 2 + L
+  return workshopToolkitStatValue('Multishot Targets', completedLevels)!
 }
 
 /** Integer target count as display string. */
@@ -28,9 +28,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopMultishotTargetsNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopMultishotTargetsNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Multishot Targets', completedLevels)
 }

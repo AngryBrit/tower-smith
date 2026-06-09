@@ -3,6 +3,7 @@
  * Wiki **Value** uses an **M** suffix for meters. **Cost** is marginal coins per row (full ladder).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_ATTACK_RANGE_MAX_LEVEL = 79 as const
 
 /** Marginal coins for upgrade ending at workshop level L (1…79), i.e. wiki **Cost** on that row. */
@@ -17,8 +18,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Range in meters after `completedLevels` workshop purchases (0 … 79). */
 export function workshopAttackRangeMeters(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ATTACK_RANGE_MAX_LEVEL)
-  return Math.round((30 + 0.5 * L) * 100) / 100
+  return workshopToolkitStatValue('Range', completedLevels)! / 1e6
 }
 
 /** Wiki-style value (`30.00M` … `69.50M`); **M** = meters. */
@@ -43,9 +43,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
  * Coins for the next workshop attack range upgrade when `completedLevels` purchases are done.
  * `undefined` when maxed (79) or out of range.
  */
-export function workshopAttackRangeNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_ATTACK_RANGE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopAttackRangeNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Range', completedLevels)
 }

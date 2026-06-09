@@ -104,9 +104,9 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('defensePercentLevel', 98)).toBe(
       workshopDefensePercentNextMarginalCoins(98),
     )
-    expect(workshopDefenseStatDisplay('defensePercentLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('defensePercentLevel', 1)).toBe('+0.50%')
-    expect(workshopDefenseStatDisplay('defensePercentLevel', 99)).toBe('+49.50%')
+    expect(workshopDefenseStatDisplay('defensePercentLevel', 0)).toBe('0.00%')
+    expect(workshopDefenseStatDisplay('defensePercentLevel', 1)).toBe('0.50%')
+    expect(workshopDefenseStatDisplay('defensePercentLevel', 99)).toBe('49.50%')
   })
 
   it('Thorn Damage uses workshop wiki ladder (99 levels)', () => {
@@ -116,8 +116,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('thornDamageLevel', 98)).toBe(
       workshopThornDamageNextMarginalCoins(98),
     )
-    expect(workshopDefenseStatDisplay('thornDamageLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('thornDamageLevel', 99)).toBe('+99.00%')
+    expect(workshopDefenseStatDisplay('thornDamageLevel', 0)).toBe('0.00%')
+    expect(workshopDefenseStatDisplay('thornDamageLevel', 99)).toBe('99.00%')
   })
 
   it('Lifesteal uses workshop wiki ladder (80 levels)', () => {
@@ -127,8 +127,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('lifestealLevel', 79)).toBe(
       workshopLifestealNextMarginalCoins(79),
     )
-    expect(workshopDefenseStatDisplay('lifestealLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('lifestealLevel', 80)).toBe('+4.46%')
+    expect(workshopDefenseStatDisplay('lifestealLevel', 0)).toBe('0.00%')
+    expect(workshopDefenseStatDisplay('lifestealLevel', 80)).toBe('4.46%')
   })
 
   it('Knockback Chance uses workshop wiki ladder (80 levels)', () => {
@@ -138,8 +138,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('knockbackChanceLevel', 79)).toBe(
       workshopKnockbackChanceNextMarginalCoins(79),
     )
-    expect(workshopDefenseStatDisplay('knockbackChanceLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('knockbackChanceLevel', 80)).toBe('+80.00%')
+    expect(workshopDefenseStatDisplay('knockbackChanceLevel', 0)).toBe('0.00%')
+    expect(workshopDefenseStatDisplay('knockbackChanceLevel', 80)).toBe('80.00%')
   })
 
   it('Knockback Force uses workshop wiki ladder (40 levels)', () => {
@@ -149,7 +149,7 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('knockbackForceLevel', 39)).toBe(
       workshopKnockbackForceNextMarginalCoins(39),
     )
-    expect(workshopDefenseStatDisplay('knockbackForceLevel', 0)).toBe('0.00')
+    expect(workshopDefenseStatDisplay('knockbackForceLevel', 0)).toBe('0.40')
     expect(workshopDefenseStatDisplay('knockbackForceLevel', 1)).toBe('0.55')
     expect(workshopDefenseStatDisplay('knockbackForceLevel', 40)).toBe('6.08')
   })
@@ -161,7 +161,7 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('orbSpeedLevel', 37)).toBe(
       workshopOrbSpeedNextMarginalCoins(37),
     )
-    expect(workshopDefenseStatDisplay('orbSpeedLevel', 0)).toBe('0.00')
+    expect(workshopDefenseStatDisplay('orbSpeedLevel', 0)).toBe('0.40')
     expect(workshopDefenseStatDisplay('orbSpeedLevel', 38)).toBe('6.10')
   })
 
@@ -181,7 +181,7 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('shockwaveSizeLevel', 34)).toBe(
       workshopShockwaveSizeNextMarginalCoins(34),
     )
-    expect(workshopDefenseStatDisplay('shockwaveSizeLevel', 0)).toBe('0.00')
+    expect(workshopDefenseStatDisplay('shockwaveSizeLevel', 0)).toBe('0.60')
     expect(workshopDefenseStatDisplay('shockwaveSizeLevel', 35)).toBe('2.35')
   })
 
@@ -194,7 +194,7 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('shockwaveFrequencyLevel', 39)).toBe(
       workshopShockwaveFrequencyNextMarginalCoins(39),
     )
-    expect(workshopDefenseStatDisplay('shockwaveFrequencyLevel', 0)).toBe('0.00s')
+    expect(workshopDefenseStatDisplay('shockwaveFrequencyLevel', 0)).toBe('20.00s')
     expect(workshopDefenseStatDisplay('shockwaveFrequencyLevel', 40)).toBe('14.00s')
   })
 
@@ -205,8 +205,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('landMineChanceLevel', 49)).toBe(
       workshopLandMineChanceNextMarginalCoins(49),
     )
-    expect(workshopDefenseStatDisplay('landMineChanceLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('landMineChanceLevel', 50)).toBe('+30.00%')
+    expect(workshopDefenseStatDisplay('landMineChanceLevel', 0)).toBe('0.00%')
+    expect(workshopDefenseStatDisplay('landMineChanceLevel', 50)).toBe('30.00%')
   })
 
   it('Land Mine Damage uses workshop wiki ladder (200 levels)', () => {
@@ -216,8 +216,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('landMineDamageLevel', 199)).toBe(
       workshopLandMineDamageNextMarginalCoins(199),
     )
-    expect(workshopDefenseStatDisplay('landMineDamageLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('landMineDamageLevel', 200)).toBe('+2100.00%')
+    expect(workshopDefenseStatDisplay('landMineDamageLevel', 0)).toBe('x1.0')
+    expect(workshopDefenseStatDisplay('landMineDamageLevel', 200)).toBe('x21.0')
   })
 
   it('Land Mine Radius uses workshop wiki ladder (50 levels)', () => {
@@ -227,7 +227,7 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('landMineRadiusLevel', 49)).toBe(
       workshopLandMineRadiusNextMarginalCoins(49),
     )
-    expect(workshopDefenseStatDisplay('landMineRadiusLevel', 0)).toBe('0.00')
+    expect(workshopDefenseStatDisplay('landMineRadiusLevel', 0)).toBe('0.50')
     expect(workshopDefenseStatDisplay('landMineRadiusLevel', 50)).toBe('1.50')
   })
 
@@ -238,8 +238,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('deathDefyLevel', 74)).toBe(
       workshopDeathDefyNextMarginalCoins(74),
     )
-    expect(workshopDefenseStatDisplay('deathDefyLevel', 0)).toBe('0%')
-    expect(workshopDefenseStatDisplay('deathDefyLevel', 75)).toBe('30%')
+    expect(workshopDefenseStatDisplay('deathDefyLevel', 0)).toBe('0.00%')
+    expect(workshopDefenseStatDisplay('deathDefyLevel', 75)).toBe('30.00%')
   })
 
   it('Wall Health uses workshop wiki ladder (1800 levels)', () => {
@@ -249,8 +249,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('wallHealthLevel', 1799)).toBe(
       workshopWallHealthNextMarginalCoins(1799),
     )
-    expect(workshopDefenseStatDisplay('wallHealthLevel', 0)).toBe('+0.00%')
-    expect(workshopDefenseStatDisplay('wallHealthLevel', 1800)).toBe('+200.00%')
+    expect(workshopDefenseStatDisplay('wallHealthLevel', 0)).toBe('20.00%')
+    expect(workshopDefenseStatDisplay('wallHealthLevel', 1800)).toBe('200.00%')
   })
 
   it('Wall Rebuild uses workshop wiki ladder (300 levels)', () => {
@@ -333,27 +333,25 @@ describe('workshopDefenseStatDisplay', () => {
   it('adds Garlic Thorns lab % to workshop Thorn Damage display', () => {
     expect(
       workshopDefenseStatDisplay('thornDamageLevel', 99, { thornDamageLabPercentPoints: 5 }),
-    ).toBe('+104.00%')
+    ).toBe('104.00%')
   })
 
   it('adds Defense % lab to workshop Defense % display', () => {
     expect(
       workshopDefenseStatDisplay('defensePercentLevel', 99, { defensePercentLabPercentPoints: 0.4 }),
-    ).toBe('+49.90%')
+    ).toBe('49.90%')
   })
 
   it('shows Health Regen lab multiplier when wiki Value is still 0', () => {
     expect(
       workshopDefenseStatDisplay('healthRegenLevel', 0, { healthRegenLabMultiplier: 1.03 }),
-    ).toBe('0.00 ×1.03')
+    ).toBe('0/sec ×1.03')
     expect(
       workshopDefenseStatDisplay('healthRegenLevel', 1, { healthRegenLabMultiplier: 1.03 }),
-    ).toBe('0.00 ×1.03')
+    ).toBe('0/sec ×1.03')
   })
 
   it('shows Health lab multiplier when wiki HP is still 0', () => {
-    expect(workshopDefenseStatDisplay('healthLevel', 0, { healthLabMultiplier: 1.03 })).toBe(
-      '0.00 ×1.03',
-    )
+    expect(workshopDefenseStatDisplay('healthLevel', 0, { healthLabMultiplier: 1.03 })).toBe('5')
   })
 })

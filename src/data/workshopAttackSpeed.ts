@@ -4,6 +4,7 @@
  * Displayed value uses {@link workshopDisplayedAttackSpeedFromWorkshopLevel} when sim opts are passed.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 import {
   workshopDisplayedAttackSpeedFromWorkshopLevel,
   type WorkshopAttackSpeedDisplayOpts,
@@ -27,8 +28,7 @@ const MARGINAL_COINS: readonly number[] = [
 
 /** Multiplier value after `completedLevels` workshop upgrades (0 … 99). */
 export function workshopAttackSpeedStatValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_ATTACK_SPEED_MAX_LEVEL)
-  return 1 + 0.05 * L
+  return workshopToolkitStatValue('Attack Speed', completedLevels)!
 }
 
 /**
@@ -54,6 +54,5 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
  * `undefined` when maxed (99) or out of range.
  */
 export function workshopAttackSpeedNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_ATTACK_SPEED_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+  return workshopToolkitMarginalCoins('Attack Speed', completedLevels)
 }

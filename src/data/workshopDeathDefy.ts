@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…75). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_DEATH_DEFY_MAX_LEVEL = 75 as const
 
 /** Wiki **Value** (chance %) after exactly `level` purchases (`level` = 1…75). */
@@ -24,16 +25,13 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
 
 /** Death defy chance % after `completedLevels` workshop purchases. */
 export function workshopDeathDefyStatPercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_DEATH_DEFY_MAX_LEVEL)
-  if (L === 0) return 0
-  return WIKI_PERCENT_AT_LEVEL[L - 1]!
+  return workshopToolkitStatValue('Death Defy', completedLevels)!
 }
 
 export function workshopDeathDefyStatDisplay(completedLevels: number): string {
-  return `${workshopDeathDefyStatPercent(completedLevels)}%`
+  return `${workshopDeathDefyStatPercent(completedLevels).toFixed(2)}%`
 }
 
 export function workshopDeathDefyNextMarginalCoins(completedLevels: number): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_DEATH_DEFY_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+  return workshopToolkitMarginalCoins('Death Defy', completedLevels)
 }

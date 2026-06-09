@@ -3,6 +3,7 @@
  * Rows **1…40** share the same marginal **Cost** ladder as Bounce Shot Chance; **41…60** use the wiki range ladder.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL = 60 as const
 
 const MARGINAL_COINS: readonly number[] = [
@@ -13,10 +14,12 @@ const MARGINAL_COINS: readonly number[] = [
   1140000000000, 1190000000000, 1230000000000,
 ]
 
+/** GOD **Value** is meters ×1e6 (same encoding as workshop **Range**). */
+const BOUNCE_SHOT_RANGE_GOD_VALUE_SCALE = 1e-6
+
 /** Range in meters after `completedLevels` purchases (0 … 60). */
 export function workshopBounceShotRangeMeters(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL)
-  return Math.round((2.0 + 0.1 * L) * 100) / 100
+  return workshopToolkitStatValue('Bounce Shot Range', completedLevels)! * BOUNCE_SHOT_RANGE_GOD_VALUE_SCALE
 }
 
 /** Display like wiki (`2.00m` … `8.00m`). */
@@ -33,9 +36,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopBounceShotRangeNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopBounceShotRangeNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Bounce Shot Range', completedLevels)
 }

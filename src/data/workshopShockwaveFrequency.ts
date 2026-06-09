@@ -3,6 +3,7 @@
  * `completedLevels` = finished purchases (0…40). Next purchase cost is the wiki **Cost** for workshop level `completedLevels + 1`.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_SHOCKWAVE_FREQUENCY_MAX_LEVEL = 40 as const
 
 /** Wiki **Value** (seconds) after exactly `level` purchases (`level` = 1…40). */
@@ -18,11 +19,15 @@ const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [
   55_100, 59_600, 64_330, 69_290, 74_480, 79_920, 85_600,
 ]
 
-/** Interval in seconds after `completedLevels` workshop purchases (0 before any purchase). */
+/** GOD **Value** stores seconds ×1e21 (import parses trailing `s` as septillion suffix). */
+const SHOCKWAVE_FREQUENCY_GOD_VALUE_SCALE = 1e-21
+
+/** Interval in seconds after `completedLevels` workshop purchases. */
 export function workshopShockwaveFrequencyStatSeconds(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_SHOCKWAVE_FREQUENCY_MAX_LEVEL)
-  if (L === 0) return 0
-  return WIKI_SECONDS_AT_LEVEL[L - 1]!
+  const raw =
+    workshopToolkitStatValue('Shockwave Frequency', completedLevels)! *
+    SHOCKWAVE_FREQUENCY_GOD_VALUE_SCALE
+  return Math.round(raw * 100) / 100
 }
 
 export function workshopShockwaveFrequencyStatDisplay(completedLevels: number): string {
@@ -30,9 +35,6 @@ export function workshopShockwaveFrequencyStatDisplay(completedLevels: number): 
   return `${sec.toFixed(2)}s`
 }
 
-export function workshopShockwaveFrequencyNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_SHOCKWAVE_FREQUENCY_MAX_LEVEL) return undefined
-  return MARGINAL_COST_TO_NEXT_LEVEL[completedLevels]!
+export function workshopShockwaveFrequencyNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Shockwave Frequency', completedLevels)
 }

@@ -13,9 +13,9 @@ describe('workshopEnemyLevelSkipShared', () => {
     expect(workshopEnemyLevelSkipStatPercent(0)).toBe(0.05)
     expect(workshopEnemyLevelSkipStatPercent(1)).toBe(0.1)
     expect(workshopEnemyLevelSkipStatPercent(699)).toBe(35)
-    expect(workshopEnemyLevelSkipStatDisplay(0)).toBe('+0.05%')
-    expect(workshopEnemyLevelSkipStatDisplay(1)).toBe('+0.10%')
-    expect(workshopEnemyLevelSkipStatDisplay(699)).toBe('+35.00%')
+    expect(workshopEnemyLevelSkipStatDisplay(0)).toBe('0.05%')
+    expect(workshopEnemyLevelSkipStatDisplay(1)).toBe('0.10%')
+    expect(workshopEnemyLevelSkipStatDisplay(699)).toBe('35.00%')
 
     expect(workshopEnemyLevelSkipNextMarginalCoins(0)).toBe(300_000_000)
     expect(workshopEnemyLevelSkipNextMarginalCoins(9)).toBe(444_010_000)

@@ -13,9 +13,9 @@ describe('workshopRecoveryAmount', () => {
     expect(workshopRecoveryAmountStatPercent(0)).toBe(14)
     expect(workshopRecoveryAmountStatPercent(1)).toBe(14.4)
     expect(workshopRecoveryAmountStatPercent(300)).toBe(134)
-    expect(workshopRecoveryAmountStatDisplay(0)).toBe('+14.00%')
-    expect(workshopRecoveryAmountStatDisplay(1)).toBe('+14.40%')
-    expect(workshopRecoveryAmountStatDisplay(300)).toBe('+134.00%')
+    expect(workshopRecoveryAmountStatDisplay(0)).toBe('14.00%')
+    expect(workshopRecoveryAmountStatDisplay(1)).toBe('14.40%')
+    expect(workshopRecoveryAmountStatDisplay(300)).toBe('134.00%')
 
     expect(workshopRecoveryAmountNextMarginalCoins(0)).toBe(1000)
     expect(workshopRecoveryAmountNextMarginalCoins(9)).toBe(20_900)

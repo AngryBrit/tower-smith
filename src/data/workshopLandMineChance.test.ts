@@ -19,8 +19,8 @@ describe('workshopLandMineChance', () => {
 
   it('matches wiki Value and Cost spot checks', () => {
     expect(workshopLandMineChanceStatPercentPoints(0)).toBe(0)
-    expect(workshopLandMineChanceStatDisplay(1)).toBe('+0.60%')
-    expect(workshopLandMineChanceStatDisplay(50)).toBe('+30.00%')
+    expect(workshopLandMineChanceStatDisplay(1)).toBe('0.60%')
+    expect(workshopLandMineChanceStatDisplay(50)).toBe('30.00%')
     expect(workshopLandMineChanceNextMarginalCoins(0)).toBe(500)
     expect(workshopLandMineChanceNextMarginalCoins(49)).toBe(1_260_000)
     expect(workshopLandMineChanceNextMarginalCoins(50)).toBeUndefined()

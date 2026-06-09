@@ -4,6 +4,7 @@
  * of each decade uses an **equal split** of the remaining block spend (matches wiki **Cost** + **Total** at 10/20/…/120).
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL = 120 as const
 
 /** Cumulative coins after `L` completed purchases (`L` ∈ {0,1,10,20,…,120}). */
@@ -73,8 +74,7 @@ const MARGINAL_COINS: readonly number[] = buildMarginalCoins()
 
 /** Multiplier (1.2 … 13.2) after `completedLevels` purchases (0 … 120). */
 export function workshopSuperCritMultValue(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL)
-  return Math.round((1.2 + 0.1 * L) * 100) / 100
+  return workshopToolkitStatValue('Super Crit Mult', completedLevels)!
 }
 
 /** Display like in-game workshop card (`×1.20` … `×13.20`). */
@@ -97,9 +97,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return MARGINAL_COINS[targetLevel - 1]
 }
 
-export function workshopSuperCritMultNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopSuperCritMultNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Super Crit Mult', completedLevels)
 }

@@ -3,6 +3,7 @@
  * max **200** levels. Between milestones, **Value** (%) and marginal **Cost** use log-linear interpolation.
  */
 
+import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL = 200 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -33,25 +34,18 @@ function segmentIndex(level: number): number {
   return i
 }
 
-/** Land mine damage **%** after `completedLevels` workshop purchases (0 … 200). */
+/** Land mine damage multiplier after `completedLevels` workshop purchases (0 … 200). */
 export function workshopLandMineDamageStatPercent(completedLevels: number): number {
-  const L = Math.min(Math.max(0, completedLevels), WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL)
-  if (L === 0) return 0
-  if (L === 1) return ANCHOR_STAT_PERCENT[0]!
+  return workshopToolkitStatValue('Land Mine Damage', completedLevels)!
+}
 
-  const i = segmentIndex(L)
-  const L0 = ANCHOR_LEVELS[i]!
-  const L1 = ANCHOR_LEVELS[i + 1]!
-  const v0 = ANCHOR_STAT_PERCENT[i]!
-  const v1 = ANCHOR_STAT_PERCENT[i + 1]!
-  if (L1 <= L0) return v0
-  const t = (L - L0) / (L1 - L0)
-  return Math.round(logLerp(v0, v1, t))
+/** In-game workshop card: **`x1.0`** … **`x21.0`** (GOD `valueDisplay` uses two decimals + suffix). */
+export function formatWorkshopLandMineDamageMultiplier(mult: number): string {
+  return `x${mult.toFixed(1)}`
 }
 
 export function workshopLandMineDamageStatDisplay(completedLevels: number): string {
-  const pct = workshopLandMineDamageStatPercent(completedLevels)
-  return `+${pct.toFixed(2)}%`
+  return formatWorkshopLandMineDamageMultiplier(workshopLandMineDamageStatPercent(completedLevels))
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {
@@ -70,9 +64,6 @@ function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined 
   return logLerp(v0, v1, t)
 }
 
-export function workshopLandMineDamageNextMarginalCoins(
-  completedLevels: number,
-): number | undefined {
-  if (completedLevels < 0 || completedLevels >= WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL) return undefined
-  return marginalCoinsPurchaseEndingAt(completedLevels + 1)
+export function workshopLandMineDamageNextMarginalCoins(completedLevels: number): number | undefined {
+  return workshopToolkitMarginalCoins('Land Mine Damage', completedLevels)
 }
