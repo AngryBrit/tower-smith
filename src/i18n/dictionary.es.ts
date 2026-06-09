@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_306_headline: 'Novedades en v3.0.6',
+  whats_new_306_body:
+    'Los bonus de subestadísticas del módulo assist ahora incluyen el lab Assist Module Substats completo además de la eficiencia de sub-piedras: CD/duración de armas definitivas y otras sub-stats assist se muestran correctamente al 100 % de eficiencia combinada.',
   whats_new_305_headline: 'Novedades en v3.0.5',
   whats_new_305_body:
     'Las estadísticas del taller coinciden con el juego: daño, salud, utilidad, cantidad de recuperación y recuperación máxima con mejora Paquete de recuperación+. Costes de lab y taller con tablas GOD actualizadas.',

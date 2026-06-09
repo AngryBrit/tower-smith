@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_306_headline: 'Neu in v3.0.6',
+  whats_new_306_body:
+    'Assist-Modul-Substat-Boni enthalten jetzt das volle Assist Module Substats-Lab zusätzlich zur Sub-Stein-Effizienz — Ultimate-Waffen-CD/Dauer und andere Assist-Substats werden bei 100 % kombinierter Effizienz korrekt angezeigt.',
   whats_new_305_headline: 'Neu in v3.0.5',
   whats_new_305_body:
     'Werkstatt-Statkarten entsprechen jetzt den Spielwerten — Schaden, Leben, Utility-Zeilen, Heilmenge und Max. Heilung mit Heilpaket+-Verstärkung. Lab- und Werkstatt-Kosten nutzen aktualisierte GOD-Tabellen.',

@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.6] - 2026-06-09
+
+### Fixed
+
+- **Assist substat scaling** — Combined sub-stone efficiency (70%) plus Assist Module Substats lab (30%) can reach 100%, but assist substat bonuses were clamped at the 70% stone cap. Ultimate weapon and workshop displays now apply the full SE lab bonus (e.g. Poison Swamp cooldown/duration with max assist core substats).
+
+### Docs
+
+- README: version **3.0.6**.
+- What's new banner (en/de/es).
+
 ## [3.0.5] - 2026-06-08
 
 ### Added
