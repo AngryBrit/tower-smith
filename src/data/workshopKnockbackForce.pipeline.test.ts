@@ -4,13 +4,13 @@ import { workshopDefenseStatDisplay } from './workshopDefense'
 import { enrichDefenseStatDisplayOpts } from './workshopRelicWorkshopDisplay'
 import { enrichDefenseStatDisplayOptsWithSubmodules } from './workshopSubmoduleWorkshopDisplay'
 import { workshopKnockbackForceStatMultiplier } from './workshopKnockbackForce'
-import { workshopRelicsActiveBonusPercent } from './workshopRelicStats'
 import { decodePlayerInfoFile } from '../playerSave/decodePlayerInfo'
 import {
   mapPlayerSaveToTower,
   researchLevelsToOverrides,
 } from '../playerSave/mapPlayerDataToTower'
 import { loadResearchFixture } from '../test/researchFixture'
+import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
 const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
 const IN_GAME = 7.78
@@ -22,7 +22,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopKnockbackForce pipeline', () 
     const labOverrides = researchLevelsToOverrides(data, save.researchLevel)
     const { workshop: ws } = mapPlayerSaveToTower(data, save)
     const relicSet = new Set(ws.relicOwnedIds ?? [])
-    const submoduleCtx = { workshop: ws, research: data, labOverrides }
+    const submoduleCtx = workshopPipelineSubmoduleContext(ws, data, labOverrides)
     const opts = enrichDefenseStatDisplayOpts(
       enrichDefenseStatDisplayOptsWithSubmodules(
         {},

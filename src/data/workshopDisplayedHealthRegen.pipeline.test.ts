@@ -25,6 +25,7 @@ import {
   researchLevelsToOverrides,
 } from '../playerSave/mapPlayerDataToTower'
 import { loadResearchFixture } from '../test/researchFixture'
+import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
 const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
 
@@ -37,7 +38,7 @@ function buildDefenseStatLabDisplayOptsLikeWorkshopPage(
   const lab = buildWorkshopDefenseLabDisplayOpts(researchData, labLevelOverrides)
   const cardMult = (id: Parameters<typeof workshopCardMultProduct>[3]) =>
     workshopCardMultProduct(workshopPersisted, researchData, labLevelOverrides, id)
-  const cardAdd = (id: Parameters<typeof workshopCardMultProduct>[3]) => 0
+  const cardAdd = (_id: Parameters<typeof workshopCardMultProduct>[3]) => 0
   void cardAdd
   const armorChassis = workshopChassisModuleHeroStatMultiplier(workshopPersisted, 'armor')
   const chassisDefense =
@@ -82,11 +83,11 @@ function buildDefenseStatLabDisplayOptsLikeWorkshopPage(
       cardMult('fortress'),
     ),
   }
-  const submoduleCtx = {
-    workshop: workshopPersisted,
-    research: researchData,
-    labOverrides: labLevelOverrides,
-  }
+  const submoduleCtx = workshopPipelineSubmoduleContext(
+    workshopPersisted,
+    researchData,
+    labLevelOverrides,
+  )
   return enrichDefenseStatDisplayOpts(
     enrichDefenseStatDisplayOptsWithSubmodules(
       enriched,

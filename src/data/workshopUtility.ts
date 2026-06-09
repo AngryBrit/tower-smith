@@ -7,73 +7,60 @@
 
 import {
   WORKSHOP_CASH_BONUS_MAX_LEVEL,
-  workshopCashBonusNextMarginalCoins,
   workshopCashBonusStatDisplay,
 } from './workshopCashBonus'
 import {
   WORKSHOP_CASH_PER_WAVE_MAX_LEVEL,
-  workshopCashPerWaveNextMarginalCoins,
   workshopCashPerWaveStatDisplay,
 } from './workshopCashPerWave'
 import {
   WORKSHOP_COINS_KILL_BONUS_MAX_LEVEL,
-  workshopCoinsKillBonusNextMarginalCoins,
   workshopCoinsKillBonusStatDisplay,
 } from './workshopCoinsKillBonus'
 import {
   WORKSHOP_COINS_WAVE_MAX_LEVEL,
-  workshopCoinsWaveNextMarginalCoins,
   workshopCoinsWaveStatDisplay,
 } from './workshopCoinsWave'
 import { workshopDisplayedFreeUpgradesEnhancementWorkshopPercentPoints } from './workshopEnhanceFreeUpgrades'
 import {
   WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL,
-  workshopFreeAttackUpgradeNextMarginalCoins,
   workshopFreeAttackUpgradeStatDisplay,
   workshopFreeAttackUpgradeStatPercentPoints,
 } from './workshopFreeAttackUpgrade'
 import {
   WORKSHOP_FREE_DEFENSE_UPGRADE_MAX_LEVEL,
-  workshopFreeDefenseUpgradeNextMarginalCoins,
   workshopFreeDefenseUpgradeStatDisplay,
   workshopFreeDefenseUpgradeStatPercentPoints,
 } from './workshopFreeDefenseUpgrade'
 import {
   WORKSHOP_FREE_UTILITY_UPGRADE_MAX_LEVEL,
-  workshopFreeUtilityUpgradeNextMarginalCoins,
   workshopFreeUtilityUpgradeStatDisplay,
   workshopFreeUtilityUpgradeStatPercentPoints,
 } from './workshopFreeUtilityUpgrade'
 import {
   WORKSHOP_INTEREST_PER_WAVE_MAX_LEVEL,
-  workshopInterestPerWaveNextMarginalCoins,
   workshopInterestPerWaveStatDisplay,
 } from './workshopInterestPerWave'
 import {
   WORKSHOP_RECOVERY_AMOUNT_MAX_LEVEL,
-  workshopRecoveryAmountNextMarginalCoins,
   workshopRecoveryAmountStatDisplay,
 } from './workshopRecoveryAmount'
 import {
   WORKSHOP_MAX_RECOVERY_MAX_LEVEL,
-  workshopMaxRecoveryNextMarginalCoins,
   workshopMaxRecoveryStatDisplay,
 } from './workshopMaxRecovery'
 import {
   WORKSHOP_PACKAGE_CHANCE_MAX_LEVEL,
-  workshopPackageChanceNextMarginalCoins,
   workshopPackageChanceStatDisplay,
 } from './workshopPackageChance'
 export { WORKSHOP_RECOVERY_UNLOCK_COINS } from './workshopRecoveryShared'
 export { WORKSHOP_ENEMY_LEVEL_SKIP_UNLOCK_COINS } from './workshopEnemyLevelSkipShared'
 import {
   WORKSHOP_ENEMY_ATTACK_LEVEL_SKIP_MAX_LEVEL,
-  workshopEnemyAttackLevelSkipNextMarginalCoins,
   workshopEnemyAttackLevelSkipStatDisplay,
 } from './workshopEnemyAttackLevelSkip'
 import {
   WORKSHOP_ENEMY_HEALTH_LEVEL_SKIP_MAX_LEVEL,
-  workshopEnemyHealthLevelSkipNextMarginalCoins,
   workshopEnemyHealthLevelSkipStatDisplay,
 } from './workshopEnemyHealthLevelSkip'
 import {

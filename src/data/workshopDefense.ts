@@ -5,7 +5,6 @@
 import {
   formatAdditiveCount,
   formatAdditiveNumeric,
-  formatAdditivePercentPoints,
   formatPercentAfterLabAddition,
   formatPercentAfterLabAdditionAndMultiplier,
   formatWorkshopPercentDisplay,
@@ -25,106 +24,85 @@ import { workshopDisplayedHealthStatDisplay } from './workshopDisplayedHealth'
 import { workshopDisplayedHealthRegenStatDisplay } from './workshopDisplayedHealthRegen'
 import {
   WORKSHOP_HEALTH_REGEN_MAX_LEVEL,
-  formatWorkshopHealthRegenPerSec,
-  workshopHealthRegenNextMarginalCoins,
   workshopHealthRegenStatDisplay,
-  workshopHealthRegenStatValue,
 } from './workshopHealthRegen'
 import {
   WORKSHOP_HEALTH_MAX_LEVEL,
-  workshopHealthNextMarginalCoins,
   workshopHealthStatDisplay,
-  workshopHealthStatValue,
 } from './workshopHealth'
 import {
   WORKSHOP_DEFENSE_PERCENT_MAX_LEVEL,
-  workshopDefensePercentNextMarginalCoins,
   workshopDefensePercentStatDisplay,
   workshopDefensePercentStatPercentPoints,
 } from './workshopDefensePercent'
 import {
   WORKSHOP_DEFENSE_ABSOLUTE_MAX_LEVEL,
-  workshopDefenseAbsoluteNextMarginalCoins,
   workshopDefenseAbsoluteStatDisplay,
 } from './workshopDefenseAbsolute'
 import {
   WORKSHOP_THORN_DAMAGE_MAX_LEVEL,
-  workshopThornDamageNextMarginalCoins,
   workshopThornDamageStatDisplay,
   workshopThornDamageStatPercentPoints,
 } from './workshopThornDamage'
 import {
   WORKSHOP_LIFESTEAL_MAX_LEVEL,
-  workshopLifestealNextMarginalCoins,
   workshopLifestealStatDisplay,
   workshopLifestealStatPercentPoints,
 } from './workshopLifesteal'
 import {
   WORKSHOP_KNOCKBACK_CHANCE_MAX_LEVEL,
-  workshopKnockbackChanceNextMarginalCoins,
   workshopKnockbackChanceStatDisplay,
   workshopKnockbackChanceStatPercentPoints,
 } from './workshopKnockbackChance'
 import {
   WORKSHOP_KNOCKBACK_FORCE_MAX_LEVEL,
-  workshopKnockbackForceNextMarginalCoins,
   workshopKnockbackForceStatDisplay,
   workshopKnockbackForceStatMultiplier,
 } from './workshopKnockbackForce'
 import {
   WORKSHOP_ORB_SPEED_MAX_LEVEL,
-  workshopOrbSpeedNextMarginalCoins,
   workshopOrbSpeedStatDisplay,
 } from './workshopOrbSpeed'
 import {
   WORKSHOP_ORBS_MAX_LEVEL,
-  workshopOrbsNextMarginalCoins,
   workshopOrbsStatDisplay,
 } from './workshopOrbs'
 import {
   WORKSHOP_SHOCKWAVE_SIZE_MAX_LEVEL,
-  workshopShockwaveSizeNextMarginalCoins,
   workshopShockwaveSizeStatDisplay,
 } from './workshopShockwaveSize'
 import {
   WORKSHOP_SHOCKWAVE_FREQUENCY_MAX_LEVEL,
-  workshopShockwaveFrequencyNextMarginalCoins,
   workshopShockwaveFrequencyStatDisplay,
   workshopShockwaveFrequencyStatSeconds,
 } from './workshopShockwaveFrequency'
 import {
   WORKSHOP_LAND_MINE_CHANCE_MAX_LEVEL,
-  workshopLandMineChanceNextMarginalCoins,
   workshopLandMineChanceStatDisplay,
   workshopLandMineChanceStatPercentPoints,
 } from './workshopLandMineChance'
 import {
   WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL,
   formatWorkshopLandMineDamageMultiplier,
-  workshopLandMineDamageNextMarginalCoins,
   workshopLandMineDamageStatDisplay,
   workshopLandMineDamageStatPercent,
 } from './workshopLandMineDamage'
 import {
   WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL,
-  workshopLandMineRadiusNextMarginalCoins,
   workshopLandMineRadiusStatDisplay,
   workshopLandMineRadiusStatValue,
 } from './workshopLandMineRadius'
 import {
   WORKSHOP_DEATH_DEFY_MAX_LEVEL,
-  workshopDeathDefyNextMarginalCoins,
   workshopDeathDefyStatDisplay,
   workshopDeathDefyStatPercent,
 } from './workshopDeathDefy'
 import {
   WORKSHOP_WALL_HEALTH_MAX_LEVEL,
-  workshopWallHealthNextMarginalCoins,
   workshopWallHealthStatDisplay,
 } from './workshopWallHealth'
 import {
   WORKSHOP_WALL_REBUILD_MAX_LEVEL,
-  workshopWallRebuildNextMarginalCoins,
   workshopWallRebuildStatDisplay,
 } from './workshopWallRebuild'
 

@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import { workshopToolkitMarginalCoins } from '../workshopCosts'
 import { WORKSHOP_GOD_TABLES } from './workshopGodTables'
 import {
-  WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
   workshopDisplayedRendArmorChanceEnhancementMultiplier,
   workshopDisplayedRendArmorMultEnhancementMultiplier,
   workshopRendArmorChanceNextMarginalCoins,

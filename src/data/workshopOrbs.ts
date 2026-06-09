@@ -6,8 +6,6 @@
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 export const WORKSHOP_ORBS_MAX_LEVEL = 4 as const
 
-/** Marginal coin cost for purchase `k` → `k+1` completed levels (`k` = 0…3); wiki **Cost** at Level `k + 1`. */
-const MARGINAL_COST_TO_NEXT_LEVEL: readonly number[] = [3_000, 20_000, 120_000, 350_000]
 
 /** Extra orb count after `completedLevels` workshop purchases. */
 export function workshopOrbsStatCount(completedLevels: number): number {

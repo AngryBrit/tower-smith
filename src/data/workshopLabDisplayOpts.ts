@@ -8,7 +8,6 @@ import {
   attackResearchSuperCritChanceLabPercentPoints,
   defenseResearchDefensePercentLabPercentPoints,
   defenseResearchExtraExtraOrbsBonus,
-  defenseResearchGarlicThornsLabPercentPoints,
   defenseResearchHealthStyleLabMultiplierByName,
   defenseResearchHealthStyleMultiplier,
   defenseResearchLandMineDamageLabPercentPoints,
@@ -151,10 +150,6 @@ export function buildWorkshopDefenseLabDisplayOpts(
       research,
       labOverrides,
       'Health Regen',
-    ),
-    thornDamageLabPercentPoints: defenseResearchGarlicThornsLabPercentPoints(
-      research,
-      labOverrides,
     ),
     defensePercentLabPercentPoints: defenseResearchDefensePercentLabPercentPoints(
       research,

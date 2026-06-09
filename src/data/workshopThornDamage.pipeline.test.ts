@@ -11,6 +11,7 @@ import {
   researchLevelsToOverrides,
 } from '../playerSave/mapPlayerDataToTower'
 import { loadResearchFixture } from '../test/researchFixture'
+import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
 const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
 const IN_GAME = 109
@@ -23,7 +24,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopThornDamage pipeline', () => 
     const { workshop: ws } = mapPlayerSaveToTower(data, save)
     const relicSet = new Set(ws.relicOwnedIds ?? [])
     const lab = buildWorkshopDefenseLabDisplayOpts(data, labOverrides)
-    const submoduleCtx = { workshop: ws, research: data, labOverrides }
+    const submoduleCtx = workshopPipelineSubmoduleContext(ws, data, labOverrides)
     const enriched = { ...(lab ?? {}) }
     const opts = enrichDefenseStatDisplayOpts(
       enrichDefenseStatDisplayOptsWithSubmodules(

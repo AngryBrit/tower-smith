@@ -9,6 +9,7 @@ import { workshopUtilityStatDisplay } from './workshopUtility'
 import { decodePlayerInfoFile } from '../playerSave/decodePlayerInfo'
 import { mapPlayerSaveToTower } from '../playerSave/mapPlayerDataToTower'
 import { loadResearchFixture } from '../test/researchFixture'
+import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
 const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
 
@@ -19,7 +20,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopCashPerWave pipeline', () => 
     const { workshop: ws, overrides: labOverrides } = mapPlayerSaveToTower(data, save)
     const relicSet = new Set(ws.relicOwnedIds ?? [])
     const lab = buildWorkshopUtilityLabDisplayOpts(data, labOverrides)
-    const submoduleCtx = { workshop: ws, research: data, labOverrides }
+    const submoduleCtx = workshopPipelineSubmoduleContext(ws, data, labOverrides)
     const cashCard = workshopCardMultProduct(ws, data, labOverrides, 'cash')
     const opts = enrichUtilityLabDisplayOpts(
       enrichUtilityLabDisplayOptsWithSubmodules(
