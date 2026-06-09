@@ -15,22 +15,22 @@ describe('formatCoinAbbrev', () => {
     expect(formatCoinAbbrevPreferT(0)).toBe('0')
   })
 
-  it('shows quadrillion q from 0.1 q (1e14), not T', () => {
-    expect(formatCoinAbbrev(250_000_000_000_000)).toBe('0.25q')
-    expect(formatCoinAbbrev(100_000_000_000_000)).toBe('0.10q')
+  it('keeps sub-quadrillion amounts in T, then q from 1 q (1e15)', () => {
     expect(formatCoinAbbrev(50_000_000_000_000)).toBe('50.00T')
-  })
-
-  it('formatCoinAbbrevPreferT keeps workshop-scale trillions in T', () => {
-    expect(formatCoinAbbrevPreferT(500_000_000_000_000)).toBe('500.00T')
-    expect(formatCoinAbbrevPreferT(50_000_000_000_000)).toBe('50.00T')
-    expect(formatCoinAbbrevPreferT(250_000_000_000_000)).toBe('250.00T')
+    expect(formatCoinAbbrev(100_000_000_000_000)).toBe('100.00T')
+    expect(formatCoinAbbrev(250_000_000_000_000)).toBe('250.00T')
+    expect(formatCoinAbbrev(500_000_000_000_000)).toBe('500.00T')
+    expect(formatCoinAbbrev(840_000_000_000_000)).toBe('840.00T')
+    expect(formatCoinAbbrev(1_000_000_000_000_000)).toBe('1.00q')
+    expect(formatCoinAbbrev(2_000_000_000_000_000)).toBe('2.00q')
+    expect(formatCoinAbbrevPreferT(840_000_000_000_000)).toBe('840.00T')
+    expect(formatCoinAbbrevPreferT(1_000_000_000_000_000)).toBe('1.00q')
   })
 
   it('normalizeCoinAbbrevDisplay strips space and uses lab coin rules', () => {
     expect(normalizeCoinAbbrevDisplay('0.25 q')).toBe('250.00T')
     expect(normalizeCoinAbbrevDisplay('0.25 q', { assistModuleLab: true })).toBe(
-      '250.00q',
+      '250.00T',
     )
     expect(normalizeCoinAbbrevDisplay('0.25q')).toBe('250.00T')
     expect(normalizeCoinAbbrevDisplay('2 q')).toBe('2.00q')
@@ -54,22 +54,22 @@ describe('formatCoinAbbrev', () => {
 })
 
 describe('Assist Module labs coin display', () => {
-  it('level 1 marginal uses wiki q scale (not T)', () => {
+  it('uses same T/q rules as other labs', () => {
     const level1 = toolkitMarginalCoinCost('Assist Module Substats - Cannon', 0)!
     expect(level1).toBe(250_000_000_000_000)
-    expect(formatAssistModuleLabCoinDisplay(level1)).toBe('250.00q')
+    expect(formatAssistModuleLabCoinDisplay(level1)).toBe('250.00T')
     expect(formatLabCoinDisplay(level1)).toBe('250.00T')
     expect(
       formatAssistModuleLabCoinDisplay(
         toolkitMarginalCoinCost('Assist Module Bonus - Cannon', 0)!,
       ),
-    ).toBe('250.00q')
+    ).toBe('250.00T')
     expect(
       formatLabCoinDisplay(toolkitMarginalCoinCost('Ultimate Weapon Durations', 0)!),
     ).toBe('2.00q')
   })
 
-  it('high levels use q with 1e15 divisor', () => {
+  it('shows q from 1 q upward', () => {
     const level15 = toolkitMarginalCoinCost('Assist Module Substats - Cannon', 14)!
     expect(level15).toBe(3_750_000_000_000_000)
     expect(formatAssistModuleLabCoinDisplay(level15)).toBe('3.75q')

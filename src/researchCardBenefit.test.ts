@@ -1094,7 +1094,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(toolkitMarginalCoinCost('Assist Module Bonus - Armor', 0)).toBe(
         250_000_000_000_000,
       )
-      expect(marginalCostForNextUpgrade(bonus!, 0, max, 0)).toBe('250.00q')
+      expect(marginalCostForNextUpgrade(bonus!, 0, max, 0)).toBe('250.00T')
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Armor', 0)).toBe(
         933_060,
       )
@@ -1110,7 +1110,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
         0,
         max,
         0,
-      )).toBe('250.00q')
+      )).toBe('250.00T')
       expect(toolkitUpgradeDurationSeconds('Assist Module Bonus - Cannon', 0)).toBe(
         933_060,
       )

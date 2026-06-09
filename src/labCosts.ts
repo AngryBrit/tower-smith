@@ -6,8 +6,7 @@
  * `public/research/sections/card-mastery.json` instead of abbreviated coin ladder amounts. Labs missing
  * from both maps show **—** in the app (no snapshot fallback).
  *
- * Display: Assist Module labs → {@link formatAssistModuleLabCoinDisplay}; other research cards →
- * {@link formatLabCoinDisplay}. See README § Lab coin display.
+ * Display: {@link formatCoinAbbrev} / {@link formatLabCoinDisplay} — **T** below 1 q (1e15), **q** from 1e15 up.
  */
 
 import { labGodLevelEntry } from './data/labGodTables'
@@ -146,41 +145,14 @@ export function isAssistModuleLabName(labDisplayName: string): boolean {
   )
 }
 
-/**
- * Assist Module lab coins (wiki): always **q**, never **T**.
- * Below 1 q (1e15): **q** with 1e12 divisor (e.g. 247.00q for ~250T raw).
- * From 1e15 up: **q** with 1e15 divisor (e.g. 3.75q for level 15 marginal).
- */
+/** @deprecated Alias for {@link formatCoinAbbrev}; Assist Module labs use the same T/q rules. */
 export function formatAssistModuleLabCoinDisplay(n: number): string {
-  if (!Number.isFinite(n) || n < 0) return '—'
-  if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
-  const abs = n
-  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
-  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
-  if (abs >= 1e15) return `${(n / 1e15).toFixed(2)}q`
-  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}q`
-  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
-  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
-  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
-  return String(Math.round(n))
+  return formatCoinAbbrev(n)
 }
 
-/**
- * Lab / research coin display: **T** below 1 q (1e15), **q** from 1e15 up (e.g. Ultimate Weapon Durations).
- * Avoids `0.25q` for 250T and `1976T` for ~2q. Assist Module labs use {@link formatAssistModuleLabCoinDisplay}.
- */
+/** Lab / research coin display. */
 export function formatLabCoinDisplay(n: number): string {
-  if (!Number.isFinite(n) || n < 0) return '—'
-  if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
-  const abs = n
-  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
-  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
-  if (abs >= 1e15) return `${(n / 1e15).toFixed(2)}q`
-  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}T`
-  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
-  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
-  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
-  return String(Math.round(n))
+  return formatCoinAbbrev(n)
 }
 
 /**
@@ -189,21 +161,22 @@ export function formatLabCoinDisplay(n: number): string {
  */
 export function normalizeCoinAbbrevDisplay(
   s: string,
-  opts?: { assistModuleLab?: boolean },
+  _opts?: { assistModuleLab?: boolean },
 ): string {
   const t = String(s).trim()
   if (!t || t === '—' || /^max$/i.test(t)) return t
   const compact = t.replace(/ (?=[KMBTqQs]$)/, '')
   const n = parseAbbreviatedCoinsToNumber(compact)
   if (n != null && n >= 1e12) {
-    return opts?.assistModuleLab
-      ? formatAssistModuleLabCoinDisplay(n)
-      : formatLabCoinDisplay(n)
+    return formatLabCoinDisplay(n)
   }
   return compact
 }
 
-/** Abbreviated coin display (K/M/B/T/q/Q/s): always two decimals (e.g. `197.60K`). */
+/**
+ * Abbreviated coin display (K/M/B/T/q/Q/s): **T** below **1 q** (1e15), then **q** / **Q** / **s**.
+ * Avoids `0.84q` for 840T; shows `1.00q` from 1e15 up.
+ */
 export function formatCoinAbbrev(n: number): string {
   if (!Number.isFinite(n) || n < 0) return '—'
   if (n === 0) return '0'
@@ -211,8 +184,7 @@ export function formatCoinAbbrev(n: number): string {
   const abs = n
   if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
   if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
-  // Wiki uses q (1e15) from ~0.1 q upward; 250 T = 0.25 q (Assist Module labs, etc.)
-  if (abs >= 1e14) return `${(n / 1e15).toFixed(2)}q`
+  if (abs >= 1e15) return `${(n / 1e15).toFixed(2)}q`
   if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}T`
   if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
   if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
@@ -220,22 +192,9 @@ export function formatCoinAbbrev(n: number): string {
   return String(Math.round(n))
 }
 
-/**
- * Like `formatCoinAbbrev`, but keeps **T** through quintillion scale (skips **q**).
- * Workshop enhancement unlock hints use wiki “50T / 500T” wording.
- */
+/** @deprecated Alias for {@link formatCoinAbbrev}; same T/q rules app-wide. */
 export function formatCoinAbbrevPreferT(n: number): string {
-  if (!Number.isFinite(n) || n < 0) return '—'
-  if (n === 0) return '0'
-  if (n < 1e3) return n < 1 ? n.toFixed(2) : String(Math.round(n))
-  const abs = n
-  if (abs >= 1e21) return `${(n / 1e21).toFixed(2)}s`
-  if (abs >= 1e18) return `${(n / 1e18).toFixed(2)}Q`
-  if (abs >= 1e12) return `${(n / 1e12).toFixed(2)}T`
-  if (abs >= 1e9) return `${(n / 1e9).toFixed(2)}B`
-  if (abs >= 1e6) return `${(n / 1e6).toFixed(2)}M`
-  if (abs >= 1e3) return `${(n / 1e3).toFixed(2)}K`
-  return String(Math.round(n))
+  return formatCoinAbbrev(n)
 }
 
 /** Full power-stone amount for ultimate workshop cards (no K/M/B abbrev). */

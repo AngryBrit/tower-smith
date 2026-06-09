@@ -1,5 +1,4 @@
 import {
-  formatAssistModuleLabCoinDisplay,
   formatLabCoinDisplay,
   isAssistModuleLabName,
   normalizeCoinAbbrevDisplay,
@@ -71,9 +70,7 @@ export function marginalCostForNextUpgrade(
     const discount =
       item.name === 'Labs Coin Discount' ? 0 : labsCoinDiscountPercent
     const discounted = applyLabsCoinDiscountToCoins(fromToolkit, discount)
-    return isAssistModuleLabName(item.name)
-      ? formatAssistModuleLabCoinDisplay(discounted)
-      : formatLabCoinDisplay(discounted)
+    return formatLabCoinDisplay(discounted)
   }
 
   return '—'
