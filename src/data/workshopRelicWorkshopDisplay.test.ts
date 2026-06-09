@@ -24,6 +24,18 @@ describe('workshopRelicWorkshopDisplay', () => {
     expect(opts?.healthLabMultiplier).toBeCloseTo(2)
   })
 
+  it('does not merge health regen relic % into defense lab regen multiplier', () => {
+    const owned = new Set(['t_viii_graviton'])
+    const opts = enrichDefenseStatDisplayOpts({ healthRegenLabMultiplier: 2 }, owned)
+    expect(opts?.healthRegenLabMultiplier).toBeCloseTo(2)
+  })
+
+  it('puts thorns relic % on thornDamageRelicsPercentPoints only', () => {
+    const owned = new Set(['angler_fish'])
+    const opts = enrichDefenseStatDisplayOpts(undefined, owned)
+    expect(opts?.thornDamageRelicsPercentPoints).toBe(2)
+  })
+
   it('stacks owned lab-speed relic % as a labs multiplier', () => {
     expect(workshopRelicsLabSpeedMultiplier(new Set(['t_xii_chrono']))).toBeCloseTo(1.1)
     expect(

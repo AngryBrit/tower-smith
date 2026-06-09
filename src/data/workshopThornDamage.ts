@@ -4,6 +4,7 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import { formatWorkshopPercentDisplay } from './workshopLabDisplayHelpers'
 export const WORKSHOP_THORN_DAMAGE_MAX_LEVEL = 99 as const
 
 /** Marginal coin cost for purchase `k` → `k+1` completed levels (`k` = 0…98); wiki **Cost** at Level `k + 1`. */
@@ -23,8 +24,7 @@ export function workshopThornDamageStatPercentPoints(completedLevels: number): n
 }
 
 export function workshopThornDamageStatDisplay(completedLevels: number): string {
-  const pct = workshopThornDamageStatPercentPoints(completedLevels)
-  return `${pct.toFixed(2)}%`
+  return formatWorkshopPercentDisplay(workshopThornDamageStatPercentPoints(completedLevels))
 }
 
 export function workshopThornDamageNextMarginalCoins(completedLevels: number): number | undefined {

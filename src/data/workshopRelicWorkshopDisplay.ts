@@ -52,7 +52,6 @@ export function enrichDefenseStatDisplayOpts(
   opts: WorkshopDefenseStatDisplayOpts | undefined,
   ownedIds: ReadonlySet<string>,
 ): WorkshopDefenseStatDisplayOpts | undefined {
-  const healthRegen = workshopRelicsActiveBonusPercent(ownedIds, 'healthRegen')
   const defenseAbsolute = workshopRelicsActiveBonusPercent(ownedIds, 'defenseAbsolute')
   const defensePercent = workshopRelicsActiveBonusPercent(ownedIds, 'defensePercent')
   const thorns = workshopRelicsActiveBonusPercent(ownedIds, 'thorns')
@@ -63,7 +62,6 @@ export function enrichDefenseStatDisplayOpts(
   const wallRebuildSec = workshopRelicsActiveBonus(ownedIds, 'wallRebuild')
 
   if (
-    healthRegen <= 0 &&
     defenseAbsolute <= 0 &&
     defensePercent <= 0 &&
     thorns <= 0 &&
@@ -80,9 +78,9 @@ export function enrichDefenseStatDisplayOpts(
   const base = opts ?? {}
   return {
     ...base,
-    // Health relics apply to displayed health **(1 + Relics)** only — not the Health workshop card lab term.
+    // Health / Health Regen relics apply to displayed **(1 + Relics)** only — not lab terms.
     healthLabMultiplier: base.healthLabMultiplier,
-    healthRegenLabMultiplier: mergeRelicMultiplier(base.healthRegenLabMultiplier, healthRegen),
+    healthRegenLabMultiplier: base.healthRegenLabMultiplier,
     defenseAbsoluteLabMultiplier: mergeRelicMultiplier(
       base.defenseAbsoluteLabMultiplier,
       defenseAbsolute,
@@ -91,10 +89,8 @@ export function enrichDefenseStatDisplayOpts(
       base.defensePercentLabPercentPoints,
       defensePercent,
     ),
-    thornDamageLabPercentPoints: mergeRelicPercentPoints(
-      base.thornDamageLabPercentPoints,
-      thorns,
-    ),
+    thornDamageRelicsPercentPoints:
+      thorns > 0 ? thorns : base.thornDamageRelicsPercentPoints,
     knockbackForceRelicPercentPoints:
       knockbackForce > 0 ? knockbackForce : base.knockbackForceRelicPercentPoints,
     orbSpeedRelicPercentPoints:

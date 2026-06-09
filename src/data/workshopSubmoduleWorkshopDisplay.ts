@@ -64,10 +64,7 @@ export function enrichDefenseStatDisplayOptsWithSubmodules(
   const base = opts ?? {}
   return {
     ...base,
-    healthRegenLabMultiplier: mergeRelicMultiplier(
-      base.healthRegenLabMultiplier,
-      sub.healthRegenPercentBonus ?? 0,
-    ),
+    healthRegenLabMultiplier: base.healthRegenLabMultiplier,
     defensePercentLabPercentPoints: mergeRelicPercentPoints(
       base.defensePercentLabPercentPoints,
       sub.defensePercentPoints ?? 0,
@@ -76,10 +73,7 @@ export function enrichDefenseStatDisplayOptsWithSubmodules(
       base.defenseAbsoluteLabMultiplier,
       sub.defenseAbsolutePercentBonus ?? 0,
     ),
-    thornDamageLabPercentPoints: mergeRelicPercentPoints(
-      base.thornDamageLabPercentPoints,
-      sub.thornDamagePercentPoints ?? 0,
-    ),
+    thornDamageRelicsPercentPoints: base.thornDamageRelicsPercentPoints,
     orbSpeedLabPlus:
       sub.orbSpeedAdd != null && sub.orbSpeedAdd !== 0
         ? (base.orbSpeedLabPlus ?? 0) + sub.orbSpeedAdd

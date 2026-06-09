@@ -127,6 +127,13 @@ import {
   workshopHealthRelicsBonusFraction,
 } from '../data/workshopDisplayedHealth'
 import {
+  workshopDisplayedHealthRegenEnhancementMultiplier,
+  workshopHealthRegenRelicsBonusFraction,
+} from '../data/workshopDisplayedHealthRegen'
+import { workshopDisplayedLandMineDamageEnhancementMultiplier } from '../data/workshopLandMineDamage'
+import { workshopDisplayedCashBonusEnhancementAdditive } from '../data/workshopCashBonus'
+import { workshopDisplayedWallHealthEnhancementMultiplier } from '../data/workshopWallHealth'
+import {
   WORKSHOP_UTILITY_UPGRADE_ORDER,
   workshopUtilityClampLevel,
   workshopUtilityMaxLevel,
@@ -2438,7 +2445,21 @@ export function WorkshopPage({
       enhancementsUnlocked,
     )
     const healthRelicsBonus = workshopHealthRelicsBonusFraction(relicOwnedSet)
+    const healthRegenEnhanceMult = workshopDisplayedHealthRegenEnhancementMultiplier(
+      workshopPersisted.enhanceHealthRegenLevel,
+      enhancementsUnlocked,
+    )
+    const healthRegenRelicsBonus = workshopHealthRegenRelicsBonusFraction(relicOwnedSet)
+    const landMineEnhanceMult = workshopDisplayedLandMineDamageEnhancementMultiplier(
+      workshopPersisted.enhanceLandMineDamageLevel,
+      enhancementsUnlocked,
+    )
+    const wallHealthEnhanceMult = workshopDisplayedWallHealthEnhancementMultiplier(
+      workshopPersisted.enhanceWallHealthLevel,
+      enhancementsUnlocked,
+    )
     const healthCard = cardMult('health')
+    const healthRegenCard = cardMult('healthRegen')
     const healthLab =
       lab?.healthLabMultiplier != null && lab.healthLabMultiplier > 1 + 1e-9
         ? lab.healthLabMultiplier
@@ -2451,10 +2472,16 @@ export function WorkshopPage({
       healthRelicsBonus: healthRelicsBonus > 0 ? healthRelicsBonus : undefined,
       healthEnhancementsMultiplier:
         healthEnhanceMult > 1 + 1e-9 ? healthEnhanceMult : undefined,
-      healthRegenLabMultiplier: mergeLabAndCardMult(
-        lab?.healthRegenLabMultiplier,
-        cardMult('healthRegen'),
-      ),
+      healthRegenCardMultiplier:
+        healthRegenCard > 1 + 1e-9 ? healthRegenCard : undefined,
+      healthRegenRelicsBonus:
+        healthRegenRelicsBonus > 0 ? healthRegenRelicsBonus : undefined,
+      healthRegenEnhancementsMultiplier:
+        healthRegenEnhanceMult > 1 + 1e-9 ? healthRegenEnhanceMult : undefined,
+      landMineDamageEnhancementsMultiplier:
+        landMineEnhanceMult > 1 + 1e-9 ? landMineEnhanceMult : undefined,
+      wallHealthEnhancementsMultiplier:
+        wallHealthEnhanceMult > 1 + 1e-9 ? wallHealthEnhanceMult : undefined,
       defenseAbsoluteLabMultiplier: mergeLabAndCardMult(
         lab?.defenseAbsoluteLabMultiplier,
         cardMult('fortress'),
@@ -2466,7 +2493,11 @@ export function WorkshopPage({
       healthCard === 1 &&
       healthRelicsBonus <= 0 &&
       healthEnhanceMult <= 1 + 1e-9 &&
-      cardMult('healthRegen') === 1 &&
+      healthRegenRelicsBonus <= 0 &&
+      healthRegenEnhanceMult <= 1 + 1e-9 &&
+      landMineEnhanceMult <= 1 + 1e-9 &&
+      wallHealthEnhanceMult <= 1 + 1e-9 &&
+      healthRegenCard === 1 &&
       cardMult('fortress') === 1 &&
       extraDefense === 0 &&
       Object.keys(chassisDefense).length === 0
@@ -2535,6 +2566,14 @@ export function WorkshopPage({
     const coins = cardMult('coins')
     const freeUpgrades = cardAdd('freeUpgrades')
     const packageChance = cardAdd('recoveryPackageChance')
+    const enhancementsUnlocked = workshopEnhancementsLabUnlocked(
+      researchData,
+      labLevelOverrides,
+    )
+    const cashBonusEnhanceAdd = workshopDisplayedCashBonusEnhancementAdditive(
+      workshopPersisted.enhanceCashBonusLevel,
+      enhancementsUnlocked,
+    )
     const generatorChassis = workshopChassisModuleHeroStatMultiplier(
       workshopPersisted,
       'generator',
@@ -2552,6 +2591,8 @@ export function WorkshopPage({
       coinsWaveLabMultiplier: mergeLabAndCardMult(lab?.coinsWaveLabMultiplier, coins),
       freeUpgradesCardPercentPoints: freeUpgrades > 0 ? freeUpgrades : undefined,
       packageChanceCardPercentPoints: packageChance > 0 ? packageChance : undefined,
+      cashBonusEnhanceAdditive:
+        cashBonusEnhanceAdd > 0 ? cashBonusEnhanceAdd : undefined,
     }
     if (
       lab == null &&
@@ -2559,6 +2600,7 @@ export function WorkshopPage({
       coins === 1 &&
       freeUpgrades === 0 &&
       packageChance === 0 &&
+      cashBonusEnhanceAdd <= 0 &&
       Object.keys(chassisUtility).length === 0
     ) {
       return enrichUtilityLabDisplayOpts(

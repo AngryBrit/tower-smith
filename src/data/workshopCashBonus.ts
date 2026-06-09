@@ -4,6 +4,7 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 export const WORKSHOP_CASH_BONUS_MAX_LEVEL = 149 as const
 
 /** Cash multiplier with zero workshop purchases (before wiki level 1). */
@@ -44,6 +45,20 @@ export function workshopCashBonusStatMultiplier(completedLevels: number): number
 export function workshopCashBonusStatDisplay(completedLevels: number): string {
   const mult = workshopCashBonusStatMultiplier(completedLevels)
   return `x${mult.toFixed(2)}`
+}
+
+/**
+ * **Cash Bonus +** contribution on the main Cash Bonus workshop card (additive `x`, not ×).
+ * Calibrated: L10 enhance adds **+0.09** on top of **x5.10** → in-game **x5.19**.
+ */
+export function workshopDisplayedCashBonusEnhancementAdditive(
+  enhanceCashBonusLevel: number,
+  enhancementsLabUnlocked: boolean,
+): number {
+  if (!enhancementsLabUnlocked || enhanceCashBonusLevel <= 0) return 0
+  const level = Math.max(0, Math.trunc(enhanceCashBonusLevel))
+  if (level <= 0) return 0
+  return workshopEnhanceTier400Multiplier(level - 1, 'Cash Bonus +') - 1
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

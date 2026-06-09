@@ -67,6 +67,16 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('cashBonusLevel', 0)).toBe('x1.00')
     expect(workshopUtilityStatDisplay('cashBonusLevel', 1)).toBe('x1.01')
     expect(workshopUtilityStatDisplay('cashBonusLevel', 149)).toBe('x2.49')
+  })
+
+  it('applies Cash Bonus + enhancement additively on the workshop card', () => {
+    expect(
+      workshopUtilityStatDisplay('cashBonusLevel', 149, {
+        generatorCashBonusMultiplier: 1.128,
+        cashBonusLabMultiplier: 1.8172,
+        cashBonusEnhanceAdditive: 0.09,
+      }),
+    ).toBe('x5.19')
     expect(workshopUtilityNextMarginalCoins('cashBonusLevel', 149)).toBeUndefined()
   })
 

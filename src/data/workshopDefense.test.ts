@@ -116,8 +116,8 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('thornDamageLevel', 98)).toBe(
       workshopThornDamageNextMarginalCoins(98),
     )
-    expect(workshopDefenseStatDisplay('thornDamageLevel', 0)).toBe('0.00%')
-    expect(workshopDefenseStatDisplay('thornDamageLevel', 99)).toBe('99.00%')
+    expect(workshopDefenseStatDisplay('thornDamageLevel', 0)).toBe('0%')
+    expect(workshopDefenseStatDisplay('thornDamageLevel', 99)).toBe('99%')
   })
 
   it('Lifesteal uses workshop wiki ladder (80 levels)', () => {
@@ -152,6 +152,14 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseStatDisplay('knockbackForceLevel', 0)).toBe('0.40')
     expect(workshopDefenseStatDisplay('knockbackForceLevel', 1)).toBe('0.55')
     expect(workshopDefenseStatDisplay('knockbackForceLevel', 40)).toBe('6.08')
+  })
+
+  it('applies knockback force relic % without integer rounding', () => {
+    expect(
+      workshopDefenseStatDisplay('knockbackForceLevel', 40, {
+        knockbackForceRelicPercentPoints: 28,
+      }),
+    ).toBe('7.78')
   })
 
   it('Orb Speed uses workshop wiki ladder (38 levels)', () => {
@@ -220,6 +228,14 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseStatDisplay('landMineDamageLevel', 200)).toBe('x21.0')
   })
 
+  it('applies Land Mine Damage + enhancement to workshop display', () => {
+    expect(
+      workshopDefenseStatDisplay('landMineDamageLevel', 170, {
+        landMineDamageEnhancementsMultiplier: 4,
+      }),
+    ).toBe('x72.0')
+  })
+
   it('Land Mine Radius uses workshop wiki ladder (50 levels)', () => {
     expect(workshopDefenseMaxLevel('landMineRadiusLevel')).toBe(WORKSHOP_LAND_MINE_RADIUS_MAX_LEVEL)
     expect(workshopDefenseNextMarginalCoins('landMineRadiusLevel', 0)).toBe(500)
@@ -251,6 +267,20 @@ describe('workshopDefenseNextMarginalCoins', () => {
     )
     expect(workshopDefenseStatDisplay('wallHealthLevel', 0)).toBe('20.00%')
     expect(workshopDefenseStatDisplay('wallHealthLevel', 1800)).toBe('200.00%')
+  })
+
+  it('applies Wall Health + enhancement to workshop display', () => {
+    expect(
+      workshopDefenseStatDisplay('wallHealthLevel', 1800, {
+        wallHealthEnhancementsMultiplier: 1.5,
+      }),
+    ).toBe('300.00%')
+    expect(
+      workshopDefenseStatDisplay('wallHealthLevel', 1800, {
+        wallHealthLabPercentPoints: 100,
+        wallHealthEnhancementsMultiplier: 1.5,
+      }),
+    ).toBe('450.00%')
   })
 
   it('Wall Rebuild uses workshop wiki ladder (300 levels)', () => {
@@ -330,10 +360,10 @@ describe('workshopDefenseStatDisplay', () => {
     ).toBe(formatCoinAbbrev(Math.round(workshopHealthStatValue(level) * mult)))
   })
 
-  it('adds Garlic Thorns lab % to workshop Thorn Damage display', () => {
+  it('adds thorns relic % to workshop Thorn Damage display', () => {
     expect(
-      workshopDefenseStatDisplay('thornDamageLevel', 99, { thornDamageLabPercentPoints: 5 }),
-    ).toBe('104.00%')
+      workshopDefenseStatDisplay('thornDamageLevel', 99, { thornDamageRelicsPercentPoints: 10 }),
+    ).toBe('109%')
   })
 
   it('adds Defense % lab to workshop Defense % display', () => {
@@ -342,12 +372,12 @@ describe('workshopDefenseStatDisplay', () => {
     ).toBe('49.90%')
   })
 
-  it('shows Health Regen lab multiplier when wiki Value is still 0', () => {
+  it('shows Health Regen card multiplier when wiki Value is still 0', () => {
     expect(
-      workshopDefenseStatDisplay('healthRegenLevel', 0, { healthRegenLabMultiplier: 1.03 }),
+      workshopDefenseStatDisplay('healthRegenLevel', 0, { healthRegenCardMultiplier: 1.03 }),
     ).toBe('0/sec ×1.03')
     expect(
-      workshopDefenseStatDisplay('healthRegenLevel', 1, { healthRegenLabMultiplier: 1.03 }),
+      workshopDefenseStatDisplay('healthRegenLevel', 1, { healthRegenCardMultiplier: 1.03 }),
     ).toBe('0/sec ×1.03')
   })
 

@@ -30,9 +30,25 @@ export function formatAdditivePercentPoints(workshopPct: number, labPct: number)
   return `+${(workshopPct + labPct).toFixed(2)}%`
 }
 
+/** Whole-number percents omit decimals (in-game workshop card style: `109%` not `109.00%`). */
+export function formatWorkshopPercentDisplay(pct: number): string {
+  if (Number.isInteger(pct)) return `${pct}%`
+  const t = pct.toFixed(2)
+  return `${t.replace(/\.?0+$/, '')}%`
+}
+
 /** Workshop **%** stat plus lab percent points (e.g. Thunder **Linger** `20.00%` → `33.00%`). */
 export function formatPercentAfterLabAddition(workshopPct: number, labPct: number): string {
   return `${(workshopPct + labPct).toFixed(2)}%`
+}
+
+/** Workshop **%** plus lab points, then × enhancement tier (e.g. Wall Health **+**). */
+export function formatPercentAfterLabAdditionAndMultiplier(
+  workshopPct: number,
+  labPct: number,
+  multiplier: number,
+): string {
+  return `${((workshopPct + labPct) * multiplier).toFixed(2)}%`
 }
 
 export function formatAdditivePlusValue(

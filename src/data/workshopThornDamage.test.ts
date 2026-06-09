@@ -19,8 +19,8 @@ describe('workshopThornDamage', () => {
 
   it('matches wiki spot checks', () => {
     expect(workshopThornDamageStatPercentPoints(0)).toBe(0)
-    expect(workshopThornDamageStatDisplay(1)).toBe('1.00%')
-    expect(workshopThornDamageStatDisplay(50)).toBe('50.00%')
+    expect(workshopThornDamageStatDisplay(1)).toBe('1%')
+    expect(workshopThornDamageStatDisplay(50)).toBe('50%')
     expect(workshopThornDamageNextMarginalCoins(0)).toBe(60)
     expect(workshopThornDamageNextMarginalCoins(10)).toBe(706)
     expect(workshopThornDamageNextMarginalCoins(75)).toBe(42_160)

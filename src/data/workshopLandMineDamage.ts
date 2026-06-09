@@ -4,6 +4,7 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 export const WORKSHOP_LAND_MINE_DAMAGE_MAX_LEVEL = 200 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -46,6 +47,18 @@ export function formatWorkshopLandMineDamageMultiplier(mult: number): string {
 
 export function workshopLandMineDamageStatDisplay(completedLevels: number): string {
   return formatWorkshopLandMineDamageMultiplier(workshopLandMineDamageStatPercent(completedLevels))
+}
+
+/** **Land Mine Damage +** tier when the Workshop Enhancements lab is unlocked (×1 when locked or L0). */
+export function workshopDisplayedLandMineDamageEnhancementMultiplier(
+  enhanceLandMineDamageLevel: number,
+  enhancementsLabUnlocked: boolean,
+): number {
+  if (!enhancementsLabUnlocked || enhanceLandMineDamageLevel <= 0) return 1
+  return workshopEnhanceTier400Multiplier(
+    Math.max(0, Math.trunc(enhanceLandMineDamageLevel)),
+    'Land Mine Damage +',
+  )
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

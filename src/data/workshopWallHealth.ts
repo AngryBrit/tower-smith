@@ -4,6 +4,7 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 export const WORKSHOP_WALL_HEALTH_MAX_LEVEL = 1800 as const
 
 const ANCHOR_LEVELS: readonly number[] = [
@@ -41,6 +42,18 @@ export function workshopWallHealthStatPercent(completedLevels: number): number {
 export function workshopWallHealthStatDisplay(completedLevels: number): string {
   const pct = workshopWallHealthStatPercent(completedLevels)
   return `${pct.toFixed(2)}%`
+}
+
+/** **Wall Health +** tier when the Workshop Enhancements lab is unlocked (×1 when locked or L0). */
+export function workshopDisplayedWallHealthEnhancementMultiplier(
+  enhanceWallHealthLevel: number,
+  enhancementsLabUnlocked: boolean,
+): number {
+  if (!enhancementsLabUnlocked || enhanceWallHealthLevel <= 0) return 1
+  return workshopEnhanceTier400Multiplier(
+    Math.max(0, Math.trunc(enhanceWallHealthLevel)),
+    'Wall Health +',
+  )
 }
 
 function marginalCoinsPurchaseEndingAt(targetLevel: number): number | undefined {

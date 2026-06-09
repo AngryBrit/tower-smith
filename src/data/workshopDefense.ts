@@ -13,6 +13,8 @@ import {
   formatAdditiveNumeric,
   formatAdditivePercentPoints,
   formatPercentAfterLabAddition,
+  formatPercentAfterLabAdditionAndMultiplier,
+  formatWorkshopPercentDisplay,
   formatSecondsAfterLabReduction,
   formatWithDamageStyleLabMultiplier,
   formatWithHealthStyleLabMultiplier,
@@ -26,6 +28,7 @@ import { workshopWallHealthStatPercent } from './workshopWallHealth'
 import { workshopWallRebuildStatSeconds } from './workshopWallRebuild'
 import { WORKSHOP_DEFENSE_GOD_NAMES, workshopToolkitMarginalCoins } from '../workshopCosts'
 import { workshopDisplayedHealthStatDisplay } from './workshopDisplayedHealth'
+import { workshopDisplayedHealthRegenStatDisplay } from './workshopDisplayedHealthRegen'
 import {
   WORKSHOP_HEALTH_REGEN_MAX_LEVEL,
   formatWorkshopHealthRegenPerSec,
@@ -234,8 +237,13 @@ export type WorkshopDefenseStatDisplayOpts = {
   /** **Health +** + partial **Health Regen +** enhancement tier (omitted when ×1). */
   healthEnhancementsMultiplier?: number
   healthRegenLabMultiplier?: number
-  /** Additive **Garlic Thorns** lab % (percent points), summed with workshop Thorn Damage. */
-  thornDamageLabPercentPoints?: number
+  healthRegenCardMultiplier?: number
+  /** Summed **Health** + **Health Regen** relic fraction for regen **(1 + Relics)**. */
+  healthRegenRelicsBonus?: number
+  /** Partial **Health Regen +** enhancement tier (omitted when ×1). */
+  healthRegenEnhancementsMultiplier?: number
+  /** Owned **Thorns** relic % (percent points) on the workshop Thorn Damage card. */
+  thornDamageRelicsPercentPoints?: number
   /** Additive **Defense %** lab (percent points), summed with workshop Defense %. */
   defensePercentLabPercentPoints?: number
   defenseAbsoluteLabMultiplier?: number
@@ -243,7 +251,11 @@ export type WorkshopDefenseStatDisplayOpts = {
   orbsLabBonus?: number
   shockwaveSizeLabPlus?: number
   landMineDamageLabPercentPoints?: number
+  /** **Land Mine Damage +** enhancement tier (omitted when ×1). */
+  landMineDamageEnhancementsMultiplier?: number
   wallHealthLabPercentPoints?: number
+  /** **Wall Health +** enhancement tier (omitted when ×1). */
+  wallHealthEnhancementsMultiplier?: number
   wallRebuildLabSecondsReduction?: number
   /** Equipped Extra Defense card (additive % points). */
   defensePercentCardPercentPoints?: number
@@ -289,13 +301,19 @@ export function workshopDefenseStatDisplay(
       return workshopHealthStatDisplay(completedLevels)
     }
     case 'healthRegenLevel': {
-      const m = opts?.healthRegenLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 0) {
-        return formatWithHealthStyleLabMultiplier(
-          workshopHealthRegenStatValue(completedLevels),
-          m,
-          formatWorkshopHealthRegenPerSec,
-        )
+      const card = opts?.healthRegenCardMultiplier
+      const relics = opts?.healthRegenRelicsBonus
+      const enhance = opts?.healthRegenEnhancementsMultiplier
+      if (
+        (card !== undefined && Number.isFinite(card) && card > 1 + 1e-9) ||
+        (relics !== undefined && relics > 0) ||
+        (enhance !== undefined && enhance > 1 + 1e-9)
+      ) {
+        return workshopDisplayedHealthRegenStatDisplay(completedLevels, {
+          healthRegenCardMultiplier: card,
+          relicsBonus: relics,
+          healthRegenEnhancementsMultiplier: enhance,
+        })
       }
       return workshopHealthRegenStatDisplay(completedLevels)
     }
@@ -319,10 +337,10 @@ export function workshopDefenseStatDisplay(
       return workshopDefensePercentStatDisplay(completedLevels)
     }
     case 'thornDamageLevel': {
-      const labPts = opts?.thornDamageLabPercentPoints
-      if (labPts !== undefined && Number.isFinite(labPts)) {
+      const relicPts = opts?.thornDamageRelicsPercentPoints ?? 0
+      if (relicPts !== 0) {
         const w = workshopThornDamageStatPercentPoints(completedLevels)
-        return formatPercentAfterLabAddition(w, labPts)
+        return formatWorkshopPercentDisplay(w + relicPts)
       }
       return workshopThornDamageStatDisplay(completedLevels)
     }
@@ -352,7 +370,9 @@ export function workshopDefenseStatDisplay(
       let base = workshopKnockbackForceStatMultiplier(completedLevels)
       if (subAdd > 0) base += subAdd
       if (relicPct > 0) {
-        return formatWithHealthStyleLabMultiplier(base, 1 + relicPct / 100, (v) => v.toFixed(2))
+        return formatWithDamageStyleLabMultiplier(base, 1 + relicPct / 100, (v) =>
+          v.toFixed(2),
+        )
       }
       if (subAdd > 0) return base.toFixed(2)
       return workshopKnockbackForceStatDisplay(completedLevels)
@@ -366,7 +386,7 @@ export function workshopDefenseStatDisplay(
           ? base + lab
           : base
       if (relicPct > 0) {
-        return formatWithHealthStyleLabMultiplier(withLab, 1 + relicPct / 100, (v) =>
+        return formatWithDamageStyleLabMultiplier(withLab, 1 + relicPct / 100, (v) =>
           v.toFixed(2),
         )
       }
@@ -410,11 +430,13 @@ export function workshopDefenseStatDisplay(
       return workshopLandMineChanceStatDisplay(completedLevels)
     }
     case 'landMineDamageLevel': {
-      const lab = opts?.landMineDamageLabPercentPoints
-      if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
+      const labPts = opts?.landMineDamageLabPercentPoints ?? 0
+      const enhance = opts?.landMineDamageEnhancementsMultiplier ?? 1
+      const totalMult = (1 + (labPts > 0 ? labPts / 100 : 0)) * enhance
+      if (labPts > 0 || enhance > 1 + 1e-9) {
         return formatWithDamageStyleLabMultiplier(
           workshopLandMineDamageStatPercent(completedLevels),
-          1 + lab / 100,
+          totalMult,
           formatWorkshopLandMineDamageMultiplier,
         )
       }
@@ -435,9 +457,11 @@ export function workshopDefenseStatDisplay(
       return workshopDeathDefyStatDisplay(completedLevels)
     }
     case 'wallHealthLevel': {
-      const lab = opts?.wallHealthLabPercentPoints
-      if (lab !== undefined && Number.isFinite(lab) && lab > 0) {
-        return formatPercentAfterLabAddition(workshopWallHealthStatPercent(completedLevels), lab)
+      const labPts = opts?.wallHealthLabPercentPoints ?? 0
+      const enhance = opts?.wallHealthEnhancementsMultiplier ?? 1
+      const base = workshopWallHealthStatPercent(completedLevels)
+      if (labPts > 0 || enhance > 1 + 1e-9) {
+        return formatPercentAfterLabAdditionAndMultiplier(base, labPts, enhance)
       }
       return workshopWallHealthStatDisplay(completedLevels)
     }

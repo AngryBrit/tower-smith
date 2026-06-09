@@ -178,13 +178,15 @@ export function workshopUtilityStatDisplay(
   switch (key) {
     case 'cashBonusLevel': {
       const chassis = opts?.generatorCashBonusMultiplier ?? 1
-      const base = workshopCashBonusStatMultiplier(completedLevels) * chassis
+      const workshop = workshopCashBonusStatMultiplier(completedLevels)
+      const base = workshop * chassis
       const m = opts?.cashBonusLabMultiplier
-      if (
-        (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) ||
-        chassis > 1 + 1e-9
-      ) {
-        return formatWithDamageStyleLabMultiplier(base, m ?? 1, (v) => `x${v.toFixed(2)}`)
+      const enhanceAdd = opts?.cashBonusEnhanceAdditive ?? 0
+      const hasLabOrChassis =
+        (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) || chassis > 1 + 1e-9
+      if (hasLabOrChassis || enhanceAdd > 0) {
+        const core = base * (m ?? 1)
+        return `x${(core + enhanceAdd).toFixed(2)}`
       }
       return workshopCashBonusStatDisplay(completedLevels)
     }
