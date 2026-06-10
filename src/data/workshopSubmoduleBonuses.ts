@@ -2,7 +2,13 @@
  * Resolve equipped sub-module effect values from persisted selections + wiki catalog.
  */
 
+import { workshopAssistChassisModuleSelection } from './workshopAssistChassisModule'
+import {
+  workshopChassisModuleLevel,
+  workshopChassisModuleSelection,
+} from './workshopChassisModuleSelection'
 import type { WorkshopAssistModuleSlot } from './workshopSimModules'
+import { workshopAssistModuleLevel } from './workshopSimModules'
 import {
   parseSubmoduleCellNumber,
   submoduleEffectId,
@@ -18,6 +24,7 @@ import type {
   WorkshopSubmoduleSelections,
   WorkshopSubmoduleSlotSelections,
 } from './workshopSubmoduleSelection'
+import { submoduleEffectActiveAtModuleLevel } from './workshopSubmoduleSelection'
 import type { WorkshopUltimateUpgradeKey } from './workshopUltimateData'
 
 export type { WorkshopSubmoduleBonusContext } from './workshopAssistSubmoduleScale'
@@ -141,16 +148,52 @@ function pick(
   return submoduleValueForEffectId(selections, slot, submoduleEffectId(label))
 }
 
+function pickMain(
+  slotSelections: WorkshopSubmoduleSlotSelections,
+  slot: WorkshopAssistModuleSlot,
+  label: string,
+  ctx?: WorkshopSubmoduleBonusContext,
+): number {
+  const effectId = submoduleEffectId(label)
+  const raw = pick(slotSelections.main, slot, label)
+  if (raw === 0 || ctx == null) return raw
+  if (
+    !submoduleEffectActiveAtModuleLevel(
+      slotSelections,
+      slot,
+      effectId,
+      'main',
+      workshopChassisModuleLevel(ctx.ws, slot),
+      workshopChassisModuleSelection(ctx.ws, slot).rarity,
+    )
+  ) {
+    return 0
+  }
+  return raw
+}
+
 function pickAssist(
   ctx: WorkshopSubmoduleBonusContext | undefined,
   slotSelections: WorkshopSubmoduleSlotSelections,
   slot: WorkshopAssistModuleSlot,
   label: string,
 ): number {
+  const effectId = submoduleEffectId(label)
   const raw = pick(slotSelections.assist, slot, label)
   if (raw === 0) return 0
   if (ctx == null) return raw
-  const effectId = submoduleEffectId(label)
+  if (
+    !submoduleEffectActiveAtModuleLevel(
+      slotSelections,
+      slot,
+      effectId,
+      'assist',
+      workshopAssistModuleLevel(ctx.ws, slot),
+      workshopAssistChassisModuleSelection(ctx.ws, slot).rarity,
+    )
+  ) {
+    return 0
+  }
   return scaleAssistSubmoduleValueForSlot(
     ctx.ws,
     slot,
@@ -167,7 +210,7 @@ function pickSlot(
   label: string,
   ctx?: WorkshopSubmoduleBonusContext,
 ): number {
-  return pick(slotSelections.main, slot, label) + pickAssist(ctx, slotSelections, slot, label)
+  return pickMain(slotSelections, slot, label, ctx) + pickAssist(ctx, slotSelections, slot, label)
 }
 
 function buildAttackBonuses(
@@ -182,11 +225,7 @@ function buildAttackBonuses(
     attackRangeMetersAdd: p('Attack Range [m]') || undefined,
     // Workshop **Damage / Meter** card uses main cannon sub-module only (not assist copy).
     damagePerMeterMultAdd:
-      submoduleValueForEffectId(
-        slotSelections.main,
-        'cannon',
-        submoduleEffectId('Damage / Meter [m]'),
-      ) || undefined,
+      pickMain(slotSelections, 'cannon', 'Damage / Meter [m]', ctx) || undefined,
     multishotChancePercentPoints: p('Multishot Chance [%]') || undefined,
     multishotTargetsCount: p('Multishot Targets') || undefined,
     rapidFireChancePercentPoints: p('Rapid Fire Chance [%]') || undefined,
@@ -255,6 +294,7 @@ function buildUtilityBonuses(
 }
 
 function buildUltimateBonusesFromMap(
+  slotSelections: WorkshopSubmoduleSlotSelections,
   selections: WorkshopSubmoduleSelectionMap,
   role: 'main' | 'assist',
   ctx?: WorkshopSubmoduleBonusContext,
@@ -266,6 +306,28 @@ function buildUltimateBonusesFromMap(
     const effectId = submoduleEffectId(row.label)
     const raw = submoduleValueForEffectId(selections, 'core', effectId)
     if (raw === 0) continue
+    if (ctx != null) {
+      const moduleLevel =
+        role === 'assist'
+          ? workshopAssistModuleLevel(ctx.ws, 'core')
+          : workshopChassisModuleLevel(ctx.ws, 'core')
+      const moduleRarity =
+        role === 'assist'
+          ? workshopAssistChassisModuleSelection(ctx.ws, 'core').rarity
+          : workshopChassisModuleSelection(ctx.ws, 'core').rarity
+      if (
+        !submoduleEffectActiveAtModuleLevel(
+          slotSelections,
+          'core',
+          effectId,
+          role,
+          moduleLevel,
+          moduleRarity,
+        )
+      ) {
+        continue
+      }
+    }
     const val =
       role === 'assist'
         ? ctx != null
@@ -288,8 +350,8 @@ function buildUltimateBonuses(
   slotSelections: WorkshopSubmoduleSlotSelections,
   ctx?: WorkshopSubmoduleBonusContext,
 ): Partial<Record<WorkshopUltimateUpgradeKey, number>> {
-  const main = buildUltimateBonusesFromMap(slotSelections.main, 'main', ctx)
-  const assist = buildUltimateBonusesFromMap(slotSelections.assist, 'assist', ctx)
+  const main = buildUltimateBonusesFromMap(slotSelections, slotSelections.main, 'main', ctx)
+  const assist = buildUltimateBonusesFromMap(slotSelections, slotSelections.assist, 'assist', ctx)
   const out: Partial<Record<WorkshopUltimateUpgradeKey, number>> = { ...main }
   for (const [key, val] of Object.entries(assist) as [WorkshopUltimateUpgradeKey, number][]) {
     out[key] = (out[key] ?? 0) + val

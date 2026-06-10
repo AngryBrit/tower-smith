@@ -38,6 +38,7 @@ import {
   WORKSHOP_SUBMODULE_SECTIONS,
   WORKSHOP_SUBMODULE_SLOT_COUNT,
   WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL,
+  workshopSubmoduleSlotUnlocked,
   formatSubmoduleCellDisplay,
   submoduleEffectId,
   submoduleEffectPickerSlotText,
@@ -587,6 +588,11 @@ export function ChassisModulePickerDialog({
               const rarityMax = workshopChassisModuleMaxLevel(pickerRarity)
               const blockedByRarity = unlockAt > rarityMax
               const rawLevel = clampWorkshopAssistModuleLevel(moduleLevel)
+              const levelUnlocked = workshopSubmoduleSlotUnlocked(
+                index,
+                rawLevel,
+                pickerRarity,
+              )
               const pick = submoduleOrderedSlots?.[index] ?? null
               const entry =
                 pick != null
@@ -596,55 +602,58 @@ export function ChassisModulePickerDialog({
                       pickerRole === 'assist' ? assistSubmoduleBonusContext : undefined,
                     )
                   : null
-              const unlocked =
-                entry != null || (!blockedByRarity && rawLevel >= unlockAt)
+              const hasEntry = entry != null && entry.rarity != null
               return (
                 <li
                   key={index}
                   className={[
                     'modules-picker__effect-slot',
-                    unlocked ? '' : 'modules-picker__effect-slot--locked',
+                    !levelUnlocked ? 'modules-picker__effect-slot--locked' : '',
+                    hasEntry && !levelUnlocked
+                      ? 'modules-picker__effect-slot--level-locked'
+                      : '',
                     blockedByRarity ? 'modules-picker__effect-slot--rarity-cap' : '',
                   ]
                     .filter(Boolean)
                     .join(' ')}
                 >
-                  {unlocked ? (
-                    entry != null && entry.rarity != null ? (
-                      <>
-                        <span
-                          className={[
-                            'modules-picker__effect-tier',
-                            WORKSHOP_SUBMODULE_RARITY_CLASS[entry.rarity],
-                          ].join(' ')}
-                        >
-                          {t(SUB_RARITY_LABEL[entry.rarity])}
+                  {hasEntry ? (
+                    <>
+                      <span
+                        className={[
+                          'modules-picker__effect-tier',
+                          WORKSHOP_SUBMODULE_RARITY_CLASS[entry.rarity],
+                        ].join(' ')}
+                      >
+                        {t(SUB_RARITY_LABEL[entry.rarity])}
+                      </span>
+                      <span className="modules-picker__effect-text">{entry.pickerText}</span>
+                      {!levelUnlocked ? (
+                        <span className="modules-picker__effect-locked">
+                          {t('ws_modules_submodule_unlocks_at')} {unlockAt}
                         </span>
-                        <span className="modules-picker__effect-text">
-                          {entry.pickerText}
-                        </span>
-                        <button
-                          type="button"
-                          className="modules-picker__effect-clear"
-                          aria-label={t('ws_modules_picker_clear_effect')}
-                          onClick={() => {
-                            const row = section.rows.find(
-                              (r) => submoduleEffectId(r.label) === entry.effectId,
-                            )
-                            onSelectEffect(
-                              entry.effectId,
-                              entry.rarity,
-                              row?.cells[entry.rarity] ?? null,
-                              pickerRole,
-                            )
-                          }}
-                        >
-                          ×
-                        </button>
-                      </>
-                    ) : (
-                      <span className="modules-picker__effect-empty">—</span>
-                    )
+                      ) : null}
+                      <button
+                        type="button"
+                        className="modules-picker__effect-clear"
+                        aria-label={t('ws_modules_picker_clear_effect')}
+                        onClick={() => {
+                          const row = section.rows.find(
+                            (r) => submoduleEffectId(r.label) === entry.effectId,
+                          )
+                          onSelectEffect(
+                            entry.effectId,
+                            entry.rarity,
+                            row?.cells[entry.rarity] ?? null,
+                            pickerRole,
+                          )
+                        }}
+                      >
+                        ×
+                      </button>
+                    </>
+                  ) : levelUnlocked ? (
+                    <span className="modules-picker__effect-empty">—</span>
                   ) : blockedByRarity ? (
                     <span className="modules-picker__effect-locked">
                       {t('ws_modules_submodule_locked_rarity_max')

@@ -14,8 +14,8 @@ import type { ResearchData } from '../types/research'
 
 import { assistFlooredQuantity } from './workshopAssistModuleCatalog'
 import {
+  assistSubmodulePickerCellFromScaledNumber,
   parseSubmoduleCellNumber,
-  submoduleCellFromScaledNumber,
   submoduleEffectId,
   submoduleEffectPickerSlotText,
 } from './workshopSubmoduleCatalog'
@@ -68,14 +68,14 @@ const ASSIST_UNIQUE_EFFECT_TIER_ORDER: readonly WorkshopChassisModuleEffectTier[
   'ancestral',
 ]
 
-/** Matches game `uniqueEffectEfficiencyLevel` (0…3) added to sub-stat picker scaling only. */
+/** +1% picker scaling when unique effect is above Epic (legendary/mythic/ancestral). */
 function assistUniqueEffectLevelPickerBonus(
   ws: WorkshopPersistedV1,
   slot: WorkshopAssistModuleSlot,
 ): number {
   const tier = assistUniqueRarityFromPersisted(ws, slot)
   const idx = ASSIST_UNIQUE_EFFECT_TIER_ORDER.indexOf(tier)
-  return idx >= 0 ? idx : 0
+  return idx >= 1 ? 1 : 0
 }
 
 /** In-game assist module picker combines sub stone, substats lab, and unique-effect tier level. */
@@ -183,7 +183,7 @@ export function assistSubmodulePickerSlotText(
     ? assistSubmoduleDisplayScaledValue(raw, eff)
     : 0
   return submoduleEffectPickerSlotText(
-    submoduleCellFromScaledNumber(scaled, cell, effectLabel),
+    assistSubmodulePickerCellFromScaledNumber(scaled, cell, effectLabel),
     effectLabel,
   )
 }

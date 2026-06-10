@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { CANNON_SUBMODULE_ATTACK_SPEED_ADD } from './workshopSubmoduleEffects'
 import {
+  assistSubmodulePickerCellFromScaledNumber,
   cannonSubmoduleAttackSpeedByRarity,
   WORKSHOP_SUBMODULE_SECTIONS,
   WORKSHOP_SUBMODULE_SLOT_COUNT,
   WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL,
+  workshopSubmoduleSlotUnlocked,
   formatSubmoduleCellDisplay,
   parseSubmoduleCellNumber,
   submoduleCellFromScaledNumber,
@@ -17,6 +19,9 @@ describe('workshopSubmoduleCatalog', () => {
       1, 1, 41, 101, 141, 161, 201, 241,
     ])
     expect(WORKSHOP_SUBMODULE_SLOT_COUNT).toBe(8)
+    expect(workshopSubmoduleSlotUnlocked(3, 66, 'star_2')).toBe(false)
+    expect(workshopSubmoduleSlotUnlocked(3, 101, 'star_2')).toBe(true)
+    expect(workshopSubmoduleSlotUnlocked(2, 66, 'star_2')).toBe(true)
   })
 
   it('has submodule tables for all four chassis slots', () => {
@@ -53,6 +58,18 @@ describe('workshopSubmoduleCatalog', () => {
   it('formats scaled assist percent cells with one decimal', () => {
     expect(submoduleCellFromScaledNumber(2.2, '11', 'Package Chance [%]')).toBe('2.2%')
     expect(submoduleCellFromScaledNumber(3, '6', 'Crit Chance [%]')).toBe('3%')
+  })
+
+  it('formats assist picker cells with in-game floor/truncate rules', () => {
+    expect(
+      assistSubmodulePickerCellFromScaledNumber(5.2, '20', 'Health Regen [%]'),
+    ).toBe('5%')
+    expect(
+      assistSubmodulePickerCellFromScaledNumber(2.25, '9', 'Land Mine Chance [%]'),
+    ).toBe('2.25%')
+    expect(assistSubmodulePickerCellFromScaledNumber(0.1875, '0.75', 'Land Mine Radius')).toBe(
+      '0.19',
+    )
   })
 
   it('formats in-game picker slot text for percent effects', () => {

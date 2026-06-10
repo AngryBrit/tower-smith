@@ -1,15 +1,25 @@
 /**
  * Row order for game `ModuleManager.effects` sparse table (330 entries).
- * Cannon/armor/generator follow wiki catalog order; core follows SubstatsCluster enum
- * with in-game row order verified against playerInfo.dat and Fudgyrella.dat core effect indices.
+ * Cannon/generator follow wiki catalog order; armor/core use in-game row order verified
+ * against playerInfo.dat (e.g. Space Displacer land-mine sub-stats, Fudgyrella core indices).
  */
 import { WORKSHOP_SUBMODULE_SECTIONS } from '../../src/data/workshopSubmoduleCatalog.ts'
 
 /** @param {string} label */
-function coreRow(label) {
-  const row = WORKSHOP_SUBMODULE_SECTIONS.core.rows.find((r) => r.label === label)
-  if (!row) throw new Error(`Missing core submodule row: ${label}`)
+function slotRow(slot, label) {
+  const row = WORKSHOP_SUBMODULE_SECTIONS[slot].rows.find((r) => r.label === label)
+  if (!row) throw new Error(`Missing ${slot} submodule row: ${label}`)
   return row
+}
+
+/** @param {string} label */
+function coreRow(label) {
+  return slotRow('core', label)
+}
+
+/** @param {string} label */
+function armorRow(label) {
+  return slotRow('armor', label)
 }
 
 /** Core rows in game table order (not wiki catalog order). */
@@ -42,8 +52,30 @@ export const CORE_GAME_EFFECT_ROWS = [
   'Spotlight - Angle*',
 ].map(coreRow)
 
+/** Armor rows in game table order (Land Mine Chance before Damage; wiki catalog is reversed). */
+export const ARMOR_GAME_EFFECT_ROWS = [
+  'Health Regen [%]',
+  'Defense [%]',
+  'Defense Absolute [%]',
+  'Thorns Damage',
+  'Lifesteal [%]',
+  'Knockback Chance [%]',
+  'Knockback Force',
+  'Orb Speed',
+  'Orbs',
+  'Shockwave Size',
+  'Shockwave Frequency [s]',
+  'Land Mine Chance [%]',
+  'Land Mine Damage [%]',
+  'Land Mine Radius',
+  'Death Defy',
+  'Wall Health [%]',
+  'Wall Rebuild [s]',
+].map(armorRow)
+
 /** @param {import('../../src/data/workshopSubmoduleCatalog.ts').WorkshopAssistModuleSlot} slot */
 export function gameEffectRowsForSlot(slot) {
   if (slot === 'core') return CORE_GAME_EFFECT_ROWS
+  if (slot === 'armor') return ARMOR_GAME_EFFECT_ROWS
   return WORKSHOP_SUBMODULE_SECTIONS[slot].rows
 }

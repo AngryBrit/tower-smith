@@ -2,6 +2,10 @@
  * Sub-Module Effects tables (wiki) per chassis slot.
  */
 
+import {
+  workshopChassisModuleMaxLevel,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleShared'
 import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 import type { WorkshopSubmoduleRarity } from './workshopSubmoduleEffects'
 
@@ -137,6 +141,25 @@ export const WORKSHOP_SUBMODULE_SLOT_COUNT = WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVE
 export const WORKSHOP_SUBMODULE_MAX_UNLOCK_LEVEL =
   WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL[WORKSHOP_SUBMODULE_SLOT_COUNT - 1]!
 
+/** Module level required to unlock sub-module effect slot `slotIndex` (0-based). */
+export function workshopSubmoduleSlotUnlockLevel(slotIndex: number): number {
+  return WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL[slotIndex] ?? 1
+}
+
+/** Whether a sub-module slot is active at `moduleLevel` (also blocked above rarity max level). */
+export function workshopSubmoduleSlotUnlocked(
+  slotIndex: number,
+  moduleLevel: number,
+  moduleRarity?: WorkshopChassisModuleMergeTier,
+): boolean {
+  const unlockAt = workshopSubmoduleSlotUnlockLevel(slotIndex)
+  if (moduleRarity != null && unlockAt > workshopChassisModuleMaxLevel(moduleRarity)) {
+    return false
+  }
+  const level = Number.isFinite(moduleLevel) ? Math.max(0, Math.trunc(moduleLevel)) : 0
+  return level >= unlockAt
+}
+
 /** Ancestral 5★ module max level (wiki module upgrade table). */
 export const WORKSHOP_MODULE_LEVEL_MAX = 300
 
@@ -150,6 +173,75 @@ export function parseSubmoduleCellNumber(cell: string | null): number | null {
 function trimTrailingDisplayZeros(value: string): string {
   if (!value.includes('.')) return value
   return value.replace(/\.?0+$/, '')
+}
+
+const SUBMODULE_RARITY_ORDER: (keyof SubmoduleEffectCells)[] = [
+  'common',
+  'rare',
+  'epic',
+  'legendary',
+  'mythic',
+  'ancestral',
+]
+
+/** Largest wiki cell magnitude for a submodule row (used for assist picker display rules). */
+export function submoduleRowPeakValue(effectLabel: string): number {
+  let peak = 0
+  for (const section of Object.values(WORKSHOP_SUBMODULE_SECTIONS)) {
+    const row = section.rows.find((r) => r.label === effectLabel)
+    if (row == null) continue
+    for (const rarity of SUBMODULE_RARITY_ORDER) {
+      const n = parseSubmoduleCellNumber(row.cells[rarity])
+      if (n != null) peak = Math.max(peak, Math.abs(n))
+    }
+    return peak
+  }
+  return peak
+}
+
+function assistPickerTrunc2(value: number): number {
+  return Math.floor(Math.abs(value) * 100 + 1e-9) / 100
+}
+
+function assistPickerRound2(value: number): number {
+  return Math.round(Math.abs(value) * 100) / 100
+}
+
+/** In-game assist module picker value formatting (differs from main-module catalog cells). */
+export function assistSubmodulePickerCellFromScaledNumber(
+  scaled: number,
+  templateCell: string,
+  effectLabel?: string,
+): string {
+  if (effectLabel != null && isSubmoduleMultiplierEffectLabel(effectLabel)) {
+    if (scaled === 0) return '0x'
+    return `${scaled < 0 ? '-' : ''}${Number(Math.abs(scaled).toFixed(2))}x`
+  }
+
+  const trimmed = templateCell.trim()
+  const suffix = trimmed.replace(/^[+-]?[0-9.]+/, '')
+  const isPercent = suffix === '%' || submoduleLabelUnit(effectLabel) === '%'
+
+  if (scaled === 0) return isPercent ? '0%' : `0${suffix}`
+
+  const sign = scaled < 0 ? '-' : ''
+  const abs = Math.abs(scaled)
+
+  if (isPercent) {
+    const peak = effectLabel != null ? submoduleRowPeakValue(effectLabel) : 0
+    if (peak >= 20) {
+      return `${sign}${Math.floor(abs + 1e-9)}%`
+    }
+    const truncated = assistPickerTrunc2(abs)
+    return `${sign}${trimTrailingDisplayZeros(truncated.toFixed(2))}%`
+  }
+
+  const rounded = assistPickerRound2(abs)
+  if (suffix !== '') {
+    return `${sign}${trimTrailingDisplayZeros(rounded.toFixed(2))}${suffix}`
+  }
+
+  return `${sign}${trimTrailingDisplayZeros(rounded.toFixed(2))}`
 }
 
 /** Rebuild a wiki cell for assist picker display (`11` at 20% eff → `2.2%`). */

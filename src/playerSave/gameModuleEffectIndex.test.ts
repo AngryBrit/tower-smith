@@ -135,6 +135,62 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Orbital Augment armor main effects (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [92, 149, 86, 139, 0, 0, 0, 0],
+      130,
+      0,
+      'ancestral',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'defense',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'wall-health',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'health-regen',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'land-mine-radius',
+      rarity: 'rare',
+    })
+    expect(imported.map).toMatchObject({
+      defense: 'ancestral',
+      'wall-health': 'mythic',
+      'health-regen': 'ancestral',
+      'land-mine-radius': 'rare',
+    })
+  })
+
+  it('decodes Space Displacer assist armor effects (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [142, 88, 81, 132, 0, 0, 0, 0],
+      90,
+      undefined,
+      'mythic',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'land-mine-radius',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'land-mine-chance',
+      rarity: 'mythic',
+    })
+    expect(imported.map).toMatchObject({
+      'land-mine-radius': 'mythic',
+      defense: 'rare',
+      'health-regen': 'common',
+      'land-mine-chance': 'mythic',
+    })
+  })
+
   it('decodes Pulsar Harvester assist generator effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'generator',

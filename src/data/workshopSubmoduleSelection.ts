@@ -10,7 +10,17 @@ import {
   WORKSHOP_SUBMODULE_SECTIONS,
   WORKSHOP_SUBMODULE_SLOT_COUNT,
   submoduleEffectId,
+  workshopSubmoduleSlotUnlocked,
 } from './workshopSubmoduleCatalog'
+import {
+  workshopAssistChassisModuleSelection,
+} from './workshopAssistChassisModule'
+import {
+  workshopChassisModuleLevel,
+  workshopChassisModuleSelection,
+  type WorkshopChassisModuleMergeTier,
+} from './workshopChassisModuleSelection'
+import { workshopAssistModuleLevel } from './workshopSimModules'
 import type { WorkshopSubmoduleRarity } from './workshopSubmoduleEffects'
 import type { WorkshopSubmoduleBonusContext } from './workshopAssistSubmoduleScale'
 import { scaleAssistSubmoduleValueForSlot } from './workshopAssistSubmoduleScale'
@@ -69,6 +79,36 @@ export function selectionMapFromOrderedSlots(
     out[pick.effectId] = pick.rarity
   }
   return out
+}
+
+/** Slot index (0-based) for an equipped sub-effect, or null if not found. */
+export function submoduleEffectSlotIndex(
+  orderedSlots: WorkshopSubmoduleOrderedSlots | undefined,
+  map: WorkshopSubmoduleSelectionMap,
+  effectId: string,
+): number | null {
+  const ordered = orderedSlots ?? orderedSlotsFromSelectionMap(map)
+  for (let i = 0; i < ordered.length; i++) {
+    if (ordered[i]?.effectId === effectId) return i
+  }
+  return null
+}
+
+/** Whether an equipped sub-effect counts at `moduleLevel` (slot unlock + rarity cap). */
+export function submoduleEffectActiveAtModuleLevel(
+  slotSelections: WorkshopSubmoduleSlotSelections,
+  slot: WorkshopAssistModuleSlot,
+  effectId: string,
+  role: WorkshopSubmoduleModuleRole,
+  moduleLevel: number,
+  moduleRarity: WorkshopChassisModuleMergeTier,
+): boolean {
+  const map = role === 'main' ? slotSelections.main : slotSelections.assist
+  if (map[effectId] == null) return false
+  const ordered = role === 'main' ? slotSelections.mainSlots : slotSelections.assistSlots
+  const slotIndex = submoduleEffectSlotIndex(ordered, map, effectId)
+  if (slotIndex == null) return true
+  return workshopSubmoduleSlotUnlocked(slotIndex, moduleLevel, moduleRarity)
 }
 
 /** Legacy flat map → first N picker slots (no gaps). */
@@ -239,20 +279,46 @@ export function totalCannonAttackSpeedFromSelections(
   ctx?: WorkshopSubmoduleBonusContext,
 ): number {
   const slot = selections.cannon
-  const main = cannonSubmoduleAttackSpeedFromSelections(slot.main)
-  const assistRaw = cannonSubmoduleAttackSpeedFromSelections(slot.assist)
-  const assist =
-    ctx != null
-      ? scaleAssistSubmoduleValueForSlot(
-          ctx.ws,
-          'cannon',
-          assistRaw,
-          CANNON_ATTACK_SPEED_EFFECT_ID,
-          ctx.research,
-          ctx.labOverrides,
-        )
-      : assistRaw
-  return main + assist
+  let main = cannonSubmoduleAttackSpeedFromSelections(slot.main)
+  if (ctx != null && main !== 0) {
+    if (
+      !submoduleEffectActiveAtModuleLevel(
+        slot,
+        'cannon',
+        CANNON_ATTACK_SPEED_EFFECT_ID,
+        'main',
+        workshopChassisModuleLevel(ctx.ws, 'cannon'),
+        workshopChassisModuleSelection(ctx.ws, 'cannon').rarity,
+      )
+    ) {
+      main = 0
+    }
+  }
+  let assistRaw = cannonSubmoduleAttackSpeedFromSelections(slot.assist)
+  if (ctx != null) {
+    if (
+      assistRaw !== 0 &&
+      !submoduleEffectActiveAtModuleLevel(
+        slot,
+        'cannon',
+        CANNON_ATTACK_SPEED_EFFECT_ID,
+        'assist',
+        workshopAssistModuleLevel(ctx.ws, 'cannon'),
+        workshopAssistChassisModuleSelection(ctx.ws, 'cannon').rarity,
+      )
+    ) {
+      assistRaw = 0
+    }
+    assistRaw = scaleAssistSubmoduleValueForSlot(
+      ctx.ws,
+      'cannon',
+      assistRaw,
+      CANNON_ATTACK_SPEED_EFFECT_ID,
+      ctx.research,
+      ctx.labOverrides,
+    )
+  }
+  return main + assistRaw
 }
 
 function orderedSlotsAfterToggle(

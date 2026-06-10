@@ -151,16 +151,16 @@ export const GAME_MODULE_EFFECT_BY_INDEX: readonly GameModuleEffectDecode[] = [
   { slot: "armor", effectId: "shockwave-frequency-s", rarity: "legendary" }, // 125
   { slot: "armor", effectId: "shockwave-frequency-s", rarity: "legendary" }, // 126
   { slot: "armor", effectId: "shockwave-frequency-s", rarity: "mythic" }, // 127
-  { slot: "armor", effectId: "land-mine-damage", rarity: "rare" }, // 128
-  { slot: "armor", effectId: "land-mine-damage", rarity: "epic" }, // 129
-  { slot: "armor", effectId: "land-mine-damage", rarity: "legendary" }, // 130
-  { slot: "armor", effectId: "land-mine-damage", rarity: "legendary" }, // 131
-  { slot: "armor", effectId: "land-mine-damage", rarity: "mythic" }, // 132
-  { slot: "armor", effectId: "land-mine-chance", rarity: "rare" }, // 133
-  { slot: "armor", effectId: "land-mine-chance", rarity: "epic" }, // 134
-  { slot: "armor", effectId: "land-mine-chance", rarity: "legendary" }, // 135
-  { slot: "armor", effectId: "land-mine-chance", rarity: "legendary" }, // 136
-  { slot: "armor", effectId: "land-mine-chance", rarity: "mythic" }, // 137
+  { slot: "armor", effectId: "land-mine-chance", rarity: "rare" }, // 128
+  { slot: "armor", effectId: "land-mine-chance", rarity: "epic" }, // 129
+  { slot: "armor", effectId: "land-mine-chance", rarity: "legendary" }, // 130
+  { slot: "armor", effectId: "land-mine-chance", rarity: "legendary" }, // 131
+  { slot: "armor", effectId: "land-mine-chance", rarity: "mythic" }, // 132
+  { slot: "armor", effectId: "land-mine-damage", rarity: "rare" }, // 133
+  { slot: "armor", effectId: "land-mine-damage", rarity: "epic" }, // 134
+  { slot: "armor", effectId: "land-mine-damage", rarity: "legendary" }, // 135
+  { slot: "armor", effectId: "land-mine-damage", rarity: "legendary" }, // 136
+  { slot: "armor", effectId: "land-mine-damage", rarity: "mythic" }, // 137
   { slot: "armor", effectId: "land-mine-radius", rarity: "rare" }, // 138
   { slot: "armor", effectId: "land-mine-radius", rarity: "epic" }, // 139
   { slot: "armor", effectId: "land-mine-radius", rarity: "legendary" }, // 140
@@ -400,12 +400,56 @@ function decodeGeneratorEffectAtIndex(
   return decoded != null && decoded.slot === 'generator' ? decoded : null
 }
 
+function isAncestralFamilyChassisMerge(
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): boolean {
+  return (
+    chassisMerge != null && workshopChassisModuleEffectTier(chassisMerge) === 'ancestral'
+  )
+}
+
+/** Common-start armor rows use sparse offset 6 for Ancestral on ancestral-family chassis. */
+const ARMOR_COMMON_START_ANCESTRAL_ROWS: readonly {
+  base: number
+  effectId: string
+}[] = [
+  { base: 80, effectId: 'health-regen' },
+  { base: 86, effectId: 'defense' },
+  { base: 92, effectId: 'defense-absolute' },
+]
+
+function decodeArmorAncestralCommonStartRow(
+  rawIndex: number,
+): GameModuleEffectDecode | null {
+  for (const { base, effectId } of ARMOR_COMMON_START_ANCESTRAL_ROWS) {
+    if (rawIndex - base === 6) {
+      return { slot: 'armor', effectId, rarity: 'ancestral' }
+    }
+  }
+  return null
+}
+
+function decodeArmorLandMineRadiusOnAncestralChassis(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+): GameModuleEffectDecode | null {
+  if (decoded.effectId !== 'land-mine-radius' || decoded.rarity !== 'epic') {
+    return null
+  }
+  const shifted = gameModuleEffectByIndex(rawIndex - 1)
+  if (shifted?.effectId === 'land-mine-radius' && shifted.rarity === 'rare') {
+    return shifted
+  }
+  return null
+}
+
 /**
  * Decode save effect index for submodule import.
  * Main ancestral-tier generator modules store the Epic row base index for Epic-only substat rows;
  * bump +3 when that decodes as Epic but Ancestral exists in the same row.
  * Generator assist encodes vs primary chassis level: sparse+primary≥330 → stored as sparse+primary−10;
  * ancestral-family assist may store mythic/ancestral picks as raw−3.
+ * Ancestral-family armor common-start rows store Ancestral at sparse offset 6 (index table omits it).
  */
 function gameModuleEffectForSubmoduleImport(
   raw: number,
@@ -438,6 +482,11 @@ function gameModuleEffectForSubmoduleImport(
     }
   }
 
+  if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const ancestralRow = decodeArmorAncestralCommonStartRow(rawIndex)
+    if (ancestralRow != null) return ancestralRow
+  }
+
   const decoded = gameModuleEffectByIndexForSlot(
     raw,
     slot,
@@ -445,6 +494,10 @@ function gameModuleEffectForSubmoduleImport(
     primaryModuleLevel,
   )
   if (decoded == null) return null
+  if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const landMine = decodeArmorLandMineRadiusOnAncestralChassis(rawIndex, decoded)
+    if (landMine != null) return landMine
+  }
   if (
     slot === 'generator' &&
     chassisMerge != null &&

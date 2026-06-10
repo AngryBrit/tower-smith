@@ -35,6 +35,8 @@ describe('workshopSubmoduleBonuses', () => {
       simCannonAssistUnlocked: true,
       simCannonAssistChassisModuleId: 'deathPenalty',
       simCannonAssistSubStoneEfficiency: 70,
+      simCannonModuleLevel: 1,
+      simCannonChassisModuleLevel: 1,
       simSubmoduleSelections: selections,
     }
     const bonuses = buildWorkshopSubmoduleBonuses(selections, {

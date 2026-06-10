@@ -9,7 +9,10 @@ import {
   scaleAssistSubmoduleRawValue,
 } from './workshopAssistSubmoduleScale'
 import { buildWorkshopSubmoduleBonuses } from './workshopSubmoduleBonuses'
-import { defaultWorkshopSubmoduleSelections } from './workshopSubmoduleSelection'
+import {
+  defaultWorkshopSubmoduleSelections,
+  selectionMapFromOrderedSlots,
+} from './workshopSubmoduleSelection'
 import { CANNON_ATTACK_SPEED_EFFECT_ID } from './workshopSubmoduleSelection'
 import { workshopUltimateStatDisplay } from './workshopUltimate'
 
@@ -88,7 +91,7 @@ describe('workshopAssistSubmoduleScale', () => {
         },
         'generator',
       ),
-    ).toBe('+2.1% Package Chance')
+    ).toBe('+2.09% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '11',
@@ -115,6 +118,44 @@ describe('workshopAssistSubmoduleScale', () => {
         'generator',
       ),
     ).toBe('+1.6% Enemy Attack Level Skip')
+  })
+
+  it('formats Space Displacer assist armor picker like in-game (petethered)', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simArmorAssistUnlocked: true,
+      simArmorAssistChassisModuleId: 'spaceDisplacer',
+      simArmorAssistUniqueRarity: 'mythic',
+      simArmorAssistSubStoneEfficiency: 24,
+    }
+    const ctx = { ws, research: null, labOverrides: {} }
+    expect(
+      assistSubmodulePickerSlotText(
+        '0.75',
+        'Land Mine Radius',
+        submoduleEffectId('Land Mine Radius'),
+        ctx,
+        'armor',
+      ),
+    ).toBe('+0.19 Land Mine Radius')
+    expect(
+      assistSubmodulePickerSlotText(
+        '20',
+        'Health Regen [%]',
+        submoduleEffectId('Health Regen [%]'),
+        ctx,
+        'armor',
+      ),
+    ).toBe('+5% Health Regen')
+    expect(
+      assistSubmodulePickerSlotText(
+        '9',
+        'Land Mine Chance [%]',
+        submoduleEffectId('Land Mine Chance [%]'),
+        ctx,
+        'armor',
+      ),
+    ).toBe('+2.25% Land Mine Chance')
   })
 
   it('adds unique-effect tier level to assist picker scaling (petethered Pulsar Harvester)', () => {
@@ -195,6 +236,8 @@ describe('workshopAssistSubmoduleScale', () => {
       simCannonAssistUnlocked: true,
       simCannonAssistChassisModuleId: 'deathPenalty',
       simCannonAssistSubStoneEfficiency: 50,
+      simCannonModuleLevel: 1,
+      simCannonChassisModuleLevel: 1,
       simSubmoduleSelections: selections,
     }
     const ctx = { ws, research: null, labOverrides: {} }
@@ -221,6 +264,8 @@ describe('workshopAssistSubmoduleScale', () => {
       simCoreAssistUnlocked: true,
       simCoreAssistChassisModuleId: 'multiverseNexus',
       simCoreAssistSubStoneEfficiency: 70,
+      simCoreModuleLevel: 1,
+      simCoreChassisModuleLevel: 1,
       simSubmoduleSelections: selections,
     }
     const labOverrides = coreSubstatsLabOverride(research, 30)
@@ -243,6 +288,37 @@ describe('workshopAssistSubmoduleScale', () => {
         bonuses.ultimate.poisonSwampDurationLevel ?? 0,
       ),
     ).toBe('105s')
+  })
+
+  it('does not apply assist max recovery below slot 4 unlock level (petethered Pulsar Harvester)', () => {
+    const assistSlots = [
+      { effectId: 'package-chance', rarity: 'mythic' as const },
+      { effectId: 'enemy-attack-level-skip', rarity: 'ancestral' as const },
+      { effectId: 'enemy-health-level-skip', rarity: 'ancestral' as const },
+      { effectId: 'max-recovery', rarity: 'epic' as const },
+      null,
+      null,
+      null,
+      null,
+    ]
+    const selections = defaultWorkshopSubmoduleSelections()
+    selections.generator.assistSlots = assistSlots
+    selections.generator.assist = selectionMapFromOrderedSlots(assistSlots)
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simGeneratorAssistUnlocked: true,
+      simGeneratorAssistChassisModuleId: 'pulsarHarvester',
+      simGeneratorAssistChassisModuleRarity: 'star_2',
+      simGeneratorModuleLevel: 66,
+      simGeneratorAssistSubStoneEfficiency: 19,
+      simSubmoduleSelections: selections,
+    }
+    const ctx = { ws, research: null, labOverrides: {} }
+    const bonuses = buildWorkshopSubmoduleBonuses(selections, ctx)
+    expect(bonuses.utility.maxRecoveryAdd).toBeUndefined()
+    expect(bonuses.utility.packageChancePercentPoints).toBe(2)
+    expect(bonuses.utility.enemyAttackSkipPercentPoints).toBe(1)
+    expect(bonuses.utility.enemyHealthSkipPercentPoints).toBe(1)
   })
 
   it('ignores assist picks when assist module not equipped', () => {

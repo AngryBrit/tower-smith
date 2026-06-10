@@ -11,6 +11,7 @@
  * Generator rows that start at Epic (no Common/Rare) map sparse offset → wiki tier in order
  * (Package Chance, Enemy Level Skip, etc.). Ancestral merge modules may store the row base
  * index; import bumps +3 when decode is Epic on an Ancestral-tier chassis (see import helper).
+ * Ancestral-family armor common-start rows store Ancestral at sparse offset 6 (not in table).
  *
  * Run: npx tsx scripts/gen-game-module-effect-index.mjs
  */
@@ -167,12 +168,56 @@ function decodeGeneratorEffectAtIndex(
   return decoded != null && decoded.slot === 'generator' ? decoded : null
 }
 
+function isAncestralFamilyChassisMerge(
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): boolean {
+  return (
+    chassisMerge != null && workshopChassisModuleEffectTier(chassisMerge) === 'ancestral'
+  )
+}
+
+/** Common-start armor rows use sparse offset 6 for Ancestral on ancestral-family chassis. */
+const ARMOR_COMMON_START_ANCESTRAL_ROWS: readonly {
+  base: number
+  effectId: string
+}[] = [
+  { base: 80, effectId: 'health-regen' },
+  { base: 86, effectId: 'defense' },
+  { base: 92, effectId: 'defense-absolute' },
+]
+
+function decodeArmorAncestralCommonStartRow(
+  rawIndex: number,
+): GameModuleEffectDecode | null {
+  for (const { base, effectId } of ARMOR_COMMON_START_ANCESTRAL_ROWS) {
+    if (rawIndex - base === 6) {
+      return { slot: 'armor', effectId, rarity: 'ancestral' }
+    }
+  }
+  return null
+}
+
+function decodeArmorLandMineRadiusOnAncestralChassis(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+): GameModuleEffectDecode | null {
+  if (decoded.effectId !== 'land-mine-radius' || decoded.rarity !== 'epic') {
+    return null
+  }
+  const shifted = gameModuleEffectByIndex(rawIndex - 1)
+  if (shifted?.effectId === 'land-mine-radius' && shifted.rarity === 'rare') {
+    return shifted
+  }
+  return null
+}
+
 /**
  * Decode save effect index for submodule import.
  * Main ancestral-tier generator modules store the Epic row base index for Epic-only substat rows;
  * bump +3 when that decodes as Epic but Ancestral exists in the same row.
  * Generator assist encodes vs primary chassis level: sparse+primary≥330 → stored as sparse+primary−10;
  * ancestral-family assist may store mythic/ancestral picks as raw−3.
+ * Ancestral-family armor common-start rows store Ancestral at sparse offset 6 (index table omits it).
  */
 function gameModuleEffectForSubmoduleImport(
   raw: number,
@@ -205,6 +250,11 @@ function gameModuleEffectForSubmoduleImport(
     }
   }
 
+  if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const ancestralRow = decodeArmorAncestralCommonStartRow(rawIndex)
+    if (ancestralRow != null) return ancestralRow
+  }
+
   const decoded = gameModuleEffectByIndexForSlot(
     raw,
     slot,
@@ -212,6 +262,10 @@ function gameModuleEffectForSubmoduleImport(
     primaryModuleLevel,
   )
   if (decoded == null) return null
+  if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const landMine = decodeArmorLandMineRadiusOnAncestralChassis(rawIndex, decoded)
+    if (landMine != null) return landMine
+  }
   if (
     slot === 'generator' &&
     chassisMerge != null &&

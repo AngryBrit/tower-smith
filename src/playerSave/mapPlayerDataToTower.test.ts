@@ -11,6 +11,7 @@ import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 
 const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
 const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
+const PETETHERED_SAVE = 'h:/The Tower/petethered.dat'
 const JAMES_WRIGHT_SAVE = 'h:/The Tower/James Wright.dat'
 
 function minimalSave(
@@ -393,12 +394,26 @@ describe('playerSaveToWorkshop', () => {
     })
   })
 
+  it('imports Orbital Augment armor submodule effects from petethered save', async () => {
+    if (!existsSync(PETETHERED_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simArmorChassisModuleId).toBe('orbitalAugment')
+    expect(ws.simArmorChassisModuleRarity).toBe('ancestral')
+    expect(ws.simSubmoduleSelections.armor.main).toEqual({
+      defense: 'ancestral',
+      'wall-health': 'mythic',
+      'health-regen': 'ancestral',
+      'land-mine-radius': 'rare',
+    })
+  })
+
   it('imports assist unlocks when assistModuleSlots has data even if assistModulesAvailable is false', () => {
     const ws = playerSaveToWorkshop(
       minimalSave({
         moduleEquipped: [
           { infoIndex: 41, level: 136, rarity: 14, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
-          { infoIndex: 46, level: 130, rarity: 10, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          { infoIndex: 46, level: 130, rarity: 10, effects: [92, 149, 86, 139, 0, 0, 0, 0] },
           { infoIndex: 43, level: 134, rarity: 13, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
           { infoIndex: 38, level: 138, rarity: 10, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
         ],
@@ -466,10 +481,10 @@ describe('playerSaveToWorkshop', () => {
       'land-mine-radius': 'mythic',
       defense: 'rare',
       'health-regen': 'common',
-      'land-mine-damage': 'mythic',
+      'land-mine-chance': 'mythic',
     })
     expect(ws.simSubmoduleSelections.armor.assistSlots?.[3]).toMatchObject({
-      effectId: 'land-mine-damage',
+      effectId: 'land-mine-chance',
       rarity: 'mythic',
     })
     expect(ws.simGeneratorAssistChassisModuleId).toBe(

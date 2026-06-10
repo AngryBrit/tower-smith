@@ -6551,6 +6551,11 @@ button.workshop__uw-plus-cost--display:hover {
   background: var(--sr-picker-slot-locked-bg);
 }
 
+.modules-picker__effect-slot--level-locked .modules-picker__effect-tier,
+.modules-picker__effect-slot--level-locked .modules-picker__effect-text {
+  opacity: 0.45;
+}
+
 .modules-picker__effect-tier {
   flex-shrink: 0;
   padding: 0.1rem 0.35rem;
