@@ -620,6 +620,11 @@ export const STRINGS_DE = {
     'Spiel- und Wiki-Daten in diesem Build wurden zuletzt am {{date}} abgeglichen (Aktualisierung bei Regenerierung durch Maintainer-Skripte).',
   app_wiki_data_stamp_unknown:
     'Für diesen Build ist kein Abgleichsdatum mit Spiel und Wiki hinterlegt.',
+  app_settings_ep_section_title: 'Effective Paths (Google Sheets)',
+  app_settings_ep_ids_master_label: 'IDS-Master-Spreadsheet-ID oder URL',
+  app_settings_ep_ids_master_placeholder: '1RnNttj_… oder https://docs.google.com/spreadsheets/d/…',
+  app_settings_ep_ids_master_hint:
+    'Deine IDS-Master-Gateway-Tabelle. TowerSmith liest den IDS-Tab und verknüpfte IDs aus Spalte D („Go to my … Sheet“).',
   app_settings_relic_workshop_bonus_hint:
     'Wenn aktiv, zeigt jede Reliktkarte, wie der Effekt im Simulator wirkt (z. B. +10 % Werkstatt-Schaden). Standardmäßig aus.',
   settings_shortcuts_title: 'Tastenkürzel',
@@ -1258,6 +1263,59 @@ export const STRINGS_DE = {
   sr_notice_import_player_android_path_no_clip:
     'Datei-Dialog wird geöffnet — im Dateimanager zu Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat navigieren.',
   sr_lab_export_file: 'Tower nach CSV exportieren',
+  ep_export_section: 'Effective Paths (Google Sheets)',
+  ep_export_section_hint:
+    'Relikte ins Effective-Paths-Relics-Buch synchronisieren. IDS-Master-URL zuerst unter Einstellungen setzen.',
+  ep_export_open_btn: 'Relikte mit Effective Paths synchronisieren…',
+  ep_export_title: 'Relikte mit Effective Paths synchronisieren',
+  ep_export_intro:
+    'Verknüpfte Arbeitsmappen aus IDS Master laden (unter Einstellungen) und Relikte ins Relics-Buch synchronisieren.',
+  ep_export_missing_ids_master:
+    'IDS-Master-URL unter Einstellungen (Tools → Einstellungen) setzen, bevor verknüpfte Arbeitsmappen geladen werden.',
+  ep_export_spreadsheet_label: 'IDS-Master-Spreadsheet-ID oder URL',
+  ep_export_spreadsheet_placeholder: '1RnNttj_… oder https://docs.google.com/spreadsheets/d/…',
+  ep_export_spreadsheet_hint:
+    'IDS-Master-URL einfügen. Verknüpfte IDs stammen nur aus Spalte D („Go to my … Sheet“-Links).',
+  ep_export_load_sheets_btn: 'Google Sheets erlauben & verknüpfte Mappen laden',
+  ep_export_loading_sheets: 'Google Sheets wird erlaubt und verknüpfte Arbeitsmappen geprüft…',
+  ep_export_workbook_access_ok: 'Zugriff',
+  ep_export_workbook_access_denied: 'Kein Zugriff',
+  ep_export_workbook_access_not_found: 'Nicht gefunden',
+  ep_export_linked_workbooks_denied:
+    'Google Sheets ist verbunden, aber TowerSmith kann diese verknüpften Arbeitsmappen nicht öffnen: {{names}}. Jeweils in Google Sheets mit demselben Konto öffnen (Editor-Rechte) oder den „Go to my … Sheet“-Link auf dem IDS-Tab korrigieren.',
+  ep_export_linked_sheets_title: 'IDS-Tab „{{tab}}“ — verknüpfte Arbeitsmappen',
+  ep_export_relics_resolved:
+    'Relics-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (separate Tabelle; Sync auf Relics-Tab).',
+  ep_export_relics_sync_target: 'Relikt-Sync-Ziel',
+  ep_export_relics_missing_in_master:
+    'Keine Relics-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
+  ep_export_relics_missing_loaded:
+    'Geladen: {{names}}. „Go to my Relics Sheet“-Link in Spalte D auf dem IDS-Tab prüfen.',
+  ep_export_sync_btn: 'Relikte ins Relics-Buch synchronisieren',
+  ep_export_syncing: 'Relikte werden synchronisiert…',
+  ep_export_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Reliktzeilen).',
+  ep_export_unmapped_hint: '{{count}} Reliktname(n) konnten nicht zugeordnet werden und blieben unverändert.',
+  ep_export_invalid_spreadsheet: 'Gültige Google-Spreadsheet-ID oder docs.google.com-URL eingeben.',
+  ep_export_oauth_not_configured: 'Google-Sheets-Export ist auf dieser Seite nicht konfiguriert.',
+  ep_export_cancelled: 'Google-Anmeldung abgebrochen.',
+  ep_export_error_network:
+    'Export-Dienst nicht erreichbar. Lokal npm run dev:netlify versuchen.',
+  ep_export_error_invalid_spreadsheet: 'Ungültige Spreadsheet-ID.',
+  ep_export_error_sheets_auth_failed:
+    'Google-Anmeldung fehlgeschlagen oder Tabellenberechtigung nicht erteilt. Erneut versuchen und Google Sheets-Zugriff erlauben.',
+  ep_export_error_sheet_not_found: 'Tabelle oder Tab nicht gefunden. ID, URL und gid prüfen.',
+  ep_export_error_ids_master_not_found: 'IDS-Master-Tabellenblatt konnte nicht gelesen werden.',
+  ep_export_error_ids_master_empty: 'IDS Master enthält keine verknüpften Arbeitsmappen-Zeilen.',
+  ep_export_error_relic_workbook_not_found:
+    'IDS Master hat keine Relics-Zeile. Verknüpfte-ID-Tabelle prüfen.',
+  ep_export_relics_open_sheet: 'Verknüpftes Relics-Buch in Google Sheets öffnen',
+  ep_export_error_relic_workbook_access_denied:
+    'Das IDS-verknüpfte Relics-Buch ({{id}}) ist nicht bearbeitbar. In Google Sheets öffnen und Editor-Zugriff prüfen, oder den Link auf dem IDS-Tab korrigieren.',
+  ep_export_error_relic_tab_not_found: 'Relics-Tab im Relics-Buch nicht gefunden.',
+  ep_export_error_no_relic_rows:
+    'Keine Reliktzeilen im Relics-Buch gefunden. Relics-Tab in Google Sheets öffnen und Namen sowie Spalte Unlocked prüfen.',
+  ep_export_error_sheets_api_error: 'Google Sheets meldete einen Fehler. Erneut versuchen.',
+  ep_export_error_unknown: 'Export fehlgeschlagen. Erneut versuchen.',
   sr_compare_launcher: 'Builds vergleichen…',
   sr_compare_title: 'Zwei Lab-Snapshots vergleichen',
   sr_compare_intro: 'Füge eine Tower-CSV ein (erste Zeile tower_csv_v1; lab-, ws-, card-, module-, theme- und build-Zeilen), eine kurze URL mit ?build=…, eine lange URL mit ?tower=…, einen Freigabe-Payload (u… / z…) oder JSON { "v":4, "o", "w", "t", "n" }. Import stellt Labor, Werkstatt, Karten, Modul-Loadout-Presets, Relikte und besessene Themes wieder her. Jede Vergleichsseite nutzt ihr eigenes Labs-Münzrabatt-Niveau.',

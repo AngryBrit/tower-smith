@@ -620,6 +620,11 @@ export const STRINGS_EN = {
     'Game and wiki data in this build were aligned as of {{date}} (updated when maintainer scripts regenerate tables).',
   app_wiki_data_stamp_unknown:
     'Game and wiki alignment date is not recorded for this build.',
+  app_settings_ep_section_title: 'Effective Paths (Google Sheets)',
+  app_settings_ep_ids_master_label: 'IDS Master spreadsheet ID or URL',
+  app_settings_ep_ids_master_placeholder: '1RnNttj_… or https://docs.google.com/spreadsheets/d/…',
+  app_settings_ep_ids_master_hint:
+    'Your IDS Master gateway spreadsheet. TowerSmith reads the IDS tab and linked workbook IDs from column D (“Go to my … Sheet”).',
   app_settings_relic_workshop_bonus_hint:
     'When on, each relic card shows how its effect applies in the simulator (e.g. +10% workshop damage). Off by default.',
   settings_shortcuts_title: 'Keyboard shortcuts',
@@ -1308,6 +1313,58 @@ export const STRINGS_EN = {
   sr_notice_import_player_android_path_no_clip:
     'Opening file picker — in your file manager go to Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat.',
   sr_lab_export_file: 'Export tower to CSV',
+  ep_export_section: 'Effective Paths (Google Sheets)',
+  ep_export_section_hint:
+    'Sync owned relics to your Effective Paths Relics workbook. Set your IDS Master URL in Settings first.',
+  ep_export_open_btn: 'Sync relics to Effective Paths…',
+  ep_export_title: 'Sync relics to Effective Paths',
+  ep_export_intro:
+    'Load linked workbooks from your IDS Master (set in Settings), then sync owned relics to the Relics workbook.',
+  ep_export_missing_ids_master:
+    'Set your IDS Master spreadsheet URL in Settings (Tools → Settings) before loading linked workbooks.',
+  ep_export_spreadsheet_label: 'IDS Master spreadsheet ID or URL',
+  ep_export_spreadsheet_placeholder: '1RnNttj_… or https://docs.google.com/spreadsheets/d/…',
+  ep_export_spreadsheet_hint:
+    'Paste your IDS Master URL (any tab is fine — TowerSmith reads the IDS tab). Linked workbook IDs come only from column D (“Go to my … Sheet” hyperlinks).',
+  ep_export_load_sheets_btn: 'Allow Google Sheets & load linked workbooks',
+  ep_export_loading_sheets: 'Allowing Google Sheets & checking linked workbooks…',
+  ep_export_workbook_access_ok: 'Accessible',
+  ep_export_workbook_access_denied: 'No access',
+  ep_export_workbook_access_not_found: 'Not found',
+  ep_export_linked_workbooks_denied:
+    'Google Sheets is connected, but TowerSmith cannot open these linked workbooks: {{names}}. Open each in Google Sheets with the same account (Editor access) or fix the “Go to my … Sheet” link on the IDS tab.',
+  ep_export_linked_sheets_title: 'IDS tab “{{tab}}” — linked workbooks',
+  ep_export_relics_resolved:
+    'Relics workbook ID from IDS tab “{{tab}}”: {{id}} (separate spreadsheet; sync targets its Relics tab).',
+  ep_export_relics_sync_target: 'relic sync target',
+  ep_export_relics_missing_in_master:
+    'No Relics row with a spreadsheet ID was found on the IDS tab.',
+  ep_export_relics_missing_loaded:
+    'Loaded: {{names}}. Fix the “Go to my Relics Sheet” link in column D on the IDS tab.',
+  ep_export_sync_btn: 'Sync relics to Relics workbook',
+  ep_export_syncing: 'Syncing relics…',
+  ep_export_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
+  ep_export_unmapped_hint: '{{count}} sheet relic names were not mapped and were left unchanged.',
+  ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
+  ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
+  ep_export_cancelled: 'Google sign-in was cancelled.',
+  ep_export_error_network: 'Could not reach the export service. Try npm run dev:netlify locally.',
+  ep_export_error_invalid_spreadsheet: 'Invalid spreadsheet ID.',
+  ep_export_error_sheets_auth_failed:
+    'Google sign-in failed or the spreadsheets permission was not granted. Try again and allow access to Google Sheets.',
+  ep_export_error_sheet_not_found: 'Spreadsheet or tab not found. Check the ID, URL, and gid.',
+  ep_export_error_ids_master_not_found: 'Could not read the IDS Master table tab.',
+  ep_export_error_ids_master_empty: 'IDS Master has no linked workbook rows.',
+  ep_export_error_relic_workbook_not_found:
+    'IDS Master has no Relics workbook row. Check the linked-ID table.',
+  ep_export_relics_open_sheet: 'Open linked Relics workbook in Google Sheets',
+  ep_export_error_relic_workbook_access_denied:
+    'Cannot edit the IDS-linked Relics workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the “Go to my Relics Sheet” link on the IDS tab.',
+  ep_export_error_relic_tab_not_found: 'Could not find the Relics tab in the Relics workbook.',
+  ep_export_error_no_relic_rows:
+    'No relic rows found on the Relics workbook tab. Open the Relics sheet in Google Sheets and confirm the Relics tab has relic names and an Unlocked column.',
+  ep_export_error_sheets_api_error: 'Google Sheets returned an error. Try again in a moment.',
+  ep_export_error_unknown: 'Export failed. Try again.',
   sr_compare_launcher: 'Compare builds…',
   sr_compare_title: 'Compare two lab snapshots',
   sr_compare_intro:

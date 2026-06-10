@@ -627,6 +627,11 @@ export const STRINGS_ES = {
     'Los datos del juego y la wiki de esta compilación están alineados desde el {{date}} (se actualizan al regenerar tablas con scripts del proyecto).',
   app_wiki_data_stamp_unknown:
     'No hay fecha de alineación con el juego y la wiki para esta compilación.',
+  app_settings_ep_section_title: 'Effective Paths (Google Sheets)',
+  app_settings_ep_ids_master_label: 'ID o URL de IDS Master',
+  app_settings_ep_ids_master_placeholder: '1RnNttj_… o https://docs.google.com/spreadsheets/d/…',
+  app_settings_ep_ids_master_hint:
+    'Tu hoja IDS Master. TowerSmith lee la pestaña IDS y los IDs vinculados de la columna D (“Ir a mi hoja …”).',
   app_settings_relic_workshop_bonus_hint:
     'Si está activado, cada reliquia muestra cómo aplica su efecto en el simulador (p. ej. +10% daño de taller). Desactivado por defecto.',
   settings_shortcuts_title: 'Atajos de teclado',
@@ -1322,6 +1327,59 @@ export const STRINGS_ES = {
   sr_notice_import_player_android_path_no_clip:
     'Abriendo selector — en el gestor de archivos ve a Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat.',
   sr_lab_export_file: 'Exportar tower a CSV',
+  ep_export_section: 'Effective Paths (Google Sheets)',
+  ep_export_section_hint:
+    'Sincroniza reliquias con tu libro Relics de Effective Paths. Configura primero la URL de IDS Master en Ajustes.',
+  ep_export_open_btn: 'Sincronizar reliquias con Effective Paths…',
+  ep_export_title: 'Sincronizar reliquias con Effective Paths',
+  ep_export_intro:
+    'Carga libros vinculados desde IDS Master (configurado en Ajustes) y sincroniza reliquias en el libro Relics.',
+  ep_export_missing_ids_master:
+    'Configura la URL de IDS Master en Ajustes (Herramientas → Ajustes) antes de cargar libros vinculados.',
+  ep_export_spreadsheet_label: 'ID o URL de IDS Master',
+  ep_export_spreadsheet_placeholder: '1RnNttj_… o https://docs.google.com/spreadsheets/d/…',
+  ep_export_spreadsheet_hint:
+    'Pega la URL de tu IDS Master. Los IDs vinculados se leen solo de la columna D (“Ir a mi hoja …”).',
+  ep_export_load_sheets_btn: 'Permitir Google Sheets y cargar libros vinculados',
+  ep_export_loading_sheets: 'Permitiendo Google Sheets y comprobando libros vinculados…',
+  ep_export_workbook_access_ok: 'Accesible',
+  ep_export_workbook_access_denied: 'Sin acceso',
+  ep_export_workbook_access_not_found: 'No encontrado',
+  ep_export_linked_workbooks_denied:
+    'Google Sheets está conectado, pero TowerSmith no puede abrir estos libros vinculados: {{names}}. Ábrelos en Google Sheets con la misma cuenta (acceso de Editor) o corrige el enlace “Ir a mi hoja …” en la pestaña IDS.',
+  ep_export_linked_sheets_title: 'Pestaña IDS “{{tab}}” — libros vinculados',
+  ep_export_relics_resolved:
+    'ID del libro Relics desde IDS “{{tab}}”: {{id}} (hoja separada; sincroniza su pestaña Relics).',
+  ep_export_relics_sync_target: 'objetivo de sincronización',
+  ep_export_relics_missing_in_master:
+    'No se encontró una fila Relics con ID de hoja en la pestaña IDS.',
+  ep_export_relics_missing_loaded:
+    'Cargados: {{names}}. Corrige el enlace “Ir a mi hoja Relics” en la columna D.',
+  ep_export_sync_btn: 'Sincronizar reliquias al libro Relics',
+  ep_export_syncing: 'Sincronizando reliquias…',
+  ep_export_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de reliquias).',
+  ep_export_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',
+  ep_export_invalid_spreadsheet: 'Introduce un ID o URL válido de Google Spreadsheet.',
+  ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
+  ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
+  ep_export_error_network:
+    'No se pudo contactar el servicio de exportación. Prueba npm run dev:netlify en local.',
+  ep_export_error_invalid_spreadsheet: 'ID de hoja no válido.',
+  ep_export_error_sheets_auth_failed:
+    'Falló el inicio de sesión de Google o no se concedió permiso de hojas de cálculo. Inténtalo de nuevo y permite el acceso a Google Sheets.',
+  ep_export_error_sheet_not_found: 'Hoja o pestaña no encontrada. Revisa ID, URL y gid.',
+  ep_export_error_ids_master_not_found: 'No se pudo leer la pestaña de tabla IDS Master.',
+  ep_export_error_ids_master_empty: 'IDS Master no tiene filas de libros vinculados.',
+  ep_export_error_relic_workbook_not_found:
+    'IDS Master no tiene fila Relics. Revisa la tabla de IDs vinculados.',
+  ep_export_relics_open_sheet: 'Abrir Relics vinculado en Google Sheets',
+  ep_export_error_relic_workbook_access_denied:
+    'No se puede editar el Relics vinculado en IDS ({{id}}). Ábrelo en Google Sheets y confirma acceso de editor, o corrige el enlace en la pestaña IDS.',
+  ep_export_error_relic_tab_not_found: 'No se encontró la pestaña Relics en el libro Relics.',
+  ep_export_error_no_relic_rows:
+    'No se encontraron filas de reliquias en el libro Relics. Abre la pestaña Relics en Google Sheets y comprueba nombres y columna Unlocked.',
+  ep_export_error_sheets_api_error: 'Google Sheets devolvió un error. Inténtalo de nuevo.',
+  ep_export_error_unknown: 'La exportación falló. Inténtalo de nuevo.',
   sr_compare_launcher: 'Comparar builds…',
   sr_compare_title: 'Comparar dos instantáneas de labs',
   sr_compare_intro:
