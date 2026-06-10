@@ -1,9 +1,11 @@
 import { useCallback, useEffect, useId, useState } from 'react'
 import type { ImportNoticeVariant } from '../importNotice'
 import type { BotsEpSyncState } from '../effectivePaths/botsEpStateFromPersisted'
+import type { UwsEpSyncState } from '../effectivePaths/uwsEpStateFromPersisted'
 import {
   exportBotsToEffectivePaths,
   exportLabsToEffectivePaths,
+  exportUwsToEffectivePaths,
   exportCardsToEffectivePaths,
   exportRelicsToEffectivePaths,
   exportThemesToEffectivePaths,
@@ -15,6 +17,7 @@ import {
 import {
   isBotsWorkbookName,
   isLaboratoryWorkbookName,
+  isUwsWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -66,6 +69,10 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   laboratory_workbook_access_denied: 'ep_export_error_laboratory_workbook_access_denied',
   laboratory_tab_not_found: 'ep_export_error_laboratory_tab_not_found',
   no_lab_rows: 'ep_export_error_no_lab_rows',
+  uws_workbook_not_found: 'ep_export_error_uws_workbook_not_found',
+  uws_workbook_access_denied: 'ep_export_error_uws_workbook_access_denied',
+  uws_tab_not_found: 'ep_export_error_uws_tab_not_found',
+  no_uws_rows: 'ep_export_error_no_uws_rows',
   sheets_api_error: 'ep_export_error_sheets_api_error',
   unknown: 'ep_export_error_unknown',
 }
@@ -82,6 +89,7 @@ export type EffectivePathsExportDialogProps = {
   workshopLevels: Readonly<Record<string, number>>
   labLevelOverrides: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
+  uwsEpState: UwsEpSyncState
   /** Success notice only — shown on the parent panel after sync completes. */
   onSuccess: (message: string) => void
 }
@@ -98,6 +106,7 @@ export function EffectivePathsExportDialog({
   workshopLevels,
   labLevelOverrides,
   botsEpState,
+  uwsEpState,
   onSuccess,
 }: EffectivePathsExportDialogProps) {
   const { t } = useI18n()
@@ -134,10 +143,14 @@ export function EffectivePathsExportDialog({
   const [laboratoryWorkbookAccess, setLaboratoryWorkbookAccess] = useState<
     'ok' | 'denied' | 'not_found' | null
   >(null)
+  const [uwsWorkbook, setUwsWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
+  const [uwsWorkbookAccess, setUwsWorkbookAccess] = useState<
+    'ok' | 'denied' | 'not_found' | null
+  >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
   const [exportingTarget, setExportingTarget] = useState<
-    'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | null
+    'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | null
   >(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
@@ -168,6 +181,10 @@ export function EffectivePathsExportDialog({
     laboratoryWorkbook != null &&
     laboratoryWorkbookAccess !== 'denied' &&
     laboratoryWorkbookAccess !== 'not_found'
+  const canSyncUws =
+    uwsWorkbook != null &&
+    uwsWorkbookAccess !== 'denied' &&
+    uwsWorkbookAccess !== 'not_found'
   const exporting = exportingTarget != null
   const busy = loadingSheets || exporting
 
@@ -285,6 +302,8 @@ export function EffectivePathsExportDialog({
       setBotsWorkbookAccess(result.botsWorkbookAccess)
       setLaboratoryWorkbook(result.laboratoryWorkbook)
       setLaboratoryWorkbookAccess(result.laboratoryWorkbookAccess)
+      setUwsWorkbook(result.uwsWorkbook)
+      setUwsWorkbookAccess(result.uwsWorkbookAccess)
       setWorkbookAccess(result.workbookAccess)
       const deniedWorkbooks = result.workbookAccess.filter((row) => row.access === 'denied')
       if (deniedWorkbooks.length > 0) {
@@ -301,7 +320,8 @@ export function EffectivePathsExportDialog({
         !result.cardsWorkbook &&
         !result.workshopWorkbook &&
         !result.botsWorkbook &&
-        !result.laboratoryWorkbook
+        !result.laboratoryWorkbook &&
+        !result.uwsWorkbook
       ) {
         const loaded = result.workbooks.map((workbook) => workbook.name).join(', ')
         showNotice(
@@ -836,6 +856,81 @@ export function EffectivePathsExportDialog({
     t,
   ])
 
+  const handleExportUws = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+    if (!canSyncUws) {
+      showNotice(
+        uwsWorkbook
+          ? t('ep_export_error_uws_workbook_access_denied').replace(
+              '{{id}}',
+              uwsWorkbook.spreadsheetId,
+            )
+          : t('ep_export_uws_missing_in_master'),
+        'error',
+      )
+      return
+    }
+
+    setExportingTarget('uws')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+
+      writeStoredSpreadsheetRef(spreadsheetRef)
+
+      const result = await exportUwsToEffectivePaths({
+        googleAccessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        uwsEpState,
+      })
+
+      if (!result.ok) {
+        if (result.error === 'uws_workbook_access_denied') {
+          showNotice(
+            t('ep_export_error_uws_workbook_access_denied').replace(
+              '{{id}}',
+              uwsWorkbook?.spreadsheetId ?? '',
+            ),
+            'error',
+          )
+        } else {
+          showNotice(formatExportError(result.error, result.message), 'error')
+        }
+        return
+      }
+
+      const { matchedRows, updatedCells, sheetTitle } = result.result
+      const message = t('ep_export_uws_success')
+        .replace('{{rows}}', String(matchedRows))
+        .replace('{{cells}}', String(updatedCells))
+        .replace('{{sheet}}', sheetTitle)
+      onSuccess(message)
+      onClose()
+    } finally {
+      setExportingTarget(null)
+    }
+  }, [
+    parsedMaster,
+    canSyncUws,
+    ensureGoogleToken,
+    spreadsheetRef,
+    uwsEpState,
+    uwsWorkbook,
+    formatExportError,
+    showNotice,
+    onSuccess,
+    onClose,
+    t,
+  ])
+
   if (!open) return null
 
   return labOverlayPortal(
@@ -992,6 +1087,25 @@ export function EffectivePathsExportDialog({
             ) : null}
           </p>
         ) : null}
+        {uwsWorkbook ? (
+          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
+            {t('ep_export_uws_resolved')
+              .replace('{{tab}}', idsTabTitle ?? 'IDS')
+              .replace('{{id}}', uwsWorkbook.spreadsheetId)}
+            {uwsWorkbookAccess === 'denied' || uwsWorkbookAccess === 'not_found' ? (
+              <>
+                {' '}
+                <a
+                  href={googleSpreadsheetEditUrl(uwsWorkbook.spreadsheetId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('ep_export_uws_open_sheet')}
+                </a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
         {workbookAccess && workbookAccess.length > 0 ? (
           <div className="effective-paths-export-dialog__workbooks">
             <p id={listId} className="select-research__lab-data-section-label">
@@ -1014,11 +1128,18 @@ export function EffectivePathsExportDialog({
                 const isWorkshop = isWorkshopWorkbookName(workbook.name)
                 const isBots = isBotsWorkbookName(workbook.name)
                 const isLaboratory = isLaboratoryWorkbookName(workbook.name)
+                const isUws = isUwsWorkbookName(workbook.name)
                 return (
                   <li
                     key={`${workbook.name}:${workbook.spreadsheetId}`}
                     className={
-                      isRelics || isThemes || isCards || isWorkshop || isBots || isLaboratory
+                      isRelics ||
+                      isThemes ||
+                      isCards ||
+                      isWorkshop ||
+                      isBots ||
+                      isLaboratory ||
+                      isUws
                         ? 'effective-paths-export-dialog__workbook-item effective-paths-export-dialog__workbook-item--relics'
                         : 'effective-paths-export-dialog__workbook-item'
                     }
@@ -1063,6 +1184,11 @@ export function EffectivePathsExportDialog({
                     {isLaboratory ? (
                       <span className="effective-paths-export-dialog__workbook-tag">
                         {t('ep_export_labs_sync_target')}
+                      </span>
+                    ) : null}
+                    {isUws ? (
+                      <span className="effective-paths-export-dialog__workbook-tag">
+                        {t('ep_export_uws_sync_target')}
                       </span>
                     ) : null}
                   </li>
@@ -1121,6 +1247,14 @@ export function EffectivePathsExportDialog({
             onClick={() => void handleExportLabs()}
           >
             {exportingTarget === 'labs' ? t('ep_export_syncing_labs') : t('ep_export_sync_labs_btn')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={busy || !canSyncUws}
+            onClick={() => void handleExportUws()}
+          >
+            {exportingTarget === 'uws' ? t('ep_export_syncing_uws') : t('ep_export_sync_uws_btn')}
           </button>
           <button
             type="button"

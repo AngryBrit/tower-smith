@@ -1,5 +1,6 @@
 import { useRef, useState, type ChangeEvent } from 'react'
 import type { BotsEpSyncState } from '../../effectivePaths/botsEpStateFromPersisted'
+import type { UwsEpSyncState } from '../../effectivePaths/uwsEpStateFromPersisted'
 import { EffectivePathsExportDialog } from '../EffectivePathsExportDialog'
 import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
 import type { BugBusterInitial } from '../../bugBuster/bugBusterTypes'
@@ -52,6 +53,7 @@ export type LabImportExportPanelProps = {
   workshopLevels: Readonly<Record<string, number>>
   labLevelOverrides: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
+  uwsEpState: UwsEpSyncState
   onEffectivePathsSuccess: (message: string) => void
 }
 
@@ -81,6 +83,7 @@ export function LabImportExportPanel({
   workshopLevels,
   labLevelOverrides,
   botsEpState,
+  uwsEpState,
   onEffectivePathsSuccess,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
@@ -283,6 +286,7 @@ export function LabImportExportPanel({
         workshopLevels={workshopLevels}
         labLevelOverrides={labLevelOverrides}
         botsEpState={botsEpState}
+        uwsEpState={uwsEpState}
         onSuccess={onEffectivePathsSuccess}
       />
     </>,

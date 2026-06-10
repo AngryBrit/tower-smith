@@ -1,4 +1,4 @@
-import { categoryNameKey } from './effectivePathsCategoryNames'
+import { categoryNameKey, isUwsWorkbookName } from './effectivePathsCategoryNames'
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 
 /** Category rows on the IDS Master IDS tab (only these are linked workbooks). */
@@ -24,8 +24,18 @@ const CANONICAL_ORDER = new Map(
   EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES.map((name, index) => [categoryNameKey(name), index]),
 )
 
+const ULTIMATE_WEAPON_CANONICAL_KEY = categoryNameKey('Ultimate Weapon')
+
+/** Map IDS tab labels (incl. versioned aliases) to a canonical gateway category key. */
+export function idsWorkbookCategoryKey(name: string): string | null {
+  const key = categoryNameKey(name)
+  if (KNOWN_IDS_WORKBOOK_KEYS.has(key)) return key
+  if (isUwsWorkbookName(name)) return ULTIMATE_WEAPON_CANONICAL_KEY
+  return null
+}
+
 export function isKnownIdsWorkbookName(name: string): boolean {
-  return KNOWN_IDS_WORKBOOK_KEYS.has(categoryNameKey(name))
+  return idsWorkbookCategoryKey(name) != null
 }
 
 /** Keep only the eleven IDS gateway categories; drop IDS Collection, master ID rows, etc. */
@@ -35,8 +45,8 @@ export function filterKnownIdsWorkbooks(
   const seen = new Set<string>()
   const out: EffectivePathsLinkedWorkbook[] = []
   for (const workbook of workbooks) {
-    const key = categoryNameKey(workbook.name)
-    if (!KNOWN_IDS_WORKBOOK_KEYS.has(key) || seen.has(key)) continue
+    const key = idsWorkbookCategoryKey(workbook.name)
+    if (!key || seen.has(key)) continue
     seen.add(key)
     out.push(workbook)
   }
@@ -48,8 +58,8 @@ export function sortIdsWorkbooksCanonical(
 ): EffectivePathsLinkedWorkbook[] {
   return [...workbooks].sort(
     (a, b) =>
-      (CANONICAL_ORDER.get(categoryNameKey(a.name)) ?? 999) -
-      (CANONICAL_ORDER.get(categoryNameKey(b.name)) ?? 999),
+      (CANONICAL_ORDER.get(idsWorkbookCategoryKey(a.name) ?? '') ?? 999) -
+      (CANONICAL_ORDER.get(idsWorkbookCategoryKey(b.name) ?? '') ?? 999),
   )
 }
 

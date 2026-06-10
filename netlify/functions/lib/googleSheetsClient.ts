@@ -64,7 +64,8 @@ export function throwIfSheetsAccessDenied(
     | 'cards_workbook'
     | 'workshop_workbook'
     | 'bots_workbook'
-    | 'laboratory_workbook',
+    | 'laboratory_workbook'
+    | 'uws_workbook',
 ): void {
   if (status !== 401 && status !== 403) return
   if (context === 'relic_workbook') {
@@ -84,6 +85,9 @@ export function throwIfSheetsAccessDenied(
   }
   if (context === 'laboratory_workbook') {
     throw new GoogleSheetsApiError('sheets_api_error', status, 'laboratory_workbook_access_denied')
+  }
+  if (context === 'uws_workbook') {
+    throw new GoogleSheetsApiError('sheets_api_error', status, 'uws_workbook_access_denied')
   }
   throw new GoogleSheetsApiError('sheets_auth_failed', status)
 }

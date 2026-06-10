@@ -1342,6 +1342,7 @@ export const STRINGS_EN = {
   ep_export_workshop_sync_target: 'workshop sync target',
   ep_export_bots_sync_target: 'bots sync target',
   ep_export_labs_sync_target: 'laboratory sync target',
+  ep_export_uws_sync_target: 'ultimate weapons sync target',
   ep_export_relics_missing_in_master:
     'No Relics row with a spreadsheet ID was found on the IDS tab.',
   ep_export_themes_missing_in_master:
@@ -1352,6 +1353,8 @@ export const STRINGS_EN = {
     'No Workshop row with a spreadsheet ID was found on the IDS tab.',
   ep_export_bots_missing_in_master:
     'No Bots row with a spreadsheet ID was found on the IDS tab.',
+  ep_export_uws_missing_in_master:
+    'IDS Master has no Ultimate Weapons workbook row. Add a UWs v3.1.2 link on the IDS tab.',
   ep_export_labs_missing_in_master:
     'No Laboratory row with a spreadsheet ID was found on the IDS tab.',
   ep_export_sync_targets_missing:
@@ -1364,12 +1367,14 @@ export const STRINGS_EN = {
   ep_export_sync_workshop_btn: 'Sync workshop to Workshop workbook',
   ep_export_sync_bots_btn: 'Sync bots to Bots workbook',
   ep_export_sync_labs_btn: 'Sync labs to Laboratory workbook',
+  ep_export_sync_uws_btn: 'Sync ultimate weapons to UWs workbook',
   ep_export_syncing_relics: 'Syncing relics…',
   ep_export_syncing_themes: 'Syncing themes…',
   ep_export_syncing_cards: 'Syncing cards & presets…',
   ep_export_syncing_workshop: 'Syncing workshop…',
   ep_export_syncing_bots: 'Syncing bots…',
   ep_export_syncing_labs: 'Syncing labs…',
+  ep_export_syncing_uws: 'Syncing ultimate weapons…',
   ep_export_relics_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
   ep_export_themes_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} theme rows).',
   ep_export_cards_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} card rows).',
@@ -1379,6 +1384,8 @@ export const STRINGS_EN = {
     'Also updated {{enhanceRows}} workshop enhancement levels.',
   ep_export_bots_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} bot stat rows).',
   ep_export_labs_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} lab rows).',
+  ep_export_uws_success:
+    'Updated {{cells}} cells on “{{sheet}}” ({{rows}} ultimate weapon level rows).',
   ep_export_bots_lab_success_suffix: 'Also updated {{labRows}} BOTS laboratory levels.',
   ep_export_cards_presets_success_suffix:
     'Also updated {{presetRows}} preset slots on “{{presetSheet}}”.',
@@ -1411,6 +1418,9 @@ export const STRINGS_EN = {
   ep_export_labs_resolved:
     'Laboratory workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets Master Sheet lab levels).',
   ep_export_labs_open_sheet: 'Open linked Laboratory workbook in Google Sheets',
+  ep_export_uws_resolved:
+    'Ultimate Weapons workbook resolved from {{tab}}: {{id}}',
+  ep_export_uws_open_sheet: 'Open linked UWs workbook in Google Sheets',
   ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
   ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
   ep_export_cancelled: 'Google sign-in was cancelled.',
@@ -1469,6 +1479,14 @@ export const STRINGS_EN = {
     'Could not find the Master Sheet tab in the Laboratory workbook.',
   ep_export_error_no_lab_rows:
     'No lab rows were found on the Master Sheet tab. Check the sheet layout or tab name.',
+  ep_export_error_uws_workbook_not_found:
+    'IDS Master has no Ultimate Weapons workbook row. Check the linked-ID table.',
+  ep_export_error_uws_workbook_access_denied:
+    'Cannot edit the IDS-linked UWs workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the link on the IDS tab.',
+  ep_export_error_uws_tab_not_found:
+    'Could not find the Master Sheet tab in the UWs workbook.',
+  ep_export_error_no_uws_rows:
+    'No ultimate weapon rows were found on the Master Sheet tab. Check the sheet layout or tab name.',
   ep_export_error_no_relic_rows:
     'No relic rows found on the Relics workbook tab. Open the Relics sheet in Google Sheets and confirm the Relics tab has relic names and an Unlocked column.',
   ep_export_error_sheets_api_error: 'Google Sheets returned an error. Try again in a moment.',

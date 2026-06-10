@@ -7,6 +7,7 @@ import { readIdsGatewayLookup } from './lib/idsMasterSheets'
 import {
   isBotsWorkbookName,
   isLaboratoryWorkbookName,
+  isUwsWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -86,6 +87,7 @@ export default async (req: Request): Promise<Response> => {
       ...(gateway.workshopWorkbook ? [gateway.workshopWorkbook] : []),
       ...(gateway.botsWorkbook ? [gateway.botsWorkbook] : []),
       ...(gateway.laboratoryWorkbook ? [gateway.laboratoryWorkbook] : []),
+      ...(gateway.uwsWorkbook ? [gateway.uwsWorkbook] : []),
     ])
     const workbookAccess = (
       await authorizeLinkedWorkbooks(token, workbooksToAuthorize)
@@ -102,6 +104,8 @@ export default async (req: Request): Promise<Response> => {
       workbookAccess.find((row) => isBotsWorkbookName(row.name))?.access ?? null
     const laboratoryWorkbookAccess =
       workbookAccess.find((row) => isLaboratoryWorkbookName(row.name))?.access ?? null
+    const uwsWorkbookAccess =
+      workbookAccess.find((row) => isUwsWorkbookName(row.name))?.access ?? null
     return jsonResponse(
       200,
       {
@@ -120,6 +124,8 @@ export default async (req: Request): Promise<Response> => {
         botsWorkbookAccess,
         laboratoryWorkbook: gateway.laboratoryWorkbook,
         laboratoryWorkbookAccess,
+        uwsWorkbook: gateway.uwsWorkbook,
+        uwsWorkbookAccess,
         workbookAccess,
       },
       cors,

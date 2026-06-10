@@ -3,9 +3,12 @@ import { effectivePathsCors, googleAccessToken, SPREADSHEET_ID_RE } from './lib/
 import { jsonResponse } from './lib/http'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
 import type { BotsEpSyncState } from '../../src/effectivePaths/botsEpStateFromPersisted'
+import type { UwsEpSyncState } from '../../src/effectivePaths/uwsEpStateFromPersisted'
+import { WORKSHOP_ULTIMATE_WEAPON_ORDER } from '../../src/data/workshopUltimateData'
 import {
   exportBotsToGoogleSheet,
   exportLabsToGoogleSheet,
+  exportUwsToGoogleSheet,
   exportCardsToGoogleSheet,
   exportRelicsToGoogleSheet,
   exportThemesToGoogleSheet,
@@ -13,7 +16,7 @@ import {
   GoogleSheetsApiError,
 } from './lib/googleSheets'
 
-type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs'
+type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws'
 
 function parseBody(raw: unknown):
   | {
@@ -31,6 +34,7 @@ function parseBody(raw: unknown):
       cardPresetLoadouts: string[][]
       workshopLevels: Record<string, number>
       botsEpState: BotsEpSyncState
+      uwsEpState: UwsEpSyncState
       labLevelOverrides: Record<string, number>
     }
   | { ok: false; error: 'invalid_json' | 'invalid_spreadsheet' } {
@@ -75,7 +79,9 @@ function parseBody(raw: unknown):
             ? 'bots'
             : targetRaw === 'labs'
               ? 'labs'
-              : 'relics'
+              : targetRaw === 'uws'
+                ? 'uws'
+                : 'relics'
 
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
@@ -172,6 +178,35 @@ function parseBody(raw: unknown):
     }
   }
 
+  const uwsLevels: Record<string, number> = {}
+  const uwsLevelsRaw = (raw as { uwsLevels?: unknown }).uwsLevels
+  if (uwsLevelsRaw && typeof uwsLevelsRaw === 'object') {
+    for (const [key, val] of Object.entries(uwsLevelsRaw)) {
+      if (typeof key === 'string' && typeof val === 'number' && Number.isFinite(val)) {
+        uwsLevels[key] = val
+      }
+    }
+  }
+
+  const uwsOwnedByWeaponId: UwsEpSyncState['ownedByWeaponId'] = {
+    chainLightning: false,
+    smartMissiles: false,
+    deathWave: false,
+    chronoField: false,
+    innerLandMines: false,
+    goldenTower: false,
+    poisonSwamp: false,
+    blackHole: false,
+    spotlight: false,
+  }
+  const uwsOwnedRaw = (raw as { uwsOwnedByWeaponId?: unknown }).uwsOwnedByWeaponId
+  if (uwsOwnedRaw && typeof uwsOwnedRaw === 'object') {
+    for (const weaponId of WORKSHOP_ULTIMATE_WEAPON_ORDER) {
+      const val = (uwsOwnedRaw as Record<string, unknown>)[weaponId]
+      if (val === true) uwsOwnedByWeaponId[weaponId] = true
+    }
+  }
+
   return {
     ok: true,
     syncTarget,
@@ -192,6 +227,10 @@ function parseBody(raw: unknown):
       labLevels: botLabLevels,
     },
     labLevelOverrides,
+    uwsEpState: {
+      levels: uwsLevels,
+      ownedByWeaponId: uwsOwnedByWeaponId,
+    },
   }
 }
 
@@ -203,24 +242,28 @@ function mapExportError(message: string | undefined): string {
   if (message === 'no_workshop_rows') return 'no_workshop_rows'
   if (message === 'no_bot_rows') return 'no_bot_rows'
   if (message === 'no_lab_rows') return 'no_lab_rows'
+  if (message === 'no_uws_rows') return 'no_uws_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
   if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
   if (message === 'cards_workbook_not_found') return 'cards_workbook_not_found'
   if (message === 'workshop_workbook_not_found') return 'workshop_workbook_not_found'
   if (message === 'bots_workbook_not_found') return 'bots_workbook_not_found'
   if (message === 'laboratory_workbook_not_found') return 'laboratory_workbook_not_found'
+  if (message === 'uws_workbook_not_found') return 'uws_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
   if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
   if (message === 'cards_workbook_access_denied') return 'cards_workbook_access_denied'
   if (message === 'workshop_workbook_access_denied') return 'workshop_workbook_access_denied'
   if (message === 'bots_workbook_access_denied') return 'bots_workbook_access_denied'
   if (message === 'laboratory_workbook_access_denied') return 'laboratory_workbook_access_denied'
+  if (message === 'uws_workbook_access_denied') return 'uws_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
   if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
   if (message === 'cards_tab_not_found') return 'cards_tab_not_found'
   if (message === 'workshop_tab_not_found') return 'workshop_tab_not_found'
   if (message === 'bots_tab_not_found') return 'bots_tab_not_found'
   if (message === 'laboratory_tab_not_found') return 'laboratory_tab_not_found'
+  if (message === 'uws_tab_not_found') return 'uws_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
 }
@@ -320,6 +363,18 @@ export default async (req: Request): Promise<Response> => {
         labLevelOverrides: parsed.labLevelOverrides,
       })
       return jsonResponse(200, { ok: true, syncTarget: 'labs', ...result }, cors)
+    }
+
+    if (parsed.syncTarget === 'uws') {
+      const result = await exportUwsToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        uwsEpState: parsed.uwsEpState,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'uws', ...result }, cors)
     }
 
     const result = await exportRelicsToGoogleSheet({

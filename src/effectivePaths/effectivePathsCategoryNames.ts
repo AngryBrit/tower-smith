@@ -3,6 +3,7 @@ import {
   EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_LABORATORY_WORKBOOK_NAME,
+  EFFECTIVE_PATHS_UWS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
   EFFECTIVE_PATHS_WORKSHOP_WORKBOOK_NAME,
@@ -21,7 +22,11 @@ export function categoryNameKey(name: string): string {
 
 /** Display-friendly category label (emoji kept, extra whitespace trimmed). */
 export function cleanEffectivePathsCategoryName(name: string): string {
-  return name.trim().replace(/\s+/g, ' ')
+  const trimmed = name.trim().replace(/\s+/g, ' ')
+  if (isUwsWorkbookName(trimmed)) {
+    return EFFECTIVE_PATHS_UWS_WORKBOOK_NAME
+  }
+  return trimmed
 }
 
 export function isLaboratoryWorkbookName(name: string): boolean {
@@ -130,6 +135,31 @@ export function findBotsWorkbook(
   const byAlias = workbooks.find((workbook) => isBotsWorkbookName(workbook.name))
   if (byAlias) return byAlias
   const norm = categoryNameKey(EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}
+
+export function isUwsWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return (
+    key === 'uws' ||
+    key.startsWith('uws ') ||
+    key === 'ultimate weapon' ||
+    key === 'ultimate weapons' ||
+    key.endsWith(' uws') ||
+    key.includes('ultimate weapon')
+  )
+}
+
+export function findUwsWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isUwsWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_UWS_WORKBOOK_NAME)
   return (
     workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
     workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??

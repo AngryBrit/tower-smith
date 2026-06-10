@@ -16,6 +16,8 @@ describe('filterKnownIdsWorkbooks', () => {
     ])
     expect(filtered.map((w) => w.name)).toEqual(['Laboratory', 'Relics', 'Modules'])
     expect(isKnownIdsWorkbookName('Themes & Songs')).toBe(true)
+    expect(isKnownIdsWorkbookName('Ultimate Weapons')).toBe(true)
+    expect(isKnownIdsWorkbookName('UWs v3.1.2')).toBe(true)
     expect(isKnownIdsWorkbookName('IDS Collection')).toBe(false)
     expect(EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES).toHaveLength(11)
   })
@@ -27,6 +29,14 @@ describe('filterKnownIdsWorkbooks', () => {
       { name: 'Modules', spreadsheetId: '1Mods', access: 'ok' },
     ])
     expect(sorted.map((row) => row.name)).toEqual(['Laboratory', 'Relics', 'Modules'])
+  })
+
+  it('keeps Ultimate Weapon aliases in canonical IDS order', () => {
+    const filtered = filterKnownIdsWorkbooks([
+      { name: 'UWs v3.1.2', spreadsheetId: '1UwsWorkbookIdXXXXXXXXXXXXXX' },
+      { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
+    ])
+    expect(filtered.map((w) => w.name)).toEqual(['Laboratory', 'UWs v3.1.2'])
   })
 
   it('drops Home Page stat rows from linked workbook access lists', () => {

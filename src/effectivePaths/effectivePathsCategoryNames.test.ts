@@ -1,12 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import {
   categoryNameKey,
+  cleanEffectivePathsCategoryName,
   findBotsWorkbook,
   findCardsWorkbook,
   findRelicsWorkbook,
   findThemesWorkbook,
   findWorkshopWorkbook,
+  findUwsWorkbook,
   isBotsWorkbookName,
+  isUwsWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -17,6 +20,14 @@ describe('categoryNameKey', () => {
   it('strips leading emoji from IDS Master category labels', () => {
     expect(categoryNameKey('🔮 Relics')).toBe('relics')
     expect(categoryNameKey('Relics')).toBe('relics')
+  })
+})
+
+describe('cleanEffectivePathsCategoryName', () => {
+  it('drops ID suffix from Ultimate Weapon IDS row labels', () => {
+    expect(cleanEffectivePathsCategoryName('Ultimate Weapon ID')).toBe('Ultimate Weapon')
+    expect(cleanEffectivePathsCategoryName('Ultimate Weapons')).toBe('Ultimate Weapon')
+    expect(cleanEffectivePathsCategoryName('UWs v3.1.2')).toBe('Ultimate Weapon')
   })
 })
 
@@ -72,5 +83,17 @@ describe('findBotsWorkbook', () => {
     ])
     expect(found?.spreadsheetId).toBe('1BotsWorkbookIdXXXXXXXXXXXXX')
     expect(isBotsWorkbookName('🤖 Bots')).toBe(true)
+  })
+})
+
+describe('findUwsWorkbook', () => {
+  it('finds UWs among versioned workbook names', () => {
+    const found = findUwsWorkbook([
+      { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
+      { name: 'UWs v3.1.2', spreadsheetId: '1UwsWorkbookIdXXXXXXXXXXXXXX' },
+    ])
+    expect(found?.spreadsheetId).toBe('1UwsWorkbookIdXXXXXXXXXXXXXX')
+    expect(isUwsWorkbookName('UWs v3.1.2')).toBe(true)
+    expect(isUwsWorkbookName('Ultimate Weapon')).toBe(true)
   })
 })

@@ -10,6 +10,16 @@ import {
   type BotFarmingLevelCellUpdate,
 } from '../../../src/effectivePaths/buildBotSheetUpdates'
 import {
+  buildUwFarmingLevelCellUpdates,
+  buildUwSheetUpdates,
+  type UwFarmingLevelCellUpdate,
+} from '../../../src/effectivePaths/buildUwSheetUpdates'
+import type { UwsEpSyncState } from '../../../src/effectivePaths/uwsEpStateFromPersisted'
+import {
+  UW_EP_V31_LEVEL_FIRST_ROW,
+  UW_EP_V31_LEVEL_LAST_ROW,
+} from '../../../src/effectivePaths/uwEpSheetNames'
+import {
   BOT_EP_V31_FARMING_LEVEL_FIRST_ROW,
   BOT_EP_V31_FARMING_LEVEL_LAST_ROW,
 } from '../../../src/effectivePaths/botSheetNames'
@@ -103,6 +113,10 @@ import {
   pickEffectivePathsBotsTab,
 } from '../../../src/effectivePaths/pickBotsTab'
 import {
+  isUwsInputTabCandidate,
+  pickEffectivePathsUwsTab,
+} from '../../../src/effectivePaths/pickUwsTab'
+import {
   isWorkshopInputTabCandidate,
   pickEffectivePathsWorkshopTab,
 } from '../../../src/effectivePaths/pickWorkshopTab'
@@ -114,6 +128,7 @@ import {
   resolveBotsWorkbookId,
   resolveCardsWorkbookId,
   resolveLaboratoryWorkbookId,
+  resolveUwsWorkbookId,
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
   resolveWorkshopWorkbookId,
@@ -1362,5 +1377,212 @@ export async function exportLabsToGoogleSheet(options: {
     unmappedSheetNames: unmappedLabNamesWithLayout(rawRows, blocks, nameIndex),
     sheetTitle,
     laboratoryWorkbookId,
+  }
+}
+
+export const UW_EP_V31_LEVEL_COL = 6
+export const UW_EP_V31_UNLOCKED_COL = 3
+
+export type ExportUwsToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  sheetTitle: string
+  uwsWorkbookId: string
+}
+
+function orderedUwsWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isUwsInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsUwsTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isUwsInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+async function clearUwLevelColumn(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetTitle: string,
+): Promise<void> {
+  const quoted = quoteSheetTitleForRange(sheetTitle)
+  const range = encodeURIComponent(
+    `${quoted}!G${UW_EP_V31_LEVEL_FIRST_ROW}:G${UW_EP_V31_LEVEL_LAST_ROW}`,
+  )
+  const clearRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values/${range}:clear`,
+    { method: 'POST' },
+  )
+  throwIfSheetsAccessDenied(clearRes.status, 'uws_workbook')
+  if (!clearRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', clearRes.status, await clearRes.text())
+  }
+}
+
+async function applyUwLevelCells(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetId: number,
+  cells: readonly UwFarmingLevelCellUpdate[],
+): Promise<number> {
+  if (cells.length === 0) return 0
+
+  const requests = cells.map(({ rowIndex, label }) => ({
+    updateCells: {
+      range: {
+        sheetId,
+        startRowIndex: rowIndex - 1,
+        endRowIndex: rowIndex,
+        startColumnIndex: UW_EP_V31_LEVEL_COL,
+        endColumnIndex: UW_EP_V31_LEVEL_COL + 1,
+      },
+      rows: [
+        {
+          values: [{ userEnteredValue: { stringValue: label } }],
+        },
+      ],
+      fields: 'userEnteredValue',
+    },
+  }))
+
+  const updateRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'uws_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  return cells.length
+}
+
+export async function exportUwsToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  uwsEpState: UwsEpSyncState
+}): Promise<ExportUwsToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let uwsWorkbookId = overrideId
+  if (!uwsWorkbookId && options.masterSpreadsheetId) {
+    uwsWorkbookId = await resolveUwsWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!uwsWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(uwsWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'uws_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let sheetTitle = ''
+  let sheetId: number | null = null
+  for (const tab of orderedUwsWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    if (isUwsInputTabCandidate(tab.title, tab.gridProperties)) {
+      sheetTitle = tab.title
+      sheetId = tab.sheetId ?? null
+      break
+    }
+  }
+
+  if (!sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'uws_tab_not_found')
+  }
+
+  const farmingCells = buildUwFarmingLevelCellUpdates(options.uwsEpState)
+  const batch = buildUwSheetUpdates(sheetTitle, options.uwsEpState)
+  if (farmingCells.length === 0 && batch.length === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_uws_rows')
+  }
+
+  await clearUwLevelColumn(options.accessToken, uwsWorkbookId, sheetTitle)
+
+  let updatedCells = 0
+  let valueBatch = batch
+
+  if (sheetId != null) {
+    updatedCells += await applyUwLevelCells(
+      options.accessToken,
+      uwsWorkbookId,
+      sheetId,
+      farmingCells,
+    )
+  } else if (farmingCells.length > 0) {
+    const quoted = quoteSheetTitleForRange(sheetTitle)
+    valueBatch = [
+      ...batch,
+      ...farmingCells.map(({ rowIndex, label }) => ({
+        range: `${quoted}!G${rowIndex}`,
+        values: [[label]] as (string | number | boolean)[][],
+      })),
+    ]
+  }
+
+  if (valueBatch.length > 0) {
+    const updateRes = await sheetsFetch(
+      options.accessToken,
+      `/${encodeURIComponent(uwsWorkbookId)}/values:batchUpdate`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          valueInputOption: 'USER_ENTERED',
+          data: valueBatch,
+        }),
+      },
+    )
+    throwIfSheetsAccessDenied(updateRes.status, 'uws_workbook')
+    if (!updateRes.ok) {
+      throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+    }
+    const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+    updatedCells += updateBody.totalUpdatedCells ?? valueBatch.length
+  }
+
+  return {
+    updatedCells,
+    matchedRows: farmingCells.length,
+    sheetTitle,
+    uwsWorkbookId,
   }
 }
