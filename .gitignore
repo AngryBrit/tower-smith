@@ -40,9 +40,9 @@ tmp-kept-en-keys.json
 # Local IL2CPP / asset extraction scratch (not for the repo)
 tools/
 
-# Sensitive player save dumps (never commit)
-docs/player-save-field-dump.json
-docs/player-save-field-dump.txt
+# Local player save dumps (never commit)
+docs/player-save-*-dump.json
+docs/player-save-*-dump.txt
 
 # Playwright
 test-results/
