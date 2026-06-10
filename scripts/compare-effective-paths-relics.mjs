@@ -22,7 +22,10 @@ function normalizeName(name) {
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .replace(/['']/g, '')
+    .replace(/\bt\s*:\s*([ivx]+)\b/gi, (_match, roman) => `t${roman.toLowerCase()}`)
     .replace(/[^a-z0-9 ]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function loadGameIndexToId() {
@@ -104,27 +107,57 @@ function loadSaveOwnedIds() {
   return owned
 }
 
+function detectTsvLayout(lines) {
+  let nameCol = 2
+  let unlockedCol = 5
+  let startRow = 1
+  for (let i = 0; i < Math.min(lines.length, 15); i++) {
+    const cols = lines[i].split('\t').map((c) => c.trim())
+    const hasRarity = cols.some((c) => c.toLowerCase() === 'rarity')
+    if (!hasRarity) continue
+    const relicNameIdx = cols.findIndex((c) => /^relic(\s*name)?$/i.test(c) || c.toLowerCase() === 'name')
+    const unlockedIdx = cols.findIndex((c) => c.toLowerCase() === 'unlocked' || c.toLowerCase() === 'owned')
+    if (relicNameIdx >= 0) nameCol = relicNameIdx
+    if (unlockedIdx >= 0) unlockedCol = unlockedIdx
+    startRow = i + 1
+    break
+  }
+  return { nameCol, unlockedCol, startRow }
+}
+
 function parseSpreadsheet(path) {
   const text = readFileSync(path, 'utf8')
+  const lines = text.split(/\r?\n/)
+  const { nameCol, unlockedCol, startRow } = detectTsvLayout(lines)
   const rows = []
-  for (const line of text.split(/\r?\n/)) {
-    if (!line.trim() || line.startsWith('Rarity\t')) continue
-    const cols = line.split('\t')
-    if (cols.length < 6) continue
-    const name = cols[2]?.trim()
-    const unlockedRaw = cols[5]?.trim().toUpperCase()
-    if (!name || !unlockedRaw) continue
+  for (let i = startRow; i < lines.length; i++) {
+    const line = lines[i]
+    if (!line.trim()) continue
+    const cols = line.split('\t').map((c) => c.trim())
+    const name = cols[nameCol]?.trim()
+    const unlockedRaw = cols[unlockedCol]?.trim().toUpperCase()
+    if (!name || name.toLowerCase().startsWith('rarity')) continue
+    if (!unlockedRaw) continue
     if (unlockedRaw !== 'TRUE' && unlockedRaw !== 'FALSE') continue
     rows.push({ name, unlocked: unlockedRaw === 'TRUE' })
   }
   return rows
 }
 
-const sheetPath =
-  process.argv[2] ?? join(root, 'scripts/effective-paths-relics.tsv')
+const defaultSheetPath = join(root, 'scripts/effective-paths-relics.tsv')
+const sheetPath = process.argv[2] ?? defaultSheetPath
 if (!existsSync(sheetPath)) {
   console.error('Missing spreadsheet:', sheetPath)
-  console.error('Save Effective Paths paste as scripts/effective-paths-relics.tsv')
+  console.error('')
+  console.error('Export your Effective Paths Relics tab from Google Sheets:')
+  console.error('  File → Download → Tab-separated values (.tsv)')
+  console.error('Then save it as one of:')
+  console.error(`  ${defaultSheetPath}`)
+  console.error('  or pass the full path:')
+  console.error('  node scripts/compare-effective-paths-relics.mjs "C:\\Users\\you\\Downloads\\Relics.tsv"')
+  console.error('')
+  console.error('Save data uses docs/player-save-field-dump.json — refresh with:')
+  console.error('  npx tsx scripts/regenerate-player-save-dump.mjs "h:/The Tower/playerInfo.dat"')
   process.exit(1)
 }
 

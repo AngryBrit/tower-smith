@@ -1,0 +1,36 @@
+import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
+import { EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME } from './effectivePathsWorkbooks'
+
+/** Strip leading emoji/icons and normalize for IDS Master category labels. */
+export function categoryNameKey(name: string): string {
+  return name
+    .trim()
+    .replace(/^[\s\p{Extended_Pictographic}\p{Emoji_Presentation}\p{Emoji}]+/gu, '')
+    .replace(/^[^a-zA-Z0-9]+/, '')
+    .toLowerCase()
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+/** Display-friendly category label (emoji kept, extra whitespace trimmed). */
+export function cleanEffectivePathsCategoryName(name: string): string {
+  return name.trim().replace(/\s+/g, ' ')
+}
+
+export function isRelicsWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return key === 'relics' || key === 'relic' || key.endsWith(' relics')
+}
+
+export function findRelicsWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isRelicsWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}

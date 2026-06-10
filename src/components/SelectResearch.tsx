@@ -798,6 +798,8 @@ export function SelectResearch({
             onImportPlayerSaveClick={handleImportPlayerSaveClick}
             onCopyShareLink={() => void copyCleanShareLink()}
             onShowShareQr={() => void handleShowShareQr()}
+            relicOwnedIds={workshopFlat.relicOwnedIds}
+            onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
           />
       </Suspense>
 

@@ -1,0 +1,24 @@
+import { describe, expect, it } from 'vitest'
+import {
+  categoryNameKey,
+  findRelicsWorkbook,
+  isRelicsWorkbookName,
+} from './effectivePathsCategoryNames'
+
+describe('categoryNameKey', () => {
+  it('strips leading emoji from IDS Master category labels', () => {
+    expect(categoryNameKey('🔮 Relics')).toBe('relics')
+    expect(categoryNameKey('Relics')).toBe('relics')
+  })
+})
+
+describe('findRelicsWorkbook', () => {
+  it('finds Relics among emoji-prefixed workbook names', () => {
+    const found = findRelicsWorkbook([
+      { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
+      { name: '🔮 Relics', spreadsheetId: '1RelicsWorkbookIdXXXXXXXXXX' },
+    ])
+    expect(found?.spreadsheetId).toBe('1RelicsWorkbookIdXXXXXXXXXX')
+    expect(isRelicsWorkbookName('🔮 Relics')).toBe(true)
+  })
+})

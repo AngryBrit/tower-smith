@@ -1,4 +1,6 @@
-import { useRef, type ChangeEvent } from 'react'
+import { useRef, useState, type ChangeEvent } from 'react'
+import { EffectivePathsExportDialog } from '../EffectivePathsExportDialog'
+import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
 import type { BugBusterInitial } from '../../bugBuster/bugBusterTypes'
 import type { ImportNoticeVariant } from '../../importNotice'
 import { TOWER_ANDROID_SAVE_FOLDER } from '../../playerSave/playerInfoSavePath'
@@ -40,6 +42,8 @@ export type LabImportExportPanelProps = {
   onImportPlayerSaveClick: () => void
   onCopyShareLink: () => void | Promise<void>
   onShowShareQr: () => void
+  relicOwnedIds: readonly string[]
+  onEffectivePathsSuccess: (message: string) => void
 }
 
 export function LabImportExportPanel({
@@ -59,8 +63,13 @@ export function LabImportExportPanel({
   onImportPlayerSaveClick,
   onCopyShareLink,
   onShowShareQr,
+  relicOwnedIds,
+  onEffectivePathsSuccess,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
+  const [effectivePathsOpen, setEffectivePathsOpen] = useState(false)
+  const [effectivePathsSession, setEffectivePathsSession] = useState(0)
+  const effectivePathsAvailable = googleSheetsOAuthConfigured()
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)
   const importProgressLabel =
@@ -131,6 +140,24 @@ export function LabImportExportPanel({
               {t('sr_lab_export_file')}
             </button>
           </div>
+          {effectivePathsAvailable ? (
+            <>
+              <p className="select-research__lab-data-section-label">{t('ep_export_section')}</p>
+              <p className="select-research__lab-data-share-hint">{t('ep_export_section_hint')}</p>
+              <div className="select-research__lab-data-actions">
+                <button
+                  type="button"
+                  className="glow-btn glow-btn--block"
+                  onClick={() => {
+                    setEffectivePathsSession((n) => n + 1)
+                    setEffectivePathsOpen(true)
+                  }}
+                >
+                  {t('ep_export_open_btn')}
+                </button>
+              </div>
+            </>
+          ) : null}
           <p className="select-research__lab-data-section-label">{t('sr_lab_data_save_game')}</p>
           {androidPlayerSaveImport ? (
             <p className="select-research__lab-data-share-hint select-research__lab-data-path">
@@ -226,6 +253,13 @@ export function LabImportExportPanel({
         </div>
       </div>
       )}
+      <EffectivePathsExportDialog
+        key={effectivePathsSession}
+        open={effectivePathsOpen}
+        onClose={() => setEffectivePathsOpen(false)}
+        relicOwnedIds={relicOwnedIds}
+        onSuccess={onEffectivePathsSuccess}
+      />
     </>,
   )
 }

@@ -8,6 +8,7 @@ import { useColorScheme } from '../colorSchemeContext'
 import type { ColorSchemePreference } from '../colorSchemePreference'
 import { useI18n, type AppLocale } from '../i18n'
 import { InstallAppPanel } from './InstallAppPanel'
+import { EffectivePathsSettingsSection } from './settings/EffectivePathsSettingsSection'
 import { KeyboardShortcutsSection } from './settings/KeyboardShortcutsSection'
 import { WikiDataStampNotice } from './settings/WikiDataStampNotice'
 import { BugBusterTrigger } from './BugBusterTrigger'
@@ -84,6 +85,9 @@ export function SettingsPage({
         </select>
         <p className="settings-page__hint">{t('app_settings_color_scheme_hint')}</p>
       </div>
+
+      <EffectivePathsSettingsSection />
+      <hr className="settings-page__divider" aria-hidden />
 
       <div className="settings-page__field">
         <label className="settings-page__label" htmlFor="settings-locale-select">

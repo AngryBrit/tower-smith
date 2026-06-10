@@ -2281,6 +2281,89 @@ html[data-color-scheme='high-contrast'] {
   margin-top: 0.5rem;
 }
 
+.effective-paths-export-backdrop {
+  z-index: 120;
+}
+
+.select-research__lab-data-dialog.effective-paths-export-dialog {
+  max-width: 24rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.effective-paths-export-dialog__actions {
+  margin-top: 0.15rem;
+}
+
+.effective-paths-export-dialog__actions--footer {
+  margin-top: 0.25rem;
+}
+
+.effective-paths-export-dialog__actions .select-research__lab-data-close {
+  margin-top: 0;
+}
+
+.effective-paths-export-dialog__label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  margin: 0.35rem 0 0.25rem;
+  color: var(--sr-muted, #64748b);
+}
+
+.effective-paths-export-dialog__input {
+  margin-bottom: 0;
+  box-sizing: border-box;
+  padding: 0.45rem 0.55rem;
+  font-size: 0.82rem;
+}
+
+.effective-paths-export-dialog__workbooks {
+  margin-top: 0.35rem;
+}
+
+.effective-paths-export-dialog__workbook-list {
+  margin: 0.2rem 0 0.5rem;
+  padding: 0.35rem 0.5rem 0.35rem 1.15rem;
+  max-height: 9rem;
+  overflow-y: auto;
+  border-radius: 0.35rem;
+  border: 1px solid color-mix(in srgb, var(--sr-border, #cbd5e1) 70%, transparent);
+  font-size: 0.8rem;
+}
+
+.effective-paths-export-dialog__workbook-item {
+  margin: 0.15rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem;
+}
+
+.effective-paths-export-dialog__workbook-item--relics {
+  font-weight: 600;
+}
+
+.effective-paths-export-dialog__workbook-tag {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--sr-muted, #64748b);
+}
+
+.effective-paths-export-dialog__workbook-access {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.effective-paths-export-dialog__workbook-access--ok {
+  color: #16a34a;
+}
+
+.effective-paths-export-dialog__workbook-access--bad {
+  color: #dc2626;
+}
+
 .select-research__lab-data-title {
   margin: 0 0 0.5rem;
   font-size: 0.92rem;
@@ -9077,6 +9160,12 @@ button.workshop__uw-plus-cost--display:hover {
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: var(--sr-muted);
+}
+
+.settings-page__text-input {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .settings-page__locale-select {
