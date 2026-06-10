@@ -14,4 +14,4 @@ export const BUG_REPORT_ISSUES_URL =
 export const BUG_REPORT_SUPPORT_EMAIL = 'support@towersmith.com'
 
 /** TowerSmith community Discord (new tab). */
-export const DISCORD_URL = 'https://discord.gg/KBh4GK7P'
+export const DISCORD_URL = 'https://discord.gg/hUDZ6nCmF3'
