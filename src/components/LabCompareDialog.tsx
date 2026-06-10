@@ -1,4 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import type { CompareDialogInit } from '../lab/labToolsTypes'
+import { computeBuildCompareSummary, type BuildCompareSummary } from '../buildCompareSummary'
 import type { I18nFormatters, StringId } from '../i18n/dictionary'
 import { compareLabLevelOverrides, type LabCompareResult } from '../labCompare'
 import { readTowerThemesSnapshot } from '../towerDataThemes'
@@ -194,6 +196,7 @@ function workshopFieldLabel(field: WorkshopCompareRow['field'], t: TFn): string 
 type CompareOutcome = {
   lab: LabCompareResult
   workshopRows: WorkshopCompareRow[]
+  summary: BuildCompareSummary
 }
 
 export function LabCompareDialog({
@@ -202,6 +205,7 @@ export function LabCompareDialog({
   onClose,
   currentOverrides,
   currentWorkshop,
+  initialCompare = null,
   t,
   fmt,
 }: {
@@ -210,24 +214,35 @@ export function LabCompareDialog({
   onClose: () => void
   currentOverrides: Record<string, number>
   currentWorkshop: WorkshopPersistedV1
+  initialCompare?: CompareDialogInit | null
   t: TFn
   fmt: I18nFormatters
 }) {
   const [textA, setTextA] = useState('')
   const [textB, setTextB] = useState('')
+  const [sideLabelA, setSideLabelA] = useState<string | null>(null)
+  const [sideLabelB, setSideLabelB] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
   const [errorA, setErrorA] = useState<string | null>(null)
   const [errorB, setErrorB] = useState<string | null>(null)
   const [outcome, setOutcome] = useState<CompareOutcome | null>(null)
+  const initAppliedRef = useRef(false)
+  const pendingAutoRunRef = useRef(false)
 
-  const fillCurrentCsv = useCallback(
-    (side: 'a' | 'b') => {
-      const csv = serializeTowerUnifiedCsv(
+  const currentCsv = useCallback(
+    () =>
+      serializeTowerUnifiedCsv(
         currentOverrides,
         currentWorkshop,
         undefined,
         readTowerThemesSnapshot(),
-      )
+      ),
+    [currentOverrides, currentWorkshop],
+  )
+
+  const fillCurrentCsv = useCallback(
+    (side: 'a' | 'b') => {
+      const csv = currentCsv()
       if (side === 'a') {
         setTextA(csv)
         setErrorA(null)
@@ -237,7 +252,7 @@ export function LabCompareDialog({
       }
       setOutcome(null)
     },
-    [currentOverrides, currentWorkshop],
+    [currentCsv],
   )
 
   const runCompare = useCallback(async () => {
@@ -262,15 +277,54 @@ export function LabCompareDialog({
       const wsA = pa.workshop ?? defaultWorkshopPersisted()
       const wsB = pb.workshop ?? defaultWorkshopPersisted()
       const workshopRows = compareWorkshopPersisted(wsA, wsB)
-      setOutcome({ lab, workshopRows })
+      const summary = computeBuildCompareSummary(
+        data,
+        pa.overrides,
+        wsA,
+        pb.overrides,
+        wsB,
+        pa.themes,
+        pb.themes,
+      )
+      setOutcome({ lab, workshopRows, summary })
     } finally {
       setBusy(false)
     }
   }, [data, textA, textB, t])
 
+  useEffect(() => {
+    if (!open) {
+      initAppliedRef.current = false
+      pendingAutoRunRef.current = false
+      return
+    }
+    if (initAppliedRef.current || !initialCompare) return
+    initAppliedRef.current = true
+    setErrorA(null)
+    setErrorB(null)
+    setOutcome(null)
+    setSideLabelA(initialCompare.labelA ?? null)
+    setSideLabelB(initialCompare.labelB ?? null)
+    if (initialCompare.fillCurrentA) {
+      setTextA(currentCsv())
+    }
+    setTextB(initialCompare.textB)
+    pendingAutoRunRef.current = initialCompare.autoRun === true
+  }, [open, initialCompare, currentCsv])
+
+  useEffect(() => {
+    if (!open || !pendingAutoRunRef.current || busy) return
+    if (!textB.trim()) return
+    if (initialCompare?.fillCurrentA && !textA.trim()) return
+    pendingAutoRunRef.current = false
+    void runCompare()
+  }, [open, textA, textB, busy, initialCompare, runCompare])
+
   const clearAll = useCallback(() => {
     setTextA('')
     setTextB('')
+    setSideLabelA(null)
+    setSideLabelB(null)
     setErrorA(null)
     setErrorB(null)
     setOutcome(null)
@@ -280,7 +334,10 @@ export function LabCompareDialog({
 
   const result = outcome?.lab
   const workshopRows = outcome?.workshopRows
+  const summary = outcome?.summary
   const wsDiffering = workshopRows ? workshopDiffCount(workshopRows) : 0
+  const buildALabel = sideLabelA ?? t('sr_compare_build_a')
+  const buildBLabel = sideLabelB ?? t('sr_compare_build_b')
 
   return (
     <div
@@ -303,7 +360,7 @@ export function LabCompareDialog({
 
         <div className="select-research__compare-grid">
           <div className="select-research__compare-col">
-            <p className="select-research__compare-col-label">{t('sr_compare_build_a')}</p>
+            <p className="select-research__compare-col-label">{buildALabel}</p>
             <textarea
               className="select-research__compare-textarea glow-input"
               value={textA}
@@ -333,7 +390,7 @@ export function LabCompareDialog({
             </button>
           </div>
           <div className="select-research__compare-col">
-            <p className="select-research__compare-col-label">{t('sr_compare_build_b')}</p>
+            <p className="select-research__compare-col-label">{buildBLabel}</p>
             <textarea
               className="select-research__compare-textarea glow-input"
               value={textB}
@@ -378,9 +435,22 @@ export function LabCompareDialog({
           </button>
         </div>
 
-        {result && workshopRows ? (
+        {result && workshopRows && summary ? (
           <div className="select-research__compare-result" role="region" aria-live="polite">
+            <h3 className="select-research__compare-diff-head">{t('sr_compare_highlights_title')}</h3>
             <dl className="select-research__compare-summary">
+              <div className="select-research__compare-summary-row">
+                <dt>{t('sr_compare_displayed_damage_a')}</dt>
+                <dd>{summary.displayedDamageALabel}</dd>
+              </div>
+              <div className="select-research__compare-summary-row">
+                <dt>{t('sr_compare_displayed_damage_b')}</dt>
+                <dd>{summary.displayedDamageBLabel}</dd>
+              </div>
+              <div className="select-research__compare-summary-row">
+                <dt>{t('sr_compare_displayed_damage_delta')}</dt>
+                <dd>{summary.displayedDamageDeltaLabel}</dd>
+              </div>
               <div className="select-research__compare-summary-row">
                 <dt>{t('sr_compare_spent_a')}</dt>
                 <dd>{result.spentALabel}</dd>
@@ -393,8 +463,87 @@ export function LabCompareDialog({
                 <dt>{t('sr_compare_coin_delta')}</dt>
                 <dd>{result.coinDeltaLabel}</dd>
               </div>
+              <div className="select-research__compare-summary-row">
+                <dt>{t('sr_compare_ws_spent_a')}</dt>
+                <dd>{summary.workshopSpentALabel}</dd>
+              </div>
+              <div className="select-research__compare-summary-row">
+                <dt>{t('sr_compare_ws_spent_b')}</dt>
+                <dd>{summary.workshopSpentBLabel}</dd>
+              </div>
+              <div className="select-research__compare-summary-row">
+                <dt>{t('sr_compare_ws_coin_delta')}</dt>
+                <dd>{summary.workshopCoinDeltaLabel}</dd>
+              </div>
             </dl>
-            <p className="select-research__compare-diff-head">
+            {summary.topLabDiffs.length > 0 ? (
+              <>
+                <p className="select-research__compare-diff-head select-research__compare-diff-head--spaced">
+                  {t('sr_compare_top_lab_diffs')}
+                </p>
+                <div className="select-research__compare-table-wrap">
+                  <table className="select-research__compare-table">
+                    <thead>
+                      <tr>
+                        <th scope="col">{t('sr_compare_table_lab')}</th>
+                        <th scope="col">{buildALabel}</th>
+                        <th scope="col">{buildBLabel}</th>
+                        <th scope="col">{t('sr_compare_table_delta')}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {summary.topLabDiffs.map((row) => {
+                        const d = row.levelB - row.levelA
+                        const dStr = d > 0 ? `+${d}` : String(d)
+                        return (
+                          <tr key={`top-${row.sectionIndex}-${row.itemIndex}`}>
+                            <td>{row.name}</td>
+                            <td>{levelCell(data, row.sectionIndex, row.itemIndex, row.levelA, t)}</td>
+                            <td>{levelCell(data, row.sectionIndex, row.itemIndex, row.levelB, t)}</td>
+                            <td>{dStr}</td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : null}
+            {summary.relicsOnlyA.length > 0 || summary.relicsOnlyB.length > 0 ? (
+              <>
+                <p className="select-research__compare-diff-head select-research__compare-diff-head--spaced">
+                  {t('sr_compare_relic_diff_title')}
+                </p>
+                {summary.relicsOnlyA.length > 0 ? (
+                  <p className="select-research__compare-ws-summary">
+                    {fmt.compareRelicsOnlySide(buildALabel, summary.relicsOnlyA.length)}
+                  </p>
+                ) : null}
+                {summary.relicsOnlyB.length > 0 ? (
+                  <p className="select-research__compare-ws-summary">
+                    {fmt.compareRelicsOnlySide(buildBLabel, summary.relicsOnlyB.length)}
+                  </p>
+                ) : null}
+              </>
+            ) : null}
+            {summary.themesOnlyA.length > 0 || summary.themesOnlyB.length > 0 ? (
+              <>
+                <p className="select-research__compare-diff-head select-research__compare-diff-head--spaced">
+                  {t('sr_compare_theme_diff_title')}
+                </p>
+                {summary.themesOnlyA.length > 0 ? (
+                  <p className="select-research__compare-ws-summary">
+                    {fmt.compareThemesOnlySide(buildALabel, summary.themesOnlyA.length)}
+                  </p>
+                ) : null}
+                {summary.themesOnlyB.length > 0 ? (
+                  <p className="select-research__compare-ws-summary">
+                    {fmt.compareThemesOnlySide(buildBLabel, summary.themesOnlyB.length)}
+                  </p>
+                ) : null}
+              </>
+            ) : null}
+            <p className="select-research__compare-diff-head select-research__compare-diff-head--spaced">
               {fmt.compareDifferingLabsCount(result.differingCount)}
             </p>
             {result.differingCount > 0 ? (

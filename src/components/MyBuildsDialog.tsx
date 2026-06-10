@@ -174,6 +174,22 @@ export function MyBuildsDialog({
     [errorStrings, fmt, labToolsRef, setLoadingId, setNotice, t],
   )
 
+  const handleCompare = useCallback(
+    (id: string, title: string) => {
+      setNotice(null)
+      const { clean } = buildGalleryShareUrls(id, window.location.href)
+      labToolsRef.current?.openCompareDialog({
+        textB: clean,
+        labelA: t('sr_compare_label_yours'),
+        labelB: title,
+        fillCurrentA: true,
+        autoRun: true,
+      })
+      onClose()
+    },
+    [labToolsRef, onClose, t],
+  )
+
   const handleDeleteOwn = useCallback(
     async (id: string, title: string) => {
       setNotice(null)
@@ -345,39 +361,43 @@ export function MyBuildsDialog({
                         ? t('gallery_loading_tower')
                         : entry.title}
                     </button>
-                    <div className="my-builds-entry__meta-row">
-                      <div className="tower-gallery__entry-main">
-                        <div className="tower-gallery__entry-badges">
-                          <GalleryCategorySelect
-                            value={entry.category ?? 'other'}
-                            disabled={loadingId === entry.id}
-                            onChange={(next) =>
-                              void handleSetCategoryOwn(entry.id, next)
-                            }
-                          />
-                          <GalleryVisibilitySelect
-                            value={entry.visibility === 'unlisted' ? 'unlisted' : 'public'}
-                            disabled={loadingId === entry.id}
-                            onChange={(next) =>
-                              void handleSetVisibilityOwn(entry.id, next)
-                            }
-                          />
-                        </div>
-                        <time className="tower-gallery__entry-date" dateTime={entry.createdAt}>
-                          {formatGalleryDate(entry.createdAt, locale)}
-                        </time>
+                    <div className="tower-gallery__entry-main">
+                      <div className="tower-gallery__entry-badges">
+                        <GalleryCategorySelect
+                          value={entry.category ?? 'other'}
+                          disabled={loadingId === entry.id}
+                          onChange={(next) =>
+                            void handleSetCategoryOwn(entry.id, next)
+                          }
+                        />
+                        <GalleryVisibilitySelect
+                          value={entry.visibility === 'unlisted' ? 'unlisted' : 'public'}
+                          disabled={loadingId === entry.id}
+                          onChange={(next) =>
+                            void handleSetVisibilityOwn(entry.id, next)
+                          }
+                        />
                       </div>
-                      <div className="tower-gallery__entry-actions">
-                        <button
-                          type="button"
-                          className="glow-btn"
-                          onClick={() => void handleCopyLink(entry.id)}
-                        >
-                          {t('gallery_copy_link_btn')}
-                        </button>
-                      </div>
+                      <time className="tower-gallery__entry-date" dateTime={entry.createdAt}>
+                        {formatGalleryDate(entry.createdAt, locale)}
+                      </time>
                     </div>
-                    <div className="tower-gallery__owner-actions">
+                    <div className="tower-gallery__entry-actions">
+                      <button
+                        type="button"
+                        className="glow-btn"
+                        disabled={loadingId === entry.id}
+                        onClick={() => handleCompare(entry.id, entry.title)}
+                      >
+                        {t('gallery_compare_btn')}
+                      </button>
+                      <button
+                        type="button"
+                        className="glow-btn"
+                        onClick={() => void handleCopyLink(entry.id)}
+                      >
+                        {t('gallery_copy_link_btn')}
+                      </button>
                       <button
                         type="button"
                         className="glow-btn"

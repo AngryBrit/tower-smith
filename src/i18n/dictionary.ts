@@ -529,6 +529,7 @@ export const STRINGS_EN = {
   gallery_notice_regenerated_link: 'New link generated and copied. Old link no longer works.',
   gallery_notice_regenerated_no_copy: 'New link generated. Copy it from the build row.',
   gallery_load_btn: 'Load',
+  gallery_compare_btn: 'Compare',
   gallery_loading_tower: 'Loading…',
   gallery_error_network: 'Could not reach the gallery API. Try again later.',
   gallery_error_unavailable:
@@ -574,7 +575,7 @@ export const STRINGS_EN = {
     'Lists every build in the database (public and private). Use Load more if needed. Delete removes the short link and listing.',
   gallery_owner_make_public: 'Make public',
   gallery_owner_make_unlisted: 'Make Private',
-  gallery_owner_regenerate_link: 'Regenerate link',
+  gallery_owner_regenerate_link: 'Regen link',
   gallery_owner_delete_confirm:
     'Delete this build? This cannot be undone, and the old link will stop working.',
   gallery_regenerate_confirm:
@@ -1313,6 +1314,21 @@ export const STRINGS_EN = {
     'Paste a tower CSV (first line tower_csv_v1; lab, ws, card, module, theme, and build rows), a short URL with ?build=…, a long URL with ?tower=…, a raw share payload (u… / z…), or JSON { "v":4, "o", "w", "t", "n" }. Imports restore lab, workshop, cards, module loadout presets, relics, and owned themes. Each compare side uses its own Labs Coin Discount level.',
   sr_compare_build_a: 'Build A',
   sr_compare_build_b: 'Build B',
+  sr_compare_label_yours: 'Your build',
+  sr_compare_highlights_title: 'Key differences',
+  sr_compare_displayed_damage_a: 'Displayed damage (A)',
+  sr_compare_displayed_damage_b: 'Displayed damage (B)',
+  sr_compare_displayed_damage_delta: 'Damage change (B − A)',
+  sr_compare_ws_spent_a: 'Workshop coins spent (A)',
+  sr_compare_ws_spent_b: 'Workshop coins spent (B)',
+  sr_compare_ws_coin_delta: 'Workshop coin delta (B − A)',
+  sr_compare_top_lab_diffs: 'Largest lab level gaps',
+  sr_compare_relic_diff_title: 'Relics',
+  sr_compare_theme_diff_title: 'Themes',
+  sr_compare_relics_only_side_one: '{{side}} has 1 relic the other lacks.',
+  sr_compare_relics_only_side_many: '{{side}} has {{count}} relics the other lacks.',
+  sr_compare_themes_only_side_one: '{{side}} has 1 theme the other lacks.',
+  sr_compare_themes_only_side_many: '{{side}} has {{count}} themes the other lacks.',
   sr_compare_placeholder: 'Tower CSV, URL, share payload, or JSON…',
   sr_compare_use_current: 'Insert current tower CSV',
   sr_compare_ws_title: 'Workshop snapshot',
@@ -1511,6 +1527,8 @@ export type I18nFormatters = {
   versionAria: (version: string) => string
   compareDifferingLabsCount: (count: number) => string
   compareDifferingWorkshopFields: (count: number) => string
+  compareRelicsOnlySide: (side: string, count: number) => string
+  compareThemesOnlySide: (side: string, count: number) => string
   importedTowerBuildNamed: (name: string) => string
   importedTowerBuilds: (count: number) => string
   galleryNoticeLoaded: (title: string) => string
@@ -1589,6 +1607,14 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     compareDifferingWorkshopFields(count) {
       if (count === 1) return s.sr_compare_ws_diff_one
       return replaceParams(s.sr_compare_ws_diff_many, { count })
+    },
+    compareRelicsOnlySide(side, count) {
+      if (count === 1) return replaceParams(s.sr_compare_relics_only_side_one, { side })
+      return replaceParams(s.sr_compare_relics_only_side_many, { side, count })
+    },
+    compareThemesOnlySide(side, count) {
+      if (count === 1) return replaceParams(s.sr_compare_themes_only_side_one, { side })
+      return replaceParams(s.sr_compare_themes_only_side_many, { side, count })
     },
     importedTowerBuildNamed(name) {
       return replaceParams(s.sr_notice_import_tower_named, { name })

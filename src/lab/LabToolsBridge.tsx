@@ -12,7 +12,11 @@ import {
   buildLabsShareFileFromWorkspace,
 } from './labShareActions'
 import type { LabsShareFile } from '../labsShareCodec'
-import type { PendingLabUiAction, SelectResearchHandle } from './labToolsTypes'
+import type {
+  CompareDialogInit,
+  PendingLabUiAction,
+  SelectResearchHandle,
+} from './labToolsTypes'
 import type { ResearchData } from '../types/research'
 
 export function LabToolsBridgeProvider({
@@ -35,6 +39,7 @@ export function LabToolsBridgeProvider({
     'openLabDataPanel' | 'openCompareDialog'
   > | null>(null)
   const pendingUiRef = useRef<PendingLabUiAction | null>(null)
+  const pendingCompareInitRef = useRef<CompareDialogInit | null>(null)
 
   const getLabsShareFile = useCallback((): LabsShareFile | null => {
     if (!hydrated) return null
@@ -72,10 +77,14 @@ export function LabToolsBridgeProvider({
     pendingUiRef.current = 'dataPanel'
   }, [hydrated])
 
-  const openCompareDialog = useCallback(() => {
-    if (!hydrated) return
+  const openCompareDialog = useCallback((init?: CompareDialogInit) => {
+    pendingCompareInitRef.current = init ?? null
+    if (!hydrated) {
+      pendingUiRef.current = 'compare'
+      return
+    }
     if (researchUiRef.current) {
-      researchUiRef.current.openCompareDialog()
+      researchUiRef.current.openCompareDialog(init)
       return
     }
     pendingUiRef.current = 'compare'
@@ -89,7 +98,7 @@ export function LabToolsBridgeProvider({
       if (!pending) return
       pendingUiRef.current = null
       if (pending === 'dataPanel') handle.openLabDataPanel()
-      else handle.openCompareDialog()
+      else handle.openCompareDialog(pendingCompareInitRef.current ?? undefined)
     },
     [],
   )

@@ -53,6 +53,7 @@ import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useCommunityBuild } from '../lab/communityBuildContext'
 import { useLabHydration } from '../lab/labHydrationContext'
 import { useLabToolsBridge } from '../lab/labToolsBridgeContext'
+import type { CompareDialogInit } from '../lab/labToolsTypes'
 import { deferInEffect } from '../deferInEffect'
 import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
 import { LabToolbarQuick } from './lab/LabToolbarQuick'
@@ -137,6 +138,7 @@ export function SelectResearch({
   const [resetLevelsConfirmOpen, setResetLevelsConfirmOpen] = useState(false)
   const [labDataPanelOpen, setLabDataPanelOpen] = useState(false)
   const [labCompareOpen, setLabCompareOpen] = useState(false)
+  const [compareInit, setCompareInit] = useState<CompareDialogInit | null>(null)
   const [labBudgetCollapsed, setLabBudgetCollapsed] = useState(() => {
     try {
       return localStorage.getItem(LAB_BUDGET_COLLAPSED_STORAGE_KEY) === '1'
@@ -215,6 +217,7 @@ export function SelectResearch({
       setResetLevelsConfirmOpen(false)
       setLabDataPanelOpen(false)
       setLabCompareOpen(false)
+      setCompareInit(null)
     }
     window.addEventListener('keydown', onKey)
     const prevOverflow = document.body.style.overflow
@@ -581,12 +584,18 @@ export function SelectResearch({
     setLabDataPanelOpen(true)
   }, [hydrated])
 
-  const openCompareDialog = useCallback(() => {
+  const openCompareDialog = useCallback((init?: CompareDialogInit) => {
     if (!hydrated) return
     setShareQr(null)
     setLabDataPanelOpen(false)
+    setCompareInit(init ?? null)
     setLabCompareOpen(true)
   }, [hydrated])
+
+  const closeCompareDialog = useCallback(() => {
+    setLabCompareOpen(false)
+    setCompareInit(null)
+  }, [])
 
   useEffect(() => {
     registerResearchUi({ openLabDataPanel, openCompareDialog })
@@ -689,6 +698,7 @@ export function SelectResearch({
                 onClick={() => {
                   setShareQr(null)
                   setLabDataPanelOpen(false)
+                  setCompareInit(null)
                   setLabCompareOpen(true)
                 }}
                 disabled={!hydrated}
@@ -797,9 +807,10 @@ export function SelectResearch({
             <LabCompareDialog
               data={data}
               open={labCompareOpen}
-              onClose={() => setLabCompareOpen(false)}
+              onClose={closeCompareDialog}
               currentOverrides={levelOverrides}
               currentWorkshop={workshopFlat}
+              initialCompare={compareInit}
               t={t}
               fmt={fmt}
             />,

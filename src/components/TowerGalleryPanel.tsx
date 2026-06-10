@@ -337,6 +337,21 @@ export function TowerGalleryPanel({
 
   )
 
+  const handleCompare = useCallback(
+    (id: string, title: string) => {
+      setActionNotice(null)
+      const { clean } = buildGalleryShareUrls(id, window.location.href)
+      labToolsRef.current?.openCompareDialog({
+        textB: clean,
+        labelA: t('sr_compare_label_yours'),
+        labelB: title,
+        fillCurrentA: true,
+        autoRun: true,
+      })
+    },
+    [labToolsRef, t],
+  )
+
   const handleDeleteOwn = useCallback(
     async (id: string, title: string) => {
       setActionNotice(null)
@@ -684,7 +699,6 @@ export function TowerGalleryPanel({
                 </div>
 
                 <div className="tower-gallery__entry-actions">
-
                   <GalleryUpvoteButton
                     buildId={entry.id}
                     upvoteCount={entry.upvoteCount}
@@ -700,51 +714,55 @@ export function TowerGalleryPanel({
                   />
 
                   <button
-
                     type="button"
-
                     className="glow-btn"
-
-                    onClick={() => void handleCopyLink(entry.id)}
-
+                    disabled={loadingId === entry.id}
+                    onClick={() => handleCompare(entry.id, entry.title)}
                   >
-
-                    {t('gallery_copy_link_btn')}
-
+                    {t('gallery_compare_btn')}
                   </button>
+
+                  <button
+                    type="button"
+                    className="glow-btn"
+                    onClick={() => void handleCopyLink(entry.id)}
+                  >
+                    {t('gallery_copy_link_btn')}
+                  </button>
+
+                  {entry.viewerOwns ? (
+                    <>
+                      <button
+                        type="button"
+                        className="glow-btn"
+                        disabled={loadingId === entry.id}
+                        onClick={() =>
+                          setOwnerConfirm({
+                            kind: 'regenerate',
+                            id: entry.id,
+                            title: entry.title,
+                          })
+                        }
+                      >
+                        {t('gallery_owner_regenerate_link')}
+                      </button>
+                      <button
+                        type="button"
+                        className="glow-btn glow-btn--danger"
+                        disabled={loadingId === entry.id}
+                        onClick={() =>
+                          setOwnerConfirm({
+                            kind: 'delete',
+                            id: entry.id,
+                            title: entry.title,
+                          })
+                        }
+                      >
+                        {t('gallery_admin_delete')}
+                      </button>
+                    </>
+                  ) : null}
                 </div>
-                {entry.viewerOwns ? (
-                  <div className="tower-gallery__owner-actions">
-                    <button
-                      type="button"
-                      className="glow-btn"
-                      disabled={loadingId === entry.id}
-                      onClick={() =>
-                        setOwnerConfirm({
-                          kind: 'regenerate',
-                          id: entry.id,
-                          title: entry.title,
-                        })
-                      }
-                    >
-                      {t('gallery_owner_regenerate_link')}
-                    </button>
-                    <button
-                      type="button"
-                      className="glow-btn glow-btn--danger"
-                      disabled={loadingId === entry.id}
-                      onClick={() =>
-                        setOwnerConfirm({
-                          kind: 'delete',
-                          id: entry.id,
-                          title: entry.title,
-                        })
-                      }
-                    >
-                      {t('gallery_admin_delete')}
-                    </button>
-                  </div>
-                ) : null}
 
               </li>
 

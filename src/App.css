@@ -1850,26 +1850,9 @@ html[data-color-scheme='high-contrast'] {
   text-align: left;
 }
 
-.my-builds-dialog__entries .my-builds-entry__meta-row {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.75rem;
-  width: 100%;
-}
-
-.my-builds-dialog__entries .my-builds-entry__meta-row .tower-gallery__entry-main {
+.my-builds-dialog__entries .my-builds-entry .tower-gallery__entry-main {
   min-width: 0;
-  flex: 1 1 auto;
-}
-
-.my-builds-dialog__entries .my-builds-entry__meta-row .tower-gallery__entry-actions {
-  flex-shrink: 0;
-}
-
-.my-builds-dialog__entries .my-builds-entry .tower-gallery__owner-actions {
   width: 100%;
-  margin-top: 0;
 }
 
 .my-builds-dialog__footer {
@@ -8502,10 +8485,9 @@ button.workshop__uw-plus-cost--display:hover {
 
 .tower-gallery__entry {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0.75rem;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
   padding: 0.55rem 0.65rem;
   border-radius: 8px;
   border: 1px solid var(--border-subtle, rgba(255, 255, 255, 0.12));
@@ -8790,14 +8772,9 @@ button.workshop__uw-plus-cost--display:hover {
 
 .tower-gallery__entry-actions {
   display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  gap: 0.35rem;
-}
-
-.tower-gallery__owner-actions {
-  display: flex;
-  flex-wrap: nowrap;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 0.35rem;
   width: 100%;
   margin-top: 0.15rem;
@@ -8868,20 +8845,37 @@ button.workshop__uw-plus-cost--display:hover {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-width: 5.5rem;
-  padding-inline: 0.55rem;
+  gap: 0.2rem;
+  min-width: 0;
+  min-height: 2rem;
+  padding: 0.3rem 0.45rem;
+  line-height: 1;
 }
 
 .gallery-upvote-btn--on {
   border-color: var(--sr-cyan-a55);
-  color: var(--sr-text);
+  color: var(--sr-cyan-bright, #22d3ee);
+}
+
+.gallery-upvote-btn:not(.gallery-upvote-btn--on) .gallery-upvote-btn__icon {
+  opacity: 0.55;
+  filter: grayscale(0.35);
+}
+
+.gallery-upvote-btn__icon {
+  flex-shrink: 0;
+  display: block;
+  font-size: 0.95rem;
+  line-height: 1;
 }
 
 .gallery-upvote-btn__count {
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  opacity: 0.9;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.92;
+  min-width: 0.65rem;
+  text-align: center;
 }
 
 .settings-page__field {

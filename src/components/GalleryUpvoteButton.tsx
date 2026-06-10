@@ -71,10 +71,10 @@ export function GalleryUpvoteButton({
       aria-label={`${label} (${upvoteCount})`}
       title={!signedIn ? t('gallery_upvote_sign_in') : undefined}
     >
-      <span className={`${className}__label`}>{label}</span>
-      <span className={`${className}__count`} aria-hidden="true">
-        {upvoteCount}
+      <span className={`${className}__icon`} aria-hidden="true">
+        👍
       </span>
+      <span className={`${className}__count`}>{upvoteCount}</span>
     </button>
   )
 }

@@ -1,5 +1,8 @@
 import { createContext, useContext } from 'react'
-import type { PendingLabUiAction, SelectResearchHandle } from './labToolsTypes'
+import type {
+  PendingLabUiAction,
+  SelectResearchHandle,
+} from './labToolsTypes'
 
 export type LabToolsBridgeContextValue = {
   api: SelectResearchHandle
