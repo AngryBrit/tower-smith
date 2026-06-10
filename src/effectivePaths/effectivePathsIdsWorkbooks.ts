@@ -52,3 +52,22 @@ export function sortIdsWorkbooksCanonical(
       (CANONICAL_ORDER.get(categoryNameKey(b.name)) ?? 999),
   )
 }
+
+/** Canonical order for linked-workbook access rows (eleven IDS categories only). */
+export function sortLinkedWorkbookAccess<
+  T extends { name: string; spreadsheetId: string },
+>(rows: readonly T[]): T[] {
+  const known = rows.filter((row) => isKnownIdsWorkbookName(row.name))
+  const canon = sortIdsWorkbooksCanonical(
+    known.map((row) => ({ name: row.name, spreadsheetId: row.spreadsheetId })),
+  )
+  const out: T[] = []
+  for (const wb of canon) {
+    const row = known.find(
+      (candidate) =>
+        candidate.name === wb.name && candidate.spreadsheetId === wb.spreadsheetId,
+    )
+    if (row) out.push(row)
+  }
+  return out
+}

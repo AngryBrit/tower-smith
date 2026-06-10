@@ -35,6 +35,7 @@ import {
   applyTowerThemes,
   readTowerThemesSnapshot,
 } from '../towerDataThemes'
+import { useThemeOwned } from '../themeOwnedStorage'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { mergeWorkspaceBuild } from '../towerWorkspaceStorage'
@@ -126,6 +127,8 @@ export function SelectResearch({
     setLabLevelOverrides: setLevelOverrides,
     workshopFlat,
   } = useTowerWorkspaceContext()
+  const [themeOwned] = useThemeOwned()
+  const themeOwnedIds = useMemo(() => [...themeOwned].sort(), [themeOwned])
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const labBudgetBodyId = useId().replace(/:/g, '')
   const [search, setSearch] = useState('')
@@ -799,6 +802,7 @@ export function SelectResearch({
             onCopyShareLink={() => void copyCleanShareLink()}
             onShowShareQr={() => void handleShowShareQr()}
             relicOwnedIds={workshopFlat.relicOwnedIds}
+            themeOwnedIds={themeOwnedIds}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
           />
       </Suspense>

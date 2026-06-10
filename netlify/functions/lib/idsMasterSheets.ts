@@ -1,8 +1,9 @@
 import { quoteSheetTitleForRange } from '../../../src/effectivePaths/buildRelicUnlockedUpdates'
 import { padSheetRowsToWidth } from '../../../src/effectivePaths/relicSheetLayout'
-import { findRelicsWorkbook } from '../../../src/effectivePaths/effectivePathsCategoryNames'
+import { findRelicsWorkbook, findThemesWorkbook } from '../../../src/effectivePaths/effectivePathsCategoryNames'
 import { filterKnownIdsWorkbooks } from '../../../src/effectivePaths/effectivePathsIdsWorkbooks'
 import { lookupRelicsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupRelicsOnIdsGrid'
+import { lookupThemesWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupThemesOnIdsGrid'
 import {
   parseIdsMasterWorkbooks,
   type EffectivePathsLinkedWorkbook,
@@ -123,6 +124,7 @@ export type IdsGatewayLookup = {
   idsTabTitle: string
   workbooks: EffectivePathsLinkedWorkbook[]
   relicsWorkbook: EffectivePathsLinkedWorkbook | null
+  themesWorkbook: EffectivePathsLinkedWorkbook | null
 }
 
 function pickIdsGatewayTab(
@@ -169,18 +171,23 @@ export async function readIdsGatewayLookup(options: {
   }
 
   const grid = await readTabGrid(options.accessToken, options.masterSpreadsheetId, idsTab.title)
-  const workbooks = filterKnownIdsWorkbooks(parseIdsMasterWorkbooks(grid))
+  const workbooks = parseIdsMasterWorkbooks(grid)
   const relicsFromRow = lookupRelicsWorkbookOnIdsGrid(grid)
   const relicsWorkbook =
     relicsFromRow && filterKnownIdsWorkbooks([relicsFromRow])[0]
       ? relicsFromRow
       : findRelicsWorkbook(workbooks)
+  const themesFromRow = lookupThemesWorkbookOnIdsGrid(grid)
+  const themesWorkbook =
+    themesFromRow && filterKnownIdsWorkbooks([themesFromRow])[0]
+      ? themesFromRow
+      : findThemesWorkbook(workbooks)
 
-  if (workbooks.length === 0 && !relicsWorkbook) {
+  if (workbooks.length === 0 && !relicsWorkbook && !themesWorkbook) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'ids_master_empty')
   }
 
-  return { idsTabTitle: idsTab.title, workbooks, relicsWorkbook }
+  return { idsTabTitle: idsTab.title, workbooks, relicsWorkbook, themesWorkbook }
 }
 
 export async function readIdsMasterWorkbooks(options: {
@@ -210,7 +217,7 @@ export async function readIdsMasterWorkbooks(options: {
 
   for (const tab of orderedIdsMasterTabs(sheets, options.sheetGid)) {
     const grid = await readTabGrid(options.accessToken, options.masterSpreadsheetId, tab.title)
-    const workbooks = filterKnownIdsWorkbooks(parseIdsMasterWorkbooks(grid))
+    const workbooks = parseIdsMasterWorkbooks(grid)
     if (workbooks.length > 0) return workbooks
   }
 
@@ -227,4 +234,16 @@ export async function resolveRelicsWorkbookId(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 404, 'relic_workbook_not_found')
   }
   return gateway.relicsWorkbook.spreadsheetId
+}
+
+export async function resolveThemesWorkbookId(options: {
+  accessToken: string
+  masterSpreadsheetId: string
+  sheetGid: number | null
+}): Promise<string> {
+  const gateway = await readIdsGatewayLookup(options)
+  if (!gateway.themesWorkbook) {
+    throw new GoogleSheetsApiError('sheets_api_error', 404, 'themes_workbook_not_found')
+  }
+  return gateway.themesWorkbook.spreadsheetId
 }

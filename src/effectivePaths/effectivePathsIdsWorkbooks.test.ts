@@ -3,6 +3,7 @@ import {
   EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES,
   filterKnownIdsWorkbooks,
   isKnownIdsWorkbookName,
+  sortLinkedWorkbookAccess,
 } from './effectivePathsIdsWorkbooks'
 
 describe('filterKnownIdsWorkbooks', () => {
@@ -17,5 +18,23 @@ describe('filterKnownIdsWorkbooks', () => {
     expect(isKnownIdsWorkbookName('Themes & Songs')).toBe(true)
     expect(isKnownIdsWorkbookName('IDS Collection')).toBe(false)
     expect(EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES).toHaveLength(11)
+  })
+
+  it('sorts linked workbook access rows in canonical IDS order', () => {
+    const sorted = sortLinkedWorkbookAccess([
+      { name: 'Relics', spreadsheetId: '1Relics', access: 'ok' },
+      { name: 'Laboratory', spreadsheetId: '1Labs', access: 'denied' },
+      { name: 'Modules', spreadsheetId: '1Mods', access: 'ok' },
+    ])
+    expect(sorted.map((row) => row.name)).toEqual(['Laboratory', 'Relics', 'Modules'])
+  })
+
+  it('drops Home Page stat rows from linked workbook access lists', () => {
+    const sorted = sortLinkedWorkbookAccess([
+      { name: 'Relics', spreadsheetId: '1Relics', access: 'ok' },
+      { name: 'Labs done: 984', spreadsheetId: '1Junk', access: 'ok' },
+      { name: 'Completion: 97%', spreadsheetId: '1Junk2', access: 'ok' },
+    ])
+    expect(sorted.map((row) => row.name)).toEqual(['Relics'])
   })
 })

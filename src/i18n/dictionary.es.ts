@@ -1329,11 +1329,11 @@ export const STRINGS_ES = {
   sr_lab_export_file: 'Exportar tower a CSV',
   ep_export_section: 'Effective Paths (Google Sheets)',
   ep_export_section_hint:
-    'Sincroniza reliquias con tu libro Relics de Effective Paths. Configura primero la URL de IDS Master en Ajustes.',
-  ep_export_open_btn: 'Sincronizar reliquias con Effective Paths…',
-  ep_export_title: 'Sincronizar reliquias con Effective Paths',
+    'Sincroniza reliquias y temas con tus libros Effective Paths. Configura primero la URL de IDS Master en Ajustes.',
+  ep_export_open_btn: 'Sincronizar con Effective Paths…',
+  ep_export_title: 'Sincronizar con Effective Paths',
   ep_export_intro:
-    'Carga libros vinculados desde IDS Master (configurado en Ajustes) y sincroniza reliquias en el libro Relics.',
+    'Carga libros vinculados desde IDS Master (configurado en Ajustes) y sincroniza reliquias o temas en los libros hijo vinculados.',
   ep_export_missing_ids_master:
     'Configura la URL de IDS Master en Ajustes (Herramientas → Ajustes) antes de cargar libros vinculados.',
   ep_export_spreadsheet_label: 'ID o URL de IDS Master',
@@ -1350,15 +1350,28 @@ export const STRINGS_ES = {
   ep_export_linked_sheets_title: 'Pestaña IDS “{{tab}}” — libros vinculados',
   ep_export_relics_resolved:
     'ID del libro Relics desde IDS “{{tab}}”: {{id}} (hoja separada; sincroniza su pestaña Relics).',
-  ep_export_relics_sync_target: 'objetivo de sincronización',
+  ep_export_relics_sync_target: 'objetivo de sincronización de reliquias',
+  ep_export_themes_sync_target: 'objetivo de sincronización de temas',
   ep_export_relics_missing_in_master:
     'No se encontró una fila Relics con ID de hoja en la pestaña IDS.',
+  ep_export_themes_missing_in_master:
+    'No se encontró una fila Themes & Songs con ID de hoja en la pestaña IDS.',
+  ep_export_sync_targets_missing:
+    'No se encontraron filas Relics ni Themes & Songs con IDs de hoja en la pestaña IDS.',
   ep_export_relics_missing_loaded:
     'Cargados: {{names}}. Corrige el enlace “Ir a mi hoja Relics” en la columna D.',
-  ep_export_sync_btn: 'Sincronizar reliquias al libro Relics',
-  ep_export_syncing: 'Sincronizando reliquias…',
-  ep_export_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de reliquias).',
-  ep_export_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',
+  ep_export_sync_relics_btn: 'Sincronizar reliquias al libro Relics',
+  ep_export_sync_themes_btn: 'Sincronizar temas al libro Themes & Songs',
+  ep_export_syncing_relics: 'Sincronizando reliquias…',
+  ep_export_syncing_themes: 'Sincronizando temas…',
+  ep_export_relics_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de reliquias).',
+  ep_export_themes_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de temas).',
+  ep_export_relics_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',
+  ep_export_themes_unmapped_hint: '{{count}} nombres de tema no se mapearon y no se cambiaron.',
+  ep_export_themes_unmapped_sample: 'Ejemplos: {{names}}',
+  ep_export_themes_resolved:
+    'ID del libro Themes & Songs desde IDS “{{tab}}”: {{id}} (sincroniza casillas de propiedad en los bloques de entrada v3.x).',
+  ep_export_themes_open_sheet: 'Abrir Themes & Songs vinculado en Google Sheets',
   ep_export_invalid_spreadsheet: 'Introduce un ID o URL válido de Google Spreadsheet.',
   ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
   ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
@@ -1376,6 +1389,14 @@ export const STRINGS_ES = {
   ep_export_error_relic_workbook_access_denied:
     'No se puede editar el Relics vinculado en IDS ({{id}}). Ábrelo en Google Sheets y confirma acceso de editor, o corrige el enlace en la pestaña IDS.',
   ep_export_error_relic_tab_not_found: 'No se encontró la pestaña Relics en el libro Relics.',
+  ep_export_error_themes_workbook_not_found:
+    'IDS Master no tiene fila Themes & Songs. Revisa la tabla de IDs vinculados.',
+  ep_export_error_themes_workbook_access_denied:
+    'No se puede editar el Themes & Songs vinculado en IDS ({{id}}). Ábrelo en Google Sheets y confirma acceso de editor, o corrige el enlace en la pestaña IDS.',
+  ep_export_error_themes_tab_not_found:
+    'No se encontró la pestaña de entrada Themes & Songs en el libro Themes & Songs.',
+  ep_export_error_no_theme_rows:
+    'No se encontraron filas de temas en la pestaña de entrada Themes & Songs. Revisa el diseño o el nombre de la pestaña.',
   ep_export_error_no_relic_rows:
     'No se encontraron filas de reliquias en el libro Relics. Abre la pestaña Relics en Google Sheets y comprueba nombres y columna Unlocked.',
   ep_export_error_sheets_api_error: 'Google Sheets devolvió un error. Inténtalo de nuevo.',

@@ -4,7 +4,14 @@ import { jsonResponse } from './lib/http'
 import { GoogleSheetsApiError } from './lib/googleSheets'
 import { authorizeLinkedWorkbooks } from './lib/authorizeLinkedWorkbooks'
 import { readIdsGatewayLookup } from './lib/idsMasterSheets'
-import { isRelicsWorkbookName } from '../../src/effectivePaths/effectivePathsCategoryNames'
+import {
+  isRelicsWorkbookName,
+  isThemesWorkbookName,
+} from '../../src/effectivePaths/effectivePathsCategoryNames'
+import {
+  filterKnownIdsWorkbooks,
+  isKnownIdsWorkbookName,
+} from '../../src/effectivePaths/effectivePathsIdsWorkbooks'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
 
 function parseBody(raw: unknown):
@@ -67,26 +74,28 @@ export default async (req: Request): Promise<Response> => {
       masterSpreadsheetId: parsed.masterSpreadsheetId,
       sheetGid: parsed.sheetGid,
     })
-    const workbooksToAuthorize = [...gateway.workbooks]
-    if (
-      gateway.relicsWorkbook &&
-      !workbooksToAuthorize.some(
-        (workbook) => workbook.spreadsheetId === gateway.relicsWorkbook!.spreadsheetId,
-      )
-    ) {
-      workbooksToAuthorize.push(gateway.relicsWorkbook)
-    }
-    const workbookAccess = await authorizeLinkedWorkbooks(token, workbooksToAuthorize)
+    const workbooksToAuthorize = filterKnownIdsWorkbooks([
+      ...gateway.workbooks,
+      ...(gateway.relicsWorkbook ? [gateway.relicsWorkbook] : []),
+      ...(gateway.themesWorkbook ? [gateway.themesWorkbook] : []),
+    ])
+    const workbookAccess = (
+      await authorizeLinkedWorkbooks(token, workbooksToAuthorize)
+    ).filter((row) => isKnownIdsWorkbookName(row.name))
     const relicsWorkbookAccess =
       workbookAccess.find((row) => isRelicsWorkbookName(row.name))?.access ?? null
+    const themesWorkbookAccess =
+      workbookAccess.find((row) => isThemesWorkbookName(row.name))?.access ?? null
     return jsonResponse(
       200,
       {
         ok: true,
-        workbooks: gateway.workbooks,
+        workbooks: filterKnownIdsWorkbooks(gateway.workbooks),
         idsTabTitle: gateway.idsTabTitle,
         relicsWorkbook: gateway.relicsWorkbook,
         relicsWorkbookAccess,
+        themesWorkbook: gateway.themesWorkbook,
+        themesWorkbookAccess,
         workbookAccess,
       },
       cors,

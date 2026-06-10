@@ -21,16 +21,31 @@ export type EffectivePathsExportError =
   | 'relic_workbook_access_denied'
   | 'relic_tab_not_found'
   | 'no_relic_rows'
+  | 'themes_workbook_not_found'
+  | 'themes_workbook_access_denied'
+  | 'themes_tab_not_found'
+  | 'no_theme_rows'
   | 'sheets_api_error'
   | 'unknown'
 
-export type EffectivePathsExportResult = {
+export type EffectivePathsRelicsExportResult = {
   ok: true
+  syncTarget: 'relics'
   updatedCells: number
   matchedRows: number
   unmappedSheetNames: string[]
   sheetTitle: string
   relicsWorkbookId: string
+}
+
+export type EffectivePathsThemesExportResult = {
+  ok: true
+  syncTarget: 'themes'
+  updatedCells: number
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  themesWorkbookId: string
 }
 
 export type EffectivePathsListResult = {
@@ -39,6 +54,8 @@ export type EffectivePathsListResult = {
   idsTabTitle: string
   relicsWorkbook: EffectivePathsLinkedWorkbook | null
   relicsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
+  themesWorkbook: EffectivePathsLinkedWorkbook | null
+  themesWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   workbookAccess: LinkedWorkbookAccess[]
 }
 
@@ -89,9 +106,16 @@ export async function listEffectivePathsWorkbooks(options: {
     }
 
     const parsed = body as EffectivePathsListResult
-    const access = (parsed as { relicsWorkbookAccess?: unknown }).relicsWorkbookAccess
+    const relicsAccess = (parsed as { relicsWorkbookAccess?: unknown }).relicsWorkbookAccess
     const relicsWorkbookAccess =
-      access === 'ok' || access === 'denied' || access === 'not_found' ? access : null
+      relicsAccess === 'ok' || relicsAccess === 'denied' || relicsAccess === 'not_found'
+        ? relicsAccess
+        : null
+    const themesAccess = (parsed as { themesWorkbookAccess?: unknown }).themesWorkbookAccess
+    const themesWorkbookAccess =
+      themesAccess === 'ok' || themesAccess === 'denied' || themesAccess === 'not_found'
+        ? themesAccess
+        : null
     const rawAccess = (parsed as { workbookAccess?: unknown }).workbookAccess
     const workbookAccess = Array.isArray(rawAccess)
       ? rawAccess.filter(
@@ -117,6 +141,13 @@ export async function listEffectivePathsWorkbooks(options: {
           ? parsed.relicsWorkbook
           : null,
       relicsWorkbookAccess,
+      themesWorkbook:
+        parsed.themesWorkbook &&
+        typeof parsed.themesWorkbook === 'object' &&
+        typeof parsed.themesWorkbook.spreadsheetId === 'string'
+          ? parsed.themesWorkbook
+          : null,
+      themesWorkbookAccess,
       workbookAccess,
     }
   } catch {
@@ -128,12 +159,60 @@ export async function exportRelicsToEffectivePaths(options: {
   googleAccessToken: string
   masterSpreadsheetId?: string | null
   masterSheetGid?: number | null
-  /** When set, syncs this Relics workbook instead of resolving from IDS Master. */
   relicsSpreadsheetId?: string | null
   relicsSheetGid?: number | null
   relicOwnedIds: readonly string[]
 }): Promise<
-  | { ok: true; result: EffectivePathsExportResult }
+  | { ok: true; result: EffectivePathsRelicsExportResult }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+> {
+  return exportToEffectivePaths({
+    ...options,
+    syncTarget: 'relics',
+    spreadsheetId: options.relicsSpreadsheetId ?? null,
+    sheetGid: options.relicsSheetGid ?? null,
+    relicOwnedIds: options.relicOwnedIds,
+    themeOwnedIds: [],
+  })
+}
+
+export async function exportThemesToEffectivePaths(options: {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  themesSpreadsheetId?: string | null
+  themesSheetGid?: number | null
+  themeOwnedIds: readonly string[]
+}): Promise<
+  | { ok: true; result: EffectivePathsThemesExportResult }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+> {
+  return exportToEffectivePaths({
+    googleAccessToken: options.googleAccessToken,
+    masterSpreadsheetId: options.masterSpreadsheetId ?? null,
+    masterSheetGid: options.masterSheetGid ?? null,
+    syncTarget: 'themes',
+    spreadsheetId: options.themesSpreadsheetId ?? null,
+    sheetGid: options.themesSheetGid ?? null,
+    relicOwnedIds: [],
+    themeOwnedIds: options.themeOwnedIds,
+  })
+}
+
+async function exportToEffectivePaths(options: {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  syncTarget: 'relics' | 'themes'
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  relicOwnedIds: readonly string[]
+  themeOwnedIds: readonly string[]
+}): Promise<
+  | {
+      ok: true
+      result: EffectivePathsRelicsExportResult | EffectivePathsThemesExportResult
+    }
   | { ok: false; error: EffectivePathsExportError; message?: string }
 > {
   try {
@@ -144,11 +223,13 @@ export async function exportRelicsToEffectivePaths(options: {
         'X-Google-Access-Token': options.googleAccessToken,
       },
       body: JSON.stringify({
+        syncTarget: options.syncTarget,
         masterSpreadsheetId: options.masterSpreadsheetId ?? null,
         masterSheetGid: options.masterSheetGid ?? null,
-        spreadsheetId: options.relicsSpreadsheetId ?? null,
-        sheetGid: options.relicsSheetGid ?? null,
+        spreadsheetId: options.spreadsheetId ?? null,
+        sheetGid: options.sheetGid ?? null,
         relicOwnedIds: options.relicOwnedIds,
+        themeOwnedIds: options.themeOwnedIds,
       }),
     })
 
@@ -162,7 +243,7 @@ export async function exportRelicsToEffectivePaths(options: {
       return { ok: false, error: 'unknown' }
     }
 
-    return { ok: true, result: body as EffectivePathsExportResult }
+    return { ok: true, result: body as EffectivePathsRelicsExportResult | EffectivePathsThemesExportResult }
   } catch {
     return { ok: false, error: 'network' }
   }
@@ -179,6 +260,10 @@ function isExportError(value: unknown): value is EffectivePathsExportError {
     value === 'relic_workbook_access_denied' ||
     value === 'relic_tab_not_found' ||
     value === 'no_relic_rows' ||
+    value === 'themes_workbook_not_found' ||
+    value === 'themes_workbook_access_denied' ||
+    value === 'themes_tab_not_found' ||
+    value === 'no_theme_rows' ||
     value === 'sheets_api_error' ||
     value === 'network' ||
     value === 'unknown'

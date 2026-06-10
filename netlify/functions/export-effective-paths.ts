@@ -2,16 +2,24 @@ import type { Config } from '@netlify/functions'
 import { effectivePathsCors, googleAccessToken, SPREADSHEET_ID_RE } from './lib/effectivePathsHttp'
 import { jsonResponse } from './lib/http'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
-import { exportRelicsToGoogleSheet, GoogleSheetsApiError } from './lib/googleSheets'
+import {
+  exportRelicsToGoogleSheet,
+  exportThemesToGoogleSheet,
+  GoogleSheetsApiError,
+} from './lib/googleSheets'
+
+type ExportSyncTarget = 'relics' | 'themes'
 
 function parseBody(raw: unknown):
   | {
       ok: true
+      syncTarget: ExportSyncTarget
       masterSpreadsheetId: string | null
       masterSheetGid: number | null
       spreadsheetId: string | null
       sheetGid: number | null
       relicOwnedIds: string[]
+      themeOwnedIds: string[]
     }
   | { ok: false; error: 'invalid_json' | 'invalid_spreadsheet' } {
   if (!raw || typeof raw !== 'object') {
@@ -43,26 +51,40 @@ function parseBody(raw: unknown):
   const gidRaw = (raw as { sheetGid?: unknown }).sheetGid
   const sheetGid = typeof gidRaw === 'number' && Number.isInteger(gidRaw) ? gidRaw : null
 
+  const targetRaw = (raw as { syncTarget?: unknown }).syncTarget
+  const syncTarget: ExportSyncTarget = targetRaw === 'themes' ? 'themes' : 'relics'
+
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
     ? relicRaw.filter((id): id is string => typeof id === 'string' && id.length > 0)
     : []
 
+  const themeRaw = (raw as { themeOwnedIds?: unknown }).themeOwnedIds
+  const themeOwnedIds = Array.isArray(themeRaw)
+    ? themeRaw.filter((id): id is string => typeof id === 'string' && id.length > 0)
+    : []
+
   return {
     ok: true,
+    syncTarget,
     masterSpreadsheetId,
     masterSheetGid,
     spreadsheetId,
     sheetGid,
     relicOwnedIds,
+    themeOwnedIds,
   }
 }
 
 function mapExportError(message: string | undefined): string {
   if (message === 'no_relic_rows') return 'no_relic_rows'
+  if (message === 'no_theme_rows') return 'no_theme_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
+  if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
+  if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
+  if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
 }
@@ -101,6 +123,18 @@ export default async (req: Request): Promise<Response> => {
   }
 
   try {
+    if (parsed.syncTarget === 'themes') {
+      const result = await exportThemesToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        themeOwnedIds: parsed.themeOwnedIds,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'themes', ...result }, cors)
+    }
+
     const result = await exportRelicsToGoogleSheet({
       accessToken: token,
       masterSpreadsheetId: parsed.masterSpreadsheetId,
@@ -109,7 +143,7 @@ export default async (req: Request): Promise<Response> => {
       sheetGid: parsed.sheetGid,
       relicOwnedIds: parsed.relicOwnedIds,
     })
-    return jsonResponse(200, { ok: true, ...result }, cors)
+    return jsonResponse(200, { ok: true, syncTarget: 'relics', ...result }, cors)
   } catch (err) {
     if (err instanceof GoogleSheetsApiError) {
       const mapped = mapExportError(err.message)

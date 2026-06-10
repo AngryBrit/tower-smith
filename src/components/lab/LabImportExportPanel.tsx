@@ -43,6 +43,7 @@ export type LabImportExportPanelProps = {
   onCopyShareLink: () => void | Promise<void>
   onShowShareQr: () => void
   relicOwnedIds: readonly string[]
+  themeOwnedIds: readonly string[]
   onEffectivePathsSuccess: (message: string) => void
 }
 
@@ -64,6 +65,7 @@ export function LabImportExportPanel({
   onCopyShareLink,
   onShowShareQr,
   relicOwnedIds,
+  themeOwnedIds,
   onEffectivePathsSuccess,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
@@ -258,6 +260,7 @@ export function LabImportExportPanel({
         open={effectivePathsOpen}
         onClose={() => setEffectivePathsOpen(false)}
         relicOwnedIds={relicOwnedIds}
+        themeOwnedIds={themeOwnedIds}
         onSuccess={onEffectivePathsSuccess}
       />
     </>,

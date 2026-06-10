@@ -2337,8 +2337,30 @@ html[data-color-scheme='high-contrast'] {
   margin: 0.15rem 0;
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.35rem;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.effective-paths-export-dialog__workbook-status {
+  flex-shrink: 0;
+  width: 1.1rem;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.effective-paths-export-dialog__workbook-status--ok {
+  color: #16a34a;
+}
+
+.effective-paths-export-dialog__workbook-status--bad {
+  color: #dc2626;
+}
+
+.effective-paths-export-dialog__workbook-name {
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .effective-paths-export-dialog__workbook-item--relics {
@@ -2349,19 +2371,6 @@ html[data-color-scheme='high-contrast'] {
   font-size: 0.72rem;
   font-weight: 500;
   color: var(--sr-muted, #64748b);
-}
-
-.effective-paths-export-dialog__workbook-access {
-  font-size: 0.72rem;
-  font-weight: 600;
-}
-
-.effective-paths-export-dialog__workbook-access--ok {
-  color: #16a34a;
-}
-
-.effective-paths-export-dialog__workbook-access--bad {
-  color: #dc2626;
 }
 
 .select-research__lab-data-title {

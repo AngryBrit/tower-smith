@@ -2,11 +2,16 @@ import { useCallback, useEffect, useId, useState } from 'react'
 import type { ImportNoticeVariant } from '../importNotice'
 import {
   exportRelicsToEffectivePaths,
+  exportThemesToEffectivePaths,
   listEffectivePathsWorkbooks,
   type EffectivePathsExportError,
   type LinkedWorkbookAccess,
 } from '../effectivePaths/exportEffectivePathsApi'
-import { isRelicsWorkbookName } from '../effectivePaths/effectivePathsCategoryNames'
+import {
+  isRelicsWorkbookName,
+  isThemesWorkbookName,
+} from '../effectivePaths/effectivePathsCategoryNames'
+import { sortLinkedWorkbookAccess } from '../effectivePaths/effectivePathsIdsWorkbooks'
 import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import {
   googleSheetsOAuthConfigured,
@@ -30,6 +35,10 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   relic_workbook_access_denied: 'ep_export_error_relic_workbook_access_denied',
   relic_tab_not_found: 'ep_export_error_relic_tab_not_found',
   no_relic_rows: 'ep_export_error_no_relic_rows',
+  themes_workbook_not_found: 'ep_export_error_themes_workbook_not_found',
+  themes_workbook_access_denied: 'ep_export_error_themes_workbook_access_denied',
+  themes_tab_not_found: 'ep_export_error_themes_tab_not_found',
+  no_theme_rows: 'ep_export_error_no_theme_rows',
   sheets_api_error: 'ep_export_error_sheets_api_error',
   unknown: 'ep_export_error_unknown',
 }
@@ -38,6 +47,7 @@ export type EffectivePathsExportDialogProps = {
   open: boolean
   onClose: () => void
   relicOwnedIds: readonly string[]
+  themeOwnedIds: readonly string[]
   /** Success notice only — shown on the parent panel after sync completes. */
   onSuccess: (message: string) => void
 }
@@ -46,6 +56,7 @@ export function EffectivePathsExportDialog({
   open,
   onClose,
   relicOwnedIds,
+  themeOwnedIds,
   onSuccess,
 }: EffectivePathsExportDialogProps) {
   const { t } = useI18n()
@@ -59,9 +70,13 @@ export function EffectivePathsExportDialog({
   const [relicsWorkbookAccess, setRelicsWorkbookAccess] = useState<
     'ok' | 'denied' | 'not_found' | null
   >(null)
+  const [themesWorkbook, setThemesWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
+  const [themesWorkbookAccess, setThemesWorkbookAccess] = useState<
+    'ok' | 'denied' | 'not_found' | null
+  >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
-  const [exporting, setExporting] = useState(false)
+  const [exportingTarget, setExportingTarget] = useState<'relics' | 'themes' | null>(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
   )
@@ -71,6 +86,12 @@ export function EffectivePathsExportDialog({
     relicsWorkbook != null &&
     relicsWorkbookAccess !== 'denied' &&
     relicsWorkbookAccess !== 'not_found'
+  const canSyncThemes =
+    themesWorkbook != null &&
+    themesWorkbookAccess !== 'denied' &&
+    themesWorkbookAccess !== 'not_found'
+  const exporting = exportingTarget != null
+  const busy = loadingSheets || exporting
 
   useEffect(() => {
     if (!open) return
@@ -108,15 +129,15 @@ export function EffectivePathsExportDialog({
         const token = await requestGoogleSheetsAccessToken({ consent: options?.consent })
         setGoogleToken(token)
         return token
-    } catch (err) {
-      const code = err instanceof Error ? err.message : 'unknown'
-      if (code === 'popup_closed_by_user' || code === 'access_denied') {
-        showNotice(t('ep_export_cancelled'), 'info')
-      } else {
-        showNotice(t('ep_export_error_unknown'), 'error')
+      } catch (err) {
+        const code = err instanceof Error ? err.message : 'unknown'
+        if (code === 'popup_closed_by_user' || code === 'access_denied') {
+          showNotice(t('ep_export_cancelled'), 'info')
+        } else {
+          showNotice(t('ep_export_error_unknown'), 'error')
+        }
+        return null
       }
-      return null
-    }
     },
     [googleToken, showNotice, t],
   )
@@ -135,6 +156,8 @@ export function EffectivePathsExportDialog({
     setIdsTabTitle(null)
     setRelicsWorkbook(null)
     setRelicsWorkbookAccess(null)
+    setThemesWorkbook(null)
+    setThemesWorkbookAccess(null)
     setWorkbookAccess(null)
     setNotice(null)
     try {
@@ -157,6 +180,8 @@ export function EffectivePathsExportDialog({
       setIdsTabTitle(result.idsTabTitle)
       setRelicsWorkbook(result.relicsWorkbook)
       setRelicsWorkbookAccess(result.relicsWorkbookAccess)
+      setThemesWorkbook(result.themesWorkbook)
+      setThemesWorkbookAccess(result.themesWorkbookAccess)
       setWorkbookAccess(result.workbookAccess)
       const deniedWorkbooks = result.workbookAccess.filter((row) => row.access === 'denied')
       if (deniedWorkbooks.length > 0) {
@@ -167,12 +192,12 @@ export function EffectivePathsExportDialog({
           ),
           'error',
         )
-      } else if (!result.relicsWorkbook) {
+      } else if (!result.relicsWorkbook && !result.themesWorkbook) {
         const loaded = result.workbooks.map((workbook) => workbook.name).join(', ')
         showNotice(
           loaded
-            ? `${t('ep_export_relics_missing_in_master')} ${t('ep_export_relics_missing_loaded').replace('{{names}}', loaded)}`
-            : t('ep_export_relics_missing_in_master'),
+            ? `${t('ep_export_sync_targets_missing')} ${t('ep_export_relics_missing_loaded').replace('{{names}}', loaded)}`
+            : t('ep_export_sync_targets_missing'),
           'error',
         )
       }
@@ -181,7 +206,7 @@ export function EffectivePathsExportDialog({
     }
   }, [parsedMaster, ensureGoogleToken, spreadsheetRef, formatExportError, showNotice, t])
 
-  const handleExport = useCallback(async () => {
+  const handleExportRelics = useCallback(async () => {
     if (!parsedMaster) {
       showNotice(
         spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
@@ -202,7 +227,7 @@ export function EffectivePathsExportDialog({
       return
     }
 
-    setExporting(true)
+    setExportingTarget('relics')
     setNotice(null)
     try {
       const token = await ensureGoogleToken()
@@ -233,17 +258,17 @@ export function EffectivePathsExportDialog({
       }
 
       const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
-      let message = t('ep_export_success')
+      let message = t('ep_export_relics_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
         .replace('{{sheet}}', sheetTitle)
       if (unmappedSheetNames.length > 0) {
-        message += ` ${t('ep_export_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
+        message += ` ${t('ep_export_relics_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
       }
       onSuccess(message)
       onClose()
     } finally {
-      setExporting(false)
+      setExportingTarget(null)
     }
   }, [
     parsedMaster,
@@ -259,7 +284,87 @@ export function EffectivePathsExportDialog({
     t,
   ])
 
-  const busy = loadingSheets || exporting
+  const handleExportThemes = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+    if (!canSyncThemes) {
+      showNotice(
+        themesWorkbook
+          ? t('ep_export_error_themes_workbook_access_denied').replace(
+              '{{id}}',
+              themesWorkbook.spreadsheetId,
+            )
+          : t('ep_export_themes_missing_in_master'),
+        'error',
+      )
+      return
+    }
+
+    setExportingTarget('themes')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+
+      writeStoredSpreadsheetRef(spreadsheetRef)
+
+      const result = await exportThemesToEffectivePaths({
+        googleAccessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        themeOwnedIds,
+      })
+
+      if (!result.ok) {
+        if (result.error === 'themes_workbook_access_denied') {
+          showNotice(
+            t('ep_export_error_themes_workbook_access_denied').replace(
+              '{{id}}',
+              themesWorkbook?.spreadsheetId ?? '',
+            ),
+            'error',
+          )
+        } else {
+          showNotice(formatExportError(result.error, result.message), 'error')
+        }
+        return
+      }
+
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
+      let message = t('ep_export_themes_success')
+        .replace('{{rows}}', String(matchedRows))
+        .replace('{{cells}}', String(updatedCells))
+        .replace('{{sheet}}', sheetTitle)
+      if (unmappedSheetNames.length > 0) {
+        message += ` ${t('ep_export_themes_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
+        const sample = [...new Set(unmappedSheetNames)].slice(0, 5).join(', ')
+        if (sample) {
+          message += ` ${t('ep_export_themes_unmapped_sample').replace('{{names}}', sample)}`
+        }
+      }
+      onSuccess(message)
+      onClose()
+    } finally {
+      setExportingTarget(null)
+    }
+  }, [
+    parsedMaster,
+    canSyncThemes,
+    ensureGoogleToken,
+    spreadsheetRef,
+    themeOwnedIds,
+    themesWorkbook,
+    formatExportError,
+    showNotice,
+    onSuccess,
+    onClose,
+    t,
+  ])
 
   if (!open) return null
 
@@ -322,49 +427,72 @@ export function EffectivePathsExportDialog({
             ) : null}
           </p>
         ) : null}
-        {workbooks && workbooks.length > 0 ? (
+        {themesWorkbook ? (
+          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
+            {t('ep_export_themes_resolved')
+              .replace('{{tab}}', idsTabTitle ?? 'IDS')
+              .replace('{{id}}', themesWorkbook.spreadsheetId)}
+            {themesWorkbookAccess === 'denied' || themesWorkbookAccess === 'not_found' ? (
+              <>
+                {' '}
+                <a
+                  href={googleSpreadsheetEditUrl(themesWorkbook.spreadsheetId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('ep_export_themes_open_sheet')}
+                </a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
+        {workbookAccess && workbookAccess.length > 0 ? (
           <div className="effective-paths-export-dialog__workbooks">
             <p id={listId} className="select-research__lab-data-section-label">
               {t('ep_export_linked_sheets_title').replace('{{tab}}', idsTabTitle ?? 'IDS')}
             </p>
             <ul className="effective-paths-export-dialog__workbook-list" aria-labelledby={listId}>
-              {workbooks.map((workbook) => {
-                const access = workbookAccess?.find(
-                  (row) =>
-                    row.name === workbook.name && row.spreadsheetId === workbook.spreadsheetId,
-                )?.access
+              {sortLinkedWorkbookAccess(workbookAccess).map((workbook) => {
+                const accessible = workbook.access === 'ok'
                 const accessLabel =
-                  access === 'ok'
+                  workbook.access === 'ok'
                     ? t('ep_export_workbook_access_ok')
-                    : access === 'denied'
+                    : workbook.access === 'denied'
                       ? t('ep_export_workbook_access_denied')
-                      : access === 'not_found'
+                      : workbook.access === 'not_found'
                         ? t('ep_export_workbook_access_not_found')
-                        : null
+                        : t('ep_export_workbook_access_denied')
+                const isRelics = isRelicsWorkbookName(workbook.name)
+                const isThemes = isThemesWorkbookName(workbook.name)
                 return (
                   <li
                     key={`${workbook.name}:${workbook.spreadsheetId}`}
                     className={
-                      isRelicsWorkbookName(workbook.name)
+                      isRelics || isThemes
                         ? 'effective-paths-export-dialog__workbook-item effective-paths-export-dialog__workbook-item--relics'
                         : 'effective-paths-export-dialog__workbook-item'
                     }
                   >
+                    <span
+                      className={
+                        accessible
+                          ? 'effective-paths-export-dialog__workbook-status effective-paths-export-dialog__workbook-status--ok'
+                          : 'effective-paths-export-dialog__workbook-status effective-paths-export-dialog__workbook-status--bad'
+                      }
+                      aria-label={accessLabel}
+                      title={accessLabel}
+                    >
+                      {accessible ? '✓' : '✗'}
+                    </span>
                     <span className="effective-paths-export-dialog__workbook-name">{workbook.name}</span>
-                    {accessLabel ? (
-                      <span
-                        className={
-                          access === 'ok'
-                            ? 'effective-paths-export-dialog__workbook-access effective-paths-export-dialog__workbook-access--ok'
-                            : 'effective-paths-export-dialog__workbook-access effective-paths-export-dialog__workbook-access--bad'
-                        }
-                      >
-                        {accessLabel}
-                      </span>
-                    ) : null}
-                    {isRelicsWorkbookName(workbook.name) ? (
+                    {isRelics ? (
                       <span className="effective-paths-export-dialog__workbook-tag">
                         {t('ep_export_relics_sync_target')}
+                      </span>
+                    ) : null}
+                    {isThemes ? (
+                      <span className="effective-paths-export-dialog__workbook-tag">
+                        {t('ep_export_themes_sync_target')}
                       </span>
                     ) : null}
                   </li>
@@ -378,9 +506,17 @@ export function EffectivePathsExportDialog({
             type="button"
             className="glow-btn glow-btn--block"
             disabled={busy || !canSyncRelics}
-            onClick={() => void handleExport()}
+            onClick={() => void handleExportRelics()}
           >
-            {exporting ? t('ep_export_syncing') : t('ep_export_sync_btn')}
+            {exportingTarget === 'relics' ? t('ep_export_syncing_relics') : t('ep_export_sync_relics_btn')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={busy || !canSyncThemes}
+            onClick={() => void handleExportThemes()}
+          >
+            {exportingTarget === 'themes' ? t('ep_export_syncing_themes') : t('ep_export_sync_themes_btn')}
           </button>
           <button
             type="button"

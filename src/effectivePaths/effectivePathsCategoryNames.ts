@@ -1,5 +1,8 @@
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
-import { EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME } from './effectivePathsWorkbooks'
+import {
+  EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
+  EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
+} from './effectivePathsWorkbooks'
 
 /** Strip leading emoji/icons and normalize for IDS Master category labels. */
 export function categoryNameKey(name: string): string {
@@ -28,6 +31,29 @@ export function findRelicsWorkbook(
   const byAlias = workbooks.find((workbook) => isRelicsWorkbookName(workbook.name))
   if (byAlias) return byAlias
   const norm = categoryNameKey(EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}
+
+export function isThemesWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return (
+    key === 'themes songs' ||
+    key === 'themes & songs' ||
+    key.endsWith(' themes songs') ||
+    key.includes('themes songs')
+  )
+}
+
+export function findThemesWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isThemesWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME)
   return (
     workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
     workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??

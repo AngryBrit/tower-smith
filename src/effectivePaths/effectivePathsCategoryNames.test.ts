@@ -2,7 +2,9 @@ import { describe, expect, it } from 'vitest'
 import {
   categoryNameKey,
   findRelicsWorkbook,
+  findThemesWorkbook,
   isRelicsWorkbookName,
+  isThemesWorkbookName,
 } from './effectivePathsCategoryNames'
 
 describe('categoryNameKey', () => {
@@ -20,5 +22,16 @@ describe('findRelicsWorkbook', () => {
     ])
     expect(found?.spreadsheetId).toBe('1RelicsWorkbookIdXXXXXXXXXX')
     expect(isRelicsWorkbookName('🔮 Relics')).toBe(true)
+  })
+})
+
+describe('findThemesWorkbook', () => {
+  it('finds Themes & Songs among emoji-prefixed workbook names', () => {
+    const found = findThemesWorkbook([
+      { name: 'Relics', spreadsheetId: '1RelicsWorkbookIdXXXXXXXXXX' },
+      { name: '🎵 Themes & Songs', spreadsheetId: '1ThemesWorkbookIdXXXXXXXXX' },
+    ])
+    expect(found?.spreadsheetId).toBe('1ThemesWorkbookIdXXXXXXXXX')
+    expect(isThemesWorkbookName('🎵 Themes & Songs')).toBe(true)
   })
 })

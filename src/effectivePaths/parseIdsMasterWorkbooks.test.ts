@@ -20,7 +20,7 @@ describe('parseIdsMasterWorkbooks', () => {
     const workbooks = parseIdsMasterWorkbooks({
       formatted: [
         ['Relics', 'Copy Me', 'template-id-ignored-xxxxx', 'Go to my Relics Sheet'],
-        ['Labs', 'Copy Me', 'template-id-ignored-yyyyy', 'Go to my Labs Sheet'],
+        ['Laboratory', 'Copy Me', 'template-id-ignored-yyyyy', 'Go to my Laboratory Sheet'],
       ],
       formulas: [
         [
@@ -30,16 +30,16 @@ describe('parseIdsMasterWorkbooks', () => {
           '=HYPERLINK("https://docs.google.com/spreadsheets/d/1RelicsWorkbookIdXXXXXXXXX/edit","Go to my Relics Sheet")',
         ],
         [
-          'Labs',
+          'Laboratory',
           'Copy Me',
           'template-id-ignored-yyyyy',
-          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1LabsWorkbookIdXXXXXXXXXXX/edit","Go to my Labs Sheet")',
+          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1LaboratoryWorkbookIdXXXXXXX/edit","Go to my Laboratory Sheet")',
         ],
       ],
     })
     expect(workbooks).toEqual([
+      { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
       { name: 'Relics', spreadsheetId: '1RelicsWorkbookIdXXXXXXXXX' },
-      { name: 'Labs', spreadsheetId: '1LabsWorkbookIdXXXXXXXXXXX' },
     ])
   })
 
@@ -109,6 +109,63 @@ describe('parseIdsMasterWorkbooks', () => {
       ],
     })
     expect(workbooks).toEqual([])
+  })
+
+  it('ignores Home Page progress stat rows with column D links', () => {
+    const workbooks = parseIdsMasterWorkbooks({
+      formatted: [
+        ['Labs done: 984', '', '', 'Go to my Laboratory Sheet'],
+        ['Relics Owned: 198', '', '', 'Go to my Relics Sheet'],
+        ['Relics', 'Copy Me', '1RelicsWorkbookIdXXXXXXXXXX', 'Go to my Relics Sheet'],
+      ],
+      formulas: [
+        [
+          'Labs done: 984',
+          '',
+          '',
+          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1LaboratoryWorkbookIdXXXXXXX/edit","Go to my Laboratory Sheet")',
+        ],
+        [
+          'Relics Owned: 198',
+          '',
+          '',
+          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1JunkRelicsStatIdXXXXXXXX/edit","Go to my Relics Sheet")',
+        ],
+        [
+          'Relics',
+          'Copy Me',
+          '1RelicsWorkbookIdXXXXXXXXXX',
+          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1RelicsFromLinkIdXXXXXXXX/edit","Go to my Relics Sheet")',
+        ],
+      ],
+    })
+    expect(workbooks.map((w) => w.name)).toEqual(['Relics'])
+  })
+
+  it('uses fallback scan when header-based parse yields no known categories', () => {
+    const workbooks = parseIdsMasterWorkbooks({
+      formatted: [
+        ['Banner', '1StaleTemplateWorkbookIdXXXXX', '', ''],
+        ['Relics', 'Copy Me', '1RelicsWorkbookIdXXXXXXXXXX', 'Go to my Relics Sheet'],
+        ['Modules', 'Copy Me', '1ModulesWorkbookIdXXXXXXXXX', 'Go to my Modules Sheet'],
+      ],
+      formulas: [
+        ['Banner', '1StaleTemplateWorkbookIdXXXXX', '', ''],
+        [
+          'Relics',
+          'Copy Me',
+          '1RelicsWorkbookIdXXXXXXXXXX',
+          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1RelicsFromLinkIdXXXXXXXX/edit","Go to my Relics Sheet")',
+        ],
+        [
+          'Modules',
+          'Copy Me',
+          '1ModulesWorkbookIdXXXXXXXXX',
+          '=HYPERLINK("https://docs.google.com/spreadsheets/d/1ModulesWorkbookIdXXXXXXXXX/edit","Go to my Modules Sheet")',
+        ],
+      ],
+    })
+    expect(workbooks.map((w) => w.name)).toEqual(['Relics', 'Modules'])
   })
 
   it('parses category rows from resolved column D hyperlink URIs', () => {

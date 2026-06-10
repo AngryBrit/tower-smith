@@ -1315,11 +1315,11 @@ export const STRINGS_EN = {
   sr_lab_export_file: 'Export tower to CSV',
   ep_export_section: 'Effective Paths (Google Sheets)',
   ep_export_section_hint:
-    'Sync owned relics to your Effective Paths Relics workbook. Set your IDS Master URL in Settings first.',
-  ep_export_open_btn: 'Sync relics to Effective Paths…',
-  ep_export_title: 'Sync relics to Effective Paths',
+    'Sync owned relics and themes to your Effective Paths workbooks. Set your IDS Master URL in Settings first.',
+  ep_export_open_btn: 'Sync to Effective Paths…',
+  ep_export_title: 'Sync to Effective Paths',
   ep_export_intro:
-    'Load linked workbooks from your IDS Master (set in Settings), then sync owned relics to the Relics workbook.',
+    'Load linked workbooks from your IDS Master (set in Settings), then sync owned relics or themes to the linked child workbooks.',
   ep_export_missing_ids_master:
     'Set your IDS Master spreadsheet URL in Settings (Tools → Settings) before loading linked workbooks.',
   ep_export_spreadsheet_label: 'IDS Master spreadsheet ID or URL',
@@ -1337,14 +1337,27 @@ export const STRINGS_EN = {
   ep_export_relics_resolved:
     'Relics workbook ID from IDS tab “{{tab}}”: {{id}} (separate spreadsheet; sync targets its Relics tab).',
   ep_export_relics_sync_target: 'relic sync target',
+  ep_export_themes_sync_target: 'theme sync target',
   ep_export_relics_missing_in_master:
     'No Relics row with a spreadsheet ID was found on the IDS tab.',
+  ep_export_themes_missing_in_master:
+    'No Themes & Songs row with a spreadsheet ID was found on the IDS tab.',
+  ep_export_sync_targets_missing:
+    'No Relics or Themes & Songs rows with spreadsheet IDs were found on the IDS tab.',
   ep_export_relics_missing_loaded:
     'Loaded: {{names}}. Fix the “Go to my Relics Sheet” link in column D on the IDS tab.',
-  ep_export_sync_btn: 'Sync relics to Relics workbook',
-  ep_export_syncing: 'Syncing relics…',
-  ep_export_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
-  ep_export_unmapped_hint: '{{count}} sheet relic names were not mapped and were left unchanged.',
+  ep_export_sync_relics_btn: 'Sync relics to Relics workbook',
+  ep_export_sync_themes_btn: 'Sync themes to Themes & Songs workbook',
+  ep_export_syncing_relics: 'Syncing relics…',
+  ep_export_syncing_themes: 'Syncing themes…',
+  ep_export_relics_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
+  ep_export_themes_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} theme rows).',
+  ep_export_relics_unmapped_hint: '{{count}} sheet relic names were not mapped and were left unchanged.',
+  ep_export_themes_unmapped_hint: '{{count}} sheet theme names were not mapped and were left unchanged.',
+  ep_export_themes_unmapped_sample: 'Examples: {{names}}',
+  ep_export_themes_resolved:
+    'Themes & Songs workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets owned checkboxes in the v3.x input blocks).',
+  ep_export_themes_open_sheet: 'Open linked Themes & Songs workbook in Google Sheets',
   ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
   ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
   ep_export_cancelled: 'Google sign-in was cancelled.',
@@ -1361,6 +1374,14 @@ export const STRINGS_EN = {
   ep_export_error_relic_workbook_access_denied:
     'Cannot edit the IDS-linked Relics workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the “Go to my Relics Sheet” link on the IDS tab.',
   ep_export_error_relic_tab_not_found: 'Could not find the Relics tab in the Relics workbook.',
+  ep_export_error_themes_workbook_not_found:
+    'IDS Master has no Themes & Songs workbook row. Check the linked-ID table.',
+  ep_export_error_themes_workbook_access_denied:
+    'Cannot edit the IDS-linked Themes & Songs workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the “Go to my Themes & Songs Sheet” link on the IDS tab.',
+  ep_export_error_themes_tab_not_found:
+    'Could not find the Themes & Songs input tab in the Themes & Songs workbook.',
+  ep_export_error_no_theme_rows:
+    'No theme rows were found on the Themes & Songs input tab. Check the sheet layout or tab name.',
   ep_export_error_no_relic_rows:
     'No relic rows found on the Relics workbook tab. Open the Relics sheet in Google Sheets and confirm the Relics tab has relic names and an Unlocked column.',
   ep_export_error_sheets_api_error: 'Google Sheets returned an error. Try again in a moment.',

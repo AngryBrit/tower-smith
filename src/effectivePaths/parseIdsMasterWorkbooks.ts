@@ -1,4 +1,5 @@
 import { cleanEffectivePathsCategoryName, categoryNameKey } from './effectivePathsCategoryNames'
+import { filterKnownIdsWorkbooks } from './effectivePathsIdsWorkbooks'
 import { extractSpreadsheetIdFromCell, extractSpreadsheetIdFromSheetCell } from './extractSpreadsheetId'
 import { pickSpreadsheetIdFromIdsCategoryRow } from './pickIdsRowSpreadsheetId'
 
@@ -18,10 +19,32 @@ function normalizeWorkbookName(name: string): string {
   return categoryNameKey(name)
 }
 
+/** Home Page / IDS tab progress stats (not linked workbook categories). */
+function looksLikeIdsStatsRowName(name: string): boolean {
+  const trimmed = name.trim()
+  const lower = trimmed.toLowerCase()
+  if (!trimmed) return false
+  return (
+    /\bspent\s*:/i.test(trimmed) ||
+    /\bdone\s*:/i.test(trimmed) ||
+    /^total bonus\s*:/i.test(lower) ||
+    /^relics owned\s*:/i.test(lower) ||
+    /^completion\s*:/i.test(lower) ||
+    /^keys spent\s*:/i.test(lower) ||
+    /^bits spent\s*:/i.test(lower) ||
+    /^medals spent\s*:/i.test(lower) ||
+    /^stones spent\s*:/i.test(lower) ||
+    /^ws\+\s*spent\s*:/i.test(lower) ||
+    /^tier\s+\d+\s*:/i.test(trimmed) ||
+    /^labs done\s*:/i.test(lower)
+  )
+}
+
 /** IDS Master category rows and banner text to ignore. */
 function shouldSkipIdsMasterRowName(name: string): boolean {
   const lower = name.trim().toLowerCase()
   if (!lower) return true
+  if (looksLikeIdsStatsRowName(name)) return true
   return (
     /^copy me$/i.test(lower) ||
     /^go to my\b/i.test(lower) ||
@@ -178,8 +201,12 @@ export function parseIdsMasterWorkbooks(grid: IdsMasterSheetGrid): EffectivePath
 
   const { nameCol, idCol, startRow } = detectIdsMasterColumns(grid.formatted)
   const primary = parseIdsMasterRows(grid, nameCol, idCol, startRow)
-  if (primary.length > 0) return primary
-  return parseIdsMasterFallbackScan(grid)
+  const knownPrimary = filterKnownIdsWorkbooks(primary)
+  if (knownPrimary.length > 0) return knownPrimary
+
+  const fallback = parseIdsMasterFallbackScan(grid)
+  const knownFallback = filterKnownIdsWorkbooks(fallback)
+  return knownFallback.length > 0 ? knownFallback : knownPrimary
 }
 
 export function findLinkedWorkbookByName(

@@ -3,6 +3,10 @@ export const SHEETS_API = 'https://sheets.googleapis.com/v4/spreadsheets'
 export type SheetProperties = {
   sheetId: number
   title: string
+  gridProperties?: {
+    rowCount?: number
+    columnCount?: number
+  }
 }
 
 export class GoogleSheetsApiError extends Error {
@@ -53,11 +57,14 @@ export async function checkSpreadsheetAccess(
 
 export function throwIfSheetsAccessDenied(
   status: number,
-  context: 'ids_master' | 'relic_workbook',
+  context: 'ids_master' | 'relic_workbook' | 'themes_workbook',
 ): void {
   if (status !== 401 && status !== 403) return
   if (context === 'relic_workbook') {
     throw new GoogleSheetsApiError('sheets_api_error', status, 'relic_workbook_access_denied')
+  }
+  if (context === 'themes_workbook') {
+    throw new GoogleSheetsApiError('sheets_api_error', status, 'themes_workbook_access_denied')
   }
   throw new GoogleSheetsApiError('sheets_auth_failed', status)
 }
