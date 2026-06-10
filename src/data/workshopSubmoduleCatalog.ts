@@ -46,9 +46,12 @@ export function submoduleEffectId(label: string): string {
     .replace(/^-|-$/g, '')
 }
 
-/** Wiki label without trailing unit tag (`Defense [%]` → `Defense`). */
+/** Wiki label without trailing unit tag (`Defense [%]` → `Defense`, `Spotlight - Angle*` → `Spotlight - Angle`). */
 export function submoduleEffectDisplayName(label: string): string {
-  return label.replace(/\s*\[[^\]]*\]\s*\*?\s*$/i, '').trim()
+  return label
+    .replace(/\s*\[[^\]]*\]\s*\*?\s*$/i, '')
+    .replace(/\*+\s*$/, '')
+    .trim()
 }
 
 const SUBMODULE_LABEL_UNIT_SUFFIX = /\[\s*([^\]]+)\s*\]\s*\*?\s*$/i
@@ -56,7 +59,9 @@ const SUBMODULE_LABEL_UNIT_SUFFIX = /\[\s*([^\]]+)\s*\]\s*\*?\s*$/i
 function submoduleLabelUnit(label: string | undefined): string | null {
   if (label == null) return null
   const match = label.match(SUBMODULE_LABEL_UNIT_SUFFIX)
-  return match?.[1]?.trim().toLowerCase() ?? null
+  if (match != null) return match[1]!.trim().toLowerCase()
+  if (submoduleEffectDisplayName(label) === 'Spotlight - Angle') return '°'
+  return null
 }
 
 /** Picker / in-game slot line (`5` + `Defense [%]` → `+5%`). */
@@ -72,13 +77,15 @@ export function formatSubmoduleCellDisplay(cell: string, effectLabel?: string): 
     const unitPattern =
       unit === '%'
         ? /%$/
-        : unit === 'm'
-          ? /m$/i
-          : unit === 's'
-            ? /s$/i
-            : unit === 'x'
-              ? /x$/i
-              : null
+        : unit === '°'
+          ? /°$/
+          : unit === 'm'
+            ? /m$/i
+            : unit === 's'
+              ? /s$/i
+              : unit === 'x'
+                ? /x$/i
+                : null
 
     if (unitPattern != null && !unitPattern.test(display)) {
       display = `${display}${unit}`
@@ -207,6 +214,35 @@ function assistPickerRound2(value: number): number {
   return Math.round(Math.abs(value) * 100) / 100
 }
 
+function assistPickerRound1(value: number): number {
+  return Math.round(Math.abs(value) * 10) / 10
+}
+
+/** In-game assist picker rounds negative cooldown seconds up in magnitude (-1.52 → -1.6s). */
+function assistPickerFormatSeconds(scaled: number): string {
+  const sign = scaled < 0 ? '-' : ''
+  const abs = Math.abs(scaled)
+  const rounded =
+    scaled < 0 ? Math.ceil(abs * 10 - 1e-9) / 10 : assistPickerRound1(abs)
+  return `${sign}${trimTrailingDisplayZeros(rounded.toFixed(1))}s`
+}
+
+function assistPickerFormatDegrees(scaled: number): string {
+  const sign = scaled < 0 ? '-' : ''
+  return `${sign}${Math.round(Math.abs(scaled))}°`
+}
+
+function assistPickerFormatPlainOneDecimal(scaled: number): string {
+  const sign = scaled < 0 ? '-' : ''
+  return `${sign}${trimTrailingDisplayZeros(assistPickerRound1(Math.abs(scaled)).toFixed(1))}`
+}
+
+function submoduleScaledValueSuffix(templateSuffix: string, effectLabel?: string): string {
+  if (templateSuffix !== '') return templateSuffix
+  const unit = submoduleLabelUnit(effectLabel)
+  return unit === '°' ? '°' : ''
+}
+
 /** In-game assist module picker value formatting (differs from main-module catalog cells). */
 export function assistSubmodulePickerCellFromScaledNumber(
   scaled: number,
@@ -219,8 +255,9 @@ export function assistSubmodulePickerCellFromScaledNumber(
   }
 
   const trimmed = templateCell.trim()
-  const suffix = trimmed.replace(/^[+-]?[0-9.]+/, '')
-  const isPercent = suffix === '%' || submoduleLabelUnit(effectLabel) === '%'
+  const templateSuffix = trimmed.replace(/^[+-]?[0-9.]+/, '')
+  const suffix = submoduleScaledValueSuffix(templateSuffix, effectLabel)
+  const isPercent = templateSuffix === '%' || submoduleLabelUnit(effectLabel) === '%'
 
   if (scaled === 0) return isPercent ? '0%' : `0${suffix}`
 
@@ -236,12 +273,25 @@ export function assistSubmodulePickerCellFromScaledNumber(
     return `${sign}${trimTrailingDisplayZeros(truncated.toFixed(2))}%`
   }
 
+  const labelUnit = submoduleLabelUnit(effectLabel)
+  if (labelUnit === 's') {
+    return assistPickerFormatSeconds(scaled)
+  }
+  if (labelUnit === '°') {
+    return assistPickerFormatDegrees(scaled)
+  }
+
+  const templateNum = trimmed.replace(/[^0-9.-]/g, '')
   const rounded = assistPickerRound2(abs)
   if (suffix !== '') {
     return `${sign}${trimTrailingDisplayZeros(rounded.toFixed(2))}${suffix}`
   }
 
-  return `${sign}${trimTrailingDisplayZeros(rounded.toFixed(2))}`
+  if (templateNum.includes('.')) {
+    return `${sign}${trimTrailingDisplayZeros(rounded.toFixed(2))}`
+  }
+
+  return assistPickerFormatPlainOneDecimal(scaled)
 }
 
 /** Rebuild a wiki cell for assist picker display (`11` at 20% eff → `2.2%`). */
@@ -251,10 +301,11 @@ export function submoduleCellFromScaledNumber(
   effectLabel?: string,
 ): string {
   const trimmed = templateCell.trim()
-  const suffix = trimmed.replace(/^[+-]?[0-9.]+/, '')
+  const templateSuffix = trimmed.replace(/^[+-]?[0-9.]+/, '')
+  const suffix = submoduleScaledValueSuffix(templateSuffix, effectLabel)
   const templateNum = trimmed.replace(/[^0-9.-]/g, '')
   const labelUnit = submoduleLabelUnit(effectLabel)
-  const isPercent = suffix === '%' || labelUnit === '%'
+  const isPercent = templateSuffix === '%' || labelUnit === '%'
 
   if (effectLabel != null && isSubmoduleMultiplierEffectLabel(effectLabel)) {
     if (scaled === 0) return '0x'

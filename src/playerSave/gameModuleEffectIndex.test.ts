@@ -135,6 +135,70 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Dimension Core main effects (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [231, 225, 324, 315, 0, 0, 0, 0],
+      138,
+      0,
+      'ancestral',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'chain-lightning-chance',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'chain-lightning-quantity',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'spotlight-angle',
+      rarity: 'legendary',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'black-hole-cooldown-s',
+      rarity: 'mythic',
+    })
+    expect(imported.map).toMatchObject({
+      'chain-lightning-chance': 'mythic',
+      'chain-lightning-quantity': 'mythic',
+      'spotlight-angle': 'legendary',
+      'black-hole-cooldown-s': 'mythic',
+    })
+  })
+
+  it('decodes Primordial Collapse assist core effects (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [315, 284, 326, 303, 0, 0, 0, 0],
+      41,
+      138,
+      'star_1',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'black-hole-cooldown-s',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'golden-tower-bonus',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'spotlight-angle',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'poison-swamp-cooldown-s',
+      rarity: 'mythic',
+    })
+    expect(imported.map).toMatchObject({
+      'black-hole-cooldown-s': 'mythic',
+      'golden-tower-bonus': 'ancestral',
+      'spotlight-angle': 'ancestral',
+      'poison-swamp-cooldown-s': 'mythic',
+    })
+  })
+
   it('decodes Orbital Augment armor main effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'armor',

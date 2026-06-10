@@ -81,4 +81,21 @@ describe('workshopSubmoduleCatalog', () => {
     expect(submoduleEffectPickerSlotText('40', 'Wall Health [%]')).toBe('+40% Wall Health')
     expect(submoduleEffectPickerSlotText('6', 'Crit Chance [%]')).toBe('+6% Crit Chance')
   })
+
+  it('formats Spotlight Angle with degree unit in picker', () => {
+    expect(formatSubmoduleCellDisplay('6', 'Spotlight - Angle*')).toBe('+6°')
+    expect(submoduleEffectPickerSlotText('6', 'Spotlight - Angle*')).toBe('+6° Spotlight - Angle')
+    expect(assistSubmodulePickerCellFromScaledNumber(6, '6', 'Spotlight - Angle*')).toBe('6°')
+    expect(assistSubmodulePickerCellFromScaledNumber(2.85, '15', 'Spotlight - Angle*')).toBe('3°')
+  })
+
+  it('formats assist picker seconds and plain cells to one decimal', () => {
+    expect(
+      assistSubmodulePickerCellFromScaledNumber(-0.57, '-3', 'Black Hole - Cooldown [s]'),
+    ).toBe('-0.6s')
+    expect(
+      assistSubmodulePickerCellFromScaledNumber(-1.52, '-8', 'Poison Swamp - Cooldown [s]'),
+    ).toBe('-1.6s')
+    expect(assistSubmodulePickerCellFromScaledNumber(0.76, '4', 'Golden Tower - Bonus')).toBe('0.8')
+  })
 })

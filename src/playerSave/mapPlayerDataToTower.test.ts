@@ -408,6 +408,33 @@ describe('playerSaveToWorkshop', () => {
     })
   })
 
+  it('imports Dimension Core submodule effects from petethered save', async () => {
+    if (!existsSync(PETETHERED_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simCoreChassisModuleId).toBe('dimensionCore')
+    expect(ws.simCoreChassisModuleRarity).toBe('ancestral')
+    expect(ws.simSubmoduleSelections.core.main).toEqual({
+      'chain-lightning-chance': 'mythic',
+      'chain-lightning-quantity': 'mythic',
+      'spotlight-angle': 'legendary',
+      'black-hole-cooldown-s': 'mythic',
+    })
+  })
+
+  it('imports Primordial Collapse assist submodule effects from petethered save', async () => {
+    if (!existsSync(PETETHERED_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simCoreAssistChassisModuleId).toBe('primordialCollapse')
+    expect(ws.simSubmoduleSelections.core.assist).toEqual({
+      'black-hole-cooldown-s': 'mythic',
+      'golden-tower-bonus': 'ancestral',
+      'spotlight-angle': 'ancestral',
+      'poison-swamp-cooldown-s': 'mythic',
+    })
+  })
+
   it('imports assist unlocks when assistModuleSlots has data even if assistModulesAvailable is false', () => {
     const ws = playerSaveToWorkshop(
       minimalSave({
@@ -415,7 +442,7 @@ describe('playerSaveToWorkshop', () => {
           { infoIndex: 41, level: 136, rarity: 14, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
           { infoIndex: 46, level: 130, rarity: 10, effects: [92, 149, 86, 139, 0, 0, 0, 0] },
           { infoIndex: 43, level: 134, rarity: 13, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
-          { infoIndex: 38, level: 138, rarity: 10, effects: [0, 0, 0, 0, 0, 0, 0, 0] },
+          { infoIndex: 38, level: 138, rarity: 10, effects: [231, 225, 324, 315, 0, 0, 0, 0] },
         ],
         assistModulesAvailable: false,
         assistModuleSlots: [
@@ -509,6 +536,12 @@ describe('playerSaveToWorkshop', () => {
       gameWorkshopChassisModuleId(48, 'core'),
     )
     expect(ws.simCoreModuleLevel).toBe(41)
+    expect(ws.simSubmoduleSelections.core.assist).toEqual({
+      'black-hole-cooldown-s': 'mythic',
+      'golden-tower-bonus': 'ancestral',
+      'spotlight-angle': 'ancestral',
+      'poison-swamp-cooldown-s': 'mythic',
+    })
   })
 
   it('imports Project Funding ancestral generator submodules from compressed save indices', () => {

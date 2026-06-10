@@ -120,6 +120,53 @@ describe('workshopAssistSubmoduleScale', () => {
     ).toBe('+1.6% Enemy Attack Level Skip')
   })
 
+  it('formats Primordial Collapse assist core picker like in-game (petethered)', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      simCoreAssistUnlocked: true,
+      simCoreAssistChassisModuleId: 'primordialCollapse',
+      simCoreAssistUniqueRarity: 'epic',
+      simCoreAssistSubStoneEfficiency: 19,
+    }
+    const ctx = { ws, research: null, labOverrides: {} }
+    expect(
+      assistSubmodulePickerSlotText(
+        '-3',
+        'Black Hole - Cooldown [s]',
+        submoduleEffectId('Black Hole - Cooldown [s]'),
+        ctx,
+        'core',
+      ),
+    ).toBe('-0.6s Black Hole - Cooldown')
+    expect(
+      assistSubmodulePickerSlotText(
+        '4',
+        'Golden Tower - Bonus',
+        submoduleEffectId('Golden Tower - Bonus'),
+        ctx,
+        'core',
+      ),
+    ).toBe('+0.8 Golden Tower - Bonus')
+    expect(
+      assistSubmodulePickerSlotText(
+        '15',
+        'Spotlight - Angle*',
+        submoduleEffectId('Spotlight - Angle*'),
+        ctx,
+        'core',
+      ),
+    ).toBe('+3° Spotlight - Angle')
+    expect(
+      assistSubmodulePickerSlotText(
+        '-8',
+        'Poison Swamp - Cooldown [s]',
+        submoduleEffectId('Poison Swamp - Cooldown [s]'),
+        ctx,
+        'core',
+      ),
+    ).toBe('-1.6s Poison Swamp - Cooldown')
+  })
+
   it('formats Space Displacer assist armor picker like in-game (petethered)', () => {
     const ws = {
       ...defaultWorkshopPersisted(),

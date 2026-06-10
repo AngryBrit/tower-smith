@@ -443,6 +443,109 @@ function decodeArmorLandMineRadiusOnAncestralChassis(
   return null
 }
 
+type CoreRowSpan = { start: number; end: number; effectId: string }
+
+function buildCoreRowSpans(): CoreRowSpan[] {
+  const spans: CoreRowSpan[] = []
+  let i = GAME_MODULE_EFFECT_BY_INDEX.findIndex((entry) => entry.slot === 'core')
+  if (i < 0) return spans
+  while (i < GAME_MODULE_EFFECT_COUNT) {
+    const entry = GAME_MODULE_EFFECT_BY_INDEX[i]
+    if (entry?.slot !== 'core') break
+    const effectId = entry.effectId
+    let j = i + 1
+    while (j < GAME_MODULE_EFFECT_COUNT && GAME_MODULE_EFFECT_BY_INDEX[j]?.effectId === effectId) {
+      j++
+    }
+    spans.push({ start: i, end: j, effectId })
+    i = j
+  }
+  return spans
+}
+
+const CORE_ROW_SPANS = buildCoreRowSpans()
+
+/** Ancestral main core: block-2 tier in row N maps to same tier in paired follow-on row. */
+const CORE_ANCESTRAL_FORWARD_ROW: Readonly<Record<string, string>> = {
+  'chain-lightning-damage-x': 'chain-lightning-quantity',
+  'spotlight-bonus': 'spotlight-angle',
+}
+
+function findCoreRowSpanForIndex(rawIndex: number): (CoreRowSpan & { offset: number }) | null {
+  for (const span of CORE_ROW_SPANS) {
+    if (rawIndex >= span.start && rawIndex < span.end) {
+      return { ...span, offset: rawIndex - span.start }
+    }
+  }
+  return null
+}
+
+function findCoreEffectWithRarity(
+  effectId: string,
+  rarity: WorkshopSubmoduleRarity,
+): GameModuleEffectDecode | null {
+  const span = CORE_ROW_SPANS.find((row) => row.effectId === effectId)
+  if (span == null) return null
+  for (let i = span.start; i < span.end; i++) {
+    const entry = GAME_MODULE_EFFECT_BY_INDEX[i]
+    if (entry?.effectId === effectId && entry.rarity === rarity) {
+      return { slot: 'core', effectId, rarity }
+    }
+  }
+  return null
+}
+
+/** Game table includes Golden Tower Bonus Ancestral at 284; import table starts ILM CD there. */
+const CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX = 284
+
+function decodeCoreAncestralFamilyRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+  primaryModuleLevel: number,
+): GameModuleEffectDecode | null {
+  if (rawIndex === CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX) {
+    return { slot: 'core', effectId: 'golden-tower-bonus', rarity: 'ancestral' }
+  }
+  if (decoded == null) return null
+
+  const row = findCoreRowSpanForIndex(rawIndex)
+  if (row == null) return null
+  const rowLength = row.end - row.start
+
+  if (
+    primaryModuleLevel === 0 &&
+    rowLength === 6 &&
+    row.offset >= 3
+  ) {
+    const targetEffectId = CORE_ANCESTRAL_FORWARD_ROW[decoded.effectId]
+    if (targetEffectId != null) {
+      return findCoreEffectWithRarity(targetEffectId, decoded.rarity)
+    }
+  }
+
+  if (
+    decoded.effectId === 'black-hole-size-m' &&
+    decoded.rarity === 'mythic' &&
+    row.offset === 1
+  ) {
+    return findCoreEffectWithRarity('black-hole-cooldown-s', 'mythic')
+  }
+
+  if (decoded.effectId === 'spotlight-angle' && decoded.rarity === 'epic' && row.offset === 0) {
+    return { slot: 'core', effectId: 'spotlight-angle', rarity: 'ancestral' }
+  }
+
+  if (
+    decoded.effectId === 'poison-swamp-cooldown-s' &&
+    decoded.rarity === 'rare' &&
+    row.offset === 0
+  ) {
+    return findCoreEffectWithRarity('poison-swamp-cooldown-s', 'mythic')
+  }
+
+  return null
+}
+
 /**
  * Decode save effect index for submodule import.
  * Main ancestral-tier generator modules store the Epic row base index for Epic-only substat rows;
@@ -450,6 +553,8 @@ function decodeArmorLandMineRadiusOnAncestralChassis(
  * Generator assist encodes vs primary chassis level: sparse+primary≥330 → stored as sparse+primary−10;
  * ancestral-family assist may store mythic/ancestral picks as raw−3.
  * Ancestral-family armor common-start rows store Ancestral at sparse offset 6 (index table omits it).
+ * Ancestral-family core modules remap sparse indices missing Ancestral tiers (e.g. 284 → GT Bonus
+ * Ancestral) and paired rows; main modules also forward block-2 tiers to follow-on stats.
  */
 function gameModuleEffectForSubmoduleImport(
   raw: number,
@@ -487,6 +592,11 @@ function gameModuleEffectForSubmoduleImport(
     if (ancestralRow != null) return ancestralRow
   }
 
+  if (slot === 'core' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const earlyCore = decodeCoreAncestralFamilyRemap(rawIndex, null, primaryLevel)
+    if (earlyCore != null) return earlyCore
+  }
+
   const decoded = gameModuleEffectByIndexForSlot(
     raw,
     slot,
@@ -497,6 +607,10 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const landMine = decodeArmorLandMineRadiusOnAncestralChassis(rawIndex, decoded)
     if (landMine != null) return landMine
+  }
+  if (slot === 'core' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const coreRemap = decodeCoreAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
+    if (coreRemap != null) return coreRemap
   }
   if (
     slot === 'generator' &&
