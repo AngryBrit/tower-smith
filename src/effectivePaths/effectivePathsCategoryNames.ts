@@ -2,6 +2,7 @@ import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 import {
   EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME,
+  EFFECTIVE_PATHS_LABORATORY_WORKBOOK_NAME,
   EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
   EFFECTIVE_PATHS_WORKSHOP_WORKBOOK_NAME,
@@ -21,6 +22,24 @@ export function categoryNameKey(name: string): string {
 /** Display-friendly category label (emoji kept, extra whitespace trimmed). */
 export function cleanEffectivePathsCategoryName(name: string): string {
   return name.trim().replace(/\s+/g, ' ')
+}
+
+export function isLaboratoryWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return key === 'laboratory' || key.endsWith(' laboratory')
+}
+
+export function findLaboratoryWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isLaboratoryWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_LABORATORY_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
 }
 
 export function isRelicsWorkbookName(name: string): boolean {

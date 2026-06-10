@@ -824,6 +824,7 @@ export function SelectResearch({
             cardEquipSlots={workshopFlat.cardEquipSlots ?? WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS}
             cardPresetLoadouts={workshopFlat.cardPresetLoadouts}
             workshopLevels={workshopLevelsForEp}
+            labLevelOverrides={levelOverrides}
             botsEpState={botsEpStateForEp}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
           />

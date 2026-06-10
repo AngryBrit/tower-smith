@@ -3,6 +3,7 @@ import { padSheetRowsToWidth } from '../../../src/effectivePaths/relicSheetLayou
 import {
   findBotsWorkbook,
   findCardsWorkbook,
+  findLaboratoryWorkbook,
   findRelicsWorkbook,
   findThemesWorkbook,
   findWorkshopWorkbook,
@@ -11,6 +12,7 @@ import { filterKnownIdsWorkbooks } from '../../../src/effectivePaths/effectivePa
 import { lookupRelicsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupRelicsOnIdsGrid'
 import { lookupCardsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupCardsOnIdsGrid'
 import { lookupBotsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupBotsOnIdsGrid'
+import { lookupLaboratoryWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupLaboratoryOnIdsGrid'
 import { lookupWorkshopWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupWorkshopOnIdsGrid'
 import { lookupThemesWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupThemesOnIdsGrid'
 import {
@@ -137,6 +139,7 @@ export type IdsGatewayLookup = {
   cardsWorkbook: EffectivePathsLinkedWorkbook | null
   workshopWorkbook: EffectivePathsLinkedWorkbook | null
   botsWorkbook: EffectivePathsLinkedWorkbook | null
+  laboratoryWorkbook: EffectivePathsLinkedWorkbook | null
 }
 
 function pickIdsGatewayTab(
@@ -209,6 +212,11 @@ export async function readIdsGatewayLookup(options: {
     botsFromRow && filterKnownIdsWorkbooks([botsFromRow])[0]
       ? botsFromRow
       : findBotsWorkbook(workbooks)
+  const laboratoryFromRow = lookupLaboratoryWorkbookOnIdsGrid(grid)
+  const laboratoryWorkbook =
+    laboratoryFromRow && filterKnownIdsWorkbooks([laboratoryFromRow])[0]
+      ? laboratoryFromRow
+      : findLaboratoryWorkbook(workbooks)
 
   if (
     workbooks.length === 0 &&
@@ -216,7 +224,8 @@ export async function readIdsGatewayLookup(options: {
     !themesWorkbook &&
     !cardsWorkbook &&
     !workshopWorkbook &&
-    !botsWorkbook
+    !botsWorkbook &&
+    !laboratoryWorkbook
   ) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'ids_master_empty')
   }
@@ -229,6 +238,7 @@ export async function readIdsGatewayLookup(options: {
     cardsWorkbook,
     workshopWorkbook,
     botsWorkbook,
+    laboratoryWorkbook,
   }
 }
 
@@ -324,4 +334,16 @@ export async function resolveBotsWorkbookId(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 404, 'bots_workbook_not_found')
   }
   return gateway.botsWorkbook.spreadsheetId
+}
+
+export async function resolveLaboratoryWorkbookId(options: {
+  accessToken: string
+  masterSpreadsheetId: string
+  sheetGid: number | null
+}): Promise<string> {
+  const gateway = await readIdsGatewayLookup(options)
+  if (!gateway.laboratoryWorkbook) {
+    throw new GoogleSheetsApiError('sheets_api_error', 404, 'laboratory_workbook_not_found')
+  }
+  return gateway.laboratoryWorkbook.spreadsheetId
 }

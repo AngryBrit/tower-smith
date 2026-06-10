@@ -50,6 +50,7 @@ export type LabImportExportPanelProps = {
   cardEquipSlots: number
   cardPresetLoadouts: readonly (readonly string[])[]
   workshopLevels: Readonly<Record<string, number>>
+  labLevelOverrides: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
   onEffectivePathsSuccess: (message: string) => void
 }
@@ -78,6 +79,7 @@ export function LabImportExportPanel({
   cardEquipSlots,
   cardPresetLoadouts,
   workshopLevels,
+  labLevelOverrides,
   botsEpState,
   onEffectivePathsSuccess,
 }: LabImportExportPanelProps) {
@@ -279,6 +281,7 @@ export function LabImportExportPanel({
         cardEquipSlots={cardEquipSlots}
         cardPresetLoadouts={cardPresetLoadouts}
         workshopLevels={workshopLevels}
+        labLevelOverrides={labLevelOverrides}
         botsEpState={botsEpState}
         onSuccess={onEffectivePathsSuccess}
       />

@@ -1355,6 +1355,7 @@ export const STRINGS_ES = {
   ep_export_cards_sync_target: 'objetivo de sincronización de cartas',
   ep_export_workshop_sync_target: 'objetivo de sincronización de taller',
   ep_export_bots_sync_target: 'objetivo de sincronización de bots',
+  ep_export_labs_sync_target: 'objetivo de sincronización de laboratorio',
   ep_export_relics_missing_in_master:
     'No se encontró una fila Relics con ID de hoja en la pestaña IDS.',
   ep_export_themes_missing_in_master:
@@ -1363,8 +1364,10 @@ export const STRINGS_ES = {
     'No se encontró una fila Cards con ID de hoja en la pestaña IDS.',
   ep_export_workshop_missing_in_master:
     'No se encontró una fila Workshop con ID de hoja en la pestaña IDS.',
+  ep_export_labs_missing_in_master:
+    'No se encontró ninguna fila Laboratory con ID de hoja de cálculo en la pestaña IDS.',
   ep_export_sync_targets_missing:
-    'No se encontraron filas Relics, Themes & Songs, Cards ni Workshop con IDs de hoja en la pestaña IDS.',
+    'No se encontraron filas Relics, Themes & Songs, Cards, Workshop, Bots ni Laboratory con IDs de hoja en la pestaña IDS.',
   ep_export_relics_missing_loaded:
     'Cargados: {{names}}. Corrige el enlace “Ir a mi hoja Relics” en la columna D.',
   ep_export_sync_relics_btn: 'Sincronizar reliquias al libro Relics',
@@ -1372,6 +1375,7 @@ export const STRINGS_ES = {
   ep_export_sync_cards_btn: 'Sincronizar cartas y presets al libro Cards',
   ep_export_sync_workshop_btn: 'Sincronizar taller al libro Workshop',
   ep_export_sync_bots_btn: 'Sincronizar bots al libro Bots',
+  ep_export_sync_labs_btn: 'Sincronizar labs al libro Laboratory',
   ep_export_syncing_relics: 'Sincronizando reliquias…',
   ep_export_syncing_themes: 'Sincronizando temas…',
   ep_export_syncing_cards: 'Sincronizando cartas y presets…',
@@ -1446,6 +1450,7 @@ export const STRINGS_ES = {
   ep_export_bots_missing_in_master:
     'No se encontró ninguna fila Bots con ID de hoja de cálculo en la pestaña IDS.',
   ep_export_syncing_bots: 'Sincronizando bots…',
+  ep_export_syncing_labs: 'Sincronizando labs…',
   ep_export_bots_success:
     'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de estadísticas de bots).',
   ep_export_bots_lab_success_suffix:
@@ -1453,9 +1458,17 @@ export const STRINGS_ES = {
   ep_export_bots_unmapped_hint:
     '{{count}} nombres de bots de la hoja no se mapearon y se dejaron sin cambios.',
   ep_export_bots_unmapped_sample: 'Ejemplos: {{names}}',
+  ep_export_labs_success:
+    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de labs).',
+  ep_export_labs_unmapped_hint:
+    '{{count}} nombres de labs de la hoja no se mapearon y se dejaron sin cambios.',
+  ep_export_labs_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_bots_resolved:
     'ID del libro Bots desde la pestaña IDS “{{tab}}”: {{id}} (sincroniza medallas, Bot+ y niveles de laboratorio BOTS en Master Sheet).',
   ep_export_bots_open_sheet: 'Abrir el libro Bots vinculado en Google Sheets',
+  ep_export_labs_resolved:
+    'ID del libro Laboratory desde la pestaña IDS “{{tab}}”: {{id}} (sincroniza niveles de labs en Master Sheet).',
+  ep_export_labs_open_sheet: 'Abrir el libro Laboratory vinculado en Google Sheets',
   ep_export_error_bots_workbook_not_found:
     'IDS Master no tiene fila del libro Bots. Comprueba la tabla de IDs vinculados.',
   ep_export_error_bots_workbook_access_denied:
@@ -1464,6 +1477,14 @@ export const STRINGS_ES = {
     'No se encontró la pestaña de entrada Bots en el libro Bots.',
   ep_export_error_no_bot_rows:
     'No se encontraron filas de bots en la pestaña Master Sheet. Comprueba el diseño o el nombre de la pestaña.',
+  ep_export_error_laboratory_workbook_not_found:
+    'IDS Master no tiene fila del libro Laboratory. Comprueba la tabla de IDs vinculados.',
+  ep_export_error_laboratory_workbook_access_denied:
+    'No se puede editar el libro Laboratory vinculado ({{id}}). Ábrelo en Google Sheets y confirma acceso de Editor, o corrige el enlace “Go to my Laboratory Sheet” en la pestaña IDS.',
+  ep_export_error_laboratory_tab_not_found:
+    'No se encontró la pestaña Master Sheet en el libro Laboratory.',
+  ep_export_error_no_lab_rows:
+    'No se encontraron filas de labs en la pestaña Master Sheet. Comprueba el diseño o el nombre de la pestaña.',
   ep_export_error_no_workshop_rows:
     'No se encontraron filas de taller en la pestaña Master Sheet. Revisa el diseño o el nombre de la pestaña.',
   ep_export_error_no_relic_rows:

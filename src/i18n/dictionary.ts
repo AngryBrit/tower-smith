@@ -1341,6 +1341,7 @@ export const STRINGS_EN = {
   ep_export_cards_sync_target: 'card sync target',
   ep_export_workshop_sync_target: 'workshop sync target',
   ep_export_bots_sync_target: 'bots sync target',
+  ep_export_labs_sync_target: 'laboratory sync target',
   ep_export_relics_missing_in_master:
     'No Relics row with a spreadsheet ID was found on the IDS tab.',
   ep_export_themes_missing_in_master:
@@ -1351,8 +1352,10 @@ export const STRINGS_EN = {
     'No Workshop row with a spreadsheet ID was found on the IDS tab.',
   ep_export_bots_missing_in_master:
     'No Bots row with a spreadsheet ID was found on the IDS tab.',
+  ep_export_labs_missing_in_master:
+    'No Laboratory row with a spreadsheet ID was found on the IDS tab.',
   ep_export_sync_targets_missing:
-    'No Relics, Themes & Songs, Cards, Workshop, or Bots rows with spreadsheet IDs were found on the IDS tab.',
+    'No Relics, Themes & Songs, Cards, Workshop, Bots, or Laboratory rows with spreadsheet IDs were found on the IDS tab.',
   ep_export_relics_missing_loaded:
     'Loaded: {{names}}. Fix the “Go to my Relics Sheet” link in column D on the IDS tab.',
   ep_export_sync_relics_btn: 'Sync relics to Relics workbook',
@@ -1360,11 +1363,13 @@ export const STRINGS_EN = {
   ep_export_sync_cards_btn: 'Sync cards & presets to Cards workbook',
   ep_export_sync_workshop_btn: 'Sync workshop to Workshop workbook',
   ep_export_sync_bots_btn: 'Sync bots to Bots workbook',
+  ep_export_sync_labs_btn: 'Sync labs to Laboratory workbook',
   ep_export_syncing_relics: 'Syncing relics…',
   ep_export_syncing_themes: 'Syncing themes…',
   ep_export_syncing_cards: 'Syncing cards & presets…',
   ep_export_syncing_workshop: 'Syncing workshop…',
   ep_export_syncing_bots: 'Syncing bots…',
+  ep_export_syncing_labs: 'Syncing labs…',
   ep_export_relics_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
   ep_export_themes_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} theme rows).',
   ep_export_cards_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} card rows).',
@@ -1373,6 +1378,7 @@ export const STRINGS_EN = {
   ep_export_workshop_enhance_success_suffix:
     'Also updated {{enhanceRows}} workshop enhancement levels.',
   ep_export_bots_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} bot stat rows).',
+  ep_export_labs_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} lab rows).',
   ep_export_bots_lab_success_suffix: 'Also updated {{labRows}} BOTS laboratory levels.',
   ep_export_cards_presets_success_suffix:
     'Also updated {{presetRows}} preset slots on “{{presetSheet}}”.',
@@ -1387,6 +1393,9 @@ export const STRINGS_EN = {
   ep_export_bots_unmapped_hint:
     '{{count}} sheet bot names were not mapped and were left unchanged.',
   ep_export_bots_unmapped_sample: 'Examples: {{names}}',
+  ep_export_labs_unmapped_hint:
+    '{{count}} sheet lab names were not mapped and were left unchanged.',
+  ep_export_labs_unmapped_sample: 'Examples: {{names}}',
   ep_export_themes_resolved:
     'Themes & Songs workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets owned checkboxes in the v3.x input blocks).',
   ep_export_themes_open_sheet: 'Open linked Themes & Songs workbook in Google Sheets',
@@ -1399,6 +1408,9 @@ export const STRINGS_EN = {
   ep_export_bots_resolved:
     'Bots workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets Master Sheet medals, Bot+, and BOTS lab levels).',
   ep_export_bots_open_sheet: 'Open linked Bots workbook in Google Sheets',
+  ep_export_labs_resolved:
+    'Laboratory workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets Master Sheet lab levels).',
+  ep_export_labs_open_sheet: 'Open linked Laboratory workbook in Google Sheets',
   ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
   ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
   ep_export_cancelled: 'Google sign-in was cancelled.',
@@ -1449,6 +1461,14 @@ export const STRINGS_EN = {
     'Could not find the Bots input tab in the Bots workbook.',
   ep_export_error_no_bot_rows:
     'No bot rows were found on the Master Sheet tab. Check the sheet layout or tab name.',
+  ep_export_error_laboratory_workbook_not_found:
+    'IDS Master has no Laboratory workbook row. Check the linked-ID table.',
+  ep_export_error_laboratory_workbook_access_denied:
+    'Cannot edit the IDS-linked Laboratory workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the “Go to my Laboratory Sheet” link on the IDS tab.',
+  ep_export_error_laboratory_tab_not_found:
+    'Could not find the Master Sheet tab in the Laboratory workbook.',
+  ep_export_error_no_lab_rows:
+    'No lab rows were found on the Master Sheet tab. Check the sheet layout or tab name.',
   ep_export_error_no_relic_rows:
     'No relic rows found on the Relics workbook tab. Open the Relics sheet in Google Sheets and confirm the Relics tab has relic names and an Unlocked column.',
   ep_export_error_sheets_api_error: 'Google Sheets returned an error. Try again in a moment.',

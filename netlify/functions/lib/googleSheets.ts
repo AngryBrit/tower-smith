@@ -13,6 +13,7 @@ import {
   BOT_EP_V31_FARMING_LEVEL_FIRST_ROW,
   BOT_EP_V31_FARMING_LEVEL_LAST_ROW,
 } from '../../../src/effectivePaths/botSheetNames'
+import { buildLabSheetUpdates } from '../../../src/effectivePaths/buildLabSheetUpdates'
 import {
   buildWorkshopEnhanceSheetUpdates,
   buildWorkshopSheetUpdates,
@@ -85,6 +86,19 @@ import {
   workshopSheetFetchRangesForGrid,
 } from '../../../src/effectivePaths/workshopSheetLayout'
 import {
+  buildLabSheetGridFromBlockRange,
+  detectLabSheetBlocks,
+  labSheetBlockFetchRangeForGrid,
+  LAB_SHEET_GRID_ROWS,
+  parseLabSheetRowsWithLayout,
+  unmappedLabNamesWithLayout,
+} from '../../../src/effectivePaths/labSheetLayout'
+import { buildLabSheetNameIndex } from '../../../src/effectivePaths/labSheetNames'
+import {
+  isLaboratoryInputTabCandidate,
+  pickEffectivePathsLaboratoryTab,
+} from '../../../src/effectivePaths/pickLaboratoryTab'
+import {
   isBotsInputTabCandidate,
   pickEffectivePathsBotsTab,
 } from '../../../src/effectivePaths/pickBotsTab'
@@ -99,10 +113,12 @@ import {
 import {
   resolveBotsWorkbookId,
   resolveCardsWorkbookId,
+  resolveLaboratoryWorkbookId,
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
   resolveWorkshopWorkbookId,
 } from './idsMasterSheets'
+import { loadBundledResearchData } from './researchData'
 import {
   GoogleSheetsApiError,
   sheetsFetch,
@@ -1192,4 +1208,159 @@ async function readCardPresetTabGrid(
     return { range: expected, values: hit?.values ?? [] }
   })
   return buildCardPresetSheetGridFromColumnRanges(valueRanges)
+}
+
+export type ExportLabsToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  laboratoryWorkbookId: string
+}
+
+function orderedLaboratoryWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isLaboratoryInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsLaboratoryTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isLaboratoryInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+async function readLaboratoryTabGrid(
+  accessToken: string,
+  spreadsheetId: string,
+  tab: SheetProperties,
+): Promise<string[][] | null> {
+  const rowCount = tab.gridProperties?.rowCount ?? LAB_SHEET_GRID_ROWS
+  const columnCount = tab.gridProperties?.columnCount ?? 72
+  const block = labSheetBlockFetchRangeForGrid(rowCount, columnCount)
+  if (!block) return null
+
+  const quoted = quoteSheetTitleForRange(tab.title)
+  const range = encodeURIComponent(`${quoted}!${block}`)
+  const valuesRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values/${range}?valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(valuesRes.status, 'laboratory_workbook')
+  if (!valuesRes.ok) {
+    const body = await valuesRes.text()
+    if (/exceeds grid limits/i.test(body)) return null
+    throw new GoogleSheetsApiError('sheets_api_error', valuesRes.status, body)
+  }
+  const valuesBody = (await valuesRes.json()) as { range?: string; values?: unknown[][] }
+  const maxRow = Math.max(1, Math.min(rowCount, LAB_SHEET_GRID_ROWS))
+  return buildLabSheetGridFromBlockRange(valuesBody.range, valuesBody.values ?? [], maxRow)
+}
+
+export async function exportLabsToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  labLevelOverrides: Readonly<Record<string, number>>
+}): Promise<ExportLabsToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let laboratoryWorkbookId = overrideId
+  if (!laboratoryWorkbookId && options.masterSpreadsheetId) {
+    laboratoryWorkbookId = await resolveLaboratoryWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!laboratoryWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(laboratoryWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'laboratory_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+  const research = loadBundledResearchData()
+  const nameIndex = buildLabSheetNameIndex(research)
+
+  let labRows: ReturnType<typeof parseLabSheetRowsWithLayout> = []
+  let blocks: ReturnType<typeof detectLabSheetBlocks> = []
+  let rawRows: string[][] = []
+  let sheetTitle = ''
+
+  for (const tab of orderedLaboratoryWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    const grid = await readLaboratoryTabGrid(options.accessToken, laboratoryWorkbookId, tab)
+    if (!grid) continue
+    const tabBlocks = detectLabSheetBlocks(grid)
+    if (tabBlocks.length === 0) continue
+    const tabRows = parseLabSheetRowsWithLayout(grid, tabBlocks, nameIndex)
+    if (tabRows.length > labRows.length) {
+      labRows = tabRows
+      blocks = tabBlocks
+      rawRows = grid
+      sheetTitle = tab.title
+    }
+  }
+
+  if (labRows.length === 0 || !sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_lab_rows')
+  }
+
+  const batch = buildLabSheetUpdates(sheetTitle, labRows, research, options.labLevelOverrides)
+  if (batch.length === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_lab_rows')
+  }
+
+  const updateRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(laboratoryWorkbookId)}/values:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valueInputOption: 'USER_ENTERED',
+        data: batch,
+      }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'laboratory_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+
+  return {
+    updatedCells: updateBody.totalUpdatedCells ?? batch.length,
+    matchedRows: labRows.length,
+    unmappedSheetNames: unmappedLabNamesWithLayout(rawRows, blocks, nameIndex),
+    sheetTitle,
+    laboratoryWorkbookId,
+  }
 }

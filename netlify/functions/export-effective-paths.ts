@@ -5,6 +5,7 @@ import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSh
 import type { BotsEpSyncState } from '../../src/effectivePaths/botsEpStateFromPersisted'
 import {
   exportBotsToGoogleSheet,
+  exportLabsToGoogleSheet,
   exportCardsToGoogleSheet,
   exportRelicsToGoogleSheet,
   exportThemesToGoogleSheet,
@@ -12,7 +13,7 @@ import {
   GoogleSheetsApiError,
 } from './lib/googleSheets'
 
-type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots'
+type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs'
 
 function parseBody(raw: unknown):
   | {
@@ -30,6 +31,7 @@ function parseBody(raw: unknown):
       cardPresetLoadouts: string[][]
       workshopLevels: Record<string, number>
       botsEpState: BotsEpSyncState
+      labLevelOverrides: Record<string, number>
     }
   | { ok: false; error: 'invalid_json' | 'invalid_spreadsheet' } {
   if (!raw || typeof raw !== 'object') {
@@ -71,7 +73,9 @@ function parseBody(raw: unknown):
           ? 'workshop'
           : targetRaw === 'bots'
             ? 'bots'
-            : 'relics'
+            : targetRaw === 'labs'
+              ? 'labs'
+              : 'relics'
 
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
@@ -158,6 +162,16 @@ function parseBody(raw: unknown):
     }
   }
 
+  const labLevelOverrides: Record<string, number> = {}
+  const labLevelsRaw = (raw as { labLevelOverrides?: unknown }).labLevelOverrides
+  if (labLevelsRaw && typeof labLevelsRaw === 'object') {
+    for (const [key, val] of Object.entries(labLevelsRaw)) {
+      if (typeof key === 'string' && typeof val === 'number' && Number.isFinite(val)) {
+        labLevelOverrides[key] = val
+      }
+    }
+  }
+
   return {
     ok: true,
     syncTarget,
@@ -177,6 +191,7 @@ function parseBody(raw: unknown):
       ownedByBotId: botOwnedByBotId,
       labLevels: botLabLevels,
     },
+    labLevelOverrides,
   }
 }
 
@@ -187,21 +202,25 @@ function mapExportError(message: string | undefined): string {
   if (message === 'no_card_preset_rows') return 'no_card_preset_rows'
   if (message === 'no_workshop_rows') return 'no_workshop_rows'
   if (message === 'no_bot_rows') return 'no_bot_rows'
+  if (message === 'no_lab_rows') return 'no_lab_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
   if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
   if (message === 'cards_workbook_not_found') return 'cards_workbook_not_found'
   if (message === 'workshop_workbook_not_found') return 'workshop_workbook_not_found'
   if (message === 'bots_workbook_not_found') return 'bots_workbook_not_found'
+  if (message === 'laboratory_workbook_not_found') return 'laboratory_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
   if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
   if (message === 'cards_workbook_access_denied') return 'cards_workbook_access_denied'
   if (message === 'workshop_workbook_access_denied') return 'workshop_workbook_access_denied'
   if (message === 'bots_workbook_access_denied') return 'bots_workbook_access_denied'
+  if (message === 'laboratory_workbook_access_denied') return 'laboratory_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
   if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
   if (message === 'cards_tab_not_found') return 'cards_tab_not_found'
   if (message === 'workshop_tab_not_found') return 'workshop_tab_not_found'
   if (message === 'bots_tab_not_found') return 'bots_tab_not_found'
+  if (message === 'laboratory_tab_not_found') return 'laboratory_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
 }
@@ -289,6 +308,18 @@ export default async (req: Request): Promise<Response> => {
         botsEpState: parsed.botsEpState,
       })
       return jsonResponse(200, { ok: true, syncTarget: 'bots', ...result }, cors)
+    }
+
+    if (parsed.syncTarget === 'labs') {
+      const result = await exportLabsToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        labLevelOverrides: parsed.labLevelOverrides,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'labs', ...result }, cors)
     }
 
     const result = await exportRelicsToGoogleSheet({

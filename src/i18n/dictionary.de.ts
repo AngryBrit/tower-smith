@@ -1291,6 +1291,7 @@ export const STRINGS_DE = {
   ep_export_cards_sync_target: 'Karten-Sync-Ziel',
   ep_export_workshop_sync_target: 'Werkstatt-Sync-Ziel',
   ep_export_bots_sync_target: 'Bots-Sync-Ziel',
+  ep_export_labs_sync_target: 'Labor-Sync-Ziel',
   ep_export_relics_missing_in_master:
     'Keine Relics-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_themes_missing_in_master:
@@ -1299,8 +1300,10 @@ export const STRINGS_DE = {
     'Keine Cards-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_workshop_missing_in_master:
     'Keine Workshop-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
+  ep_export_labs_missing_in_master:
+    'Keine Laboratory-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_sync_targets_missing:
-    'Keine Relics-, Themes-&-Songs-, Cards- oder Workshop-Zeilen mit Spreadsheet-IDs auf dem IDS-Tab gefunden.',
+    'Keine Relics-, Themes-&-Songs-, Cards-, Workshop-, Bots- oder Laboratory-Zeilen mit Spreadsheet-IDs auf dem IDS-Tab gefunden.',
   ep_export_relics_missing_loaded:
     'Geladen: {{names}}. „Go to my Relics Sheet“-Link in Spalte D auf dem IDS-Tab prüfen.',
   ep_export_sync_relics_btn: 'Relikte ins Relics-Buch synchronisieren',
@@ -1308,6 +1311,7 @@ export const STRINGS_DE = {
   ep_export_sync_cards_btn: 'Karten & Presets ins Cards-Buch synchronisieren',
   ep_export_sync_workshop_btn: 'Werkstatt ins Workshop-Buch synchronisieren',
   ep_export_sync_bots_btn: 'Bots ins Bots-Buch synchronisieren',
+  ep_export_sync_labs_btn: 'Labs ins Laboratory-Buch synchronisieren',
   ep_export_syncing_relics: 'Relikte werden synchronisiert…',
   ep_export_syncing_themes: 'Themes werden synchronisiert…',
   ep_export_syncing_cards: 'Karten & Presets werden synchronisiert…',
@@ -1382,6 +1386,7 @@ export const STRINGS_DE = {
   ep_export_bots_missing_in_master:
     'Auf dem IDS-Tab wurde keine Bots-Zeile mit Tabellen-ID gefunden.',
   ep_export_syncing_bots: 'Bots werden synchronisiert…',
+  ep_export_syncing_labs: 'Labs werden synchronisiert…',
   ep_export_bots_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Bot-Stat-Zeilen).',
   ep_export_bots_lab_success_suffix:
@@ -1389,9 +1394,16 @@ export const STRINGS_DE = {
   ep_export_bots_unmapped_hint:
     '{{count}} Bot-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
   ep_export_bots_unmapped_sample: 'Beispiele: {{names}}',
+  ep_export_labs_success: '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Lab-Zeilen).',
+  ep_export_labs_unmapped_hint:
+    '{{count}} Lab-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
+  ep_export_labs_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_bots_resolved:
     'Bots-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (sync zu Medaillen, Bot+ und BOTS-Lab-Stufen auf Master Sheet).',
   ep_export_bots_open_sheet: 'Verknüpftes Bots-Arbeitsbuch in Google Sheets öffnen',
+  ep_export_labs_resolved:
+    'Laboratory-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (Sync zu Lab-Stufen auf Master Sheet).',
+  ep_export_labs_open_sheet: 'Verknüpftes Laboratory-Arbeitsbuch in Google Sheets öffnen',
   ep_export_error_bots_workbook_not_found:
     'IDS Master hat keine Bots-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
   ep_export_error_bots_workbook_access_denied:
@@ -1400,6 +1412,14 @@ export const STRINGS_DE = {
     'Bots-Eingabe-Tab im Bots-Arbeitsbuch nicht gefunden.',
   ep_export_error_no_bot_rows:
     'Keine Bot-Zeilen auf dem Master-Sheet-Tab gefunden. Prüfe Layout oder Tab-Namen.',
+  ep_export_error_laboratory_workbook_not_found:
+    'IDS Master hat keine Laboratory-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
+  ep_export_error_laboratory_workbook_access_denied:
+    'Das verknüpfte Laboratory-Arbeitsbuch ({{id}}) kann nicht bearbeitet werden. Öffne es in Google Sheets mit Editor-Zugriff oder korrigiere den „Go to my Laboratory Sheet“-Link auf dem IDS-Tab.',
+  ep_export_error_laboratory_tab_not_found:
+    'Master-Sheet-Tab im Laboratory-Arbeitsbuch nicht gefunden.',
+  ep_export_error_no_lab_rows:
+    'Keine Lab-Zeilen auf dem Master-Sheet-Tab gefunden. Prüfe Layout oder Tab-Namen.',
   ep_export_error_no_workshop_rows:
     'Keine Werkstattzeilen auf dem Master-Sheet-Tab gefunden. Tabellenlayout oder Tab-Namen prüfen.',
   ep_export_error_no_relic_rows:
