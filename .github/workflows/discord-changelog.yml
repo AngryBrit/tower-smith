@@ -1,0 +1,29 @@
+name: Discord changelog
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - CHANGELOG.md
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Post latest changelog even if version did not change
+        type: boolean
+        default: true
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Post release notes to Discord
+        env:
+          DISCORD_CHANGELOG_WEBHOOK_URL: ${{ secrets.DISCORD_CHANGELOG_WEBHOOK_URL }}
+          DISCORD_CHANGELOG_FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.force && '1' || '' }}
+        run: |
+          export PREVIOUS_CHANGELOG="$(git show HEAD~1:CHANGELOG.md 2>/dev/null || true)"
+          node scripts/post-changelog-to-discord.mjs

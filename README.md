@@ -204,6 +204,7 @@ UI is available in **English**, **Spanish**, and **German**. Research section an
 ## Development notes
 
 - Run `npm run lint`, `npm run check:i18n`, and `npm run test` before pushing. CI (GitHub Actions) runs the same checks plus Playwright on every push/PR.
+- **Discord release posts** — pushing a new top version in [`CHANGELOG.md`](CHANGELOG.md) to `main` posts release notes to Discord (`.github/workflows/discord-changelog.yml`). Add repo secret `DISCORD_CHANGELOG_WEBHOOK_URL` (channel webhook from Server Settings → Integrations → Webhooks). To backfill the latest entry: **Actions → Discord changelog → Run workflow** (force on), or locally `DISCORD_CHANGELOG_WEBHOOK_URL=... npm run post-changelog-discord -- --force`.
 - Bump `dataVersion` in `public/research/manifest.json` when research data changes — this busts the PWA cache. Users can also force a refresh via **Tools / Settings → Refresh research data**.
 - After editing `public/app-icon.svg`, run `npm run icons`. After changing the banner layout, run `npm run og-banner`.
 - On Windows with OneDrive, Vite's cache is redirected to the system temp directory to avoid EPERM errors. Keep the project outside synced folders if issues persist.

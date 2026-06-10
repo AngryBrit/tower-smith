@@ -54,6 +54,8 @@ describe('workshopSubmoduleSelection', () => {
       simCannonAssistUnlocked: true,
       simCannonAssistChassisModuleId: 'deathPenalty',
       simCannonAssistSubStoneEfficiency: 50,
+      simCannonModuleLevel: 1,
+      simCannonChassisModuleLevel: 1,
       simSubmoduleSelections: selections,
     }
     expect(
