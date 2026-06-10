@@ -1290,6 +1290,7 @@ export const STRINGS_DE = {
   ep_export_themes_sync_target: 'Theme-Sync-Ziel',
   ep_export_cards_sync_target: 'Karten-Sync-Ziel',
   ep_export_workshop_sync_target: 'Werkstatt-Sync-Ziel',
+  ep_export_bots_sync_target: 'Bots-Sync-Ziel',
   ep_export_relics_missing_in_master:
     'Keine Relics-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_themes_missing_in_master:
@@ -1306,6 +1307,7 @@ export const STRINGS_DE = {
   ep_export_sync_themes_btn: 'Themes ins Themes-&-Songs-Buch synchronisieren',
   ep_export_sync_cards_btn: 'Karten & Presets ins Cards-Buch synchronisieren',
   ep_export_sync_workshop_btn: 'Werkstatt ins Workshop-Buch synchronisieren',
+  ep_export_sync_bots_btn: 'Bots ins Bots-Buch synchronisieren',
   ep_export_syncing_relics: 'Relikte werden synchronisiert…',
   ep_export_syncing_themes: 'Themes werden synchronisiert…',
   ep_export_syncing_cards: 'Karten & Presets werden synchronisiert…',
@@ -1377,6 +1379,27 @@ export const STRINGS_DE = {
     'Das IDS-verknüpfte Workshop-Buch ({{id}}) ist nicht bearbeitbar. In Google Sheets öffnen und Editor-Zugriff prüfen, oder den Link auf dem IDS-Tab korrigieren.',
   ep_export_error_workshop_tab_not_found:
     'Eingabe-Tab Workshop im Workshop-Buch nicht gefunden.',
+  ep_export_bots_missing_in_master:
+    'Auf dem IDS-Tab wurde keine Bots-Zeile mit Tabellen-ID gefunden.',
+  ep_export_syncing_bots: 'Bots werden synchronisiert…',
+  ep_export_bots_success:
+    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Bot-Stat-Zeilen).',
+  ep_export_bots_lab_success_suffix:
+    'Außerdem {{labRows}} BOTS-Laborstufen aktualisiert.',
+  ep_export_bots_unmapped_hint:
+    '{{count}} Bot-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
+  ep_export_bots_unmapped_sample: 'Beispiele: {{names}}',
+  ep_export_bots_resolved:
+    'Bots-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (sync zu Medaillen, Bot+ und BOTS-Lab-Stufen auf Master Sheet).',
+  ep_export_bots_open_sheet: 'Verknüpftes Bots-Arbeitsbuch in Google Sheets öffnen',
+  ep_export_error_bots_workbook_not_found:
+    'IDS Master hat keine Bots-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
+  ep_export_error_bots_workbook_access_denied:
+    'Das verknüpfte Bots-Arbeitsbuch ({{id}}) kann nicht bearbeitet werden. Öffne es in Google Sheets mit Editor-Zugriff oder korrigiere den „Go to my Bots Sheet“-Link auf dem IDS-Tab.',
+  ep_export_error_bots_tab_not_found:
+    'Bots-Eingabe-Tab im Bots-Arbeitsbuch nicht gefunden.',
+  ep_export_error_no_bot_rows:
+    'Keine Bot-Zeilen auf dem Master-Sheet-Tab gefunden. Prüfe Layout oder Tab-Namen.',
   ep_export_error_no_workshop_rows:
     'Keine Werkstattzeilen auf dem Master-Sheet-Tab gefunden. Tabellenlayout oder Tab-Namen prüfen.',
   ep_export_error_no_relic_rows:

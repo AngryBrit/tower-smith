@@ -27,7 +27,7 @@ function lin(start, step, count) {
 const thunderDuration = lin(5, 0.5, 21)
 const thunderCooldown = lin(120, -3, 16)
 const thunderLinger = lin(20, 3, 21)
-const thunderRange = [26, ...lin(28, 3, 15)]
+const thunderRange = [25, ...lin(28, 3, 15)]
 
 const goldenDuration = lin(20, 0.5, 31)
 const goldenCooldown = lin(120, -3, 16)
@@ -43,9 +43,9 @@ const amplifyRange = lin(25, 2, 19)
 
 const botBotDuration = lin(20, 0.5, 31)
 const botBotCooldown = lin(120, -3, 16)
-/** Bonus ×1.0–×2.5 (levels 0–30); range caps at level 18 (61m). */
+/** Bonus ×1.0–×2.5 (levels 0–30); range caps at level 20 (60m) per EP v3.1. */
 const botBotBonus = lin(1, 0.05, 31).map((v) => Math.round(v * 100) / 100)
-const botBotRange = lin(25, 2, 19)
+const botBotRange = lin(20, 2, 21)
 
 const flameDamageReduction = lin(20, 3, 26)
 const flameCooldown = lin(75, -3, 16)
@@ -158,10 +158,10 @@ const SPECIAL_TRACK_ROWS = {
   },
   golden: {
     kind: 'mult',
-    /** Bonus Cells: ×1.25–×2.50; medals 100 +50 (lv 1–18), then 100 +5 (lv 19–25). */
+    /** Bonus Cells: ×1.25–×2.50; medals 100 +50/level (levels 1–25). */
     rows: Array.from({ length: 26 }, (_, i) => {
       const value = Math.round((1.25 + i * 0.05) * 100) / 100
-      const cost = i === 0 ? 0 : i <= 18 ? 100 + (i - 1) * 50 : 100 + (i - 19) * 5
+      const cost = i === 0 ? 0 : 100 + (i - 1) * 50
       return [value, cost]
     }),
   },

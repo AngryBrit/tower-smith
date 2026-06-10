@@ -1,5 +1,6 @@
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 import {
+  EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
@@ -92,6 +93,24 @@ export function findWorkshopWorkbook(
   const byAlias = workbooks.find((workbook) => isWorkshopWorkbookName(workbook.name))
   if (byAlias) return byAlias
   const norm = categoryNameKey(EFFECTIVE_PATHS_WORKSHOP_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}
+
+export function isBotsWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return key === 'bots' || key.endsWith(' bots')
+}
+
+export function findBotsWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isBotsWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME)
   return (
     workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
     workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??

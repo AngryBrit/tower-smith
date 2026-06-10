@@ -5,6 +5,7 @@ import { GoogleSheetsApiError } from './lib/googleSheets'
 import { authorizeLinkedWorkbooks } from './lib/authorizeLinkedWorkbooks'
 import { readIdsGatewayLookup } from './lib/idsMasterSheets'
 import {
+  isBotsWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -82,6 +83,7 @@ export default async (req: Request): Promise<Response> => {
       ...(gateway.themesWorkbook ? [gateway.themesWorkbook] : []),
       ...(gateway.cardsWorkbook ? [gateway.cardsWorkbook] : []),
       ...(gateway.workshopWorkbook ? [gateway.workshopWorkbook] : []),
+      ...(gateway.botsWorkbook ? [gateway.botsWorkbook] : []),
     ])
     const workbookAccess = (
       await authorizeLinkedWorkbooks(token, workbooksToAuthorize)
@@ -94,6 +96,8 @@ export default async (req: Request): Promise<Response> => {
       workbookAccess.find((row) => isCardsWorkbookName(row.name))?.access ?? null
     const workshopWorkbookAccess =
       workbookAccess.find((row) => isWorkshopWorkbookName(row.name))?.access ?? null
+    const botsWorkbookAccess =
+      workbookAccess.find((row) => isBotsWorkbookName(row.name))?.access ?? null
     return jsonResponse(
       200,
       {
@@ -108,6 +112,8 @@ export default async (req: Request): Promise<Response> => {
         cardsWorkbookAccess,
         workshopWorkbook: gateway.workshopWorkbook,
         workshopWorkbookAccess,
+        botsWorkbook: gateway.botsWorkbook,
+        botsWorkbookAccess,
         workbookAccess,
       },
       cors,

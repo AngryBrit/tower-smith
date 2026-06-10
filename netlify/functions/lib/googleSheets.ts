@@ -5,9 +5,30 @@ import {
 import { buildCardPresetSheetUpdates } from '../../../src/effectivePaths/buildCardPresetSheetUpdates'
 import { buildCardSheetUpdates } from '../../../src/effectivePaths/buildCardSheetUpdates'
 import {
+  buildBotFarmingLevelCellUpdates,
+  buildBotSheetUpdates,
+  type BotFarmingLevelCellUpdate,
+} from '../../../src/effectivePaths/buildBotSheetUpdates'
+import {
+  BOT_EP_V31_FARMING_LEVEL_FIRST_ROW,
+  BOT_EP_V31_FARMING_LEVEL_LAST_ROW,
+} from '../../../src/effectivePaths/botSheetNames'
+import {
   buildWorkshopEnhanceSheetUpdates,
   buildWorkshopSheetUpdates,
 } from '../../../src/effectivePaths/buildWorkshopSheetUpdates'
+import type { BotsEpSyncState } from '../../../src/effectivePaths/botsEpStateFromPersisted'
+import {
+  BOT_FARMING_LEVEL_COL,
+  BOT_SHEET_GRID_ROWS,
+  buildBotSheetGridFromBlockRange,
+  botSheetBlockFetchRangeForGrid,
+  parseBotHeaderRowsWithLayout,
+  parseBotLabRowsWithLayout,
+  parseBotStatRowsWithLayout,
+  resolveBotSheetLayout,
+  unmappedBotNamesWithLayout,
+} from '../../../src/effectivePaths/botSheetLayout'
 import {
   buildCardPresetSheetGridFromColumnRanges,
   cardPresetSheetFetchRangesForGrid,
@@ -64,6 +85,10 @@ import {
   workshopSheetFetchRangesForGrid,
 } from '../../../src/effectivePaths/workshopSheetLayout'
 import {
+  isBotsInputTabCandidate,
+  pickEffectivePathsBotsTab,
+} from '../../../src/effectivePaths/pickBotsTab'
+import {
   isWorkshopInputTabCandidate,
   pickEffectivePathsWorkshopTab,
 } from '../../../src/effectivePaths/pickWorkshopTab'
@@ -72,6 +97,7 @@ import {
   pickEffectivePathsThemesTab,
 } from '../../../src/effectivePaths/pickThemesTab'
 import {
+  resolveBotsWorkbookId,
   resolveCardsWorkbookId,
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
@@ -124,6 +150,15 @@ export type ExportWorkshopToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   workshopWorkbookId: string
+}
+
+export type ExportBotsToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  labMatchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  botsWorkbookId: string
 }
 
 function orderedRelicsWorkbookTabs(
@@ -833,6 +868,259 @@ export async function exportWorkshopToGoogleSheet(options: {
     unmappedSheetNames,
     sheetTitle,
     workshopWorkbookId,
+  }
+}
+
+function orderedBotsWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isBotsInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsBotsTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isBotsInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+async function readBotsTabGrid(
+  accessToken: string,
+  spreadsheetId: string,
+  tab: SheetProperties,
+): Promise<string[][] | null> {
+  const rowCount = tab.gridProperties?.rowCount ?? BOT_SHEET_GRID_ROWS
+  const columnCount = tab.gridProperties?.columnCount ?? 26
+  const block = botSheetBlockFetchRangeForGrid(rowCount, columnCount)
+  if (!block) return null
+
+  const quoted = quoteSheetTitleForRange(tab.title)
+  const range = encodeURIComponent(`${quoted}!${block}`)
+  const valuesRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values/${range}?valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(valuesRes.status, 'bots_workbook')
+  if (!valuesRes.ok) {
+    const body = await valuesRes.text()
+    if (/exceeds grid limits/i.test(body)) return null
+    throw new GoogleSheetsApiError('sheets_api_error', valuesRes.status, body)
+  }
+  const valuesBody = (await valuesRes.json()) as { range?: string; values?: unknown[][] }
+  const maxRow = Math.max(4, Math.min(rowCount, BOT_SHEET_GRID_ROWS))
+  return buildBotSheetGridFromBlockRange(valuesBody.range, valuesBody.values ?? [], maxRow)
+}
+
+async function clearBotFarmingLevelColumn(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetTitle: string,
+): Promise<void> {
+  const quoted = quoteSheetTitleForRange(sheetTitle)
+  const range = encodeURIComponent(
+    `${quoted}!G${BOT_EP_V31_FARMING_LEVEL_FIRST_ROW}:G${BOT_EP_V31_FARMING_LEVEL_LAST_ROW}`,
+  )
+  const clearRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values/${range}:clear`,
+    { method: 'POST' },
+  )
+  throwIfSheetsAccessDenied(clearRes.status, 'bots_workbook')
+  if (!clearRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', clearRes.status, await clearRes.text())
+  }
+}
+
+/** Write exact dropdown labels (values API cannot match EP list entries). */
+async function applyBotFarmingLevelCells(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetId: number,
+  cells: readonly BotFarmingLevelCellUpdate[],
+): Promise<number> {
+  if (cells.length === 0) return 0
+
+  const requests = cells.map(({ rowIndex, label }) => ({
+    updateCells: {
+      range: {
+        sheetId,
+        startRowIndex: rowIndex - 1,
+        endRowIndex: rowIndex,
+        startColumnIndex: BOT_FARMING_LEVEL_COL,
+        endColumnIndex: BOT_FARMING_LEVEL_COL + 1,
+      },
+      rows: [
+        {
+          values: [
+            {
+              userEnteredValue: { stringValue: label },
+            },
+          ],
+        },
+      ],
+      fields: 'userEnteredValue',
+    },
+  }))
+
+  const updateRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'bots_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  return cells.length
+}
+
+export async function exportBotsToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  botsEpState: BotsEpSyncState
+}): Promise<ExportBotsToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let botsWorkbookId = overrideId
+  if (!botsWorkbookId && options.masterSpreadsheetId) {
+    botsWorkbookId = await resolveBotsWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!botsWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(botsWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'bots_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let statRows: ReturnType<typeof parseBotStatRowsWithLayout> = []
+  let headerRows: ReturnType<typeof parseBotHeaderRowsWithLayout> = []
+  let labRows: ReturnType<typeof parseBotLabRowsWithLayout> = []
+  let layout: ReturnType<typeof detectBotSheetLayout> = null
+  let rawRows: string[][] = []
+  let sheetTitle = ''
+  let sheetId: number | null = null
+
+  for (const tab of orderedBotsWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    const grid = await readBotsTabGrid(options.accessToken, botsWorkbookId, tab)
+    if (!grid) continue
+    const tabLayout = resolveBotSheetLayout(grid)
+    if (!tabLayout) continue
+    const tabStatRows = parseBotStatRowsWithLayout(grid, tabLayout)
+    if (tabStatRows.length > statRows.length) {
+      statRows = tabStatRows
+      headerRows = parseBotHeaderRowsWithLayout(grid, tabLayout)
+      labRows = parseBotLabRowsWithLayout(grid, tabLayout)
+      layout = tabLayout
+      rawRows = grid
+      sheetTitle = tab.title
+      sheetId = tab.sheetId ?? null
+    }
+  }
+
+  if (!layout || statRows.length === 0 || !sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_bot_rows')
+  }
+
+  const farmingCells = buildBotFarmingLevelCellUpdates(statRows, options.botsEpState)
+  const batch = buildBotSheetUpdates(
+    sheetTitle,
+    statRows,
+    headerRows,
+    labRows,
+    options.botsEpState,
+    layout,
+  )
+  if (farmingCells.length === 0 && batch.length === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_bot_rows')
+  }
+
+  await clearBotFarmingLevelColumn(options.accessToken, botsWorkbookId, sheetTitle)
+
+  let updatedCells = 0
+  let valueBatch = batch
+
+  if (sheetId != null) {
+    updatedCells += await applyBotFarmingLevelCells(
+      options.accessToken,
+      botsWorkbookId,
+      sheetId,
+      farmingCells,
+    )
+  } else if (farmingCells.length > 0) {
+    const quoted = quoteSheetTitleForRange(sheetTitle)
+    valueBatch = [
+      ...batch,
+      ...farmingCells.map(({ rowIndex, label }) => ({
+        range: `${quoted}!G${rowIndex}`,
+        values: [[label]] as (string | number | boolean)[][],
+      })),
+    ]
+  }
+
+  if (valueBatch.length > 0) {
+    const updateRes = await sheetsFetch(
+      options.accessToken,
+      `/${encodeURIComponent(botsWorkbookId)}/values:batchUpdate`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          valueInputOption: 'USER_ENTERED',
+          data: valueBatch.map(({ range, values }) => ({ range, values })),
+        }),
+      },
+    )
+    throwIfSheetsAccessDenied(updateRes.status, 'bots_workbook')
+    if (!updateRes.ok) {
+      throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+    }
+    const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+    updatedCells += updateBody.totalUpdatedCells ?? valueBatch.length
+  }
+
+  return {
+    updatedCells,
+    matchedRows: statRows.length,
+    labMatchedRows: labRows.length,
+    unmappedSheetNames: unmappedBotNamesWithLayout(rawRows, layout),
+    sheetTitle,
+    botsWorkbookId,
   }
 }
 

@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useId, useState } from 'react'
 import type { ImportNoticeVariant } from '../importNotice'
+import type { BotsEpSyncState } from '../effectivePaths/botsEpStateFromPersisted'
 import {
+  exportBotsToEffectivePaths,
   exportCardsToEffectivePaths,
   exportRelicsToEffectivePaths,
   exportThemesToEffectivePaths,
@@ -10,6 +12,7 @@ import {
   type LinkedWorkbookAccess,
 } from '../effectivePaths/exportEffectivePathsApi'
 import {
+  isBotsWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -53,6 +56,10 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   workshop_workbook_access_denied: 'ep_export_error_workshop_workbook_access_denied',
   workshop_tab_not_found: 'ep_export_error_workshop_tab_not_found',
   no_workshop_rows: 'ep_export_error_no_workshop_rows',
+  bots_workbook_not_found: 'ep_export_error_bots_workbook_not_found',
+  bots_workbook_access_denied: 'ep_export_error_bots_workbook_access_denied',
+  bots_tab_not_found: 'ep_export_error_bots_tab_not_found',
+  no_bot_rows: 'ep_export_error_no_bot_rows',
   sheets_api_error: 'ep_export_error_sheets_api_error',
   unknown: 'ep_export_error_unknown',
 }
@@ -67,6 +74,7 @@ export type EffectivePathsExportDialogProps = {
   cardEquipSlots: number
   cardPresetLoadouts: readonly (readonly string[])[]
   workshopLevels: Readonly<Record<string, number>>
+  botsEpState: BotsEpSyncState
   /** Success notice only — shown on the parent panel after sync completes. */
   onSuccess: (message: string) => void
 }
@@ -81,6 +89,7 @@ export function EffectivePathsExportDialog({
   cardEquipSlots,
   cardPresetLoadouts,
   workshopLevels,
+  botsEpState,
   onSuccess,
 }: EffectivePathsExportDialogProps) {
   const { t } = useI18n()
@@ -108,10 +117,14 @@ export function EffectivePathsExportDialog({
   const [workshopWorkbookAccess, setWorkshopWorkbookAccess] = useState<
     'ok' | 'denied' | 'not_found' | null
   >(null)
+  const [botsWorkbook, setBotsWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
+  const [botsWorkbookAccess, setBotsWorkbookAccess] = useState<
+    'ok' | 'denied' | 'not_found' | null
+  >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
   const [exportingTarget, setExportingTarget] = useState<
-    'relics' | 'themes' | 'cards' | 'workshop' | null
+    'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | null
   >(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
@@ -134,6 +147,10 @@ export function EffectivePathsExportDialog({
     workshopWorkbook != null &&
     workshopWorkbookAccess !== 'denied' &&
     workshopWorkbookAccess !== 'not_found'
+  const canSyncBots =
+    botsWorkbook != null &&
+    botsWorkbookAccess !== 'denied' &&
+    botsWorkbookAccess !== 'not_found'
   const exporting = exportingTarget != null
   const busy = loadingSheets || exporting
 
@@ -212,6 +229,8 @@ export function EffectivePathsExportDialog({
     setCardsWorkbookAccess(null)
     setWorkshopWorkbook(null)
     setWorkshopWorkbookAccess(null)
+    setBotsWorkbook(null)
+    setBotsWorkbookAccess(null)
     setWorkbookAccess(null)
     setNotice(null)
     try {
@@ -243,6 +262,8 @@ export function EffectivePathsExportDialog({
       setCardsWorkbookAccess(result.cardsWorkbookAccess)
       setWorkshopWorkbook(result.workshopWorkbook)
       setWorkshopWorkbookAccess(result.workshopWorkbookAccess)
+      setBotsWorkbook(result.botsWorkbook)
+      setBotsWorkbookAccess(result.botsWorkbookAccess)
       setWorkbookAccess(result.workbookAccess)
       const deniedWorkbooks = result.workbookAccess.filter((row) => row.access === 'denied')
       if (deniedWorkbooks.length > 0) {
@@ -621,6 +642,95 @@ export function EffectivePathsExportDialog({
     t,
   ])
 
+  const handleExportBots = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+    if (!canSyncBots) {
+      showNotice(
+        botsWorkbook
+          ? t('ep_export_error_bots_workbook_access_denied').replace(
+              '{{id}}',
+              botsWorkbook.spreadsheetId,
+            )
+          : t('ep_export_bots_missing_in_master'),
+        'error',
+      )
+      return
+    }
+
+    setExportingTarget('bots')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+
+      writeStoredSpreadsheetRef(spreadsheetRef)
+
+      const result = await exportBotsToEffectivePaths({
+        googleAccessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        botsEpState,
+      })
+
+      if (!result.ok) {
+        if (result.error === 'bots_workbook_access_denied') {
+          showNotice(
+            t('ep_export_error_bots_workbook_access_denied').replace(
+              '{{id}}',
+              botsWorkbook?.spreadsheetId ?? '',
+            ),
+            'error',
+          )
+        } else {
+          showNotice(formatExportError(result.error, result.message), 'error')
+        }
+        return
+      }
+
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, labMatchedRows } =
+        result.result
+      let message = t('ep_export_bots_success')
+        .replace('{{rows}}', String(matchedRows))
+        .replace('{{cells}}', String(updatedCells))
+        .replace('{{sheet}}', sheetTitle)
+      if (labMatchedRows > 0) {
+        message += ` ${t('ep_export_bots_lab_success_suffix').replace(
+          '{{labRows}}',
+          String(labMatchedRows),
+        )}`
+      }
+      if (unmappedSheetNames.length > 0) {
+        message += ` ${t('ep_export_bots_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
+        const sample = [...new Set(unmappedSheetNames)].slice(0, 5).join(', ')
+        if (sample) {
+          message += ` ${t('ep_export_bots_unmapped_sample').replace('{{names}}', sample)}`
+        }
+      }
+      onSuccess(message)
+      onClose()
+    } finally {
+      setExportingTarget(null)
+    }
+  }, [
+    parsedMaster,
+    canSyncBots,
+    ensureGoogleToken,
+    spreadsheetRef,
+    botsEpState,
+    botsWorkbook,
+    formatExportError,
+    showNotice,
+    onSuccess,
+    onClose,
+    t,
+  ])
+
   if (!open) return null
 
   return labOverlayPortal(
@@ -739,6 +849,25 @@ export function EffectivePathsExportDialog({
             ) : null}
           </p>
         ) : null}
+        {botsWorkbook ? (
+          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
+            {t('ep_export_bots_resolved')
+              .replace('{{tab}}', idsTabTitle ?? 'IDS')
+              .replace('{{id}}', botsWorkbook.spreadsheetId)}
+            {botsWorkbookAccess === 'denied' || botsWorkbookAccess === 'not_found' ? (
+              <>
+                {' '}
+                <a
+                  href={googleSpreadsheetEditUrl(botsWorkbook.spreadsheetId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('ep_export_bots_open_sheet')}
+                </a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
         {workbookAccess && workbookAccess.length > 0 ? (
           <div className="effective-paths-export-dialog__workbooks">
             <p id={listId} className="select-research__lab-data-section-label">
@@ -759,11 +888,12 @@ export function EffectivePathsExportDialog({
                 const isThemes = isThemesWorkbookName(workbook.name)
                 const isCards = isCardsWorkbookName(workbook.name)
                 const isWorkshop = isWorkshopWorkbookName(workbook.name)
+                const isBots = isBotsWorkbookName(workbook.name)
                 return (
                   <li
                     key={`${workbook.name}:${workbook.spreadsheetId}`}
                     className={
-                      isRelics || isThemes || isCards || isWorkshop
+                      isRelics || isThemes || isCards || isWorkshop || isBots
                         ? 'effective-paths-export-dialog__workbook-item effective-paths-export-dialog__workbook-item--relics'
                         : 'effective-paths-export-dialog__workbook-item'
                     }
@@ -798,6 +928,11 @@ export function EffectivePathsExportDialog({
                     {isWorkshop ? (
                       <span className="effective-paths-export-dialog__workbook-tag">
                         {t('ep_export_workshop_sync_target')}
+                      </span>
+                    ) : null}
+                    {isBots ? (
+                      <span className="effective-paths-export-dialog__workbook-tag">
+                        {t('ep_export_bots_sync_target')}
                       </span>
                     ) : null}
                   </li>
@@ -840,6 +975,14 @@ export function EffectivePathsExportDialog({
             {exportingTarget === 'workshop'
               ? t('ep_export_syncing_workshop')
               : t('ep_export_sync_workshop_btn')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={busy || !canSyncBots}
+            onClick={() => void handleExportBots()}
+          >
+            {exportingTarget === 'bots' ? t('ep_export_syncing_bots') : t('ep_export_sync_bots_btn')}
           </button>
           <button
             type="button"

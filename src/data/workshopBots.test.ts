@@ -208,14 +208,15 @@ describe('workshopBots Bot Bot basic upgrades', () => {
     expect(workshopBotMaxLevel('botBotDurationLevel')).toBe(30)
     expect(workshopBotMaxLevel('botBotCooldownLevel')).toBe(15)
     expect(workshopBotMaxLevel('botBotBonusLevel')).toBe(30)
-    expect(workshopBotMaxLevel('botBotRangeLevel')).toBe(18)
+    expect(workshopBotMaxLevel('botBotRangeLevel')).toBe(20)
 
     expect(workshopBotStatDisplay('botBotDurationLevel', 30)).toBe('35s')
     expect(workshopBotStatDisplay('botBotCooldownLevel', 15)).toBe('75s')
     expect(workshopBotStatDisplay('botBotBonusLevel', 0)).toBe('x1.00')
     expect(workshopBotStatDisplay('botBotBonusLevel', 1)).toBe('x1.05')
     expect(workshopBotStatDisplay('botBotBonusLevel', 30)).toBe('x2.50')
-    expect(workshopBotStatDisplay('botBotRangeLevel', 18)).toBe('61.00m')
+    expect(workshopBotStatDisplay('botBotRangeLevel', 18)).toBe('56.00m')
+    expect(workshopBotStatDisplay('botBotRangeLevel', 20)).toBe('60.00m')
 
     expect(
       workshopUltimateTrackTotalStonesToMax(WORKSHOP_BOT_TRACKS.botBotDurationLevel, 0),
@@ -228,7 +229,7 @@ describe('workshopBots Bot Bot basic upgrades', () => {
     ).toBe(20_400)
     expect(
       workshopUltimateTrackTotalStonesToMax(WORKSHOP_BOT_TRACKS.botBotRangeLevel, 0),
-    ).toBe(7_920)
+    ).toBe(9_600)
   })
 })
 
@@ -281,8 +282,8 @@ describe('workshopBots Bot+', () => {
     expect(workshopBotSpecialStatDisplay('golden', 25)).toBe('x2.50')
     expect(workshopBotSpecialNextMarginalMedals('golden', 0)).toBe(100)
     expect(workshopBotSpecialNextMarginalMedals('golden', 17)).toBe(950)
-    expect(workshopBotSpecialNextMarginalMedals('golden', 18)).toBe(100)
-    expect(workshopBotSpecialNextMarginalMedals('golden', 24)).toBe(130)
+    expect(workshopBotSpecialNextMarginalMedals('golden', 18)).toBe(1000)
+    expect(workshopBotSpecialNextMarginalMedals('golden', 24)).toBe(1300)
     expect(workshopBotSpecialNextMarginalMedals('golden', 25)).toBeUndefined()
     expect(workshopBotSpecialMaxLevel('amplify')).toBe(9)
     expect(workshopBotSpecialStatDisplay('amplify', 0)).toBe('3')

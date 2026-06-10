@@ -9,6 +9,8 @@
  *   Workshop Enhancements in P (name) and R (level).
  * - **Cards** — card data; Master Sheet tab with names in B, levels in C, mastery in D;
  *   Card Preset tab with loadouts in D/H/L/P/T (rows 5–32).
+ * - **Bots** — bot medals + Bot+ on Master Sheet (C=unlocked, D=attribute, G/H=Farming lvl/Sync);
+ *   BOTS lab levels in OTHERS (T=name, V=level).
  *
  * TowerSmith reads linked IDs from IDS Master, then writes to the linked child workbooks.
  */
@@ -39,3 +41,9 @@ export const EFFECTIVE_PATHS_CARDS_TAB_TITLE = 'Master Sheet'
 
 /** Tab title inside the Cards workbook (v3.x card loadout presets). */
 export const EFFECTIVE_PATHS_CARD_PRESET_TAB_TITLE = 'Card Preset'
+
+/** Workbook name in the IDS Master linked-ID table. */
+export const EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME = 'Bots'
+
+/** Tab title inside the Bots workbook (v3.x Master Sheet). */
+export const EFFECTIVE_PATHS_BOTS_TAB_TITLE = 'Master Sheet'

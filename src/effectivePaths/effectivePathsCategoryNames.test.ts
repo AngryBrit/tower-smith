@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import {
   categoryNameKey,
+  findBotsWorkbook,
   findCardsWorkbook,
   findRelicsWorkbook,
   findThemesWorkbook,
   findWorkshopWorkbook,
+  isBotsWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -59,5 +61,16 @@ describe('findWorkshopWorkbook', () => {
     ])
     expect(found?.spreadsheetId).toBe('1WorkshopWorkbookIdXXXXXXXXX')
     expect(isWorkshopWorkbookName('🔧 Workshop')).toBe(true)
+  })
+})
+
+describe('findBotsWorkbook', () => {
+  it('finds Bots among emoji-prefixed workbook names', () => {
+    const found = findBotsWorkbook([
+      { name: 'Workshop', spreadsheetId: '1WorkshopWorkbookIdXXXXXXXXX' },
+      { name: '🤖 Bots', spreadsheetId: '1BotsWorkbookIdXXXXXXXXXXXXX' },
+    ])
+    expect(found?.spreadsheetId).toBe('1BotsWorkbookIdXXXXXXXXXXXXX')
+    expect(isBotsWorkbookName('🤖 Bots')).toBe(true)
   })
 })
