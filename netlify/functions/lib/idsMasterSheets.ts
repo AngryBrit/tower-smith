@@ -1,8 +1,13 @@
 import { quoteSheetTitleForRange } from '../../../src/effectivePaths/buildRelicUnlockedUpdates'
 import { padSheetRowsToWidth } from '../../../src/effectivePaths/relicSheetLayout'
-import { findRelicsWorkbook, findThemesWorkbook } from '../../../src/effectivePaths/effectivePathsCategoryNames'
+import {
+  findCardsWorkbook,
+  findRelicsWorkbook,
+  findThemesWorkbook,
+} from '../../../src/effectivePaths/effectivePathsCategoryNames'
 import { filterKnownIdsWorkbooks } from '../../../src/effectivePaths/effectivePathsIdsWorkbooks'
 import { lookupRelicsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupRelicsOnIdsGrid'
+import { lookupCardsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupCardsOnIdsGrid'
 import { lookupThemesWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupThemesOnIdsGrid'
 import {
   parseIdsMasterWorkbooks,
@@ -125,6 +130,7 @@ export type IdsGatewayLookup = {
   workbooks: EffectivePathsLinkedWorkbook[]
   relicsWorkbook: EffectivePathsLinkedWorkbook | null
   themesWorkbook: EffectivePathsLinkedWorkbook | null
+  cardsWorkbook: EffectivePathsLinkedWorkbook | null
 }
 
 function pickIdsGatewayTab(
@@ -182,12 +188,17 @@ export async function readIdsGatewayLookup(options: {
     themesFromRow && filterKnownIdsWorkbooks([themesFromRow])[0]
       ? themesFromRow
       : findThemesWorkbook(workbooks)
+  const cardsFromRow = lookupCardsWorkbookOnIdsGrid(grid)
+  const cardsWorkbook =
+    cardsFromRow && filterKnownIdsWorkbooks([cardsFromRow])[0]
+      ? cardsFromRow
+      : findCardsWorkbook(workbooks)
 
-  if (workbooks.length === 0 && !relicsWorkbook && !themesWorkbook) {
+  if (workbooks.length === 0 && !relicsWorkbook && !themesWorkbook && !cardsWorkbook) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'ids_master_empty')
   }
 
-  return { idsTabTitle: idsTab.title, workbooks, relicsWorkbook, themesWorkbook }
+  return { idsTabTitle: idsTab.title, workbooks, relicsWorkbook, themesWorkbook, cardsWorkbook }
 }
 
 export async function readIdsMasterWorkbooks(options: {
@@ -246,4 +257,16 @@ export async function resolveThemesWorkbookId(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 404, 'themes_workbook_not_found')
   }
   return gateway.themesWorkbook.spreadsheetId
+}
+
+export async function resolveCardsWorkbookId(options: {
+  accessToken: string
+  masterSpreadsheetId: string
+  sheetGid: number | null
+}): Promise<string> {
+  const gateway = await readIdsGatewayLookup(options)
+  if (!gateway.cardsWorkbook) {
+    throw new GoogleSheetsApiError('sheets_api_error', 404, 'cards_workbook_not_found')
+  }
+  return gateway.cardsWorkbook.spreadsheetId
 }

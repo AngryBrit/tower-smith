@@ -2,7 +2,30 @@ import {
   buildRelicUnlockedUpdates,
   quoteSheetTitleForRange,
 } from '../../../src/effectivePaths/buildRelicUnlockedUpdates'
+import { buildCardPresetSheetUpdates } from '../../../src/effectivePaths/buildCardPresetSheetUpdates'
+import { buildCardSheetUpdates } from '../../../src/effectivePaths/buildCardSheetUpdates'
+import {
+  buildCardPresetSheetGridFromColumnRanges,
+  cardPresetSheetFetchRangesForGrid,
+  defaultCardPresetSheetLayout,
+  detectCardPresetSheetLayout,
+  isCardPresetSheetTitle,
+  parseCardPresetSlotsWithLayout,
+} from '../../../src/effectivePaths/cardPresetSheetLayout'
 import { buildThemeOwnedUpdates } from '../../../src/effectivePaths/buildThemeOwnedUpdates'
+import {
+  effectivePathsCardPresetDropdownLabels,
+  effectivePathsCardSheetLabelsFromCardRows,
+  effectivePathsCardSheetLabelsFromPresetGrid,
+  mergeEffectivePathsCardSheetLabels,
+} from '../../../src/effectivePaths/cardSheetNames'
+import {
+  buildCardSheetGridFromColumnRanges,
+  cardSheetFetchRangesForGrid,
+  detectCardSheetLayout,
+  parseCardSheetRowsWithLayout,
+  unmappedCardNamesWithLayout,
+} from '../../../src/effectivePaths/cardSheetLayout'
 import {
   detectRelicSheetLayout,
   padSheetRowsToWidth,
@@ -18,10 +41,23 @@ import {
 } from '../../../src/effectivePaths/themeSheetLayout'
 import { pickEffectivePathsRelicTab } from '../../../src/effectivePaths/pickRelicTab'
 import {
+  isCardPresetInputTabCandidate,
+  isCardPresetTabExcluded,
+  pickEffectivePathsCardPresetTab,
+} from '../../../src/effectivePaths/pickCardPresetTab'
+import {
+  isCardsInputTabCandidate,
+  pickEffectivePathsCardsTab,
+} from '../../../src/effectivePaths/pickCardsTab'
+import {
   isThemesInputTabCandidate,
   pickEffectivePathsThemesTab,
 } from '../../../src/effectivePaths/pickThemesTab'
-import { resolveRelicsWorkbookId, resolveThemesWorkbookId } from './idsMasterSheets'
+import {
+  resolveCardsWorkbookId,
+  resolveRelicsWorkbookId,
+  resolveThemesWorkbookId,
+} from './idsMasterSheets'
 import {
   GoogleSheetsApiError,
   sheetsFetch,
@@ -49,6 +85,17 @@ export type ExportThemesToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   themesWorkbookId: string
+}
+
+export type ExportCardsToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  cardsWorkbookId: string
+  presetSheetTitle: string | null
+  presetMatchedRows: number
+  presetUpdatedCells: number
 }
 
 function orderedRelicsWorkbookTabs(
@@ -338,4 +385,316 @@ export async function exportThemesToGoogleSheet(options: {
     sheetTitle,
     themesWorkbookId,
   }
+}
+
+function orderedCardsWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isCardsInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsCardsTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isCardsInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+async function readCardTabGrid(
+  accessToken: string,
+  spreadsheetId: string,
+  tab: SheetProperties,
+): Promise<string[][] | null> {
+  const rowCount = tab.gridProperties?.rowCount ?? 60
+  const columnCount = tab.gridProperties?.columnCount ?? 8
+  const slices = cardSheetFetchRangesForGrid(rowCount, columnCount)
+  if (slices.length === 0) return null
+
+  const quoted = quoteSheetTitleForRange(tab.title)
+  const rangeParams = slices
+    .map((slice) => `ranges=${encodeURIComponent(`${quoted}!${slice}`)}`)
+    .join('&')
+  const valuesRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values:batchGet?${rangeParams}&valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(valuesRes.status, 'cards_workbook')
+  if (!valuesRes.ok) {
+    const body = await valuesRes.text()
+    if (/exceeds grid limits/i.test(body)) return null
+    throw new GoogleSheetsApiError('sheets_api_error', valuesRes.status, body)
+  }
+  const valuesBody = (await valuesRes.json()) as {
+    valueRanges?: { range?: string; values?: unknown[][] }[]
+  }
+  const apiRanges = valuesBody.valueRanges ?? []
+  const valueRanges = slices.map((slice) => {
+    const expected = `${quoted}!${slice}`
+    const hit = apiRanges.find(
+      (block) => block.range === expected || block.range?.endsWith(`!${slice}`),
+    )
+    return { range: expected, values: hit?.values ?? [] }
+  })
+  return buildCardSheetGridFromColumnRanges(valueRanges)
+}
+
+function buildCardPresetBatchForWorkbook(
+  accessToken: string,
+  cardsWorkbookId: string,
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+  cardPresetLoadouts: readonly (readonly string[])[],
+  masterSheetLabels: ReadonlyMap<string, string>,
+): Promise<{
+  batch: ReturnType<typeof buildCardPresetSheetUpdates>
+  presetSlots: number
+  presetSheetTitle: string | null
+}> {
+  return (async () => {
+    let presetSlots: ReturnType<typeof parseCardPresetSlotsWithLayout> = []
+    let presetLayout: ReturnType<typeof detectCardPresetSheetLayout> = null
+    let presetSheetTitle: string | null = null
+    let presetGrid: string[][] | null = null
+
+    for (const tab of orderedCardPresetWorkbookTabs(sheets, sheetGid)) {
+      const grid = await readCardPresetTabGrid(accessToken, cardsWorkbookId, tab)
+      if (!grid) continue
+      const tabLayout =
+        detectCardPresetSheetLayout(grid) ??
+        (isCardPresetSheetTitle(tab.title) ? defaultCardPresetSheetLayout() : null)
+      if (!tabLayout) continue
+      const tabSlots = parseCardPresetSlotsWithLayout(tabLayout)
+      if (tabSlots.length > presetSlots.length) {
+        presetSlots = tabSlots
+        presetLayout = tabLayout
+        presetSheetTitle = tab.title
+        presetGrid = grid
+      }
+    }
+
+    if (!presetLayout || presetSlots.length === 0 || !presetSheetTitle) {
+      return { batch: [], presetSlots: 0, presetSheetTitle: null }
+    }
+
+    const sheetLabels = mergeEffectivePathsCardSheetLabels(
+      masterSheetLabels,
+      effectivePathsCardPresetDropdownLabels(),
+      presetGrid ? effectivePathsCardSheetLabelsFromPresetGrid(presetGrid) : new Map(),
+    )
+
+    return {
+      batch: buildCardPresetSheetUpdates(
+        presetSheetTitle,
+        presetSlots,
+        cardPresetLoadouts,
+        sheetLabels,
+      ),
+      presetSlots: presetSlots.length,
+      presetSheetTitle,
+    }
+  })()
+}
+
+export async function exportCardsToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  cardStars: Readonly<Record<string, number>>
+  cardMasteryUnlockedIds: readonly string[]
+  cardEquipSlots: number
+  cardPresetLoadouts: readonly (readonly string[])[]
+}): Promise<ExportCardsToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let cardsWorkbookId = overrideId
+  if (!cardsWorkbookId && options.masterSpreadsheetId) {
+    cardsWorkbookId = await resolveCardsWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!cardsWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(cardsWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'cards_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let cardRows: ReturnType<typeof parseCardSheetRowsWithLayout> = []
+  let layout: ReturnType<typeof detectCardSheetLayout> = null
+  let rawRows: string[][] = []
+  let sheetTitle = ''
+
+  for (const tab of orderedCardsWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    const grid = await readCardTabGrid(options.accessToken, cardsWorkbookId, tab)
+    if (!grid) continue
+    const tabLayout = detectCardSheetLayout(grid)
+    if (!tabLayout) continue
+    const tabRows = parseCardSheetRowsWithLayout(grid, tabLayout)
+    if (tabRows.length > cardRows.length) {
+      cardRows = tabRows
+      layout = tabLayout
+      rawRows = grid
+      sheetTitle = tab.title
+    }
+  }
+
+  if (!layout || cardRows.length === 0 || !sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_card_rows')
+  }
+
+  const mastery = new Set(options.cardMasteryUnlockedIds)
+  const cardBatch = buildCardSheetUpdates(
+    sheetTitle,
+    cardRows,
+    options.cardStars,
+    mastery,
+    options.cardEquipSlots,
+  )
+  if (cardBatch.length === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_card_rows')
+  }
+
+  const masterSheetLabels = effectivePathsCardSheetLabelsFromCardRows(
+    rawRows,
+    cardRows,
+    layout.nameCol,
+  )
+  const presetWork = await buildCardPresetBatchForWorkbook(
+    options.accessToken,
+    cardsWorkbookId,
+    sheets,
+    null,
+    options.cardPresetLoadouts,
+    masterSheetLabels,
+  )
+  const batch = [...cardBatch, ...presetWork.batch]
+
+  const updateRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(cardsWorkbookId)}/values:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valueInputOption: 'USER_ENTERED',
+        data: batch,
+      }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'cards_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+  const presetUpdatedCells = presetWork.batch.length
+
+  return {
+    updatedCells: updateBody.totalUpdatedCells ?? batch.length,
+    matchedRows: cardRows.length,
+    unmappedSheetNames: unmappedCardNamesWithLayout(rawRows, layout),
+    sheetTitle,
+    cardsWorkbookId,
+    presetSheetTitle: presetWork.presetSheetTitle,
+    presetMatchedRows: presetWork.presetSlots,
+    presetUpdatedCells,
+  }
+}
+
+function orderedCardPresetWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const out: SheetProperties[] = []
+
+  const push = (tab: SheetProperties) => {
+    if (isCardPresetTabExcluded(tab.title)) return
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+
+  if (sheetGid != null) {
+    const byGid = sheets.find((sheet) => sheet.properties.sheetId === sheetGid)
+    if (byGid) push(byGid.properties)
+  }
+
+  const preferred = pickEffectivePathsCardPresetTab(sheets, null)
+  if (preferred) push(preferred)
+
+  for (const sheet of sheets) {
+    const tab = sheet.properties
+    if (isCardPresetInputTabCandidate(tab.title, tab.gridProperties)) push(tab)
+  }
+
+  for (const sheet of sheets) {
+    const tab = sheet.properties
+    if (/card\s*preset/i.test(tab.title)) push(tab)
+  }
+
+  return out
+}
+
+async function readCardPresetTabGrid(
+  accessToken: string,
+  spreadsheetId: string,
+  tab: SheetProperties,
+): Promise<string[][] | null> {
+  const rowCount = tab.gridProperties?.rowCount ?? 50
+  const columnCount = tab.gridProperties?.columnCount ?? 24
+  const slices = cardPresetSheetFetchRangesForGrid(rowCount, columnCount)
+  if (slices.length === 0) return null
+
+  const quoted = quoteSheetTitleForRange(tab.title)
+  const rangeParams = slices
+    .map((slice) => `ranges=${encodeURIComponent(`${quoted}!${slice}`)}`)
+    .join('&')
+  const valuesRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values:batchGet?${rangeParams}&valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(valuesRes.status, 'cards_workbook')
+  if (!valuesRes.ok) {
+    const body = await valuesRes.text()
+    if (/exceeds grid limits/i.test(body)) return null
+    throw new GoogleSheetsApiError('sheets_api_error', valuesRes.status, body)
+  }
+  const valuesBody = (await valuesRes.json()) as {
+    valueRanges?: { range?: string; values?: unknown[][] }[]
+  }
+  const apiRanges = valuesBody.valueRanges ?? []
+  const valueRanges = slices.map((slice) => {
+    const expected = `${quoted}!${slice}`
+    const hit = apiRanges.find(
+      (block) => block.range === expected || block.range?.endsWith(`!${slice}`),
+    )
+    return { range: expected, values: hit?.values ?? [] }
+  })
+  return buildCardPresetSheetGridFromColumnRanges(valueRanges)
 }

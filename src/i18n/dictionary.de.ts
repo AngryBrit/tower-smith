@@ -1288,26 +1288,39 @@ export const STRINGS_DE = {
     'Relics-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (separate Tabelle; Sync auf Relics-Tab).',
   ep_export_relics_sync_target: 'Relikt-Sync-Ziel',
   ep_export_themes_sync_target: 'Theme-Sync-Ziel',
+  ep_export_cards_sync_target: 'Karten-Sync-Ziel',
   ep_export_relics_missing_in_master:
     'Keine Relics-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_themes_missing_in_master:
     'Keine Themes-&-Songs-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
+  ep_export_cards_missing_in_master:
+    'Keine Cards-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_sync_targets_missing:
-    'Keine Relics- oder Themes-&-Songs-Zeilen mit Spreadsheet-IDs auf dem IDS-Tab gefunden.',
+    'Keine Relics-, Themes-&-Songs- oder Cards-Zeilen mit Spreadsheet-IDs auf dem IDS-Tab gefunden.',
   ep_export_relics_missing_loaded:
     'Geladen: {{names}}. „Go to my Relics Sheet“-Link in Spalte D auf dem IDS-Tab prüfen.',
   ep_export_sync_relics_btn: 'Relikte ins Relics-Buch synchronisieren',
   ep_export_sync_themes_btn: 'Themes ins Themes-&-Songs-Buch synchronisieren',
+  ep_export_sync_cards_btn: 'Karten & Presets ins Cards-Buch synchronisieren',
   ep_export_syncing_relics: 'Relikte werden synchronisiert…',
   ep_export_syncing_themes: 'Themes werden synchronisiert…',
+  ep_export_syncing_cards: 'Karten & Presets werden synchronisiert…',
   ep_export_relics_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Reliktzeilen).',
   ep_export_themes_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Theme-Zeilen).',
+  ep_export_cards_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Kartenzeilen).',
+  ep_export_cards_presets_success_suffix:
+    'Außerdem {{presetRows}} Preset-Slots in „{{presetSheet}}“ aktualisiert.',
   ep_export_relics_unmapped_hint: '{{count}} Reliktname(n) konnten nicht zugeordnet werden und blieben unverändert.',
   ep_export_themes_unmapped_hint: '{{count}} Theme-Name(n) konnten nicht zugeordnet werden und blieben unverändert.',
+  ep_export_cards_unmapped_hint: '{{count}} Kartenname(n) konnten nicht zugeordnet werden und blieben unverändert.',
   ep_export_themes_unmapped_sample: 'Beispiele: {{names}}',
+  ep_export_cards_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_themes_resolved:
     'Themes-&-Songs-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (Sync auf Besitz-Checkboxen in den v3.x-Eingabeblöcken).',
   ep_export_themes_open_sheet: 'Verknüpftes Themes-&-Songs-Buch in Google Sheets öffnen',
+  ep_export_cards_resolved:
+    'Cards-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (Sync auf Master Sheet und Card-Preset-Tab).',
+  ep_export_cards_open_sheet: 'Verknüpftes Cards-Buch in Google Sheets öffnen',
   ep_export_invalid_spreadsheet: 'Gültige Google-Spreadsheet-ID oder docs.google.com-URL eingeben.',
   ep_export_oauth_not_configured: 'Google-Sheets-Export ist auf dieser Seite nicht konfiguriert.',
   ep_export_cancelled: 'Google-Anmeldung abgebrochen.',
@@ -1333,6 +1346,16 @@ export const STRINGS_DE = {
     'Eingabe-Tab Themes & Songs im Themes-&-Songs-Buch nicht gefunden.',
   ep_export_error_no_theme_rows:
     'Keine Theme-Zeilen auf dem Themes-&-Songs-Eingabe-Tab gefunden. Tabellenlayout oder Tab-Namen prüfen.',
+  ep_export_error_cards_workbook_not_found:
+    'IDS Master hat keine Cards-Zeile. Verknüpfte-ID-Tabelle prüfen.',
+  ep_export_error_cards_workbook_access_denied:
+    'Das IDS-verknüpfte Cards-Buch ({{id}}) ist nicht bearbeitbar. In Google Sheets öffnen und Editor-Zugriff prüfen, oder den Link auf dem IDS-Tab korrigieren.',
+  ep_export_error_cards_tab_not_found:
+    'Eingabe-Tab Cards im Cards-Buch nicht gefunden.',
+  ep_export_error_no_card_rows:
+    'Keine Kartenzeilen auf dem Master-Sheet-Tab gefunden. Tabellenlayout oder Tab-Namen prüfen.',
+  ep_export_error_no_card_preset_rows:
+    'Keine Karten-Preset-Slots auf dem Card-Preset-Tab gefunden. Tabellenlayout oder Tab-Namen prüfen.',
   ep_export_error_no_relic_rows:
     'Keine Reliktzeilen im Relics-Buch gefunden. Relics-Tab in Google Sheets öffnen und Namen sowie Spalte Unlocked prüfen.',
   ep_export_error_sheets_api_error: 'Google Sheets meldete einen Fehler. Erneut versuchen.',

@@ -1338,26 +1338,39 @@ export const STRINGS_EN = {
     'Relics workbook ID from IDS tab “{{tab}}”: {{id}} (separate spreadsheet; sync targets its Relics tab).',
   ep_export_relics_sync_target: 'relic sync target',
   ep_export_themes_sync_target: 'theme sync target',
+  ep_export_cards_sync_target: 'card sync target',
   ep_export_relics_missing_in_master:
     'No Relics row with a spreadsheet ID was found on the IDS tab.',
   ep_export_themes_missing_in_master:
     'No Themes & Songs row with a spreadsheet ID was found on the IDS tab.',
+  ep_export_cards_missing_in_master:
+    'No Cards row with a spreadsheet ID was found on the IDS tab.',
   ep_export_sync_targets_missing:
-    'No Relics or Themes & Songs rows with spreadsheet IDs were found on the IDS tab.',
+    'No Relics, Themes & Songs, or Cards rows with spreadsheet IDs were found on the IDS tab.',
   ep_export_relics_missing_loaded:
     'Loaded: {{names}}. Fix the “Go to my Relics Sheet” link in column D on the IDS tab.',
   ep_export_sync_relics_btn: 'Sync relics to Relics workbook',
   ep_export_sync_themes_btn: 'Sync themes to Themes & Songs workbook',
+  ep_export_sync_cards_btn: 'Sync cards & presets to Cards workbook',
   ep_export_syncing_relics: 'Syncing relics…',
   ep_export_syncing_themes: 'Syncing themes…',
+  ep_export_syncing_cards: 'Syncing cards & presets…',
   ep_export_relics_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
   ep_export_themes_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} theme rows).',
+  ep_export_cards_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} card rows).',
+  ep_export_cards_presets_success_suffix:
+    'Also updated {{presetRows}} preset slots on “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} sheet relic names were not mapped and were left unchanged.',
   ep_export_themes_unmapped_hint: '{{count}} sheet theme names were not mapped and were left unchanged.',
+  ep_export_cards_unmapped_hint: '{{count}} sheet card names were not mapped and were left unchanged.',
   ep_export_themes_unmapped_sample: 'Examples: {{names}}',
+  ep_export_cards_unmapped_sample: 'Examples: {{names}}',
   ep_export_themes_resolved:
     'Themes & Songs workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets owned checkboxes in the v3.x input blocks).',
   ep_export_themes_open_sheet: 'Open linked Themes & Songs workbook in Google Sheets',
+  ep_export_cards_resolved:
+    'Cards workbook ID from IDS tab “{{tab}}”: {{id}} (sync targets Master Sheet and Card Preset tab).',
+  ep_export_cards_open_sheet: 'Open linked Cards workbook in Google Sheets',
   ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
   ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
   ep_export_cancelled: 'Google sign-in was cancelled.',
@@ -1382,6 +1395,16 @@ export const STRINGS_EN = {
     'Could not find the Themes & Songs input tab in the Themes & Songs workbook.',
   ep_export_error_no_theme_rows:
     'No theme rows were found on the Themes & Songs input tab. Check the sheet layout or tab name.',
+  ep_export_error_cards_workbook_not_found:
+    'IDS Master has no Cards workbook row. Check the linked-ID table.',
+  ep_export_error_cards_workbook_access_denied:
+    'Cannot edit the IDS-linked Cards workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the “Go to my Cards Sheet” link on the IDS tab.',
+  ep_export_error_cards_tab_not_found:
+    'Could not find the Cards input tab in the Cards workbook.',
+  ep_export_error_no_card_rows:
+    'No card rows were found on the Cards Master Sheet tab. Check the sheet layout or tab name.',
+  ep_export_error_no_card_preset_rows:
+    'No card preset slots were found on the Card Preset tab. Check the sheet layout or tab name.',
   ep_export_error_no_relic_rows:
     'No relic rows found on the Relics workbook tab. Open the Relics sheet in Google Sheets and confirm the Relics tab has relic names and an Unlocked column.',
   ep_export_error_sheets_api_error: 'Google Sheets returned an error. Try again in a moment.',

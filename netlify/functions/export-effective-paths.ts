@@ -3,12 +3,13 @@ import { effectivePathsCors, googleAccessToken, SPREADSHEET_ID_RE } from './lib/
 import { jsonResponse } from './lib/http'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
 import {
+  exportCardsToGoogleSheet,
   exportRelicsToGoogleSheet,
   exportThemesToGoogleSheet,
   GoogleSheetsApiError,
 } from './lib/googleSheets'
 
-type ExportSyncTarget = 'relics' | 'themes'
+type ExportSyncTarget = 'relics' | 'themes' | 'cards'
 
 function parseBody(raw: unknown):
   | {
@@ -20,6 +21,10 @@ function parseBody(raw: unknown):
       sheetGid: number | null
       relicOwnedIds: string[]
       themeOwnedIds: string[]
+      cardStars: Record<string, number>
+      cardMasteryUnlockedIds: string[]
+      cardEquipSlots: number
+      cardPresetLoadouts: string[][]
     }
   | { ok: false; error: 'invalid_json' | 'invalid_spreadsheet' } {
   if (!raw || typeof raw !== 'object') {
@@ -52,7 +57,8 @@ function parseBody(raw: unknown):
   const sheetGid = typeof gidRaw === 'number' && Number.isInteger(gidRaw) ? gidRaw : null
 
   const targetRaw = (raw as { syncTarget?: unknown }).syncTarget
-  const syncTarget: ExportSyncTarget = targetRaw === 'themes' ? 'themes' : 'relics'
+  const syncTarget: ExportSyncTarget =
+    targetRaw === 'themes' ? 'themes' : targetRaw === 'cards' ? 'cards' : 'relics'
 
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
@@ -64,6 +70,36 @@ function parseBody(raw: unknown):
     ? themeRaw.filter((id): id is string => typeof id === 'string' && id.length > 0)
     : []
 
+  const cardStars: Record<string, number> = {}
+  const cardStarsRaw = (raw as { cardStars?: unknown }).cardStars
+  if (cardStarsRaw && typeof cardStarsRaw === 'object') {
+    for (const [key, val] of Object.entries(cardStarsRaw)) {
+      if (typeof key === 'string' && typeof val === 'number' && Number.isFinite(val)) {
+        cardStars[key] = val
+      }
+    }
+  }
+
+  const masteryRaw = (raw as { cardMasteryUnlockedIds?: unknown }).cardMasteryUnlockedIds
+  const cardMasteryUnlockedIds = Array.isArray(masteryRaw)
+    ? masteryRaw.filter((id): id is string => typeof id === 'string' && id.length > 0)
+    : []
+
+  const slotsRaw = (raw as { cardEquipSlots?: unknown }).cardEquipSlots
+  const cardEquipSlots =
+    typeof slotsRaw === 'number' && Number.isFinite(slotsRaw) ? Math.max(0, Math.round(slotsRaw)) : 0
+
+  const presetRaw = (raw as { cardPresetLoadouts?: unknown }).cardPresetLoadouts
+  const cardPresetLoadouts: string[][] = []
+  if (Array.isArray(presetRaw)) {
+    for (const row of presetRaw) {
+      if (!Array.isArray(row)) continue
+      cardPresetLoadouts.push(
+        row.filter((id): id is string => typeof id === 'string' && id.length > 0),
+      )
+    }
+  }
+
   return {
     ok: true,
     syncTarget,
@@ -73,18 +109,27 @@ function parseBody(raw: unknown):
     sheetGid,
     relicOwnedIds,
     themeOwnedIds,
+    cardStars,
+    cardMasteryUnlockedIds,
+    cardEquipSlots,
+    cardPresetLoadouts,
   }
 }
 
 function mapExportError(message: string | undefined): string {
   if (message === 'no_relic_rows') return 'no_relic_rows'
   if (message === 'no_theme_rows') return 'no_theme_rows'
+  if (message === 'no_card_rows') return 'no_card_rows'
+  if (message === 'no_card_preset_rows') return 'no_card_preset_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
   if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
+  if (message === 'cards_workbook_not_found') return 'cards_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
   if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
+  if (message === 'cards_workbook_access_denied') return 'cards_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
   if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
+  if (message === 'cards_tab_not_found') return 'cards_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
 }
@@ -133,6 +178,21 @@ export default async (req: Request): Promise<Response> => {
         themeOwnedIds: parsed.themeOwnedIds,
       })
       return jsonResponse(200, { ok: true, syncTarget: 'themes', ...result }, cors)
+    }
+
+    if (parsed.syncTarget === 'cards') {
+      const result = await exportCardsToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        cardStars: parsed.cardStars,
+        cardMasteryUnlockedIds: parsed.cardMasteryUnlockedIds,
+        cardEquipSlots: parsed.cardEquipSlots,
+        cardPresetLoadouts: parsed.cardPresetLoadouts,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'cards', ...result }, cors)
     }
 
     const result = await exportRelicsToGoogleSheet({

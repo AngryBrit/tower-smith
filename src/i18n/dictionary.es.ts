@@ -1352,26 +1352,39 @@ export const STRINGS_ES = {
     'ID del libro Relics desde IDS “{{tab}}”: {{id}} (hoja separada; sincroniza su pestaña Relics).',
   ep_export_relics_sync_target: 'objetivo de sincronización de reliquias',
   ep_export_themes_sync_target: 'objetivo de sincronización de temas',
+  ep_export_cards_sync_target: 'objetivo de sincronización de cartas',
   ep_export_relics_missing_in_master:
     'No se encontró una fila Relics con ID de hoja en la pestaña IDS.',
   ep_export_themes_missing_in_master:
     'No se encontró una fila Themes & Songs con ID de hoja en la pestaña IDS.',
+  ep_export_cards_missing_in_master:
+    'No se encontró una fila Cards con ID de hoja en la pestaña IDS.',
   ep_export_sync_targets_missing:
-    'No se encontraron filas Relics ni Themes & Songs con IDs de hoja en la pestaña IDS.',
+    'No se encontraron filas Relics, Themes & Songs ni Cards con IDs de hoja en la pestaña IDS.',
   ep_export_relics_missing_loaded:
     'Cargados: {{names}}. Corrige el enlace “Ir a mi hoja Relics” en la columna D.',
   ep_export_sync_relics_btn: 'Sincronizar reliquias al libro Relics',
   ep_export_sync_themes_btn: 'Sincronizar temas al libro Themes & Songs',
+  ep_export_sync_cards_btn: 'Sincronizar cartas y presets al libro Cards',
   ep_export_syncing_relics: 'Sincronizando reliquias…',
   ep_export_syncing_themes: 'Sincronizando temas…',
+  ep_export_syncing_cards: 'Sincronizando cartas y presets…',
   ep_export_relics_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de reliquias).',
   ep_export_themes_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de temas).',
+  ep_export_cards_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de cartas).',
+  ep_export_cards_presets_success_suffix:
+    'También actualizadas {{presetRows}} ranuras de preset en “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',
   ep_export_themes_unmapped_hint: '{{count}} nombres de tema no se mapearon y no se cambiaron.',
+  ep_export_cards_unmapped_hint: '{{count}} nombres de carta no se mapearon y no se cambiaron.',
   ep_export_themes_unmapped_sample: 'Ejemplos: {{names}}',
+  ep_export_cards_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_themes_resolved:
     'ID del libro Themes & Songs desde IDS “{{tab}}”: {{id}} (sincroniza casillas de propiedad en los bloques de entrada v3.x).',
   ep_export_themes_open_sheet: 'Abrir Themes & Songs vinculado en Google Sheets',
+  ep_export_cards_resolved:
+    'ID del libro Cards desde IDS “{{tab}}”: {{id}} (sincroniza Master Sheet y la pestaña Card Preset).',
+  ep_export_cards_open_sheet: 'Abrir Cards vinculado en Google Sheets',
   ep_export_invalid_spreadsheet: 'Introduce un ID o URL válido de Google Spreadsheet.',
   ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
   ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
@@ -1397,6 +1410,16 @@ export const STRINGS_ES = {
     'No se encontró la pestaña de entrada Themes & Songs en el libro Themes & Songs.',
   ep_export_error_no_theme_rows:
     'No se encontraron filas de temas en la pestaña de entrada Themes & Songs. Revisa el diseño o el nombre de la pestaña.',
+  ep_export_error_cards_workbook_not_found:
+    'IDS Master no tiene fila Cards. Revisa la tabla de IDs vinculados.',
+  ep_export_error_cards_workbook_access_denied:
+    'No se puede editar el Cards vinculado en IDS ({{id}}). Ábrelo en Google Sheets y confirma acceso de editor, o corrige el enlace en la pestaña IDS.',
+  ep_export_error_cards_tab_not_found:
+    'No se encontró la pestaña de entrada Cards en el libro Cards.',
+  ep_export_error_no_card_rows:
+    'No se encontraron filas de cartas en la pestaña Master Sheet. Revisa el diseño o el nombre de la pestaña.',
+  ep_export_error_no_card_preset_rows:
+    'No se encontraron ranuras de preset en la pestaña Card Preset. Revisa el diseño o el nombre de la pestaña.',
   ep_export_error_no_relic_rows:
     'No se encontraron filas de reliquias en el libro Relics. Abre la pestaña Relics en Google Sheets y comprueba nombres y columna Unlocked.',
   ep_export_error_sheets_api_error: 'Google Sheets devolvió un error. Inténtalo de nuevo.',

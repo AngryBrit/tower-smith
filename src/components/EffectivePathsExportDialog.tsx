@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useState } from 'react'
 import type { ImportNoticeVariant } from '../importNotice'
 import {
+  exportCardsToEffectivePaths,
   exportRelicsToEffectivePaths,
   exportThemesToEffectivePaths,
   listEffectivePathsWorkbooks,
@@ -8,6 +9,7 @@ import {
   type LinkedWorkbookAccess,
 } from '../effectivePaths/exportEffectivePathsApi'
 import {
+  isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
 } from '../effectivePaths/effectivePathsCategoryNames'
@@ -39,6 +41,11 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   themes_workbook_access_denied: 'ep_export_error_themes_workbook_access_denied',
   themes_tab_not_found: 'ep_export_error_themes_tab_not_found',
   no_theme_rows: 'ep_export_error_no_theme_rows',
+  cards_workbook_not_found: 'ep_export_error_cards_workbook_not_found',
+  cards_workbook_access_denied: 'ep_export_error_cards_workbook_access_denied',
+  cards_tab_not_found: 'ep_export_error_cards_tab_not_found',
+  no_card_rows: 'ep_export_error_no_card_rows',
+  no_card_preset_rows: 'ep_export_error_no_card_preset_rows',
   sheets_api_error: 'ep_export_error_sheets_api_error',
   unknown: 'ep_export_error_unknown',
 }
@@ -48,6 +55,10 @@ export type EffectivePathsExportDialogProps = {
   onClose: () => void
   relicOwnedIds: readonly string[]
   themeOwnedIds: readonly string[]
+  cardStars: Readonly<Record<string, number>>
+  cardMasteryUnlockedIds: readonly string[]
+  cardEquipSlots: number
+  cardPresetLoadouts: readonly (readonly string[])[]
   /** Success notice only — shown on the parent panel after sync completes. */
   onSuccess: (message: string) => void
 }
@@ -57,6 +68,10 @@ export function EffectivePathsExportDialog({
   onClose,
   relicOwnedIds,
   themeOwnedIds,
+  cardStars,
+  cardMasteryUnlockedIds,
+  cardEquipSlots,
+  cardPresetLoadouts,
   onSuccess,
 }: EffectivePathsExportDialogProps) {
   const { t } = useI18n()
@@ -74,9 +89,13 @@ export function EffectivePathsExportDialog({
   const [themesWorkbookAccess, setThemesWorkbookAccess] = useState<
     'ok' | 'denied' | 'not_found' | null
   >(null)
+  const [cardsWorkbook, setCardsWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
+  const [cardsWorkbookAccess, setCardsWorkbookAccess] = useState<
+    'ok' | 'denied' | 'not_found' | null
+  >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
-  const [exportingTarget, setExportingTarget] = useState<'relics' | 'themes' | null>(null)
+  const [exportingTarget, setExportingTarget] = useState<'relics' | 'themes' | 'cards' | null>(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
   )
@@ -90,6 +109,10 @@ export function EffectivePathsExportDialog({
     themesWorkbook != null &&
     themesWorkbookAccess !== 'denied' &&
     themesWorkbookAccess !== 'not_found'
+  const canSyncCards =
+    cardsWorkbook != null &&
+    cardsWorkbookAccess !== 'denied' &&
+    cardsWorkbookAccess !== 'not_found'
   const exporting = exportingTarget != null
   const busy = loadingSheets || exporting
 
@@ -158,6 +181,8 @@ export function EffectivePathsExportDialog({
     setRelicsWorkbookAccess(null)
     setThemesWorkbook(null)
     setThemesWorkbookAccess(null)
+    setCardsWorkbook(null)
+    setCardsWorkbookAccess(null)
     setWorkbookAccess(null)
     setNotice(null)
     try {
@@ -182,6 +207,8 @@ export function EffectivePathsExportDialog({
       setRelicsWorkbookAccess(result.relicsWorkbookAccess)
       setThemesWorkbook(result.themesWorkbook)
       setThemesWorkbookAccess(result.themesWorkbookAccess)
+      setCardsWorkbook(result.cardsWorkbook)
+      setCardsWorkbookAccess(result.cardsWorkbookAccess)
       setWorkbookAccess(result.workbookAccess)
       const deniedWorkbooks = result.workbookAccess.filter((row) => row.access === 'denied')
       if (deniedWorkbooks.length > 0) {
@@ -192,7 +219,7 @@ export function EffectivePathsExportDialog({
           ),
           'error',
         )
-      } else if (!result.relicsWorkbook && !result.themesWorkbook) {
+      } else if (!result.relicsWorkbook && !result.themesWorkbook && !result.cardsWorkbook) {
         const loaded = result.workbooks.map((workbook) => workbook.name).join(', ')
         showNotice(
           loaded
@@ -366,6 +393,106 @@ export function EffectivePathsExportDialog({
     t,
   ])
 
+  const handleExportCards = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+    if (!canSyncCards) {
+      showNotice(
+        cardsWorkbook
+          ? t('ep_export_error_cards_workbook_access_denied').replace(
+              '{{id}}',
+              cardsWorkbook.spreadsheetId,
+            )
+          : t('ep_export_cards_missing_in_master'),
+        'error',
+      )
+      return
+    }
+
+    setExportingTarget('cards')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+
+      writeStoredSpreadsheetRef(spreadsheetRef)
+
+      const result = await exportCardsToEffectivePaths({
+        googleAccessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        cardStars,
+        cardMasteryUnlockedIds,
+        cardEquipSlots,
+        cardPresetLoadouts,
+      })
+
+      if (!result.ok) {
+        if (result.error === 'cards_workbook_access_denied') {
+          showNotice(
+            t('ep_export_error_cards_workbook_access_denied').replace(
+              '{{id}}',
+              cardsWorkbook?.spreadsheetId ?? '',
+            ),
+            'error',
+          )
+        } else {
+          showNotice(formatExportError(result.error, result.message), 'error')
+        }
+        return
+      }
+
+      const {
+        matchedRows,
+        updatedCells,
+        sheetTitle,
+        unmappedSheetNames,
+        presetSheetTitle,
+        presetMatchedRows,
+      } = result.result
+      let message = t('ep_export_cards_success')
+        .replace('{{rows}}', String(matchedRows))
+        .replace('{{cells}}', String(updatedCells))
+        .replace('{{sheet}}', sheetTitle)
+      if (presetSheetTitle && presetMatchedRows > 0) {
+        message += ` ${t('ep_export_cards_presets_success_suffix')
+          .replace('{{presetSheet}}', presetSheetTitle)
+          .replace('{{presetRows}}', String(presetMatchedRows))}`
+      }
+      if (unmappedSheetNames.length > 0) {
+        message += ` ${t('ep_export_cards_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
+        const sample = [...new Set(unmappedSheetNames)].slice(0, 5).join(', ')
+        if (sample) {
+          message += ` ${t('ep_export_cards_unmapped_sample').replace('{{names}}', sample)}`
+        }
+      }
+      onSuccess(message)
+      onClose()
+    } finally {
+      setExportingTarget(null)
+    }
+  }, [
+    parsedMaster,
+    canSyncCards,
+    ensureGoogleToken,
+    spreadsheetRef,
+    cardStars,
+    cardMasteryUnlockedIds,
+    cardEquipSlots,
+    cardPresetLoadouts,
+    cardsWorkbook,
+    formatExportError,
+    showNotice,
+    onSuccess,
+    onClose,
+    t,
+  ])
+
   if (!open) return null
 
   return labOverlayPortal(
@@ -446,6 +573,25 @@ export function EffectivePathsExportDialog({
             ) : null}
           </p>
         ) : null}
+        {cardsWorkbook ? (
+          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
+            {t('ep_export_cards_resolved')
+              .replace('{{tab}}', idsTabTitle ?? 'IDS')
+              .replace('{{id}}', cardsWorkbook.spreadsheetId)}
+            {cardsWorkbookAccess === 'denied' || cardsWorkbookAccess === 'not_found' ? (
+              <>
+                {' '}
+                <a
+                  href={googleSpreadsheetEditUrl(cardsWorkbook.spreadsheetId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('ep_export_cards_open_sheet')}
+                </a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
         {workbookAccess && workbookAccess.length > 0 ? (
           <div className="effective-paths-export-dialog__workbooks">
             <p id={listId} className="select-research__lab-data-section-label">
@@ -464,11 +610,12 @@ export function EffectivePathsExportDialog({
                         : t('ep_export_workbook_access_denied')
                 const isRelics = isRelicsWorkbookName(workbook.name)
                 const isThemes = isThemesWorkbookName(workbook.name)
+                const isCards = isCardsWorkbookName(workbook.name)
                 return (
                   <li
                     key={`${workbook.name}:${workbook.spreadsheetId}`}
                     className={
-                      isRelics || isThemes
+                      isRelics || isThemes || isCards
                         ? 'effective-paths-export-dialog__workbook-item effective-paths-export-dialog__workbook-item--relics'
                         : 'effective-paths-export-dialog__workbook-item'
                     }
@@ -495,6 +642,11 @@ export function EffectivePathsExportDialog({
                         {t('ep_export_themes_sync_target')}
                       </span>
                     ) : null}
+                    {isCards ? (
+                      <span className="effective-paths-export-dialog__workbook-tag">
+                        {t('ep_export_cards_sync_target')}
+                      </span>
+                    ) : null}
                   </li>
                 )
               })}
@@ -517,6 +669,14 @@ export function EffectivePathsExportDialog({
             onClick={() => void handleExportThemes()}
           >
             {exportingTarget === 'themes' ? t('ep_export_syncing_themes') : t('ep_export_sync_themes_btn')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={busy || !canSyncCards}
+            onClick={() => void handleExportCards()}
+          >
+            {exportingTarget === 'cards' ? t('ep_export_syncing_cards') : t('ep_export_sync_cards_btn')}
           </button>
           <button
             type="button"

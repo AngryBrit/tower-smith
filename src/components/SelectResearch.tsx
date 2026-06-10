@@ -35,6 +35,8 @@ import {
   applyTowerThemes,
   readTowerThemesSnapshot,
 } from '../towerDataThemes'
+import { workshopCardMasteryUnlockedSet } from '../data/workshopCardMastery'
+import { WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS } from '../data/workshopGameCardWiki'
 import { useThemeOwned } from '../themeOwnedStorage'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
@@ -129,6 +131,10 @@ export function SelectResearch({
   } = useTowerWorkspaceContext()
   const [themeOwned] = useThemeOwned()
   const themeOwnedIds = useMemo(() => [...themeOwned].sort(), [themeOwned])
+  const cardMasteryUnlockedIds = useMemo(
+    () => [...workshopCardMasteryUnlockedSet(data, levelOverrides)].sort(),
+    [data, levelOverrides],
+  )
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const labBudgetBodyId = useId().replace(/:/g, '')
   const [search, setSearch] = useState('')
@@ -803,6 +809,10 @@ export function SelectResearch({
             onShowShareQr={() => void handleShowShareQr()}
             relicOwnedIds={workshopFlat.relicOwnedIds}
             themeOwnedIds={themeOwnedIds}
+            cardStars={workshopFlat.cardStars}
+            cardMasteryUnlockedIds={cardMasteryUnlockedIds}
+            cardEquipSlots={workshopFlat.cardEquipSlots ?? WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS}
+            cardPresetLoadouts={workshopFlat.cardPresetLoadouts}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
           />
       </Suspense>

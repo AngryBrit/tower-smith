@@ -44,6 +44,10 @@ export type LabImportExportPanelProps = {
   onShowShareQr: () => void
   relicOwnedIds: readonly string[]
   themeOwnedIds: readonly string[]
+  cardStars: Readonly<Record<string, number>>
+  cardMasteryUnlockedIds: readonly string[]
+  cardEquipSlots: number
+  cardPresetLoadouts: readonly (readonly string[])[]
   onEffectivePathsSuccess: (message: string) => void
 }
 
@@ -66,6 +70,10 @@ export function LabImportExportPanel({
   onShowShareQr,
   relicOwnedIds,
   themeOwnedIds,
+  cardStars,
+  cardMasteryUnlockedIds,
+  cardEquipSlots,
+  cardPresetLoadouts,
   onEffectivePathsSuccess,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
@@ -261,6 +269,10 @@ export function LabImportExportPanel({
         onClose={() => setEffectivePathsOpen(false)}
         relicOwnedIds={relicOwnedIds}
         themeOwnedIds={themeOwnedIds}
+        cardStars={cardStars}
+        cardMasteryUnlockedIds={cardMasteryUnlockedIds}
+        cardEquipSlots={cardEquipSlots}
+        cardPresetLoadouts={cardPresetLoadouts}
         onSuccess={onEffectivePathsSuccess}
       />
     </>,
