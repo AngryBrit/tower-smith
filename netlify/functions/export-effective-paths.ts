@@ -6,10 +6,11 @@ import {
   exportCardsToGoogleSheet,
   exportRelicsToGoogleSheet,
   exportThemesToGoogleSheet,
+  exportWorkshopToGoogleSheet,
   GoogleSheetsApiError,
 } from './lib/googleSheets'
 
-type ExportSyncTarget = 'relics' | 'themes' | 'cards'
+type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop'
 
 function parseBody(raw: unknown):
   | {
@@ -25,6 +26,7 @@ function parseBody(raw: unknown):
       cardMasteryUnlockedIds: string[]
       cardEquipSlots: number
       cardPresetLoadouts: string[][]
+      workshopLevels: Record<string, number>
     }
   | { ok: false; error: 'invalid_json' | 'invalid_spreadsheet' } {
   if (!raw || typeof raw !== 'object') {
@@ -58,7 +60,13 @@ function parseBody(raw: unknown):
 
   const targetRaw = (raw as { syncTarget?: unknown }).syncTarget
   const syncTarget: ExportSyncTarget =
-    targetRaw === 'themes' ? 'themes' : targetRaw === 'cards' ? 'cards' : 'relics'
+    targetRaw === 'themes'
+      ? 'themes'
+      : targetRaw === 'cards'
+        ? 'cards'
+        : targetRaw === 'workshop'
+          ? 'workshop'
+          : 'relics'
 
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
@@ -100,6 +108,16 @@ function parseBody(raw: unknown):
     }
   }
 
+  const workshopLevels: Record<string, number> = {}
+  const workshopLevelsRaw = (raw as { workshopLevels?: unknown }).workshopLevels
+  if (workshopLevelsRaw && typeof workshopLevelsRaw === 'object') {
+    for (const [key, val] of Object.entries(workshopLevelsRaw)) {
+      if (typeof key === 'string' && typeof val === 'number' && Number.isFinite(val)) {
+        workshopLevels[key] = val
+      }
+    }
+  }
+
   return {
     ok: true,
     syncTarget,
@@ -113,6 +131,7 @@ function parseBody(raw: unknown):
     cardMasteryUnlockedIds,
     cardEquipSlots,
     cardPresetLoadouts,
+    workshopLevels,
   }
 }
 
@@ -121,15 +140,19 @@ function mapExportError(message: string | undefined): string {
   if (message === 'no_theme_rows') return 'no_theme_rows'
   if (message === 'no_card_rows') return 'no_card_rows'
   if (message === 'no_card_preset_rows') return 'no_card_preset_rows'
+  if (message === 'no_workshop_rows') return 'no_workshop_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
   if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
   if (message === 'cards_workbook_not_found') return 'cards_workbook_not_found'
+  if (message === 'workshop_workbook_not_found') return 'workshop_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
   if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
   if (message === 'cards_workbook_access_denied') return 'cards_workbook_access_denied'
+  if (message === 'workshop_workbook_access_denied') return 'workshop_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
   if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
   if (message === 'cards_tab_not_found') return 'cards_tab_not_found'
+  if (message === 'workshop_tab_not_found') return 'workshop_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
 }
@@ -193,6 +216,18 @@ export default async (req: Request): Promise<Response> => {
         cardPresetLoadouts: parsed.cardPresetLoadouts,
       })
       return jsonResponse(200, { ok: true, syncTarget: 'cards', ...result }, cors)
+    }
+
+    if (parsed.syncTarget === 'workshop') {
+      const result = await exportWorkshopToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        workshopLevels: parsed.workshopLevels,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'workshop', ...result }, cors)
     }
 
     const result = await exportRelicsToGoogleSheet({

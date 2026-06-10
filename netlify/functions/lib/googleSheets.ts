@@ -4,6 +4,7 @@ import {
 } from '../../../src/effectivePaths/buildRelicUnlockedUpdates'
 import { buildCardPresetSheetUpdates } from '../../../src/effectivePaths/buildCardPresetSheetUpdates'
 import { buildCardSheetUpdates } from '../../../src/effectivePaths/buildCardSheetUpdates'
+import { buildWorkshopSheetUpdates } from '../../../src/effectivePaths/buildWorkshopSheetUpdates'
 import {
   buildCardPresetSheetGridFromColumnRanges,
   cardPresetSheetFetchRangesForGrid,
@@ -50,6 +51,17 @@ import {
   pickEffectivePathsCardsTab,
 } from '../../../src/effectivePaths/pickCardsTab'
 import {
+  buildWorkshopSheetGridFromColumnRanges,
+  detectWorkshopSheetLayout,
+  parseWorkshopSheetRowsWithLayout,
+  unmappedWorkshopNamesWithLayout,
+  workshopSheetFetchRangesForGrid,
+} from '../../../src/effectivePaths/workshopSheetLayout'
+import {
+  isWorkshopInputTabCandidate,
+  pickEffectivePathsWorkshopTab,
+} from '../../../src/effectivePaths/pickWorkshopTab'
+import {
   isThemesInputTabCandidate,
   pickEffectivePathsThemesTab,
 } from '../../../src/effectivePaths/pickThemesTab'
@@ -57,6 +69,7 @@ import {
   resolveCardsWorkbookId,
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
+  resolveWorkshopWorkbookId,
 } from './idsMasterSheets'
 import {
   GoogleSheetsApiError,
@@ -96,6 +109,14 @@ export type ExportCardsToSheetResult = {
   presetSheetTitle: string | null
   presetMatchedRows: number
   presetUpdatedCells: number
+}
+
+export type ExportWorkshopToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  workshopWorkbookId: string
 }
 
 function orderedRelicsWorkbookTabs(
@@ -451,6 +472,70 @@ async function readCardTabGrid(
   return buildCardSheetGridFromColumnRanges(valueRanges)
 }
 
+function orderedWorkshopWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isWorkshopInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsWorkshopTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isWorkshopInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+async function readWorkshopTabGrid(
+  accessToken: string,
+  spreadsheetId: string,
+  tab: SheetProperties,
+): Promise<string[][] | null> {
+  const rowCount = tab.gridProperties?.rowCount ?? 70
+  const columnCount = tab.gridProperties?.columnCount ?? 8
+  const slices = workshopSheetFetchRangesForGrid(rowCount, columnCount)
+  if (slices.length === 0) return null
+
+  const quoted = quoteSheetTitleForRange(tab.title)
+  const rangeParams = slices
+    .map((slice) => `ranges=${encodeURIComponent(`${quoted}!${slice}`)}`)
+    .join('&')
+  const valuesRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values:batchGet?${rangeParams}&valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(valuesRes.status, 'workshop_workbook')
+  if (!valuesRes.ok) {
+    const body = await valuesRes.text()
+    if (/exceeds grid limits/i.test(body)) return null
+    throw new GoogleSheetsApiError('sheets_api_error', valuesRes.status, body)
+  }
+  const valuesBody = (await valuesRes.json()) as {
+    valueRanges?: { range?: string; values?: unknown[][] }[]
+  }
+  const apiRanges = valuesBody.valueRanges ?? []
+  const valueRanges = slices.map((slice) => {
+    const expected = `${quoted}!${slice}`
+    const hit = apiRanges.find(
+      (block) => block.range === expected || block.range?.endsWith(`!${slice}`),
+    )
+    return { range: expected, values: hit?.values ?? [] }
+  })
+  return buildWorkshopSheetGridFromColumnRanges(valueRanges)
+}
+
 function buildCardPresetBatchForWorkbook(
   accessToken: string,
   cardsWorkbookId: string,
@@ -626,6 +711,98 @@ export async function exportCardsToGoogleSheet(options: {
     presetSheetTitle: presetWork.presetSheetTitle,
     presetMatchedRows: presetWork.presetSlots,
     presetUpdatedCells,
+  }
+}
+
+export async function exportWorkshopToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  workshopLevels: Readonly<Record<string, number>>
+}): Promise<ExportWorkshopToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let workshopWorkbookId = overrideId
+  if (!workshopWorkbookId && options.masterSpreadsheetId) {
+    workshopWorkbookId = await resolveWorkshopWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!workshopWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(workshopWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'workshop_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let workshopRows: ReturnType<typeof parseWorkshopSheetRowsWithLayout> = []
+  let layout: ReturnType<typeof detectWorkshopSheetLayout> = null
+  let rawRows: string[][] = []
+  let sheetTitle = ''
+
+  for (const tab of orderedWorkshopWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    const grid = await readWorkshopTabGrid(options.accessToken, workshopWorkbookId, tab)
+    if (!grid) continue
+    const tabLayout = detectWorkshopSheetLayout(grid)
+    if (!tabLayout) continue
+    const tabRows = parseWorkshopSheetRowsWithLayout(grid, tabLayout)
+    if (tabRows.length > workshopRows.length) {
+      workshopRows = tabRows
+      layout = tabLayout
+      rawRows = grid
+      sheetTitle = tab.title
+    }
+  }
+
+  if (!layout || workshopRows.length === 0 || !sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
+  }
+
+  const batch = buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels)
+  if (batch.length === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
+  }
+
+  const updateRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(workshopWorkbookId)}/values:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valueInputOption: 'USER_ENTERED',
+        data: batch,
+      }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'workshop_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+
+  return {
+    updatedCells: updateBody.totalUpdatedCells ?? batch.length,
+    matchedRows: workshopRows.length,
+    unmappedSheetNames: unmappedWorkshopNamesWithLayout(rawRows, layout),
+    sheetTitle,
+    workshopWorkbookId,
   }
 }
 

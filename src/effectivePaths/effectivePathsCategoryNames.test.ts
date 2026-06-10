@@ -4,9 +4,11 @@ import {
   findCardsWorkbook,
   findRelicsWorkbook,
   findThemesWorkbook,
+  findWorkshopWorkbook,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
+  isWorkshopWorkbookName,
 } from './effectivePathsCategoryNames'
 
 describe('categoryNameKey', () => {
@@ -46,5 +48,16 @@ describe('findCardsWorkbook', () => {
     ])
     expect(found?.spreadsheetId).toBe('1CardsWorkbookIdXXXXXXXXXXXX')
     expect(isCardsWorkbookName('🃏 Cards')).toBe(true)
+  })
+})
+
+describe('findWorkshopWorkbook', () => {
+  it('finds Workshop among emoji-prefixed workbook names', () => {
+    const found = findWorkshopWorkbook([
+      { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
+      { name: '🔧 Workshop', spreadsheetId: '1WorkshopWorkbookIdXXXXXXXXX' },
+    ])
+    expect(found?.spreadsheetId).toBe('1WorkshopWorkbookIdXXXXXXXXX')
+    expect(isWorkshopWorkbookName('🔧 Workshop')).toBe(true)
   })
 })

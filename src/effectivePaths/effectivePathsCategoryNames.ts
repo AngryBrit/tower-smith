@@ -3,6 +3,7 @@ import {
   EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
+  EFFECTIVE_PATHS_WORKSHOP_WORKBOOK_NAME,
 } from './effectivePathsWorkbooks'
 
 /** Strip leading emoji/icons and normalize for IDS Master category labels. */
@@ -73,6 +74,24 @@ export function findCardsWorkbook(
   const byAlias = workbooks.find((workbook) => isCardsWorkbookName(workbook.name))
   if (byAlias) return byAlias
   const norm = categoryNameKey(EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}
+
+export function isWorkshopWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return key === 'workshop' || key.endsWith(' workshop')
+}
+
+export function findWorkshopWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isWorkshopWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_WORKSHOP_WORKBOOK_NAME)
   return (
     workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
     workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??

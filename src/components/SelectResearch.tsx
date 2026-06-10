@@ -36,6 +36,7 @@ import {
   readTowerThemesSnapshot,
 } from '../towerDataThemes'
 import { workshopCardMasteryUnlockedSet } from '../data/workshopCardMastery'
+import { workshopLevelsFromPersisted } from '../effectivePaths/workshopLevelsFromPersisted'
 import { WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS } from '../data/workshopGameCardWiki'
 import { useThemeOwned } from '../themeOwnedStorage'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
@@ -134,6 +135,10 @@ export function SelectResearch({
   const cardMasteryUnlockedIds = useMemo(
     () => [...workshopCardMasteryUnlockedSet(data, levelOverrides)].sort(),
     [data, levelOverrides],
+  )
+  const workshopLevelsForEp = useMemo(
+    () => workshopLevelsFromPersisted(workshopFlat),
+    [workshopFlat],
   )
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
   const labBudgetBodyId = useId().replace(/:/g, '')
@@ -813,6 +818,7 @@ export function SelectResearch({
             cardMasteryUnlockedIds={cardMasteryUnlockedIds}
             cardEquipSlots={workshopFlat.cardEquipSlots ?? WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS}
             cardPresetLoadouts={workshopFlat.cardPresetLoadouts}
+            workshopLevels={workshopLevelsForEp}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
           />
       </Suspense>

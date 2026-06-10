@@ -48,6 +48,7 @@ export type LabImportExportPanelProps = {
   cardMasteryUnlockedIds: readonly string[]
   cardEquipSlots: number
   cardPresetLoadouts: readonly (readonly string[])[]
+  workshopLevels: Readonly<Record<string, number>>
   onEffectivePathsSuccess: (message: string) => void
 }
 
@@ -74,6 +75,7 @@ export function LabImportExportPanel({
   cardMasteryUnlockedIds,
   cardEquipSlots,
   cardPresetLoadouts,
+  workshopLevels,
   onEffectivePathsSuccess,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
@@ -273,6 +275,7 @@ export function LabImportExportPanel({
         cardMasteryUnlockedIds={cardMasteryUnlockedIds}
         cardEquipSlots={cardEquipSlots}
         cardPresetLoadouts={cardPresetLoadouts}
+        workshopLevels={workshopLevels}
         onSuccess={onEffectivePathsSuccess}
       />
     </>,

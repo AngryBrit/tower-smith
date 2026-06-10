@@ -8,6 +8,7 @@ import {
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
+  isWorkshopWorkbookName,
 } from '../../src/effectivePaths/effectivePathsCategoryNames'
 import {
   filterKnownIdsWorkbooks,
@@ -80,6 +81,7 @@ export default async (req: Request): Promise<Response> => {
       ...(gateway.relicsWorkbook ? [gateway.relicsWorkbook] : []),
       ...(gateway.themesWorkbook ? [gateway.themesWorkbook] : []),
       ...(gateway.cardsWorkbook ? [gateway.cardsWorkbook] : []),
+      ...(gateway.workshopWorkbook ? [gateway.workshopWorkbook] : []),
     ])
     const workbookAccess = (
       await authorizeLinkedWorkbooks(token, workbooksToAuthorize)
@@ -90,6 +92,8 @@ export default async (req: Request): Promise<Response> => {
       workbookAccess.find((row) => isThemesWorkbookName(row.name))?.access ?? null
     const cardsWorkbookAccess =
       workbookAccess.find((row) => isCardsWorkbookName(row.name))?.access ?? null
+    const workshopWorkbookAccess =
+      workbookAccess.find((row) => isWorkshopWorkbookName(row.name))?.access ?? null
     return jsonResponse(
       200,
       {
@@ -102,6 +106,8 @@ export default async (req: Request): Promise<Response> => {
         themesWorkbookAccess,
         cardsWorkbook: gateway.cardsWorkbook,
         cardsWorkbookAccess,
+        workshopWorkbook: gateway.workshopWorkbook,
+        workshopWorkbookAccess,
         workbookAccess,
       },
       cors,
