@@ -168,7 +168,7 @@ export function scaleAssistSubmoduleValueForSlot(
 export function assistSubmodulePickerSlotText(
   cell: string,
   effectLabel: string,
-  effectId: string,
+  _effectId: string,
   ctx: WorkshopSubmoduleBonusContext,
   slot: WorkshopAssistModuleSlot,
 ): string {

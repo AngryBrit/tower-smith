@@ -101,7 +101,7 @@ describe('workshopAssistSubmoduleScale', () => {
           ws: {
             ...ws,
             simGeneratorAssistSubStoneEfficiency: 19,
-            simGeneratorAssistUniqueRarity: 'legendary',
+            simGeneratorAssistUniqueRarity: 'legendary' as const,
           },
           research: null,
           labOverrides: {},
@@ -125,7 +125,7 @@ describe('workshopAssistSubmoduleScale', () => {
       ...defaultWorkshopPersisted(),
       simCoreAssistUnlocked: true,
       simCoreAssistChassisModuleId: 'primordialCollapse',
-      simCoreAssistUniqueRarity: 'epic',
+      simCoreAssistUniqueRarity: 'epic' as const,
       simCoreAssistSubStoneEfficiency: 19,
     }
     const ctx = { ws, research: null, labOverrides: {} }
@@ -172,7 +172,7 @@ describe('workshopAssistSubmoduleScale', () => {
       ...defaultWorkshopPersisted(),
       simArmorAssistUnlocked: true,
       simArmorAssistChassisModuleId: 'spaceDisplacer',
-      simArmorAssistUniqueRarity: 'mythic',
+      simArmorAssistUniqueRarity: 'mythic' as const,
       simArmorAssistSubStoneEfficiency: 24,
     }
     const ctx = { ws, research: null, labOverrides: {} }
@@ -210,7 +210,7 @@ describe('workshopAssistSubmoduleScale', () => {
       ...defaultWorkshopPersisted(),
       simGeneratorAssistUnlocked: true,
       simGeneratorAssistChassisModuleId: 'pulsarHarvester',
-      simGeneratorAssistUniqueRarity: 'legendary',
+      simGeneratorAssistUniqueRarity: 'legendary' as const,
       simGeneratorAssistSubStoneEfficiency: 19,
     }
     const ctx = { ws, research: null, labOverrides: {} }
@@ -355,7 +355,7 @@ describe('workshopAssistSubmoduleScale', () => {
       ...defaultWorkshopPersisted(),
       simGeneratorAssistUnlocked: true,
       simGeneratorAssistChassisModuleId: 'pulsarHarvester',
-      simGeneratorAssistChassisModuleRarity: 'star_2',
+      simGeneratorAssistChassisModuleRarity: 'star_2' as const,
       simGeneratorModuleLevel: 66,
       simGeneratorAssistSubStoneEfficiency: 19,
       simSubmoduleSelections: selections,

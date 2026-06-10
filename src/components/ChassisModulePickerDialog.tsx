@@ -5,7 +5,6 @@ import {
   type WorkshopChassisModuleHeroStatContext,
 } from '../data/workshopChassisModuleHeroStat'
 import {
-  clampWorkshopChassisModuleLevel,
   formatWorkshopChassisModuleAbility,
   formatWorkshopChassisModuleValue,
   WORKSHOP_CHASSIS_MODULE_MERGE_TIERS,

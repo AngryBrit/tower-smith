@@ -18,8 +18,8 @@ import {
 import {
   workshopChassisModuleLevel,
   workshopChassisModuleSelection,
-  type WorkshopChassisModuleMergeTier,
 } from './workshopChassisModuleSelection'
+import type { WorkshopChassisModuleMergeTier } from './workshopChassisModuleShared'
 import { workshopAssistModuleLevel } from './workshopSimModules'
 import type { WorkshopSubmoduleRarity } from './workshopSubmoduleEffects'
 import type { WorkshopSubmoduleBonusContext } from './workshopAssistSubmoduleScale'
@@ -97,7 +97,7 @@ export function submoduleEffectSlotIndex(
 /** Whether an equipped sub-effect counts at `moduleLevel` (slot unlock + rarity cap). */
 export function submoduleEffectActiveAtModuleLevel(
   slotSelections: WorkshopSubmoduleSlotSelections,
-  slot: WorkshopAssistModuleSlot,
+  _slot: WorkshopAssistModuleSlot,
   effectId: string,
   role: WorkshopSubmoduleModuleRole,
   moduleLevel: number,
@@ -127,7 +127,7 @@ export function orderedSlotsFromSelectionMap(
 function sanitizeOrderedSlots(
   slot: WorkshopAssistModuleSlot,
   raw: unknown,
-  map: WorkshopSubmoduleSelectionMap,
+  _map: WorkshopSubmoduleSelectionMap,
 ): WorkshopSubmoduleOrderedSlots | undefined {
   if (!Array.isArray(raw)) return undefined
   const section = WORKSHOP_SUBMODULE_SECTIONS[slot]

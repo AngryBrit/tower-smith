@@ -31,10 +31,7 @@ import {
   workshopGeneratorModuleDef,
   type WorkshopGeneratorModuleId,
 } from './workshopGeneratorModules'
-import {
-  clampWorkshopAssistModuleLevel,
-  type WorkshopAssistModuleSlot,
-} from './workshopSimModules'
+import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
 export type WorkshopChassisModuleSelection = {
   moduleId: string | null
