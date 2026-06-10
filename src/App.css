@@ -8494,6 +8494,24 @@ button.workshop__uw-plus-cost--display:hover {
   background: rgba(0, 0, 0, 0.15);
 }
 
+.tower-gallery__entry-header {
+  position: relative;
+  width: 100%;
+  padding-right: 2.85rem;
+}
+
+.tower-gallery__entry-header .tower-gallery__entry-title {
+  display: block;
+  width: 100%;
+  min-width: 0;
+}
+
+.tower-gallery__entry-header .gallery-upvote-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
 .tower-gallery__entry-main {
   display: flex;
   flex-direction: column;

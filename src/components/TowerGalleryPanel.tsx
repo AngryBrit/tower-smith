@@ -628,8 +628,7 @@ export function TowerGalleryPanel({
 
               <li key={entry.id} className="tower-gallery__entry">
 
-                <div className="tower-gallery__entry-main">
-
+                <div className="tower-gallery__entry-header">
                   <button
                     type="button"
                     className="tower-gallery__entry-title"
@@ -641,6 +640,23 @@ export function TowerGalleryPanel({
                       ? t('gallery_loading_tower')
                       : entry.title}
                   </button>
+
+                  <GalleryUpvoteButton
+                    buildId={entry.id}
+                    upvoteCount={entry.upvoteCount}
+                    viewerVoted={entry.viewerVoted}
+                    signedIn={Boolean(auth.session)}
+                    disabled={loadingId === entry.id}
+                    getAccessToken={auth.getAccessToken}
+                    onVoteChange={patchEntryVote}
+                    onNotice={setActionNotice}
+                    onError={(error) =>
+                      setActionNotice(apiErrorMessage(error, errorStrings))
+                    }
+                  />
+                </div>
+
+                <div className="tower-gallery__entry-main">
 
                   {(entry.category || entry.viewerOwns) ? (
                     <div className="tower-gallery__entry-badges">
@@ -699,20 +715,6 @@ export function TowerGalleryPanel({
                 </div>
 
                 <div className="tower-gallery__entry-actions">
-                  <GalleryUpvoteButton
-                    buildId={entry.id}
-                    upvoteCount={entry.upvoteCount}
-                    viewerVoted={entry.viewerVoted}
-                    signedIn={Boolean(auth.session)}
-                    disabled={loadingId === entry.id}
-                    getAccessToken={auth.getAccessToken}
-                    onVoteChange={patchEntryVote}
-                    onNotice={setActionNotice}
-                    onError={(error) =>
-                      setActionNotice(apiErrorMessage(error, errorStrings))
-                    }
-                  />
-
                   <button
                     type="button"
                     className="glow-btn"

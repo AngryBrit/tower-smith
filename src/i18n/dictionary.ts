@@ -575,7 +575,7 @@ export const STRINGS_EN = {
     'Lists every build in the database (public and private). Use Load more if needed. Delete removes the short link and listing.',
   gallery_owner_make_public: 'Make public',
   gallery_owner_make_unlisted: 'Make Private',
-  gallery_owner_regenerate_link: 'Regen link',
+  gallery_owner_regenerate_link: 'Regenerate link',
   gallery_owner_delete_confirm:
     'Delete this build? This cannot be undone, and the old link will stop working.',
   gallery_regenerate_confirm:
