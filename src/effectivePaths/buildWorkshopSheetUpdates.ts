@@ -1,7 +1,8 @@
 import { quoteSheetTitleForRange } from './buildRelicUnlockedUpdates'
 import type { EffectivePathsWorkshopSheetRow } from './workshopSheetLayout'
 import { columnIndexToA1Letter } from './workshopSheetLayout'
-import { workshopUpgradeIdFromSheetName } from './workshopSheetNames'
+import type { WorkshopEnhanceSheetLayout } from './workshopSheetLayout'
+import { workshopEnhanceIdFromSheetName, workshopUpgradeIdFromSheetName } from './workshopSheetNames'
 import { workshopUpgradeUnlockedForEp } from './workshopEpUnlock'
 
 export type WorkshopSheetBatchUpdate = {
@@ -28,6 +29,30 @@ export function buildWorkshopSheetUpdates(
       range: `${quoted}!${unlockedCol}${row.rowIndex}`,
       values: [[workshopUpgradeUnlockedForEp(upgradeId, level) ? 'TRUE' : 'FALSE']],
     })
+    out.push({
+      range: `${quoted}!${levelCol}${row.rowIndex}`,
+      values: [[level]],
+    })
+  }
+
+  return out
+}
+
+/** Build per-row updates for enhancement level (R) on Workshop v3.x Master Sheet. */
+export function buildWorkshopEnhanceSheetUpdates(
+  sheetTitle: string,
+  enhanceRows: readonly EffectivePathsWorkshopSheetRow[],
+  workshopLevels: Readonly<Record<string, number>>,
+  layout: WorkshopEnhanceSheetLayout,
+): WorkshopSheetBatchUpdate[] {
+  const quoted = quoteSheetTitleForRange(sheetTitle)
+  const levelCol = columnIndexToA1Letter(layout.levelCol)
+  const out: WorkshopSheetBatchUpdate[] = []
+
+  for (const row of enhanceRows) {
+    const enhanceId = workshopEnhanceIdFromSheetName(row.name)
+    if (!enhanceId) continue
+    const level = Math.max(0, Math.round(workshopLevels[enhanceId] ?? 0))
     out.push({
       range: `${quoted}!${levelCol}${row.rowIndex}`,
       values: [[level]],

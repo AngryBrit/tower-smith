@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest'
-import { WORKSHOP_EP_UPGRADE_KEYS, workshopUpgradeIdFromSheetName } from './workshopSheetNames'
+import {
+  WORKSHOP_EP_ENHANCE_KEYS,
+  WORKSHOP_EP_UPGRADE_KEYS,
+  workshopEnhanceIdFromSheetName,
+  workshopUpgradeIdFromSheetName,
+} from './workshopSheetNames'
 
 describe('workshopUpgradeIdFromSheetName', () => {
   it('maps EP workshop labels to persisted upgrade keys', () => {
@@ -25,8 +30,26 @@ describe('workshopUpgradeIdFromSheetName', () => {
     expect(workshopUpgradeIdFromSheetName('Max Amount')).toBe('maxRecoveryLevel')
   })
 
+  it('maps workshop enhancement labels', () => {
+    expect(workshopEnhanceIdFromSheetName('Damage +')).toBe('enhanceDamageLevel')
+    expect(workshopEnhanceIdFromSheetName('Rend Armor Max')).toBe('enhanceRendArmorLevel')
+    expect(workshopEnhanceIdFromSheetName('Coin Bonus +')).toBe('enhanceCoinBonusLevel')
+    expect(workshopEnhanceIdFromSheetName('Enemy Level Skip +')).toBe('enhanceEnemyLevelSkipLevel')
+  })
+
+  it('maps Effective Paths enhancement and unlock-gate spellings', () => {
+    expect(workshopEnhanceIdFromSheetName('Rend Armor Mult +')).toBe('enhanceRendArmorLevel')
+    expect(workshopEnhanceIdFromSheetName('Damage / Meter +')).toBe('enhanceDamagePerMeterLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock SCM + (35.52 T)')).toBe('enhanceSuperCritMultLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock ASPD + (485.52 T)')).toBe('enhanceAttackSpeedLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock Orb Size + (426.78 T)')).toBe('enhanceOrbSizeLevel')
+    expect(workshopEnhanceIdFromSheetName('Super Crit Multi +')).toBe('enhanceSuperCritMultLevel')
+    expect(workshopEnhanceIdFromSheetName('Orb Size +')).toBe('enhanceOrbSizeLevel')
+  })
+
   it('covers every basic workshop upgrade key', () => {
     expect(WORKSHOP_EP_UPGRADE_KEYS.length).toBe(48)
+    expect(WORKSHOP_EP_ENHANCE_KEYS.length).toBe(18)
     for (const key of WORKSHOP_EP_UPGRADE_KEYS) {
       const name =
         key === 'damageLevel'

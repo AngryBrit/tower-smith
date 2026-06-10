@@ -993,7 +993,7 @@ export const STRINGS_EN = {
   ws_enhance_attack_speed_level_input_aria:
     'Attack speed enhancement level (type a number, Enter or blur to apply)',
   ws_stat_enhanceDamage: 'Damage +',
-  ws_stat_enhanceRendArmor: 'Rend Armor',
+  ws_stat_enhanceRendArmor: 'Rend Armor +',
   ws_stat_enhanceCritFactor: 'Critical Factor +',
   ws_stat_enhanceDamagePerMeter: 'Damage / Meter +',
   ws_stat_enhanceSuperCritMult: 'Super Crit Mult +',
@@ -1365,6 +1365,8 @@ export const STRINGS_EN = {
   ep_export_cards_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} card rows).',
   ep_export_workshop_success:
     'Updated {{cells}} cells on “{{sheet}}” ({{rows}} workshop rows).',
+  ep_export_workshop_enhance_success_suffix:
+    'Also updated {{enhanceRows}} workshop enhancement levels.',
   ep_export_cards_presets_success_suffix:
     'Also updated {{presetRows}} preset slots on “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} sheet relic names were not mapped and were left unchanged.',

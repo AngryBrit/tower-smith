@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { buildWorkshopSheetUpdates } from './buildWorkshopSheetUpdates'
+import {
+  buildWorkshopEnhanceSheetUpdates,
+  buildWorkshopSheetUpdates,
+} from './buildWorkshopSheetUpdates'
 
 describe('buildWorkshopSheetUpdates', () => {
   it('writes unlocked and level cells for workshop rows', () => {
@@ -26,5 +29,21 @@ describe('buildWorkshopSheetUpdates', () => {
         { range: "'Master Sheet'!D8", values: [[12]] },
       ]),
     )
+  })
+
+  it('writes enhancement levels to column R', () => {
+    const batch = buildWorkshopEnhanceSheetUpdates(
+      'Master Sheet',
+      [
+        { rowIndex: 6, name: 'Damage +' },
+        { rowIndex: 7, name: 'Health +' },
+      ],
+      { enhanceDamageLevel: 40, enhanceHealthLevel: 25 },
+      { nameCol: 15, levelCol: 17, startRow: 5, endRow: 8 },
+    )
+    expect(batch).toEqual([
+      { range: "'Master Sheet'!R6", values: [[40]] },
+      { range: "'Master Sheet'!R7", values: [[25]] },
+    ])
   })
 })

@@ -970,7 +970,7 @@ export const STRINGS_DE = {
   ws_enhance_super_crit_mult_level_input_aria: 'Super-Krit-Mult-Verstärkungsstufe (Zahl eingeben; Enter oder Feld verlassen zum Übernehmen)',
   ws_enhance_attack_speed_level_input_aria: 'Angriffstempo-Verstärkungsstufe (Zahl eingeben; Enter oder Feld verlassen zum Übernehmen)',
   ws_stat_enhanceDamage: 'Schaden +',
-  ws_stat_enhanceRendArmor: 'Rüstungsdurchdringung',
+  ws_stat_enhanceRendArmor: 'Rüstungsdurchdringung +',
   ws_stat_enhanceCritFactor: 'Krit-Faktor +',
   ws_stat_enhanceDamagePerMeter: 'Schaden / Meter +',
   ws_stat_enhanceSuperCritMult: 'Super-Krit-Mult +',
@@ -1315,6 +1315,8 @@ export const STRINGS_DE = {
   ep_export_cards_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Kartenzeilen).',
   ep_export_workshop_success:
     '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Werkstattzeilen).',
+  ep_export_workshop_enhance_success_suffix:
+    'Außerdem {{enhanceRows}} Werkstatt-Verbesserungslevel aktualisiert.',
   ep_export_cards_presets_success_suffix:
     'Außerdem {{presetRows}} Preset-Slots in „{{presetSheet}}“ aktualisiert.',
   ep_export_relics_unmapped_hint: '{{count}} Reliktname(n) konnten nicht zugeordnet werden und blieben unverändert.',

@@ -18,6 +18,7 @@ import {
 import { sortLinkedWorkbookAccess } from '../effectivePaths/effectivePathsIdsWorkbooks'
 import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import {
+  getCachedGoogleSheetsAccessToken,
   googleSheetsOAuthConfigured,
   requestGoogleSheetsAccessToken,
 } from '../effectivePaths/googleSheetsOAuth'
@@ -86,7 +87,9 @@ export function EffectivePathsExportDialog({
   const titleId = useId()
   const listId = useId()
   const [spreadsheetRef, setSpreadsheetRef] = useState(() => readStoredSpreadsheetRef())
-  const [googleToken, setGoogleToken] = useState<string | null>(null)
+  const [googleToken, setGoogleToken] = useState<string | null>(() =>
+    getCachedGoogleSheetsAccessToken(),
+  )
   const [workbooks, setWorkbooks] = useState<EffectivePathsLinkedWorkbook[] | null>(null)
   const [idsTabTitle, setIdsTabTitle] = useState<string | null>(null)
   const [relicsWorkbook, setRelicsWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
@@ -161,7 +164,13 @@ export function EffectivePathsExportDialog({
 
   const ensureGoogleToken = useCallback(
     async (options?: { consent?: boolean }): Promise<string | null> => {
-      if (googleToken && !options?.consent) return googleToken
+      if (!options?.consent) {
+        const cached = googleToken ?? getCachedGoogleSheetsAccessToken()
+        if (cached) {
+          if (!googleToken) setGoogleToken(cached)
+          return cached
+        }
+      }
       if (!googleSheetsOAuthConfigured()) {
         showNotice(t('ep_export_oauth_not_configured'), 'error')
         return null
@@ -206,7 +215,10 @@ export function EffectivePathsExportDialog({
     setWorkbookAccess(null)
     setNotice(null)
     try {
-      const token = await ensureGoogleToken({ consent: true })
+      let token = await ensureGoogleToken()
+      if (!token) {
+        token = await ensureGoogleToken({ consent: true })
+      }
       if (!token) return
 
       writeStoredSpreadsheetRef(spreadsheetRef)
@@ -572,10 +584,17 @@ export function EffectivePathsExportDialog({
       }
 
       const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
+      const enhanceMatchedRows = result.result.enhanceMatchedRows ?? 0
       let message = t('ep_export_workshop_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
         .replace('{{sheet}}', sheetTitle)
+      if (enhanceMatchedRows > 0) {
+        message += ` ${t('ep_export_workshop_enhance_success_suffix').replace(
+          '{{enhanceRows}}',
+          String(enhanceMatchedRows),
+        )}`
+      }
       if (unmappedSheetNames.length > 0) {
         message += ` ${t('ep_export_workshop_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
         const sample = [...new Set(unmappedSheetNames)].slice(0, 5).join(', ')

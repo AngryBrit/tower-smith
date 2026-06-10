@@ -1003,7 +1003,7 @@ export const STRINGS_ES = {
   ws_enhance_attack_speed_level_input_aria:
     'Nivel de mejora de velocidad de ataque (escribe un número; Enter o salir para aplicar)',
   ws_stat_enhanceDamage: 'Daño +',
-  ws_stat_enhanceRendArmor: 'Perforar armadura',
+  ws_stat_enhanceRendArmor: 'Perforar armadura +',
   ws_stat_enhanceCritFactor: 'Factor crítico +',
   ws_stat_enhanceDamagePerMeter: 'Daño / Metro +',
   ws_stat_enhanceSuperCritMult: 'Mult. súper crítico +',
@@ -1379,6 +1379,8 @@ export const STRINGS_ES = {
   ep_export_cards_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de cartas).',
   ep_export_workshop_success:
     'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de taller).',
+  ep_export_workshop_enhance_success_suffix:
+    'También actualizados {{enhanceRows}} niveles de mejoras del taller.',
   ep_export_cards_presets_success_suffix:
     'También actualizadas {{presetRows}} ranuras de preset en “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',

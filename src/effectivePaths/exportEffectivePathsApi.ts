@@ -75,6 +75,7 @@ export type EffectivePathsWorkshopExportResult = {
   syncTarget: 'workshop'
   updatedCells: number
   matchedRows: number
+  enhanceMatchedRows: number
   unmappedSheetNames: string[]
   sheetTitle: string
   workshopWorkbookId: string

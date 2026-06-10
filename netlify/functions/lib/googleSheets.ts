@@ -4,7 +4,10 @@ import {
 } from '../../../src/effectivePaths/buildRelicUnlockedUpdates'
 import { buildCardPresetSheetUpdates } from '../../../src/effectivePaths/buildCardPresetSheetUpdates'
 import { buildCardSheetUpdates } from '../../../src/effectivePaths/buildCardSheetUpdates'
-import { buildWorkshopSheetUpdates } from '../../../src/effectivePaths/buildWorkshopSheetUpdates'
+import {
+  buildWorkshopEnhanceSheetUpdates,
+  buildWorkshopSheetUpdates,
+} from '../../../src/effectivePaths/buildWorkshopSheetUpdates'
 import {
   buildCardPresetSheetGridFromColumnRanges,
   cardPresetSheetFetchRangesForGrid,
@@ -52,8 +55,11 @@ import {
 } from '../../../src/effectivePaths/pickCardsTab'
 import {
   buildWorkshopSheetGridFromColumnRanges,
+  detectWorkshopEnhanceSheetLayout,
   detectWorkshopSheetLayout,
+  parseWorkshopEnhanceSheetRowsWithLayout,
   parseWorkshopSheetRowsWithLayout,
+  unmappedWorkshopEnhanceNamesWithLayout,
   unmappedWorkshopNamesWithLayout,
   workshopSheetFetchRangesForGrid,
 } from '../../../src/effectivePaths/workshopSheetLayout'
@@ -114,6 +120,7 @@ export type ExportCardsToSheetResult = {
 export type ExportWorkshopToSheetResult = {
   updatedCells: number
   matchedRows: number
+  enhanceMatchedRows: number
   unmappedSheetNames: string[]
   sheetTitle: string
   workshopWorkbookId: string
@@ -504,7 +511,7 @@ async function readWorkshopTabGrid(
   tab: SheetProperties,
 ): Promise<string[][] | null> {
   const rowCount = tab.gridProperties?.rowCount ?? 70
-  const columnCount = tab.gridProperties?.columnCount ?? 8
+  const columnCount = tab.gridProperties?.columnCount ?? 24
   const slices = workshopSheetFetchRangesForGrid(rowCount, columnCount)
   if (slices.length === 0) return null
 
@@ -752,6 +759,8 @@ export async function exportWorkshopToGoogleSheet(options: {
 
   let workshopRows: ReturnType<typeof parseWorkshopSheetRowsWithLayout> = []
   let layout: ReturnType<typeof detectWorkshopSheetLayout> = null
+  let enhanceRows: ReturnType<typeof parseWorkshopEnhanceSheetRowsWithLayout> = []
+  let enhanceLayout: ReturnType<typeof detectWorkshopEnhanceSheetLayout> = null
   let rawRows: string[][] = []
   let sheetTitle = ''
 
@@ -766,6 +775,11 @@ export async function exportWorkshopToGoogleSheet(options: {
       layout = tabLayout
       rawRows = grid
       sheetTitle = tab.title
+      const tabEnhanceLayout = detectWorkshopEnhanceSheetLayout(grid)
+      enhanceLayout = tabEnhanceLayout
+      enhanceRows = tabEnhanceLayout
+        ? parseWorkshopEnhanceSheetRowsWithLayout(grid, tabEnhanceLayout)
+        : []
     }
   }
 
@@ -773,7 +787,17 @@ export async function exportWorkshopToGoogleSheet(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
   }
 
-  const batch = buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels)
+  const batch = [
+    ...buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels),
+    ...(enhanceLayout
+      ? buildWorkshopEnhanceSheetUpdates(
+          sheetTitle,
+          enhanceRows,
+          options.workshopLevels,
+          enhanceLayout,
+        )
+      : []),
+  ]
   if (batch.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
   }
@@ -797,10 +821,16 @@ export async function exportWorkshopToGoogleSheet(options: {
 
   const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
 
+  const unmappedSheetNames = [
+    ...unmappedWorkshopNamesWithLayout(rawRows, layout),
+    ...(enhanceLayout ? unmappedWorkshopEnhanceNamesWithLayout(rawRows, enhanceLayout) : []),
+  ]
+
   return {
     updatedCells: updateBody.totalUpdatedCells ?? batch.length,
     matchedRows: workshopRows.length,
-    unmappedSheetNames: unmappedWorkshopNamesWithLayout(rawRows, layout),
+    enhanceMatchedRows: enhanceRows.length,
+    unmappedSheetNames,
     sheetTitle,
     workshopWorkbookId,
   }

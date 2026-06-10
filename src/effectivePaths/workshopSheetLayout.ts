@@ -1,4 +1,4 @@
-import { workshopUpgradeIdFromSheetName } from './workshopSheetNames'
+import { workshopEnhanceIdFromSheetName, workshopUpgradeIdFromSheetName } from './workshopSheetNames'
 import { columnIndexToA1Letter } from './relicSheetLayout'
 
 export type WorkshopSheetLayout = {
@@ -20,15 +20,40 @@ export type EffectivePathsWorkshopSheetRow = {
   name: string
 }
 
-export const WORKSHOP_SHEET_GRID_ROWS = 70
+export type WorkshopEnhanceSheetLayout = {
+  /** 0-based column index for enhancement name cells (P). */
+  nameCol: number
+  /** 0-based column index for enhancement level cells (R). */
+  levelCol: number
+  /** Inclusive 0-based first data row. */
+  startRow: number
+  /** Exclusive 0-based end row. */
+  endRow: number
+}
 
-/** Single-column fetches for Workshop v3.x Master Sheet (B=unlocked, C=name, D=level). */
-export const WORKSHOP_SHEET_FETCH_RANGES = ['B1:B70', 'C1:C70', 'D1:D70'] as const
+export const WORKSHOP_SHEET_GRID_ROWS = 70
+export const WORKSHOP_SHEET_GRID_COLUMNS = 24
+
+/** 0-based column index for Workshop Enhancements name (P). */
+export const WORKSHOP_ENHANCE_NAME_COL = 15
+/** 0-based column index for Workshop Enhancements level (R). */
+export const WORKSHOP_ENHANCE_LEVEL_COL = 17
+
+/** Single-column fetches for Workshop v3.x Master Sheet. */
+export const WORKSHOP_SHEET_FETCH_RANGES = [
+  'B1:B70',
+  'C1:C70',
+  'D1:D70',
+  'P1:P70',
+  'R1:R70',
+] as const
 
 const SINGLE_COLUMN_BLOCKS: readonly { suffix: string; col: number }[] = [
   { suffix: '!B1:B', col: 1 },
   { suffix: '!C1:C', col: 2 },
   { suffix: '!D1:D', col: 3 },
+  { suffix: '!P1:P', col: WORKSHOP_ENHANCE_NAME_COL },
+  { suffix: '!R1:R', col: WORKSHOP_ENHANCE_LEVEL_COL },
 ]
 
 type WorkshopSheetValueRange = {
@@ -82,7 +107,7 @@ export function buildWorkshopSheetGridFromColumnRanges(
   valueRanges: readonly WorkshopSheetValueRange[],
 ): string[][] {
   const grid: string[][] = Array.from({ length: WORKSHOP_SHEET_GRID_ROWS }, () =>
-    Array(8).fill(''),
+    Array(WORKSHOP_SHEET_GRID_COLUMNS).fill(''),
   )
 
   const placeColumn = (values: readonly (readonly unknown[])[], col: number) => {
@@ -171,6 +196,79 @@ export function unmappedWorkshopNamesWithLayout(
     const unlocked = cellAt(rows, i, layout.unlockedCol)
     const level = cellAt(rows, i, layout.levelCol)
     if (!unlocked && !level) continue
+    out.push(name)
+  }
+  return out
+}
+
+function isLikelyWorkshopEnhanceDataRowName(value: string): boolean {
+  const trimmed = value.trim()
+  if (!trimmed) return false
+  return workshopEnhanceIdFromSheetName(trimmed) != null
+}
+
+function findWorkshopEnhanceBlockStartRow(rows: readonly (readonly unknown[])[]): number | null {
+  const limit = Math.min(rows.length, WORKSHOP_SHEET_GRID_ROWS)
+  for (let rowIndex = 0; rowIndex < limit; rowIndex++) {
+    const name = cellAt(rows, rowIndex, WORKSHOP_ENHANCE_NAME_COL)
+    if (isLikelyWorkshopEnhanceDataRowName(name)) return rowIndex
+  }
+  return null
+}
+
+/** Detect Workshop v3.x Enhancements block (P=name, R=level). */
+export function detectWorkshopEnhanceSheetLayout(
+  rows: readonly (readonly unknown[])[],
+): WorkshopEnhanceSheetLayout | null {
+  const startRow = findWorkshopEnhanceBlockStartRow(rows)
+  if (startRow == null) return null
+
+  let mappedNames = 0
+  let endRow = startRow
+  for (let row = startRow; row < rows.length && row < WORKSHOP_SHEET_GRID_ROWS; row++) {
+    const name = cellAt(rows, row, WORKSHOP_ENHANCE_NAME_COL)
+    if (!isLikelyWorkshopEnhanceDataRowName(name)) continue
+    if (workshopEnhanceIdFromSheetName(name)) mappedNames++
+    endRow = row + 1
+  }
+
+  if (mappedNames < 2 || endRow <= startRow) return null
+
+  return {
+    nameCol: WORKSHOP_ENHANCE_NAME_COL,
+    levelCol: WORKSHOP_ENHANCE_LEVEL_COL,
+    startRow,
+    endRow,
+  }
+}
+
+export function parseWorkshopEnhanceSheetRowsWithLayout(
+  rows: readonly (readonly unknown[])[],
+  layout: WorkshopEnhanceSheetLayout,
+): EffectivePathsWorkshopSheetRow[] {
+  const out: EffectivePathsWorkshopSheetRow[] = []
+  for (let i = layout.startRow; i < layout.endRow; i++) {
+    const name = cellAt(rows, i, layout.nameCol)
+    if (!isLikelyWorkshopEnhanceDataRowName(name)) continue
+    out.push({
+      rowIndex: i + 1,
+      name,
+    })
+  }
+  return out
+}
+
+export function unmappedWorkshopEnhanceNamesWithLayout(
+  rows: readonly (readonly unknown[])[],
+  layout: WorkshopEnhanceSheetLayout,
+): string[] {
+  const out: string[] = []
+  for (let i = layout.startRow; i < layout.endRow; i++) {
+    const name = cellAt(rows, i, layout.nameCol)
+    if (!name) continue
+    if (workshopEnhanceIdFromSheetName(name)) continue
+    const level = cellAt(rows, i, layout.levelCol)
+    if (!level) continue
     out.push(name)
   }
   return out

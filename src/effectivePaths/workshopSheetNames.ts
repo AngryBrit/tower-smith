@@ -1,8 +1,14 @@
 import {
   WORKSHOP_DEFENSE_GOD_NAMES,
+  WORKSHOP_ENHANCE_ATTACK_GOD_NAMES,
+  WORKSHOP_ENHANCE_DEFENSE_GOD_NAMES,
+  WORKSHOP_ENHANCE_UTILITY_GOD_NAMES,
   WORKSHOP_GOD_NAME_ALIASES,
   WORKSHOP_UTILITY_GOD_NAMES,
 } from '../workshopCosts'
+import type { WorkshopEnhanceAttackUpgradeKey } from '../data/workshopEnhanceAttack'
+import type { WorkshopEnhanceDefenseUpgradeKey } from '../data/workshopEnhanceDefense'
+import type { WorkshopEnhanceUtilityUpgradeKey } from '../data/workshopEnhanceUtility'
 import type { WorkshopDefenseUpgradeKey } from '../data/workshopDefense'
 import type { WorkshopUtilityUpgradeKey } from '../data/workshopUtility'
 
@@ -40,7 +46,19 @@ export const WORKSHOP_EP_UPGRADE_KEYS: readonly WorkshopEpUpgradeKey[] = [
   ...Object.keys(WORKSHOP_UTILITY_GOD_NAMES),
 ] as WorkshopEpUpgradeKey[]
 
+export type WorkshopEpEnhanceKey =
+  | WorkshopEnhanceAttackUpgradeKey
+  | WorkshopEnhanceDefenseUpgradeKey
+  | WorkshopEnhanceUtilityUpgradeKey
+
+export const WORKSHOP_EP_ENHANCE_KEYS: readonly WorkshopEpEnhanceKey[] = [
+  ...Object.keys(WORKSHOP_ENHANCE_ATTACK_GOD_NAMES),
+  ...Object.keys(WORKSHOP_ENHANCE_DEFENSE_GOD_NAMES),
+  ...Object.keys(WORKSHOP_ENHANCE_UTILITY_GOD_NAMES),
+] as WorkshopEpEnhanceKey[]
+
 const NAME_TO_UPGRADE_ID = new Map<string, WorkshopEpUpgradeKey>()
+const NAME_TO_ENHANCE_ID = new Map<string, WorkshopEpEnhanceKey>()
 
 function registerName(name: string, id: WorkshopEpUpgradeKey) {
   const trimmed = name.trim()
@@ -86,14 +104,57 @@ for (const [alias, id] of Object.entries(WORKSHOP_SHEET_NAME_ALIASES)) {
   registerName(alias, id)
 }
 
+function registerEnhanceName(name: string, id: WorkshopEpEnhanceKey) {
+  const trimmed = name.trim()
+  if (!trimmed) return
+  NAME_TO_ENHANCE_ID.set(trimmed.toLowerCase(), id)
+}
+
+for (const [id, name] of Object.entries(WORKSHOP_ENHANCE_ATTACK_GOD_NAMES)) {
+  registerEnhanceName(name, id as WorkshopEnhanceAttackUpgradeKey)
+}
+for (const [id, name] of Object.entries(WORKSHOP_ENHANCE_DEFENSE_GOD_NAMES)) {
+  registerEnhanceName(name, id as WorkshopEnhanceDefenseUpgradeKey)
+}
+for (const [id, name] of Object.entries(WORKSHOP_ENHANCE_UTILITY_GOD_NAMES)) {
+  registerEnhanceName(name, id as WorkshopEnhanceUtilityUpgradeKey)
+}
+
+/** Effective Paths v3.x enhancement spellings and unlock-gate row labels. */
+const WORKSHOP_ENHANCE_SHEET_ALIASES: Readonly<Record<string, WorkshopEpEnhanceKey>> = {
+  'Rend Armor Mult +': 'enhanceRendArmorLevel',
+  'Damage / Meter +': 'enhanceDamagePerMeterLevel',
+  'Damage/Meter +': 'enhanceDamagePerMeterLevel',
+  'Unlock SCM +': 'enhanceSuperCritMultLevel',
+  'Unlock ASPD +': 'enhanceAttackSpeedLevel',
+  'Unlock Orb Size +': 'enhanceOrbSizeLevel',
+  'Super Crit Multi +': 'enhanceSuperCritMultLevel',
+  'Orb Size +': 'enhanceOrbSizeLevel',
+}
+
+for (const [alias, id] of Object.entries(WORKSHOP_ENHANCE_SHEET_ALIASES)) {
+  registerEnhanceName(alias, id)
+}
+
 function normalizeSheetName(value: string): string {
   return value.trim().toLowerCase()
+}
+
+/** Strip Effective Paths unlock-cost suffixes, e.g. " (35.52 T)". */
+export function normalizeWorkshopEnhanceSheetLabel(sheetName: string): string {
+  return sheetName.replace(/\s*\([^)]*\)\s*$/g, '').trim()
 }
 
 export function workshopUpgradeIdFromSheetName(sheetName: string): WorkshopEpUpgradeKey | null {
   const key = normalizeSheetName(sheetName)
   if (!key) return null
   return NAME_TO_UPGRADE_ID.get(key) ?? null
+}
+
+export function workshopEnhanceIdFromSheetName(sheetName: string): WorkshopEpEnhanceKey | null {
+  const key = normalizeSheetName(normalizeWorkshopEnhanceSheetLabel(sheetName))
+  if (!key) return null
+  return NAME_TO_ENHANCE_ID.get(key) ?? null
 }
 
 export function workshopUpgradeSheetNameFromId(

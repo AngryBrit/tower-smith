@@ -5,7 +5,8 @@
  * - **IDS Collection** — all sheets combined into one workbook.
  * - **Relics** — relic data; tab **Relics** lists every relic (name col C, Unlocked col F).
  * - **Themes & Songs** — themes input tab; owned toggles in B/C, E/F, M/N, and Q/R blocks.
- * - **Workshop** — upgrade data; Master Sheet tab with unlocked in B, names in C, levels in D.
+ * - **Workshop** — upgrade data; Master Sheet tab with unlocked in B, names in C, levels in D;
+ *   Workshop Enhancements in P (name) and R (level).
  * - **Cards** — card data; Master Sheet tab with names in B, levels in C, mastery in D;
  *   Card Preset tab with loadouts in D/H/L/P/T (rows 5–32).
  *
