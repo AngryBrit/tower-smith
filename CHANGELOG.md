@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## [3.0.8] - 2026-06-10
+
+### Fixed
+
+- **Module submodule import** — Ancestral and star-tier chassis and assist modules (e.g. Orbital Augment, Dimension Core, Primordial Collapse) decode sparse save effect indices to the correct in-game substat picks.
+- **Assist module picker** — Submodule slot levels, scaled values, and display formatting (degrees, seconds, land-mine stats, generator ancestral tiers) match in-game lines after save import.
+- **Swamp Rend ultimate labs** — `researchLevel` slots 156–157 map to Swamp Rend and Swamp Rend+.
+
+### Changed
+
+- Workshop state tracks main and assist chassis module levels separately.
+
+### Docs
+
+- README: version **3.0.8**.
+- What's new banner (en/de/es).
+
 ## [3.0.7] - 2026-06-09
 
 ### Fixed

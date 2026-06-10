@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_308_headline: 'Novedades en v3.0.8',
+  whats_new_308_body:
+    'Las subestadísticas de módulos importadas desde tu guardado coinciden con el juego en chasis y módulos assist Ancestral y de estrellas — p. ej. Orbital Augment, Dimension Core y Primordial Collapse — con escala y formato del selector assist corregidos.',
   whats_new_307_headline: 'Novedades en v3.0.7',
   whats_new_307_body:
     'Golden Tower Golden Combo ahora sube hasta el nivel 14 (0,45 % de bonus) con los costes de piedras del wiki; la pista Plus antes se limitaba cinco niveles antes.',

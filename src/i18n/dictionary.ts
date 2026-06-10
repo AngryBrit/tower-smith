@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_308_headline: "What's new in v3.0.8",
+  whats_new_308_body:
+    'Module submodule picks from your save now match in-game for ancestral and star-tier chassis and assist modules — including Orbital Augment, Dimension Core, and Primordial Collapse — with corrected assist picker scaling and formatting.',
   whats_new_307_headline: "What's new in v3.0.7",
   whats_new_307_body:
     'Golden Tower Golden Combo now upgrades to level 14 (0.45% bonus) with correct wiki stone costs — the Plus track was previously capped five levels early.',

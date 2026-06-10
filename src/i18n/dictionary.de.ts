@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_308_headline: 'Neu in v3.0.8',
+  whats_new_308_body:
+    'Modul-Substat-Auswahl aus deinem Spielstand entspricht jetzt dem Spiel bei Ancestral- und Stern-Chassis sowie Assist-Modulen — u. a. Orbital Augment, Dimension Core und Primordial Collapse — inkl. korrigierter Assist-Picker-Skalierung und -Formatierung.',
   whats_new_307_headline: 'Neu in v3.0.7',
   whats_new_307_body:
     'Golden Tower Golden Combo lässt sich jetzt bis Stufe 14 (0,45 % Bonus) mit korrekten Wiki-Steinkosten verbessern — die Plus-Spur war zuvor fünf Stufen zu früh gedeckelt.',
