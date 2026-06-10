@@ -949,7 +949,7 @@ export const STRINGS_DE = {
   ws_stat_enhanceDefenseAbsolute: 'Verteidigung absolut +',
   ws_stat_enhanceLandMineDamage: 'Minenschaden +',
   ws_stat_enhanceWallHealth: 'Mauerleben +',
-  ws_stat_enhanceOrbSize: 'Orb-Größe',
+  ws_stat_enhanceOrbSize: 'Orb-Größe +',
   ws_enhance_health_level_input_aria: 'Leben-Verstärkungsstufe (Zahl eingeben; Enter oder Feld verlassen zum Übernehmen)',
   ws_enhance_health_regen_level_input_aria: 'Lebensregenerations-Verstärkungsstufe (Zahl eingeben; Enter oder Feld verlassen zum Übernehmen)',
   ws_enhance_defense_absolute_level_input_aria: 'Verteidigung-absolut-Verstärkungsstufe (Zahl eingeben; Enter oder Feld verlassen zum Übernehmen)',

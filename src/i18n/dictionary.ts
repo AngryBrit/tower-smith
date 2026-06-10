@@ -936,7 +936,7 @@ export const STRINGS_EN = {
   ws_section_utility_enhance: 'Utility Enhancements',
   ws_stat_enhanceCashBonus: 'Cash Bonus +',
   ws_stat_enhanceCoinBonus: 'Coin Bonus +',
-  ws_stat_enhanceCellsKillBonus: 'Cells/Kill Bonus',
+  ws_stat_enhanceCellsKillBonus: 'Cells/Kill Bonus +',
   ws_stat_enhanceFreeUpgrades: 'Free Upgrades +',
   ws_stat_enhanceRecoveryPackage: 'Recovery Package +',
   ws_stat_enhanceEnemyLevelSkip: 'Enemy Level Skip +',
@@ -957,7 +957,7 @@ export const STRINGS_EN = {
   ws_stat_enhanceDefenseAbsolute: 'Defense Absolute +',
   ws_stat_enhanceLandMineDamage: 'Land Mine Damage +',
   ws_stat_enhanceWallHealth: 'Wall Health +',
-  ws_stat_enhanceOrbSize: 'Orb Size',
+  ws_stat_enhanceOrbSize: 'Orb Size +',
   ws_enhance_health_level_input_aria:
     'Health enhancement level (type a number, Enter or blur to apply)',
   ws_enhance_health_regen_level_input_aria:

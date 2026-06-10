@@ -966,7 +966,7 @@ export const STRINGS_ES = {
   ws_stat_enhanceDefenseAbsolute: 'Defensa absoluta +',
   ws_stat_enhanceLandMineDamage: 'Daño de minas +',
   ws_stat_enhanceWallHealth: 'Salud del muro +',
-  ws_stat_enhanceOrbSize: 'Tamaño de orbe',
+  ws_stat_enhanceOrbSize: 'Tamaño de orbe +',
   ws_enhance_health_level_input_aria:
     'Nivel de mejora de salud (escribe un número; Enter o salir para aplicar)',
   ws_enhance_health_regen_level_input_aria:
