@@ -151,7 +151,7 @@ export function EffectivePathsSyncDialog({
   const [googleToken, setGoogleToken] = useState<string | null>(() =>
     getCachedGoogleSheetsAccessToken(),
   )
-  const [workbooks, setWorkbooks] = useState<EffectivePathsLinkedWorkbook[] | null>(null)
+  const [, setWorkbooks] = useState<EffectivePathsLinkedWorkbook[] | null>(null)
   const [idsTabTitle, setIdsTabTitle] = useState<string | null>(null)
   const [relicsWorkbook, setRelicsWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
   const [relicsWorkbookAccess, setRelicsWorkbookAccess] = useState<
@@ -318,10 +318,13 @@ export function EffectivePathsSyncDialog({
 
   useEffect(() => {
     if (!open) return
-    setSpreadsheetRef(readStoredSpreadsheetRef())
-    setNotice(null)
-    const cached = getCachedGoogleSheetsAccessToken()
-    if (cached) setGoogleToken(cached)
+    const frameId = window.requestAnimationFrame(() => {
+      setSpreadsheetRef(readStoredSpreadsheetRef())
+      setNotice(null)
+      const cached = getCachedGoogleSheetsAccessToken()
+      if (cached) setGoogleToken(cached)
+    })
+    return () => window.cancelAnimationFrame(frameId)
   }, [open])
 
   const showNotice = useCallback((message: string, variant: ImportNoticeVariant) => {
@@ -1203,7 +1206,7 @@ export function EffectivePathsSyncDialog({
   const handleImportTarget = useCallback(
     async (target: EffectivePathsImportTarget) => {
       const ui = IMPORT_TARGET_UI.find((entry) => entry.target === target)!
-      const { workbook, access } = workbookByTarget[target]
+      const { workbook } = workbookByTarget[target]
 
       if (!parsedMaster) {
         showNotice(

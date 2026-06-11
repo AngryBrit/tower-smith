@@ -1,6 +1,5 @@
 import type { WorkshopGameCardId } from '../data/workshopGameCards'
 import { workshopBotOwnedKey } from '../data/workshopBots'
-import type { WorkshopBotId } from '../data/workshopBotsData'
 import { WORKSHOP_BOT_ORDER, WORKSHOP_BOT_SPECIAL_LEVEL_ORDER, WORKSHOP_BOT_UPGRADE_ORDER } from '../data/workshopBotsData'
 import {
   ASSIST_CHASSIS_MODULE_ID_KEY,
@@ -170,7 +169,7 @@ export function modulesEpStateAppliedToPersisted(
   base: WorkshopPersistedV1,
   state: ModulesEpSyncState,
 ): WorkshopPersistedV1 {
-  let patch: WorkshopPersistedV1 = { ...base }
+  const patch: WorkshopPersistedV1 = { ...base }
 
   for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
     patch[CHASSIS_MODULE_ID_KEY[slot]] = ''

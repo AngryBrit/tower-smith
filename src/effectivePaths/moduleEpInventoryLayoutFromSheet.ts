@@ -138,7 +138,7 @@ function collectNameRowLabels(nameRow: string[]): string[] {
     if (!text) continue
     if (isSectionLabel(text)) continue
     if (isSidebarLabel(text)) continue
-    if (/^[🔵🟥▲🔶]/.test(text)) continue
+    if (/^[🔵🟥▲🔶]/u.test(text)) continue
     if (/^rarity$/i.test(text)) continue
     if (/^(level|stat)$/i.test(text)) continue
     if (SIDEBAR_STAT_LABEL.test(text)) continue

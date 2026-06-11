@@ -4,12 +4,11 @@ export function useSimulatedProgress(active: boolean): number {
   const [percent, setPercent] = useState(10)
 
   useEffect(() => {
-    if (!active) {
-      setPercent(10)
-      return
-    }
+    if (!active) return
 
-    setPercent(14)
+    const startId = window.requestAnimationFrame(() => {
+      setPercent(14)
+    })
     const id = window.setInterval(() => {
       setPercent((current) => {
         if (current >= 92) return current
@@ -18,8 +17,11 @@ export function useSimulatedProgress(active: boolean): number {
       })
     }, 350)
 
-    return () => window.clearInterval(id)
+    return () => {
+      window.cancelAnimationFrame(startId)
+      window.clearInterval(id)
+    }
   }, [active])
 
-  return percent
+  return active ? percent : 10
 }

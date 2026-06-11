@@ -112,7 +112,7 @@ function parseIdsMasterRows(
   for (let rowIndex = startRow; rowIndex < formatted.length; rowIndex++) {
     const row = formatted[rowIndex] ?? []
     const formulaRow = formulas?.[rowIndex]
-    let name = cellAt(formatted, rowIndex, nameCol)
+    const name = cellAt(formatted, rowIndex, nameCol)
     const rowFormatted: string[] = []
     const rowFormulas: string[] = []
     const maxCols = Math.max(row.length, formulaRow?.length ?? 0)
