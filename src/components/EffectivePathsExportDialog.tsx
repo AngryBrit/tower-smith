@@ -1,10 +1,13 @@
 import { useCallback, useEffect, useId, useState } from 'react'
 import type { ImportNoticeVariant } from '../importNotice'
 import type { BotsEpSyncState } from '../effectivePaths/botsEpStateFromPersisted'
+import { countModulesEpEquippedSlots } from '../effectivePaths/buildModuleSheetUpdates'
+import type { ModulesEpSyncState } from '../effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../effectivePaths/uwsEpStateFromPersisted'
 import {
   exportBotsToEffectivePaths,
   exportLabsToEffectivePaths,
+  exportModulesToEffectivePaths,
   exportUwsToEffectivePaths,
   exportCardsToEffectivePaths,
   exportRelicsToEffectivePaths,
@@ -18,6 +21,7 @@ import {
   isBotsWorkbookName,
   isLaboratoryWorkbookName,
   isUwsWorkbookName,
+  isModulesWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -73,6 +77,10 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   uws_workbook_access_denied: 'ep_export_error_uws_workbook_access_denied',
   uws_tab_not_found: 'ep_export_error_uws_tab_not_found',
   no_uws_rows: 'ep_export_error_no_uws_rows',
+  modules_workbook_not_found: 'ep_export_error_modules_workbook_not_found',
+  modules_workbook_access_denied: 'ep_export_error_modules_workbook_access_denied',
+  modules_tab_not_found: 'ep_export_error_modules_tab_not_found',
+  no_modules_rows: 'ep_export_error_no_modules_rows',
   sheets_api_error: 'ep_export_error_sheets_api_error',
   unknown: 'ep_export_error_unknown',
 }
@@ -90,6 +98,7 @@ export type EffectivePathsExportDialogProps = {
   labLevelOverrides: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
   uwsEpState: UwsEpSyncState
+  modulesEpState: ModulesEpSyncState
   /** Success notice only — shown on the parent panel after sync completes. */
   onSuccess: (message: string) => void
 }
@@ -107,6 +116,7 @@ export function EffectivePathsExportDialog({
   labLevelOverrides,
   botsEpState,
   uwsEpState,
+  modulesEpState,
   onSuccess,
 }: EffectivePathsExportDialogProps) {
   const { t } = useI18n()
@@ -147,10 +157,14 @@ export function EffectivePathsExportDialog({
   const [uwsWorkbookAccess, setUwsWorkbookAccess] = useState<
     'ok' | 'denied' | 'not_found' | null
   >(null)
+  const [modulesWorkbook, setModulesWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
+  const [modulesWorkbookAccess, setModulesWorkbookAccess] = useState<
+    'ok' | 'denied' | 'not_found' | null
+  >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
   const [exportingTarget, setExportingTarget] = useState<
-    'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | null
+    'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'modules' | null
   >(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
@@ -185,6 +199,12 @@ export function EffectivePathsExportDialog({
     uwsWorkbook != null &&
     uwsWorkbookAccess !== 'denied' &&
     uwsWorkbookAccess !== 'not_found'
+  const modulesEquippedCount = countModulesEpEquippedSlots(modulesEpState)
+  const canSyncModules =
+    modulesWorkbook != null &&
+    modulesWorkbookAccess !== 'denied' &&
+    modulesWorkbookAccess !== 'not_found' &&
+    modulesEquippedCount > 0
   const exporting = exportingTarget != null
   const busy = loadingSheets || exporting
 
@@ -304,6 +324,8 @@ export function EffectivePathsExportDialog({
       setLaboratoryWorkbookAccess(result.laboratoryWorkbookAccess)
       setUwsWorkbook(result.uwsWorkbook)
       setUwsWorkbookAccess(result.uwsWorkbookAccess)
+      setModulesWorkbook(result.modulesWorkbook)
+      setModulesWorkbookAccess(result.modulesWorkbookAccess)
       setWorkbookAccess(result.workbookAccess)
       const deniedWorkbooks = result.workbookAccess.filter((row) => row.access === 'denied')
       if (deniedWorkbooks.length > 0) {
@@ -321,7 +343,8 @@ export function EffectivePathsExportDialog({
         !result.workshopWorkbook &&
         !result.botsWorkbook &&
         !result.laboratoryWorkbook &&
-        !result.uwsWorkbook
+        !result.uwsWorkbook &&
+        !result.modulesWorkbook
       ) {
         const loaded = result.workbooks.map((workbook) => workbook.name).join(', ')
         showNotice(
@@ -931,6 +954,87 @@ export function EffectivePathsExportDialog({
     t,
   ])
 
+  const handleExportModules = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+    if (!modulesWorkbook || modulesWorkbookAccess === 'denied' || modulesWorkbookAccess === 'not_found') {
+      showNotice(
+        modulesWorkbook
+          ? t('ep_export_error_modules_workbook_access_denied').replace(
+              '{{id}}',
+              modulesWorkbook.spreadsheetId,
+            )
+          : t('ep_export_modules_missing_in_master'),
+        'error',
+      )
+      return
+    }
+    if (modulesEquippedCount === 0) {
+      showNotice(t('ep_export_error_no_modules_rows'), 'error')
+      return
+    }
+
+    setExportingTarget('modules')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+
+      writeStoredSpreadsheetRef(spreadsheetRef)
+
+      const result = await exportModulesToEffectivePaths({
+        googleAccessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        modulesEpState,
+      })
+
+      if (!result.ok) {
+        if (result.error === 'modules_workbook_access_denied') {
+          showNotice(
+            t('ep_export_error_modules_workbook_access_denied').replace(
+              '{{id}}',
+              modulesWorkbook?.spreadsheetId ?? '',
+            ),
+            'error',
+          )
+        } else {
+          showNotice(formatExportError(result.error, result.message), 'error')
+        }
+        return
+      }
+
+      const { matchedRows, matchedSubstats, updatedCells, sheetTitle } = result.result
+      const message = t('ep_export_modules_success')
+        .replace('{{rows}}', String(matchedRows))
+        .replace('{{effects}}', String(matchedSubstats))
+        .replace('{{cells}}', String(updatedCells))
+        .replace('{{sheet}}', sheetTitle)
+      onSuccess(message)
+      onClose()
+    } finally {
+      setExportingTarget(null)
+    }
+  }, [
+    parsedMaster,
+    canSyncModules,
+    ensureGoogleToken,
+    spreadsheetRef,
+    modulesEpState,
+    modulesEquippedCount,
+    modulesWorkbook,
+    formatExportError,
+    showNotice,
+    onSuccess,
+    onClose,
+    t,
+  ])
+
   if (!open) return null
 
   return labOverlayPortal(
@@ -1106,6 +1210,25 @@ export function EffectivePathsExportDialog({
             ) : null}
           </p>
         ) : null}
+        {modulesWorkbook ? (
+          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
+            {t('ep_export_modules_resolved')
+              .replace('{{tab}}', idsTabTitle ?? 'IDS')
+              .replace('{{id}}', modulesWorkbook.spreadsheetId)}
+            {modulesWorkbookAccess === 'denied' || modulesWorkbookAccess === 'not_found' ? (
+              <>
+                {' '}
+                <a
+                  href={googleSpreadsheetEditUrl(modulesWorkbook.spreadsheetId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t('ep_export_modules_open_sheet')}
+                </a>
+              </>
+            ) : null}
+          </p>
+        ) : null}
         {workbookAccess && workbookAccess.length > 0 ? (
           <div className="effective-paths-export-dialog__workbooks">
             <p id={listId} className="select-research__lab-data-section-label">
@@ -1129,6 +1252,7 @@ export function EffectivePathsExportDialog({
                 const isBots = isBotsWorkbookName(workbook.name)
                 const isLaboratory = isLaboratoryWorkbookName(workbook.name)
                 const isUws = isUwsWorkbookName(workbook.name)
+                const isModules = isModulesWorkbookName(workbook.name)
                 return (
                   <li
                     key={`${workbook.name}:${workbook.spreadsheetId}`}
@@ -1139,7 +1263,8 @@ export function EffectivePathsExportDialog({
                       isWorkshop ||
                       isBots ||
                       isLaboratory ||
-                      isUws
+                      isUws ||
+                      isModules
                         ? 'effective-paths-export-dialog__workbook-item effective-paths-export-dialog__workbook-item--relics'
                         : 'effective-paths-export-dialog__workbook-item'
                     }
@@ -1189,6 +1314,11 @@ export function EffectivePathsExportDialog({
                     {isUws ? (
                       <span className="effective-paths-export-dialog__workbook-tag">
                         {t('ep_export_uws_sync_target')}
+                      </span>
+                    ) : null}
+                    {isModules ? (
+                      <span className="effective-paths-export-dialog__workbook-tag">
+                        {t('ep_export_modules_sync_target')}
                       </span>
                     ) : null}
                   </li>
@@ -1255,6 +1385,16 @@ export function EffectivePathsExportDialog({
             onClick={() => void handleExportUws()}
           >
             {exportingTarget === 'uws' ? t('ep_export_syncing_uws') : t('ep_export_sync_uws_btn')}
+          </button>
+          <button
+            type="button"
+            className="glow-btn glow-btn--block"
+            disabled={busy || !canSyncModules}
+            onClick={() => void handleExportModules()}
+          >
+            {exportingTarget === 'modules'
+              ? t('ep_export_syncing_modules')
+              : t('ep_export_sync_modules_btn')}
           </button>
           <button
             type="button"

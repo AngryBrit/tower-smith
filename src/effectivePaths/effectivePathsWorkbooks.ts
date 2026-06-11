@@ -13,6 +13,7 @@
  * - **Bots** — bot medals + Bot+ on Master Sheet (C=unlocked, D=attribute, G/H=Farming lvl/Sync);
  *   BOTS lab levels in OTHERS (T=name, V=level).
  * - **Ultimate Weapon / UWs** — UW unlocked in D; basic + Plus levels in G (dropdown labels).
+ * - **Modules** — equipped chassis modules on Inventory tab (rarity, level, stat, main substats).
  *
  * TowerSmith reads linked IDs from IDS Master, then writes to the linked child workbooks.
  */
@@ -61,3 +62,9 @@ export const EFFECTIVE_PATHS_UWS_WORKBOOK_NAME = 'Ultimate Weapon'
 
 /** Tab title inside the UWs workbook (v3.x Master Sheet). */
 export const EFFECTIVE_PATHS_UWS_TAB_TITLE = 'Master Sheet'
+
+/** Workbook name in the IDS Master linked-ID table. */
+export const EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME = 'Modules'
+
+/** Tab title inside the Modules workbook (v6.x Inventory). */
+export const EFFECTIVE_PATHS_MODULES_TAB_TITLE = 'Inventory'

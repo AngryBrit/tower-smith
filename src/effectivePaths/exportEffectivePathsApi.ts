@@ -1,4 +1,5 @@
 import type { BotsEpSyncState } from './botsEpStateFromPersisted'
+import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 
@@ -48,6 +49,10 @@ export type EffectivePathsExportError =
   | 'uws_workbook_access_denied'
   | 'uws_tab_not_found'
   | 'no_uws_rows'
+  | 'modules_workbook_not_found'
+  | 'modules_workbook_access_denied'
+  | 'modules_tab_not_found'
+  | 'no_modules_rows'
   | 'sheets_api_error'
   | 'unknown'
 
@@ -125,6 +130,16 @@ export type EffectivePathsUwsExportResult = {
   uwsWorkbookId: string
 }
 
+export type EffectivePathsModulesExportResult = {
+  ok: true
+  syncTarget: 'modules'
+  updatedCells: number
+  matchedRows: number
+  matchedSubstats: number
+  sheetTitle: string
+  modulesWorkbookId: string
+}
+
 export type EffectivePathsListResult = {
   ok: true
   workbooks: EffectivePathsLinkedWorkbook[]
@@ -143,6 +158,8 @@ export type EffectivePathsListResult = {
   laboratoryWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   uwsWorkbook: EffectivePathsLinkedWorkbook | null
   uwsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
+  modulesWorkbook: EffectivePathsLinkedWorkbook | null
+  modulesWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   workbookAccess: LinkedWorkbookAccess[]
 }
 
@@ -231,6 +248,11 @@ export async function listEffectivePathsWorkbooks(options: {
       uwsAccess === 'ok' || uwsAccess === 'denied' || uwsAccess === 'not_found'
         ? uwsAccess
         : null
+    const modulesAccess = (parsed as { modulesWorkbookAccess?: unknown }).modulesWorkbookAccess
+    const modulesWorkbookAccess =
+      modulesAccess === 'ok' || modulesAccess === 'denied' || modulesAccess === 'not_found'
+        ? modulesAccess
+        : null
     const rawAccess = (parsed as { workbookAccess?: unknown }).workbookAccess
     const workbookAccess = Array.isArray(rawAccess)
       ? rawAccess.filter(
@@ -298,6 +320,13 @@ export async function listEffectivePathsWorkbooks(options: {
           ? parsed.uwsWorkbook
           : null,
       uwsWorkbookAccess,
+      modulesWorkbook:
+        parsed.modulesWorkbook &&
+        typeof parsed.modulesWorkbook === 'object' &&
+        typeof parsed.modulesWorkbook.spreadsheetId === 'string'
+          ? parsed.modulesWorkbook
+          : null,
+      modulesWorkbookAccess,
       workbookAccess,
     }
   } catch {
@@ -330,6 +359,7 @@ export async function exportRelicsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   })
 }
@@ -361,6 +391,7 @@ export async function exportThemesToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   })
 }
@@ -395,6 +426,7 @@ export async function exportCardsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   })
 }
@@ -426,6 +458,7 @@ export async function exportWorkshopToEffectivePaths(options: {
     workshopLevels: options.workshopLevels,
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   })
 }
@@ -488,6 +521,7 @@ export async function exportBotsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: options.botsEpState,
     uwsEpState: emptyUwsEpState(),
+    modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   })
 }
@@ -519,6 +553,39 @@ export async function exportUwsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: options.uwsEpState,
+    modulesEpState: emptyModulesEpState(),
+    labLevelOverrides: {},
+  })
+}
+
+export async function exportModulesToEffectivePaths(options: {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  modulesSpreadsheetId?: string | null
+  modulesSheetGid?: number | null
+  modulesEpState: ModulesEpSyncState
+}): Promise<
+  | { ok: true; result: EffectivePathsModulesExportResult }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+> {
+  return exportToEffectivePaths({
+    googleAccessToken: options.googleAccessToken,
+    masterSpreadsheetId: options.masterSpreadsheetId ?? null,
+    masterSheetGid: options.masterSheetGid ?? null,
+    syncTarget: 'modules',
+    spreadsheetId: options.modulesSpreadsheetId ?? null,
+    sheetGid: options.modulesSheetGid ?? null,
+    relicOwnedIds: [],
+    themeOwnedIds: [],
+    cardStars: {},
+    cardMasteryUnlockedIds: [],
+    cardEquipSlots: 0,
+    cardPresetLoadouts: [],
+    workshopLevels: {},
+    botsEpState: emptyBotsEpState(),
+    uwsEpState: emptyUwsEpState(),
+    modulesEpState: options.modulesEpState,
     labLevelOverrides: {},
   })
 }
@@ -554,11 +621,15 @@ function emptyUwsEpState(): UwsEpSyncState {
   }
 }
 
+function emptyModulesEpState(): ModulesEpSyncState {
+  return { modules: [] }
+}
+
 async function exportToEffectivePaths(options: {
   googleAccessToken: string
   masterSpreadsheetId?: string | null
   masterSheetGid?: number | null
-  syncTarget: 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws'
+  syncTarget: 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'modules'
   spreadsheetId?: string | null
   sheetGid?: number | null
   relicOwnedIds: readonly string[]
@@ -570,6 +641,7 @@ async function exportToEffectivePaths(options: {
   workshopLevels: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
   uwsEpState: UwsEpSyncState
+  modulesEpState: ModulesEpSyncState
   labLevelOverrides: Readonly<Record<string, number>>
 }): Promise<
   | {
@@ -582,6 +654,7 @@ async function exportToEffectivePaths(options: {
         | EffectivePathsBotsExportResult
         | EffectivePathsLabsExportResult
         | EffectivePathsUwsExportResult
+        | EffectivePathsModulesExportResult
     }
   | { ok: false; error: EffectivePathsExportError; message?: string }
 > {
@@ -610,6 +683,7 @@ async function exportToEffectivePaths(options: {
         botLabLevels: options.botsEpState.labLevels,
         uwsLevels: options.uwsEpState.levels,
         uwsOwnedByWeaponId: options.uwsEpState.ownedByWeaponId,
+        modulesEpState: options.modulesEpState,
         labLevelOverrides: options.labLevelOverrides,
       }),
     })
@@ -633,7 +707,8 @@ async function exportToEffectivePaths(options: {
         | EffectivePathsWorkshopExportResult
         | EffectivePathsBotsExportResult
         | EffectivePathsLabsExportResult
-        | EffectivePathsUwsExportResult,
+        | EffectivePathsUwsExportResult
+        | EffectivePathsModulesExportResult,
     }
   } catch {
     return { ok: false, error: 'network' }
@@ -676,6 +751,10 @@ function isExportError(value: unknown): value is EffectivePathsExportError {
     value === 'uws_workbook_access_denied' ||
     value === 'uws_tab_not_found' ||
     value === 'no_uws_rows' ||
+    value === 'modules_workbook_not_found' ||
+    value === 'modules_workbook_access_denied' ||
+    value === 'modules_tab_not_found' ||
+    value === 'no_modules_rows' ||
     value === 'sheets_api_error' ||
     value === 'network' ||
     value === 'unknown'

@@ -3,12 +3,22 @@ import { effectivePathsCors, googleAccessToken, SPREADSHEET_ID_RE } from './lib/
 import { jsonResponse } from './lib/http'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
 import type { BotsEpSyncState } from '../../src/effectivePaths/botsEpStateFromPersisted'
+import { moduleEpInventorySlotForModuleId } from '../../src/effectivePaths/moduleEpInventoryLayout'
+import type {
+  ModulesEpEquippedModule,
+  ModulesEpEquippedSubstat,
+  ModulesEpSyncState,
+} from '../../src/effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../src/effectivePaths/uwsEpStateFromPersisted'
+import { WORKSHOP_ASSIST_MODULE_SLOTS } from '../../src/data/workshopSimModules'
+import type { WorkshopSubmoduleRarity } from '../../src/data/workshopSubmoduleEffects'
+import { sanitizeChassisModuleMergeTier } from '../../src/data/workshopChassisModuleSelection'
 import { WORKSHOP_ULTIMATE_WEAPON_ORDER } from '../../src/data/workshopUltimateData'
 import {
   exportBotsToGoogleSheet,
   exportLabsToGoogleSheet,
   exportUwsToGoogleSheet,
+  exportModulesToGoogleSheet,
   exportCardsToGoogleSheet,
   exportRelicsToGoogleSheet,
   exportThemesToGoogleSheet,
@@ -16,7 +26,7 @@ import {
   GoogleSheetsApiError,
 } from './lib/googleSheets'
 
-type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws'
+type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'modules'
 
 function parseBody(raw: unknown):
   | {
@@ -35,6 +45,7 @@ function parseBody(raw: unknown):
       workshopLevels: Record<string, number>
       botsEpState: BotsEpSyncState
       uwsEpState: UwsEpSyncState
+      modulesEpState: ModulesEpSyncState
       labLevelOverrides: Record<string, number>
     }
   | { ok: false; error: 'invalid_json' | 'invalid_spreadsheet' } {
@@ -81,7 +92,9 @@ function parseBody(raw: unknown):
               ? 'labs'
               : targetRaw === 'uws'
                 ? 'uws'
-                : 'relics'
+                : targetRaw === 'modules'
+                  ? 'modules'
+                  : 'relics'
 
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
@@ -207,6 +220,91 @@ function parseBody(raw: unknown):
     }
   }
 
+  const modulesEpState: ModulesEpSyncState = { modules: [] }
+  const modulesRaw = (raw as { modulesEpState?: unknown }).modulesEpState
+  if (modulesRaw && typeof modulesRaw === 'object') {
+    const submoduleRarities = new Set<WorkshopSubmoduleRarity>([
+      'common',
+      'rare',
+      'epic',
+      'legendary',
+      'mythic',
+      'ancestral',
+    ])
+    const parseModule = (entry: unknown): ModulesEpEquippedModule | null => {
+      if (!entry || typeof entry !== 'object') return null
+      const moduleId =
+        typeof (entry as { moduleId?: unknown }).moduleId === 'string'
+          ? (entry as { moduleId: string }).moduleId
+          : ''
+      const mergeRaw = (entry as { mergeTier?: unknown }).mergeTier
+      const levelRaw = (entry as { level?: unknown }).level
+      if (!moduleId || typeof levelRaw !== 'number' || !Number.isFinite(levelRaw)) return null
+      const hubSlotRaw = (entry as { hubSlot?: unknown }).hubSlot
+      const roleRaw = (entry as { role?: unknown }).role
+      const hubSlot =
+        hubSlotRaw === 'cannon' ||
+        hubSlotRaw === 'armor' ||
+        hubSlotRaw === 'generator' ||
+        hubSlotRaw === 'core'
+          ? hubSlotRaw
+          : moduleEpInventorySlotForModuleId(moduleId)
+      if (!hubSlot) return null
+      const role = roleRaw === 'assist' ? 'assist' : 'main'
+      const substats: ModulesEpEquippedSubstat[] = []
+      const substatsRaw =
+        (entry as { substats?: unknown }).substats ??
+        (entry as { mainSubstats?: unknown }).mainSubstats
+      if (Array.isArray(substatsRaw)) {
+        for (const sub of substatsRaw) {
+          if (!sub || typeof sub !== 'object') continue
+          const effectId =
+            typeof (sub as { effectId?: unknown }).effectId === 'string'
+              ? (sub as { effectId: string }).effectId
+              : ''
+          const catalogLabel =
+            typeof (sub as { catalogLabel?: unknown }).catalogLabel === 'string'
+              ? (sub as { catalogLabel: string }).catalogLabel
+              : ''
+          const rarity = (sub as { rarity?: unknown }).rarity
+          if (!effectId || !catalogLabel || typeof rarity !== 'string') continue
+          if (!submoduleRarities.has(rarity as WorkshopSubmoduleRarity)) continue
+          substats.push({
+            effectId,
+            catalogLabel,
+            rarity: rarity as WorkshopSubmoduleRarity,
+          })
+        }
+      }
+      return {
+        moduleId,
+        hubSlot,
+        role,
+        mergeTier: sanitizeChassisModuleMergeTier(mergeRaw),
+        level: Math.max(0, Math.trunc(levelRaw)),
+        substats,
+      }
+    }
+
+    const modulesListRaw = (modulesRaw as { modules?: unknown }).modules
+    if (Array.isArray(modulesListRaw)) {
+      const byKey = new Map<string, ModulesEpEquippedModule>()
+      for (const entry of modulesListRaw) {
+        const mod = parseModule(entry)
+        if (mod) byKey.set(`${mod.hubSlot}:${mod.role}`, mod)
+      }
+      modulesEpState.modules = [...byKey.values()]
+    } else {
+      const slotsRaw = (modulesRaw as { slots?: unknown }).slots
+      if (slotsRaw && typeof slotsRaw === 'object') {
+        for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+          const mod = parseModule((slotsRaw as Record<string, unknown>)[slot])
+          if (mod) modulesEpState.modules.push(mod)
+        }
+      }
+    }
+  }
+
   return {
     ok: true,
     syncTarget,
@@ -231,6 +329,7 @@ function parseBody(raw: unknown):
       levels: uwsLevels,
       ownedByWeaponId: uwsOwnedByWeaponId,
     },
+    modulesEpState,
   }
 }
 
@@ -243,6 +342,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'no_bot_rows') return 'no_bot_rows'
   if (message === 'no_lab_rows') return 'no_lab_rows'
   if (message === 'no_uws_rows') return 'no_uws_rows'
+  if (message === 'no_modules_rows') return 'no_modules_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
   if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
   if (message === 'cards_workbook_not_found') return 'cards_workbook_not_found'
@@ -250,6 +350,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'bots_workbook_not_found') return 'bots_workbook_not_found'
   if (message === 'laboratory_workbook_not_found') return 'laboratory_workbook_not_found'
   if (message === 'uws_workbook_not_found') return 'uws_workbook_not_found'
+  if (message === 'modules_workbook_not_found') return 'modules_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
   if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
   if (message === 'cards_workbook_access_denied') return 'cards_workbook_access_denied'
@@ -257,6 +358,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'bots_workbook_access_denied') return 'bots_workbook_access_denied'
   if (message === 'laboratory_workbook_access_denied') return 'laboratory_workbook_access_denied'
   if (message === 'uws_workbook_access_denied') return 'uws_workbook_access_denied'
+  if (message === 'modules_workbook_access_denied') return 'modules_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
   if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
   if (message === 'cards_tab_not_found') return 'cards_tab_not_found'
@@ -264,6 +366,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'bots_tab_not_found') return 'bots_tab_not_found'
   if (message === 'laboratory_tab_not_found') return 'laboratory_tab_not_found'
   if (message === 'uws_tab_not_found') return 'uws_tab_not_found'
+  if (message === 'modules_tab_not_found') return 'modules_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
 }
@@ -375,6 +478,18 @@ export default async (req: Request): Promise<Response> => {
         uwsEpState: parsed.uwsEpState,
       })
       return jsonResponse(200, { ok: true, syncTarget: 'uws', ...result }, cors)
+    }
+
+    if (parsed.syncTarget === 'modules') {
+      const result = await exportModulesToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        modulesEpState: parsed.modulesEpState,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'modules', ...result }, cors)
     }
 
     const result = await exportRelicsToGoogleSheet({

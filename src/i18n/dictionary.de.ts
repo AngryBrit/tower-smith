@@ -1293,6 +1293,7 @@ export const STRINGS_DE = {
   ep_export_bots_sync_target: 'Bots-Sync-Ziel',
   ep_export_labs_sync_target: 'Labor-Sync-Ziel',
   ep_export_uws_sync_target: 'Ultimate-Weapons-Sync-Ziel',
+  ep_export_modules_sync_target: 'Module-Sync-Ziel',
   ep_export_relics_missing_in_master:
     'Keine Relics-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_themes_missing_in_master:
@@ -1303,6 +1304,8 @@ export const STRINGS_DE = {
     'Keine Workshop-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_uws_missing_in_master:
     'Keine Ultimate-Weapons-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
+  ep_export_modules_missing_in_master:
+    'Keine Modules-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_labs_missing_in_master:
     'Keine Laboratory-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_sync_targets_missing:
@@ -1316,6 +1319,7 @@ export const STRINGS_DE = {
   ep_export_sync_bots_btn: 'Bots ins Bots-Buch synchronisieren',
   ep_export_sync_labs_btn: 'Labs ins Laboratory-Buch synchronisieren',
   ep_export_sync_uws_btn: 'Ultimate Weapons ins UWs-Buch synchronisieren',
+  ep_export_sync_modules_btn: 'Module ins Modules-Buch synchronisieren',
   ep_export_syncing_relics: 'Relikte werden synchronisiert…',
   ep_export_syncing_themes: 'Themes werden synchronisiert…',
   ep_export_syncing_cards: 'Karten & Presets werden synchronisiert…',
@@ -1392,6 +1396,7 @@ export const STRINGS_DE = {
   ep_export_syncing_bots: 'Bots werden synchronisiert…',
   ep_export_syncing_labs: 'Labs werden synchronisiert…',
   ep_export_syncing_uws: 'Ultimate Weapons werden synchronisiert…',
+  ep_export_syncing_modules: 'Module werden synchronisiert…',
   ep_export_bots_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Bot-Stat-Zeilen).',
   ep_export_bots_lab_success_suffix:
@@ -1402,6 +1407,8 @@ export const STRINGS_DE = {
   ep_export_labs_success: '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Lab-Zeilen).',
   ep_export_uws_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Ultimate-Weapon-Level-Zeilen).',
+  ep_export_modules_success:
+    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} ausgerüstete Modul-Spalten, {{effects}} Effekte).',
   ep_export_labs_unmapped_hint:
     '{{count}} Lab-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
   ep_export_labs_unmapped_sample: 'Beispiele: {{names}}',
@@ -1414,6 +1421,9 @@ export const STRINGS_DE = {
   ep_export_uws_resolved:
     'UWs-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}}',
   ep_export_uws_open_sheet: 'Verknüpftes UWs-Arbeitsbuch in Google Sheets öffnen',
+  ep_export_modules_resolved:
+    'Modules-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (Sync zum Inventory-Tab).',
+  ep_export_modules_open_sheet: 'Verknüpftes Modules-Arbeitsbuch in Google Sheets öffnen',
   ep_export_error_bots_workbook_not_found:
     'IDS Master hat keine Bots-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
   ep_export_error_bots_workbook_access_denied:
@@ -1438,6 +1448,14 @@ export const STRINGS_DE = {
     'Master-Sheet-Tab im UWs-Arbeitsbuch nicht gefunden.',
   ep_export_error_no_uws_rows:
     'Keine Ultimate-Weapon-Zeilen auf dem Master-Sheet-Tab gefunden. Prüfe Layout oder Tab-Namen.',
+  ep_export_error_modules_workbook_not_found:
+    'IDS Master hat keine Modules-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
+  ep_export_error_modules_workbook_access_denied:
+    'Das verknüpfte Modules-Arbeitsbuch ({{id}}) kann nicht bearbeitet werden. Öffne es in Google Sheets mit Editor-Zugriff oder korrigiere den Link auf dem IDS-Tab.',
+  ep_export_error_modules_tab_not_found:
+    'Inventory-Tab im Modules-Arbeitsbuch nicht gefunden.',
+  ep_export_error_no_modules_rows:
+    'Keine ausgerüsteten Chassis-Module zum Synchronisieren. Unter Werkstatt → Module Haupt- oder Assist-Module wählen oder einen Spielstand mit Moduldaten importieren.',
   ep_export_error_no_workshop_rows:
     'Keine Werkstattzeilen auf dem Master-Sheet-Tab gefunden. Tabellenlayout oder Tab-Namen prüfen.',
   ep_export_error_no_relic_rows:

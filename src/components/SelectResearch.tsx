@@ -37,6 +37,7 @@ import {
 } from '../towerDataThemes'
 import { workshopCardMasteryUnlockedSet } from '../data/workshopCardMastery'
 import { botsEpStateFromPersisted } from '../effectivePaths/botsEpStateFromPersisted'
+import { modulesEpStateFromPersisted } from '../effectivePaths/modulesEpStateFromPersisted'
 import { uwsEpStateFromPersisted } from '../effectivePaths/uwsEpStateFromPersisted'
 import { workshopLevelsFromPersisted } from '../effectivePaths/workshopLevelsFromPersisted'
 import { WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS } from '../data/workshopGameCardWiki'
@@ -148,6 +149,10 @@ export function SelectResearch({
   )
   const uwsEpStateForEp = useMemo(
     () => uwsEpStateFromPersisted(workshopFlat),
+    [workshopFlat],
+  )
+  const modulesEpStateForEp = useMemo(
+    () => modulesEpStateFromPersisted(workshopFlat),
     [workshopFlat],
   )
   const [budgetPanelsVisible] = useBudgetPanelsVisible()
@@ -832,6 +837,7 @@ export function SelectResearch({
             labLevelOverrides={levelOverrides}
             botsEpState={botsEpStateForEp}
             uwsEpState={uwsEpStateForEp}
+            modulesEpState={modulesEpStateForEp}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
           />
       </Suspense>

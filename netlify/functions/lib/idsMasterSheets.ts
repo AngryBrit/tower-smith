@@ -5,6 +5,7 @@ import {
   findCardsWorkbook,
   findLaboratoryWorkbook,
   findUwsWorkbook,
+  findModulesWorkbook,
   findRelicsWorkbook,
   findThemesWorkbook,
   findWorkshopWorkbook,
@@ -15,6 +16,7 @@ import { lookupCardsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookup
 import { lookupBotsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupBotsOnIdsGrid'
 import { lookupLaboratoryWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupLaboratoryOnIdsGrid'
 import { lookupUwsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupUwsOnIdsGrid'
+import { lookupModulesWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupModulesOnIdsGrid'
 import { lookupWorkshopWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupWorkshopOnIdsGrid'
 import { lookupThemesWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupThemesOnIdsGrid'
 import {
@@ -143,6 +145,7 @@ export type IdsGatewayLookup = {
   botsWorkbook: EffectivePathsLinkedWorkbook | null
   laboratoryWorkbook: EffectivePathsLinkedWorkbook | null
   uwsWorkbook: EffectivePathsLinkedWorkbook | null
+  modulesWorkbook: EffectivePathsLinkedWorkbook | null
 }
 
 function pickIdsGatewayTab(
@@ -222,6 +225,8 @@ export async function readIdsGatewayLookup(options: {
       : findLaboratoryWorkbook(workbooks)
   const uwsFromRow = lookupUwsWorkbookOnIdsGrid(grid)
   const uwsWorkbook = uwsFromRow ?? findUwsWorkbook(workbooks)
+  const modulesFromRow = lookupModulesWorkbookOnIdsGrid(grid)
+  const modulesWorkbook = modulesFromRow ?? findModulesWorkbook(workbooks)
 
   if (
     workbooks.length === 0 &&
@@ -231,7 +236,8 @@ export async function readIdsGatewayLookup(options: {
     !workshopWorkbook &&
     !botsWorkbook &&
     !laboratoryWorkbook &&
-    !uwsWorkbook
+    !uwsWorkbook &&
+    !modulesWorkbook
   ) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'ids_master_empty')
   }
@@ -246,6 +252,7 @@ export async function readIdsGatewayLookup(options: {
     botsWorkbook,
     laboratoryWorkbook,
     uwsWorkbook,
+    modulesWorkbook,
   }
 }
 
@@ -365,4 +372,16 @@ export async function resolveUwsWorkbookId(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 404, 'uws_workbook_not_found')
   }
   return gateway.uwsWorkbook.spreadsheetId
+}
+
+export async function resolveModulesWorkbookId(options: {
+  accessToken: string
+  masterSpreadsheetId: string
+  sheetGid: number | null
+}): Promise<string> {
+  const gateway = await readIdsGatewayLookup(options)
+  if (!gateway.modulesWorkbook) {
+    throw new GoogleSheetsApiError('sheets_api_error', 404, 'modules_workbook_not_found')
+  }
+  return gateway.modulesWorkbook.spreadsheetId
 }

@@ -8,6 +8,7 @@ import {
   isBotsWorkbookName,
   isLaboratoryWorkbookName,
   isUwsWorkbookName,
+  isModulesWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -88,6 +89,7 @@ export default async (req: Request): Promise<Response> => {
       ...(gateway.botsWorkbook ? [gateway.botsWorkbook] : []),
       ...(gateway.laboratoryWorkbook ? [gateway.laboratoryWorkbook] : []),
       ...(gateway.uwsWorkbook ? [gateway.uwsWorkbook] : []),
+      ...(gateway.modulesWorkbook ? [gateway.modulesWorkbook] : []),
     ])
     const workbookAccess = (
       await authorizeLinkedWorkbooks(token, workbooksToAuthorize)
@@ -106,6 +108,8 @@ export default async (req: Request): Promise<Response> => {
       workbookAccess.find((row) => isLaboratoryWorkbookName(row.name))?.access ?? null
     const uwsWorkbookAccess =
       workbookAccess.find((row) => isUwsWorkbookName(row.name))?.access ?? null
+    const modulesWorkbookAccess =
+      workbookAccess.find((row) => isModulesWorkbookName(row.name))?.access ?? null
     return jsonResponse(
       200,
       {
@@ -126,6 +130,8 @@ export default async (req: Request): Promise<Response> => {
         laboratoryWorkbookAccess,
         uwsWorkbook: gateway.uwsWorkbook,
         uwsWorkbookAccess,
+        modulesWorkbook: gateway.modulesWorkbook,
+        modulesWorkbookAccess,
         workbookAccess,
       },
       cors,

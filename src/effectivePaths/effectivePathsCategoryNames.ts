@@ -4,6 +4,7 @@ import {
   EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_LABORATORY_WORKBOOK_NAME,
   EFFECTIVE_PATHS_UWS_WORKBOOK_NAME,
+  EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME,
   EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
   EFFECTIVE_PATHS_WORKSHOP_WORKBOOK_NAME,
@@ -25,6 +26,9 @@ export function cleanEffectivePathsCategoryName(name: string): string {
   const trimmed = name.trim().replace(/\s+/g, ' ')
   if (isUwsWorkbookName(trimmed)) {
     return EFFECTIVE_PATHS_UWS_WORKBOOK_NAME
+  }
+  if (isModulesWorkbookName(trimmed)) {
+    return EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME
   }
   return trimmed
 }
@@ -160,6 +164,24 @@ export function findUwsWorkbook(
   const byAlias = workbooks.find((workbook) => isUwsWorkbookName(workbook.name))
   if (byAlias) return byAlias
   const norm = categoryNameKey(EFFECTIVE_PATHS_UWS_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}
+
+export function isModulesWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return key === 'modules' || key.startsWith('modules ')
+}
+
+export function findModulesWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isModulesWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME)
   return (
     workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
     workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??

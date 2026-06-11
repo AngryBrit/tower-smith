@@ -14,6 +14,13 @@ import {
   buildUwSheetUpdates,
   type UwFarmingLevelCellUpdate,
 } from '../../../src/effectivePaths/buildUwSheetUpdates'
+import {
+  buildModuleSheetUpdates,
+  countModulesEpEquippedSlots,
+  countModulesEpEquippedSubstats,
+} from '../../../src/effectivePaths/buildModuleSheetUpdates'
+import { resolveModuleEpInventoryLayout } from '../../../src/effectivePaths/moduleEpInventoryLayoutFromSheet'
+import type { ModulesEpSyncState } from '../../../src/effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../../src/effectivePaths/uwsEpStateFromPersisted'
 import {
   UW_EP_V31_LEVEL_FIRST_ROW,
@@ -113,6 +120,10 @@ import {
   pickEffectivePathsBotsTab,
 } from '../../../src/effectivePaths/pickBotsTab'
 import {
+  isModulesInputTabCandidate,
+  pickEffectivePathsModulesTab,
+} from '../../../src/effectivePaths/pickModulesTab'
+import {
   isUwsInputTabCandidate,
   pickEffectivePathsUwsTab,
 } from '../../../src/effectivePaths/pickUwsTab'
@@ -129,6 +140,7 @@ import {
   resolveCardsWorkbookId,
   resolveLaboratoryWorkbookId,
   resolveUwsWorkbookId,
+  resolveModulesWorkbookId,
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
   resolveWorkshopWorkbookId,
@@ -1584,5 +1596,132 @@ export async function exportUwsToGoogleSheet(options: {
     matchedRows: farmingCells.length,
     sheetTitle,
     uwsWorkbookId,
+  }
+}
+
+export type ExportModulesToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  matchedSubstats: number
+  sheetTitle: string
+  modulesWorkbookId: string
+}
+
+function orderedModulesWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isModulesInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsModulesTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isModulesInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+export async function exportModulesToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  modulesEpState: ModulesEpSyncState
+}): Promise<ExportModulesToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let modulesWorkbookId = overrideId
+  if (!modulesWorkbookId && options.masterSpreadsheetId) {
+    modulesWorkbookId = await resolveModulesWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!modulesWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(modulesWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'modules_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let sheetTitle = ''
+  for (const tab of orderedModulesWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    if (isModulesInputTabCandidate(tab.title, tab.gridProperties)) {
+      sheetTitle = tab.title
+      break
+    }
+  }
+
+  if (!sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'modules_tab_not_found')
+  }
+
+  const quotedTitle = quoteSheetTitleForRange(sheetTitle)
+  const gridRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(modulesWorkbookId)}/values/${encodeURIComponent(`${quotedTitle}!A1:AS55`)}?valueRenderOption=FORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(gridRes.status, 'modules_workbook')
+  if (!gridRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', gridRes.status, await gridRes.text())
+  }
+  const gridBody = (await gridRes.json()) as { values?: unknown[][] }
+  const layout = resolveModuleEpInventoryLayout(gridBody.values ?? [])
+  const batch = buildModuleSheetUpdates(sheetTitle, options.modulesEpState, layout)
+  const matchedRows = countModulesEpEquippedSlots(options.modulesEpState)
+  const matchedSubstats = countModulesEpEquippedSubstats(options.modulesEpState)
+  if (batch.length === 0 || matchedRows === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_modules_rows')
+  }
+
+  const updateRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(modulesWorkbookId)}/values:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valueInputOption: 'USER_ENTERED',
+        data: batch,
+      }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'modules_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+  const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+
+  return {
+    updatedCells: updateBody.totalUpdatedCells ?? batch.length,
+    matchedRows,
+    matchedSubstats,
+    sheetTitle,
+    modulesWorkbookId,
   }
 }
