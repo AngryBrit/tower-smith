@@ -65,6 +65,37 @@ const SAMPLE_STATE: ModulesEpSyncState = {
 }
 
 describe('buildModuleSheetUpdates', () => {
+  it('clears unequipped module columns before writing (legacy layout)', () => {
+    const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
+      modules: [
+        {
+          moduleId: 'astralDeliverance',
+          hubSlot: 'cannon',
+          role: 'main',
+          mergeTier: 'rare',
+          level: 20,
+          substats: [],
+        },
+      ],
+    }
+    const byRange = Object.fromEntries(
+      buildModuleSheetUpdates('Inventory', state, LEGACY_LAYOUT).map((u) => [u.range, u.values[0]![0]]),
+    )
+
+    expect(byRange["'Inventory'!D2"]).toBe(0)
+    expect(byRange["'Inventory'!D3"]).toBe(0)
+    expect(byRange["'Inventory'!D6"]).toBe(0)
+    expect(byRange["'Inventory'!D21"]).toBe(0)
+    expect(byRange["'Inventory'!F2"]).toBe('Rare')
+    expect(byRange["'Inventory'!G2"]).toBeUndefined()
+    expect(byRange["'Inventory'!K2"]).toBe('None')
+    expect(byRange["'Inventory'!L2"]).toBeUndefined()
+    expect(byRange["'Inventory'!G7"]).toBe('')
+    expect(byRange["'Inventory'!P2"]).toBe('None')
+    expect(byRange["'Inventory'!F7"]).toBe('')
+  })
+
   it('writes equipped module rarity and main substats (legacy layout)', () => {
     const updates = buildModuleSheetUpdates('Inventory', SAMPLE_STATE, LEGACY_LAYOUT)
     const byRange = Object.fromEntries(updates.map((u) => [u.range, u.values[0]![0]]))
@@ -110,7 +141,8 @@ describe('buildModuleSheetUpdates', () => {
 
     expect(byRange["'Inventory'!AE2"]).toBe('Legendary+')
     expect(byRange["'Inventory'!AE4"]).toBe('Attack Speed')
-    expect(byRange["'Inventory'!AE3"]).toBeUndefined()
+    expect(byRange["'Inventory'!AE3"]).toBe('')
+    expect(byRange["'Inventory'!AF3"]).toBe('')
   })
 
   it('counts equipped inventory columns', () => {

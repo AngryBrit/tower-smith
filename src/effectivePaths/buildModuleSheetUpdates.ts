@@ -7,6 +7,7 @@ import {
   type ModuleEpResolvedSection,
 } from './moduleEpInventoryLayoutFromSheet'
 import {
+  MODULE_EP_EMPTY_RARITY_SHEET_LABEL,
   moduleEpMergeTierSheetLabel,
   moduleEpSubmoduleRaritySheetLabel,
   moduleEpSubmoduleSheetLabel,
@@ -68,6 +69,41 @@ function resolveWriteTarget(
   return { section, baseCol: anyOther.baseCol }
 }
 
+function clearModuleColumn(
+  out: ModuleSheetBatchUpdate[],
+  quoted: string,
+  section: ModuleEpResolvedSection,
+  baseCol: number,
+): void {
+  const { dataRow, substatStartRow, substatEndRow } = section
+  // Data row: Rarity only (e.g. F5). Level/Stat (G5, H5) are sheet formulas — never touch.
+  pushCell(out, quoted, baseCol, dataRow, MODULE_EP_EMPTY_RARITY_SHEET_LABEL)
+
+  if (substatStartRow == null) return
+
+  // Substat band (e.g. F7–F14 names, G7–G14 rarities): clear empty — not "None".
+  for (let i = 0; i < MODULE_EP_INVENTORY_SUBSTAT_ROWS; i += 1) {
+    const row = substatStartRow + i
+    if (row > substatEndRow || row <= dataRow) break
+    pushCell(out, quoted, baseCol, row, '')
+    pushCell(out, quoted, baseCol + 1, row, '')
+  }
+}
+
+function clearSectionModuleColumns(
+  out: ModuleSheetBatchUpdate[],
+  quoted: string,
+  layout: ModuleEpResolvedLayout,
+): void {
+  for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+    const section = layout.sections[slot]
+    if (!section) continue
+    for (const column of section.modules) {
+      clearModuleColumn(out, quoted, section, column.baseCol)
+    }
+  }
+}
+
 function writeEquippedModule(
   out: ModuleSheetBatchUpdate[],
   quoted: string,
@@ -94,18 +130,46 @@ function writeEquippedModule(
     if (row > substatEndRow) break
 
     const substat = equipped.substats[i]
-    if (substat) {
-      pushCell(out, quoted, baseCol, row, moduleEpSubmoduleSheetLabel(substat.catalogLabel))
+    if (!substat) continue
+
+    pushCell(out, quoted, baseCol, row, moduleEpSubmoduleSheetLabel(substat.catalogLabel))
+    pushCell(
+      out,
+      quoted,
+      baseCol + 1,
+      row,
+      moduleEpSubmoduleRaritySheetLabel(substat.rarity),
+    )
+  }
+}
+
+function resetSectionSidebarLevels(
+  out: ModuleSheetBatchUpdate[],
+  quoted: string,
+  layout: ModuleEpResolvedLayout,
+): void {
+  for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+    const section = layout.sections[slot]
+    if (!section) continue
+
+    const { highestPrimaryLevelCell, highestAssistLevelCell } = section
+    if (highestPrimaryLevelCell) {
       pushCell(
         out,
         quoted,
-        baseCol + 1,
-        row,
-        moduleEpSubmoduleRaritySheetLabel(substat.rarity),
+        highestPrimaryLevelCell.col,
+        highestPrimaryLevelCell.row,
+        0,
       )
-    } else if (!isAssist) {
-      pushCell(out, quoted, baseCol, row, '')
-      pushCell(out, quoted, baseCol + 1, row, '')
+    }
+    if (highestAssistLevelCell) {
+      pushCell(
+        out,
+        quoted,
+        highestAssistLevelCell.col,
+        highestAssistLevelCell.row,
+        0,
+      )
     }
   }
 }
@@ -154,7 +218,9 @@ export function buildModuleSheetUpdates(
   const quoted = quoteSheetTitleForRange(sheetTitle)
   const out: ModuleSheetBatchUpdate[] = []
 
+  resetSectionSidebarLevels(out, quoted, layout)
   writeSectionSidebarLevels(out, quoted, layout, state)
+  clearSectionModuleColumns(out, quoted, layout)
 
   for (const equipped of state.modules) {
     writeEquippedModule(out, quoted, layout, equipped)

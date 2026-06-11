@@ -55,6 +55,9 @@ const SECTION_ROW_MARKERS: Record<WorkshopAssistModuleSlot, RegExp> = {
 const MERGE_TIER_CELL =
   /^(none|common|rare|rare\+|epic|epic\+|legendary|legendary\+|mythic|mythic\+|ancestral(\s+\d\*)?)$/i
 
+const SIDEBAR_STAT_LABEL =
+  /^(tower (damage|health)|coin bonus|uw damage)$/i
+
 function cell(rows: string[][], row: number, col: number): string {
   return (rows[row]?.[col] ?? '').trim()
 }
@@ -137,9 +140,33 @@ function collectNameRowLabels(nameRow: string[]): string[] {
     if (isSidebarLabel(text)) continue
     if (/^[🔵🟥▲🔶]/.test(text)) continue
     if (/^rarity$/i.test(text)) continue
+    if (/^(level|stat)$/i.test(text)) continue
+    if (SIDEBAR_STAT_LABEL.test(text)) continue
+    if (/^\d+$/.test(text)) continue
     labels.push(text)
   }
   return labels
+}
+
+function scanModuleRarityCols(
+  dataRow: string[],
+  firstCol: number,
+  blockStride: number,
+): number[] {
+  const cols: number[] = []
+  for (let c = firstCol; c < dataRow.length; c += blockStride) {
+    cols.push(c)
+  }
+  return cols
+}
+
+function moduleIdsFromNameRowLabels(
+  slot: WorkshopAssistModuleSlot,
+  nameRow: string[],
+): string[] {
+  return collectNameRowLabels(nameRow)
+    .map((label) => sheetLabelToModuleId(slot, label))
+    .filter((id): id is string => id != null)
 }
 
 function parseModuleColumns(
@@ -152,11 +179,10 @@ function parseModuleColumns(
   const modules: ModuleEpResolvedModuleColumn[] = []
 
   if (blockStride === 3) {
-    const labels = collectNameRowLabels(nameRow)
-    for (let i = 0; i < labels.length; i += 1) {
-      const moduleId = sheetLabelToModuleId(slot, labels[i]!)
-      if (!moduleId) continue
-      modules.push({ moduleId, baseCol: firstCol + i * blockStride })
+    const moduleIds = moduleIdsFromNameRowLabels(slot, nameRow)
+    const rarityCols = scanModuleRarityCols(dataRow, firstCol, blockStride)
+    for (let i = 0; i < Math.min(moduleIds.length, rarityCols.length); i += 1) {
+      modules.push({ moduleId: moduleIds[i]!, baseCol: rarityCols[i]! })
     }
     return { modules, blockStride }
   }
@@ -186,9 +212,6 @@ function findSectionNameRows(rows: string[][]): Partial<Record<WorkshopAssistMod
 
   return bands
 }
-
-const SIDEBAR_STAT_LABEL =
-  /^(tower (damage|health)|coin bonus|uw damage)$/i
 
 function findHighestPrimaryLevelCell(
   rows: string[][],

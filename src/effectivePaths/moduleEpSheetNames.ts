@@ -59,6 +59,9 @@ function defaultSubmoduleSheetLabel(catalogLabel: string): string {
     .trim()
 }
 
+/** Inventory dropdown value for an empty module or substat rarity cell. */
+export const MODULE_EP_EMPTY_RARITY_SHEET_LABEL = 'None'
+
 export function moduleEpMergeTierSheetLabel(merge: WorkshopChassisModuleMergeTier): string {
   return MODULE_EP_MERGE_TIER_SHEET_LABEL[merge]
 }

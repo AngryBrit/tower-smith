@@ -56,6 +56,27 @@ describe('resolveModuleEpInventoryLayout', () => {
     const orbital = layout.sections.armor.modules.find((m) => m.moduleId === 'orbitalAugment')
     expect(orbital?.baseCol).toBe(14)
   })
+
+  it('maps stride-3 rarity columns from data row, not skipped name-row labels', () => {
+    const rows = V612_GRID.map((row) => [...row])
+    rows[2] = [
+      '',
+      '🔵 CANNON',
+      'Tower Damage',
+      '300',
+      'Astral Deliverance',
+      'Being Annihilator',
+      'Death Penalty',
+      'Havoc Bringer',
+      'Shrink Ray',
+      'Amplifying Strike',
+      'Any Other',
+      'Any Other 2',
+    ]
+    const layout = resolveModuleEpInventoryLayout(rows)
+    const astral = layout.sections.cannon.modules.find((m) => m.moduleId === 'astralDeliverance')
+    expect(astral?.baseCol).toBe(3)
+  })
 })
 
 describe('buildModuleSheetUpdates v612', () => {
@@ -93,9 +114,10 @@ describe('buildModuleSheetUpdates v612', () => {
     expect(byRange["'Inventory'!B8"]).toBe(1)
     expect(byRange["'Inventory'!D5"]).toBe('Ancestral 2*')
     expect(byRange["'Inventory'!E5"]).toBeUndefined()
+    expect(byRange["'Inventory'!G5"]).toBe('None')
     expect(byRange["'Inventory'!S5"]).toBe('Legendary+')
     expect(byRange["'Inventory'!T5"]).toBeUndefined()
-    expect(byRange["'Inventory'!V5"]).toBeUndefined()
+    expect(byRange["'Inventory'!V5"]).toBe('None')
   })
 })
 
