@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
+import { deferInEffect } from '../deferInEffect'
 import type { CompareDialogInit } from '../lab/labToolsTypes'
 import { computeBuildCompareSummary, type BuildCompareSummary } from '../buildCompareSummary'
 import type { I18nFormatters, StringId } from '../i18n/dictionary'
@@ -300,16 +301,18 @@ export function LabCompareDialog({
     }
     if (initAppliedRef.current || !initialCompare) return
     initAppliedRef.current = true
-    setErrorA(null)
-    setErrorB(null)
-    setOutcome(null)
-    setSideLabelA(initialCompare.labelA ?? null)
-    setSideLabelB(initialCompare.labelB ?? null)
-    if (initialCompare.fillCurrentA) {
-      setTextA(currentCsv())
-    }
-    setTextB(initialCompare.textB)
-    pendingAutoRunRef.current = initialCompare.autoRun === true
+    const compare = initialCompare
+    const fillCurrentA = compare.fillCurrentA ? currentCsv() : null
+    deferInEffect(() => {
+      setErrorA(null)
+      setErrorB(null)
+      setOutcome(null)
+      setSideLabelA(compare.labelA ?? null)
+      setSideLabelB(compare.labelB ?? null)
+      if (fillCurrentA != null) setTextA(fillCurrentA)
+      setTextB(compare.textB)
+      pendingAutoRunRef.current = compare.autoRun === true
+    })
   }, [open, initialCompare, currentCsv])
 
   useEffect(() => {
@@ -317,7 +320,9 @@ export function LabCompareDialog({
     if (!textB.trim()) return
     if (initialCompare?.fillCurrentA && !textA.trim()) return
     pendingAutoRunRef.current = false
-    void runCompare()
+    deferInEffect(() => {
+      void runCompare()
+    })
   }, [open, textA, textB, busy, initialCompare, runCompare])
 
   const clearAll = useCallback(() => {

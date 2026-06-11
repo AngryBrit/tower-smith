@@ -16,8 +16,8 @@ describe('buildCardSheetUpdates', () => {
     )
     expect(batch).toEqual(
       expect.arrayContaining([
-        { range: "'Master Sheet'!C5", values: [[18]] },
-        { range: "'Master Sheet'!C6", values: [[7]] },
+        { range: "'Master Sheet'!C5", values: [['18']] },
+        { range: "'Master Sheet'!C6", values: [['7']] },
         { range: "'Master Sheet'!D6", values: [['TRUE']] },
         { range: "'Master Sheet'!C36", values: [['Locked']] },
         { range: "'Master Sheet'!D36", values: [['FALSE']] },

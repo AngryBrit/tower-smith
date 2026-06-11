@@ -31,7 +31,7 @@ export function buildWorkshopSheetUpdates(
     })
     out.push({
       range: `${quoted}!${levelCol}${row.rowIndex}`,
-      values: [[level]],
+      values: [[String(level)]],
     })
   }
 
@@ -55,7 +55,7 @@ export function buildWorkshopEnhanceSheetUpdates(
     const level = Math.max(0, Math.round(workshopLevels[enhanceId] ?? 0))
     out.push({
       range: `${quoted}!${levelCol}${row.rowIndex}`,
-      values: [[level]],
+      values: [[String(level)]],
     })
   }
 

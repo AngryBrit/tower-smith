@@ -187,7 +187,7 @@ export function MyBuildsDialog({
       })
       onClose()
     },
-    [labToolsRef, onClose, t],
+    [labToolsRef, onClose, setNotice, t],
   )
 
   const handleDeleteOwn = useCallback(

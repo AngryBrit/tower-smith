@@ -102,7 +102,7 @@ function detectIdsMasterColumns(
 function parseIdsMasterRows(
   grid: IdsMasterSheetGrid,
   nameCol: number,
-  idCol: number,
+  _idCol: number,
   startRow: number,
 ): EffectivePathsLinkedWorkbook[] {
   const { formatted, formulas } = grid

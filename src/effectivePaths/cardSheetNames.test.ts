@@ -44,8 +44,8 @@ describe('workshopCardIdFromSheetName', () => {
     const labels = effectivePathsCardSheetLabelsFromCardRows(
       rows,
       [
-        { rowIndex: 6, kind: 'card', name: 'Free Upgrades' },
-        { rowIndex: 7, kind: 'card', name: 'Landmine Stun' },
+        { rowIndex: 6, kind: 'card' },
+        { rowIndex: 7, kind: 'card' },
       ],
       1,
     )

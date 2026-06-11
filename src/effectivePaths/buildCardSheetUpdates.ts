@@ -9,9 +9,9 @@ export type CardSheetBatchUpdate = {
   values: string[][]
 }
 
-function levelCellValue(cardId: WorkshopGameCardId, stars: number): string | number {
+function levelCellValue(cardId: WorkshopGameCardId, stars: number): string {
   if (cardId === 'areaOfEffect' && stars <= 0) return 'Locked'
-  return Math.max(0, Math.min(7, Math.round(stars)))
+  return String(Math.max(0, Math.min(7, Math.round(stars))))
 }
 
 /** Build per-row updates for level (C) and mastery (D) on Cards v3.x Master Sheet. */
@@ -32,7 +32,7 @@ export function buildCardSheetUpdates(
     if (row.kind === 'equip_slots') {
       out.push({
         range: `${quoted}!${levelCol}${row.rowIndex}`,
-        values: [[Math.max(0, Math.round(cardEquipSlots))]],
+        values: [[String(Math.max(0, Math.round(cardEquipSlots)))]],
       })
       continue
     }

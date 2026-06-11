@@ -45,7 +45,7 @@ export const UW_EP_V31_LEVEL_KEY_ORDER: Record<WorkshopUltimateWeaponId, readonl
       const plusKey = WORKSHOP_ULTIMATE_PLUS_LEVEL_BY_ABILITY[plusAbility]
       return [weaponId, [...basic, plusKey] as const]
     }),
-  ) as Record<WorkshopUltimateWeaponId, readonly UwEpLevelKey[]>
+  ) as unknown as Record<WorkshopUltimateWeaponId, readonly UwEpLevelKey[]>
 
 const PLUS_LEVEL_KEYS = new Set<string>(
   Object.values(WORKSHOP_ULTIMATE_PLUS_LEVEL_BY_ABILITY),

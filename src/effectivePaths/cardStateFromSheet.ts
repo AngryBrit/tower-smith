@@ -13,7 +13,7 @@ export type CardStateFromSheet = {
 }
 
 function parseCardLevelCell(
-  cardId: WorkshopGameCardId,
+  _cardId: WorkshopGameCardId,
   raw: unknown,
 ): number | null {
   const text = String(raw ?? '').trim()

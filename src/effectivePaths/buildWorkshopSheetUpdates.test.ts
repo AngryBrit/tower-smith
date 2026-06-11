@@ -22,11 +22,11 @@ describe('buildWorkshopSheetUpdates', () => {
     expect(batch).toEqual(
       expect.arrayContaining([
         { range: "'Master Sheet'!B6", values: [['TRUE']] },
-        { range: "'Master Sheet'!D6", values: [[5640]] },
+        { range: "'Master Sheet'!D6", values: [['5640']] },
         { range: "'Master Sheet'!B7", values: [['FALSE']] },
-        { range: "'Master Sheet'!D7", values: [[0]] },
+        { range: "'Master Sheet'!D7", values: [['0']] },
         { range: "'Master Sheet'!B8", values: [['TRUE']] },
-        { range: "'Master Sheet'!D8", values: [[12]] },
+        { range: "'Master Sheet'!D8", values: [['12']] },
       ]),
     )
   })
@@ -42,8 +42,8 @@ describe('buildWorkshopSheetUpdates', () => {
       { nameCol: 15, levelCol: 17, startRow: 5, endRow: 8 },
     )
     expect(batch).toEqual([
-      { range: "'Master Sheet'!R6", values: [[40]] },
-      { range: "'Master Sheet'!R7", values: [[25]] },
+      { range: "'Master Sheet'!R6", values: [['40']] },
+      { range: "'Master Sheet'!R7", values: [['25']] },
     ])
   })
 })

@@ -99,14 +99,14 @@ export function detectRelicSheetLayout(
     let nameCol = -1
     let unlockedCol = -1
     for (let col = 0; col < row.length; col++) {
-      const cell = row[col]?.trim().toLowerCase() ?? ''
+      const cell = cellValueToString(row[col]).toLowerCase()
       if (/^relic(\s*name)?$/.test(cell) || cell === 'name') nameCol = col
       if (isUnlockedHeaderCell(cell)) unlockedCol = col
     }
     if (nameCol >= 0 && unlockedCol >= 0) {
       return { nameCol, unlockedCol, startRow: rowIndex + 1 }
     }
-    if (row[0]?.trim().toLowerCase().startsWith('rarity')) {
+    if (cellValueToString(row[0]).toLowerCase().startsWith('rarity')) {
       return { nameCol: 2, unlockedCol: 5, startRow: rowIndex + 1 }
     }
   }

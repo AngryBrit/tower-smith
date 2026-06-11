@@ -527,7 +527,7 @@ export function parseModuleEpInventoryLayoutV612(rows: string[][]): ModuleEpReso
   return parseModuleEpInventoryLayoutFromSheet(rows)
 }
 
-export function resolveModuleEpInventoryLayout(rows: readonly (readonly unknown)[]): ModuleEpResolvedLayout {
+export function resolveModuleEpInventoryLayout(rows: readonly (readonly unknown[])[]): ModuleEpResolvedLayout {
   const padded = padSheetRowsToWidth(rows, 50)
   const hasContent = padded.some((row) => row.some((cell) => cell.trim() !== ''))
   if (!hasContent) return legacyModuleEpInventoryLayout()

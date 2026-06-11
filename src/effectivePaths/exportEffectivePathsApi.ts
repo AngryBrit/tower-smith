@@ -322,10 +322,8 @@ function parseWorkbooksList(raw: unknown): EffectivePathsLinkedWorkbook[] {
 
 function parseIdsGatewayBody(body: unknown): EffectivePathsIdsGateway | null {
   if (!body || typeof body !== 'object' || !('workbooks' in body)) return null
-  const idsTabTitle =
-    typeof (body as { idsTabTitle?: unknown }).idsTabTitle === 'string'
-      ? (body as { idsTabTitle: string }).idsTabTitle
-      : 'IDS'
+  const record = body as { idsTabTitle?: unknown }
+  const idsTabTitle = typeof record.idsTabTitle === 'string' ? record.idsTabTitle : 'IDS'
   return {
     idsTabTitle,
     workbooks: parseWorkbooksList((body as { workbooks?: unknown }).workbooks),
@@ -470,6 +468,10 @@ export async function listEffectivePathsWorkbooks(options: {
   }
 }
 
+type EffectivePathsExportCallResult<TResult> =
+  | { ok: true; result: TResult }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+
 export async function exportRelicsToEffectivePaths(options: {
   googleAccessToken: string
   masterSpreadsheetId?: string | null
@@ -477,10 +479,7 @@ export async function exportRelicsToEffectivePaths(options: {
   relicsSpreadsheetId?: string | null
   relicsSheetGid?: number | null
   relicOwnedIds: readonly string[]
-}): Promise<
-  | { ok: true; result: EffectivePathsRelicsExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsRelicsExportResult>> {
   return exportToEffectivePaths({
     ...options,
     syncTarget: 'relics',
@@ -497,7 +496,7 @@ export async function exportRelicsToEffectivePaths(options: {
     uwsEpState: emptyUwsEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsRelicsExportResult>>
 }
 
 export async function exportThemesToEffectivePaths(options: {
@@ -507,10 +506,7 @@ export async function exportThemesToEffectivePaths(options: {
   themesSpreadsheetId?: string | null
   themesSheetGid?: number | null
   themeOwnedIds: readonly string[]
-}): Promise<
-  | { ok: true; result: EffectivePathsThemesExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsThemesExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -529,7 +525,7 @@ export async function exportThemesToEffectivePaths(options: {
     uwsEpState: emptyUwsEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsThemesExportResult>>
 }
 
 export async function exportCardsToEffectivePaths(options: {
@@ -542,10 +538,7 @@ export async function exportCardsToEffectivePaths(options: {
   cardMasteryUnlockedIds: readonly string[]
   cardEquipSlots: number
   cardPresetLoadouts: readonly (readonly string[])[]
-}): Promise<
-  | { ok: true; result: EffectivePathsCardsExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsCardsExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -564,7 +557,7 @@ export async function exportCardsToEffectivePaths(options: {
     uwsEpState: emptyUwsEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsCardsExportResult>>
 }
 
 export async function exportWorkshopToEffectivePaths(options: {
@@ -574,10 +567,7 @@ export async function exportWorkshopToEffectivePaths(options: {
   workshopSpreadsheetId?: string | null
   workshopSheetGid?: number | null
   workshopLevels: Readonly<Record<string, number>>
-}): Promise<
-  | { ok: true; result: EffectivePathsWorkshopExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsWorkshopExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -596,7 +586,7 @@ export async function exportWorkshopToEffectivePaths(options: {
     uwsEpState: emptyUwsEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsWorkshopExportResult>>
 }
 
 export function importRelicsFromEffectivePaths(
@@ -726,10 +716,7 @@ export async function exportLabsToEffectivePaths(options: {
   laboratorySpreadsheetId?: string | null
   laboratorySheetGid?: number | null
   labLevelOverrides: Readonly<Record<string, number>>
-}): Promise<
-  | { ok: true; result: EffectivePathsLabsExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsLabsExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -746,8 +733,9 @@ export async function exportLabsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    modulesEpState: emptyModulesEpState(),
     labLevelOverrides: options.labLevelOverrides,
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsLabsExportResult>>
 }
 
 export async function exportBotsToEffectivePaths(options: {
@@ -757,10 +745,7 @@ export async function exportBotsToEffectivePaths(options: {
   botsSpreadsheetId?: string | null
   botsSheetGid?: number | null
   botsEpState: BotsEpSyncState
-}): Promise<
-  | { ok: true; result: EffectivePathsBotsExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsBotsExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -779,7 +764,7 @@ export async function exportBotsToEffectivePaths(options: {
     uwsEpState: emptyUwsEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsBotsExportResult>>
 }
 
 export async function exportUwsToEffectivePaths(options: {
@@ -789,10 +774,7 @@ export async function exportUwsToEffectivePaths(options: {
   uwsSpreadsheetId?: string | null
   uwsSheetGid?: number | null
   uwsEpState: UwsEpSyncState
-}): Promise<
-  | { ok: true; result: EffectivePathsUwsExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsUwsExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -811,7 +793,7 @@ export async function exportUwsToEffectivePaths(options: {
     uwsEpState: options.uwsEpState,
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsUwsExportResult>>
 }
 
 export async function exportModulesToEffectivePaths(options: {
@@ -821,10 +803,7 @@ export async function exportModulesToEffectivePaths(options: {
   modulesSpreadsheetId?: string | null
   modulesSheetGid?: number | null
   modulesEpState: ModulesEpSyncState
-}): Promise<
-  | { ok: true; result: EffectivePathsModulesExportResult }
-  | { ok: false; error: EffectivePathsExportError; message?: string }
-> {
+}): Promise<EffectivePathsExportCallResult<EffectivePathsModulesExportResult>> {
   return exportToEffectivePaths({
     googleAccessToken: options.googleAccessToken,
     masterSpreadsheetId: options.masterSpreadsheetId ?? null,
@@ -843,7 +822,7 @@ export async function exportModulesToEffectivePaths(options: {
     uwsEpState: emptyUwsEpState(),
     modulesEpState: options.modulesEpState,
     labLevelOverrides: {},
-  })
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsModulesExportResult>>
 }
 
 function emptyBotsEpState(): BotsEpSyncState {

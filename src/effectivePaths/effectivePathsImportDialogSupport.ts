@@ -176,7 +176,7 @@ export function importPayloadFromResult(
         cardStars: result.cardStars,
         cardEquipSlots: result.cardEquipSlots,
         cardMasteryUnlockedIds: result.cardMasteryUnlockedIds,
-        cardPresetLoadouts: result.cardPresetLoadouts as WorkshopGameCardId[][],
+        cardPresetLoadouts: result.cardPresetLoadouts as unknown as WorkshopGameCardId[][],
       }
     case 'workshop':
       return { syncTarget: 'workshop', workshopLevels: result.workshopLevels }
