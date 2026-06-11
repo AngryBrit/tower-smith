@@ -145,7 +145,7 @@ type WorkshopUltimateActiveFlags = { [K in WorkshopUltimateActiveKey]: boolean }
 
 function defaultUltimateActive(): WorkshopUltimateActiveFlags {
   return Object.fromEntries(
-    WORKSHOP_ULTIMATE_WEAPON_ORDER.map((id) => [`${id}Active`, false]),
+    WORKSHOP_ULTIMATE_WEAPON_ORDER.map((id) => [`${id}Active`, true]),
   ) as WorkshopUltimateActiveFlags
 }
 
@@ -920,7 +920,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     ...Object.fromEntries(
       WORKSHOP_ULTIMATE_ACTIVE_ORDER.map((key) => [
         key,
-        (o as Record<string, unknown>)[key] === true ? true : false,
+        (o as Record<string, unknown>)[key] !== false,
       ]),
     ),
     ...Object.fromEntries(

@@ -5,13 +5,13 @@ import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 export const EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES = [
   'Laboratory',
   'Workshop',
-  'Ultimate Weapon',
-  'Themes & Songs',
-  'Bots',
-  'Relics',
-  'Vault',
+  'Ultimate Weapons',
   'Cards',
   'Modules',
+  'Bots',
+  'Themes & Songs',
+  'Relics',
+  'Vault',
   'Guardians',
   'Player & Stuff',
 ] as const
@@ -24,7 +24,7 @@ const CANONICAL_ORDER = new Map(
   EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES.map((name, index) => [categoryNameKey(name), index]),
 )
 
-const ULTIMATE_WEAPON_CANONICAL_KEY = categoryNameKey('Ultimate Weapon')
+const ULTIMATE_WEAPON_CANONICAL_KEY = categoryNameKey('Ultimate Weapons')
 const MODULES_CANONICAL_KEY = categoryNameKey('Modules')
 
 /** Map IDS tab labels (incl. versioned aliases) to a canonical gateway category key. */

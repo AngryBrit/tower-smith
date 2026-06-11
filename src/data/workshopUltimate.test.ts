@@ -11,6 +11,7 @@ import {
   workshopUltimateUnlockCostForWeapon,
   workshopUltimateUnlockSpentStones,
   workshopUltimateUnlockToMaxStones,
+  workshopUltimateIsActive,
   workshopUltimateWeaponIsOwned,
 } from './workshopUltimate'
 
@@ -242,6 +243,12 @@ describe('workshop ultimate wiki spot checks', () => {
     expect(workshopUltimateWeaponIsOwned({ goldenTowerBonusLevel: 1 }, 'goldenTower')).toBe(
       true,
     )
+  })
+
+  it('defaults ultimate run toggles to on unless explicitly false', () => {
+    expect(workshopUltimateIsActive({}, 'goldenTower')).toBe(true)
+    expect(workshopUltimateIsActive({ goldenTowerActive: false }, 'goldenTower')).toBe(false)
+    expect(workshopUltimateIsActive({ goldenTowerActive: true }, 'goldenTower')).toBe(true)
   })
 
   it('every ultimate row has a finite max level', () => {

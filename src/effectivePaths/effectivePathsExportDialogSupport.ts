@@ -1,4 +1,7 @@
-import { importTargetForWorkbookName } from './effectivePathsImportDialogSupport'
+import {
+  EFFECTIVE_PATHS_IMPORT_TARGET_ORDER,
+  importTargetForWorkbookName,
+} from './effectivePathsImportDialogSupport'
 import type { EffectivePathsExportTarget } from './effectivePathsExportSyncingLabel'
 import type { StringId } from '../i18n'
 
@@ -11,6 +14,8 @@ export type ExportTargetUiConfig = {
 export const exportTargetForWorkbookName = importTargetForWorkbookName as (
   name: string,
 ) => EffectivePathsExportTarget | null
+
+export const EFFECTIVE_PATHS_EXPORT_TARGET_ORDER = EFFECTIVE_PATHS_IMPORT_TARGET_ORDER
 
 export function exportUiForTarget(target: EffectivePathsExportTarget): ExportTargetUiConfig {
   return EXPORT_TARGET_UI.find((entry) => entry.target === target)!

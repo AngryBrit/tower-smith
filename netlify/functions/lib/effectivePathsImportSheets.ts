@@ -16,12 +16,12 @@ import {
   unmappedRelicNamesWithLayout,
 } from '../../../src/effectivePaths/relicSheetLayout'
 import { relicOwnedIdsFromSheetRows } from '../../../src/effectivePaths/relicOwnedIdsFromSheet'
+import { unmappedThemeNamesWithLayout } from '../../../src/effectivePaths/themeSheetLayout'
 import {
-  detectThemeSheetLayout,
-  parseThemeRowsWithLayout,
-  unmappedThemeNamesWithLayout,
-} from '../../../src/effectivePaths/themeSheetLayout'
-import { themeOwnedIdsFromSheetRows } from '../../../src/effectivePaths/themeOwnedIdsFromSheet'
+  parseThemesSheetTab,
+  pickThemesSheetForSync,
+  themeOwnedIdsFromParsedThemesTabs,
+} from '../../../src/effectivePaths/resolveThemesSheetTab'
 import { modulesEpStateFromSheetGrid } from '../../../src/effectivePaths/modulesEpStateFromSheet'
 import { resolveModuleEpInventoryLayout } from '../../../src/effectivePaths/moduleEpInventoryLayoutFromSheet'
 import { uwsEpStateFromSheetGrid } from '../../../src/effectivePaths/uwsEpStateFromSheet'
@@ -109,29 +109,35 @@ async function readUwsImportGrid(
   sheetTitle: string,
 ): Promise<string[][]> {
   const quoted = quoteSheetTitleForRange(sheetTitle)
-  const dRange = encodeURIComponent(`${quoted}!D${UW_EP_V31_LEVEL_FIRST_ROW}:D${UW_EP_V31_LEVEL_LAST_ROW}`)
-  const gRange = encodeURIComponent(`${quoted}!G${UW_EP_V31_LEVEL_FIRST_ROW}:G${UW_EP_V31_LEVEL_LAST_ROW}`)
-  const [dRes, gRes] = await Promise.all([
-    sheetsFetch(
-      accessToken,
-      `/${encodeURIComponent(spreadsheetId)}/values/${dRange}?valueRenderOption=UNFORMATTED_VALUE`,
-    ),
-    sheetsFetch(
-      accessToken,
-      `/${encodeURIComponent(spreadsheetId)}/values/${gRange}?valueRenderOption=UNFORMATTED_VALUE`,
-    ),
-  ])
-  throwIfSheetsAccessDenied(dRes.status, 'uws_workbook')
-  throwIfSheetsAccessDenied(gRes.status, 'uws_workbook')
-  if (!dRes.ok || !gRes.ok) {
-    throw new GoogleSheetsApiError('sheets_api_error', dRes.status || gRes.status)
+  const firstRow = UW_EP_V31_LEVEL_FIRST_ROW
+  const lastRow = UW_EP_V31_LEVEL_LAST_ROW
+  const rangeParams = [
+    `${quoted}!C${firstRow}:C${lastRow}`,
+    `${quoted}!D${firstRow}:D${lastRow}`,
+    `${quoted}!G${firstRow}:G${lastRow}`,
+  ]
+    .map((range) => `ranges=${encodeURIComponent(range)}`)
+    .join('&')
+  const batchRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values:batchGet?${rangeParams}&valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(batchRes.status, 'uws_workbook')
+  if (!batchRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', batchRes.status, await batchRes.text())
   }
-  const dBody = (await dRes.json()) as { values?: unknown[][] }
-  const gBody = (await gRes.json()) as { values?: unknown[][] }
-  const dValues = dBody.values ?? []
-  const gValues = gBody.values ?? []
+  const batchBody = (await batchRes.json()) as {
+    valueRanges?: { range?: string; values?: unknown[][] }[]
+  }
+  const valueRanges = batchBody.valueRanges ?? []
+  const cValues = valueRanges.find((entry) => /!C\d/i.test(entry.range ?? ''))?.values ?? []
+  const dValues = valueRanges.find((entry) => /!D\d/i.test(entry.range ?? ''))?.values ?? []
+  const gValues = valueRanges.find((entry) => /!G\d/i.test(entry.range ?? ''))?.values ?? []
   const rowCount = UW_EP_V31_LEVEL_LAST_ROW
   const grid: string[][] = Array.from({ length: rowCount }, () => Array(8).fill(''))
+  for (let i = 0; i < cValues.length; i += 1) {
+    grid[UW_EP_V31_LEVEL_FIRST_ROW - 1 + i]![2] = cellValueToString(cValues[i]?.[0])
+  }
   for (let i = 0; i < dValues.length; i += 1) {
     grid[UW_EP_V31_LEVEL_FIRST_ROW - 1 + i]![3] = cellValueToString(dValues[i]?.[0])
   }
@@ -212,34 +218,27 @@ export async function importThemesFromGoogleSheet(
 
   const meta = (await metaRes.json()) as SpreadsheetMetadata
   const sheets = meta.sheets ?? []
-  let themeRows: ReturnType<typeof parseThemeRowsWithLayout> = []
-  let layout: ReturnType<typeof detectThemeSheetLayout> = null
-  let rawRows: string[][] = []
-  let sheetTitle = ''
-
-  for (const tab of orderedThemesWorkbookTabs(sheets, options.sheetGid ?? null)) {
+  const parsedTabs = []
+  const themeTabCandidates = orderedThemesWorkbookTabs(sheets, options.sheetGid ?? null)
+  const maxThemeImportTabs = 2
+  for (let index = 0; index < themeTabCandidates.length && index < maxThemeImportTabs; index += 1) {
+    const tab = themeTabCandidates[index]!
     const grid = await readThemeTabGrid(options.accessToken, themesWorkbookId, tab)
     if (!grid) continue
-    const tabLayout = detectThemeSheetLayout(grid)
-    if (!tabLayout) continue
-    const tabRows = parseThemeRowsWithLayout(grid, tabLayout)
-    if (tabRows.length > themeRows.length) {
-      themeRows = tabRows
-      layout = tabLayout
-      rawRows = grid
-      sheetTitle = tab.title
-    }
+    const parsed = parseThemesSheetTab(tab.title, grid)
+    if (parsed) parsedTabs.push(parsed)
   }
 
-  if (!layout || themeRows.length === 0 || !sheetTitle) {
+  const primary = pickThemesSheetForSync(parsedTabs)
+  if (!primary) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_theme_rows')
   }
 
   return {
-    themeOwnedIds: themeOwnedIdsFromSheetRows(themeRows, rawRows),
-    matchedRows: themeRows.length,
-    unmappedSheetNames: unmappedThemeNamesWithLayout(rawRows, layout),
-    sheetTitle,
+    themeOwnedIds: themeOwnedIdsFromParsedThemesTabs(parsedTabs),
+    matchedRows: primary.themeRows.length,
+    unmappedSheetNames: unmappedThemeNamesWithLayout(primary.rawRows, primary.layout),
+    sheetTitle: primary.sheetTitle,
     themesWorkbookId,
   }
 }

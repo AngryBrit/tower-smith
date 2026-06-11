@@ -59,6 +59,7 @@ export type LabImportExportPanelProps = {
   modulesEpState: ModulesEpSyncState
   onEffectivePathsSuccess: (message: string) => void
   onEffectivePathsImported: (payload: EffectivePathsImportPayload, message: string) => void
+  onEffectivePathsImportedAll: (payloads: EffectivePathsImportPayload[], message: string) => void
 }
 
 export function LabImportExportPanel({
@@ -91,6 +92,7 @@ export function LabImportExportPanel({
   modulesEpState,
   onEffectivePathsSuccess,
   onEffectivePathsImported,
+  onEffectivePathsImportedAll,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
   const [effectivePathsSyncOpen, setEffectivePathsSyncOpen] = useState(false)
@@ -291,6 +293,7 @@ export function LabImportExportPanel({
         modulesEpState={modulesEpState}
         onSuccess={onEffectivePathsSuccess}
         onImported={onEffectivePathsImported}
+        onImportedAll={onEffectivePathsImportedAll}
       />
     </>,
   )

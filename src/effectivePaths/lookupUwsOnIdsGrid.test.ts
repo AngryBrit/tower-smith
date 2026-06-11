@@ -26,7 +26,7 @@ describe('lookupUwsWorkbookOnIdsGrid', () => {
       ],
     })
     expect(uws).toEqual({
-      name: 'Ultimate Weapon',
+      name: 'Ultimate Weapons',
       spreadsheetId: USER_UWS_ID,
     })
   })
@@ -44,6 +44,6 @@ describe('lookupUwsWorkbookOnIdsGrid', () => {
       ],
     })
     expect(uws?.spreadsheetId).toBe(USER_UWS_ID)
-    expect(uws?.name).toBe('Ultimate Weapon')
+    expect(uws?.name).toBe('Ultimate Weapons')
   })
 })

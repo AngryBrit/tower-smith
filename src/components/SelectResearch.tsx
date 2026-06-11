@@ -40,14 +40,8 @@ import { botsEpStateFromPersisted } from '../effectivePaths/botsEpStateFromPersi
 import { modulesEpStateFromPersisted } from '../effectivePaths/modulesEpStateFromPersisted'
 import { uwsEpStateFromPersisted } from '../effectivePaths/uwsEpStateFromPersisted'
 import {
-  botsEpStateAppliedToPersisted,
-  cardStateAppliedToPersisted,
-  labLevelOverridesFromBotLabLevels,
-  labLevelOverridesFromCardMasteryIds,
-  modulesEpStateAppliedToPersisted,
-  relicOwnedIdsAppliedToPersisted,
-  uwsEpStateAppliedToPersisted,
-  workshopLevelsAppliedToPersisted,
+  applyEffectivePathsImportPayload,
+  applyEffectivePathsImportPayloads,
 } from '../effectivePaths/epImportAppliedToPersisted'
 import type { EffectivePathsImportPayload } from '../effectivePaths/effectivePathsImportDialogSupport'
 import { workshopLevelsFromPersisted } from '../effectivePaths/workshopLevelsFromPersisted'
@@ -548,101 +542,95 @@ export function SelectResearch({
     }
   }, [androidPlayerSaveImport, publishImportNotice, t])
 
+  const commitLabLevelOverrides = useCallback(
+    (overrides: Record<string, number>) => {
+      setLevelOverrides(overrides)
+      setWorkspace((prev) => ({
+        ...prev,
+        lab: { levelOverrides: overrides },
+      }))
+      setScratchWorkspace((prev) => ({
+        ...prev,
+        lab: { levelOverrides: overrides },
+      }))
+    },
+    [setLevelOverrides, setScratchWorkspace, setWorkspace],
+  )
+
+  const commitEffectivePathsImportResult = useCallback(
+    (applied: ReturnType<typeof applyEffectivePathsImportPayload>) => {
+      if (applied.themeOwnedIdsToApply) {
+        applyTowerThemes({ ownedIds: applied.themeOwnedIdsToApply })
+      }
+      const build = splitTowerBuild(applied.workshopFlat)
+      setWorkspace((prev) => {
+        const next = mergeWorkspaceBuild(prev, build)
+        return { ...next, lab: { levelOverrides: applied.levelOverrides } }
+      })
+      setScratchWorkspace((prev) => {
+        const next = mergeWorkspaceBuild(prev, build)
+        return { ...next, lab: { levelOverrides: applied.levelOverrides } }
+      })
+      setLevelOverrides(applied.levelOverrides)
+    },
+    [setLevelOverrides, setScratchWorkspace, setWorkspace],
+  )
+
   const handleEffectivePathsImported = useCallback(
     (payload: EffectivePathsImportPayload, message: string) => {
+      const applied = applyEffectivePathsImportPayload(data, workshopFlat, levelOverrides, payload)
       if (payload.syncTarget === 'labs') {
-        const sanitized = sanitizeLevelOverrides(data, payload.labLevelOverrides)
-        setLevelOverrides(sanitized)
-        setWorkspace((prev) => ({
-          ...prev,
-          lab: { levelOverrides: sanitized },
-        }))
-        setScratchWorkspace((prev) => ({
-          ...prev,
-          lab: { levelOverrides: sanitized },
-        }))
+        commitLabLevelOverrides(applied.levelOverrides)
+      } else if (payload.syncTarget === 'themes') {
+        if (applied.themeOwnedIdsToApply) {
+          applyTowerThemes({ ownedIds: applied.themeOwnedIdsToApply })
+        }
       } else {
-        let mergedFlat = workshopFlat
-        let labPatch: Record<string, number> | null = null
-
-        switch (payload.syncTarget) {
-          case 'relics':
-            mergedFlat = relicOwnedIdsAppliedToPersisted(workshopFlat, payload.relicOwnedIds)
-            break
-          case 'themes':
-            applyTowerThemes({ ownedIds: payload.themeOwnedIds })
-            break
-          case 'cards': {
-            mergedFlat = cardStateAppliedToPersisted(workshopFlat, {
-              cardStars: payload.cardStars,
-              cardEquipSlots: payload.cardEquipSlots,
-              cardMasteryUnlockedIds: payload.cardMasteryUnlockedIds,
-              cardPresetLoadouts: payload.cardPresetLoadouts,
-            })
-            const masteryOverrides = labLevelOverridesFromCardMasteryIds(
-              data,
-              payload.cardMasteryUnlockedIds,
-              levelOverrides,
-            )
-            if (Object.keys(masteryOverrides).length > 0) {
-              labPatch = sanitizeLevelOverrides(data, {
-                ...levelOverrides,
-                ...masteryOverrides,
-              })
-            }
-            break
-          }
-          case 'workshop':
-            mergedFlat = workshopLevelsAppliedToPersisted(workshopFlat, payload.workshopLevels)
-            break
-          case 'bots': {
-            mergedFlat = botsEpStateAppliedToPersisted(workshopFlat, payload.botsEpState)
-            const botLabPatch = labLevelOverridesFromBotLabLevels(data, payload.botsEpState.labLevels)
-            if (Object.keys(botLabPatch).length > 0) {
-              labPatch = sanitizeLevelOverrides(data, {
-                ...levelOverrides,
-                ...botLabPatch,
-              })
-            }
-            break
-          }
-          case 'uws':
-            mergedFlat = uwsEpStateAppliedToPersisted(workshopFlat, payload.uwsEpState)
-            break
-          case 'modules':
-            mergedFlat = modulesEpStateAppliedToPersisted(workshopFlat, payload.modulesEpState)
-            break
-        }
-
-        if (payload.syncTarget !== 'themes') {
-          const build = splitTowerBuild(mergedFlat)
-          setWorkspace((prev) => {
-            const next = mergeWorkspaceBuild(prev, build)
-            return labPatch ? { ...next, lab: { levelOverrides: labPatch } } : next
-          })
-          setScratchWorkspace((prev) => {
-            const next = mergeWorkspaceBuild(prev, build)
-            return labPatch ? { ...next, lab: { levelOverrides: labPatch } } : next
-          })
-          if (labPatch) setLevelOverrides(labPatch)
-        } else if (labPatch) {
-          setLevelOverrides(labPatch)
-          setWorkspace((prev) => ({ ...prev, lab: { levelOverrides: labPatch! } }))
-          setScratchWorkspace((prev) => ({ ...prev, lab: { levelOverrides: labPatch! } }))
-        }
+        commitEffectivePathsImportResult(applied)
       }
-
       setImportNoticeBugInitial(null)
       publishImportNotice(message, 'success')
       setLabDataPanelOpen(false)
     },
     [
+      commitEffectivePathsImportResult,
+      commitLabLevelOverrides,
       data,
       levelOverrides,
       publishImportNotice,
-      setLevelOverrides,
-      setScratchWorkspace,
-      setWorkspace,
+      workshopFlat,
+    ],
+  )
+
+  const handleEffectivePathsImportedAll = useCallback(
+    (payloads: EffectivePathsImportPayload[], message: string) => {
+      const applied = applyEffectivePathsImportPayloads(
+        data,
+        workshopFlat,
+        levelOverrides,
+        payloads,
+      )
+      const labsOnly = payloads.length > 0 && payloads.every((row) => row.syncTarget === 'labs')
+      const themesOnly = payloads.length > 0 && payloads.every((row) => row.syncTarget === 'themes')
+      if (labsOnly) {
+        commitLabLevelOverrides(applied.levelOverrides)
+      } else if (themesOnly) {
+        if (applied.themeOwnedIdsToApply) {
+          applyTowerThemes({ ownedIds: applied.themeOwnedIdsToApply })
+        }
+      } else {
+        commitEffectivePathsImportResult(applied)
+      }
+      setImportNoticeBugInitial(null)
+      publishImportNotice(message, 'success')
+      setLabDataPanelOpen(false)
+    },
+    [
+      commitEffectivePathsImportResult,
+      commitLabLevelOverrides,
+      data,
+      levelOverrides,
+      publishImportNotice,
       workshopFlat,
     ],
   )
@@ -950,6 +938,7 @@ export function SelectResearch({
             modulesEpState={modulesEpStateForEp}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
             onEffectivePathsImported={handleEffectivePathsImported}
+            onEffectivePathsImportedAll={handleEffectivePathsImportedAll}
           />
       </Suspense>
 

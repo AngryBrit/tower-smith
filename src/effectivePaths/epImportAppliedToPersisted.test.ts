@@ -1,9 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { patchWorkshopModules, selectWorkshopModulePreset } from '../data/workshopModulePresets'
 import { defaultWorkshopPersisted } from '../labPresetsStorage'
-import { modulesEpStateAppliedToPersisted } from './epImportAppliedToPersisted'
+import { modulesEpStateAppliedToPersisted, uwsEpStateAppliedToPersisted } from './epImportAppliedToPersisted'
 import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
 import { modulesEpDefaultSectionLevels } from './modulesEpStateFromPersisted'
+import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
+import { workshopUltimateIsActive, workshopUltimateWeaponIsOwned } from '../data/workshopUltimate'
+import { flattenTowerBuild, splitTowerBuild } from '../towerBuildStorage'
 
 const IMPORTED_CANNON: ModulesEpSyncState = {
   sectionLevels: {
@@ -21,6 +24,72 @@ const IMPORTED_CANNON: ModulesEpSyncState = {
     },
   ],
 }
+
+describe('uwsEpStateAppliedToPersisted', () => {
+  it('turns on ultimate weapons that are unlocked on the EP sheet', () => {
+    const state: UwsEpSyncState = {
+      levels: { goldenTowerBonusLevel: 3 },
+      ownedByWeaponId: {
+        chainLightning: false,
+        smartMissiles: false,
+        deathWave: false,
+        chronoField: false,
+        innerLandMines: false,
+        goldenTower: true,
+        poisonSwamp: false,
+        blackHole: false,
+        spotlight: true,
+      },
+    }
+    const applied = uwsEpStateAppliedToPersisted(defaultWorkshopPersisted(), state)
+    expect(workshopUltimateWeaponIsOwned(applied, 'goldenTower')).toBe(true)
+    expect(workshopUltimateIsActive(applied, 'goldenTower')).toBe(true)
+    expect(workshopUltimateWeaponIsOwned(applied, 'spotlight')).toBe(true)
+    expect(workshopUltimateIsActive(applied, 'spotlight')).toBe(true)
+    expect(workshopUltimateWeaponIsOwned(applied, 'chainLightning')).toBe(false)
+    expect(workshopUltimateIsActive(applied, 'chainLightning')).toBe(false)
+  })
+
+  it('turns on weapons that are owned via imported upgrade levels when D is empty', () => {
+    const state: UwsEpSyncState = {
+      levels: { deathWaveDamageLevel: 4 },
+      ownedByWeaponId: {
+        chainLightning: false,
+        smartMissiles: false,
+        deathWave: false,
+        chronoField: false,
+        innerLandMines: false,
+        goldenTower: false,
+        poisonSwamp: false,
+        blackHole: false,
+        spotlight: false,
+      },
+    }
+    const applied = uwsEpStateAppliedToPersisted(defaultWorkshopPersisted(), state)
+    expect(workshopUltimateWeaponIsOwned(applied, 'deathWave')).toBe(true)
+    expect(workshopUltimateIsActive(applied, 'deathWave')).toBe(true)
+  })
+
+  it('keeps active on after workspace split and flatten', () => {
+    const state: UwsEpSyncState = {
+      levels: { goldenTowerBonusLevel: 2 },
+      ownedByWeaponId: {
+        chainLightning: false,
+        smartMissiles: false,
+        deathWave: false,
+        chronoField: false,
+        innerLandMines: false,
+        goldenTower: true,
+        poisonSwamp: false,
+        blackHole: false,
+        spotlight: false,
+      },
+    }
+    const applied = uwsEpStateAppliedToPersisted(defaultWorkshopPersisted(), state)
+    const flat = flattenTowerBuild(splitTowerBuild(applied))
+    expect(workshopUltimateIsActive(flat, 'goldenTower')).toBe(true)
+  })
+})
 
 describe('modulesEpStateAppliedToPersisted', () => {
   it('applies imported modules over the active preset tab', () => {

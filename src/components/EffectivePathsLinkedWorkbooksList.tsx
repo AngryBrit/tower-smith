@@ -29,6 +29,15 @@ export type EffectivePathsLinkedWorkbooksListProps = {
     canExportTarget: (target: EffectivePathsExportTarget) => boolean
     onExportTarget: (target: EffectivePathsExportTarget) => void
   }
+  bulkActions?: {
+    busy: boolean
+    importingAll: boolean
+    exportingAll: boolean
+    canImportAll: boolean
+    canExportAll: boolean
+    onImportAll: () => void
+    onExportAll: () => void
+  }
 }
 
 export function EffectivePathsLinkedWorkbooksList({
@@ -38,14 +47,41 @@ export function EffectivePathsLinkedWorkbooksList({
   t,
   importActions,
   exportActions,
+  bulkActions,
 }: EffectivePathsLinkedWorkbooksListProps) {
   if (workbookAccess.length === 0) return null
 
   return (
     <div className="effective-paths-export-dialog__workbooks">
-      <p id={listId} className="select-research__lab-data-section-label">
-        {t('ep_export_linked_sheets_title').replace('{{tab}}', idsTabTitle ?? 'IDS')}
-      </p>
+      <div className="effective-paths-export-dialog__workbooks-header">
+        <p id={listId} className="select-research__lab-data-section-label">
+          {t('ep_export_linked_sheets_title').replace('{{tab}}', idsTabTitle ?? 'IDS')}
+        </p>
+        {bulkActions && (importActions || exportActions) ? (
+          <div className="effective-paths-export-dialog__bulk-actions">
+            {importActions ? (
+              <button
+                type="button"
+                className="glow-btn glow-btn--block effective-paths-export-dialog__bulk-action"
+                disabled={bulkActions.busy || !bulkActions.canImportAll}
+                onClick={bulkActions.onImportAll}
+              >
+                {bulkActions.importingAll ? t('ep_import_all_syncing') : t('ep_import_all_btn')}
+              </button>
+            ) : null}
+            {exportActions ? (
+              <button
+                type="button"
+                className="glow-btn glow-btn--block effective-paths-export-dialog__bulk-action"
+                disabled={bulkActions.busy || !bulkActions.canExportAll}
+                onClick={bulkActions.onExportAll}
+              >
+                {bulkActions.exportingAll ? t('ep_export_all_syncing') : t('ep_export_all_btn')}
+              </button>
+            ) : null}
+          </div>
+        ) : null}
+      </div>
       <ul className="effective-paths-export-dialog__workbook-list" aria-labelledby={listId}>
         {sortLinkedWorkbookAccess(workbookAccess).map((workbook) => {
           const accessible = workbook.access === 'ok'

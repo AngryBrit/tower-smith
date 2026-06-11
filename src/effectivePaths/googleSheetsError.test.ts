@@ -1,5 +1,8 @@
 import { describe, expect, it } from 'vitest'
-import { summarizeGoogleSheetsApiError } from './googleSheetsError'
+import {
+  isGoogleSheetsQuotaExceededError,
+  summarizeGoogleSheetsApiError,
+} from './googleSheetsError'
 
 describe('summarizeGoogleSheetsApiError', () => {
   it('extracts message from Google JSON error body', () => {
@@ -12,5 +15,14 @@ describe('summarizeGoogleSheetsApiError', () => {
 
   it('returns plain text as-is', () => {
     expect(summarizeGoogleSheetsApiError('ids_master_empty')).toBe('ids_master_empty')
+  })
+
+  it('detects quota exceeded errors', () => {
+    expect(
+      isGoogleSheetsQuotaExceededError(
+        '{"error":{"message":"Quota exceeded for quota metric \'Read requests\'"}}',
+      ),
+    ).toBe(true)
+    expect(isGoogleSheetsQuotaExceededError('ids_master_empty')).toBe(false)
   })
 })

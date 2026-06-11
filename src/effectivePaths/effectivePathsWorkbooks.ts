@@ -4,7 +4,7 @@
  * - **IDS Master** — paste its URL in TowerSmith; linked IDs live on the **IDS** tab (category rows).
  * - **IDS Collection** — all sheets combined into one workbook.
  * - **Relics** — relic data; tab **Relics** lists every relic (name col C, Unlocked col F).
- * - **Themes & Songs** — themes input tab; owned toggles in B/C, E/F, M/N, and Q/R blocks.
+ * - **Themes & Songs** — owned/name pairs in B/C, E/F, L/M (milestone/songs/guardians), and Q/R.
  * - **Workshop** — upgrade data; Master Sheet tab with unlocked in B, names in C, levels in D;
  *   Workshop Enhancements in P (name) and R (level).
  * - **Cards** — card data; Master Sheet tab with names in B, levels in C, mastery in D;
@@ -58,7 +58,7 @@ export const EFFECTIVE_PATHS_BOTS_WORKBOOK_NAME = 'Bots'
 export const EFFECTIVE_PATHS_BOTS_TAB_TITLE = 'Master Sheet'
 
 /** Workbook name in the IDS Master linked-ID table. */
-export const EFFECTIVE_PATHS_UWS_WORKBOOK_NAME = 'Ultimate Weapon'
+export const EFFECTIVE_PATHS_UWS_WORKBOOK_NAME = 'Ultimate Weapons'
 
 /** Tab title inside the UWs workbook (v3.x Master Sheet). */
 export const EFFECTIVE_PATHS_UWS_TAB_TITLE = 'Master Sheet'

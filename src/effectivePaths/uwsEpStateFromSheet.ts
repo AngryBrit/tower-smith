@@ -11,6 +11,20 @@ import {
 } from './uwEpSheetNames'
 
 const UW_FARMING_LEVEL_COL = 6
+/** Input tab: D=unlocked. Some layouts place the checkbox in C instead. */
+const UW_UNLOCKED_COLS = [3, 2] as const
+
+function uwUnlockedFromGridRow(
+  grid: readonly (readonly unknown[])[],
+  row0: number,
+): boolean {
+  for (const col of UW_UNLOCKED_COLS) {
+    const raw = grid[row0]?.[col]
+    if (raw == null || String(raw).trim() === '') continue
+    return parseSheetBoolCell(raw)
+  }
+  return false
+}
 
 /** Read UWs workbook sync state from Master Sheet grid. */
 export function uwsEpStateFromSheetGrid(
@@ -21,7 +35,7 @@ export function uwsEpStateFromSheetGrid(
 
   for (const weaponId of WORKSHOP_ULTIMATE_WEAPON_ORDER) {
     const unlockedRow = UW_EP_V31_UNLOCKED_ROWS[weaponId]
-    ownedByWeaponId[weaponId] = parseSheetBoolCell(grid[unlockedRow - 1]?.[3])
+    ownedByWeaponId[weaponId] = uwUnlockedFromGridRow(grid, unlockedRow - 1)
 
     const startRow = UW_EP_V31_LEVEL_START_ROWS[weaponId]
     const levelKeys = UW_EP_V31_LEVEL_KEY_ORDER[weaponId]

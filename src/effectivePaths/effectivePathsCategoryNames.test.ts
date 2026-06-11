@@ -25,9 +25,9 @@ describe('categoryNameKey', () => {
 
 describe('cleanEffectivePathsCategoryName', () => {
   it('drops ID suffix from Ultimate Weapon IDS row labels', () => {
-    expect(cleanEffectivePathsCategoryName('Ultimate Weapon ID')).toBe('Ultimate Weapon')
-    expect(cleanEffectivePathsCategoryName('Ultimate Weapons')).toBe('Ultimate Weapon')
-    expect(cleanEffectivePathsCategoryName('UWs v3.1.2')).toBe('Ultimate Weapon')
+    expect(cleanEffectivePathsCategoryName('Ultimate Weapon ID')).toBe('Ultimate Weapons')
+    expect(cleanEffectivePathsCategoryName('Ultimate Weapons')).toBe('Ultimate Weapons')
+    expect(cleanEffectivePathsCategoryName('UWs v3.1.2')).toBe('Ultimate Weapons')
   })
 })
 

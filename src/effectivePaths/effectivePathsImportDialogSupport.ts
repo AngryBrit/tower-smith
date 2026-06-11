@@ -35,14 +35,14 @@ export type EffectivePathsImportTarget =
   | 'modules'
 
 export const EFFECTIVE_PATHS_IMPORT_TARGET_ORDER: readonly EffectivePathsImportTarget[] = [
-  'relics',
-  'themes',
-  'cards',
-  'workshop',
-  'bots',
   'labs',
+  'workshop',
   'uws',
+  'cards',
   'modules',
+  'bots',
+  'themes',
+  'relics',
 ]
 
 export type EffectivePathsImportPayload =
@@ -191,6 +191,10 @@ export function importPayloadFromResult(
   }
 }
 
+export function importAllSuccessMessage(t: Translate, count: number): string {
+  return fillTemplate(t('ep_import_all_success'), { count })
+}
+
 export function importSuccessMessage(
   t: Translate,
   result:
@@ -221,6 +225,10 @@ export function importSuccessMessage(
       })
       if (result.unmappedSheetNames.length > 0) {
         message += ` ${fillTemplate(t('ep_export_themes_unmapped_hint'), { count: result.unmappedSheetNames.length })}`
+        const sample = [...new Set(result.unmappedSheetNames)].slice(0, 5).join(', ')
+        if (sample) {
+          message += ` ${fillTemplate(t('ep_export_themes_unmapped_sample'), { names: sample })}`
+        }
       }
       return message
     }

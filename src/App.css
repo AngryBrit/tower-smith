@@ -2327,6 +2327,31 @@ html[data-color-scheme='high-contrast'] {
   margin-top: 0.35rem;
 }
 
+.effective-paths-export-dialog__workbooks-header {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+}
+
+.effective-paths-export-dialog__workbooks-header .select-research__lab-data-section-label {
+  margin: 0;
+}
+
+.effective-paths-export-dialog__bulk-actions {
+  display: flex;
+  width: 100%;
+  gap: 0.35rem;
+}
+
+.effective-paths-export-dialog__bulk-action {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.78rem;
+  line-height: 1.25;
+}
+
 .effective-paths-export-dialog__workbook-list {
   margin: 0.2rem 0 0.5rem;
   padding: 0.35rem 0.5rem 0.35rem 1.15rem;

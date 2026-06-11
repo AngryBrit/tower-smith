@@ -33,7 +33,7 @@ export function lookupUwsWorkbookOnIdsGrid(
       }
       if (/go to my (?:ultimate weapons?|uws)\b/i.test(cell)) {
         uwsRow = true
-        name = name || 'Ultimate Weapon'
+        name = name || 'Ultimate Weapons'
       }
     }
 
@@ -52,7 +52,7 @@ export function lookupUwsWorkbookOnIdsGrid(
     )
 
     if (!spreadsheetId) continue
-    return { name: name || 'Ultimate Weapon', spreadsheetId }
+    return { name: name || 'Ultimate Weapons', spreadsheetId }
   }
 
   return null

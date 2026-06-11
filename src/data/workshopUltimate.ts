@@ -213,10 +213,10 @@ export function workshopUltimateActiveKey(
   return `${weaponId}Active`
 }
 
-/** Whether this ultimate weapon is toggled on for a run (defaults to inactive). */
+/** Whether this ultimate weapon is toggled on for a run (defaults to active). */
 export function workshopUltimateIsActive(
   ws: Partial<Record<WorkshopUltimateActiveKey, boolean>>,
   weaponId: WorkshopUltimateWeaponId,
 ): boolean {
-  return ws[workshopUltimateActiveKey(weaponId)] === true
+  return ws[workshopUltimateActiveKey(weaponId)] !== false
 }

@@ -150,7 +150,7 @@ describe('resetWorkshopUltimates', () => {
     expect(after.cardStars.damage).toBe(5)
     expect(after.smartMissilesDamageLevel).toBe(0)
     expect(after.smartMissilesOwned).toBe(false)
-    expect(after.smartMissilesActive).toBe(false)
+    expect(after.smartMissilesActive).toBe(true)
     expect(after.ultimatePlusSmartMissilesCoverFireLevel).toBe(-1)
   })
 })

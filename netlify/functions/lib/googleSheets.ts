@@ -76,9 +76,11 @@ import {
   unmappedRelicNamesWithLayout,
 } from '../../../src/effectivePaths/relicSheetLayout'
 import {
+  parseThemesSheetTab,
+  pickThemesSheetForSync,
+} from '../../../src/effectivePaths/resolveThemesSheetTab'
+import {
   buildThemeSheetGridFromBlockRanges,
-  detectThemeSheetLayout,
-  parseThemeRowsWithLayout,
   themeSheetFetchRangesForGrid,
   unmappedThemeNamesWithLayout,
 } from '../../../src/effectivePaths/themeSheetLayout'
@@ -439,28 +441,20 @@ export async function exportThemesToGoogleSheet(options: {
   const meta = (await metaRes.json()) as SpreadsheetMetadata
   const sheets = meta.sheets ?? []
 
-  let themeRows: ReturnType<typeof parseThemeRowsWithLayout> = []
-  let layout: ReturnType<typeof detectThemeSheetLayout> = null
-  let rawRows: string[][] = []
-  let sheetTitle = ''
-
+  const parsedTabs = []
   for (const tab of orderedThemesWorkbookTabs(sheets, options.sheetGid ?? null)) {
     const grid = await readThemeTabGrid(options.accessToken, themesWorkbookId, tab)
     if (!grid) continue
-    const tabLayout = detectThemeSheetLayout(grid)
-    if (!tabLayout) continue
-    const tabRows = parseThemeRowsWithLayout(grid, tabLayout)
-    if (tabRows.length > themeRows.length) {
-      themeRows = tabRows
-      layout = tabLayout
-      rawRows = grid
-      sheetTitle = tab.title
-    }
+    const parsed = parseThemesSheetTab(tab.title, grid)
+    if (parsed) parsedTabs.push(parsed)
   }
 
-  if (!layout || themeRows.length === 0 || !sheetTitle) {
+  const primary = pickThemesSheetForSync(parsedTabs)
+  if (!primary) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_theme_rows')
   }
+
+  const { themeRows, layout, rawRows, sheetTitle } = primary
 
   const owned = new Set(options.themeOwnedIds)
   const batch = buildThemeOwnedUpdates(sheetTitle, themeRows, owned)

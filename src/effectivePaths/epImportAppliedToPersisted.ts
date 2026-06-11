@@ -10,7 +10,12 @@ import {
   CHASSIS_MODULE_LEVEL_KEY,
   CHASSIS_MODULE_RARITY_KEY,
 } from '../data/workshopChassisModuleSelection'
-import { workshopUltimateOwnedKey, WORKSHOP_ULTIMATE_UPGRADE_ORDER } from '../data/workshopUltimate'
+import {
+  workshopUltimateActiveKey,
+  workshopUltimateOwnedKey,
+  workshopUltimateWeaponIsOwned,
+  WORKSHOP_ULTIMATE_UPGRADE_ORDER,
+} from '../data/workshopUltimate'
 import { WORKSHOP_ULTIMATE_PLUS_LEVEL_ORDER } from '../data/workshopUltimatePlus'
 import { WORKSHOP_ULTIMATE_WEAPON_ORDER } from '../data/workshopUltimateData'
 import {
@@ -28,11 +33,110 @@ import { patchWorkshopModules } from '../data/workshopModulePresets'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { sanitizeWorkshopPersisted } from '../labPresetsStorage'
 import type { ResearchData } from '../types/research'
+import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import type { BotsEpSyncState } from './botsEpStateFromPersisted'
 import type { CardStateFromSheet } from './cardStateFromSheet'
+import type { EffectivePathsImportPayload } from './effectivePathsImportDialogSupport'
 import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
 import { WORKSHOP_EP_ENHANCE_KEYS, WORKSHOP_EP_UPGRADE_KEYS } from './workshopSheetNames'
+
+export type EffectivePathsImportApplyResult = {
+  workshopFlat: WorkshopPersistedV1
+  levelOverrides: Record<string, number>
+  /** When set, caller should invoke applyTowerThemes with these ids. */
+  themeOwnedIdsToApply: string[] | null
+}
+
+/** Fold one Effective Paths import payload onto workshop + lab override state. */
+export function applyEffectivePathsImportPayload(
+  data: ResearchData,
+  workshopFlat: WorkshopPersistedV1,
+  levelOverrides: Readonly<Record<string, number>>,
+  payload: EffectivePathsImportPayload,
+): EffectivePathsImportApplyResult {
+  if (payload.syncTarget === 'labs') {
+    return {
+      workshopFlat,
+      levelOverrides: sanitizeLevelOverrides(data, payload.labLevelOverrides),
+      themeOwnedIdsToApply: null,
+    }
+  }
+
+  let mergedFlat = workshopFlat
+  let nextOverrides = { ...levelOverrides }
+  let labPatch: Record<string, number> | null = null
+
+  switch (payload.syncTarget) {
+    case 'relics':
+      mergedFlat = relicOwnedIdsAppliedToPersisted(workshopFlat, payload.relicOwnedIds)
+      break
+    case 'themes':
+      return {
+        workshopFlat,
+        levelOverrides: nextOverrides,
+        themeOwnedIdsToApply: [...payload.themeOwnedIds],
+      }
+    case 'cards': {
+      mergedFlat = cardStateAppliedToPersisted(workshopFlat, {
+        cardStars: payload.cardStars,
+        cardEquipSlots: payload.cardEquipSlots,
+        cardMasteryUnlockedIds: payload.cardMasteryUnlockedIds,
+        cardPresetLoadouts: payload.cardPresetLoadouts,
+      })
+      const masteryOverrides = labLevelOverridesFromCardMasteryIds(
+        data,
+        payload.cardMasteryUnlockedIds,
+        nextOverrides,
+      )
+      if (Object.keys(masteryOverrides).length > 0) {
+        labPatch = sanitizeLevelOverrides(data, masteryOverrides)
+      }
+      break
+    }
+    case 'workshop':
+      mergedFlat = workshopLevelsAppliedToPersisted(workshopFlat, payload.workshopLevels)
+      break
+    case 'bots': {
+      mergedFlat = botsEpStateAppliedToPersisted(workshopFlat, payload.botsEpState)
+      const botLabPatch = labLevelOverridesFromBotLabLevels(data, payload.botsEpState.labLevels)
+      if (Object.keys(botLabPatch).length > 0) {
+        labPatch = sanitizeLevelOverrides(data, {
+          ...nextOverrides,
+          ...botLabPatch,
+        })
+      }
+      break
+    }
+    case 'uws':
+      mergedFlat = uwsEpStateAppliedToPersisted(workshopFlat, payload.uwsEpState)
+      break
+    case 'modules':
+      mergedFlat = modulesEpStateAppliedToPersisted(workshopFlat, payload.modulesEpState)
+      break
+  }
+
+  if (labPatch) nextOverrides = labPatch
+  return { workshopFlat: mergedFlat, levelOverrides: nextOverrides, themeOwnedIdsToApply: null }
+}
+
+export function applyEffectivePathsImportPayloads(
+  data: ResearchData,
+  workshopFlat: WorkshopPersistedV1,
+  levelOverrides: Readonly<Record<string, number>>,
+  payloads: readonly EffectivePathsImportPayload[],
+): EffectivePathsImportApplyResult {
+  let mergedFlat = workshopFlat
+  let nextOverrides = { ...levelOverrides }
+  let themeOwnedIdsToApply: string[] | null = null
+  for (const payload of payloads) {
+    const applied = applyEffectivePathsImportPayload(data, mergedFlat, nextOverrides, payload)
+    mergedFlat = applied.workshopFlat
+    nextOverrides = applied.levelOverrides
+    if (applied.themeOwnedIdsToApply) themeOwnedIdsToApply = applied.themeOwnedIdsToApply
+  }
+  return { workshopFlat: mergedFlat, levelOverrides: nextOverrides, themeOwnedIdsToApply }
+}
 
 export function relicOwnedIdsAppliedToPersisted(
   base: WorkshopPersistedV1,
@@ -134,6 +238,12 @@ export function uwsEpStateAppliedToPersisted(
   }
   for (const weaponId of WORKSHOP_ULTIMATE_WEAPON_ORDER) {
     patch[workshopUltimateOwnedKey(weaponId)] = state.ownedByWeaponId[weaponId] === true
+  }
+  for (const weaponId of WORKSHOP_ULTIMATE_WEAPON_ORDER) {
+    patch[workshopUltimateActiveKey(weaponId)] = workshopUltimateWeaponIsOwned(
+      patch as WorkshopPersistedV1,
+      weaponId,
+    )
   }
   return sanitizeWorkshopPersisted(patch)
 }

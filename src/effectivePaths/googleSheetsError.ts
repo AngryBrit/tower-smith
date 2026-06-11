@@ -1,3 +1,10 @@
+/** True when Google Sheets rejected the call due to per-minute read/write quota. */
+export function isGoogleSheetsQuotaExceededError(raw: string | undefined): boolean {
+  if (!raw?.trim()) return false
+  const message = summarizeGoogleSheetsApiError(raw) ?? raw.trim()
+  return /quota exceeded/i.test(message) || /rate limit exceeded/i.test(message)
+}
+
 /** Pull a short human-readable message from a Google API error body. */
 export function summarizeGoogleSheetsApiError(raw: string | undefined): string | null {
   if (!raw?.trim()) return null

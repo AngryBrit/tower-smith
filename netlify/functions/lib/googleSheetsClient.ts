@@ -24,18 +24,34 @@ export class GoogleSheetsApiError extends Error {
   }
 }
 
+const SHEETS_FETCH_MAX_ATTEMPTS = 4
+const SHEETS_FETCH_RETRY_BASE_MS = 2000
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms))
+}
+
 export async function sheetsFetch(
   accessToken: string,
   path: string,
   init?: RequestInit,
 ): Promise<Response> {
-  return fetch(`${SHEETS_API}${path}`, {
-    ...init,
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      ...(init?.headers ?? {}),
-    },
-  })
+  let lastResponse: Response | null = null
+  for (let attempt = 0; attempt < SHEETS_FETCH_MAX_ATTEMPTS; attempt += 1) {
+    const response = await fetch(`${SHEETS_API}${path}`, {
+      ...init,
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        ...(init?.headers ?? {}),
+      },
+    })
+    lastResponse = response
+    if (response.status !== 429 || attempt === SHEETS_FETCH_MAX_ATTEMPTS - 1) {
+      return response
+    }
+    await sleep(SHEETS_FETCH_RETRY_BASE_MS * 2 ** attempt)
+  }
+  return lastResponse!
 }
 
 export type SpreadsheetAccess = 'ok' | 'denied' | 'not_found'
