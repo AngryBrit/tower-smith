@@ -2,7 +2,8 @@ import { useRef, useState, type ChangeEvent } from 'react'
 import type { BotsEpSyncState } from '../../effectivePaths/botsEpStateFromPersisted'
 import type { ModulesEpSyncState } from '../../effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../effectivePaths/uwsEpStateFromPersisted'
-import { EffectivePathsExportDialog } from '../EffectivePathsExportDialog'
+import { EffectivePathsSyncDialog } from '../EffectivePathsSyncDialog'
+import type { EffectivePathsImportPayload } from '../../effectivePaths/effectivePathsImportDialogSupport'
 import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
 import type { BugBusterInitial } from '../../bugBuster/bugBusterTypes'
 import type { ImportNoticeVariant } from '../../importNotice'
@@ -57,6 +58,7 @@ export type LabImportExportPanelProps = {
   uwsEpState: UwsEpSyncState
   modulesEpState: ModulesEpSyncState
   onEffectivePathsSuccess: (message: string) => void
+  onEffectivePathsImported: (payload: EffectivePathsImportPayload, message: string) => void
 }
 
 export function LabImportExportPanel({
@@ -88,10 +90,10 @@ export function LabImportExportPanel({
   uwsEpState,
   modulesEpState,
   onEffectivePathsSuccess,
+  onEffectivePathsImported,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
-  const [effectivePathsOpen, setEffectivePathsOpen] = useState(false)
-  const [effectivePathsSession, setEffectivePathsSession] = useState(0)
+  const [effectivePathsSyncOpen, setEffectivePathsSyncOpen] = useState(false)
   const effectivePathsAvailable = googleSheetsOAuthConfigured()
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)
@@ -165,18 +167,15 @@ export function LabImportExportPanel({
           </div>
           {effectivePathsAvailable ? (
             <>
-              <p className="select-research__lab-data-section-label">{t('ep_export_section')}</p>
-              <p className="select-research__lab-data-share-hint">{t('ep_export_section_hint')}</p>
+              <p className="select-research__lab-data-section-label">{t('ep_labs_sync_section')}</p>
+              <p className="select-research__lab-data-share-hint">{t('ep_labs_sync_section_hint')}</p>
               <div className="select-research__lab-data-actions">
                 <button
                   type="button"
                   className="glow-btn glow-btn--block"
-                  onClick={() => {
-                    setEffectivePathsSession((n) => n + 1)
-                    setEffectivePathsOpen(true)
-                  }}
+                  onClick={() => setEffectivePathsSyncOpen(true)}
                 >
-                  {t('ep_export_open_btn')}
+                  {t('ep_sync_open_btn')}
                 </button>
               </div>
             </>
@@ -276,10 +275,9 @@ export function LabImportExportPanel({
         </div>
       </div>
       )}
-      <EffectivePathsExportDialog
-        key={effectivePathsSession}
-        open={effectivePathsOpen}
-        onClose={() => setEffectivePathsOpen(false)}
+      <EffectivePathsSyncDialog
+        open={effectivePathsSyncOpen}
+        onClose={() => setEffectivePathsSyncOpen(false)}
         relicOwnedIds={relicOwnedIds}
         themeOwnedIds={themeOwnedIds}
         cardStars={cardStars}
@@ -292,6 +290,7 @@ export function LabImportExportPanel({
         uwsEpState={uwsEpState}
         modulesEpState={modulesEpState}
         onSuccess={onEffectivePathsSuccess}
+        onImported={onEffectivePathsImported}
       />
     </>,
   )

@@ -110,6 +110,9 @@ import {
   parseLabSheetRowsWithLayout,
   unmappedLabNamesWithLayout,
 } from '../../../src/effectivePaths/labSheetLayout'
+import { labsLevelOverridesFromSheetRows } from '../../../src/effectivePaths/labsLevelOverridesFromSheet'
+import { workshopLevelsFromSheetRows } from '../../../src/effectivePaths/workshopLevelsFromSheet'
+import { sanitizeLevelOverrides } from '../../../src/labLevelOverridesSanitize'
 import { buildLabSheetNameIndex } from '../../../src/effectivePaths/labSheetNames'
 import {
   isLaboratoryInputTabCandidate,
@@ -204,7 +207,7 @@ export type ExportBotsToSheetResult = {
   botsWorkbookId: string
 }
 
-function orderedRelicsWorkbookTabs(
+export function orderedRelicsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
@@ -219,7 +222,7 @@ function orderedRelicsWorkbookTabs(
   return out
 }
 
-async function readRelicTabGrid(
+export async function readRelicTabGrid(
   accessToken: string,
   spreadsheetId: string,
   tabTitle: string,
@@ -333,7 +336,7 @@ export async function exportRelicsToGoogleSheet(options: {
   }
 }
 
-function orderedThemesWorkbookTabs(
+export function orderedThemesWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
@@ -362,7 +365,7 @@ function orderedThemesWorkbookTabs(
   return out
 }
 
-async function readThemeTabGrid(
+export async function readThemeTabGrid(
   accessToken: string,
   spreadsheetId: string,
   tab: SheetProperties,
@@ -493,7 +496,7 @@ export async function exportThemesToGoogleSheet(options: {
   }
 }
 
-function orderedCardsWorkbookTabs(
+export function orderedCardsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
@@ -519,7 +522,7 @@ function orderedCardsWorkbookTabs(
   return out
 }
 
-async function readCardTabGrid(
+export async function readCardTabGrid(
   accessToken: string,
   spreadsheetId: string,
   tab: SheetProperties,
@@ -799,6 +802,127 @@ export async function exportCardsToGoogleSheet(options: {
   }
 }
 
+type WorkshopMasterSheetData = {
+  workshopRows: ReturnType<typeof parseWorkshopSheetRowsWithLayout>
+  layout: NonNullable<ReturnType<typeof detectWorkshopSheetLayout>>
+  enhanceRows: ReturnType<typeof parseWorkshopEnhanceSheetRowsWithLayout>
+  enhanceLayout: ReturnType<typeof detectWorkshopEnhanceSheetLayout>
+  rawRows: string[][]
+  sheetTitle: string
+}
+
+async function loadWorkshopMasterSheet(options: {
+  accessToken: string
+  workshopWorkbookId: string
+  sheetGid?: number | null
+}): Promise<WorkshopMasterSheetData | null> {
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(options.workshopWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'workshop_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let workshopRows: ReturnType<typeof parseWorkshopSheetRowsWithLayout> = []
+  let layout: ReturnType<typeof detectWorkshopSheetLayout> = null
+  let enhanceRows: ReturnType<typeof parseWorkshopEnhanceSheetRowsWithLayout> = []
+  let enhanceLayout: ReturnType<typeof detectWorkshopEnhanceSheetLayout> = null
+  let rawRows: string[][] = []
+  let sheetTitle = ''
+
+  for (const tab of orderedWorkshopWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    const grid = await readWorkshopTabGrid(options.accessToken, options.workshopWorkbookId, tab)
+    if (!grid) continue
+    const tabLayout = detectWorkshopSheetLayout(grid)
+    if (!tabLayout) continue
+    const tabRows = parseWorkshopSheetRowsWithLayout(grid, tabLayout)
+    if (tabRows.length > workshopRows.length) {
+      workshopRows = tabRows
+      layout = tabLayout
+      rawRows = grid
+      sheetTitle = tab.title
+      const tabEnhanceLayout = detectWorkshopEnhanceSheetLayout(grid)
+      enhanceLayout = tabEnhanceLayout
+      enhanceRows = tabEnhanceLayout
+        ? parseWorkshopEnhanceSheetRowsWithLayout(grid, tabEnhanceLayout)
+        : []
+    }
+  }
+
+  if (!layout || workshopRows.length === 0 || !sheetTitle) return null
+
+  return { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle }
+}
+
+export type ImportWorkshopFromSheetResult = {
+  workshopLevels: Record<string, number>
+  matchedRows: number
+  enhanceMatchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  workshopWorkbookId: string
+}
+
+export async function importWorkshopFromGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+}): Promise<ImportWorkshopFromSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let workshopWorkbookId = overrideId
+  if (!workshopWorkbookId && options.masterSpreadsheetId) {
+    workshopWorkbookId = await resolveWorkshopWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!workshopWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const loaded = await loadWorkshopMasterSheet({
+    accessToken: options.accessToken,
+    workshopWorkbookId,
+    sheetGid: options.sheetGid ?? null,
+  })
+  if (!loaded) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
+  }
+
+  const workshopLevels = workshopLevelsFromSheetRows(
+    loaded.workshopRows,
+    loaded.enhanceRows,
+    loaded.rawRows,
+    loaded.layout,
+    loaded.enhanceLayout,
+  )
+
+  return {
+    workshopLevels,
+    matchedRows: loaded.workshopRows.length,
+    enhanceMatchedRows: loaded.enhanceRows.length,
+    unmappedSheetNames: [
+      ...unmappedWorkshopNamesWithLayout(loaded.rawRows, loaded.layout),
+      ...(loaded.enhanceLayout
+        ? unmappedWorkshopEnhanceNamesWithLayout(loaded.rawRows, loaded.enhanceLayout)
+        : []),
+    ],
+    sheetTitle: loaded.sheetTitle,
+    workshopWorkbookId,
+  }
+}
+
 export async function exportWorkshopToGoogleSheet(options: {
   accessToken: string
   masterSpreadsheetId?: string | null
@@ -820,50 +944,16 @@ export async function exportWorkshopToGoogleSheet(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
   }
 
-  const metaRes = await sheetsFetch(
-    options.accessToken,
-    `/${encodeURIComponent(workshopWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
-  )
-  throwIfSheetsAccessDenied(metaRes.status, 'workshop_workbook')
-  if (metaRes.status === 404) {
-    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
-  }
-  if (!metaRes.ok) {
-    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
-  }
-
-  const meta = (await metaRes.json()) as SpreadsheetMetadata
-  const sheets = meta.sheets ?? []
-
-  let workshopRows: ReturnType<typeof parseWorkshopSheetRowsWithLayout> = []
-  let layout: ReturnType<typeof detectWorkshopSheetLayout> = null
-  let enhanceRows: ReturnType<typeof parseWorkshopEnhanceSheetRowsWithLayout> = []
-  let enhanceLayout: ReturnType<typeof detectWorkshopEnhanceSheetLayout> = null
-  let rawRows: string[][] = []
-  let sheetTitle = ''
-
-  for (const tab of orderedWorkshopWorkbookTabs(sheets, options.sheetGid ?? null)) {
-    const grid = await readWorkshopTabGrid(options.accessToken, workshopWorkbookId, tab)
-    if (!grid) continue
-    const tabLayout = detectWorkshopSheetLayout(grid)
-    if (!tabLayout) continue
-    const tabRows = parseWorkshopSheetRowsWithLayout(grid, tabLayout)
-    if (tabRows.length > workshopRows.length) {
-      workshopRows = tabRows
-      layout = tabLayout
-      rawRows = grid
-      sheetTitle = tab.title
-      const tabEnhanceLayout = detectWorkshopEnhanceSheetLayout(grid)
-      enhanceLayout = tabEnhanceLayout
-      enhanceRows = tabEnhanceLayout
-        ? parseWorkshopEnhanceSheetRowsWithLayout(grid, tabEnhanceLayout)
-        : []
-    }
-  }
-
-  if (!layout || workshopRows.length === 0 || !sheetTitle) {
+  const loaded = await loadWorkshopMasterSheet({
+    accessToken: options.accessToken,
+    workshopWorkbookId,
+    sheetGid: options.sheetGid ?? null,
+  })
+  if (!loaded) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
   }
+
+  const { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle } = loaded
 
   const batch = [
     ...buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels),
@@ -914,7 +1004,7 @@ export async function exportWorkshopToGoogleSheet(options: {
   }
 }
 
-function orderedBotsWorkbookTabs(
+export function orderedBotsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
@@ -940,7 +1030,7 @@ function orderedBotsWorkbookTabs(
   return out
 }
 
-async function readBotsTabGrid(
+export async function readBotsTabGrid(
   accessToken: string,
   spreadsheetId: string,
   tab: SheetProperties,
@@ -1167,7 +1257,7 @@ export async function exportBotsToGoogleSheet(options: {
   }
 }
 
-function orderedCardPresetWorkbookTabs(
+export function orderedCardPresetWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
@@ -1199,7 +1289,7 @@ function orderedCardPresetWorkbookTabs(
   return out
 }
 
-async function readCardPresetTabGrid(
+export async function readCardPresetTabGrid(
   accessToken: string,
   spreadsheetId: string,
   tab: SheetProperties,
@@ -1298,6 +1388,118 @@ async function readLaboratoryTabGrid(
   return buildLabSheetGridFromBlockRange(valuesBody.range, valuesBody.values ?? [], maxRow)
 }
 
+type LaboratoryMasterSheetData = {
+  labRows: ReturnType<typeof parseLabSheetRowsWithLayout>
+  blocks: ReturnType<typeof detectLabSheetBlocks>
+  rawRows: string[][]
+  sheetTitle: string
+  nameIndex: ReturnType<typeof buildLabSheetNameIndex>
+}
+
+async function loadLaboratoryMasterSheet(options: {
+  accessToken: string
+  laboratoryWorkbookId: string
+  sheetGid?: number | null
+}): Promise<LaboratoryMasterSheetData | null> {
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(options.laboratoryWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'laboratory_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+  const research = loadBundledResearchData()
+  const nameIndex = buildLabSheetNameIndex(research)
+
+  let labRows: ReturnType<typeof parseLabSheetRowsWithLayout> = []
+  let blocks: ReturnType<typeof detectLabSheetBlocks> = []
+  let rawRows: string[][] = []
+  let sheetTitle = ''
+
+  for (const tab of orderedLaboratoryWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    const grid = await readLaboratoryTabGrid(
+      options.accessToken,
+      options.laboratoryWorkbookId,
+      tab,
+    )
+    if (!grid) continue
+    const tabBlocks = detectLabSheetBlocks(grid)
+    if (tabBlocks.length === 0) continue
+    const tabRows = parseLabSheetRowsWithLayout(grid, tabBlocks, nameIndex)
+    if (tabRows.length > labRows.length) {
+      labRows = tabRows
+      blocks = tabBlocks
+      rawRows = grid
+      sheetTitle = tab.title
+    }
+  }
+
+  if (labRows.length === 0 || !sheetTitle) return null
+
+  return { labRows, blocks, rawRows, sheetTitle, nameIndex }
+}
+
+export type ImportLabsFromSheetResult = {
+  labLevelOverrides: Record<string, number>
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  laboratoryWorkbookId: string
+}
+
+export async function importLabsFromGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+}): Promise<ImportLabsFromSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let laboratoryWorkbookId = overrideId
+  if (!laboratoryWorkbookId && options.masterSpreadsheetId) {
+    laboratoryWorkbookId = await resolveLaboratoryWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!laboratoryWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const loaded = await loadLaboratoryMasterSheet({
+    accessToken: options.accessToken,
+    laboratoryWorkbookId,
+    sheetGid: options.sheetGid ?? null,
+  })
+  if (!loaded) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_lab_rows')
+  }
+
+  const research = loadBundledResearchData()
+  const rawOverrides = labsLevelOverridesFromSheetRows(loaded.labRows, loaded.rawRows)
+  const labLevelOverrides = sanitizeLevelOverrides(research, rawOverrides)
+
+  return {
+    labLevelOverrides,
+    matchedRows: loaded.labRows.length,
+    unmappedSheetNames: unmappedLabNamesWithLayout(
+      loaded.rawRows,
+      loaded.blocks,
+      loaded.nameIndex,
+    ),
+    sheetTitle: loaded.sheetTitle,
+    laboratoryWorkbookId,
+  }
+}
+
 export async function exportLabsToGoogleSheet(options: {
   accessToken: string
   masterSpreadsheetId?: string | null
@@ -1319,45 +1521,17 @@ export async function exportLabsToGoogleSheet(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
   }
 
-  const metaRes = await sheetsFetch(
-    options.accessToken,
-    `/${encodeURIComponent(laboratoryWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
-  )
-  throwIfSheetsAccessDenied(metaRes.status, 'laboratory_workbook')
-  if (metaRes.status === 404) {
-    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
-  }
-  if (!metaRes.ok) {
-    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
-  }
-
-  const meta = (await metaRes.json()) as SpreadsheetMetadata
-  const sheets = meta.sheets ?? []
-  const research = loadBundledResearchData()
-  const nameIndex = buildLabSheetNameIndex(research)
-
-  let labRows: ReturnType<typeof parseLabSheetRowsWithLayout> = []
-  let blocks: ReturnType<typeof detectLabSheetBlocks> = []
-  let rawRows: string[][] = []
-  let sheetTitle = ''
-
-  for (const tab of orderedLaboratoryWorkbookTabs(sheets, options.sheetGid ?? null)) {
-    const grid = await readLaboratoryTabGrid(options.accessToken, laboratoryWorkbookId, tab)
-    if (!grid) continue
-    const tabBlocks = detectLabSheetBlocks(grid)
-    if (tabBlocks.length === 0) continue
-    const tabRows = parseLabSheetRowsWithLayout(grid, tabBlocks, nameIndex)
-    if (tabRows.length > labRows.length) {
-      labRows = tabRows
-      blocks = tabBlocks
-      rawRows = grid
-      sheetTitle = tab.title
-    }
-  }
-
-  if (labRows.length === 0 || !sheetTitle) {
+  const loaded = await loadLaboratoryMasterSheet({
+    accessToken: options.accessToken,
+    laboratoryWorkbookId,
+    sheetGid: options.sheetGid ?? null,
+  })
+  if (!loaded) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_lab_rows')
   }
+
+  const { labRows, blocks, rawRows, sheetTitle, nameIndex } = loaded
+  const research = loadBundledResearchData()
 
   const batch = buildLabSheetUpdates(sheetTitle, labRows, research, options.labLevelOverrides)
   if (batch.length === 0) {
@@ -1402,7 +1576,7 @@ export type ExportUwsToSheetResult = {
   uwsWorkbookId: string
 }
 
-function orderedUwsWorkbookTabs(
+export function orderedUwsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
@@ -1607,7 +1781,7 @@ export type ExportModulesToSheetResult = {
   modulesWorkbookId: string
 }
 
-function orderedModulesWorkbookTabs(
+export function orderedModulesWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {

@@ -4,13 +4,25 @@ import {
   type ModulesEpSyncState,
 } from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
+import {
+  assembleEffectivePathsListResult,
+  workbooksToAuthorizeFromGateway,
+  type EffectivePathsIdsGateway,
+  type EffectivePathsListResult,
+} from './assembleEffectivePathsListResult'
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 
-export type LinkedWorkbookAccess = {
-  name: string
-  spreadsheetId: string
-  access: 'ok' | 'denied' | 'not_found'
+export type { EffectivePathsIdsGateway, EffectivePathsListResult }
+
+export type EffectivePathsLoadProgress = {
+  phase: 'gateway' | 'workbook'
+  completed: number
+  total: number
+  currentWorkbookName?: string
 }
+
+export type { LinkedWorkbookAccess } from './assembleEffectivePathsListResult'
+import type { LinkedWorkbookAccess } from './assembleEffectivePathsListResult'
 
 const API_BASE =
   (import.meta.env.VITE_TOWER_GALLERY_API as string | undefined)?.replace(/\/$/, '') ??
@@ -124,6 +136,141 @@ export type EffectivePathsLabsExportResult = {
   laboratoryWorkbookId: string
 }
 
+export type EffectivePathsLabsImportResult = {
+  ok: true
+  syncTarget: 'labs'
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  laboratoryWorkbookId: string
+  labLevelOverrides: Record<string, number>
+}
+
+export type EffectivePathsWorkshopImportResult = {
+  ok: true
+  syncTarget: 'workshop'
+  matchedRows: number
+  enhanceMatchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  workshopWorkbookId: string
+  workshopLevels: Record<string, number>
+}
+
+export type EffectivePathsRelicsImportResult = {
+  ok: true
+  syncTarget: 'relics'
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  relicsWorkbookId: string
+  relicOwnedIds: string[]
+}
+
+export type EffectivePathsThemesImportResult = {
+  ok: true
+  syncTarget: 'themes'
+  matchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  themesWorkbookId: string
+  themeOwnedIds: string[]
+}
+
+export type EffectivePathsCardsImportResult = {
+  ok: true
+  syncTarget: 'cards'
+  matchedRows: number
+  presetMatchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  presetSheetTitle: string | null
+  cardsWorkbookId: string
+  cardStars: Record<string, number>
+  cardEquipSlots: number
+  cardMasteryUnlockedIds: string[]
+  cardPresetLoadouts: string[][][]
+}
+
+export type EffectivePathsBotsImportResult = {
+  ok: true
+  syncTarget: 'bots'
+  matchedRows: number
+  labMatchedRows: number
+  unmappedSheetNames: string[]
+  sheetTitle: string
+  botsWorkbookId: string
+  botsEpState: import('./botsEpStateFromPersisted').BotsEpSyncState
+}
+
+export type EffectivePathsUwsImportResult = {
+  ok: true
+  syncTarget: 'uws'
+  matchedRows: number
+  sheetTitle: string
+  uwsWorkbookId: string
+  uwsEpState: import('./uwsEpStateFromPersisted').UwsEpSyncState
+}
+
+export type EffectivePathsModulesImportResult = {
+  ok: true
+  syncTarget: 'modules'
+  matchedRows: number
+  matchedSubstats: number
+  sheetTitle: string
+  modulesWorkbookId: string
+  modulesEpState: import('./modulesEpStateFromPersisted').ModulesEpSyncState
+}
+
+type EffectivePathsImportApiOptions = {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+}
+
+type EffectivePathsImportApiResult<T> =
+  | { ok: true; result: T }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+
+async function postEffectivePathsImport<T extends { ok: true }>(
+  syncTarget: string,
+  options: EffectivePathsImportApiOptions,
+  validate: (body: unknown) => body is T,
+): Promise<EffectivePathsImportApiResult<T>> {
+  try {
+    const res = await fetch(`${API_BASE}/effective-paths/import`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Google-Access-Token': options.googleAccessToken,
+      },
+      body: JSON.stringify({
+        syncTarget,
+        masterSpreadsheetId: options.masterSpreadsheetId ?? null,
+        masterSheetGid: options.masterSheetGid ?? null,
+        spreadsheetId: options.spreadsheetId ?? null,
+        sheetGid: options.sheetGid ?? null,
+      }),
+    })
+
+    const body = await res.json().catch(() => null)
+    if (!res.ok) {
+      const err = await parseApiError(res, body)
+      return { ok: false, ...err }
+    }
+
+    if (!validate(body)) {
+      return { ok: false, error: 'unknown' }
+    }
+
+    return { ok: true, result: body }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
 export type EffectivePathsUwsExportResult = {
   ok: true
   syncTarget: 'uws'
@@ -143,29 +290,6 @@ export type EffectivePathsModulesExportResult = {
   modulesWorkbookId: string
 }
 
-export type EffectivePathsListResult = {
-  ok: true
-  workbooks: EffectivePathsLinkedWorkbook[]
-  idsTabTitle: string
-  relicsWorkbook: EffectivePathsLinkedWorkbook | null
-  relicsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  themesWorkbook: EffectivePathsLinkedWorkbook | null
-  themesWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  cardsWorkbook: EffectivePathsLinkedWorkbook | null
-  cardsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  workshopWorkbook: EffectivePathsLinkedWorkbook | null
-  workshopWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  botsWorkbook: EffectivePathsLinkedWorkbook | null
-  botsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  laboratoryWorkbook: EffectivePathsLinkedWorkbook | null
-  laboratoryWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  uwsWorkbook: EffectivePathsLinkedWorkbook | null
-  uwsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  modulesWorkbook: EffectivePathsLinkedWorkbook | null
-  modulesWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
-  workbookAccess: LinkedWorkbookAccess[]
-}
-
 async function parseApiError(res: Response, body: unknown): Promise<{
   error: EffectivePathsExportError
   message?: string
@@ -181,157 +305,166 @@ async function parseApiError(res: Response, body: unknown): Promise<{
   }
 }
 
+function parseLinkedWorkbook(raw: unknown): EffectivePathsLinkedWorkbook | null {
+  if (!raw || typeof raw !== 'object') return null
+  const spreadsheetId = (raw as { spreadsheetId?: unknown }).spreadsheetId
+  const name = (raw as { name?: unknown }).name
+  if (typeof spreadsheetId !== 'string' || typeof name !== 'string') return null
+  return { name, spreadsheetId }
+}
+
+function parseWorkbooksList(raw: unknown): EffectivePathsLinkedWorkbook[] {
+  if (!Array.isArray(raw)) return []
+  return raw
+    .map((row) => parseLinkedWorkbook(row))
+    .filter((row): row is EffectivePathsLinkedWorkbook => row != null)
+}
+
+function parseIdsGatewayBody(body: unknown): EffectivePathsIdsGateway | null {
+  if (!body || typeof body !== 'object' || !('workbooks' in body)) return null
+  const idsTabTitle =
+    typeof (body as { idsTabTitle?: unknown }).idsTabTitle === 'string'
+      ? (body as { idsTabTitle: string }).idsTabTitle
+      : 'IDS'
+  return {
+    idsTabTitle,
+    workbooks: parseWorkbooksList((body as { workbooks?: unknown }).workbooks),
+    relicsWorkbook: parseLinkedWorkbook((body as { relicsWorkbook?: unknown }).relicsWorkbook),
+    themesWorkbook: parseLinkedWorkbook((body as { themesWorkbook?: unknown }).themesWorkbook),
+    cardsWorkbook: parseLinkedWorkbook((body as { cardsWorkbook?: unknown }).cardsWorkbook),
+    workshopWorkbook: parseLinkedWorkbook((body as { workshopWorkbook?: unknown }).workshopWorkbook),
+    botsWorkbook: parseLinkedWorkbook((body as { botsWorkbook?: unknown }).botsWorkbook),
+    laboratoryWorkbook: parseLinkedWorkbook(
+      (body as { laboratoryWorkbook?: unknown }).laboratoryWorkbook,
+    ),
+    uwsWorkbook: parseLinkedWorkbook((body as { uwsWorkbook?: unknown }).uwsWorkbook),
+    modulesWorkbook: parseLinkedWorkbook((body as { modulesWorkbook?: unknown }).modulesWorkbook),
+  }
+}
+
+function parseWorkbookAccessBody(body: unknown): LinkedWorkbookAccess | null {
+  if (!body || typeof body !== 'object') return null
+  const name = (body as { name?: unknown }).name
+  const spreadsheetId = (body as { spreadsheetId?: unknown }).spreadsheetId
+  const access = (body as { access?: unknown }).access
+  if (typeof name !== 'string' || typeof spreadsheetId !== 'string') return null
+  if (access !== 'ok' && access !== 'denied' && access !== 'not_found') return null
+  return { name, spreadsheetId, access }
+}
+
+async function fetchEffectivePathsIdsGateway(options: {
+  googleAccessToken: string
+  masterSpreadsheetId: string
+  sheetGid: number | null
+}): Promise<
+  | { ok: true; gateway: EffectivePathsIdsGateway }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+> {
+  const res = await fetch(`${API_BASE}/effective-paths/ids-gateway`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Google-Access-Token': options.googleAccessToken,
+    },
+    body: JSON.stringify({
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.sheetGid,
+    }),
+  })
+
+  const body = await res.json().catch(() => null)
+  if (!res.ok) {
+    const err = await parseApiError(res, body)
+    return { ok: false, ...err }
+  }
+
+  const gateway = parseIdsGatewayBody(body)
+  if (!gateway) return { ok: false, error: 'unknown' }
+  return { ok: true, gateway }
+}
+
+async function probeEffectivePathsWorkbookAccess(options: {
+  googleAccessToken: string
+  workbook: EffectivePathsLinkedWorkbook
+}): Promise<
+  | { ok: true; access: LinkedWorkbookAccess }
+  | { ok: false; error: EffectivePathsExportError; message?: string }
+> {
+  const res = await fetch(`${API_BASE}/effective-paths/workbook-access`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'X-Google-Access-Token': options.googleAccessToken,
+    },
+    body: JSON.stringify({
+      name: options.workbook.name,
+      spreadsheetId: options.workbook.spreadsheetId,
+    }),
+  })
+
+  const body = await res.json().catch(() => null)
+  if (!res.ok) {
+    const err = await parseApiError(res, body)
+    return { ok: false, ...err }
+  }
+
+  const access = parseWorkbookAccessBody(body)
+  if (!access) return { ok: false, error: 'unknown' }
+  return { ok: true, access }
+}
+
 export async function listEffectivePathsWorkbooks(options: {
   googleAccessToken: string
   masterSpreadsheetId: string
   sheetGid: number | null
+  onProgress?: (progress: EffectivePathsLoadProgress) => void
+  onGateway?: (gateway: EffectivePathsIdsGateway) => void
+  onWorkbookAccess?: (access: LinkedWorkbookAccess) => void
 }): Promise<
   | EffectivePathsListResult
   | { ok: false; error: EffectivePathsExportError; message?: string }
 > {
   try {
-    const res = await fetch(`${API_BASE}/effective-paths/list`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Google-Access-Token': options.googleAccessToken,
-      },
-      body: JSON.stringify({
-        masterSpreadsheetId: options.masterSpreadsheetId,
-        sheetGid: options.sheetGid,
-      }),
-    })
+    const toAuthorizePreview = (gateway: EffectivePathsIdsGateway) =>
+      workbooksToAuthorizeFromGateway(gateway)
+    const gatewayResult = await fetchEffectivePathsIdsGateway(options)
+    if (!gatewayResult.ok) return gatewayResult
 
-    const body = await res.json().catch(() => null)
-    if (!res.ok) {
-      const err = await parseApiError(res, body)
-      return { ok: false, ...err }
+    const gateway = gatewayResult.gateway
+    const workbooksToCheck = toAuthorizePreview(gateway)
+    const total = 1 + workbooksToCheck.length
+
+    options.onProgress?.({ phase: 'gateway', completed: 0, total })
+    options.onGateway?.(gateway)
+    options.onProgress?.({ phase: 'gateway', completed: 1, total })
+
+    const workbookAccess: LinkedWorkbookAccess[] = []
+    for (let index = 0; index < workbooksToCheck.length; index++) {
+      const workbook = workbooksToCheck[index]
+      options.onProgress?.({
+        phase: 'workbook',
+        completed: 1 + index,
+        total,
+        currentWorkbookName: workbook.name,
+      })
+
+      const probe = await probeEffectivePathsWorkbookAccess({
+        googleAccessToken: options.googleAccessToken,
+        workbook,
+      })
+      if (!probe.ok) return probe
+
+      workbookAccess.push(probe.access)
+      options.onWorkbookAccess?.(probe.access)
+      options.onProgress?.({
+        phase: 'workbook',
+        completed: 2 + index,
+        total,
+        currentWorkbookName: workbook.name,
+      })
     }
 
-    if (!body || typeof body !== 'object' || !('workbooks' in body)) {
-      return { ok: false, error: 'unknown' }
-    }
-
-    const parsed = body as EffectivePathsListResult
-    const relicsAccess = (parsed as { relicsWorkbookAccess?: unknown }).relicsWorkbookAccess
-    const relicsWorkbookAccess =
-      relicsAccess === 'ok' || relicsAccess === 'denied' || relicsAccess === 'not_found'
-        ? relicsAccess
-        : null
-    const themesAccess = (parsed as { themesWorkbookAccess?: unknown }).themesWorkbookAccess
-    const themesWorkbookAccess =
-      themesAccess === 'ok' || themesAccess === 'denied' || themesAccess === 'not_found'
-        ? themesAccess
-        : null
-    const cardsAccess = (parsed as { cardsWorkbookAccess?: unknown }).cardsWorkbookAccess
-    const cardsWorkbookAccess =
-      cardsAccess === 'ok' || cardsAccess === 'denied' || cardsAccess === 'not_found'
-        ? cardsAccess
-        : null
-    const workshopAccess = (parsed as { workshopWorkbookAccess?: unknown }).workshopWorkbookAccess
-    const workshopWorkbookAccess =
-      workshopAccess === 'ok' || workshopAccess === 'denied' || workshopAccess === 'not_found'
-        ? workshopAccess
-        : null
-    const botsAccess = (parsed as { botsWorkbookAccess?: unknown }).botsWorkbookAccess
-    const botsWorkbookAccess =
-      botsAccess === 'ok' || botsAccess === 'denied' || botsAccess === 'not_found'
-        ? botsAccess
-        : null
-    const laboratoryAccess = (parsed as { laboratoryWorkbookAccess?: unknown })
-      .laboratoryWorkbookAccess
-    const laboratoryWorkbookAccess =
-      laboratoryAccess === 'ok' ||
-      laboratoryAccess === 'denied' ||
-      laboratoryAccess === 'not_found'
-        ? laboratoryAccess
-        : null
-    const uwsAccess = (parsed as { uwsWorkbookAccess?: unknown }).uwsWorkbookAccess
-    const uwsWorkbookAccess =
-      uwsAccess === 'ok' || uwsAccess === 'denied' || uwsAccess === 'not_found'
-        ? uwsAccess
-        : null
-    const modulesAccess = (parsed as { modulesWorkbookAccess?: unknown }).modulesWorkbookAccess
-    const modulesWorkbookAccess =
-      modulesAccess === 'ok' || modulesAccess === 'denied' || modulesAccess === 'not_found'
-        ? modulesAccess
-        : null
-    const rawAccess = (parsed as { workbookAccess?: unknown }).workbookAccess
-    const workbookAccess = Array.isArray(rawAccess)
-      ? rawAccess.filter(
-          (row): row is LinkedWorkbookAccess =>
-            row != null &&
-            typeof row === 'object' &&
-            typeof (row as LinkedWorkbookAccess).name === 'string' &&
-            typeof (row as LinkedWorkbookAccess).spreadsheetId === 'string' &&
-            ((row as LinkedWorkbookAccess).access === 'ok' ||
-              (row as LinkedWorkbookAccess).access === 'denied' ||
-              (row as LinkedWorkbookAccess).access === 'not_found'),
-        )
-      : []
-
-    return {
-      ok: true,
-      workbooks: parsed.workbooks,
-      idsTabTitle: typeof parsed.idsTabTitle === 'string' ? parsed.idsTabTitle : 'IDS',
-      relicsWorkbook:
-        parsed.relicsWorkbook &&
-        typeof parsed.relicsWorkbook === 'object' &&
-        typeof parsed.relicsWorkbook.spreadsheetId === 'string'
-          ? parsed.relicsWorkbook
-          : null,
-      relicsWorkbookAccess,
-      themesWorkbook:
-        parsed.themesWorkbook &&
-        typeof parsed.themesWorkbook === 'object' &&
-        typeof parsed.themesWorkbook.spreadsheetId === 'string'
-          ? parsed.themesWorkbook
-          : null,
-      themesWorkbookAccess,
-      cardsWorkbook:
-        parsed.cardsWorkbook &&
-        typeof parsed.cardsWorkbook === 'object' &&
-        typeof parsed.cardsWorkbook.spreadsheetId === 'string'
-          ? parsed.cardsWorkbook
-          : null,
-      cardsWorkbookAccess,
-      workshopWorkbook:
-        parsed.workshopWorkbook &&
-        typeof parsed.workshopWorkbook === 'object' &&
-        typeof parsed.workshopWorkbook.spreadsheetId === 'string'
-          ? parsed.workshopWorkbook
-          : null,
-      workshopWorkbookAccess,
-      botsWorkbook:
-        parsed.botsWorkbook &&
-        typeof parsed.botsWorkbook === 'object' &&
-        typeof parsed.botsWorkbook.spreadsheetId === 'string'
-          ? parsed.botsWorkbook
-          : null,
-      botsWorkbookAccess,
-      laboratoryWorkbook:
-        parsed.laboratoryWorkbook &&
-        typeof parsed.laboratoryWorkbook === 'object' &&
-        typeof parsed.laboratoryWorkbook.spreadsheetId === 'string'
-          ? parsed.laboratoryWorkbook
-          : null,
-      laboratoryWorkbookAccess,
-      uwsWorkbook:
-        parsed.uwsWorkbook &&
-        typeof parsed.uwsWorkbook === 'object' &&
-        typeof parsed.uwsWorkbook.spreadsheetId === 'string'
-          ? parsed.uwsWorkbook
-          : null,
-      uwsWorkbookAccess,
-      modulesWorkbook:
-        parsed.modulesWorkbook &&
-        typeof parsed.modulesWorkbook === 'object' &&
-        typeof parsed.modulesWorkbook.spreadsheetId === 'string'
-          ? parsed.modulesWorkbook
-          : null,
-      modulesWorkbookAccess,
-      workbookAccess,
-    }
+    return assembleEffectivePathsListResult(gateway, workbookAccess)
   } catch {
     return { ok: false, error: 'network' }
   }
@@ -464,6 +597,126 @@ export async function exportWorkshopToEffectivePaths(options: {
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   })
+}
+
+export function importRelicsFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsRelicsImportResult>> {
+  return postEffectivePathsImport(
+    'relics',
+    options,
+    (body): body is EffectivePathsRelicsImportResult =>
+      !!body &&
+      typeof body === 'object' &&
+      'relicOwnedIds' in body &&
+      'matchedRows' in body,
+  )
+}
+
+export function importThemesFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsThemesImportResult>> {
+  return postEffectivePathsImport(
+    'themes',
+    options,
+    (body): body is EffectivePathsThemesImportResult =>
+      !!body &&
+      typeof body === 'object' &&
+      'themeOwnedIds' in body &&
+      'matchedRows' in body,
+  )
+}
+
+export function importCardsFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsCardsImportResult>> {
+  return postEffectivePathsImport(
+    'cards',
+    options,
+    (body): body is EffectivePathsCardsImportResult =>
+      !!body && typeof body === 'object' && 'cardStars' in body && 'matchedRows' in body,
+  )
+}
+
+export async function importLabsFromEffectivePaths(options: {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  laboratorySpreadsheetId?: string | null
+  laboratorySheetGid?: number | null
+}): Promise<EffectivePathsImportApiResult<EffectivePathsLabsImportResult>> {
+  return postEffectivePathsImport(
+    'labs',
+    {
+      googleAccessToken: options.googleAccessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      masterSheetGid: options.masterSheetGid,
+      spreadsheetId: options.laboratorySpreadsheetId,
+      sheetGid: options.laboratorySheetGid,
+    },
+    (body): body is EffectivePathsLabsImportResult =>
+      !!body &&
+      typeof body === 'object' &&
+      'labLevelOverrides' in body &&
+      'matchedRows' in body,
+  )
+}
+
+export async function importWorkshopFromEffectivePaths(options: {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  workshopSpreadsheetId?: string | null
+  workshopSheetGid?: number | null
+}): Promise<EffectivePathsImportApiResult<EffectivePathsWorkshopImportResult>> {
+  return postEffectivePathsImport(
+    'workshop',
+    {
+      googleAccessToken: options.googleAccessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      masterSheetGid: options.masterSheetGid,
+      spreadsheetId: options.workshopSpreadsheetId,
+      sheetGid: options.workshopSheetGid,
+    },
+    (body): body is EffectivePathsWorkshopImportResult =>
+      !!body &&
+      typeof body === 'object' &&
+      'workshopLevels' in body &&
+      'matchedRows' in body,
+  )
+}
+
+export function importBotsFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsBotsImportResult>> {
+  return postEffectivePathsImport(
+    'bots',
+    options,
+    (body): body is EffectivePathsBotsImportResult =>
+      !!body && typeof body === 'object' && 'botsEpState' in body && 'matchedRows' in body,
+  )
+}
+
+export function importUwsFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsUwsImportResult>> {
+  return postEffectivePathsImport(
+    'uws',
+    options,
+    (body): body is EffectivePathsUwsImportResult =>
+      !!body && typeof body === 'object' && 'uwsEpState' in body && 'matchedRows' in body,
+  )
+}
+
+export function importModulesFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsModulesImportResult>> {
+  return postEffectivePathsImport(
+    'modules',
+    options,
+    (body): body is EffectivePathsModulesImportResult =>
+      !!body && typeof body === 'object' && 'modulesEpState' in body && 'matchedRows' in body,
+  )
 }
 
 export async function exportLabsToEffectivePaths(options: {

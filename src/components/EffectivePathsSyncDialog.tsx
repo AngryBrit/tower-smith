@@ -1,9 +1,29 @@
-import { useCallback, useEffect, useId, useState } from 'react'
+import { useCallback, useEffect, useId, useMemo, useState } from 'react'
 import type { ImportNoticeVariant } from '../importNotice'
 import type { BotsEpSyncState } from '../effectivePaths/botsEpStateFromPersisted'
 import { countModulesEpEquippedSlots } from '../effectivePaths/buildModuleSheetUpdates'
 import type { ModulesEpSyncState } from '../effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../effectivePaths/uwsEpStateFromPersisted'
+import {
+  IMPORT_TARGET_UI,
+  importPayloadFromResult,
+  importSuccessMessage,
+  type EffectivePathsImportPayload,
+  type EffectivePathsImportTarget,
+} from '../effectivePaths/effectivePathsImportDialogSupport'
+import type { EffectivePathsExportTarget } from '../effectivePaths/effectivePathsExportSyncingLabel'
+import { effectivePathsExportSyncingLabel } from '../effectivePaths/effectivePathsExportSyncingLabel'
+import {
+  effectivePathsLoadProgressLabel,
+  effectivePathsLoadProgressPercent,
+} from '../effectivePaths/effectivePathsLoadProgressLabel'
+import { isModulesWorkbookName } from '../effectivePaths/effectivePathsCategoryNames'
+import {
+  applyEffectivePathsGateway,
+  applyEffectivePathsWorkbookAccessRow,
+  resetEffectivePathsWorkbookLoadState,
+  resolveLinkedCategoryWorkbook,
+} from '../effectivePaths/effectivePathsWorkbookLoadSetters'
 import {
   exportBotsToEffectivePaths,
   exportLabsToEffectivePaths,
@@ -13,21 +33,19 @@ import {
   exportRelicsToEffectivePaths,
   exportThemesToEffectivePaths,
   exportWorkshopToEffectivePaths,
+  importBotsFromEffectivePaths,
+  importCardsFromEffectivePaths,
+  importLabsFromEffectivePaths,
+  importModulesFromEffectivePaths,
+  importRelicsFromEffectivePaths,
+  importThemesFromEffectivePaths,
+  importUwsFromEffectivePaths,
+  importWorkshopFromEffectivePaths,
   listEffectivePathsWorkbooks,
   type EffectivePathsExportError,
+  type EffectivePathsLoadProgress,
   type LinkedWorkbookAccess,
 } from '../effectivePaths/exportEffectivePathsApi'
-import {
-  isBotsWorkbookName,
-  isLaboratoryWorkbookName,
-  isUwsWorkbookName,
-  isModulesWorkbookName,
-  isCardsWorkbookName,
-  isRelicsWorkbookName,
-  isThemesWorkbookName,
-  isWorkshopWorkbookName,
-} from '../effectivePaths/effectivePathsCategoryNames'
-import { sortLinkedWorkbookAccess } from '../effectivePaths/effectivePathsIdsWorkbooks'
 import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import {
   getCachedGoogleSheetsAccessToken,
@@ -36,8 +54,10 @@ import {
 } from '../effectivePaths/googleSheetsOAuth'
 import type { EffectivePathsLinkedWorkbook } from '../effectivePaths/parseIdsMasterWorkbooks'
 import { summarizeGoogleSheetsApiError } from '../effectivePaths/googleSheetsError'
-import { googleSpreadsheetEditUrl, parseSpreadsheetRef } from '../effectivePaths/parseSpreadsheetRef'
+import { parseSpreadsheetRef } from '../effectivePaths/parseSpreadsheetRef'
 import { useI18n, type StringId } from '../i18n'
+import { EffectivePathsLinkedWorkbooksList } from './EffectivePathsLinkedWorkbooksList'
+import { EffectivePathsWorkbooksLoadingProgress } from './EffectivePathsWorkbooksLoadingProgress'
 import { ImportNoticeBlock } from './ImportNoticeBlock'
 import { labOverlayPortal } from './lab/labOverlayPortal'
 
@@ -85,7 +105,7 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   unknown: 'ep_export_error_unknown',
 }
 
-export type EffectivePathsExportDialogProps = {
+export type EffectivePathsSyncDialogProps = {
   open: boolean
   onClose: () => void
   relicOwnedIds: readonly string[]
@@ -99,11 +119,15 @@ export type EffectivePathsExportDialogProps = {
   botsEpState: BotsEpSyncState
   uwsEpState: UwsEpSyncState
   modulesEpState: ModulesEpSyncState
-  /** Success notice only — shown on the parent panel after sync completes. */
+  /** Success notice after export completes. */
   onSuccess: (message: string) => void
+  onImported: (payload: EffectivePathsImportPayload, message: string) => void
 }
 
-export function EffectivePathsExportDialog({
+/** @deprecated Use EffectivePathsSyncDialog */
+export type EffectivePathsExportDialogProps = EffectivePathsSyncDialogProps
+
+export function EffectivePathsSyncDialog({
   open,
   onClose,
   relicOwnedIds,
@@ -118,7 +142,8 @@ export function EffectivePathsExportDialog({
   uwsEpState,
   modulesEpState,
   onSuccess,
-}: EffectivePathsExportDialogProps) {
+  onImported,
+}: EffectivePathsSyncDialogProps) {
   const { t } = useI18n()
   const titleId = useId()
   const listId = useId()
@@ -163,9 +188,9 @@ export function EffectivePathsExportDialog({
   >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
-  const [exportingTarget, setExportingTarget] = useState<
-    'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'modules' | null
-  >(null)
+  const [loadProgress, setLoadProgress] = useState<EffectivePathsLoadProgress | null>(null)
+  const [exportingTarget, setExportingTarget] = useState<EffectivePathsExportTarget | null>(null)
+  const [importingTarget, setImportingTarget] = useState<EffectivePathsImportTarget | null>(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
   )
@@ -200,18 +225,103 @@ export function EffectivePathsExportDialog({
     uwsWorkbookAccess !== 'denied' &&
     uwsWorkbookAccess !== 'not_found'
   const modulesEquippedCount = countModulesEpEquippedSlots(modulesEpState)
+  const modulesWorkbookResolved = useMemo(
+    () =>
+      resolveLinkedCategoryWorkbook(
+        modulesWorkbook,
+        modulesWorkbookAccess,
+        workbookAccess,
+        isModulesWorkbookName,
+      ),
+    [modulesWorkbook, modulesWorkbookAccess, workbookAccess],
+  )
   const canSyncModules =
-    modulesWorkbook != null &&
-    modulesWorkbookAccess !== 'denied' &&
-    modulesWorkbookAccess !== 'not_found' &&
-    modulesEquippedCount > 0
+    modulesWorkbookResolved.workbook != null &&
+    modulesWorkbookResolved.access !== 'denied' &&
+    modulesWorkbookResolved.access !== 'not_found'
+  const workbookByTarget = useMemo(
+    () => ({
+      relics: { workbook: relicsWorkbook, access: relicsWorkbookAccess },
+      themes: { workbook: themesWorkbook, access: themesWorkbookAccess },
+      cards: { workbook: cardsWorkbook, access: cardsWorkbookAccess },
+      workshop: { workbook: workshopWorkbook, access: workshopWorkbookAccess },
+      bots: { workbook: botsWorkbook, access: botsWorkbookAccess },
+      labs: { workbook: laboratoryWorkbook, access: laboratoryWorkbookAccess },
+      uws: { workbook: uwsWorkbook, access: uwsWorkbookAccess },
+      modules: {
+        workbook: modulesWorkbookResolved.workbook,
+        access: modulesWorkbookResolved.access,
+      },
+    }),
+    [
+      relicsWorkbook,
+      relicsWorkbookAccess,
+      themesWorkbook,
+      themesWorkbookAccess,
+      cardsWorkbook,
+      cardsWorkbookAccess,
+      workshopWorkbook,
+      workshopWorkbookAccess,
+      botsWorkbook,
+      botsWorkbookAccess,
+      laboratoryWorkbook,
+      laboratoryWorkbookAccess,
+      uwsWorkbook,
+      uwsWorkbookAccess,
+      modulesWorkbookResolved,
+    ],
+  )
+  const canImportTarget = useCallback(
+    (target: EffectivePathsImportTarget): boolean => {
+      const row = workbookByTarget[target]
+      return row.workbook != null && row.access !== 'denied' && row.access !== 'not_found'
+    },
+    [workbookByTarget],
+  )
+  const canExportTarget = useCallback(
+    (target: EffectivePathsExportTarget): boolean => {
+      switch (target) {
+        case 'relics':
+          return canSyncRelics
+        case 'themes':
+          return canSyncThemes
+        case 'cards':
+          return canSyncCards
+        case 'workshop':
+          return canSyncWorkshop
+        case 'bots':
+          return canSyncBots
+        case 'labs':
+          return canSyncLabs
+        case 'uws':
+          return canSyncUws
+        case 'modules':
+          return canSyncModules
+      }
+    },
+    [
+      canSyncRelics,
+      canSyncThemes,
+      canSyncCards,
+      canSyncWorkshop,
+      canSyncBots,
+      canSyncLabs,
+      canSyncUws,
+      canSyncModules,
+    ],
+  )
   const exporting = exportingTarget != null
-  const busy = loadingSheets || exporting
+  const importing = importingTarget != null
+  const busy = loadingSheets || exporting || importing
+  const hasGoogleSheetsAccess =
+    googleToken != null || getCachedGoogleSheetsAccessToken() != null
 
   useEffect(() => {
     if (!open) return
     setSpreadsheetRef(readStoredSpreadsheetRef())
     setNotice(null)
+    const cached = getCachedGoogleSheetsAccessToken()
+    if (cached) setGoogleToken(cached)
   }, [open])
 
   const showNotice = useCallback((message: string, variant: ImportNoticeVariant) => {
@@ -273,21 +383,28 @@ export function EffectivePathsExportDialog({
     }
 
     setLoadingSheets(true)
-    setWorkbooks(null)
-    setIdsTabTitle(null)
-    setRelicsWorkbook(null)
-    setRelicsWorkbookAccess(null)
-    setThemesWorkbook(null)
-    setThemesWorkbookAccess(null)
-    setCardsWorkbook(null)
-    setCardsWorkbookAccess(null)
-    setWorkshopWorkbook(null)
-    setWorkshopWorkbookAccess(null)
-    setBotsWorkbook(null)
-    setBotsWorkbookAccess(null)
-    setLaboratoryWorkbook(null)
-    setLaboratoryWorkbookAccess(null)
-    setWorkbookAccess(null)
+    resetEffectivePathsWorkbookLoadState({
+      setWorkbooks,
+      setIdsTabTitle,
+      setRelicsWorkbook,
+      setRelicsWorkbookAccess,
+      setThemesWorkbook,
+      setThemesWorkbookAccess,
+      setCardsWorkbook,
+      setCardsWorkbookAccess,
+      setWorkshopWorkbook,
+      setWorkshopWorkbookAccess,
+      setBotsWorkbook,
+      setBotsWorkbookAccess,
+      setLaboratoryWorkbook,
+      setLaboratoryWorkbookAccess,
+      setUwsWorkbook,
+      setUwsWorkbookAccess,
+      setModulesWorkbook,
+      setModulesWorkbookAccess,
+      setWorkbookAccess,
+    })
+    setLoadProgress(null)
     setNotice(null)
     try {
       let token = await ensureGoogleToken()
@@ -301,6 +418,53 @@ export function EffectivePathsExportDialog({
         googleAccessToken: token,
         masterSpreadsheetId: parsedMaster.spreadsheetId,
         sheetGid: parsedMaster.sheetGid,
+        onProgress: setLoadProgress,
+        onGateway: (gateway) => {
+          applyEffectivePathsGateway(gateway, {
+            setWorkbooks,
+            setIdsTabTitle,
+            setRelicsWorkbook,
+            setRelicsWorkbookAccess,
+            setThemesWorkbook,
+            setThemesWorkbookAccess,
+            setCardsWorkbook,
+            setCardsWorkbookAccess,
+            setWorkshopWorkbook,
+            setWorkshopWorkbookAccess,
+            setBotsWorkbook,
+            setBotsWorkbookAccess,
+            setLaboratoryWorkbook,
+            setLaboratoryWorkbookAccess,
+            setUwsWorkbook,
+            setUwsWorkbookAccess,
+            setModulesWorkbook,
+            setModulesWorkbookAccess,
+            setWorkbookAccess,
+          })
+        },
+        onWorkbookAccess: (row) => {
+          applyEffectivePathsWorkbookAccessRow(row, {
+            setWorkbooks,
+            setIdsTabTitle,
+            setRelicsWorkbook,
+            setRelicsWorkbookAccess,
+            setThemesWorkbook,
+            setThemesWorkbookAccess,
+            setCardsWorkbook,
+            setCardsWorkbookAccess,
+            setWorkshopWorkbook,
+            setWorkshopWorkbookAccess,
+            setBotsWorkbook,
+            setBotsWorkbookAccess,
+            setLaboratoryWorkbook,
+            setLaboratoryWorkbookAccess,
+            setUwsWorkbook,
+            setUwsWorkbookAccess,
+            setModulesWorkbook,
+            setModulesWorkbookAccess,
+            setWorkbookAccess,
+          })
+        },
       })
 
       if (!result.ok) {
@@ -356,6 +520,7 @@ export function EffectivePathsExportDialog({
       }
     } finally {
       setLoadingSheets(false)
+      setLoadProgress(null)
     }
   }, [parsedMaster, ensureGoogleToken, spreadsheetRef, formatExportError, showNotice, t])
 
@@ -962,12 +1127,13 @@ export function EffectivePathsExportDialog({
       )
       return
     }
-    if (!modulesWorkbook || modulesWorkbookAccess === 'denied' || modulesWorkbookAccess === 'not_found') {
+    const { workbook: modulesTarget, access: modulesTargetAccess } = modulesWorkbookResolved
+    if (!modulesTarget || modulesTargetAccess === 'denied' || modulesTargetAccess === 'not_found') {
       showNotice(
-        modulesWorkbook
+        modulesTarget
           ? t('ep_export_error_modules_workbook_access_denied').replace(
               '{{id}}',
-              modulesWorkbook.spreadsheetId,
+              modulesTarget.spreadsheetId,
             )
           : t('ep_export_modules_missing_in_master'),
         'error',
@@ -999,7 +1165,7 @@ export function EffectivePathsExportDialog({
           showNotice(
             t('ep_export_error_modules_workbook_access_denied').replace(
               '{{id}}',
-              modulesWorkbook?.spreadsheetId ?? '',
+              modulesTarget?.spreadsheetId ?? '',
             ),
             'error',
           )
@@ -1022,18 +1188,150 @@ export function EffectivePathsExportDialog({
     }
   }, [
     parsedMaster,
-    canSyncModules,
     ensureGoogleToken,
     spreadsheetRef,
     modulesEpState,
     modulesEquippedCount,
-    modulesWorkbook,
+    modulesWorkbookResolved,
     formatExportError,
     showNotice,
     onSuccess,
     onClose,
     t,
   ])
+
+  const handleImportTarget = useCallback(
+    async (target: EffectivePathsImportTarget) => {
+      const ui = IMPORT_TARGET_UI.find((entry) => entry.target === target)!
+      const { workbook, access } = workbookByTarget[target]
+
+      if (!parsedMaster) {
+        showNotice(
+          spreadsheetRef.trim()
+            ? t('ep_export_invalid_spreadsheet')
+            : t('ep_export_missing_ids_master'),
+          'error',
+        )
+        return
+      }
+      if (!canImportTarget(target)) {
+        showNotice(
+          workbook
+            ? t(ui.accessDeniedKey).replace('{{id}}', workbook.spreadsheetId)
+            : t(ui.missingKey),
+          'error',
+        )
+        return
+      }
+
+      setImportingTarget(target)
+      setNotice(null)
+      try {
+        const token = await ensureGoogleToken()
+        if (!token) return
+
+        writeStoredSpreadsheetRef(spreadsheetRef)
+
+        const apiOptions = {
+          googleAccessToken: token,
+          masterSpreadsheetId: parsedMaster.spreadsheetId,
+          masterSheetGid: parsedMaster.sheetGid,
+        }
+
+        const result =
+          target === 'labs'
+            ? await importLabsFromEffectivePaths(apiOptions)
+            : target === 'workshop'
+              ? await importWorkshopFromEffectivePaths(apiOptions)
+              : target === 'relics'
+                ? await importRelicsFromEffectivePaths(apiOptions)
+                : target === 'themes'
+                  ? await importThemesFromEffectivePaths(apiOptions)
+                  : target === 'cards'
+                    ? await importCardsFromEffectivePaths(apiOptions)
+                    : target === 'bots'
+                      ? await importBotsFromEffectivePaths(apiOptions)
+                      : target === 'uws'
+                        ? await importUwsFromEffectivePaths(apiOptions)
+                        : await importModulesFromEffectivePaths(apiOptions)
+
+        if (!result.ok) {
+          if (workbook && result.error.endsWith('_workbook_access_denied')) {
+            showNotice(t(ui.accessDeniedKey).replace('{{id}}', workbook.spreadsheetId), 'error')
+          } else {
+            showNotice(formatExportError(result.error, result.message), 'error')
+          }
+          return
+        }
+
+        onImported(importPayloadFromResult(result.result), importSuccessMessage(t, result.result))
+        onClose()
+      } finally {
+        setImportingTarget(null)
+      }
+    },
+    [
+      parsedMaster,
+      workbookByTarget,
+      canImportTarget,
+      ensureGoogleToken,
+      spreadsheetRef,
+      formatExportError,
+      showNotice,
+      onImported,
+      onClose,
+      t,
+    ],
+  )
+
+  const handleExportTarget = useCallback(
+    (target: EffectivePathsExportTarget) => {
+      switch (target) {
+        case 'relics':
+          void handleExportRelics()
+          break
+        case 'themes':
+          void handleExportThemes()
+          break
+        case 'cards':
+          void handleExportCards()
+          break
+        case 'workshop':
+          void handleExportWorkshop()
+          break
+        case 'bots':
+          void handleExportBots()
+          break
+        case 'labs':
+          void handleExportLabs()
+          break
+        case 'uws':
+          void handleExportUws()
+          break
+        case 'modules':
+          void handleExportModules()
+          break
+      }
+    },
+    [
+      handleExportRelics,
+      handleExportThemes,
+      handleExportCards,
+      handleExportWorkshop,
+      handleExportBots,
+      handleExportLabs,
+      handleExportUws,
+      handleExportModules,
+    ],
+  )
+
+  const loadWorkbooksLabel = loadingSheets
+    ? hasGoogleSheetsAccess
+      ? t('ep_export_loading_linked_workbooks')
+      : t('ep_export_loading_sheets')
+    : hasGoogleSheetsAccess
+      ? t('ep_export_load_linked_workbooks_btn')
+      : t('ep_export_load_sheets_btn')
 
   if (!open) return null
 
@@ -1052,9 +1350,9 @@ export function EffectivePathsExportDialog({
         onClick={(e) => e.stopPropagation()}
       >
         <h2 id={titleId} className="select-research__lab-data-title">
-          {t('ep_export_title')}
+          {t('ep_sync_title')}
         </h2>
-        <p className="select-research__lab-data-intro">{t('ep_export_intro')}</p>
+        <p className="select-research__lab-data-intro">{t('ep_sync_intro')}</p>
         {!parsedMaster ? (
           <p className="select-research__lab-data-share-hint" role="status">
             {t('ep_export_missing_ids_master')}
@@ -1074,328 +1372,52 @@ export function EffectivePathsExportDialog({
             disabled={busy || !parsedMaster}
             onClick={() => void handleLoadSheets()}
           >
-            {loadingSheets ? t('ep_export_loading_sheets') : t('ep_export_load_sheets_btn')}
+            {loadWorkbooksLabel}
           </button>
         </div>
-        {relicsWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_relics_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', relicsWorkbook.spreadsheetId)}
-            {relicsWorkbookAccess === 'denied' || relicsWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(relicsWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_relics_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {themesWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_themes_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', themesWorkbook.spreadsheetId)}
-            {themesWorkbookAccess === 'denied' || themesWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(themesWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_themes_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {cardsWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_cards_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', cardsWorkbook.spreadsheetId)}
-            {cardsWorkbookAccess === 'denied' || cardsWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(cardsWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_cards_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {workshopWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_workshop_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', workshopWorkbook.spreadsheetId)}
-            {workshopWorkbookAccess === 'denied' || workshopWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(workshopWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_workshop_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {botsWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_bots_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', botsWorkbook.spreadsheetId)}
-            {botsWorkbookAccess === 'denied' || botsWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(botsWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_bots_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {laboratoryWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_labs_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', laboratoryWorkbook.spreadsheetId)}
-            {laboratoryWorkbookAccess === 'denied' || laboratoryWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(laboratoryWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_labs_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {uwsWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_uws_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', uwsWorkbook.spreadsheetId)}
-            {uwsWorkbookAccess === 'denied' || uwsWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(uwsWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_uws_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
-        {modulesWorkbook ? (
-          <p className="select-research__lab-data-share-hint effective-paths-export-dialog__relics-id">
-            {t('ep_export_modules_resolved')
-              .replace('{{tab}}', idsTabTitle ?? 'IDS')
-              .replace('{{id}}', modulesWorkbook.spreadsheetId)}
-            {modulesWorkbookAccess === 'denied' || modulesWorkbookAccess === 'not_found' ? (
-              <>
-                {' '}
-                <a
-                  href={googleSpreadsheetEditUrl(modulesWorkbook.spreadsheetId)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {t('ep_export_modules_open_sheet')}
-                </a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
+        <EffectivePathsWorkbooksLoadingProgress
+          label={
+            loadProgress
+              ? effectivePathsLoadProgressLabel(loadProgress, t)
+              : hasGoogleSheetsAccess
+                ? t('ep_export_loading_linked_workbooks')
+                : t('ep_export_loading_sheets')
+          }
+          active={loadingSheets}
+          percent={loadProgress ? effectivePathsLoadProgressPercent(loadProgress) : 5}
+        />
         {workbookAccess && workbookAccess.length > 0 ? (
-          <div className="effective-paths-export-dialog__workbooks">
-            <p id={listId} className="select-research__lab-data-section-label">
-              {t('ep_export_linked_sheets_title').replace('{{tab}}', idsTabTitle ?? 'IDS')}
-            </p>
-            <ul className="effective-paths-export-dialog__workbook-list" aria-labelledby={listId}>
-              {sortLinkedWorkbookAccess(workbookAccess).map((workbook) => {
-                const accessible = workbook.access === 'ok'
-                const accessLabel =
-                  workbook.access === 'ok'
-                    ? t('ep_export_workbook_access_ok')
-                    : workbook.access === 'denied'
-                      ? t('ep_export_workbook_access_denied')
-                      : workbook.access === 'not_found'
-                        ? t('ep_export_workbook_access_not_found')
-                        : t('ep_export_workbook_access_denied')
-                const isRelics = isRelicsWorkbookName(workbook.name)
-                const isThemes = isThemesWorkbookName(workbook.name)
-                const isCards = isCardsWorkbookName(workbook.name)
-                const isWorkshop = isWorkshopWorkbookName(workbook.name)
-                const isBots = isBotsWorkbookName(workbook.name)
-                const isLaboratory = isLaboratoryWorkbookName(workbook.name)
-                const isUws = isUwsWorkbookName(workbook.name)
-                const isModules = isModulesWorkbookName(workbook.name)
-                return (
-                  <li
-                    key={`${workbook.name}:${workbook.spreadsheetId}`}
-                    className={
-                      isRelics ||
-                      isThemes ||
-                      isCards ||
-                      isWorkshop ||
-                      isBots ||
-                      isLaboratory ||
-                      isUws ||
-                      isModules
-                        ? 'effective-paths-export-dialog__workbook-item effective-paths-export-dialog__workbook-item--relics'
-                        : 'effective-paths-export-dialog__workbook-item'
-                    }
-                  >
-                    <span
-                      className={
-                        accessible
-                          ? 'effective-paths-export-dialog__workbook-status effective-paths-export-dialog__workbook-status--ok'
-                          : 'effective-paths-export-dialog__workbook-status effective-paths-export-dialog__workbook-status--bad'
-                      }
-                      aria-label={accessLabel}
-                      title={accessLabel}
-                    >
-                      {accessible ? '✓' : '✗'}
-                    </span>
-                    <span className="effective-paths-export-dialog__workbook-name">{workbook.name}</span>
-                    {isRelics ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_relics_sync_target')}
-                      </span>
-                    ) : null}
-                    {isThemes ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_themes_sync_target')}
-                      </span>
-                    ) : null}
-                    {isCards ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_cards_sync_target')}
-                      </span>
-                    ) : null}
-                    {isWorkshop ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_workshop_sync_target')}
-                      </span>
-                    ) : null}
-                    {isBots ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_bots_sync_target')}
-                      </span>
-                    ) : null}
-                    {isLaboratory ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_labs_sync_target')}
-                      </span>
-                    ) : null}
-                    {isUws ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_uws_sync_target')}
-                      </span>
-                    ) : null}
-                    {isModules ? (
-                      <span className="effective-paths-export-dialog__workbook-tag">
-                        {t('ep_export_modules_sync_target')}
-                      </span>
-                    ) : null}
-                  </li>
-                )
-              })}
-            </ul>
-          </div>
+          <EffectivePathsLinkedWorkbooksList
+            listId={listId}
+            idsTabTitle={idsTabTitle}
+            workbookAccess={workbookAccess}
+            t={t}
+            importActions={{
+              importingTarget,
+              busy,
+              canImportTarget,
+              onImportTarget: (target) => void handleImportTarget(target),
+            }}
+            exportActions={{
+              exportingTarget,
+              busy,
+              canExportTarget,
+              onExportTarget: handleExportTarget,
+            }}
+          />
         ) : null}
+        <EffectivePathsWorkbooksLoadingProgress
+          label={
+            importingTarget != null
+              ? t(IMPORT_TARGET_UI.find((entry) => entry.target === importingTarget)!.syncingKey)
+              : exportingTarget != null
+                ? effectivePathsExportSyncingLabel(exportingTarget, t)
+                : t('ep_sync_syncing')
+          }
+          active={importing || exporting}
+          simulate
+        />
         <div className="select-research__lab-data-actions effective-paths-export-dialog__actions effective-paths-export-dialog__actions--footer">
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncRelics}
-            onClick={() => void handleExportRelics()}
-          >
-            {exportingTarget === 'relics' ? t('ep_export_syncing_relics') : t('ep_export_sync_relics_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncThemes}
-            onClick={() => void handleExportThemes()}
-          >
-            {exportingTarget === 'themes' ? t('ep_export_syncing_themes') : t('ep_export_sync_themes_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncCards}
-            onClick={() => void handleExportCards()}
-          >
-            {exportingTarget === 'cards' ? t('ep_export_syncing_cards') : t('ep_export_sync_cards_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncWorkshop}
-            onClick={() => void handleExportWorkshop()}
-          >
-            {exportingTarget === 'workshop'
-              ? t('ep_export_syncing_workshop')
-              : t('ep_export_sync_workshop_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncBots}
-            onClick={() => void handleExportBots()}
-          >
-            {exportingTarget === 'bots' ? t('ep_export_syncing_bots') : t('ep_export_sync_bots_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncLabs}
-            onClick={() => void handleExportLabs()}
-          >
-            {exportingTarget === 'labs' ? t('ep_export_syncing_labs') : t('ep_export_sync_labs_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncUws}
-            onClick={() => void handleExportUws()}
-          >
-            {exportingTarget === 'uws' ? t('ep_export_syncing_uws') : t('ep_export_sync_uws_btn')}
-          </button>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={busy || !canSyncModules}
-            onClick={() => void handleExportModules()}
-          >
-            {exportingTarget === 'modules'
-              ? t('ep_export_syncing_modules')
-              : t('ep_export_sync_modules_btn')}
-          </button>
           <button
             type="button"
             className="glow-btn glow-btn--block select-research__lab-data-close"
@@ -1409,3 +1431,6 @@ export function EffectivePathsExportDialog({
     </div>,
   )
 }
+
+/** @deprecated Use EffectivePathsSyncDialog */
+export const EffectivePathsExportDialog = EffectivePathsSyncDialog

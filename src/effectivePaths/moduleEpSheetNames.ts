@@ -84,3 +84,31 @@ export const MODULE_EP_MERGE_TIER_SHEET_LABELS = Object.values(MODULE_EP_MERGE_T
 export const MODULE_EP_SUBMODULE_RARITY_SHEET_LABELS = Object.values(
   MODULE_EP_SUBMODULE_RARITY_SHEET_LABEL,
 )
+
+const MERGE_TIER_FROM_SHEET_LABEL = new Map<string, WorkshopChassisModuleMergeTier>(
+  Object.entries(MODULE_EP_MERGE_TIER_SHEET_LABEL).map(([tier, label]) => [
+    label.trim().toLowerCase(),
+    tier as WorkshopChassisModuleMergeTier,
+  ]),
+)
+
+const SUBMODULE_RARITY_FROM_SHEET_LABEL = new Map<string, WorkshopSubmoduleRarity>(
+  Object.entries(MODULE_EP_SUBMODULE_RARITY_SHEET_LABEL).map(([rarity, label]) => [
+    label.trim().toLowerCase(),
+    rarity as WorkshopSubmoduleRarity,
+  ]),
+)
+
+export function moduleEpMergeTierFromSheetLabel(label: string): WorkshopChassisModuleMergeTier | null {
+  const key = label.trim().toLowerCase()
+  if (!key || key === MODULE_EP_EMPTY_RARITY_SHEET_LABEL.toLowerCase()) return null
+  return MERGE_TIER_FROM_SHEET_LABEL.get(key) ?? null
+}
+
+export function moduleEpSubmoduleRarityFromSheetLabel(
+  label: string,
+): WorkshopSubmoduleRarity | null {
+  const key = label.trim().toLowerCase()
+  if (!key) return null
+  return SUBMODULE_RARITY_FROM_SHEET_LABEL.get(key) ?? null
+}

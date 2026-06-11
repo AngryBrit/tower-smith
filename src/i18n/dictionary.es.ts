@@ -1330,10 +1330,60 @@ export const STRINGS_ES = {
   ep_export_section: 'Effective Paths (Google Sheets)',
   ep_export_section_hint:
     'Sincroniza reliquias y temas con tus libros Effective Paths. Configura primero la URL de IDS Master en Ajustes.',
+  ep_labs_sync_section: 'Effective Paths (Google Sheets)',
+  ep_sync_open_btn: 'Sincronizar Effective Paths…',
+  ep_sync_title: 'Sincronización Effective Paths',
+  ep_sync_intro:
+    'Carga los libros vinculados desde tu IDS Master (en Ajustes) e importa o exporta cada categoría.',
+  ep_sync_syncing: 'Sincronizando…',
+  ep_labs_sync_section_hint:
+    'Exporta o importa niveles de laboratorio con tu libro Laboratory. Configura primero la URL de IDS Master en Ajustes.',
   ep_export_open_btn: 'Sincronizar con Effective Paths…',
-  ep_export_title: 'Sincronizar con Effective Paths',
+  ep_export_labs_open_btn: 'Exportar a Effective Paths…',
+  ep_import_labs_open_btn: 'Importar desde Effective Paths…',
+  ep_export_title: 'Exportar a Effective Paths',
+  ep_import_title: 'Importar desde Effective Paths',
+  ep_import_intro:
+    'Carga libros vinculados desde IDS Master (configurado en Ajustes) e importa datos del build desde los libros hijo vinculados (las mismas categorías que exportar).',
+  ep_import_labs_intro:
+    'Carga libros vinculados desde IDS Master (configurado en Ajustes) e importa niveles de laboratorio desde el Laboratory Master Sheet vinculado.',
+  ep_import_relics_btn: 'Importar reliquias desde el libro Relics',
+  ep_import_themes_btn: 'Importar temas desde el libro Themes',
+  ep_import_cards_btn: 'Importar cartas desde el libro Cards',
+  ep_import_labs_btn: 'Importar labs desde el libro Laboratory',
+  ep_import_workshop_btn: 'Importar taller desde el libro Workshop',
+  ep_import_bots_btn: 'Importar bots desde el libro Bots',
+  ep_import_uws_btn: 'Importar UWs desde el libro UWs',
+  ep_import_modules_btn: 'Importar módulos desde el libro Modules',
+  ep_import_row_btn: 'Importar',
+  ep_import_row_syncing: 'Importando…',
+  ep_import_syncing: 'Importando…',
+  ep_import_syncing_relics: 'Importando reliquias…',
+  ep_import_syncing_themes: 'Importando temas…',
+  ep_import_syncing_cards: 'Importando cartas…',
+  ep_import_syncing_labs: 'Importando labs…',
+  ep_import_syncing_workshop: 'Importando taller…',
+  ep_import_syncing_bots: 'Importando bots…',
+  ep_import_syncing_uws: 'Importando UWs…',
+  ep_import_syncing_modules: 'Importando módulos…',
+  ep_import_relics_success: 'Se importaron {{rows}} filas de reliquias desde “{{sheet}}”.',
+  ep_import_themes_success: 'Se importaron {{rows}} filas de temas desde “{{sheet}}”.',
+  ep_import_cards_success: 'Se importaron {{rows}} filas de cartas desde “{{sheet}}”.',
+  ep_import_cards_presets_success_suffix:
+    'También se importaron {{presetRows}} ranuras de preset en “{{presetSheet}}”.',
+  ep_import_labs_success: 'Se importaron {{rows}} niveles de lab desde “{{sheet}}”.',
+  ep_import_workshop_success:
+    'Se importaron {{rows}} niveles de mejoras de taller desde “{{sheet}}”.',
+  ep_import_workshop_enhance_success_suffix:
+    'También se importaron {{enhanceRows}} niveles de mejoras de taller.',
+  ep_import_bots_success: 'Se importaron {{rows}} niveles de farming de bots desde “{{sheet}}”.',
+  ep_import_bots_lab_success_suffix:
+    'También se importaron {{labRows}} niveles de laboratorio BOTS.',
+  ep_import_uws_success: 'Se importaron {{rows}} niveles de armas definitivas desde “{{sheet}}”.',
+  ep_import_modules_success:
+    'Se importaron {{rows}} columnas de módulos equipados ({{effects}} efectos) desde “{{sheet}}”.',
   ep_export_intro:
-    'Carga libros vinculados desde IDS Master (configurado en Ajustes) y sincroniza reliquias o temas en los libros hijo vinculados.',
+    'Carga libros vinculados desde IDS Master (configurado en Ajustes) y exporta reliquias, temas y otros datos del build a los libros hijo vinculados.',
   ep_export_missing_ids_master:
     'Configura la URL de IDS Master en Ajustes (Herramientas → Ajustes) antes de cargar libros vinculados.',
   ep_export_spreadsheet_label: 'ID o URL de IDS Master',
@@ -1341,15 +1391,17 @@ export const STRINGS_ES = {
   ep_export_spreadsheet_hint:
     'Pega la URL de tu IDS Master. Los IDs vinculados se leen solo de la columna D (“Ir a mi hoja …”).',
   ep_export_load_sheets_btn: 'Permitir Google Sheets y cargar libros vinculados',
+  ep_export_load_linked_workbooks_btn: 'Cargar libros vinculados',
   ep_export_loading_sheets: 'Permitiendo Google Sheets y comprobando libros vinculados…',
+  ep_export_loading_linked_workbooks: 'Cargando libros vinculados…',
+  ep_export_loading_ids_gateway: 'Leyendo IDS Master…',
+  ep_export_loading_workbook_named: 'Comprobando {{name}}…',
   ep_export_workbook_access_ok: 'Accesible',
   ep_export_workbook_access_denied: 'Sin acceso',
   ep_export_workbook_access_not_found: 'No encontrado',
   ep_export_linked_workbooks_denied:
     'Google Sheets está conectado, pero TowerSmith no puede abrir estos libros vinculados: {{names}}. Ábrelos en Google Sheets con la misma cuenta (acceso de Editor) o corrige el enlace “Ir a mi hoja …” en la pestaña IDS.',
   ep_export_linked_sheets_title: 'Pestaña IDS “{{tab}}” — libros vinculados',
-  ep_export_relics_resolved:
-    'ID del libro Relics desde IDS “{{tab}}”: {{id}} (hoja separada; sincroniza su pestaña Relics).',
   ep_export_relics_sync_target: 'objetivo de sincronización de reliquias',
   ep_export_themes_sync_target: 'objetivo de sincronización de temas',
   ep_export_cards_sync_target: 'objetivo de sincronización de cartas',
@@ -1376,18 +1428,20 @@ export const STRINGS_ES = {
     'No se encontraron filas Relics, Themes & Songs, Cards, Workshop, Bots ni Laboratory con IDs de hoja en la pestaña IDS.',
   ep_export_relics_missing_loaded:
     'Cargados: {{names}}. Corrige el enlace “Ir a mi hoja Relics” en la columna D.',
-  ep_export_sync_relics_btn: 'Sincronizar reliquias al libro Relics',
-  ep_export_sync_themes_btn: 'Sincronizar temas al libro Themes & Songs',
-  ep_export_sync_cards_btn: 'Sincronizar cartas y presets al libro Cards',
-  ep_export_sync_workshop_btn: 'Sincronizar taller al libro Workshop',
-  ep_export_sync_bots_btn: 'Sincronizar bots al libro Bots',
-  ep_export_sync_labs_btn: 'Sincronizar labs al libro Laboratory',
-  ep_export_sync_uws_btn: 'Sincronizar armas definitivas al libro UWs',
-  ep_export_sync_modules_btn: 'Sincronizar módulos al libro Modules',
-  ep_export_syncing_relics: 'Sincronizando reliquias…',
-  ep_export_syncing_themes: 'Sincronizando temas…',
-  ep_export_syncing_cards: 'Sincronizando cartas y presets…',
-  ep_export_syncing_workshop: 'Sincronizando taller…',
+  ep_export_row_btn: 'Exportar',
+  ep_export_row_syncing: 'Exportando…',
+  ep_export_sync_relics_btn: 'Exportar reliquias al libro Relics',
+  ep_export_sync_themes_btn: 'Exportar temas al libro Themes & Songs',
+  ep_export_sync_cards_btn: 'Exportar cartas y presets al libro Cards',
+  ep_export_sync_workshop_btn: 'Exportar taller al libro Workshop',
+  ep_export_sync_bots_btn: 'Exportar bots al libro Bots',
+  ep_export_sync_labs_btn: 'Exportar labs al libro Laboratory',
+  ep_export_sync_uws_btn: 'Exportar armas definitivas al libro UWs',
+  ep_export_sync_modules_btn: 'Exportar módulos al libro Modules',
+  ep_export_syncing_relics: 'Exportando reliquias…',
+  ep_export_syncing_themes: 'Exportando temas…',
+  ep_export_syncing_cards: 'Exportando cartas y presets…',
+  ep_export_syncing_workshop: 'Exportando taller…',
   ep_export_relics_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de reliquias).',
   ep_export_themes_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de temas).',
   ep_export_cards_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de cartas).',
@@ -1405,15 +1459,6 @@ export const STRINGS_ES = {
   ep_export_themes_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_cards_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_workshop_unmapped_sample: 'Ejemplos: {{names}}',
-  ep_export_themes_resolved:
-    'ID del libro Themes & Songs desde IDS “{{tab}}”: {{id}} (sincroniza casillas de propiedad en los bloques de entrada v3.x).',
-  ep_export_themes_open_sheet: 'Abrir Themes & Songs vinculado en Google Sheets',
-  ep_export_cards_resolved:
-    'ID del libro Cards desde IDS “{{tab}}”: {{id}} (sincroniza Master Sheet y la pestaña Card Preset).',
-  ep_export_cards_open_sheet: 'Abrir Cards vinculado en Google Sheets',
-  ep_export_workshop_resolved:
-    'ID del libro Workshop desde IDS “{{tab}}”: {{id}} (sincroniza casillas desbloqueadas y niveles en Master Sheet).',
-  ep_export_workshop_open_sheet: 'Abrir Workshop vinculado en Google Sheets',
   ep_export_invalid_spreadsheet: 'Introduce un ID o URL válido de Google Spreadsheet.',
   ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
   ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
@@ -1427,7 +1472,6 @@ export const STRINGS_ES = {
   ep_export_error_ids_master_empty: 'IDS Master no tiene filas de libros vinculados.',
   ep_export_error_relic_workbook_not_found:
     'IDS Master no tiene fila Relics. Revisa la tabla de IDs vinculados.',
-  ep_export_relics_open_sheet: 'Abrir Relics vinculado en Google Sheets',
   ep_export_error_relic_workbook_access_denied:
     'No se puede editar el Relics vinculado en IDS ({{id}}). Ábrelo en Google Sheets y confirma acceso de editor, o corrige el enlace en la pestaña IDS.',
   ep_export_error_relic_tab_not_found: 'No se encontró la pestaña Relics en el libro Relics.',
@@ -1457,10 +1501,10 @@ export const STRINGS_ES = {
     'No se encontró la pestaña de entrada Workshop en el libro Workshop.',
   ep_export_bots_missing_in_master:
     'No se encontró ninguna fila Bots con ID de hoja de cálculo en la pestaña IDS.',
-  ep_export_syncing_bots: 'Sincronizando bots…',
-  ep_export_syncing_labs: 'Sincronizando labs…',
-  ep_export_syncing_uws: 'Sincronizando armas definitivas…',
-  ep_export_syncing_modules: 'Sincronizando módulos…',
+  ep_export_syncing_bots: 'Exportando bots…',
+  ep_export_syncing_labs: 'Exportando labs…',
+  ep_export_syncing_uws: 'Exportando armas definitivas…',
+  ep_export_syncing_modules: 'Exportando módulos…',
   ep_export_bots_success:
     'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de estadísticas de bots).',
   ep_export_bots_lab_success_suffix:
@@ -1477,18 +1521,6 @@ export const STRINGS_ES = {
   ep_export_labs_unmapped_hint:
     '{{count}} nombres de labs de la hoja no se mapearon y se dejaron sin cambios.',
   ep_export_labs_unmapped_sample: 'Ejemplos: {{names}}',
-  ep_export_bots_resolved:
-    'ID del libro Bots desde la pestaña IDS “{{tab}}”: {{id}} (sincroniza medallas, Bot+ y niveles de laboratorio BOTS en Master Sheet).',
-  ep_export_bots_open_sheet: 'Abrir el libro Bots vinculado en Google Sheets',
-  ep_export_labs_resolved:
-    'ID del libro Laboratory desde la pestaña IDS “{{tab}}”: {{id}} (sincroniza niveles de labs en Master Sheet).',
-  ep_export_labs_open_sheet: 'Abrir el libro Laboratory vinculado en Google Sheets',
-  ep_export_uws_resolved:
-    'ID del libro UWs desde la pestaña IDS “{{tab}}”: {{id}}',
-  ep_export_uws_open_sheet: 'Abrir el libro UWs vinculado en Google Sheets',
-  ep_export_modules_resolved:
-    'ID del libro Modules desde la pestaña IDS “{{tab}}”: {{id}} (sincroniza la pestaña Inventory).',
-  ep_export_modules_open_sheet: 'Abrir el libro Modules vinculado en Google Sheets',
   ep_export_error_bots_workbook_not_found:
     'IDS Master no tiene fila del libro Bots. Comprueba la tabla de IDs vinculados.',
   ep_export_error_bots_workbook_access_denied:

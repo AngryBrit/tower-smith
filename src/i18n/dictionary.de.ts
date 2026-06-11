@@ -1266,10 +1266,59 @@ export const STRINGS_DE = {
   ep_export_section: 'Effective Paths (Google Sheets)',
   ep_export_section_hint:
     'Relikte und Themes ins Effective-Paths-Buch synchronisieren. IDS-Master-URL zuerst unter Einstellungen setzen.',
+  ep_labs_sync_section: 'Effective Paths (Google Sheets)',
+  ep_sync_open_btn: 'Effective Paths Sync…',
+  ep_sync_title: 'Effective Paths Sync',
+  ep_sync_intro:
+    'Verknüpfte Arbeitsmappen aus dem IDS Master laden (in den Einstellungen), dann pro Kategorie importieren oder exportieren.',
+  ep_sync_syncing: 'Sync läuft…',
+  ep_labs_sync_section_hint:
+    'Lab-Level ins Laboratory-Arbeitsblatt exportieren oder daraus importieren. IDS-Master-URL zuerst unter Einstellungen setzen.',
   ep_export_open_btn: 'Mit Effective Paths synchronisieren…',
-  ep_export_title: 'Mit Effective Paths synchronisieren',
+  ep_export_labs_open_btn: 'Nach Effective Paths exportieren…',
+  ep_import_labs_open_btn: 'Aus Effective Paths importieren…',
+  ep_export_title: 'Nach Effective Paths exportieren',
+  ep_import_title: 'Aus Effective Paths importieren',
+  ep_import_intro:
+    'Verknüpfte Arbeitsmappen aus IDS Master laden (unter Einstellungen) und Build-Daten aus den verknüpften Kind-Arbeitsmappen importieren (gleiche Kategorien wie Export).',
+  ep_import_labs_intro:
+    'Verknüpfte Arbeitsmappen aus IDS Master laden (unter Einstellungen) und Lab-Level aus dem verknüpften Laboratory Master Sheet importieren.',
+  ep_import_relics_btn: 'Relikte aus Relics-Arbeitsmappe importieren',
+  ep_import_themes_btn: 'Themes aus Themes-Arbeitsmappe importieren',
+  ep_import_cards_btn: 'Karten aus Cards-Arbeitsmappe importieren',
+  ep_import_labs_btn: 'Labs aus Laboratory-Arbeitsmappe importieren',
+  ep_import_workshop_btn: 'Workshop aus Workshop-Arbeitsmappe importieren',
+  ep_import_bots_btn: 'Bots aus Bots-Arbeitsmappe importieren',
+  ep_import_uws_btn: 'UWs aus UWs-Arbeitsmappe importieren',
+  ep_import_modules_btn: 'Module aus Modules-Arbeitsmappe importieren',
+  ep_import_row_btn: 'Import',
+  ep_import_row_syncing: 'Import…',
+  ep_import_syncing: 'Import läuft…',
+  ep_import_syncing_relics: 'Relikte werden importiert…',
+  ep_import_syncing_themes: 'Themes werden importiert…',
+  ep_import_syncing_cards: 'Karten werden importiert…',
+  ep_import_syncing_labs: 'Labs werden importiert…',
+  ep_import_syncing_workshop: 'Workshop wird importiert…',
+  ep_import_syncing_bots: 'Bots werden importiert…',
+  ep_import_syncing_uws: 'UWs werden importiert…',
+  ep_import_syncing_modules: 'Module werden importiert…',
+  ep_import_relics_success: '{{rows}} Relikt-Zeilen aus „{{sheet}}“ importiert.',
+  ep_import_themes_success: '{{rows}} Theme-Zeilen aus „{{sheet}}“ importiert.',
+  ep_import_cards_success: '{{rows}} Karten-Zeilen aus „{{sheet}}“ importiert.',
+  ep_import_cards_presets_success_suffix:
+    'Außerdem {{presetRows}} Preset-Slots auf „{{presetSheet}}“ importiert.',
+  ep_import_labs_success: '{{rows}} Lab-Level aus „{{sheet}}“ importiert.',
+  ep_import_workshop_success:
+    '{{rows}} Workshop-Upgrade-Level aus „{{sheet}}“ importiert.',
+  ep_import_workshop_enhance_success_suffix:
+    'Außerdem {{enhanceRows}} Workshop-Verbesserungs-Level importiert.',
+  ep_import_bots_success: '{{rows}} Bot-Farming-Level aus „{{sheet}}“ importiert.',
+  ep_import_bots_lab_success_suffix: 'Außerdem {{labRows}} BOTS-Labor-Level importiert.',
+  ep_import_uws_success: '{{rows}} Ultimate-Weapon-Level aus „{{sheet}}“ importiert.',
+  ep_import_modules_success:
+    '{{rows}} ausgerüstete Modul-Spalten ({{effects}} Effekte) aus „{{sheet}}“ importiert.',
   ep_export_intro:
-    'Verknüpfte Arbeitsmappen aus IDS Master laden (unter Einstellungen) und Relikte oder Themes in die verknüpften Kind-Arbeitsmappen synchronisieren.',
+    'Verknüpfte Arbeitsmappen aus IDS Master laden (unter Einstellungen) und Relikte, Themes und andere Build-Daten in die verknüpften Kind-Arbeitsmappen exportieren.',
   ep_export_missing_ids_master:
     'IDS-Master-URL unter Einstellungen (Tools → Einstellungen) setzen, bevor verknüpfte Arbeitsmappen geladen werden.',
   ep_export_spreadsheet_label: 'IDS-Master-Spreadsheet-ID oder URL',
@@ -1277,15 +1326,17 @@ export const STRINGS_DE = {
   ep_export_spreadsheet_hint:
     'IDS-Master-URL einfügen. Verknüpfte IDs stammen nur aus Spalte D („Go to my … Sheet“-Links).',
   ep_export_load_sheets_btn: 'Google Sheets erlauben & verknüpfte Mappen laden',
+  ep_export_load_linked_workbooks_btn: 'Verknüpfte Arbeitsmappen laden',
   ep_export_loading_sheets: 'Google Sheets wird erlaubt und verknüpfte Arbeitsmappen geprüft…',
+  ep_export_loading_linked_workbooks: 'Verknüpfte Arbeitsmappen werden geladen…',
+  ep_export_loading_ids_gateway: 'IDS Master wird gelesen…',
+  ep_export_loading_workbook_named: '{{name}} wird geprüft…',
   ep_export_workbook_access_ok: 'Zugriff',
   ep_export_workbook_access_denied: 'Kein Zugriff',
   ep_export_workbook_access_not_found: 'Nicht gefunden',
   ep_export_linked_workbooks_denied:
     'Google Sheets ist verbunden, aber TowerSmith kann diese verknüpften Arbeitsmappen nicht öffnen: {{names}}. Jeweils in Google Sheets mit demselben Konto öffnen (Editor-Rechte) oder den „Go to my … Sheet“-Link auf dem IDS-Tab korrigieren.',
   ep_export_linked_sheets_title: 'IDS-Tab „{{tab}}“ — verknüpfte Arbeitsmappen',
-  ep_export_relics_resolved:
-    'Relics-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (separate Tabelle; Sync auf Relics-Tab).',
   ep_export_relics_sync_target: 'Relikt-Sync-Ziel',
   ep_export_themes_sync_target: 'Theme-Sync-Ziel',
   ep_export_cards_sync_target: 'Karten-Sync-Ziel',
@@ -1312,18 +1363,20 @@ export const STRINGS_DE = {
     'Keine Relics-, Themes-&-Songs-, Cards-, Workshop-, Bots- oder Laboratory-Zeilen mit Spreadsheet-IDs auf dem IDS-Tab gefunden.',
   ep_export_relics_missing_loaded:
     'Geladen: {{names}}. „Go to my Relics Sheet“-Link in Spalte D auf dem IDS-Tab prüfen.',
-  ep_export_sync_relics_btn: 'Relikte ins Relics-Buch synchronisieren',
-  ep_export_sync_themes_btn: 'Themes ins Themes-&-Songs-Buch synchronisieren',
-  ep_export_sync_cards_btn: 'Karten & Presets ins Cards-Buch synchronisieren',
-  ep_export_sync_workshop_btn: 'Werkstatt ins Workshop-Buch synchronisieren',
-  ep_export_sync_bots_btn: 'Bots ins Bots-Buch synchronisieren',
-  ep_export_sync_labs_btn: 'Labs ins Laboratory-Buch synchronisieren',
-  ep_export_sync_uws_btn: 'Ultimate Weapons ins UWs-Buch synchronisieren',
-  ep_export_sync_modules_btn: 'Module ins Modules-Buch synchronisieren',
-  ep_export_syncing_relics: 'Relikte werden synchronisiert…',
-  ep_export_syncing_themes: 'Themes werden synchronisiert…',
-  ep_export_syncing_cards: 'Karten & Presets werden synchronisiert…',
-  ep_export_syncing_workshop: 'Werkstatt wird synchronisiert…',
+  ep_export_row_btn: 'Export',
+  ep_export_row_syncing: 'Export…',
+  ep_export_sync_relics_btn: 'Relikte ins Relics-Buch exportieren',
+  ep_export_sync_themes_btn: 'Themes ins Themes-&-Songs-Buch exportieren',
+  ep_export_sync_cards_btn: 'Karten & Presets ins Cards-Buch exportieren',
+  ep_export_sync_workshop_btn: 'Werkstatt ins Workshop-Buch exportieren',
+  ep_export_sync_bots_btn: 'Bots ins Bots-Buch exportieren',
+  ep_export_sync_labs_btn: 'Labs ins Laboratory-Buch exportieren',
+  ep_export_sync_uws_btn: 'Ultimate Weapons ins UWs-Buch exportieren',
+  ep_export_sync_modules_btn: 'Module ins Modules-Buch exportieren',
+  ep_export_syncing_relics: 'Relikte werden exportiert…',
+  ep_export_syncing_themes: 'Themes werden exportiert…',
+  ep_export_syncing_cards: 'Karten & Presets werden exportiert…',
+  ep_export_syncing_workshop: 'Werkstatt wird exportiert…',
   ep_export_relics_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Reliktzeilen).',
   ep_export_themes_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Theme-Zeilen).',
   ep_export_cards_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Kartenzeilen).',
@@ -1341,15 +1394,6 @@ export const STRINGS_DE = {
   ep_export_themes_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_cards_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_workshop_unmapped_sample: 'Beispiele: {{names}}',
-  ep_export_themes_resolved:
-    'Themes-&-Songs-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (Sync auf Besitz-Checkboxen in den v3.x-Eingabeblöcken).',
-  ep_export_themes_open_sheet: 'Verknüpftes Themes-&-Songs-Buch in Google Sheets öffnen',
-  ep_export_cards_resolved:
-    'Cards-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (Sync auf Master Sheet und Card-Preset-Tab).',
-  ep_export_cards_open_sheet: 'Verknüpftes Cards-Buch in Google Sheets öffnen',
-  ep_export_workshop_resolved:
-    'Workshop-Arbeitsmappe-ID aus IDS-Tab „{{tab}}“: {{id}} (Sync auf Freischalt-Checkboxen und Level im Master Sheet).',
-  ep_export_workshop_open_sheet: 'Verknüpftes Workshop-Buch in Google Sheets öffnen',
   ep_export_invalid_spreadsheet: 'Gültige Google-Spreadsheet-ID oder docs.google.com-URL eingeben.',
   ep_export_oauth_not_configured: 'Google-Sheets-Export ist auf dieser Seite nicht konfiguriert.',
   ep_export_cancelled: 'Google-Anmeldung abgebrochen.',
@@ -1363,7 +1407,6 @@ export const STRINGS_DE = {
   ep_export_error_ids_master_empty: 'IDS Master enthält keine verknüpften Arbeitsmappen-Zeilen.',
   ep_export_error_relic_workbook_not_found:
     'IDS Master hat keine Relics-Zeile. Verknüpfte-ID-Tabelle prüfen.',
-  ep_export_relics_open_sheet: 'Verknüpftes Relics-Buch in Google Sheets öffnen',
   ep_export_error_relic_workbook_access_denied:
     'Das IDS-verknüpfte Relics-Buch ({{id}}) ist nicht bearbeitbar. In Google Sheets öffnen und Editor-Zugriff prüfen, oder den Link auf dem IDS-Tab korrigieren.',
   ep_export_error_relic_tab_not_found: 'Relics-Tab im Relics-Buch nicht gefunden.',
@@ -1393,10 +1436,10 @@ export const STRINGS_DE = {
     'Eingabe-Tab Workshop im Workshop-Buch nicht gefunden.',
   ep_export_bots_missing_in_master:
     'Auf dem IDS-Tab wurde keine Bots-Zeile mit Tabellen-ID gefunden.',
-  ep_export_syncing_bots: 'Bots werden synchronisiert…',
-  ep_export_syncing_labs: 'Labs werden synchronisiert…',
-  ep_export_syncing_uws: 'Ultimate Weapons werden synchronisiert…',
-  ep_export_syncing_modules: 'Module werden synchronisiert…',
+  ep_export_syncing_bots: 'Bots werden exportiert…',
+  ep_export_syncing_labs: 'Labs werden exportiert…',
+  ep_export_syncing_uws: 'Ultimate Weapons werden exportiert…',
+  ep_export_syncing_modules: 'Module werden exportiert…',
   ep_export_bots_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Bot-Stat-Zeilen).',
   ep_export_bots_lab_success_suffix:
@@ -1412,18 +1455,6 @@ export const STRINGS_DE = {
   ep_export_labs_unmapped_hint:
     '{{count}} Lab-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
   ep_export_labs_unmapped_sample: 'Beispiele: {{names}}',
-  ep_export_bots_resolved:
-    'Bots-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (sync zu Medaillen, Bot+ und BOTS-Lab-Stufen auf Master Sheet).',
-  ep_export_bots_open_sheet: 'Verknüpftes Bots-Arbeitsbuch in Google Sheets öffnen',
-  ep_export_labs_resolved:
-    'Laboratory-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (Sync zu Lab-Stufen auf Master Sheet).',
-  ep_export_labs_open_sheet: 'Verknüpftes Laboratory-Arbeitsbuch in Google Sheets öffnen',
-  ep_export_uws_resolved:
-    'UWs-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}}',
-  ep_export_uws_open_sheet: 'Verknüpftes UWs-Arbeitsbuch in Google Sheets öffnen',
-  ep_export_modules_resolved:
-    'Modules-Arbeitsmappen-ID vom IDS-Tab „{{tab}}“: {{id}} (Sync zum Inventory-Tab).',
-  ep_export_modules_open_sheet: 'Verknüpftes Modules-Arbeitsbuch in Google Sheets öffnen',
   ep_export_error_bots_workbook_not_found:
     'IDS Master hat keine Bots-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
   ep_export_error_bots_workbook_access_denied:

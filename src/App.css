@@ -2292,6 +2292,10 @@ html[data-color-scheme='high-contrast'] {
   gap: 0.5rem;
 }
 
+.effective-paths-export-dialog__load-progress {
+  margin-top: 0.5rem;
+}
+
 .effective-paths-export-dialog__actions {
   margin-top: 0.15rem;
 }
@@ -2326,8 +2330,6 @@ html[data-color-scheme='high-contrast'] {
 .effective-paths-export-dialog__workbook-list {
   margin: 0.2rem 0 0.5rem;
   padding: 0.35rem 0.5rem 0.35rem 1.15rem;
-  max-height: 9rem;
-  overflow-y: auto;
   border-radius: 0.35rem;
   border: 1px solid color-mix(in srgb, var(--sr-border, #cbd5e1) 70%, transparent);
   font-size: 0.8rem;
@@ -2371,6 +2373,23 @@ html[data-color-scheme='high-contrast'] {
   font-size: 0.72rem;
   font-weight: 500;
   color: var(--sr-muted, #64748b);
+}
+
+.effective-paths-export-dialog__workbook-actions {
+  flex-shrink: 0;
+  margin-left: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.35rem;
+}
+
+.effective-paths-export-dialog__workbook-action {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.72rem;
+  line-height: 1.25;
+  white-space: nowrap;
 }
 
 .select-research__lab-data-title {
