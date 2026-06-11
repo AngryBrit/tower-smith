@@ -1,34 +1,43 @@
 import { quoteSheetTitleForRange } from './buildRelicUnlockedUpdates'
-import type { EffectivePathsWorkshopSheetRow } from './workshopSheetLayout'
+import type {
+  EffectivePathsWorkshopSheetRow,
+  WorkshopEnhanceSheetLayout,
+  WorkshopSheetLayout,
+} from './workshopSheetLayout'
 import { columnIndexToA1Letter } from './workshopSheetLayout'
-import type { WorkshopEnhanceSheetLayout } from './workshopSheetLayout'
-import { workshopEnhanceIdFromSheetName, workshopUpgradeIdFromSheetName } from './workshopSheetNames'
-import { workshopUpgradeUnlockedForEp } from './workshopEpUnlock'
+import { workshopEnhanceIdFromSheetName } from './workshopSheetNames'
+import {
+  workshopUpgradeUnlockedForEp,
+  workshopUpgradeWritesUnlockColumn,
+} from './workshopEpUnlock'
 
 export type WorkshopSheetBatchUpdate = {
   range: string
   values: string[][]
 }
 
-/** Build per-row updates for unlocked (B) and level (D) on Workshop v3.x Master Sheet. */
+/** Build per-row updates for unlocked and farming level on Workshop Master Sheet. */
 export function buildWorkshopSheetUpdates(
   sheetTitle: string,
   workshopRows: readonly EffectivePathsWorkshopSheetRow[],
   workshopLevels: Readonly<Record<string, number>>,
+  layout: WorkshopSheetLayout,
 ): WorkshopSheetBatchUpdate[] {
   const quoted = quoteSheetTitleForRange(sheetTitle)
-  const unlockedCol = columnIndexToA1Letter(1)
-  const levelCol = columnIndexToA1Letter(3)
+  const unlockedCol = columnIndexToA1Letter(layout.unlockedCol)
+  const levelCol = columnIndexToA1Letter(layout.levelCol)
   const out: WorkshopSheetBatchUpdate[] = []
 
   for (const row of workshopRows) {
-    const upgradeId = workshopUpgradeIdFromSheetName(row.name)
+    const upgradeId = row.upgradeId
     if (!upgradeId) continue
     const level = Math.max(0, Math.round(workshopLevels[upgradeId] ?? 0))
-    out.push({
-      range: `${quoted}!${unlockedCol}${row.rowIndex}`,
-      values: [[workshopUpgradeUnlockedForEp(upgradeId, level) ? 'TRUE' : 'FALSE']],
-    })
+    if (workshopUpgradeWritesUnlockColumn(upgradeId)) {
+      out.push({
+        range: `${quoted}!${unlockedCol}${row.rowIndex}`,
+        values: [[workshopUpgradeUnlockedForEp(upgradeId, level) ? 'TRUE' : 'FALSE']],
+      })
+    }
     out.push({
       range: `${quoted}!${levelCol}${row.rowIndex}`,
       values: [[String(level)]],

@@ -5,14 +5,14 @@
  * - **IDS Collection** — all sheets combined into one workbook.
  * - **Relics** — relic data; tab **Relics** lists every relic (name col C, Unlocked col F).
  * - **Themes & Songs** — owned/name pairs in B/C, E/F, L/M (milestone/songs/guardians), and Q/R.
- * - **Workshop** — upgrade data; Master Sheet tab with unlocked in B, names in C, levels in D;
- *   Workshop Enhancements in P (name) and R (level).
+ * - **Workshop** — upgrade data; Master Sheet tab with unlocked in B, names in C, farming levels in D, max in N;
+ *   Workshop Enhancements in P (name) and R (farming level / Preset 3; W is max on clean sheets).
  * - **Cards** — card data; Master Sheet tab with names in B, levels in C, mastery in D;
  *   Card Preset tab with loadouts in D/H/L/P/T (rows 5–32).
  * - **Laboratory** — research labs on Master Sheet (Labs=name, Level=current level) in each section block.
  * - **Bots** — bot medals + Bot+ on Master Sheet (C=unlocked, D=attribute, G/H=Farming lvl/Sync);
  *   BOTS lab levels in OTHERS (T=name, V=level).
- * - **Ultimate Weapon / UWs** — UW unlocked in D; basic + Plus levels in G (dropdown labels).
+ * - **Ultimate Weapon / UWs** — UW unlocked in C (C4, C8, …); basic + Plus levels in G (dropdown labels).
  * - **Modules** — equipped chassis modules on Inventory tab (rarity, level, stat, main substats).
  *
  * TowerSmith reads linked IDs from IDS Master, then writes to the linked child workbooks.

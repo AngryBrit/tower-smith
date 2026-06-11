@@ -26,7 +26,7 @@ describe('workshopLevelsFromSheetRows', () => {
     grid[1]![17] = 3
 
     const workshopRows: EffectivePathsWorkshopSheetRow[] = [
-      { rowIndex: 1, name: 'Damage' },
+      { rowIndex: 1, name: 'Damage', upgradeId: 'damageLevel' },
     ]
     const enhanceRows: EffectivePathsWorkshopSheetRow[] = [
       { rowIndex: 2, name: 'Damage +' },
@@ -42,7 +42,9 @@ describe('workshopLevelsFromSheetRows', () => {
 
   it('treats blank level cells as zero', () => {
     const grid = [['', '', 'Range', '']]
-    const workshopRows: EffectivePathsWorkshopSheetRow[] = [{ rowIndex: 1, name: 'Range' }]
+    const workshopRows: EffectivePathsWorkshopSheetRow[] = [
+      { rowIndex: 1, name: 'Range', upgradeId: 'attackRangeLevel' },
+    ]
     expect(workshopLevelsFromSheetRows(workshopRows, [], grid, layout, null)).toEqual({
       attackRangeLevel: 0,
     })

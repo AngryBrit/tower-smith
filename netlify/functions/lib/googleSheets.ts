@@ -22,9 +22,12 @@ import {
 import { resolveModuleEpInventoryLayout } from '../../../src/effectivePaths/moduleEpInventoryLayoutFromSheet'
 import type { ModulesEpSyncState } from '../../../src/effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../../src/effectivePaths/uwsEpStateFromPersisted'
+import { WORKSHOP_ULTIMATE_WEAPON_ORDER } from '../../../src/data/workshopUltimateData'
 import {
   UW_EP_V31_LEVEL_FIRST_ROW,
   UW_EP_V31_LEVEL_LAST_ROW,
+  UW_EP_V31_UNLOCKED_COL,
+  UW_EP_V31_UNLOCKED_ROWS,
 } from '../../../src/effectivePaths/uwEpSheetNames'
 import {
   BOT_EP_V31_FARMING_LEVEL_FIRST_ROW,
@@ -950,7 +953,7 @@ export async function exportWorkshopToGoogleSheet(options: {
   const { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle } = loaded
 
   const batch = [
-    ...buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels),
+    ...buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels, layout),
     ...(enhanceLayout
       ? buildWorkshopEnhanceSheetUpdates(
           sheetTitle,
@@ -1561,7 +1564,6 @@ export async function exportLabsToGoogleSheet(options: {
 }
 
 export const UW_EP_V31_LEVEL_COL = 6
-export const UW_EP_V31_UNLOCKED_COL = 3
 
 export type ExportUwsToSheetResult = {
   updatedCells: number
@@ -1614,6 +1616,51 @@ async function clearUwLevelColumn(
   if (!clearRes.ok) {
     throw new GoogleSheetsApiError('sheets_api_error', clearRes.status, await clearRes.text())
   }
+}
+
+async function applyUwUnlockCells(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetId: number,
+  state: UwsEpSyncState,
+): Promise<number> {
+  const requests = WORKSHOP_ULTIMATE_WEAPON_ORDER.map((weaponId) => {
+    const rowIndex = UW_EP_V31_UNLOCKED_ROWS[weaponId]
+    const owned = state.ownedByWeaponId[weaponId] === true
+    return {
+      updateCells: {
+        range: {
+          sheetId,
+          startRowIndex: rowIndex - 1,
+          endRowIndex: rowIndex,
+          startColumnIndex: UW_EP_V31_UNLOCKED_COL,
+          endColumnIndex: UW_EP_V31_UNLOCKED_COL + 1,
+        },
+        rows: [
+          {
+            values: [{ userEnteredValue: { boolValue: owned } }],
+          },
+        ],
+        fields: 'userEnteredValue',
+      },
+    }
+  })
+
+  const updateRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'uws_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  return requests.length
 }
 
 async function applyUwLevelCells(
@@ -1710,27 +1757,34 @@ export async function exportUwsToGoogleSheet(options: {
   }
 
   const farmingCells = buildUwFarmingLevelCellUpdates(options.uwsEpState)
-  const batch = buildUwSheetUpdates(sheetTitle, options.uwsEpState)
-  if (farmingCells.length === 0 && batch.length === 0) {
+  const unlockBatch = buildUwSheetUpdates(sheetTitle, options.uwsEpState)
+  if (farmingCells.length === 0 && unlockBatch.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_uws_rows')
   }
 
   await clearUwLevelColumn(options.accessToken, uwsWorkbookId, sheetTitle)
 
   let updatedCells = 0
-  let valueBatch = batch
+  let valueBatch = unlockBatch
 
   if (sheetId != null) {
+    updatedCells += await applyUwUnlockCells(
+      options.accessToken,
+      uwsWorkbookId,
+      sheetId,
+      options.uwsEpState,
+    )
     updatedCells += await applyUwLevelCells(
       options.accessToken,
       uwsWorkbookId,
       sheetId,
       farmingCells,
     )
+    valueBatch = []
   } else if (farmingCells.length > 0) {
     const quoted = quoteSheetTitleForRange(sheetTitle)
     valueBatch = [
-      ...batch,
+      ...unlockBatch,
       ...farmingCells.map(({ rowIndex, label }) => ({
         range: `${quoted}!G${rowIndex}`,
         values: [[label]] as (string | number | boolean)[][],

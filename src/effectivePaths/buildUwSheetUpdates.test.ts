@@ -63,13 +63,13 @@ describe('buildUwFarmingLevelCellUpdates', () => {
 })
 
 describe('buildUwSheetUpdates', () => {
-  it('writes UW unlocked checkboxes on column D', () => {
+  it('writes UW unlocked checkboxes on column C', () => {
     const batch = buildUwSheetUpdates('Master Sheet', state)
     expect(batch).toEqual(
       expect.arrayContaining([
-        { range: "'Master Sheet'!D2", values: [[true]] },
-        { range: "'Master Sheet'!D6", values: [[false]] },
-        { range: "'Master Sheet'!D22", values: [[true]] },
+        { range: "'Master Sheet'!C4", values: [['TRUE']] },
+        { range: "'Master Sheet'!C8", values: [['FALSE']] },
+        { range: "'Master Sheet'!C24", values: [['TRUE']] },
       ]),
     )
     expect(batch).toHaveLength(9)

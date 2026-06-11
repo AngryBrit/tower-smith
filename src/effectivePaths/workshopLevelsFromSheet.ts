@@ -3,7 +3,7 @@ import type {
   WorkshopEnhanceSheetLayout,
   WorkshopSheetLayout,
 } from './workshopSheetLayout'
-import { workshopEnhanceIdFromSheetName, workshopUpgradeIdFromSheetName } from './workshopSheetNames'
+import { workshopEnhanceIdFromSheetName } from './workshopSheetNames'
 
 function cellValueToString(raw: unknown): string {
   if (raw == null) return ''
@@ -31,7 +31,8 @@ export function workshopLevelsFromSheetRows(
   const out: Record<string, number> = {}
 
   for (const row of workshopRows) {
-    const upgradeId = workshopUpgradeIdFromSheetName(row.name)
+    const upgradeId = row.upgradeId ?? null
+    if (!upgradeId) continue
     if (!upgradeId) continue
     const level = parseSheetLevelCell(grid[row.rowIndex - 1]?.[layout.levelCol])
     if (level == null) continue

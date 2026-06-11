@@ -32,9 +32,20 @@ export const UW_EP_V31_LEVEL_START_ROWS: Record<WorkshopUltimateWeaponId, number
   spotlight: 34,
 }
 
-/** UW unlocked checkbox rows (column D) — first row of each weapon block. */
+/** 0-based column index for UW unlocked checkboxes (column C). */
+export const UW_EP_V31_UNLOCKED_COL = 2 as const
+
+/** Rows between first G-level row and unlocked checkbox within each weapon block. */
+export const UW_EP_V31_UNLOCK_ROW_OFFSET = 2 as const
+
+/** UW unlocked checkbox rows (column C): C4, C8, C12, … C36. */
 export const UW_EP_V31_UNLOCKED_ROWS: Record<WorkshopUltimateWeaponId, number> =
-  UW_EP_V31_LEVEL_START_ROWS
+  Object.fromEntries(
+    WORKSHOP_ULTIMATE_WEAPON_ORDER.map((weaponId) => [
+      weaponId,
+      UW_EP_V31_LEVEL_START_ROWS[weaponId] + UW_EP_V31_UNLOCK_ROW_OFFSET,
+    ]),
+  ) as Record<WorkshopUltimateWeaponId, number>
 
 /** Basic + Plus level keys in Master Sheet row order (G start row + offset). */
 export const UW_EP_V31_LEVEL_KEY_ORDER: Record<WorkshopUltimateWeaponId, readonly UwEpLevelKey[]> =

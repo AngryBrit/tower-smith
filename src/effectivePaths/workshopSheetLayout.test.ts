@@ -38,8 +38,12 @@ describe('workshopSheetLayout', () => {
     const layout = detectWorkshopSheetLayout(rows)
     expect(layout).not.toBeNull()
     const parsed = parseWorkshopSheetRowsWithLayout(rows, layout!)
-    expect(parsed[0]).toEqual({ rowIndex: 6, name: 'Damage' })
-    expect(parsed[1]).toEqual({ rowIndex: 7, name: 'Attack Speed' })
+    expect(parsed[0]).toEqual({ rowIndex: 6, name: 'Damage', upgradeId: 'damageLevel' })
+    expect(parsed[1]).toEqual({
+      rowIndex: 7,
+      name: 'Attack Speed',
+      upgradeId: 'attackSpeedLevel',
+    })
   })
 
   it('detects Workshop Enhancements block in columns P/R', () => {

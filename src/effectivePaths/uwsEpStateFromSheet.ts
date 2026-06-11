@@ -7,12 +7,13 @@ import {
   isUwEpPlusLevelKey,
   UW_EP_V31_LEVEL_KEY_ORDER,
   UW_EP_V31_LEVEL_START_ROWS,
+  UW_EP_V31_UNLOCKED_COL,
   UW_EP_V31_UNLOCKED_ROWS,
 } from './uwEpSheetNames'
 
 const UW_FARMING_LEVEL_COL = 6
-/** Input tab: D=unlocked. Some layouts place the checkbox in C instead. */
-const UW_UNLOCKED_COLS = [3, 2] as const
+/** Input tab: C=unlocked (C4, C8, …). Fall back to column D on older layouts. */
+const UW_UNLOCKED_COLS = [UW_EP_V31_UNLOCKED_COL, 3] as const
 
 function uwUnlockedFromGridRow(
   grid: readonly (readonly unknown[])[],

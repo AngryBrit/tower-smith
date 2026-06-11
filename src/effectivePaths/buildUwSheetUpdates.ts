@@ -14,10 +14,13 @@ import {
   type WorkshopUltimateTrack,
 } from '../data/workshopUltimateTable'
 import { quoteSheetTitleForRange } from './buildRelicUnlockedUpdates'
+import { cellValueToString } from './epSheetCellParsing'
+import { columnIndexToA1Letter } from './relicSheetLayout'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
 import {
   UW_EP_V31_LEVEL_KEY_ORDER,
   UW_EP_V31_LEVEL_START_ROWS,
+  UW_EP_V31_UNLOCKED_COL,
   UW_EP_V31_UNLOCKED_ROWS,
   isUwEpPlusLevelKey,
   uwEpPlusAbilityForLevelKey,
@@ -215,18 +218,20 @@ export function buildUwFarmingLevelCellUpdates(state: UwsEpSyncState): UwFarming
   return out
 }
 
-/** Column D UW unlocked checkboxes. */
+/** Column C UW unlocked checkboxes (C4, C8, C12, …). */
 export function buildUwSheetUpdates(
   sheetTitle: string,
   state: UwsEpSyncState,
 ): UwSheetBatchUpdate[] {
   const quoted = quoteSheetTitleForRange(sheetTitle)
+  const unlockedCol = columnIndexToA1Letter(UW_EP_V31_UNLOCKED_COL)
   const out: UwSheetBatchUpdate[] = []
   for (const weaponId of WORKSHOP_ULTIMATE_WEAPON_ORDER) {
     const row = UW_EP_V31_UNLOCKED_ROWS[weaponId]
+    const owned = state.ownedByWeaponId[weaponId] === true
     out.push({
-      range: `${quoted}!D${row}`,
-      values: [[state.ownedByWeaponId[weaponId] ?? false]],
+      range: `${quoted}!${unlockedCol}${row}`,
+      values: [[cellValueToString(owned)]],
     })
   }
   return out
