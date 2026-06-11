@@ -113,7 +113,6 @@ async function readUwsImportGrid(
   const lastRow = UW_EP_V31_LEVEL_LAST_ROW
   const rangeParams = [
     `${quoted}!C${firstRow}:C${lastRow}`,
-    `${quoted}!D${firstRow}:D${lastRow}`,
     `${quoted}!G${firstRow}:G${lastRow}`,
   ]
     .map((range) => `ranges=${encodeURIComponent(range)}`)
@@ -131,15 +130,11 @@ async function readUwsImportGrid(
   }
   const valueRanges = batchBody.valueRanges ?? []
   const cValues = valueRanges.find((entry) => /!C\d/i.test(entry.range ?? ''))?.values ?? []
-  const dValues = valueRanges.find((entry) => /!D\d/i.test(entry.range ?? ''))?.values ?? []
   const gValues = valueRanges.find((entry) => /!G\d/i.test(entry.range ?? ''))?.values ?? []
   const rowCount = UW_EP_V31_LEVEL_LAST_ROW
   const grid: string[][] = Array.from({ length: rowCount }, () => Array(8).fill(''))
   for (let i = 0; i < cValues.length; i += 1) {
     grid[UW_EP_V31_LEVEL_FIRST_ROW - 1 + i]![2] = cellValueToString(cValues[i]?.[0])
-  }
-  for (let i = 0; i < dValues.length; i += 1) {
-    grid[UW_EP_V31_LEVEL_FIRST_ROW - 1 + i]![3] = cellValueToString(dValues[i]?.[0])
   }
   for (let i = 0; i < gValues.length; i += 1) {
     grid[UW_EP_V31_LEVEL_FIRST_ROW - 1 + i]![6] = cellValueToString(gValues[i]?.[0])

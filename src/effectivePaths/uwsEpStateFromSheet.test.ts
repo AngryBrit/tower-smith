@@ -47,12 +47,12 @@ describe('uwsEpStateFromSheetGrid', () => {
     expect(state.ownedByWeaponId.chainLightning).toBe(false)
   })
 
-  it('falls back to column D when column C is empty', () => {
+  it('ignores column D when column C is empty', () => {
     const grid = Array.from({ length: 40 }, () => Array<string>(8).fill(''))
     grid[UW_EP_V31_UNLOCKED_ROWS.spotlight - 1]![3] = 'TRUE'
 
     const state = uwsEpStateFromSheetGrid(grid)
-    expect(state.ownedByWeaponId.spotlight).toBe(true)
+    expect(state.ownedByWeaponId.spotlight).toBe(false)
   })
 
   it('applies imported unlock flags to workshop persisted state', () => {

@@ -12,19 +12,14 @@ import {
 } from './uwEpSheetNames'
 
 const UW_FARMING_LEVEL_COL = 6
-/** Input tab: C=unlocked (C4, C8, …). Fall back to column D on older layouts. */
-const UW_UNLOCKED_COLS = [UW_EP_V31_UNLOCKED_COL, 3] as const
 
 function uwUnlockedFromGridRow(
   grid: readonly (readonly unknown[])[],
   row0: number,
 ): boolean {
-  for (const col of UW_UNLOCKED_COLS) {
-    const raw = grid[row0]?.[col]
-    if (raw == null || String(raw).trim() === '') continue
-    return parseSheetBoolCell(raw)
-  }
-  return false
+  const raw = grid[row0]?.[UW_EP_V31_UNLOCKED_COL]
+  if (raw == null || String(raw).trim() === '') return false
+  return parseSheetBoolCell(raw)
 }
 
 /** Read UWs workbook sync state from Master Sheet grid. */
