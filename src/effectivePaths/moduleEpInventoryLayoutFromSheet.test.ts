@@ -5,7 +5,10 @@ import {
   parseModuleEpInventoryLayoutV612,
   resolveModuleEpInventoryLayout,
 } from './moduleEpInventoryLayoutFromSheet'
-import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
+import {
+  modulesEpDefaultSectionLevels,
+  type ModulesEpSyncState,
+} from './modulesEpStateFromPersisted'
 
 /** Trimmed v6.1.2 grid Inventory tab (rows 1–20). */
 const V612_GRID: string[][] = [
@@ -33,6 +36,8 @@ describe('resolveModuleEpInventoryLayout', () => {
   it('detects v6.1.2 grid layout from title row', () => {
     const layout = resolveModuleEpInventoryLayout(V612_GRID)
     expect(layout.variant).toBe('v612')
+    expect(layout.sections.cannon.highestPrimaryLevelCell).toEqual({ row: 5, col: 2 })
+    expect(layout.sections.cannon.highestAssistLevelCell).toEqual({ row: 8, col: 1 })
     expect(layout.sections.cannon.dataRow).toBe(5)
     expect(layout.sections.armor.dataRow).toBe(18)
     expect(layout.sections.cannon.blockStride).toBe(3)
@@ -54,9 +59,13 @@ describe('resolveModuleEpInventoryLayout', () => {
 })
 
 describe('buildModuleSheetUpdates v612', () => {
-  it('writes main cannon data to row 5 column D and assist to Any Other', () => {
+  it('writes main cannon data to row 5 column D and assist to its module column', () => {
     const layout = parseModuleEpInventoryLayoutV612(V612_GRID)
     const state: ModulesEpSyncState = {
+      sectionLevels: {
+        ...modulesEpDefaultSectionLevels(),
+        cannon: { highestPrimaryLevel: 300, highestAssistLevel: 1 },
+      },
       modules: [
         {
           moduleId: 'astralDeliverance',
@@ -80,11 +89,13 @@ describe('buildModuleSheetUpdates v612', () => {
       buildModuleSheetUpdates('Inventory', state, layout).map((u) => [u.range, u.values[0]![0]]),
     )
 
+    expect(byRange["'Inventory'!C5"]).toBe(300)
+    expect(byRange["'Inventory'!B8"]).toBe(1)
     expect(byRange["'Inventory'!D5"]).toBe('Ancestral 2*')
-    expect(byRange["'Inventory'!E5"]).toBe(140)
-    expect(byRange["'Inventory'!V5"]).toBe('Legendary+')
-    expect(byRange["'Inventory'!W5"]).toBe(100)
-    expect(byRange["'Inventory'!AE5"]).toBeUndefined()
+    expect(byRange["'Inventory'!E5"]).toBeUndefined()
+    expect(byRange["'Inventory'!S5"]).toBe('Legendary+')
+    expect(byRange["'Inventory'!T5"]).toBeUndefined()
+    expect(byRange["'Inventory'!V5"]).toBeUndefined()
   })
 })
 
@@ -110,6 +121,9 @@ describe('compact Inventory layout', () => {
   it('detects compact stride-5 rows from clean template', () => {
     const layout = resolveModuleEpInventoryLayout(COMPACT_GRID)
     expect(layout.variant).toBe('compact')
+    expect(layout.sections.cannon.highestPrimaryLevelCell).toEqual({ row: 2, col: 3 })
+    expect(layout.sections.cannon.highestAssistLevelCell).toEqual({ row: 3, col: 3 })
+    expect(layout.sections.armor.highestAssistLevelCell).toEqual({ row: 21, col: 3 })
     expect(layout.sections.cannon.dataRow).toBe(2)
     expect(layout.sections.armor.dataRow).toBe(6)
     expect(layout.sections.generator.dataRow).toBe(10)
@@ -118,9 +132,38 @@ describe('compact Inventory layout', () => {
     expect(layout.sections.armor.modules.find((m) => m.moduleId === 'orbitalAugment')?.baseCol).toBe(30)
   })
 
-  it('writes astral to F2 and assist to AJ2 on compact layout', () => {
+  it('writes armor assist level to row 16 on compact layout', () => {
     const layout = resolveModuleEpInventoryLayout(COMPACT_GRID)
     const state: ModulesEpSyncState = {
+      sectionLevels: {
+        ...modulesEpDefaultSectionLevels(),
+        armor: { highestPrimaryLevel: 130, highestAssistLevel: 90 },
+      },
+      modules: [
+        {
+          moduleId: 'orbitalAugment',
+          hubSlot: 'armor',
+          role: 'assist',
+          mergeTier: 'ancestral',
+          level: 90,
+          substats: [],
+        },
+      ],
+    }
+    const byRange = Object.fromEntries(
+      buildModuleSheetUpdates('Inventory', state, layout).map((u) => [u.range, u.values[0]![0]]),
+    )
+    expect(byRange["'Inventory'!D6"]).toBe(130)
+    expect(byRange["'Inventory'!D21"]).toBe(90)
+  })
+
+  it('writes astral to F2 and assist to its module column on compact layout', () => {
+    const layout = resolveModuleEpInventoryLayout(COMPACT_GRID)
+    const state: ModulesEpSyncState = {
+      sectionLevels: {
+        ...modulesEpDefaultSectionLevels(),
+        cannon: { highestPrimaryLevel: 240, highestAssistLevel: 100 },
+      },
       modules: [
         {
           moduleId: 'astralDeliverance',
@@ -143,14 +186,18 @@ describe('compact Inventory layout', () => {
     const byRange = Object.fromEntries(
       buildModuleSheetUpdates('Inventory', state, layout).map((u) => [u.range, u.values[0]![0]]),
     )
+    expect(byRange["'Inventory'!D2"]).toBe(240)
+    expect(byRange["'Inventory'!D3"]).toBe(100)
+    expect(byRange["'Inventory'!D21"]).toBe(0)
     expect(byRange["'Inventory'!F2"]).toBe('Ancestral 2*')
-    expect(byRange["'Inventory'!AJ2"]).toBe('Legendary+')
-    expect(byRange["'Inventory'!AJ3"]).toBe('Spare Amplifying Strike')
+    expect(byRange["'Inventory'!AE2"]).toBe('Legendary+')
+    expect(byRange["'Inventory'!AE3"]).toBeUndefined()
   })
 
   it('writes main substats to v6.1.2 rows 7–14 on compact layout', () => {
     const layout = resolveModuleEpInventoryLayout(COMPACT_GRID)
     const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
       modules: [
         {
           moduleId: 'astralDeliverance',
@@ -184,7 +231,7 @@ describe('compact Inventory layout', () => {
     expect(byRange["'Inventory'!F7"]).toBe('Critical Chance')
     expect(byRange["'Inventory'!G7"]).toBe('Epic')
     expect(byRange["'Inventory'!F8"]).toBe('Super Crit Multi')
-    expect(byRange["'Inventory'!AJ7"]).toBe('Attack Speed')
+    expect(byRange["'Inventory'!AE7"]).toBe('Attack Speed')
     expect(byRange["'Inventory'!F3"]).toBeUndefined()
   })
 })
@@ -192,6 +239,7 @@ describe('compact Inventory layout', () => {
 describe('buildModuleSheetUpdates fallback', () => {
   it('still supports fallback stride-5 layout', () => {
     const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
       modules: [
         {
           moduleId: 'astralDeliverance',

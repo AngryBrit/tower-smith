@@ -23,6 +23,7 @@ import type { WorkshopSubmoduleRarity } from '../data/workshopSubmoduleEffects'
 import {
   ASSIST_MODULE_LEVEL_KEY,
   WORKSHOP_ASSIST_MODULE_SLOTS,
+  clampWorkshopAssistModuleLevel,
   type WorkshopAssistModuleSlot,
 } from '../data/workshopSimModules'
 import type { WorkshopChassisModuleMergeTier } from '../data/workshopChassisModuleShared'
@@ -45,9 +46,30 @@ export type ModulesEpEquippedModule = {
   substats: ModulesEpEquippedSubstat[]
 }
 
+export type ModulesEpSectionLevels = {
+  /** Hub “Highest Primary Level” (main chassis module level cap). */
+  highestPrimaryLevel: number
+  /** Hub “Highest Assist Level” (assist module level cap). */
+  highestAssistLevel: number
+}
+
 export type ModulesEpSyncState = {
   /** Equipped modules (main + assist per hub slot) from the active workshop tab. */
   modules: ModulesEpEquippedModule[]
+  /** Per-hub sidebar level caps written to Inventory “Highest Level” / “Assist Level”. */
+  sectionLevels: Record<WorkshopAssistModuleSlot, ModulesEpSectionLevels>
+}
+
+export function modulesEpDefaultSectionLevels(): Record<
+  WorkshopAssistModuleSlot,
+  ModulesEpSectionLevels
+> {
+  return {
+    cannon: { highestPrimaryLevel: 0, highestAssistLevel: 0 },
+    armor: { highestPrimaryLevel: 0, highestAssistLevel: 0 },
+    generator: { highestPrimaryLevel: 0, highestAssistLevel: 0 },
+    core: { highestPrimaryLevel: 0, highestAssistLevel: 0 },
+  }
 }
 
 function submoduleCatalogLabel(slot: WorkshopAssistModuleSlot, effectId: string): string | null {
@@ -111,6 +133,24 @@ function equippedAssistFromSource(
   }
 }
 
+function sectionLevelsFromPersisted(
+  ws: WorkshopPersistedV1,
+  modules: ModulesEpEquippedModule[],
+): Record<WorkshopAssistModuleSlot, ModulesEpSectionLevels> {
+  const levels = modulesEpDefaultSectionLevels()
+  for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+    const hubAssistLevel = clampWorkshopAssistModuleLevel(ws[ASSIST_MODULE_LEVEL_KEY[slot]] ?? 0)
+    const equippedAssist = modules.find((m) => m.hubSlot === slot && m.role === 'assist')
+    levels[slot] = {
+      highestPrimaryLevel: clampWorkshopAssistModuleLevel(ws[CHASSIS_MODULE_LEVEL_KEY[slot]] ?? 0),
+      highestAssistLevel: equippedAssist
+        ? Math.max(hubAssistLevel, equippedAssist.level)
+        : hubAssistLevel,
+    }
+  }
+  return levels
+}
+
 /** Equipped chassis modules (main + assist) from the active workshop tab only. */
 export function modulesEpStateFromPersisted(ws: WorkshopPersistedV1): ModulesEpSyncState {
   const modules: ModulesEpEquippedModule[] = []
@@ -120,5 +160,5 @@ export function modulesEpStateFromPersisted(ws: WorkshopPersistedV1): ModulesEpS
     const assist = equippedAssistFromSource(ws, slot)
     if (assist) modules.push(assist)
   }
-  return { modules }
+  return { modules, sectionLevels: sectionLevelsFromPersisted(ws, modules) }
 }

@@ -1,5 +1,8 @@
 import type { BotsEpSyncState } from './botsEpStateFromPersisted'
-import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
+import {
+  modulesEpDefaultSectionLevels,
+  type ModulesEpSyncState,
+} from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 
@@ -622,7 +625,7 @@ function emptyUwsEpState(): UwsEpSyncState {
 }
 
 function emptyModulesEpState(): ModulesEpSyncState {
-  return { modules: [] }
+  return { modules: [], sectionLevels: modulesEpDefaultSectionLevels() }
 }
 
 async function exportToEffectivePaths(options: {

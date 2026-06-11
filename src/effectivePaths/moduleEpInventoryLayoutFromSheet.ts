@@ -1,6 +1,9 @@
 import { CHASSIS_MODULE_ORDERS, workshopChassisModuleDefForSlot } from '../data/workshopChassisModuleSelection'
 import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
-import { MODULE_EP_INVENTORY_SUBSTAT_BANDS } from './moduleEpInventoryLayout'
+import {
+  MODULE_EP_INVENTORY_SUBSTAT_BANDS,
+  moduleEpInventoryAssistLevelRow,
+} from './moduleEpInventoryLayout'
 import { padSheetRowsToWidth } from './relicSheetLayout'
 
 export type ModuleEpResolvedModuleColumn = {
@@ -9,10 +12,21 @@ export type ModuleEpResolvedModuleColumn = {
   baseCol: number
 }
 
+export type ModuleEpSheetCell = {
+  /** 1-based sheet row. */
+  row: number
+  /** 0-based column index. */
+  col: number
+}
+
 export type ModuleEpResolvedSection = {
   slot: WorkshopAssistModuleSlot
   /** 1-based sheet row with rarity / level / stat. */
   dataRow: number
+  /** Sidebar “Highest Level” value cell; null when not present on this layout. */
+  highestPrimaryLevelCell: ModuleEpSheetCell | null
+  /** Sidebar “Assist Level” value cell; null when not present on this layout. */
+  highestAssistLevelCell: ModuleEpSheetCell | null
   /** 1-based sheet row for first substat name; null when no substat band exists. */
   substatStartRow: number | null
   /** 1-based last row (inclusive) for substat writes in this section. */
@@ -173,6 +187,62 @@ function findSectionNameRows(rows: string[][]): Partial<Record<WorkshopAssistMod
   return bands
 }
 
+const SIDEBAR_STAT_LABEL =
+  /^(tower (damage|health)|coin bonus|uw damage)$/i
+
+function findHighestPrimaryLevelCell(
+  rows: string[][],
+  nameRowIdx: number,
+  dataRowIdx: number,
+): ModuleEpSheetCell | null {
+  const dataRow = rows[dataRowIdx] ?? []
+  for (let c = 0; c < 6; c += 1) {
+    const label = dataRow[c]?.trim() ?? ''
+    if (!SIDEBAR_STAT_LABEL.test(label)) continue
+    for (let v = c + 1; v <= c + 2; v += 1) {
+      const val = dataRow[v]?.trim() ?? ''
+      if (/^\d+$/.test(val)) {
+        return { row: dataRowIdx + 1, col: v }
+      }
+    }
+  }
+
+  for (let r = nameRowIdx; r <= dataRowIdx; r += 1) {
+    const row = rows[r] ?? []
+    for (let c = 0; c < 8; c += 1) {
+      if (row[c]?.trim().toLowerCase() !== 'highest level') continue
+      return { row: dataRowIdx + 1, col: c }
+    }
+  }
+
+  return null
+}
+
+function findHighestAssistLevelCell(
+  rows: string[][],
+  dataRowIdx: number,
+  nextNameRowIdx: number,
+  primaryCell: ModuleEpSheetCell | null,
+  spareRow: number | null,
+): ModuleEpSheetCell | null {
+  const nextIdx = nextNameRowIdx - 1
+  for (let r = dataRowIdx + 1; r < nextIdx; r += 1) {
+    const marker = cell(rows, r, 1).toLowerCase()
+    if (marker !== 'assist level') continue
+    const valueRow = rows[r + 1] ?? []
+    const val = valueRow[1]?.trim() ?? ''
+    if (/^\d+$/.test(val)) {
+      return { row: r + 2, col: 1 }
+    }
+  }
+
+  if (spareRow != null && primaryCell != null) {
+    return { row: spareRow, col: primaryCell.col }
+  }
+
+  return null
+}
+
 function findDataRowIndex(rows: string[][], nameRowIndex: number): number {
   for (let r = nameRowIndex + 1; r <= nameRowIndex + 3 && r < rows.length; r += 1) {
     const row = rows[r] ?? []
@@ -248,10 +318,20 @@ export function parseModuleEpInventoryLayoutFromSheet(rows: string[][]): ModuleE
       dataRowIdx + 1,
       nextNameRow,
     )
+    const highestPrimaryLevelCell = findHighestPrimaryLevelCell(rows, nameRowIdx, dataRowIdx)
+    const highestAssistLevelCell = findHighestAssistLevelCell(
+      rows,
+      dataRowIdx,
+      nextNameRow,
+      highestPrimaryLevelCell,
+      spareRow,
+    )
 
     sections[slot] = {
       slot,
       dataRow: dataRowIdx + 1,
+      highestPrimaryLevelCell,
+      highestAssistLevelCell,
       substatStartRow,
       substatEndRow,
       spareRow,
@@ -269,9 +349,28 @@ export function parseModuleEpInventoryLayoutFromSheet(rows: string[][]): ModuleE
   const variant = detectLayoutVariant(rows, sections)
   if (variant === 'compact') {
     applyInventorySubstatBands(sections, true)
+    applyCompactAssistLevelCells(sections)
   }
 
   return { variant, sections }
+}
+
+/** Compact stacks section headers; Assist Level uses v6.1.2 absolute sidebar rows (e.g. armor D21). */
+function applyCompactAssistLevelCells(
+  sections: Record<WorkshopAssistModuleSlot, ModuleEpResolvedSection>,
+): void {
+  for (const slot of SECTION_SLOTS) {
+    const section = sections[slot]
+    const primaryCol = section?.highestPrimaryLevelCell?.col
+    if (!section || primaryCol == null) continue
+    sections[slot] = {
+      ...section,
+      highestAssistLevelCell: {
+        row: moduleEpInventoryAssistLevelRow(slot),
+        col: primaryCol,
+      },
+    }
+  }
 }
 
 /** Compact Inventory uses stacked data rows; substat dropdowns stay at v6.1.2 absolute rows. */
@@ -297,6 +396,11 @@ function fallbackSection(slot: WorkshopAssistModuleSlot): ModuleEpResolvedSectio
   return {
     slot,
     dataRow: legacy.dataRow,
+    highestPrimaryLevelCell: { row: legacy.dataRow, col: 3 },
+    highestAssistLevelCell: {
+      row: moduleEpInventoryAssistLevelRow(slot),
+      col: 3,
+    },
     substatStartRow: legacy.substatStartRow,
     substatEndRow: legacy.substatEndRow,
     spareRow: legacy.spareRow,

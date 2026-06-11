@@ -4,7 +4,9 @@ import { modulesEpStateFromPersisted } from './modulesEpStateFromPersisted'
 
 describe('modulesEpStateFromPersisted', () => {
   it('returns empty modules when none are equipped', () => {
-    expect(modulesEpStateFromPersisted(defaultWorkshopPersisted()).modules).toEqual([])
+    const state = modulesEpStateFromPersisted(defaultWorkshopPersisted())
+    expect(state.modules).toEqual([])
+    expect(state.sectionLevels.cannon).toEqual({ highestPrimaryLevel: 0, highestAssistLevel: 0 })
   })
 
   it('includes main and assist chassis modules from active tab', () => {
@@ -17,10 +19,27 @@ describe('modulesEpStateFromPersisted', () => {
     ws.simCannonModuleLevel = 100
 
     const state = modulesEpStateFromPersisted(ws)
+    expect(state.sectionLevels.cannon).toEqual({
+      highestPrimaryLevel: 140,
+      highestAssistLevel: 100,
+    })
     expect(state.modules.map((m) => `${m.hubSlot}:${m.role}:${m.moduleId}`).sort()).toEqual([
       'cannon:assist:amplifyingStrike',
       'cannon:main:astralDeliverance',
     ])
+  })
+
+  it('uses equipped assist module level for section assist level', () => {
+    const ws = defaultWorkshopPersisted()
+    ws.simArmorAssistChassisModuleId = 'orbitalAugment'
+    ws.simArmorAssistChassisModuleRarity = 'ancestral'
+    ws.simArmorModuleLevel = 90
+
+    const state = modulesEpStateFromPersisted(ws)
+    expect(state.sectionLevels.armor.highestAssistLevel).toBe(90)
+    expect(state.modules.find((m) => m.hubSlot === 'armor' && m.role === 'assist')?.moduleId).toBe(
+      'orbitalAugment',
+    )
   })
 
   it('collects ordered submodule picks for sync substats', () => {

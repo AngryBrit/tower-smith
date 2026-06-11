@@ -1,30 +1,25 @@
 import { describe, expect, it } from 'vitest'
 import {
-  formatWorkshopChassisModuleHeroStatMilli,
-  workshopChassisModuleHeroStatMilli,
-} from '../data/workshopChassisModuleHeroStatAnchors'
-import type { WorkshopChassisModuleMergeTier } from '../data/workshopChassisModuleShared'
-import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
-import {
   buildModuleSheetUpdates,
   countModulesEpEquippedSlots,
   countModulesEpEquippedSubstats,
 } from './buildModuleSheetUpdates'
 import { legacyModuleEpInventoryLayout } from './moduleEpInventoryLayoutFromSheet'
-import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
-
-function heroStat(
-  slot: WorkshopAssistModuleSlot,
-  merge: WorkshopChassisModuleMergeTier,
-  level: number,
-): string {
-  const milli = workshopChassisModuleHeroStatMilli(slot, merge, level)
-  return `x${formatWorkshopChassisModuleHeroStatMilli(milli)}`
-}
+import {
+  modulesEpDefaultSectionLevels,
+  type ModulesEpSyncState,
+} from './modulesEpStateFromPersisted'
 
 const LEGACY_LAYOUT = legacyModuleEpInventoryLayout()
 
 const SAMPLE_STATE: ModulesEpSyncState = {
+  sectionLevels: {
+    ...modulesEpDefaultSectionLevels(),
+    cannon: { highestPrimaryLevel: 140, highestAssistLevel: 100 },
+    armor: { highestPrimaryLevel: 140, highestAssistLevel: 0 },
+    generator: { highestPrimaryLevel: 100, highestAssistLevel: 0 },
+    core: { highestPrimaryLevel: 100, highestAssistLevel: 0 },
+  },
   modules: [
     {
       moduleId: 'astralDeliverance',
@@ -70,30 +65,32 @@ const SAMPLE_STATE: ModulesEpSyncState = {
 }
 
 describe('buildModuleSheetUpdates', () => {
-  it('writes equipped module rarity, level, stat, and main substats (legacy layout)', () => {
+  it('writes equipped module rarity and main substats (legacy layout)', () => {
     const updates = buildModuleSheetUpdates('Inventory', SAMPLE_STATE, LEGACY_LAYOUT)
     const byRange = Object.fromEntries(updates.map((u) => [u.range, u.values[0]![0]]))
 
+    expect(byRange["'Inventory'!D2"]).toBe(140)
+    expect(byRange["'Inventory'!D3"]).toBe(100)
     expect(byRange["'Inventory'!F2"]).toBe('Ancestral 1*')
-    expect(byRange["'Inventory'!G2"]).toBe(140)
-    expect(byRange["'Inventory'!H2"]).toBe(heroStat('cannon', 'star_1', 140))
+    expect(byRange["'Inventory'!G2"]).toBeUndefined()
+    expect(byRange["'Inventory'!H2"]).toBeUndefined()
 
     expect(byRange["'Inventory'!F3"]).toBe('Critical Chance')
     expect(byRange["'Inventory'!G3"]).toBe('Epic')
 
     expect(byRange["'Inventory'!F6"]).toBe('Ancestral')
-    expect(byRange["'Inventory'!G6"]).toBe(140)
 
     expect(byRange["'Inventory'!F10"]).toBe('Ancestral 1*')
-    expect(byRange["'Inventory'!G10"]).toBe(100)
+    expect(byRange["'Inventory'!G10"]).toBeUndefined()
     expect(byRange["'Inventory'!F11"]).toBe('Free Attack Upgrade')
 
     expect(byRange["'Inventory'!F14"]).toBe('Ancestral 1*')
-    expect(byRange["'Inventory'!H14"]).toBe(heroStat('core', 'star_1', 100))
+    expect(byRange["'Inventory'!H14"]).toBeUndefined()
   })
 
-  it('writes assist modules to Any Other with spare label (legacy layout)', () => {
+  it('writes named assist modules to their dedicated column (legacy layout)', () => {
     const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
       modules: [
         {
           moduleId: 'amplifyingStrike',
@@ -111,9 +108,9 @@ describe('buildModuleSheetUpdates', () => {
       buildModuleSheetUpdates('Inventory', state, LEGACY_LAYOUT).map((u) => [u.range, u.values[0]![0]]),
     )
 
-    expect(byRange["'Inventory'!AJ2"]).toBe('Legendary+')
-    expect(byRange["'Inventory'!AJ3"]).toBe('Spare Amplifying Strike')
-    expect(byRange["'Inventory'!AJ4"]).toBe('Attack Speed')
+    expect(byRange["'Inventory'!AE2"]).toBe('Legendary+')
+    expect(byRange["'Inventory'!AE4"]).toBe('Attack Speed')
+    expect(byRange["'Inventory'!AE3"]).toBeUndefined()
   })
 
   it('counts equipped inventory columns', () => {

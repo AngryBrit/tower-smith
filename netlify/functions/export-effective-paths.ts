@@ -4,10 +4,12 @@ import { jsonResponse } from './lib/http'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
 import type { BotsEpSyncState } from '../../src/effectivePaths/botsEpStateFromPersisted'
 import { moduleEpInventorySlotForModuleId } from '../../src/effectivePaths/moduleEpInventoryLayout'
-import type {
-  ModulesEpEquippedModule,
-  ModulesEpEquippedSubstat,
-  ModulesEpSyncState,
+import {
+  modulesEpDefaultSectionLevels,
+  type ModulesEpEquippedModule,
+  type ModulesEpEquippedSubstat,
+  type ModulesEpSectionLevels,
+  type ModulesEpSyncState,
 } from '../../src/effectivePaths/modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../src/effectivePaths/uwsEpStateFromPersisted'
 import { WORKSHOP_ASSIST_MODULE_SLOTS } from '../../src/data/workshopSimModules'
@@ -220,9 +222,32 @@ function parseBody(raw: unknown):
     }
   }
 
-  const modulesEpState: ModulesEpSyncState = { modules: [] }
+  const modulesEpState: ModulesEpSyncState = {
+    modules: [],
+    sectionLevels: modulesEpDefaultSectionLevels(),
+  }
   const modulesRaw = (raw as { modulesEpState?: unknown }).modulesEpState
   if (modulesRaw && typeof modulesRaw === 'object') {
+    const sectionLevelsRaw = (modulesRaw as { sectionLevels?: unknown }).sectionLevels
+    if (sectionLevelsRaw && typeof sectionLevelsRaw === 'object') {
+      for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+        const entry = (sectionLevelsRaw as Record<string, unknown>)[slot]
+        if (!entry || typeof entry !== 'object') continue
+        const primaryRaw = (entry as { highestPrimaryLevel?: unknown }).highestPrimaryLevel
+        const assistRaw = (entry as { highestAssistLevel?: unknown }).highestAssistLevel
+        const next: ModulesEpSectionLevels = {
+          highestPrimaryLevel: 0,
+          highestAssistLevel: 0,
+        }
+        if (typeof primaryRaw === 'number' && Number.isFinite(primaryRaw)) {
+          next.highestPrimaryLevel = Math.max(0, Math.trunc(primaryRaw))
+        }
+        if (typeof assistRaw === 'number' && Number.isFinite(assistRaw)) {
+          next.highestAssistLevel = Math.max(0, Math.trunc(assistRaw))
+        }
+        modulesEpState.sectionLevels[slot] = next
+      }
+    }
     const submoduleRarities = new Set<WorkshopSubmoduleRarity>([
       'common',
       'rare',
