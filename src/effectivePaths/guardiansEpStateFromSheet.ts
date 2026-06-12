@@ -21,23 +21,33 @@ import {
   DEFAULT_GUARDIAN_SCOUT_UPGRADES,
   DEFAULT_GUARDIAN_SUMMON_UPGRADES,
 } from '../guardianChipStorage'
-import { farmingDropdownLevelFromLabel } from './epSheetCellParsing'
+import { farmingDropdownLevelFromLabel, parseSheetBoolCell } from './epSheetCellParsing'
 import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
 import {
+  GUARDIAN_EP_ALWAYS_UNLOCKED_CHIP_IDS,
   GUARDIAN_EP_CHIP_START_ROWS,
   GUARDIAN_EP_CHIP_TRACK_ORDER,
   GUARDIAN_EP_V302_LEVEL_COL,
   GUARDIAN_EP_V302_UNLOCK_COL,
-  guardianEpUnlockRowIndex,
+  GUARDIAN_EP_V302_UNLOCKED_CHIP_IDS,
+  GUARDIAN_EP_V302_UNLOCKED_ROWS,
+  type GuardianEpUnlockableChipId,
 } from './guardianEpSheetNames'
 
 function chipUnlockedFromGridRow(
   grid: readonly (readonly unknown[])[],
   chipId: GuardianChipId,
 ): boolean {
-  const row0 = guardianEpUnlockRowIndex(chipId) - 1
-  const label = String(grid[row0]?.[GUARDIAN_EP_V302_UNLOCK_COL] ?? '').trim()
-  return /^unlocked$/i.test(label)
+  if ((GUARDIAN_EP_ALWAYS_UNLOCKED_CHIP_IDS as readonly string[]).includes(chipId)) {
+    return true
+  }
+  if (!(GUARDIAN_EP_V302_UNLOCKED_CHIP_IDS as readonly string[]).includes(chipId)) {
+    return false
+  }
+  const row0 = GUARDIAN_EP_V302_UNLOCKED_ROWS[chipId as GuardianEpUnlockableChipId] - 1
+  const raw = grid[row0]?.[GUARDIAN_EP_V302_UNLOCK_COL]
+  if (raw == null || String(raw).trim() === '') return false
+  return parseSheetBoolCell(raw)
 }
 
 function epLevelToGameLevel(epLevel: number): number {

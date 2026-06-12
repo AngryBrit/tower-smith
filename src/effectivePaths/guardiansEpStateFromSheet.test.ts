@@ -11,7 +11,7 @@ import {
   GUARDIAN_EP_CHIP_START_ROWS,
   GUARDIAN_EP_V302_LEVEL_COL,
   GUARDIAN_EP_V302_UNLOCK_COL,
-  guardianEpUnlockRowIndex,
+  GUARDIAN_EP_V302_UNLOCKED_ROWS,
 } from './guardianEpSheetNames'
 
 function gridFromGuardianExport(state: GuardiansEpSyncState): string[][] {
@@ -29,7 +29,7 @@ function gridFromGuardianExport(state: GuardiansEpSyncState): string[][] {
 }
 
 describe('guardiansEpStateFromSheetGrid', () => {
-  it('round-trips unlock labels from column B', () => {
+  it('round-trips unlock checkboxes from column B', () => {
     const state: GuardiansEpSyncState = {
       upgrades: {
         attack: { percent: 1, cooldown: 1, targets: 1 },
@@ -39,29 +39,29 @@ describe('guardiansEpStateFromSheetGrid', () => {
         summon: { cooldown: 1, duration: 1, cashBonus: 1 },
         scout: { cooldown: 1, rangeBonus: 1, duration: 1 },
       },
-      unlockedChipIds: ['attack', 'scout'],
+      unlockedChipIds: ['attack', 'ally', 'scout'],
     }
 
     const imported = guardiansEpStateFromSheetGrid(gridFromGuardianExport(state))
-    expect(imported.unlockedChipIds).toEqual(['attack', 'scout'])
+    expect(imported.unlockedChipIds).toEqual(['attack', 'ally', 'scout'])
   })
 
-  it('reads attack percent level from column C dropdown', () => {
+  it('reads attack percent level from column F dropdown', () => {
     const grid = Array.from({ length: 24 }, () => Array<string>(8).fill(''))
     grid[GUARDIAN_EP_CHIP_START_ROWS.attack - 1]![GUARDIAN_EP_V302_LEVEL_COL] =
-      '01 | 2% | Cost 25 ⧈ | Next 10 ⧈'
-    grid[guardianEpUnlockRowIndex('attack') - 1]![GUARDIAN_EP_V302_UNLOCK_COL] = 'Unlocked'
+      '01 | 2% | Cost 25 ⧈ | Next 50 ⧈'
 
     const imported = guardiansEpStateFromSheetGrid(grid)
     expect(imported.upgrades.attack.percent).toBe(2)
     expect(imported.unlockedChipIds).toContain('attack')
+    expect(imported.unlockedChipIds).toContain('ally')
   })
 
-  it('applies imported chip state to persisted guardian storage shape', () => {
+  it('reads bounty unlock from B10 TRUE/FALSE', () => {
     const grid = Array.from({ length: 24 }, () => Array<string>(8).fill(''))
+    grid[GUARDIAN_EP_V302_UNLOCKED_ROWS.bounty - 1]![GUARDIAN_EP_V302_UNLOCK_COL] = 'TRUE'
     grid[GUARDIAN_EP_CHIP_START_ROWS.bounty - 1]![GUARDIAN_EP_V302_LEVEL_COL] =
       '00 | 0.01x | Cost 0 ⧈ | Next 1 ⧈'
-    grid[guardianEpUnlockRowIndex('bounty') - 1]![GUARDIAN_EP_V302_UNLOCK_COL] = 'Unlocked'
 
     const applied = guardiansEpStateAppliedToPersisted(
       readGuardianChipState(),

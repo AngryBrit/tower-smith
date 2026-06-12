@@ -14,7 +14,7 @@
  *   BOTS lab levels in OTHERS (T=name, V=level).
  * - **Ultimate Weapon / UWs** — UW unlocked in C (C4, C8, …); basic + Plus levels in G (dropdown labels).
  * - **Modules** — equipped chassis modules on Inventory tab (rarity, level, stat, main substats).
- * - **Guardians** — chip unlock in B (Unlocked/Locked); upgrade levels in C (dropdown labels).
+ * - **Guardians** — chip unlock checkboxes in B10/B13/B16/B19 (TRUE/FALSE); upgrade levels in F2:F19.
  *
  * TowerSmith reads linked IDs from IDS Master, then writes to the linked child workbooks.
  */

@@ -35,9 +35,12 @@ import { isModulesInputTabCandidate } from '../../../src/effectivePaths/pickModu
 import { isGuardiansInputTabCandidate } from '../../../src/effectivePaths/pickGuardiansTab'
 import { isUwsInputTabCandidate } from '../../../src/effectivePaths/pickUwsTab'
 import {
+  GUARDIAN_EP_V302_LEVEL_COL,
   GUARDIAN_EP_V302_LEVEL_FIRST_ROW,
   GUARDIAN_EP_V302_LEVEL_LAST_ROW,
+  GUARDIAN_EP_V302_UNLOCK_COL,
 } from '../../../src/effectivePaths/guardianEpSheetNames'
+import { columnIndexToA1Letter } from '../../../src/effectivePaths/relicSheetLayout'
 import {
   UW_EP_V31_LEVEL_FIRST_ROW,
   UW_EP_V31_LEVEL_LAST_ROW,
@@ -158,9 +161,10 @@ async function readGuardiansImportGrid(
   const quoted = quoteSheetTitleForRange(sheetTitle)
   const firstRow = GUARDIAN_EP_V302_LEVEL_FIRST_ROW
   const lastRow = GUARDIAN_EP_V302_LEVEL_LAST_ROW
+  const levelCol = columnIndexToA1Letter(GUARDIAN_EP_V302_LEVEL_COL)
   const rangeParams = [
     `${quoted}!B${firstRow}:B${lastRow}`,
-    `${quoted}!C${firstRow}:C${lastRow}`,
+    `${quoted}!${levelCol}${firstRow}:${levelCol}${lastRow}`,
   ]
     .map((range) => `ranges=${encodeURIComponent(range)}`)
     .join('&')
@@ -177,14 +181,21 @@ async function readGuardiansImportGrid(
   }
   const valueRanges = batchBody.valueRanges ?? []
   const bValues = valueRanges.find((entry) => /!B\d/i.test(entry.range ?? ''))?.values ?? []
-  const cValues = valueRanges.find((entry) => /!C\d/i.test(entry.range ?? ''))?.values ?? []
+  const fValues =
+    valueRanges.find((entry) => new RegExp(`!${levelCol}\\d`, 'i').test(entry.range ?? ''))
+      ?.values ?? []
   const rowCount = GUARDIAN_EP_V302_LEVEL_LAST_ROW
-  const grid: string[][] = Array.from({ length: rowCount }, () => Array(4).fill(''))
+  const grid: string[][] = Array.from({ length: rowCount }, () =>
+    Array(GUARDIAN_EP_V302_LEVEL_COL + 1).fill(''),
+  )
   for (let i = 0; i < bValues.length; i += 1) {
-    grid[GUARDIAN_EP_V302_LEVEL_FIRST_ROW - 1 + i]![1] = cellValueToString(bValues[i]?.[0])
+    grid[GUARDIAN_EP_V302_LEVEL_FIRST_ROW - 1 + i]![GUARDIAN_EP_V302_UNLOCK_COL] = cellValueToString(
+      bValues[i]?.[0],
+    )
   }
-  for (let i = 0; i < cValues.length; i += 1) {
-    grid[GUARDIAN_EP_V302_LEVEL_FIRST_ROW - 1 + i]![2] = cellValueToString(cValues[i]?.[0])
+  for (let i = 0; i < fValues.length; i += 1) {
+    grid[GUARDIAN_EP_V302_LEVEL_FIRST_ROW - 1 + i]![GUARDIAN_EP_V302_LEVEL_COL] =
+      cellValueToString(fValues[i]?.[0])
   }
   return grid
 }

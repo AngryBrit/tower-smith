@@ -33,6 +33,9 @@ import {
   GUARDIAN_EP_V302_LEVEL_COL,
   GUARDIAN_EP_V302_LEVEL_FIRST_ROW,
   GUARDIAN_EP_V302_LEVEL_LAST_ROW,
+  GUARDIAN_EP_V302_UNLOCK_COL,
+  GUARDIAN_EP_V302_UNLOCKED_CHIP_IDS,
+  GUARDIAN_EP_V302_UNLOCKED_ROWS,
 } from '../../../src/effectivePaths/guardianEpSheetNames'
 import {
   isGuardiansInputTabCandidate,
@@ -88,6 +91,7 @@ import {
   unmappedCardNamesWithLayout,
 } from '../../../src/effectivePaths/cardSheetLayout'
 import {
+  columnIndexToA1Letter,
   detectRelicSheetLayout,
   padSheetRowsToWidth,
   parseRelicRowsWithLayout,
@@ -1876,8 +1880,9 @@ async function clearGuardianLevelColumn(
   sheetTitle: string,
 ): Promise<void> {
   const quoted = quoteSheetTitleForRange(sheetTitle)
+  const levelCol = columnIndexToA1Letter(GUARDIAN_EP_V302_LEVEL_COL)
   const range = encodeURIComponent(
-    `${quoted}!C${GUARDIAN_EP_V302_LEVEL_FIRST_ROW}:C${GUARDIAN_EP_V302_LEVEL_LAST_ROW}`,
+    `${quoted}!${levelCol}${GUARDIAN_EP_V302_LEVEL_FIRST_ROW}:${levelCol}${GUARDIAN_EP_V302_LEVEL_LAST_ROW}`,
   )
   const clearRes = await sheetsFetch(
     accessToken,
@@ -1931,6 +1936,51 @@ async function applyGuardianLevelCells(
   }
 
   return cells.length
+}
+
+async function applyGuardianUnlockCells(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetId: number,
+  state: GuardiansEpSyncState,
+): Promise<number> {
+  const requests = GUARDIAN_EP_V302_UNLOCKED_CHIP_IDS.map((chipId) => {
+    const rowIndex = GUARDIAN_EP_V302_UNLOCKED_ROWS[chipId]
+    const unlocked = state.unlockedChipIds.includes(chipId)
+    return {
+      updateCells: {
+        range: {
+          sheetId,
+          startRowIndex: rowIndex - 1,
+          endRowIndex: rowIndex,
+          startColumnIndex: GUARDIAN_EP_V302_UNLOCK_COL,
+          endColumnIndex: GUARDIAN_EP_V302_UNLOCK_COL + 1,
+        },
+        rows: [
+          {
+            values: [{ userEnteredValue: { boolValue: unlocked } }],
+          },
+        ],
+        fields: 'userEnteredValue',
+      },
+    }
+  })
+
+  const updateRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'guardians_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  return requests.length
 }
 
 export async function exportGuardiansToGoogleSheet(options: {
@@ -1995,18 +2045,26 @@ export async function exportGuardiansToGoogleSheet(options: {
   let valueBatch = unlockBatch
 
   if (sheetId != null) {
+    updatedCells += await applyGuardianUnlockCells(
+      options.accessToken,
+      guardiansWorkbookId,
+      sheetId,
+      options.guardiansEpState,
+    )
     updatedCells += await applyGuardianLevelCells(
       options.accessToken,
       guardiansWorkbookId,
       sheetId,
       levelCells,
     )
+    valueBatch = []
   } else if (levelCells.length > 0) {
     const quoted = quoteSheetTitleForRange(sheetTitle)
+    const levelCol = columnIndexToA1Letter(GUARDIAN_EP_V302_LEVEL_COL)
     valueBatch = [
       ...unlockBatch,
       ...levelCells.map(({ rowIndex, label }) => ({
-        range: `${quoted}!C${rowIndex}`,
+        range: `${quoted}!${levelCol}${rowIndex}`,
         values: [[label]] as (string | number | boolean)[][],
       })),
     ]

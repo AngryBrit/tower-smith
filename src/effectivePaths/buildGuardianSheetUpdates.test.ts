@@ -5,10 +5,13 @@ import {
   guardianEpLevelDropdownLabel,
 } from './buildGuardianSheetUpdates'
 import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
-import { guardianEpUnlockRowIndex, GUARDIAN_EP_V302_UNLOCK_COL } from './guardianEpSheetNames'
+import {
+  GUARDIAN_EP_V302_UNLOCK_COL,
+  GUARDIAN_EP_V302_UNLOCKED_ROWS,
+} from './guardianEpSheetNames'
 
 describe('buildGuardianSheetUpdates', () => {
-  it('writes Unlocked / Locked labels to column B on unlock rows', () => {
+  it('writes TRUE/FALSE unlock checkboxes to B10, B13, B16, B19', () => {
     const state: GuardiansEpSyncState = {
       upgrades: {
         attack: { percent: 1, cooldown: 1, targets: 1 },
@@ -23,14 +26,19 @@ describe('buildGuardianSheetUpdates', () => {
 
     const batch = buildGuardianSheetUpdates('Master Sheet', state)
     const unlockCol = String.fromCharCode('A'.charCodeAt(0) + GUARDIAN_EP_V302_UNLOCK_COL)
-    const attack = batch.find((entry) => entry.range === `'Master Sheet'!${unlockCol}${guardianEpUnlockRowIndex('attack')}`)
-    const bounty = batch.find((entry) => entry.range === `'Master Sheet'!${unlockCol}${guardianEpUnlockRowIndex('bounty')}`)
+    expect(batch).toHaveLength(4)
+    const bounty = batch.find(
+      (entry) => entry.range === `'Master Sheet'!${unlockCol}${GUARDIAN_EP_V302_UNLOCKED_ROWS.bounty}`,
+    )
+    const fetch = batch.find(
+      (entry) => entry.range === `'Master Sheet'!${unlockCol}${GUARDIAN_EP_V302_UNLOCKED_ROWS.fetch}`,
+    )
 
-    expect(attack?.values[0]?.[0]).toBe('Unlocked')
-    expect(bounty?.values[0]?.[0]).toBe('Locked')
+    expect(bounty?.values[0]?.[0]).toBe('FALSE')
+    expect(fetch?.values[0]?.[0]).toBe('TRUE')
   })
 
-  it('builds 18 column C level dropdown cells', () => {
+  it('builds 18 column F level dropdown cells', () => {
     const state: GuardiansEpSyncState = {
       upgrades: {
         attack: { percent: 2, cooldown: 1, targets: 1 },

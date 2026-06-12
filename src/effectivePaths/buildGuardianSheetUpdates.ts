@@ -1,25 +1,19 @@
 import {
-  guardianChipAllyMarginalCost,
   guardianChipAllyTrack,
   guardianChipAllyTrackLevel,
   guardianChipAllyValueAtLevel,
-  guardianChipAttackMarginalCost,
   guardianChipAttackTrack,
   guardianChipAttackTrackLevel,
   guardianChipAttackValueAtLevel,
-  guardianChipBountyMarginalCost,
   guardianChipBountyTrack,
   guardianChipBountyTrackLevel,
   guardianChipBountyValueAtLevel,
-  guardianChipFetchMarginalCost,
   guardianChipFetchTrack,
   guardianChipFetchTrackLevel,
   guardianChipFetchValueAtLevel,
-  guardianChipScoutMarginalCost,
   guardianChipScoutTrack,
   guardianChipScoutTrackLevel,
   guardianChipScoutValueAtLevel,
-  guardianChipSummonMarginalCost,
   guardianChipSummonTrack,
   guardianChipSummonTrackLevel,
   guardianChipSummonValueAtLevel,
@@ -32,15 +26,16 @@ import {
 } from '../data/guardianChipGodTables'
 import type { GuardianChipId } from '../data/guardianChips'
 import { quoteSheetTitleForRange } from './buildRelicUnlockedUpdates'
+import { cellValueToString } from './epSheetCellParsing'
 import { columnIndexToA1Letter } from './relicSheetLayout'
 import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
 import {
   GUARDIAN_EP_BITS_SYMBOL,
   GUARDIAN_EP_CHIP_START_ROWS,
   GUARDIAN_EP_CHIP_TRACK_ORDER,
-  GUARDIAN_EP_V302_LEVEL_COL,
+  GUARDIAN_EP_V302_UNLOCKED_CHIP_IDS,
+  GUARDIAN_EP_V302_UNLOCKED_ROWS,
   GUARDIAN_EP_V302_UNLOCK_COL,
-  guardianEpUnlockRowIndex,
 } from './guardianEpSheetNames'
 
 export type GuardianSheetBatchUpdate = {
@@ -94,41 +89,19 @@ function guardianEpStatLabel(chipId: GuardianChipId, trackId: string, gameLevel:
       const track = trackId as GuardianChipSummonTrackId
       const value = guardianChipSummonValueAtLevel(track, gameLevel)
       if (value == null) return '—'
-      if (track === 'cooldown' || track === 'duration') return `${value}s`
-      return `x${(value / 10).toFixed(1)}`
+      if (track === 'cooldown') return `${value}s`
+      if (track === 'duration') return `${value}s|`
+      return `${(value / 10).toFixed(1)}x`
     }
     case 'scout': {
       const track = trackId as GuardianChipScoutTrackId
       const value = guardianChipScoutValueAtLevel(track, gameLevel)
       if (value == null) return '—'
       if (track === 'cooldown' || track === 'duration') return `${value}s`
-      return `x${(value / 10).toFixed(1)}`
+      return `${(value / 10).toFixed(1)}x`
     }
     default:
       return '—'
-  }
-}
-
-function guardianEpMarginalCost(
-  chipId: GuardianChipId,
-  trackId: string,
-  gameLevel: number,
-): number | undefined {
-  switch (chipId) {
-    case 'attack':
-      return guardianChipAttackMarginalCost(trackId as GuardianChipAttackTrackId, gameLevel)
-    case 'ally':
-      return guardianChipAllyMarginalCost(trackId as GuardianChipAllyTrackId, gameLevel)
-    case 'bounty':
-      return guardianChipBountyMarginalCost(trackId as GuardianChipBountyTrackId, gameLevel)
-    case 'fetch':
-      return guardianChipFetchMarginalCost(trackId as GuardianChipFetchTrackId, gameLevel)
-    case 'summon':
-      return guardianChipSummonMarginalCost(trackId as GuardianChipSummonTrackId, gameLevel)
-    case 'scout':
-      return guardianChipScoutMarginalCost(trackId as GuardianChipScoutTrackId, gameLevel)
-    default:
-      return undefined
   }
 }
 
@@ -174,7 +147,7 @@ function guardianEpTotalCostAtLevel(
   }
 }
 
-/** Exact Guardians v3.0.2 column C dropdown spelling. */
+/** Exact Guardians v3.0.2 column F dropdown spelling. */
 export function guardianEpLevelDropdownLabel(
   chipId: GuardianChipId,
   trackId: string,
@@ -187,15 +160,17 @@ export function guardianEpLevelDropdownLabel(
   const stat = guardianEpStatLabel(chipId, trackId, level)
   const cost = guardianEpTotalCostAtLevel(chipId, trackId, level)
   const bits = GUARDIAN_EP_BITS_SYMBOL
-  const nextMarginal = guardianEpMarginalCost(chipId, trackId, level)
-  const tail =
-    level >= maxLevel || nextMarginal == null
-      ? 'Maxed'
-      : `Next ${nextMarginal} ${bits}`
-  return `${levelLabel} | ${stat} | Cost ${cost} ${bits} | ${tail}`
+  const nextTotal =
+    level < maxLevel ? guardianEpTotalCostAtLevel(chipId, trackId, level + 1) : undefined
+  const tail = nextTotal == null ? 'Maxed' : `Next ${nextTotal} ${bits}`
+  const costSegment =
+    chipId === 'summon' && trackId === 'duration'
+      ? `${stat} Cost ${cost} ${bits}`
+      : `${stat} | Cost ${cost} ${bits}`
+  return `${levelLabel} | ${costSegment} | ${tail}`
 }
 
-/** Column C level dropdowns — 18 rows (six chips × three tracks). */
+/** Column F level dropdowns — 18 rows (six chips × three tracks). */
 export function buildGuardianLevelCellUpdates(state: GuardiansEpSyncState): GuardianLevelCellUpdate[] {
   const out: GuardianLevelCellUpdate[] = []
   for (const chipId of Object.keys(GUARDIAN_EP_CHIP_START_ROWS) as GuardianChipId[]) {
@@ -212,7 +187,7 @@ export function buildGuardianLevelCellUpdates(state: GuardiansEpSyncState): Guar
   return out
 }
 
-/** Column B unlock labels (Unlocked / Locked) on the third row of each chip block. */
+/** Column B unlock checkboxes (B10, B13, B16, B19) as TRUE/FALSE. */
 export function buildGuardianSheetUpdates(
   sheetTitle: string,
   state: GuardiansEpSyncState,
@@ -220,12 +195,12 @@ export function buildGuardianSheetUpdates(
   const quoted = quoteSheetTitleForRange(sheetTitle)
   const unlockCol = columnIndexToA1Letter(GUARDIAN_EP_V302_UNLOCK_COL)
   const out: GuardianSheetBatchUpdate[] = []
-  for (const chipId of Object.keys(GUARDIAN_EP_CHIP_START_ROWS) as GuardianChipId[]) {
-    const row = guardianEpUnlockRowIndex(chipId)
+  for (const chipId of GUARDIAN_EP_V302_UNLOCKED_CHIP_IDS) {
+    const row = GUARDIAN_EP_V302_UNLOCKED_ROWS[chipId]
     const unlocked = state.unlockedChipIds.includes(chipId)
     out.push({
       range: `${quoted}!${unlockCol}${row}`,
-      values: [[unlocked ? 'Unlocked' : 'Locked']],
+      values: [[cellValueToString(unlocked)]],
     })
   }
   return out
