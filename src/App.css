@@ -9850,6 +9850,7 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 .guardians-page__loadout {
   position: relative;
   z-index: 1;
+  overflow: visible;
   display: grid;
   grid-template-columns:
     minmax(var(--guardians-chip-tile-size), 1fr)
@@ -9866,13 +9867,18 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 
 .guardians-page__guardian-card,
 .guardians-page__slot.guardians-page__chip-tile {
+  position: relative;
+  z-index: 1;
   border-radius: var(--guardians-chip-tile-radius);
   border: 2px solid rgba(56, 189, 248, 0.55);
   box-shadow:
     0 0 18px rgba(56, 189, 248, 0.2),
     inset 0 0 24px rgba(56, 189, 248, 0.06);
   background-color: rgba(15, 23, 42, 0.9);
-  overflow: hidden;
+}
+
+.guardians-page__slot.guardians-page__chip-tile {
+  overflow: visible;
 }
 
 .guardians-page__guardian-card {
@@ -9882,7 +9888,44 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   flex-direction: column;
   width: 100%;
   min-height: 10.5rem;
+  overflow: hidden;
   background-image: linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85));
+}
+
+.guardians-page__slot-connector {
+  --guardians-connector-gap: 2px;
+  --guardians-connector-extend: 3px;
+  position: absolute;
+  top: 50%;
+  height: 3px;
+  transform: translateY(-50%);
+  background: rgba(56, 189, 248, 0.5);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.guardians-page__slot--top-left .guardians-page__slot-connector,
+.guardians-page__slot--bottom-left .guardians-page__slot-connector {
+  left: calc(100% + var(--guardians-connector-gap));
+  width: calc(
+    var(--guardians-connector-left, 0px) - var(--guardians-connector-gap) +
+      var(--guardians-connector-extend)
+  );
+}
+
+.guardians-page__slot--top-right .guardians-page__slot-connector,
+.guardians-page__slot--bottom-right .guardians-page__slot-connector {
+  right: calc(100% + var(--guardians-connector-gap));
+  width: calc(
+    var(--guardians-connector-right, 0px) - var(--guardians-connector-gap) +
+      var(--guardians-connector-extend)
+  );
+}
+
+.guardians-page__slot .guardians-page__chip-icon,
+.guardians-page__slot .guardians-page__chip-label {
+  position: relative;
+  z-index: 1;
 }
 
 .guardians-page__guardian-card-head {

@@ -2,7 +2,9 @@ import {
   useCallback,
   useEffect,
   useId,
+  useLayoutEffect,
   useMemo,
+  useRef,
   useState,
   type ReactNode,
 } from 'react'
@@ -69,6 +71,8 @@ export function GuardiansPage({
   const [guardianPickerOpen, setGuardianPickerOpen] = useState(false)
   const [respecConfirmOpen, setRespecConfirmOpen] = useState(false)
   const pickerTitleId = useId().replace(/:/g, '')
+  const loadoutRef = useRef<HTMLDivElement>(null)
+  const guardianCardRef = useRef<HTMLDivElement>(null)
 
   const selectedGuardian = useMemo(
     () => GAME_THEMES.find((theme) => theme.id === selection.guardian) ?? null,
@@ -143,6 +147,33 @@ export function GuardiansPage({
   const guardianImage = selectedGuardian?.image
   const guardianName = selectedGuardian ? t(selectedGuardian.nameId) : t('guardians_no_guardian')
 
+  useLayoutEffect(() => {
+    const loadout = loadoutRef.current
+    const card = guardianCardRef.current
+    if (!loadout || !card) return
+
+    const updateConnectorLengths = () => {
+      const leftSlot = loadout.querySelector<HTMLElement>('.guardians-page__slot--top-left')
+      const rightSlot = loadout.querySelector<HTMLElement>('.guardians-page__slot--top-right')
+      if (!leftSlot || !rightSlot) return
+
+      const cardRect = card.getBoundingClientRect()
+      const leftRect = leftSlot.getBoundingClientRect()
+      const rightRect = rightSlot.getBoundingClientRect()
+      const leftWidth = Math.max(0, cardRect.left - leftRect.right)
+      const rightWidth = Math.max(0, rightRect.left - cardRect.right)
+
+      loadout.style.setProperty('--guardians-connector-left', `${leftWidth}px`)
+      loadout.style.setProperty('--guardians-connector-right', `${rightWidth}px`)
+    }
+
+    updateConnectorLengths()
+    const observer = new ResizeObserver(updateConnectorLengths)
+    observer.observe(loadout)
+    observer.observe(card)
+    return () => observer.disconnect()
+  }, [guardianName, chipState.slots])
+
   return (
     <div className="guardians-page">
       {toolbarMount ? createPortal(toolbar, toolbarMount) : toolbar}
@@ -151,7 +182,7 @@ export function GuardiansPage({
         className="guardians-page__profile"
         aria-label={t('guardians_profile_aria')}
       >
-        <div className="guardians-page__loadout">
+        <div className="guardians-page__loadout" ref={loadoutRef}>
           {SLOT_POSITIONS.map((position, slotIndex) => {
             if (slotIndex >= GUARDIAN_CHIP_SLOT_COUNT) return null
             const locked = isSlotLocked(slotIndex)
@@ -178,6 +209,7 @@ export function GuardiansPage({
                       : t('guardians_slot_empty_aria')
                 }
               >
+                <span className="guardians-page__slot-connector" aria-hidden />
                 {locked ? (
                   <GuardianChipIcon chipId="locked" className="guardians-page__chip-icon" />
                 ) : chipId ? (
@@ -196,7 +228,7 @@ export function GuardiansPage({
             )
           })}
 
-          <div className="guardians-page__guardian-card">
+          <div className="guardians-page__guardian-card" ref={guardianCardRef}>
             <div className="guardians-page__guardian-card-head">
               <h2 className="guardians-page__guardian-name">{guardianName}</h2>
               <button
