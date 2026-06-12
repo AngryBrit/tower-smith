@@ -1,4 +1,9 @@
-import { categoryNameKey, isModulesWorkbookName, isUwsWorkbookName } from './effectivePathsCategoryNames'
+import {
+  categoryNameKey,
+  isGuardiansWorkbookName,
+  isModulesWorkbookName,
+  isUwsWorkbookName,
+} from './effectivePathsCategoryNames'
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 
 /** Category rows on the IDS Master IDS tab (only these are linked workbooks). */
@@ -9,10 +14,10 @@ export const EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES = [
   'Cards',
   'Modules',
   'Bots',
+  'Guardians',
   'Themes & Songs',
   'Relics',
   'Vault',
-  'Guardians',
   'Player & Stuff',
 ] as const
 
@@ -26,6 +31,7 @@ const CANONICAL_ORDER = new Map(
 
 const ULTIMATE_WEAPON_CANONICAL_KEY = categoryNameKey('Ultimate Weapons')
 const MODULES_CANONICAL_KEY = categoryNameKey('Modules')
+const GUARDIANS_CANONICAL_KEY = categoryNameKey('Guardians')
 
 /** Map IDS tab labels (incl. versioned aliases) to a canonical gateway category key. */
 export function idsWorkbookCategoryKey(name: string): string | null {
@@ -33,6 +39,7 @@ export function idsWorkbookCategoryKey(name: string): string | null {
   if (KNOWN_IDS_WORKBOOK_KEYS.has(key)) return key
   if (isUwsWorkbookName(name)) return ULTIMATE_WEAPON_CANONICAL_KEY
   if (isModulesWorkbookName(name)) return MODULES_CANONICAL_KEY
+  if (isGuardiansWorkbookName(name)) return GUARDIANS_CANONICAL_KEY
   return null
 }
 

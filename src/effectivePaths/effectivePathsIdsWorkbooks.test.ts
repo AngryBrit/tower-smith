@@ -18,6 +18,7 @@ describe('filterKnownIdsWorkbooks', () => {
     expect(isKnownIdsWorkbookName('Themes & Songs')).toBe(true)
     expect(isKnownIdsWorkbookName('Ultimate Weapons')).toBe(true)
     expect(isKnownIdsWorkbookName('UWs v3.1.2')).toBe(true)
+    expect(isKnownIdsWorkbookName('Guardians v3.0.2')).toBe(true)
     expect(isKnownIdsWorkbookName('IDS Collection')).toBe(false)
     expect(EFFECTIVE_PATHS_IDS_WORKBOOK_NAMES).toHaveLength(11)
   })
@@ -37,6 +38,25 @@ describe('filterKnownIdsWorkbooks', () => {
       { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
     ])
     expect(filtered.map((w) => w.name)).toEqual(['Laboratory', 'UWs v3.1.2'])
+  })
+
+  it('keeps Guardians aliases in canonical IDS order', () => {
+    const filtered = filterKnownIdsWorkbooks([
+      { name: 'Guardians v3.0.2', spreadsheetId: '1GuardiansWorkbookIdXXXXXXXX' },
+      { name: 'Laboratory', spreadsheetId: '1LaboratoryWorkbookIdXXXXXXX' },
+    ])
+    expect(filtered.map((w) => w.name)).toEqual(['Laboratory', 'Guardians v3.0.2'])
+
+    const sorted = sortLinkedWorkbookAccess([
+      { name: 'Relics', spreadsheetId: '1Relics', access: 'ok' },
+      { name: 'Guardians v3.0.2', spreadsheetId: '1Guardians', access: 'ok' },
+      { name: 'Laboratory', spreadsheetId: '1Labs', access: 'ok' },
+    ])
+    expect(sorted.map((row) => row.name)).toEqual([
+      'Laboratory',
+      'Guardians v3.0.2',
+      'Relics',
+    ])
   })
 
   it('drops Home Page stat rows from linked workbook access lists', () => {

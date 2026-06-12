@@ -31,6 +31,9 @@ export function cleanEffectivePathsCategoryName(name: string): string {
   if (isModulesWorkbookName(trimmed)) {
     return EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME
   }
+  if (isGuardiansWorkbookName(trimmed)) {
+    return EFFECTIVE_PATHS_GUARDIANS_WORKBOOK_NAME
+  }
   return trimmed
 }
 
