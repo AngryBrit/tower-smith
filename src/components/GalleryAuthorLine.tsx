@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { useI18n } from '../i18n'
 
 type GalleryAuthorLineProps = {
@@ -21,6 +22,13 @@ export function GalleryAuthorLine({
 }: GalleryAuthorLineProps) {
   const { fmt } = useI18n()
   const guildName = guild?.trim() ?? ''
+  const authorInitial = author.trim().charAt(0).toUpperCase() || '?'
+  const [imageFailed, setImageFailed] = useState(false)
+
+  useEffect(() => {
+    setImageFailed(false)
+  }, [avatarUrl])
+
   const classes = [
     'gallery-author-line',
     onAuthorClick || onGuildClick ? 'gallery-author-line--clickable' : '',
@@ -31,7 +39,7 @@ export function GalleryAuthorLine({
 
   return (
     <span className={classes}>
-      {avatarUrl ? (
+      {avatarUrl && !imageFailed ? (
         <img
           src={avatarUrl}
           alt=""
@@ -40,12 +48,15 @@ export function GalleryAuthorLine({
           height={20}
           loading="lazy"
           decoding="async"
+          onError={() => setImageFailed(true)}
         />
       ) : (
         <span
           className="gallery-author-line__avatar gallery-author-line__avatar--placeholder"
           aria-hidden
-        />
+        >
+          {authorInitial}
+        </span>
       )}
       {onAuthorClick ? (
         <button

@@ -9283,8 +9283,14 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .gallery-author-line__avatar--placeholder {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--sr-cyan-ring-15);
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--sr-cyan-bright);
+  line-height: 1;
 }
 
 .settings-page__label {
