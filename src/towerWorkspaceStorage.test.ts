@@ -22,6 +22,7 @@ describe('towerWorkspaceStorage', () => {
     expect(after.lab.levelOverrides).toEqual({})
     expect(after.build.cards.cardStars.damage).toBe(0)
     expect(after.themes.ownedIds).toEqual([])
+    expect(after.themes.selection?.guardian).toBe('')
   })
 
   it('accepts nested workspace payloads', () => {

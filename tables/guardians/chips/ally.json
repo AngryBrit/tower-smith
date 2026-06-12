@@ -1,0 +1,1176 @@
+{
+  "name": "Ally",
+  "chipId": "ally",
+  "tracks": {
+    "recovery": {
+      "maxLevel": 50,
+      "levels": [
+        {
+          "level": 1,
+          "value": 1,
+          "totalCost": 0
+        },
+        {
+          "level": 2,
+          "value": 2,
+          "totalCost": 10
+        },
+        {
+          "level": 3,
+          "value": 3,
+          "totalCost": 15
+        },
+        {
+          "level": 4,
+          "value": 4,
+          "totalCost": 20
+        },
+        {
+          "level": 5,
+          "value": 5,
+          "totalCost": 25
+        },
+        {
+          "level": 6,
+          "value": 6,
+          "totalCost": 30
+        },
+        {
+          "level": 7,
+          "value": 7,
+          "totalCost": 35
+        },
+        {
+          "level": 8,
+          "value": 8,
+          "totalCost": 40
+        },
+        {
+          "level": 9,
+          "value": 9,
+          "totalCost": 45
+        },
+        {
+          "level": 10,
+          "value": 10,
+          "totalCost": 50
+        },
+        {
+          "level": 11,
+          "value": 11,
+          "totalCost": 55
+        },
+        {
+          "level": 12,
+          "value": 12,
+          "totalCost": 60
+        },
+        {
+          "level": 13,
+          "value": 13,
+          "totalCost": 65
+        },
+        {
+          "level": 14,
+          "value": 14,
+          "totalCost": 70
+        },
+        {
+          "level": 15,
+          "value": 15,
+          "totalCost": 75
+        },
+        {
+          "level": 16,
+          "value": 16,
+          "totalCost": 80
+        },
+        {
+          "level": 17,
+          "value": 17,
+          "totalCost": 85
+        },
+        {
+          "level": 18,
+          "value": 18,
+          "totalCost": 90
+        },
+        {
+          "level": 19,
+          "value": 19,
+          "totalCost": 95
+        },
+        {
+          "level": 20,
+          "value": 20,
+          "totalCost": 100
+        },
+        {
+          "level": 21,
+          "value": 21,
+          "totalCost": 105
+        },
+        {
+          "level": 22,
+          "value": 22,
+          "totalCost": 110
+        },
+        {
+          "level": 23,
+          "value": 23,
+          "totalCost": 115
+        },
+        {
+          "level": 24,
+          "value": 24,
+          "totalCost": 120
+        },
+        {
+          "level": 25,
+          "value": 25,
+          "totalCost": 125
+        },
+        {
+          "level": 26,
+          "value": 26,
+          "totalCost": 130
+        },
+        {
+          "level": 27,
+          "value": 27,
+          "totalCost": 135
+        },
+        {
+          "level": 28,
+          "value": 28,
+          "totalCost": 140
+        },
+        {
+          "level": 29,
+          "value": 29,
+          "totalCost": 145
+        },
+        {
+          "level": 30,
+          "value": 30,
+          "totalCost": 150
+        },
+        {
+          "level": 31,
+          "value": 31,
+          "totalCost": 155
+        },
+        {
+          "level": 32,
+          "value": 32,
+          "totalCost": 160
+        },
+        {
+          "level": 33,
+          "value": 33,
+          "totalCost": 165
+        },
+        {
+          "level": 34,
+          "value": 34,
+          "totalCost": 170
+        },
+        {
+          "level": 35,
+          "value": 35,
+          "totalCost": 175
+        },
+        {
+          "level": 36,
+          "value": 36,
+          "totalCost": 180
+        },
+        {
+          "level": 37,
+          "value": 37,
+          "totalCost": 185
+        },
+        {
+          "level": 38,
+          "value": 38,
+          "totalCost": 190
+        },
+        {
+          "level": 39,
+          "value": 39,
+          "totalCost": 195
+        },
+        {
+          "level": 40,
+          "value": 40,
+          "totalCost": 200
+        },
+        {
+          "level": 41,
+          "value": 41,
+          "totalCost": 205
+        },
+        {
+          "level": 42,
+          "value": 42,
+          "totalCost": 210
+        },
+        {
+          "level": 43,
+          "value": 43,
+          "totalCost": 215
+        },
+        {
+          "level": 44,
+          "value": 44,
+          "totalCost": 220
+        },
+        {
+          "level": 45,
+          "value": 45,
+          "totalCost": 225
+        },
+        {
+          "level": 46,
+          "value": 46,
+          "totalCost": 230
+        },
+        {
+          "level": 47,
+          "value": 47,
+          "totalCost": 235
+        },
+        {
+          "level": 48,
+          "value": 48,
+          "totalCost": 240
+        },
+        {
+          "level": 49,
+          "value": 49,
+          "totalCost": 245
+        },
+        {
+          "level": 50,
+          "value": 50,
+          "totalCost": 250
+        }
+      ]
+    },
+    "maxRecovery": {
+      "maxLevel": 90,
+      "levels": [
+        {
+          "level": 1,
+          "value": 11,
+          "totalCost": 0
+        },
+        {
+          "level": 2,
+          "value": 12,
+          "totalCost": 1
+        },
+        {
+          "level": 3,
+          "value": 13,
+          "totalCost": 2
+        },
+        {
+          "level": 4,
+          "value": 14,
+          "totalCost": 3
+        },
+        {
+          "level": 5,
+          "value": 15,
+          "totalCost": 4
+        },
+        {
+          "level": 6,
+          "value": 16,
+          "totalCost": 5
+        },
+        {
+          "level": 7,
+          "value": 17,
+          "totalCost": 6
+        },
+        {
+          "level": 8,
+          "value": 18,
+          "totalCost": 7
+        },
+        {
+          "level": 9,
+          "value": 19,
+          "totalCost": 8
+        },
+        {
+          "level": 10,
+          "value": 20,
+          "totalCost": 9
+        },
+        {
+          "level": 11,
+          "value": 21,
+          "totalCost": 10
+        },
+        {
+          "level": 12,
+          "value": 22,
+          "totalCost": 11
+        },
+        {
+          "level": 13,
+          "value": 23,
+          "totalCost": 12
+        },
+        {
+          "level": 14,
+          "value": 24,
+          "totalCost": 13
+        },
+        {
+          "level": 15,
+          "value": 25,
+          "totalCost": 14
+        },
+        {
+          "level": 16,
+          "value": 26,
+          "totalCost": 15
+        },
+        {
+          "level": 17,
+          "value": 27,
+          "totalCost": 16
+        },
+        {
+          "level": 18,
+          "value": 28,
+          "totalCost": 17
+        },
+        {
+          "level": 19,
+          "value": 29,
+          "totalCost": 18
+        },
+        {
+          "level": 20,
+          "value": 30,
+          "totalCost": 19
+        },
+        {
+          "level": 21,
+          "value": 31,
+          "totalCost": 20
+        },
+        {
+          "level": 22,
+          "value": 32,
+          "totalCost": 21
+        },
+        {
+          "level": 23,
+          "value": 33,
+          "totalCost": 22
+        },
+        {
+          "level": 24,
+          "value": 34,
+          "totalCost": 23
+        },
+        {
+          "level": 25,
+          "value": 35,
+          "totalCost": 24
+        },
+        {
+          "level": 26,
+          "value": 36,
+          "totalCost": 25
+        },
+        {
+          "level": 27,
+          "value": 37,
+          "totalCost": 26
+        },
+        {
+          "level": 28,
+          "value": 38,
+          "totalCost": 27
+        },
+        {
+          "level": 29,
+          "value": 39,
+          "totalCost": 28
+        },
+        {
+          "level": 30,
+          "value": 40,
+          "totalCost": 29
+        },
+        {
+          "level": 31,
+          "value": 41,
+          "totalCost": 30
+        },
+        {
+          "level": 32,
+          "value": 42,
+          "totalCost": 31
+        },
+        {
+          "level": 33,
+          "value": 43,
+          "totalCost": 32
+        },
+        {
+          "level": 34,
+          "value": 44,
+          "totalCost": 33
+        },
+        {
+          "level": 35,
+          "value": 45,
+          "totalCost": 34
+        },
+        {
+          "level": 36,
+          "value": 46,
+          "totalCost": 35
+        },
+        {
+          "level": 37,
+          "value": 47,
+          "totalCost": 36
+        },
+        {
+          "level": 38,
+          "value": 48,
+          "totalCost": 37
+        },
+        {
+          "level": 39,
+          "value": 49,
+          "totalCost": 38
+        },
+        {
+          "level": 40,
+          "value": 50,
+          "totalCost": 39
+        },
+        {
+          "level": 41,
+          "value": 51,
+          "totalCost": 40
+        },
+        {
+          "level": 42,
+          "value": 52,
+          "totalCost": 41
+        },
+        {
+          "level": 43,
+          "value": 53,
+          "totalCost": 42
+        },
+        {
+          "level": 44,
+          "value": 54,
+          "totalCost": 43
+        },
+        {
+          "level": 45,
+          "value": 55,
+          "totalCost": 44
+        },
+        {
+          "level": 46,
+          "value": 56,
+          "totalCost": 45
+        },
+        {
+          "level": 47,
+          "value": 57,
+          "totalCost": 46
+        },
+        {
+          "level": 48,
+          "value": 58,
+          "totalCost": 47
+        },
+        {
+          "level": 49,
+          "value": 59,
+          "totalCost": 48
+        },
+        {
+          "level": 50,
+          "value": 60,
+          "totalCost": 49
+        },
+        {
+          "level": 51,
+          "value": 61,
+          "totalCost": 50
+        },
+        {
+          "level": 52,
+          "value": 62,
+          "totalCost": 51
+        },
+        {
+          "level": 53,
+          "value": 63,
+          "totalCost": 52
+        },
+        {
+          "level": 54,
+          "value": 64,
+          "totalCost": 53
+        },
+        {
+          "level": 55,
+          "value": 65,
+          "totalCost": 54
+        },
+        {
+          "level": 56,
+          "value": 66,
+          "totalCost": 55
+        },
+        {
+          "level": 57,
+          "value": 67,
+          "totalCost": 56
+        },
+        {
+          "level": 58,
+          "value": 68,
+          "totalCost": 57
+        },
+        {
+          "level": 59,
+          "value": 69,
+          "totalCost": 58
+        },
+        {
+          "level": 60,
+          "value": 70,
+          "totalCost": 59
+        },
+        {
+          "level": 61,
+          "value": 71,
+          "totalCost": 60
+        },
+        {
+          "level": 62,
+          "value": 72,
+          "totalCost": 61
+        },
+        {
+          "level": 63,
+          "value": 73,
+          "totalCost": 62
+        },
+        {
+          "level": 64,
+          "value": 74,
+          "totalCost": 63
+        },
+        {
+          "level": 65,
+          "value": 75,
+          "totalCost": 64
+        },
+        {
+          "level": 66,
+          "value": 76,
+          "totalCost": 65
+        },
+        {
+          "level": 67,
+          "value": 77,
+          "totalCost": 66
+        },
+        {
+          "level": 68,
+          "value": 78,
+          "totalCost": 67
+        },
+        {
+          "level": 69,
+          "value": 79,
+          "totalCost": 68
+        },
+        {
+          "level": 70,
+          "value": 80,
+          "totalCost": 69
+        },
+        {
+          "level": 71,
+          "value": 81,
+          "totalCost": 70
+        },
+        {
+          "level": 72,
+          "value": 82,
+          "totalCost": 71
+        },
+        {
+          "level": 73,
+          "value": 83,
+          "totalCost": 72
+        },
+        {
+          "level": 74,
+          "value": 84,
+          "totalCost": 73
+        },
+        {
+          "level": 75,
+          "value": 85,
+          "totalCost": 74
+        },
+        {
+          "level": 76,
+          "value": 86,
+          "totalCost": 75
+        },
+        {
+          "level": 77,
+          "value": 87,
+          "totalCost": 76
+        },
+        {
+          "level": 78,
+          "value": 88,
+          "totalCost": 77
+        },
+        {
+          "level": 79,
+          "value": 89,
+          "totalCost": 78
+        },
+        {
+          "level": 80,
+          "value": 90,
+          "totalCost": 79
+        },
+        {
+          "level": 81,
+          "value": 91,
+          "totalCost": 80
+        },
+        {
+          "level": 82,
+          "value": 92,
+          "totalCost": 81
+        },
+        {
+          "level": 83,
+          "value": 93,
+          "totalCost": 82
+        },
+        {
+          "level": 84,
+          "value": 94,
+          "totalCost": 83
+        },
+        {
+          "level": 85,
+          "value": 95,
+          "totalCost": 84
+        },
+        {
+          "level": 86,
+          "value": 96,
+          "totalCost": 85
+        },
+        {
+          "level": 87,
+          "value": 97,
+          "totalCost": 86
+        },
+        {
+          "level": 88,
+          "value": 98,
+          "totalCost": 87
+        },
+        {
+          "level": 89,
+          "value": 99,
+          "totalCost": 88
+        },
+        {
+          "level": 90,
+          "value": 100,
+          "totalCost": 89
+        }
+      ]
+    },
+    "cooldown": {
+      "maxLevel": 91,
+      "levels": [
+        {
+          "level": 1,
+          "value": 120,
+          "totalCost": 0
+        },
+        {
+          "level": 2,
+          "value": 119,
+          "totalCost": 1
+        },
+        {
+          "level": 3,
+          "value": 118,
+          "totalCost": 2
+        },
+        {
+          "level": 4,
+          "value": 117,
+          "totalCost": 3
+        },
+        {
+          "level": 5,
+          "value": 116,
+          "totalCost": 4
+        },
+        {
+          "level": 6,
+          "value": 115,
+          "totalCost": 5
+        },
+        {
+          "level": 7,
+          "value": 114,
+          "totalCost": 6
+        },
+        {
+          "level": 8,
+          "value": 113,
+          "totalCost": 7
+        },
+        {
+          "level": 9,
+          "value": 112,
+          "totalCost": 8
+        },
+        {
+          "level": 10,
+          "value": 111,
+          "totalCost": 9
+        },
+        {
+          "level": 11,
+          "value": 110,
+          "totalCost": 10
+        },
+        {
+          "level": 12,
+          "value": 109,
+          "totalCost": 11
+        },
+        {
+          "level": 13,
+          "value": 108,
+          "totalCost": 12
+        },
+        {
+          "level": 14,
+          "value": 107,
+          "totalCost": 13
+        },
+        {
+          "level": 15,
+          "value": 106,
+          "totalCost": 14
+        },
+        {
+          "level": 16,
+          "value": 105,
+          "totalCost": 15
+        },
+        {
+          "level": 17,
+          "value": 104,
+          "totalCost": 16
+        },
+        {
+          "level": 18,
+          "value": 103,
+          "totalCost": 17
+        },
+        {
+          "level": 19,
+          "value": 102,
+          "totalCost": 18
+        },
+        {
+          "level": 20,
+          "value": 101,
+          "totalCost": 19
+        },
+        {
+          "level": 21,
+          "value": 100,
+          "totalCost": 20
+        },
+        {
+          "level": 22,
+          "value": 99,
+          "totalCost": 21
+        },
+        {
+          "level": 23,
+          "value": 98,
+          "totalCost": 22
+        },
+        {
+          "level": 24,
+          "value": 97,
+          "totalCost": 23
+        },
+        {
+          "level": 25,
+          "value": 96,
+          "totalCost": 24
+        },
+        {
+          "level": 26,
+          "value": 95,
+          "totalCost": 25
+        },
+        {
+          "level": 27,
+          "value": 94,
+          "totalCost": 26
+        },
+        {
+          "level": 28,
+          "value": 93,
+          "totalCost": 27
+        },
+        {
+          "level": 29,
+          "value": 92,
+          "totalCost": 28
+        },
+        {
+          "level": 30,
+          "value": 91,
+          "totalCost": 29
+        },
+        {
+          "level": 31,
+          "value": 90,
+          "totalCost": 30
+        },
+        {
+          "level": 32,
+          "value": 89,
+          "totalCost": 31
+        },
+        {
+          "level": 33,
+          "value": 88,
+          "totalCost": 32
+        },
+        {
+          "level": 34,
+          "value": 87,
+          "totalCost": 33
+        },
+        {
+          "level": 35,
+          "value": 86,
+          "totalCost": 34
+        },
+        {
+          "level": 36,
+          "value": 85,
+          "totalCost": 35
+        },
+        {
+          "level": 37,
+          "value": 84,
+          "totalCost": 36
+        },
+        {
+          "level": 38,
+          "value": 83,
+          "totalCost": 37
+        },
+        {
+          "level": 39,
+          "value": 82,
+          "totalCost": 38
+        },
+        {
+          "level": 40,
+          "value": 81,
+          "totalCost": 39
+        },
+        {
+          "level": 41,
+          "value": 80,
+          "totalCost": 40
+        },
+        {
+          "level": 42,
+          "value": 79,
+          "totalCost": 41
+        },
+        {
+          "level": 43,
+          "value": 78,
+          "totalCost": 42
+        },
+        {
+          "level": 44,
+          "value": 77,
+          "totalCost": 43
+        },
+        {
+          "level": 45,
+          "value": 76,
+          "totalCost": 44
+        },
+        {
+          "level": 46,
+          "value": 75,
+          "totalCost": 45
+        },
+        {
+          "level": 47,
+          "value": 74,
+          "totalCost": 46
+        },
+        {
+          "level": 48,
+          "value": 73,
+          "totalCost": 47
+        },
+        {
+          "level": 49,
+          "value": 72,
+          "totalCost": 48
+        },
+        {
+          "level": 50,
+          "value": 71,
+          "totalCost": 49
+        },
+        {
+          "level": 51,
+          "value": 70,
+          "totalCost": 50
+        },
+        {
+          "level": 52,
+          "value": 69,
+          "totalCost": 51
+        },
+        {
+          "level": 53,
+          "value": 68,
+          "totalCost": 52
+        },
+        {
+          "level": 54,
+          "value": 67,
+          "totalCost": 53
+        },
+        {
+          "level": 55,
+          "value": 66,
+          "totalCost": 54
+        },
+        {
+          "level": 56,
+          "value": 65,
+          "totalCost": 55
+        },
+        {
+          "level": 57,
+          "value": 64,
+          "totalCost": 56
+        },
+        {
+          "level": 58,
+          "value": 63,
+          "totalCost": 57
+        },
+        {
+          "level": 59,
+          "value": 62,
+          "totalCost": 58
+        },
+        {
+          "level": 60,
+          "value": 61,
+          "totalCost": 59
+        },
+        {
+          "level": 61,
+          "value": 60,
+          "totalCost": 60
+        },
+        {
+          "level": 62,
+          "value": 59,
+          "totalCost": 61
+        },
+        {
+          "level": 63,
+          "value": 58,
+          "totalCost": 62
+        },
+        {
+          "level": 64,
+          "value": 57,
+          "totalCost": 63
+        },
+        {
+          "level": 65,
+          "value": 56,
+          "totalCost": 64
+        },
+        {
+          "level": 66,
+          "value": 55,
+          "totalCost": 65
+        },
+        {
+          "level": 67,
+          "value": 54,
+          "totalCost": 66
+        },
+        {
+          "level": 68,
+          "value": 53,
+          "totalCost": 67
+        },
+        {
+          "level": 69,
+          "value": 52,
+          "totalCost": 68
+        },
+        {
+          "level": 70,
+          "value": 51,
+          "totalCost": 69
+        },
+        {
+          "level": 71,
+          "value": 50,
+          "totalCost": 70
+        },
+        {
+          "level": 72,
+          "value": 49,
+          "totalCost": 71
+        },
+        {
+          "level": 73,
+          "value": 48,
+          "totalCost": 72
+        },
+        {
+          "level": 74,
+          "value": 47,
+          "totalCost": 73
+        },
+        {
+          "level": 75,
+          "value": 46,
+          "totalCost": 74
+        },
+        {
+          "level": 76,
+          "value": 45,
+          "totalCost": 75
+        },
+        {
+          "level": 77,
+          "value": 44,
+          "totalCost": 76
+        },
+        {
+          "level": 78,
+          "value": 43,
+          "totalCost": 77
+        },
+        {
+          "level": 79,
+          "value": 42,
+          "totalCost": 78
+        },
+        {
+          "level": 80,
+          "value": 41,
+          "totalCost": 79
+        },
+        {
+          "level": 81,
+          "value": 40,
+          "totalCost": 80
+        },
+        {
+          "level": 82,
+          "value": 39,
+          "totalCost": 81
+        },
+        {
+          "level": 83,
+          "value": 38,
+          "totalCost": 82
+        },
+        {
+          "level": 84,
+          "value": 37,
+          "totalCost": 83
+        },
+        {
+          "level": 85,
+          "value": 36,
+          "totalCost": 84
+        },
+        {
+          "level": 86,
+          "value": 35,
+          "totalCost": 85
+        },
+        {
+          "level": 87,
+          "value": 34,
+          "totalCost": 86
+        },
+        {
+          "level": 88,
+          "value": 33,
+          "totalCost": 87
+        },
+        {
+          "level": 89,
+          "value": 32,
+          "totalCost": 88
+        },
+        {
+          "level": 90,
+          "value": 31,
+          "totalCost": 89
+        },
+        {
+          "level": 91,
+          "value": 30,
+          "totalCost": 90
+        }
+      ]
+    }
+  }
+}

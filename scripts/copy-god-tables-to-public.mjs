@@ -62,6 +62,7 @@ function publishGodTables(srcSubdir, destSubdir, excludeBasenames = []) {
 
 const workshopCount = publishGodTables('workshop', 'workshop')
 const labCount = publishGodTables('labs', 'labs', ['lab-order.json'])
+const guardianCount = publishGodTables('guardians', 'guardians')
 console.log(
-  `Published ${workshopCount} workshop + ${labCount} lab GOD tables to public/tables/`,
+  `Published ${workshopCount} workshop + ${labCount} lab + ${guardianCount} guardian GOD tables to public/tables/`,
 )

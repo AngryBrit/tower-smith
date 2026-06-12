@@ -160,7 +160,13 @@ export function clearTowerWorkspace(workspace: TowerWorkspaceV1): TowerWorkspace
   return {
     lab: defaultLabPersisted(),
     build: clearTowerBuild(workspace.build),
-    themes: defaultThemesPersisted(),
+    themes: {
+      ...defaultThemesPersisted(),
+      selection: {
+        ...DEFAULT_THEME_SELECTION,
+        guardian: '',
+      },
+    },
   }
 }
 

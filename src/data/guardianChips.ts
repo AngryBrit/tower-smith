@@ -24,12 +24,9 @@ export const GUARDIAN_CHIPS: readonly GuardianChipEntry[] = GUARDIAN_CHIP_IDS.ma
 
 export const GUARDIAN_CHIP_SLOT_COUNT = 4
 
-/** Slot index of the chip that unlocks with guild progression (locked in-game until then). */
-export const GUARDIAN_CHIP_LOCKED_SLOT_INDEX = 3
-
 export const DEFAULT_GUARDIAN_CHIP_SLOTS: readonly (GuardianChipId | null)[] = [
   'fetch',
-  'summon',
-  'bounty',
+  null,
+  null,
   null,
 ]

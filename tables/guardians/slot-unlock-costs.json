@@ -1,0 +1,9 @@
+{
+  "name": "Guardian chip slot unlock costs",
+  "slots": [
+    { "slot": 1, "cost": 0 },
+    { "slot": 2, "cost": 200 },
+    { "slot": 3, "cost": 300 },
+    { "slot": 4, "cost": null }
+  ]
+}

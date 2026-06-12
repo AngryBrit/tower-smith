@@ -1,0 +1,776 @@
+{
+  "name": "Fetch",
+  "chipId": "fetch",
+  "tracks": {
+    "cooldown": {
+      "maxLevel": 61,
+      "levels": [
+        {
+          "level": 1,
+          "value": 120,
+          "totalCost": 0
+        },
+        {
+          "level": 2,
+          "value": 119,
+          "totalCost": 2
+        },
+        {
+          "level": 3,
+          "value": 118,
+          "totalCost": 4
+        },
+        {
+          "level": 4,
+          "value": 117,
+          "totalCost": 6
+        },
+        {
+          "level": 5,
+          "value": 116,
+          "totalCost": 8
+        },
+        {
+          "level": 6,
+          "value": 115,
+          "totalCost": 10
+        },
+        {
+          "level": 7,
+          "value": 114,
+          "totalCost": 12
+        },
+        {
+          "level": 8,
+          "value": 113,
+          "totalCost": 14
+        },
+        {
+          "level": 9,
+          "value": 112,
+          "totalCost": 16
+        },
+        {
+          "level": 10,
+          "value": 111,
+          "totalCost": 18
+        },
+        {
+          "level": 11,
+          "value": 110,
+          "totalCost": 20
+        },
+        {
+          "level": 12,
+          "value": 109,
+          "totalCost": 22
+        },
+        {
+          "level": 13,
+          "value": 108,
+          "totalCost": 24
+        },
+        {
+          "level": 14,
+          "value": 107,
+          "totalCost": 26
+        },
+        {
+          "level": 15,
+          "value": 106,
+          "totalCost": 28
+        },
+        {
+          "level": 16,
+          "value": 105,
+          "totalCost": 30
+        },
+        {
+          "level": 17,
+          "value": 104,
+          "totalCost": 32
+        },
+        {
+          "level": 18,
+          "value": 103,
+          "totalCost": 34
+        },
+        {
+          "level": 19,
+          "value": 102,
+          "totalCost": 36
+        },
+        {
+          "level": 20,
+          "value": 101,
+          "totalCost": 38
+        },
+        {
+          "level": 21,
+          "value": 100,
+          "totalCost": 40
+        },
+        {
+          "level": 22,
+          "value": 99,
+          "totalCost": 42
+        },
+        {
+          "level": 23,
+          "value": 98,
+          "totalCost": 44
+        },
+        {
+          "level": 24,
+          "value": 97,
+          "totalCost": 46
+        },
+        {
+          "level": 25,
+          "value": 96,
+          "totalCost": 48
+        },
+        {
+          "level": 26,
+          "value": 95,
+          "totalCost": 50
+        },
+        {
+          "level": 27,
+          "value": 94,
+          "totalCost": 52
+        },
+        {
+          "level": 28,
+          "value": 93,
+          "totalCost": 54
+        },
+        {
+          "level": 29,
+          "value": 92,
+          "totalCost": 56
+        },
+        {
+          "level": 30,
+          "value": 91,
+          "totalCost": 58
+        },
+        {
+          "level": 31,
+          "value": 90,
+          "totalCost": 60
+        },
+        {
+          "level": 32,
+          "value": 89,
+          "totalCost": 62
+        },
+        {
+          "level": 33,
+          "value": 88,
+          "totalCost": 64
+        },
+        {
+          "level": 34,
+          "value": 87,
+          "totalCost": 66
+        },
+        {
+          "level": 35,
+          "value": 86,
+          "totalCost": 68
+        },
+        {
+          "level": 36,
+          "value": 85,
+          "totalCost": 70
+        },
+        {
+          "level": 37,
+          "value": 84,
+          "totalCost": 72
+        },
+        {
+          "level": 38,
+          "value": 83,
+          "totalCost": 74
+        },
+        {
+          "level": 39,
+          "value": 82,
+          "totalCost": 76
+        },
+        {
+          "level": 40,
+          "value": 81,
+          "totalCost": 78
+        },
+        {
+          "level": 41,
+          "value": 80,
+          "totalCost": 80
+        },
+        {
+          "level": 42,
+          "value": 79,
+          "totalCost": 82
+        },
+        {
+          "level": 43,
+          "value": 78,
+          "totalCost": 84
+        },
+        {
+          "level": 44,
+          "value": 77,
+          "totalCost": 86
+        },
+        {
+          "level": 45,
+          "value": 76,
+          "totalCost": 88
+        },
+        {
+          "level": 46,
+          "value": 75,
+          "totalCost": 90
+        },
+        {
+          "level": 47,
+          "value": 74,
+          "totalCost": 92
+        },
+        {
+          "level": 48,
+          "value": 73,
+          "totalCost": 94
+        },
+        {
+          "level": 49,
+          "value": 72,
+          "totalCost": 96
+        },
+        {
+          "level": 50,
+          "value": 71,
+          "totalCost": 98
+        },
+        {
+          "level": 51,
+          "value": 70,
+          "totalCost": 100
+        },
+        {
+          "level": 52,
+          "value": 69,
+          "totalCost": 102
+        },
+        {
+          "level": 53,
+          "value": 68,
+          "totalCost": 104
+        },
+        {
+          "level": 54,
+          "value": 67,
+          "totalCost": 106
+        },
+        {
+          "level": 55,
+          "value": 66,
+          "totalCost": 108
+        },
+        {
+          "level": 56,
+          "value": 65,
+          "totalCost": 110
+        },
+        {
+          "level": 57,
+          "value": 64,
+          "totalCost": 112
+        },
+        {
+          "level": 58,
+          "value": 63,
+          "totalCost": 114
+        },
+        {
+          "level": 59,
+          "value": 62,
+          "totalCost": 116
+        },
+        {
+          "level": 60,
+          "value": 61,
+          "totalCost": 118
+        },
+        {
+          "level": 61,
+          "value": 60,
+          "totalCost": 120
+        }
+      ]
+    },
+    "findChance": {
+      "maxLevel": 41,
+      "levels": [
+        {
+          "level": 1,
+          "value": 10,
+          "totalCost": 0
+        },
+        {
+          "level": 2,
+          "value": 11,
+          "totalCost": 20
+        },
+        {
+          "level": 3,
+          "value": 12,
+          "totalCost": 25
+        },
+        {
+          "level": 4,
+          "value": 13,
+          "totalCost": 30
+        },
+        {
+          "level": 5,
+          "value": 14,
+          "totalCost": 35
+        },
+        {
+          "level": 6,
+          "value": 15,
+          "totalCost": 40
+        },
+        {
+          "level": 7,
+          "value": 16,
+          "totalCost": 45
+        },
+        {
+          "level": 8,
+          "value": 17,
+          "totalCost": 50
+        },
+        {
+          "level": 9,
+          "value": 18,
+          "totalCost": 55
+        },
+        {
+          "level": 10,
+          "value": 19,
+          "totalCost": 60
+        },
+        {
+          "level": 11,
+          "value": 20,
+          "totalCost": 65
+        },
+        {
+          "level": 12,
+          "value": 21,
+          "totalCost": 70
+        },
+        {
+          "level": 13,
+          "value": 22,
+          "totalCost": 75
+        },
+        {
+          "level": 14,
+          "value": 23,
+          "totalCost": 80
+        },
+        {
+          "level": 15,
+          "value": 24,
+          "totalCost": 85
+        },
+        {
+          "level": 16,
+          "value": 25,
+          "totalCost": 90
+        },
+        {
+          "level": 17,
+          "value": 26,
+          "totalCost": 95
+        },
+        {
+          "level": 18,
+          "value": 27,
+          "totalCost": 100
+        },
+        {
+          "level": 19,
+          "value": 28,
+          "totalCost": 105
+        },
+        {
+          "level": 20,
+          "value": 29,
+          "totalCost": 110
+        },
+        {
+          "level": 21,
+          "value": 30,
+          "totalCost": 115
+        },
+        {
+          "level": 22,
+          "value": 31,
+          "totalCost": 120
+        },
+        {
+          "level": 23,
+          "value": 32,
+          "totalCost": 125
+        },
+        {
+          "level": 24,
+          "value": 33,
+          "totalCost": 130
+        },
+        {
+          "level": 25,
+          "value": 34,
+          "totalCost": 135
+        },
+        {
+          "level": 26,
+          "value": 35,
+          "totalCost": 140
+        },
+        {
+          "level": 27,
+          "value": 36,
+          "totalCost": 145
+        },
+        {
+          "level": 28,
+          "value": 37,
+          "totalCost": 150
+        },
+        {
+          "level": 29,
+          "value": 38,
+          "totalCost": 155
+        },
+        {
+          "level": 30,
+          "value": 39,
+          "totalCost": 160
+        },
+        {
+          "level": 31,
+          "value": 40,
+          "totalCost": 165
+        },
+        {
+          "level": 32,
+          "value": 41,
+          "totalCost": 170
+        },
+        {
+          "level": 33,
+          "value": 42,
+          "totalCost": 175
+        },
+        {
+          "level": 34,
+          "value": 43,
+          "totalCost": 180
+        },
+        {
+          "level": 35,
+          "value": 44,
+          "totalCost": 185
+        },
+        {
+          "level": 36,
+          "value": 45,
+          "totalCost": 190
+        },
+        {
+          "level": 37,
+          "value": 46,
+          "totalCost": 195
+        },
+        {
+          "level": 38,
+          "value": 47,
+          "totalCost": 200
+        },
+        {
+          "level": 39,
+          "value": 48,
+          "totalCost": 205
+        },
+        {
+          "level": 40,
+          "value": 49,
+          "totalCost": 210
+        },
+        {
+          "level": 41,
+          "value": 50,
+          "totalCost": 215
+        }
+      ]
+    },
+    "doubleFindChance": {
+      "maxLevel": 49,
+      "levels": [
+        {
+          "level": 1,
+          "value": 2,
+          "totalCost": 0
+        },
+        {
+          "level": 2,
+          "value": 3,
+          "totalCost": 10
+        },
+        {
+          "level": 3,
+          "value": 4,
+          "totalCost": 15
+        },
+        {
+          "level": 4,
+          "value": 5,
+          "totalCost": 20
+        },
+        {
+          "level": 5,
+          "value": 6,
+          "totalCost": 25
+        },
+        {
+          "level": 6,
+          "value": 7,
+          "totalCost": 30
+        },
+        {
+          "level": 7,
+          "value": 8,
+          "totalCost": 35
+        },
+        {
+          "level": 8,
+          "value": 9,
+          "totalCost": 40
+        },
+        {
+          "level": 9,
+          "value": 10,
+          "totalCost": 45
+        },
+        {
+          "level": 10,
+          "value": 11,
+          "totalCost": 50
+        },
+        {
+          "level": 11,
+          "value": 12,
+          "totalCost": 55
+        },
+        {
+          "level": 12,
+          "value": 13,
+          "totalCost": 60
+        },
+        {
+          "level": 13,
+          "value": 14,
+          "totalCost": 65
+        },
+        {
+          "level": 14,
+          "value": 15,
+          "totalCost": 70
+        },
+        {
+          "level": 15,
+          "value": 16,
+          "totalCost": 75
+        },
+        {
+          "level": 16,
+          "value": 17,
+          "totalCost": 80
+        },
+        {
+          "level": 17,
+          "value": 18,
+          "totalCost": 85
+        },
+        {
+          "level": 18,
+          "value": 19,
+          "totalCost": 90
+        },
+        {
+          "level": 19,
+          "value": 20,
+          "totalCost": 95
+        },
+        {
+          "level": 20,
+          "value": 21,
+          "totalCost": 100
+        },
+        {
+          "level": 21,
+          "value": 22,
+          "totalCost": 105
+        },
+        {
+          "level": 22,
+          "value": 23,
+          "totalCost": 110
+        },
+        {
+          "level": 23,
+          "value": 24,
+          "totalCost": 115
+        },
+        {
+          "level": 24,
+          "value": 25,
+          "totalCost": 120
+        },
+        {
+          "level": 25,
+          "value": 26,
+          "totalCost": 125
+        },
+        {
+          "level": 26,
+          "value": 27,
+          "totalCost": 130
+        },
+        {
+          "level": 27,
+          "value": 28,
+          "totalCost": 135
+        },
+        {
+          "level": 28,
+          "value": 29,
+          "totalCost": 140
+        },
+        {
+          "level": 29,
+          "value": 30,
+          "totalCost": 145
+        },
+        {
+          "level": 30,
+          "value": 31,
+          "totalCost": 150
+        },
+        {
+          "level": 31,
+          "value": 32,
+          "totalCost": 155
+        },
+        {
+          "level": 32,
+          "value": 33,
+          "totalCost": 160
+        },
+        {
+          "level": 33,
+          "value": 34,
+          "totalCost": 165
+        },
+        {
+          "level": 34,
+          "value": 35,
+          "totalCost": 170
+        },
+        {
+          "level": 35,
+          "value": 36,
+          "totalCost": 175
+        },
+        {
+          "level": 36,
+          "value": 37,
+          "totalCost": 180
+        },
+        {
+          "level": 37,
+          "value": 38,
+          "totalCost": 185
+        },
+        {
+          "level": 38,
+          "value": 39,
+          "totalCost": 190
+        },
+        {
+          "level": 39,
+          "value": 40,
+          "totalCost": 195
+        },
+        {
+          "level": 40,
+          "value": 41,
+          "totalCost": 200
+        },
+        {
+          "level": 41,
+          "value": 42,
+          "totalCost": 205
+        },
+        {
+          "level": 42,
+          "value": 43,
+          "totalCost": 210
+        },
+        {
+          "level": 43,
+          "value": 44,
+          "totalCost": 215
+        },
+        {
+          "level": 44,
+          "value": 45,
+          "totalCost": 220
+        },
+        {
+          "level": 45,
+          "value": 46,
+          "totalCost": 225
+        },
+        {
+          "level": 46,
+          "value": 47,
+          "totalCost": 230
+        },
+        {
+          "level": 47,
+          "value": 48,
+          "totalCost": 235
+        },
+        {
+          "level": 48,
+          "value": 49,
+          "totalCost": 240
+        },
+        {
+          "level": 49,
+          "value": 50,
+          "totalCost": 245
+        }
+      ]
+    }
+  }
+}

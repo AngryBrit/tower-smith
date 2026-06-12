@@ -11,17 +11,71 @@ import {
 import { createPortal } from 'react-dom'
 import {
   GUARDIAN_CHIPS,
-  GUARDIAN_CHIP_LOCKED_SLOT_INDEX,
   GUARDIAN_CHIP_SLOT_COUNT,
   type GuardianChipId,
 } from '../data/guardianChips'
 import { GAME_THEMES, themesForCategory } from '../data/gameThemes'
 import {
+  GUARDIAN_CHIP_ALLY_TRACK_IDS,
+  GUARDIAN_CHIP_ATTACK_TRACK_IDS,
+  GUARDIAN_CHIP_BOUNTY_TRACK_IDS,
+  GUARDIAN_CHIP_FETCH_TRACK_IDS,
+  GUARDIAN_CHIP_SCOUT_TRACK_IDS,
+  GUARDIAN_CHIP_SUMMON_TRACK_IDS,
+  clampGuardianChipAllyLevel,
+  clampGuardianChipAttackLevel,
+  clampGuardianChipBountyLevel,
+  clampGuardianChipFetchLevel,
+  clampGuardianChipScoutLevel,
+  clampGuardianChipSummonLevel,
+  formatGuardianChipAllyValue,
+  formatGuardianChipAttackValue,
+  formatGuardianChipBountyValue,
+  formatGuardianChipFetchValue,
+  formatGuardianChipScoutValue,
+  formatGuardianChipSummonValue,
+  guardianChipAllyMarginalCost,
+  guardianChipAllyTrack,
+  guardianChipAttackMarginalCost,
+  guardianChipAttackTrack,
+  guardianChipBountyMarginalCost,
+  guardianChipBountyTrack,
+  guardianChipFetchMarginalCost,
+  guardianChipFetchTrack,
+  guardianChipScoutMarginalCost,
+  guardianChipScoutTrack,
+  guardianChipSummonMarginalCost,
+  guardianChipSummonTrack,
+  type GuardianChipAllyTrackId,
+  type GuardianChipAttackTrackId,
+  type GuardianChipBountyTrackId,
+  type GuardianChipFetchTrackId,
+  type GuardianChipScoutTrackId,
+  type GuardianChipSummonTrackId,
+} from '../data/guardianChipGodTables'
+import { guardianChipSlotUnlockCostForUi } from '../data/guardianSlotGodTables'
+import {
+  bumpGuardianAllyUpgradeLevel,
+  bumpGuardianAttackUpgradeLevel,
+  bumpGuardianBountyUpgradeLevel,
+  bumpGuardianFetchUpgradeLevel,
+  bumpGuardianScoutUpgradeLevel,
+  bumpGuardianSummonUpgradeLevel,
   equipGuardianChip,
+  isGuardianChipSlotLocked,
   respecGuardianChips,
+  setGuardianAllyUpgradeLevel,
+  setGuardianAttackUpgradeLevel,
+  setGuardianBountyUpgradeLevel,
+  setGuardianFetchUpgradeLevel,
+  setGuardianScoutUpgradeLevel,
+  setGuardianSummonUpgradeLevel,
   unequipGuardianChipSlot,
+  unlockGuardianChipSlot,
   useGuardianChipState,
 } from '../guardianChipStorage'
+import { BitsGlyph } from './BitsGlyph'
+import { GuardianChipUpgradePanel } from './GuardianChipUpgradePanel'
 import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -70,6 +124,7 @@ export function GuardiansPage({
   const [ownedIds] = useThemeOwned()
   const [guardianPickerOpen, setGuardianPickerOpen] = useState(false)
   const [respecConfirmOpen, setRespecConfirmOpen] = useState(false)
+  const [selectedChipId, setSelectedChipId] = useState<GuardianChipId | null>('attack')
   const pickerTitleId = useId().replace(/:/g, '')
   const loadoutRef = useRef<HTMLDivElement>(null)
   const guardianCardRef = useRef<HTMLDivElement>(null)
@@ -92,12 +147,23 @@ export function GuardiansPage({
   )
 
   const isSlotLocked = useCallback(
-    (slotIndex: number) =>
-      slotIndex === GUARDIAN_CHIP_LOCKED_SLOT_INDEX && !chipState.fourthSlotUnlocked,
-    [chipState.fourthSlotUnlocked],
+    (slotIndex: number) => isGuardianChipSlotLocked(chipState, slotIndex),
+    [chipState],
   )
 
-  const handleInventoryChipClick = useCallback(
+  const handleSlotUnlock = useCallback(
+    (slotIndex: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => unlockGuardianChipSlot(prev, slotIndex))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleInventoryChipSelect = useCallback((chipId: GuardianChipId) => {
+    setSelectedChipId(chipId)
+  }, [])
+
+  const handleToggleChipEquip = useCallback(
     (chipId: GuardianChipId) => {
       pushUndoSnapshot()
       updateChipState((prev) => {
@@ -111,15 +177,109 @@ export function GuardiansPage({
     [pushUndoSnapshot, updateChipState],
   )
 
+  const handleAttackUpgradeBump = useCallback(
+    (track: GuardianChipAttackTrackId, direction: -1 | 1) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => bumpGuardianAttackUpgradeLevel(prev, track, direction))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleAttackUpgradeSetLevel = useCallback(
+    (track: GuardianChipAttackTrackId, level: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => setGuardianAttackUpgradeLevel(prev, track, level))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleAllyUpgradeBump = useCallback(
+    (track: GuardianChipAllyTrackId, direction: -1 | 1) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => bumpGuardianAllyUpgradeLevel(prev, track, direction))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleAllyUpgradeSetLevel = useCallback(
+    (track: GuardianChipAllyTrackId, level: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => setGuardianAllyUpgradeLevel(prev, track, level))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleBountyUpgradeBump = useCallback(
+    (track: GuardianChipBountyTrackId, direction: -1 | 1) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => bumpGuardianBountyUpgradeLevel(prev, track, direction))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleBountyUpgradeSetLevel = useCallback(
+    (track: GuardianChipBountyTrackId, level: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => setGuardianBountyUpgradeLevel(prev, track, level))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleFetchUpgradeBump = useCallback(
+    (track: GuardianChipFetchTrackId, direction: -1 | 1) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => bumpGuardianFetchUpgradeLevel(prev, track, direction))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleFetchUpgradeSetLevel = useCallback(
+    (track: GuardianChipFetchTrackId, level: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => setGuardianFetchUpgradeLevel(prev, track, level))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleSummonUpgradeBump = useCallback(
+    (track: GuardianChipSummonTrackId, direction: -1 | 1) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => bumpGuardianSummonUpgradeLevel(prev, track, direction))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleSummonUpgradeSetLevel = useCallback(
+    (track: GuardianChipSummonTrackId, level: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => setGuardianSummonUpgradeLevel(prev, track, level))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleScoutUpgradeBump = useCallback(
+    (track: GuardianChipScoutTrackId, direction: -1 | 1) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => bumpGuardianScoutUpgradeLevel(prev, track, direction))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
+  const handleScoutUpgradeSetLevel = useCallback(
+    (track: GuardianChipScoutTrackId, level: number) => {
+      pushUndoSnapshot()
+      updateChipState((prev) => setGuardianScoutUpgradeLevel(prev, track, level))
+    },
+    [pushUndoSnapshot, updateChipState],
+  )
+
   const handleSlotClick = useCallback(
     (slotIndex: number) => {
       if (isSlotLocked(slotIndex)) return
       const chipId = chipState.slots[slotIndex]
-      if (!chipId) return
-      pushUndoSnapshot()
-      updateChipState((prev) => unequipGuardianChipSlot(prev, slotIndex))
+      if (chipId) setSelectedChipId(chipId)
     },
-    [chipState.slots, isSlotLocked, pushUndoSnapshot, updateChipState],
+    [chipState.slots, isSlotLocked],
   )
 
   const openRespecConfirm = useCallback(() => {
@@ -186,6 +346,8 @@ export function GuardiansPage({
           {SLOT_POSITIONS.map((position, slotIndex) => {
             if (slotIndex >= GUARDIAN_CHIP_SLOT_COUNT) return null
             const locked = isSlotLocked(slotIndex)
+            const unlockCost = guardianChipSlotUnlockCostForUi(slotIndex)
+            const purchasable = locked && typeof unlockCost === 'number' && unlockCost > 0
             const chipId = chipState.slots[slotIndex]
             return (
               <button
@@ -193,25 +355,37 @@ export function GuardiansPage({
                 type="button"
                 className={`guardians-page__chip-tile guardians-page__slot guardians-page__slot--${position}${
                   locked ? ' guardians-page__slot--locked' : ''
-                }${chipId ? ' guardians-page__slot--filled' : ''}${
-                  !locked && !chipId ? ' guardians-page__slot--empty' : ''
-                }`}
-                onClick={() => handleSlotClick(slotIndex)}
-                disabled={locked || !chipId}
+                }${purchasable ? ' guardians-page__slot--unlockable' : ''}${
+                  chipId ? ' guardians-page__slot--filled' : ''
+                }${!locked && !chipId ? ' guardians-page__slot--empty' : ''}`}
+                onClick={() =>
+                  purchasable ? handleSlotUnlock(slotIndex) : handleSlotClick(slotIndex)
+                }
+                disabled={locked && !purchasable}
                 aria-label={
-                  locked
-                    ? t('guardians_slot_locked_aria')
-                    : chipId
-                      ? t('guardians_slot_unequip_aria').replace(
-                          '{{chip}}',
-                          t(`guardian_chip_${chipId}` as StringId),
-                        )
-                      : t('guardians_slot_empty_aria')
+                  purchasable
+                    ? t('guardians_slot_unlock_aria').replace('{{cost}}', String(unlockCost))
+                    : locked
+                      ? t('guardians_slot_locked_aria')
+                      : chipId
+                        ? t('guardians_chip_select_aria').replace(
+                            '{{chip}}',
+                            t(`guardian_chip_${chipId}` as StringId),
+                          )
+                        : t('guardians_slot_empty_aria')
                 }
               >
                 <span className="guardians-page__slot-connector" aria-hidden />
-                {locked ? (
-                  <GuardianChipIcon chipId="locked" className="guardians-page__chip-icon" />
+                {purchasable ? (
+                  <span className="guardians-page__slot-unlock-cost">
+                    <span>{String(unlockCost)}</span>
+                    <BitsGlyph className="guardians-page__slot-unlock-bits" />
+                  </span>
+                ) : locked ? (
+                  <GuardianChipIcon
+                    chipId="locked"
+                    className="guardians-page__chip-icon guardians-page__chip-icon--locked"
+                  />
                 ) : chipId ? (
                   <>
                     <GuardianChipIcon chipId={chipId} className="guardians-page__chip-icon" />
@@ -249,7 +423,7 @@ export function GuardiansPage({
               {guardianImage ? (
                 <img src={guardianImage} alt="" className="guardians-page__guardian-image" />
               ) : (
-                <GuardianChipIcon chipId="ally" className="guardians-page__guardian-fallback" />
+                <span className="guardians-page__guardian-empty">{t('guardians_no_guardian')}</span>
               )}
             </div>
           </div>
@@ -273,14 +447,10 @@ export function GuardiansPage({
                   type="button"
                   className={`guardians-page__chip-tile guardians-page__chip${
                     equipped ? ' guardians-page__chip--equipped' : ''
-                  }`}
-                  onClick={() => handleInventoryChipClick(chip.id)}
-                  aria-pressed={equipped}
-                  aria-label={
-                    equipped
-                      ? t('guardians_chip_equipped_aria').replace('{{chip}}', t(chip.nameId))
-                      : t('guardians_chip_equip_aria').replace('{{chip}}', t(chip.nameId))
-                  }
+                  }${selectedChipId === chip.id ? ' guardians-page__chip--selected' : ''}`}
+                  onClick={() => handleInventoryChipSelect(chip.id)}
+                  aria-pressed={selectedChipId === chip.id}
+                  aria-label={t('guardians_chip_select_aria').replace('{{chip}}', t(chip.nameId))}
                 >
                   <GuardianChipIcon chipId={chip.id} className="guardians-page__chip-icon" />
                   <span className="guardians-page__chip-label">{t(chip.nameId)}</span>
@@ -295,6 +465,171 @@ export function GuardiansPage({
           })}
         </ul>
       </section>
+
+      {selectedChipId === 'attack' ? (
+        <GuardianChipUpgradePanel
+          chipId="attack"
+          titleId="guardian_chip_attack"
+          equipped={equippedSet.has('attack')}
+          onToggleEquip={() => handleToggleChipEquip('attack')}
+          tracks={{
+            trackIds: GUARDIAN_CHIP_ATTACK_TRACK_IDS,
+            trackLabels: {
+              percent: 'guardians_attack_track_percent',
+              cooldown: 'guardians_attack_track_cooldown',
+              targets: 'guardians_attack_track_targets',
+            },
+            upgrades: chipState.upgrades.attack,
+            maxLevel: (track) => guardianChipAttackTrack(track).maxLevel,
+            formatValue: formatGuardianChipAttackValue,
+            marginalCost: guardianChipAttackMarginalCost,
+            clampLevel: clampGuardianChipAttackLevel,
+            onBump: handleAttackUpgradeBump,
+            onSetLevel: handleAttackUpgradeSetLevel,
+          }}
+        />
+      ) : selectedChipId === 'ally' ? (
+        <GuardianChipUpgradePanel
+          chipId="ally"
+          titleId="guardian_chip_ally"
+          equipped={equippedSet.has('ally')}
+          onToggleEquip={() => handleToggleChipEquip('ally')}
+          tracks={{
+            trackIds: GUARDIAN_CHIP_ALLY_TRACK_IDS,
+            trackLabels: {
+              recovery: 'guardians_ally_track_recovery',
+              maxRecovery: 'guardians_ally_track_max_recovery',
+              cooldown: 'guardians_ally_track_cooldown',
+            },
+            upgrades: chipState.upgrades.ally,
+            maxLevel: (track) => guardianChipAllyTrack(track).maxLevel,
+            formatValue: formatGuardianChipAllyValue,
+            marginalCost: guardianChipAllyMarginalCost,
+            clampLevel: clampGuardianChipAllyLevel,
+            onBump: handleAllyUpgradeBump,
+            onSetLevel: handleAllyUpgradeSetLevel,
+          }}
+        />
+      ) : selectedChipId === 'bounty' ? (
+        <GuardianChipUpgradePanel
+          chipId="bounty"
+          titleId="guardian_chip_bounty"
+          equipped={equippedSet.has('bounty')}
+          onToggleEquip={() => handleToggleChipEquip('bounty')}
+          tracks={{
+            trackIds: GUARDIAN_CHIP_BOUNTY_TRACK_IDS,
+            trackLabels: {
+              multiplier: 'guardians_bounty_track_multiplier',
+              cooldown: 'guardians_bounty_track_cooldown',
+              targets: 'guardians_bounty_track_targets',
+            },
+            upgrades: chipState.upgrades.bounty,
+            maxLevel: (track) => guardianChipBountyTrack(track).maxLevel,
+            formatValue: formatGuardianChipBountyValue,
+            marginalCost: guardianChipBountyMarginalCost,
+            clampLevel: clampGuardianChipBountyLevel,
+            onBump: handleBountyUpgradeBump,
+            onSetLevel: handleBountyUpgradeSetLevel,
+          }}
+        />
+      ) : selectedChipId === 'fetch' ? (
+        <GuardianChipUpgradePanel
+          chipId="fetch"
+          titleId="guardian_chip_fetch"
+          equipped={equippedSet.has('fetch')}
+          onToggleEquip={() => handleToggleChipEquip('fetch')}
+          tracks={{
+            trackIds: GUARDIAN_CHIP_FETCH_TRACK_IDS,
+            trackLabels: {
+              cooldown: 'guardians_fetch_track_cooldown',
+              findChance: 'guardians_fetch_track_find_chance',
+              doubleFindChance: 'guardians_fetch_track_double_find_chance',
+            },
+            upgrades: chipState.upgrades.fetch,
+            maxLevel: (track) => guardianChipFetchTrack(track).maxLevel,
+            formatValue: formatGuardianChipFetchValue,
+            marginalCost: guardianChipFetchMarginalCost,
+            clampLevel: clampGuardianChipFetchLevel,
+            onBump: handleFetchUpgradeBump,
+            onSetLevel: handleFetchUpgradeSetLevel,
+          }}
+        />
+      ) : selectedChipId === 'summon' ? (
+        <GuardianChipUpgradePanel
+          chipId="summon"
+          titleId="guardian_chip_summon"
+          equipped={equippedSet.has('summon')}
+          onToggleEquip={() => handleToggleChipEquip('summon')}
+          tracks={{
+            trackIds: GUARDIAN_CHIP_SUMMON_TRACK_IDS,
+            trackLabels: {
+              cooldown: 'guardians_summon_track_cooldown',
+              duration: 'guardians_summon_track_duration',
+              cashBonus: 'guardians_summon_track_cash_bonus',
+            },
+            upgrades: chipState.upgrades.summon,
+            maxLevel: (track) => guardianChipSummonTrack(track).maxLevel,
+            formatValue: formatGuardianChipSummonValue,
+            marginalCost: guardianChipSummonMarginalCost,
+            clampLevel: clampGuardianChipSummonLevel,
+            onBump: handleSummonUpgradeBump,
+            onSetLevel: handleSummonUpgradeSetLevel,
+          }}
+        />
+      ) : selectedChipId === 'scout' ? (
+        <GuardianChipUpgradePanel
+          chipId="scout"
+          titleId="guardian_chip_scout"
+          equipped={equippedSet.has('scout')}
+          onToggleEquip={() => handleToggleChipEquip('scout')}
+          tracks={{
+            trackIds: GUARDIAN_CHIP_SCOUT_TRACK_IDS,
+            trackLabels: {
+              cooldown: 'guardians_scout_track_cooldown',
+              rangeBonus: 'guardians_scout_track_range_bonus',
+              duration: 'guardians_scout_track_duration',
+            },
+            upgrades: chipState.upgrades.scout,
+            maxLevel: (track) => guardianChipScoutTrack(track).maxLevel,
+            formatValue: formatGuardianChipScoutValue,
+            marginalCost: guardianChipScoutMarginalCost,
+            clampLevel: clampGuardianChipScoutLevel,
+            onBump: handleScoutUpgradeBump,
+            onSetLevel: handleScoutUpgradeSetLevel,
+          }}
+        />
+      ) : selectedChipId ? (
+        <section className="guardians-page__upgrade guardians-page__upgrade--placeholder">
+          <header className="guardians-page__upgrade-head">
+            <div className="guardians-page__upgrade-title-row">
+              <GuardianChipIcon chipId={selectedChipId} className="guardians-page__upgrade-icon" />
+              <h3 className="guardians-page__upgrade-title">
+                {t(`guardian_chip_${selectedChipId}` as StringId)}
+              </h3>
+            </div>
+            <button
+              type="button"
+              className={
+                equippedSet.has(selectedChipId)
+                  ? 'guardians-page__upgrade-equip guardians-page__upgrade-equip--on glow-btn'
+                  : 'guardians-page__upgrade-equip glow-btn'
+              }
+              aria-pressed={equippedSet.has(selectedChipId)}
+              onClick={() => handleToggleChipEquip(selectedChipId)}
+            >
+              {equippedSet.has(selectedChipId)
+                ? t('guardians_chip_unequip')
+                : t('guardians_chip_equip')}
+            </button>
+          </header>
+          <p className="guardians-page__upgrade-placeholder">
+            {t('guardians_chip_upgrades_unavailable').replace(
+              '{{chip}}',
+              t(`guardian_chip_${selectedChipId}` as StringId),
+            )}
+          </p>
+        </section>
+      ) : null}
 
       {guardianPickerOpen
         ? guardiansOverlayPortal(

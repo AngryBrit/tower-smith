@@ -3923,8 +3923,8 @@ button.workshop__uw-plus-cost--display:hover {
   padding: 0.5rem 0.7rem 0.45rem;
 }
 
-/* Ultimate workshop: unlock bar height matches owned icon + stat row (tallest stat column). */
-#inpanel-panel-workshop .workshop__grid--ultimate {
+/* Ultimate workshop + guardian chip upgrades: unlock bar height matches owned icon + stat row. */
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate {
   --workshop-uw-stats-row-min-height: max(
     3.25rem,
     calc(
@@ -3933,7 +3933,7 @@ button.workshop__uw-plus-cost--display:hover {
   );
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-card {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-card {
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
@@ -3941,13 +3941,13 @@ button.workshop__uw-plus-cost--display:hover {
   min-height: 0;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-head {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-head {
   flex: 0 0 auto;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-title {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-title {
   grid-column: 2;
   grid-row: 1;
   justify-self: center;
@@ -3957,8 +3957,8 @@ button.workshop__uw-plus-cost--display:hover {
   max-width: 100%;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-active-toggle,
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-active-toggle--placeholder {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-active-toggle,
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-active-toggle--placeholder {
   grid-column: 3;
   grid-row: 1;
   justify-self: end;
@@ -3969,8 +3969,8 @@ button.workshop__uw-plus-cost--display:hover {
   max-width: max-content;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body,
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-body,
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-body--unlock {
   display: flex;
   align-self: stretch;
   width: 100%;
@@ -3978,7 +3978,7 @@ button.workshop__uw-plus-cost--display:hover {
   min-height: 0;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-body--unlock {
   flex: 0 0 auto;
   flex-direction: column;
   align-items: stretch;
@@ -3992,7 +3992,7 @@ button.workshop__uw-plus-cost--display:hover {
   background: var(--sr-surface-72);
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-stats--unlock {
   flex: 0 0 auto;
   align-self: stretch;
   width: 100%;
@@ -4002,7 +4002,7 @@ button.workshop__uw-plus-cost--display:hover {
   align-items: stretch;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
   width: 100%;
   height: auto;
   min-height: var(--workshop-uw-stats-row-min-height);
@@ -4010,7 +4010,7 @@ button.workshop__uw-plus-cost--display:hover {
   align-self: stretch;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body-unlock {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-body-unlock {
   flex: 1 1 auto;
   align-self: stretch;
   width: 100%;
@@ -4019,14 +4019,14 @@ button.workshop__uw-plus-cost--display:hover {
   max-height: 100%;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-label,
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-cost {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-label,
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-col--uw-unlock .workshop__uw-head-unlock-cost {
   min-height: 0;
   height: 100%;
 }
 
 /* Owned weapons: body height follows icon + stat row (no fixed min). */
-#inpanel-panel-workshop
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians)
   .workshop__grid--ultimate
   .workshop__uw-body:not(.workshop__uw-body--unlock) {
   flex: 0 0 auto;
@@ -4036,13 +4036,13 @@ button.workshop__uw-plus-cost--display:hover {
   align-items: flex-start;
 }
 
-#inpanel-panel-workshop
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians)
   .workshop__grid--ultimate
   .workshop__uw-icon-wrap {
-  align-self: flex-start;
+  align-self: center;
 }
 
-#inpanel-panel-workshop
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians)
   .workshop__grid--ultimate
   .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
   flex: 1 1 auto;
@@ -4057,7 +4057,7 @@ button.workshop__uw-plus-cost--display:hover {
   grid-auto-rows: max-content;
 }
 
-#inpanel-panel-workshop
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians)
   .workshop__grid--ultimate
   .workshop__uw-stats:not(.workshop__uw-stats--unlock)
   .workshop__uw-col {
@@ -4067,31 +4067,31 @@ button.workshop__uw-plus-cost--display:hover {
   justify-content: flex-start;
 }
 
-#inpanel-panel-workshop
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians)
   .workshop__grid--ultimate
   .workshop__uw-stats:not(.workshop__uw-stats--unlock)
   .workshop__uw-col-top,
-#inpanel-panel-workshop
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians)
   .workshop__grid--ultimate
   .workshop__uw-stats:not(.workshop__uw-stats--unlock)
   .workshop__uw-col-foot {
   flex: 0 0 auto;
 }
 
-#inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-plus-bar {
+:is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-plus-bar {
   flex: 0 0 auto;
 }
 
 @media (max-width: 640px) {
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-title {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-title {
     white-space: normal;
     overflow: visible;
     text-overflow: clip;
     line-height: 1.2;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-active-toggle,
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-active-toggle--placeholder {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-active-toggle,
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-active-toggle--placeholder {
     height: 1.75rem;
     min-height: 1.75rem;
     max-height: 1.75rem;
@@ -4099,20 +4099,20 @@ button.workshop__uw-plus-cost--display:hover {
     font-size: 0.58rem;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-card {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-card {
     height: auto;
     min-height: 0;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body,
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-body--unlock {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-body,
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-body--unlock {
     flex: 0 0 auto;
     height: auto;
     min-height: 0;
     max-height: none;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
     flex: 1 1 auto;
     align-self: flex-start;
     height: auto;
@@ -4121,14 +4121,14 @@ button.workshop__uw-plus-cost--display:hover {
     grid-auto-rows: max-content;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-stats--unlock {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-stats--unlock {
     flex: 0 0 auto;
     height: auto;
     min-height: 0;
     align-items: stretch;
   }
 
-  #inpanel-panel-workshop
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians)
     .workshop__grid--ultimate
     .workshop__uw-stats:not(.workshop__uw-stats--unlock)
     .workshop__uw-col {
@@ -4137,14 +4137,14 @@ button.workshop__uw-plus-cost--display:hover {
     align-self: start;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
     height: auto;
     min-height: var(--workshop-uw-stats-row-min-height);
     max-height: var(--workshop-uw-stats-row-min-height);
     align-self: stretch;
   }
 
-  #inpanel-panel-workshop .workshop__grid--ultimate .workshop__uw-col-top {
+  :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-col-top {
     flex: 0 0 auto;
   }
 
@@ -4676,11 +4676,29 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .workshop__uw-medal .workshop-medal-img,
-.workshop__uw-cells .workshop-cells-img {
+.workshop__uw-cells .workshop-cells-img,
+.workshop__uw-bits .workshop-bits-img {
   display: block;
   width: 1rem;
   height: 1rem;
   object-fit: contain;
+}
+
+.workshop__uw-col-cost .workshop__uw-bits {
+  display: inline-flex;
+  flex: 0 0 0.85rem;
+  align-items: center;
+  justify-content: center;
+  width: 0.85rem;
+  height: 0.85rem;
+  overflow: hidden;
+}
+
+.workshop__uw-col-cost .workshop__uw-bits .workshop-bits-img {
+  width: 0.85rem;
+  height: 0.85rem;
+  max-width: 0.85rem;
+  max-height: 0.85rem;
 }
 
 .workshop__uw-plus-effect--unlocked {
@@ -9977,10 +9995,13 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   filter: drop-shadow(0 0 10px rgba(56, 189, 248, 0.35));
 }
 
-.guardians-page__guardian-fallback {
-  width: 4rem;
-  height: 4rem;
-  opacity: 0.7;
+.guardians-page__guardian-empty {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: rgba(148, 163, 184, 0.75);
+  text-align: center;
 }
 
 .guardians-page__chip-tile {
@@ -10098,9 +10119,46 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   cursor: not-allowed;
 }
 
-.guardians-page__slot--locked .guardians-page__chip-icon {
-  width: 4rem;
-  height: 4rem;
+.guardians-page__slot--unlockable {
+  cursor: pointer;
+  opacity: 0.85;
+}
+
+.guardians-page__slot--unlockable:hover {
+  opacity: 1;
+  border-color: rgba(56, 189, 248, 0.55);
+}
+
+.guardians-page__slot--unlockable .guardians-page__slot-unlock-cost {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.35rem;
+  background: rgba(15, 23, 42, 0.82);
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #f8fafc;
+  line-height: 1;
+}
+
+.guardians-page__slot-unlock-bits .workshop-bits-img {
+  width: 1rem;
+  height: 1rem;
+}
+
+.guardians-page__slot--locked:not(.guardians-page__slot--unlockable) .guardians-page__chip-icon--locked {
+  position: absolute;
+  inset: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: auto;
+  display: block;
 }
 
 .guardians-page__slot:disabled:not(.guardians-page__slot--locked) {
@@ -10158,6 +10216,13 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   border-color: rgba(74, 222, 128, 0.6);
 }
 
+.guardians-page__chip--selected {
+  border-color: rgba(56, 189, 248, 0.75);
+  box-shadow:
+    0 0 16px rgba(56, 189, 248, 0.28),
+    inset 0 0 18px rgba(56, 189, 248, 0.08);
+}
+
 .guardians-page__chip-label {
   font-size: 0.58rem;
   font-weight: 700;
@@ -10188,6 +10253,61 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   text-align: center;
   color: var(--sr-muted);
   font-size: 0.82rem;
+}
+
+.guardians-page__upgrade {
+  padding: 0.85rem 0.75rem 1.1rem;
+  background: rgba(15, 23, 42, 0.92);
+  border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.guardians-page__upgrade-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.guardians-page__upgrade-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.guardians-page__upgrade-icon {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.guardians-page__upgrade-title {
+  margin: 0;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #f8fafc;
+}
+
+.guardians-page__upgrade-equip {
+  flex-shrink: 0;
+  min-width: 4.75rem;
+  padding: 0.35rem 0.55rem;
+  font-size: 0.68rem;
+}
+
+.guardians-page__upgrade-equip--on {
+  border-color: rgba(74, 222, 128, 0.55);
+}
+
+.guardians-page__upgrade-placeholder {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: var(--sr-muted);
 }
 
 .guardians-page__picker-backdrop {
