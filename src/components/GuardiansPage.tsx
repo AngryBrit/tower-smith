@@ -102,7 +102,7 @@ function GuardiansToolbar({ onRespec }: { onRespec: () => void }) {
       <div className="select-research__toolbar-quick select-research__toolbar-quick--guardians-only">
         <button
           type="button"
-          className="glow-btn glow-btn--block"
+          className="glow-btn glow-btn--danger glow-btn--block"
           onClick={onRespec}
           aria-label={t('guardians_respec_aria')}
         >
@@ -694,35 +694,38 @@ export function GuardiansPage({
       {respecConfirmOpen
         ? guardiansOverlayPortal(
             <div
-              className="guardians-page__picker-backdrop"
+              className="select-research__reset-confirm-backdrop"
               role="presentation"
               onClick={() => setRespecConfirmOpen(false)}
             >
               <div
-                className="guardians-page__confirm"
+                className="select-research__reset-confirm-dialog"
                 role="alertdialog"
                 aria-modal="true"
                 aria-labelledby="guardians-respec-title"
                 aria-describedby="guardians-respec-desc"
                 onClick={(e) => e.stopPropagation()}
               >
-                <h2 id="guardians-respec-title" className="guardians-page__confirm-title">
+                <h2
+                  id="guardians-respec-title"
+                  className="select-research__reset-confirm-title"
+                >
                   {t('guardians_respec_confirm_title')}
                 </h2>
-                <p id="guardians-respec-desc" className="guardians-page__confirm-body">
+                <p id="guardians-respec-desc" className="select-research__reset-confirm-desc">
                   {t('guardians_respec_confirm_body')}
                 </p>
-                <div className="guardians-page__confirm-actions">
+                <div className="select-research__reset-confirm-actions">
                   <button
                     type="button"
-                    className="glow-btn"
+                    className="glow-btn glow-btn--block"
                     onClick={() => setRespecConfirmOpen(false)}
                   >
-                    {t('guardians_respec_cancel')}
+                    {t('sr_cancel')}
                   </button>
                   <button
                     type="button"
-                    className="glow-btn glow-btn--danger"
+                    className="glow-btn glow-btn--danger glow-btn--block"
                     onClick={performRespec}
                   >
                     {t('guardians_respec_confirm')}

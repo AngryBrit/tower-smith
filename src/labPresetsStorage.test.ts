@@ -14,7 +14,12 @@ import {
   resetWorkshopUpgradeLevels,
   sanitizeWorkshopPersisted,
 } from './labPresetsStorage'
-import { workshopBotIsOwned, workshopBotStatDisplay } from './data/workshopBots'
+import {
+  workshopBotIsOwned,
+  workshopBotOwnedKey,
+  workshopBotStatDisplay,
+  workshopBotUpgradeKeys,
+} from './data/workshopBots'
 
 describe('parseLabPresetsFile', () => {
   it('accepts a valid v1 file', () => {
@@ -156,7 +161,7 @@ describe('resetWorkshopUltimates', () => {
 })
 
 describe('resetWorkshopUpgradeLevels', () => {
-  it('clears upgrade levels but keeps cards and modules sim', () => {
+  it('clears upgrade levels but keeps cards, modules sim, and bots', () => {
     const before = {
       ...defaultWorkshopPersisted(),
       damageLevel: 42,
@@ -164,6 +169,8 @@ describe('resetWorkshopUpgradeLevels', () => {
       cardStars: { ...defaultWorkshopPersisted().cardStars, damage: 5 },
       simAssistModuleSlot: 'armor' as const,
       simAttackSpeedModuleSubEffect: 12,
+      [workshopBotOwnedKey('flame')]: true,
+      [workshopBotUpgradeKeys('flame')[0]]: 9,
     }
     const after = resetWorkshopUpgradeLevels(before)
     expect(after.damageLevel).toBe(0)
@@ -172,6 +179,8 @@ describe('resetWorkshopUpgradeLevels', () => {
     expect(after.simAssistModuleSlot).toBe('armor')
     expect(after.simAttackSpeedModuleSubEffect).toBe(12)
     expect(after.simDamageCardStars).toBe(0)
+    expect(workshopBotIsOwned(after, 'flame')).toBe(true)
+    expect(after[workshopBotUpgradeKeys('flame')[0]]).toBe(9)
   })
 })
 

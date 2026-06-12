@@ -510,7 +510,7 @@ export function resetWorkshopBots(current: WorkshopPersistedV1): WorkshopPersist
 export function clearBuildWorkspace(current: WorkshopPersistedV1): WorkshopPersistedV1 {
   return resetWorkshopRelics(
     resetWorkshopModules(
-      resetWorkshopCards(resetWorkshopUpgradeLevels(current)),
+      resetWorkshopCards(resetWorkshopBots(resetWorkshopUpgradeLevels(current))),
     ),
   )
 }
@@ -592,6 +592,24 @@ export function resetWorkshopUpgradeLevels(
     simRelicsBonusFraction: current.simRelicsBonusFraction,
     simPerkDamageQuantity: current.simPerkDamageQuantity,
     simBerserkerDamageTaken: current.simBerserkerDamageTaken,
+    ...Object.fromEntries(
+      WORKSHOP_BOT_UPGRADE_ORDER.map((key) => [key, current[key]]),
+    ),
+    ...Object.fromEntries(
+      WORKSHOP_BOT_ACTIVE_ORDER.map((key) => [key, current[key]]),
+    ),
+    ...Object.fromEntries(
+      WORKSHOP_BOT_ORDER.map((id) => [
+        WORKSHOP_BOT_SPECIAL_BY_BOT[id],
+        current[WORKSHOP_BOT_SPECIAL_BY_BOT[id]],
+      ]),
+    ),
+    ...Object.fromEntries(
+      WORKSHOP_BOT_SPECIAL_LEVEL_ORDER.map((key) => [key, current[key]]),
+    ),
+    ...Object.fromEntries(
+      WORKSHOP_BOT_OWNED_ORDER.map((key) => [key, current[key]]),
+    ),
     ...workshopCardStarMirrorsForPersisted({
       cardStars: current.cardStars,
       cardPresetLoadouts: current.cardPresetLoadouts,

@@ -41,7 +41,7 @@ export function LabResetLevelsConfirmDialog({
             className="glow-btn glow-btn--danger glow-btn--block"
             onClick={onConfirm}
           >
-            {t('sr_reset_all')}
+            {t('sr_reset_lab_levels')}
           </button>
         </div>
       </div>

@@ -127,12 +127,12 @@ export const STRINGS_ES = {
   app_nav_themes: 'Temas',
   app_nav_guardians: 'GUARDIANES',
   app_nav_gallery: 'BUILDS',
-  guardians_respec: 'Reespec',
-  guardians_respec_aria: 'Reespecificar chips de guardián equipados',
-  guardians_respec_confirm_title: '¿Reespecificar chips?',
+  guardians_respec: 'Restablecer chips',
+  guardians_respec_aria: 'Restablecer chips equipados y ranuras compradas',
+  guardians_respec_confirm_title: '¿Restablecer chips?',
   guardians_respec_confirm_body:
     'Desequipa todos los chips y restablece las ranuras de chip compradas.',
-  guardians_respec_confirm: 'Reespec',
+  guardians_respec_confirm: 'Restablecer chips',
   guardians_respec_cancel: 'Cancelar',
   guardians_search_label_hidden: 'Buscar chips de guardián',
   guardians_search_placeholder: 'Buscar chips…',
@@ -451,7 +451,7 @@ export const STRINGS_ES = {
     'Borra todo lo que esta app guarda localmente y recarga la página. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
   app_tools_full_reset_confirm_title: '¿Restablecer todo en este navegador?',
   app_tools_full_reset_confirm_body:
-    'Elimina niveles del laboratorio, builds guardados, mejoras del taller, cartas, módulos, reliquias, temas, idioma y demás ajustes de TowerSmith en este navegador. La página se recargará con valores de fábrica. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
+    'Elimina niveles del laboratorio, builds guardados, mejoras del taller, cartas, módulos, reliquias, chips de guardián, temas, idioma y demás ajustes de TowerSmith en este navegador. La página se recargará con valores de fábrica. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
   app_tools_full_reset_confirm_btn: 'Restablecer todo',
   auth_loading: 'Comprobando sesión…',
   auth_sign_in: 'Iniciar sesión',
@@ -1148,10 +1148,10 @@ export const STRINGS_ES = {
   ws_reset_ultimate_demo: 'Restablecer armas definitivas',
   ws_reset_confirm_title: '¿Restablecer niveles de mejora del taller?',
   ws_reset_confirm_body:
-    'Esto restablece los niveles predeterminados de mejora, potenciación y definitivas del taller. Las cartas, los módulos y la investigación del laboratorio no se ven afectados. Exporta o copia un enlace para compartir antes si quieres conservar estos niveles.',
+    'Restablece las mejoras, potenciaciones y armas definitivas del taller a los valores predeterminados. Exporta o copia un enlace para compartir antes si quieres conservar estos niveles.',
   ws_reset_ultimate_confirm_title: '¿Restablecer armas definitivas?',
   ws_reset_ultimate_confirm_body:
-    'Esto restablece los niveles de mejora, la propiedad, los interruptores activos y las habilidades plus de armas definitivas. Los niveles de mejora y potenciación del taller, las cartas, los módulos y la investigación del laboratorio no se ven afectados. Exporta o copia un enlace para compartir antes si quieres conservar estos niveles.',
+    'Restablece los niveles de mejora, la propiedad, los interruptores activos y las habilidades plus de armas definitivas a los valores predeterminados. Exporta o copia un enlace para compartir antes si quieres conservar estos niveles.',
   ws_damage_level_down_aria: 'Bajar el nivel de daño del taller',
   ws_damage_level_up_aria: 'Subir el nivel de daño del taller',
   ws_damage_level_input_aria:
@@ -1706,29 +1706,27 @@ export const STRINGS_ES = {
 
   sr_reset_confirm_title: '¿Restablecer todos los niveles del laboratorio?',
   sr_reset_confirm_body:
-    'Esto restablece los niveles de investigación del laboratorio guardados en este navegador. El taller y las demás herramientas no cambian. Exporta o copia un enlace antes si quieres conservar estos niveles.',
+    'Restablece los niveles de investigación predeterminados de todas las cartas del laboratorio en este navegador. Exporta o copia un enlace antes si quieres conservar estos niveles.',
   sr_cancel: 'Cancelar',
   sr_reset_all: 'Restablecer todo',
 
   sr_reset_cards: 'Restablecer cartas',
-  sr_reset_cards_aria:
-    'Restablece solo estrellas, presets y ranuras de cartas. No cambia mejoras del taller, módulos ni niveles del laboratorio.',
+  sr_reset_cards_aria: 'Restablecer estrellas, presets y ranuras de cartas',
   sr_reset_cards_confirm_title: '¿Restablecer solo las cartas?',
-  sr_reset_cards_confirm_body:
-    'Borra estrellas, todos los presets de cartas y ranuras equipadas. No cambia mejoras del taller, módulos ni investigación del laboratorio.',
+  sr_reset_cards_confirm_body: 'Borra estrellas, todos los presets de cartas y ranuras equipadas.',
 
   sr_reset_relics: 'Restablecer reliquias',
   sr_reset_relics_aria:
     'Restablecer reliquias obtenidas y el bono de reliquias de daño mostrado',
   sr_reset_relics_confirm_title: '¿Restablecer solo las reliquias?',
   sr_reset_relics_confirm_body:
-    'Borra las reliquias obtenidas y el bono de reliquias de daño mostrado. No cambia cartas, módulos, niveles del taller ni datos del laboratorio.',
+    'Borra las reliquias obtenidas y el bono de reliquias de daño mostrado.',
   sr_reset_modules: 'Restablecer módulos',
   sr_reset_modules_aria:
-    'Restablece solo niveles de módulos de asistencia, módulos de chasis y efectos de submódulos. No cambia mejoras del taller, cartas ni niveles del laboratorio.',
+    'Restablecer niveles de módulos de asistencia, módulos de chasis y efectos de submódulos',
   sr_reset_modules_confirm_title: '¿Restablecer solo los módulos?',
   sr_reset_modules_confirm_body:
-    'Borra niveles de módulos, módulos de chasis equipados y efectos de submódulos. No cambia mejoras del taller, cartas ni investigación del laboratorio.',
+    'Borra niveles de módulos, módulos de chasis equipados y efectos de submódulos.',
 
   sr_footer_nav_aria: 'Versión de la app, registro de cambios, comunidad, legal y patrocinio',
   sr_footer_discord: 'Discord',

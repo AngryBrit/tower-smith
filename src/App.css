@@ -10356,8 +10356,7 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   background: rgba(2, 6, 23, 0.72);
 }
 
-.guardians-page__picker,
-.guardians-page__confirm {
+.guardians-page__picker {
   width: min(24rem, 100%);
   max-height: min(80vh, 32rem);
   overflow: auto;
@@ -10376,8 +10375,7 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   border-bottom: 1px solid rgba(148, 163, 184, 0.12);
 }
 
-.guardians-page__picker-title,
-.guardians-page__confirm-title {
+.guardians-page__picker-title {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 700;
@@ -10435,22 +10433,5 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 .guardians-page__picker-card--locked {
   opacity: 0.45;
   cursor: not-allowed;
-}
-
-.guardians-page__confirm {
-  padding: 1rem 0.85rem 0.85rem;
-}
-
-.guardians-page__confirm-body {
-  margin: 0.5rem 0 0.85rem;
-  color: var(--sr-muted);
-  font-size: 0.84rem;
-  line-height: 1.45;
-}
-
-.guardians-page__confirm-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
 }
 

@@ -129,12 +129,12 @@ export const STRINGS_EN = {
   app_nav_themes: 'THEMES',
   app_nav_guardians: 'GUARDIANS',
   app_nav_gallery: 'BUILDS',
-  guardians_respec: 'Respec',
-  guardians_respec_aria: 'Respec equipped guardian chips',
-  guardians_respec_confirm_title: 'Respec chips?',
+  guardians_respec: 'Reset Chips',
+  guardians_respec_aria: 'Reset equipped guardian chips and purchased slot unlocks',
+  guardians_respec_confirm_title: 'Reset chips?',
   guardians_respec_confirm_body:
     'Unequip all guardian chips and reset purchased chip slot unlocks.',
-  guardians_respec_confirm: 'Respec',
+  guardians_respec_confirm: 'Reset Chips',
   guardians_respec_cancel: 'Cancel',
   guardians_search_label_hidden: 'Search guardian chips',
   guardians_search_placeholder: 'Search chips…',
@@ -453,7 +453,7 @@ export const STRINGS_EN = {
     'Clears everything this app stores locally and reloads the page. Export or copy a share link first if you want to keep your data.',
   app_tools_full_reset_confirm_title: 'Reset everything in this browser?',
   app_tools_full_reset_confirm_body:
-    'This removes lab levels, saved builds, workshop upgrades, cards, modules, relics, themes, language, and other settings stored for TowerSmith in this browser. The page will reload with factory defaults. Export or copy a share link first if you want to keep your data.',
+    'This removes lab levels, saved builds, workshop upgrades, cards, modules, relics, guardian chips, themes, language, and other settings stored for TowerSmith in this browser. The page will reload with factory defaults. Export or copy a share link first if you want to keep your data.',
   app_tools_full_reset_confirm_btn: 'Reset everything',
   auth_loading: 'Checking sign-in…',
   auth_sign_in: 'Sign in',
@@ -1136,10 +1136,10 @@ export const STRINGS_EN = {
   ws_reset_ultimate_demo: 'Reset Ultimate Weapons',
   ws_reset_confirm_title: 'Reset workshop upgrade levels?',
   ws_reset_confirm_body:
-    'This restores default workshop upgrade, enhance, and ultimate levels. Cards, modules, and lab research are not affected. Export or copy a share link first if you want to keep these levels.',
+    'Resets workshop upgrade, enhance, and ultimate weapon levels to defaults. Export or copy a share link first if you want to keep these levels.',
   ws_reset_ultimate_confirm_title: 'Reset ultimate weapons?',
   ws_reset_ultimate_confirm_body:
-    'This restores default ultimate weapon upgrade levels, ownership, active toggles, and plus abilities. Workshop upgrade and enhance levels, cards, modules, and lab research are not affected. Export or copy a share link first if you want to keep these levels.',
+    'Resets ultimate weapon upgrade levels, ownership, active toggles, and plus abilities to defaults. Export or copy a share link first if you want to keep these levels.',
   ws_damage_level_down_aria: 'Decrease workshop damage level',
   ws_damage_level_up_aria: 'Increase workshop damage level',
   ws_damage_level_input_aria: 'Workshop damage level (type a number, Enter or blur to apply)',
@@ -1685,28 +1685,25 @@ export const STRINGS_EN = {
 
   sr_reset_confirm_title: 'Reset all lab levels?',
   sr_reset_confirm_body:
-    'This restores default research levels for the lab stored in this browser. The Workshop and other tools are not affected. Export or copy a share link first if you want to keep these levels.',
+    'Restores default research levels for all lab cards in this browser. Export or copy a share link first if you want to keep these levels.',
   sr_cancel: 'Cancel',
   sr_reset_all: 'Reset all',
 
   sr_reset_cards: 'Reset Cards',
-  sr_reset_cards_aria:
-    'Reset card stars, loadouts, and equip slots only. Does not change workshop upgrades, modules, or lab levels.',
+  sr_reset_cards_aria: 'Reset card stars, loadouts, and equip slots',
   sr_reset_cards_confirm_title: 'Reset cards only?',
-  sr_reset_cards_confirm_body:
-    'Clears card stars, all preset loadouts, and equip slots. Workshop upgrade levels, module settings, and lab research are not changed.',
+  sr_reset_cards_confirm_body: 'Clears card stars, all preset loadouts, and equip slots.',
 
   sr_reset_relics: 'Reset Relics',
   sr_reset_relics_aria: 'Reset relic ownership and displayed-damage relic bonus',
   sr_reset_relics_confirm_title: 'Reset relics only?',
   sr_reset_relics_confirm_body:
-    'Clears owned relics and the displayed-damage relic bonus. Cards, modules, workshop levels, and lab data are unchanged.',
+    'Clears owned relics and the displayed-damage relic bonus.',
   sr_reset_modules: 'Reset Modules',
-  sr_reset_modules_aria:
-    'Reset assist module levels, chassis modules, and sub-module effect picks only. Does not change workshop upgrades, cards, or lab levels.',
+  sr_reset_modules_aria: 'Reset assist module levels, chassis modules, and sub-module effect picks',
   sr_reset_modules_confirm_title: 'Reset modules only?',
   sr_reset_modules_confirm_body:
-    'Clears module levels, equipped chassis modules, and sub-module effect picks. Workshop upgrade levels, cards, and lab research are not changed.',
+    'Clears module levels, equipped chassis modules, and sub-module effect picks.',
 
   sr_footer_nav_aria: 'App version, changelog, community, legal, and sponsorship',
   sr_footer_discord: 'Discord',
