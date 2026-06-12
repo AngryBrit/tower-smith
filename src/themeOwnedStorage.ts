@@ -2,7 +2,8 @@ import { useCallback, useEffect, useState } from 'react'
 import { GAME_THEMES, type GameThemeEntry } from './data/gameThemes'
 
 export const THEME_OWNED_STORAGE_KEY = 'tower-export-theme-owned-v2'
-const CATALOG_DEFAULTS_MIGRATION_KEY = 'tower-export-theme-owned-catalog-defaults-v2'
+export const CATALOG_DEFAULTS_MIGRATION_KEY =
+  'tower-export-theme-owned-catalog-defaults-v2'
 
 const CHANGE_EVENT = 'tower-export-theme-owned-change'
 
@@ -66,6 +67,19 @@ export function writeThemeOwnedIds(owned: ReadonlySet<string>): void {
     /* ignore */
   }
   window.dispatchEvent(new CustomEvent(CHANGE_EVENT))
+}
+
+/**
+ * After wiping all browser storage: persist empty owned themes and skip the
+ * one-time catalog-default migration so reset does not reload dev/test skins.
+ */
+export function seedThemeOwnedAfterFullReset(): void {
+  writeThemeOwnedIds(new Set())
+  try {
+    localStorage.setItem(CATALOG_DEFAULTS_MIGRATION_KEY, '1')
+  } catch {
+    /* ignore quota / private mode */
+  }
 }
 
 export function isThemeOwned(

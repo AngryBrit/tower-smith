@@ -1,15 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
-  clearAllTowerExportStorage,
-  listTowerExportStorageKeys,
-  performFullAppReset,
-  TOWER_EXPORT_STORAGE_KEY_PREFIX,
-} from './fullResetStorage'
-import {
   CATALOG_DEFAULTS_MIGRATION_KEY,
   migrateThemeOwnedCatalogDefaults,
   readThemeOwnedIds,
+  seedThemeOwnedAfterFullReset,
   THEME_OWNED_STORAGE_KEY,
+  writeThemeOwnedIds,
 } from './themeOwnedStorage'
 
 function createLocalStorageMock() {
@@ -42,11 +38,10 @@ function stubBrowserGlobals() {
     dispatchEvent: vi.fn(),
     addEventListener: vi.fn(),
     removeEventListener: vi.fn(),
-    location: { reload: vi.fn() },
   })
 }
 
-describe('fullResetStorage', () => {
+describe('themeOwnedStorage', () => {
   beforeEach(() => {
     stubBrowserGlobals()
   })
@@ -55,31 +50,29 @@ describe('fullResetStorage', () => {
     vi.unstubAllGlobals()
   })
 
-  it('lists and clears only tower-export keys', () => {
-    localStorage.setItem(`${TOWER_EXPORT_STORAGE_KEY_PREFIX}lab-presets-v1`, '{}')
-    localStorage.setItem(`${TOWER_EXPORT_STORAGE_KEY_PREFIX}locale-v1`, 'en')
-    localStorage.setItem('other-app-key', 'keep')
-
-    expect(listTowerExportStorageKeys().sort()).toEqual([
-      `${TOWER_EXPORT_STORAGE_KEY_PREFIX}lab-presets-v1`,
-      `${TOWER_EXPORT_STORAGE_KEY_PREFIX}locale-v1`,
-    ])
-
-    clearAllTowerExportStorage()
-
-    expect(listTowerExportStorageKeys()).toEqual([])
-    expect(localStorage.getItem('other-app-key')).toBe('keep')
+  it('returns catalog defaults when no saved owned state exists', () => {
+    const owned = readThemeOwnedIds()
+    expect(owned.size).toBeGreaterThan(0)
+    expect(owned.has('bg-plasma-field')).toBe(true)
   })
 
-  it('performFullAppReset seeds empty theme owned before reload', () => {
-    localStorage.setItem(`${TOWER_EXPORT_STORAGE_KEY_PREFIX}locale-v1`, 'en')
-    localStorage.setItem(THEME_OWNED_STORAGE_KEY, JSON.stringify(['bg-koi-pond']))
-
-    performFullAppReset()
-
-    expect(window.location.reload).toHaveBeenCalledOnce()
+  it('seedThemeOwnedAfterFullReset leaves no owned themes after migration', () => {
+    localStorage.clear()
+    seedThemeOwnedAfterFullReset()
+    migrateThemeOwnedCatalogDefaults()
+    expect(readThemeOwnedIds().size).toBe(0)
     expect(localStorage.getItem(THEME_OWNED_STORAGE_KEY)).toBe('[]')
     expect(localStorage.getItem(CATALOG_DEFAULTS_MIGRATION_KEY)).toBe('1')
+  })
+
+  it('migrateThemeOwnedCatalogDefaults merges defaults on first visit only', () => {
+    writeThemeOwnedIds(new Set(['bg-interstellar']))
+    migrateThemeOwnedCatalogDefaults()
+    const afterFirst = readThemeOwnedIds()
+    expect(afterFirst.has('bg-interstellar')).toBe(true)
+    expect(afterFirst.has('bg-plasma-field')).toBe(true)
+
+    writeThemeOwnedIds(new Set())
     migrateThemeOwnedCatalogDefaults()
     expect(readThemeOwnedIds().size).toBe(0)
   })

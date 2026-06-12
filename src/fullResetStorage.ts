@@ -1,3 +1,5 @@
+import { seedThemeOwnedAfterFullReset } from './themeOwnedStorage'
+
 /** Prefix for all TowerSmith browser persistence keys. */
 export const TOWER_EXPORT_STORAGE_KEY_PREFIX = 'tower-export-'
 
@@ -32,5 +34,6 @@ export function clearAllTowerExportStorage(): void {
  */
 export function performFullAppReset(): void {
   clearAllTowerExportStorage()
+  seedThemeOwnedAfterFullReset()
   window.location.reload()
 }
