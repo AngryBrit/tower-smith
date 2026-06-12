@@ -16,6 +16,8 @@ import {
   type WorkshopModulePresetSnapshot,
 } from './data/workshopModulePresets'
 import type { TowerThemesSnapshot } from './towerDataThemes'
+import type { GuardianChipState } from './guardianChipStorage'
+import { GAME_RESEARCH_SLOT_COUNT } from './playerSave/gameResearchIndex'
 
 describe('towerUnifiedCsv', () => {
   it('roundtrips lab levels and workshop', () => {
@@ -83,10 +85,10 @@ describe('towerUnifiedCsv', () => {
     }
     const csv = serializeTowerUnifiedCsv({ '2-2': 4 }, ws, undefined, themes)
     expect(csv).toContain('theme,ownedIds,')
+    expect(csv).toContain('theme,selection,')
     expect(csv).toContain('relic,ownedIds,')
     expect(csv).toContain('relic,simBonusFraction,0.12')
     expect(csv).not.toContain('ws,relicOwnedIds,')
-    expect(csv).not.toContain('theme,selection,')
     expect(csv).not.toContain('theme,owned,')
     expect(csv).not.toContain('theme,sel.')
     const parsed = parseTowerUnifiedCsv(csv)
@@ -98,8 +100,46 @@ describe('towerUnifiedCsv', () => {
       expect(b.workshop.cardStars.damage).toBe(5)
       expect(b.workshop.relicOwnedIds).toEqual(['t_iv_harmonic', 't_xiv_arcane'])
       expect(b.workshop.simRelicsBonusFraction).toBeCloseTo(0.12)
-      expect(parsed.themes?.selection).toBeUndefined()
+      expect(parsed.themes?.selection?.tower).toBe('tower-plasma')
       expect(parsed.themes?.ownedIds).toContain('tower-plasma')
+    }
+  })
+
+  it('roundtrips guardian chips and gameResearchLevel', () => {
+    const researchLevel = Array.from({ length: GAME_RESEARCH_SLOT_COUNT }, (_, i) =>
+      i === 0 ? 42 : 0,
+    )
+    const guardianChips: GuardianChipState = {
+      slots: ['attack', null, 'fetch', null],
+      unlockedSlots: [true, false, true, false],
+      unlockedChipIds: ['attack', 'fetch'],
+      upgrades: {
+        attack: { percent: 3, cooldown: 2, targets: 4 },
+        ally: { recovery: 1, maxRecovery: 1, cooldown: 1 },
+        bounty: { multiplier: 1, cooldown: 1, targets: 1 },
+        fetch: { cooldown: 5, findChance: 2, doubleFindChance: 1 },
+        summon: { cooldown: 1, duration: 1, cashBonus: 1 },
+        scout: { cooldown: 1, rangeBonus: 1, duration: 1 },
+      },
+    }
+    const csv = serializeTowerUnifiedCsv(
+      { '0-0': 1 },
+      defaultWorkshopPersisted(),
+      undefined,
+      { ownedIds: ['tower-plasma'], selection: { ...DEFAULT_THEME_SELECTION, music: 'music-retro' } },
+      guardianChips,
+      researchLevel,
+    )
+    expect(csv).toContain('guardian,state,')
+    expect(csv).toContain('lab,gameResearchLevel,')
+    const parsed = parseTowerUnifiedCsv(csv)
+    expect(parsed.tag).toBe('ok')
+    if (parsed.tag === 'ok') {
+      const primary = towerUnifiedPrimaryBuild(parsed)
+      expect(primary.gameResearchLevel?.[0]).toBe(42)
+      expect(parsed.guardianChips?.slots[0]).toBe('attack')
+      expect(parsed.guardianChips?.upgrades.fetch.cooldown).toBe(5)
+      expect(parsed.themes?.selection?.music).toBe('music-retro')
     }
   })
 
@@ -194,19 +234,27 @@ describe('towerUnifiedCsv', () => {
     }
   })
 
-  it('rejects non-ownedIds theme rows', () => {
+  it('rejects unknown theme row keys', () => {
     const lines = [
       TOWER_UNIFIED_CSV_MAGIC,
       'type,key,value',
       'theme,sel.tower,tower-plasma',
     ]
     expect(parseTowerUnifiedCsv(lines.join('\n')).tag).toBe('invalid')
-    const selectionJson = [
-      TOWER_UNIFIED_CSV_MAGIC,
-      'type,key,value',
-      'theme,selection,{"tower":"tower-plasma"}',
-    ]
-    expect(parseTowerUnifiedCsv(selectionJson.join('\n')).tag).toBe('invalid')
+  })
+
+  it('accepts theme selection without ownedIds', () => {
+    const csv = serializeTowerUnifiedCsv(
+      {},
+      defaultWorkshopPersisted(),
+      undefined,
+      { ownedIds: [], selection: { ...DEFAULT_THEME_SELECTION, tower: 'tower-plasma' } },
+    )
+    const parsed = parseTowerUnifiedCsv(csv)
+    expect(parsed.tag).toBe('ok')
+    if (parsed.tag === 'ok') {
+      expect(parsed.themes?.selection?.tower).toBe('tower-plasma')
+    }
   })
 
   it('returns none for non-tower CSV', () => {

@@ -322,22 +322,29 @@ function defaultGuardianChipState(): GuardianChipState {
   }
 }
 
+export function sanitizeGuardianChipState(raw: unknown): GuardianChipState {
+  if (typeof raw !== 'object' || raw === null) return defaultGuardianChipState()
+  const record = raw as Record<string, unknown>
+  const unlockedSlots = parseUnlockedSlots(record.unlockedSlots, record)
+  return {
+    slots: normalizeSlotsForUnlocks(parseSlots(record.slots), unlockedSlots),
+    unlockedSlots,
+    unlockedChipIds: parseUnlocked(record.unlockedChipIds),
+    upgrades: parseUpgrades(record.upgrades),
+  }
+}
+
 export function readGuardianChipState(): GuardianChipState {
   try {
     const raw = localStorage.getItem(GUARDIAN_CHIP_STORAGE_KEY)
     if (!raw) return defaultGuardianChipState()
     const parsed: unknown = JSON.parse(raw)
-    if (typeof parsed !== 'object' || parsed === null) return defaultGuardianChipState()
-    const record = parsed as Record<string, unknown>
-    const unlockedSlots = parseUnlockedSlots(record.unlockedSlots, record)
-    const state: GuardianChipState = {
-      slots: normalizeSlotsForUnlocks(parseSlots(record.slots), unlockedSlots),
-      unlockedSlots,
-      unlockedChipIds: parseUnlocked(record.unlockedChipIds),
-      upgrades: parseUpgrades(record.upgrades),
-    }
-    if (storageVersion(record) < GUARDIAN_CHIP_STORAGE_VERSION) {
-      writeGuardianChipState(state)
+    const state = sanitizeGuardianChipState(parsed)
+    if (typeof parsed === 'object' && parsed !== null) {
+      const record = parsed as Record<string, unknown>
+      if (storageVersion(record) < GUARDIAN_CHIP_STORAGE_VERSION) {
+        writeGuardianChipState(state)
+      }
     }
     return state
   } catch {

@@ -33,9 +33,19 @@ import {
   sanitizeChassisModuleEffectTier,
   sanitizeChassisModuleMergeTier,
 } from './data/workshopChassisModuleShared'
+import { sanitizeGameResearchLevel } from './data/workshopLabOverridesForDamage'
 import { parseRelicOwnedIdsCell } from './data/workshopRelics'
+import {
+  sanitizeGuardianChipState,
+  type GuardianChipState,
+} from './guardianChipStorage'
 import { sanitizeWorkshopPersisted, type WorkshopPersistedV1 } from './labPresetsStorage'
-import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from './towerDataThemes'
+import {
+  sanitizeThemeOwnedIds,
+  sanitizeThemeSelection,
+  type TowerThemesSnapshot,
+} from './towerDataThemes'
+import type { ThemeSelectionState } from './themeSelectionStorage'
 
 /** First line of a combined tower backup CSV. */
 export const TOWER_UNIFIED_CSV_MAGIC = 'tower_csv_v1'
@@ -197,12 +207,18 @@ export type TowerUnifiedCsvBuild = {
   name?: string
   overrides: Record<string, number>
   workshop: WorkshopPersistedV1
+  gameResearchLevel?: number[]
 }
 
 export type ParseTowerUnifiedCsv =
   | { tag: 'none' }
   | { tag: 'invalid' }
-  | { tag: 'ok'; builds: TowerUnifiedCsvBuild[]; themes?: TowerThemesSnapshot }
+  | {
+      tag: 'ok'
+      builds: TowerUnifiedCsvBuild[]
+      themes?: TowerThemesSnapshot
+      guardianChips?: GuardianChipState
+    }
 
 /** First build in a parsed file (compare / single-build callers). */
 export function towerUnifiedPrimaryBuild(
@@ -251,6 +267,13 @@ function appendModuleRows(lines: string[], workshop: WorkshopPersistedV1): void 
 
 function appendThemeRows(lines: string[], themes: TowerThemesSnapshot): void {
   lines.push(`theme,ownedIds,${escapeCsvCell(JSON.stringify(themes.ownedIds))}`)
+  if (themes.selection !== undefined) {
+    lines.push(`theme,selection,${escapeCsvCell(JSON.stringify(themes.selection))}`)
+  }
+}
+
+function appendGuardianRows(lines: string[], guardianChips: GuardianChipState): void {
+  lines.push(`guardian,state,${escapeCsvCell(JSON.stringify(guardianChips))}`)
 }
 
 function appendRelicRows(lines: string[], workshop: WorkshopPersistedV1): void {
@@ -264,11 +287,17 @@ function appendBuildRows(
     name?: string
     levelOverrides: Record<string, number>
     workshop: WorkshopPersistedV1
+    gameResearchLevel?: number[]
   },
 ): void {
   const trimmedName = build.name?.trim()
   if (trimmedName) {
     lines.push(`build,name,${escapeCsvCell(trimmedName)}`)
+  }
+  if (build.gameResearchLevel !== undefined) {
+    lines.push(
+      `lab,gameResearchLevel,${escapeCsvCell(JSON.stringify(build.gameResearchLevel))}`,
+    )
   }
   for (const k of sortLabKeys(Object.keys(build.levelOverrides))) {
     lines.push(`lab,${escapeCsvCell(k)},${build.levelOverrides[k] ?? 0}`)
@@ -287,11 +316,14 @@ export function serializeTowerUnifiedCsvBuilds(
     name?: string
     levelOverrides: Record<string, number>
     workshop: WorkshopPersistedV1
+    gameResearchLevel?: number[]
   }[],
   themes?: TowerThemesSnapshot,
+  guardianChips?: GuardianChipState,
 ): string {
   const lines: string[] = [TOWER_UNIFIED_CSV_MAGIC, HEADER]
   if (themes) appendThemeRows(lines, themes)
+  if (guardianChips) appendGuardianRows(lines, guardianChips)
   for (const b of builds) {
     appendBuildRows(lines, b)
   }
@@ -304,10 +336,13 @@ export function serializeTowerUnifiedCsv(
   workshop: WorkshopPersistedV1,
   buildName?: string,
   themes?: TowerThemesSnapshot,
+  guardianChips?: GuardianChipState,
+  gameResearchLevel?: number[],
 ): string {
   return serializeTowerUnifiedCsvBuilds(
-    [{ name: buildName, levelOverrides, workshop }],
+    [{ name: buildName, levelOverrides, workshop, gameResearchLevel }],
     themes,
+    guardianChips,
   )
 }
 
@@ -325,6 +360,7 @@ function isWorkshopGameCardId(s: string): s is WorkshopGameCardId {
 type BuildAccumulator = {
   name?: string
   overrides: Record<string, number>
+  gameResearchLevel?: number[]
   wsRaw: Record<string, unknown>
   cardStars: Record<string, number>
   cardPresetLoadouts: string[][]
@@ -351,6 +387,7 @@ function flushBuildAccumulator(
     acc.modulePresetSnapshots.some((snap) => snap !== undefined)
   if (
     Object.keys(acc.overrides).length === 0 &&
+    acc.gameResearchLevel === undefined &&
     Object.keys(acc.wsRaw).length === 0 &&
     Object.keys(acc.cardStars).length === 0 &&
     !hasModuleRows
@@ -378,6 +415,9 @@ function flushBuildAccumulator(
     name: acc.name,
     overrides: { ...acc.overrides },
     workshop: sanitizeWorkshopPersisted(wsRaw),
+    ...(acc.gameResearchLevel !== undefined
+      ? { gameResearchLevel: acc.gameResearchLevel }
+      : {}),
   })
   return newBuildAccumulator()
 }
@@ -506,6 +546,8 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
   const builds: TowerUnifiedCsvBuild[] = []
   let acc = newBuildAccumulator()
   const themeOwned = new Set<string>()
+  let themeSelection: ThemeSelectionState | undefined
+  let guardianChips: GuardianChipState | undefined
 
   for (let i = start; i < lines.length; i += 1) {
     const r = parseCsvLine(lines[i]!)
@@ -529,6 +571,30 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
         for (const id of sanitizeThemeOwnedIds(parsed)) {
           themeOwned.add(id)
         }
+        continue
+      }
+      if (key === 'selection') {
+        let parsed: unknown
+        try {
+          parsed = JSON.parse(valCell)
+        } catch {
+          return { tag: 'invalid' }
+        }
+        themeSelection = sanitizeThemeSelection(parsed)
+        continue
+      }
+      return { tag: 'invalid' }
+    }
+
+    if (kind === 'guardian') {
+      if (key === 'state') {
+        let parsed: unknown
+        try {
+          parsed = JSON.parse(valCell)
+        } catch {
+          return { tag: 'invalid' }
+        }
+        guardianChips = sanitizeGuardianChipState(parsed)
         continue
       }
       return { tag: 'invalid' }
@@ -557,6 +623,18 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
     }
 
     if (kind === 'lab') {
+      if (key === 'gameResearchLevel') {
+        let parsed: unknown
+        try {
+          parsed = JSON.parse(valCell)
+        } catch {
+          return { tag: 'invalid' }
+        }
+        const sanitized = sanitizeGameResearchLevel(parsed)
+        if (sanitized === undefined) return { tag: 'invalid' }
+        acc.gameResearchLevel = sanitized
+        continue
+      }
       if (!LAB_KEY_RE.test(key)) return { tag: 'invalid' }
       const n = valCell === '' ? 0 : Number(valCell)
       if (!Number.isFinite(n)) return { tag: 'invalid' }
@@ -637,10 +715,18 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
     })
   }
 
-  const hasThemes = themeOwned.size > 0
+  const hasThemes = themeOwned.size > 0 || themeSelection !== undefined
   const themes: TowerThemesSnapshot | undefined = hasThemes
-    ? { ownedIds: sanitizeThemeOwnedIds([...themeOwned]) }
+    ? {
+        ownedIds: sanitizeThemeOwnedIds([...themeOwned]),
+        ...(themeSelection !== undefined ? { selection: themeSelection } : {}),
+      }
     : undefined
 
-  return { tag: 'ok', builds, ...(themes ? { themes } : {}) }
+  return {
+    tag: 'ok',
+    builds,
+    ...(themes ? { themes } : {}),
+    ...(guardianChips ? { guardianChips } : {}),
+  }
 }

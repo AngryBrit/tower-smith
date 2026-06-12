@@ -5,6 +5,7 @@ import { computeBuildCompareSummary, type BuildCompareSummary } from '../buildCo
 import type { I18nFormatters, StringId } from '../i18n/dictionary'
 import { compareLabLevelOverrides, type LabCompareResult } from '../labCompare'
 import { readTowerThemesSnapshot } from '../towerDataThemes'
+import { readGuardianChipState } from '../guardianChipStorage'
 import { serializeTowerUnifiedCsv } from '../towerUnifiedCsv'
 import { defaultWorkshopPersisted, type WorkshopPersistedV1 } from '../labPresetsStorage'
 import { parseLabLevelsPayload, type ParseLabLevelsError } from '../parseLabLevelsPayload'
@@ -206,6 +207,7 @@ export function LabCompareDialog({
   onClose,
   currentOverrides,
   currentWorkshop,
+  currentGameResearchLevel,
   initialCompare = null,
   t,
   fmt,
@@ -215,6 +217,7 @@ export function LabCompareDialog({
   onClose: () => void
   currentOverrides: Record<string, number>
   currentWorkshop: WorkshopPersistedV1
+  currentGameResearchLevel?: number[]
   initialCompare?: CompareDialogInit | null
   t: TFn
   fmt: I18nFormatters
@@ -237,8 +240,10 @@ export function LabCompareDialog({
         currentWorkshop,
         undefined,
         readTowerThemesSnapshot(),
+        readGuardianChipState(),
+        currentGameResearchLevel,
       ),
-    [currentOverrides, currentWorkshop],
+    [currentGameResearchLevel, currentOverrides, currentWorkshop],
   )
 
   const fillCurrentCsv = useCallback(

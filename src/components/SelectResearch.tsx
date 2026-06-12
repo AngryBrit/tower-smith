@@ -51,7 +51,7 @@ import { WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS } from '../data/workshopGameCardWiki'
 import { useThemeOwned } from '../themeOwnedStorage'
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
-import { mergeWorkspaceBuild } from '../towerWorkspaceStorage'
+import { mergeWorkspaceBuild, type LabPersistedV1 } from '../towerWorkspaceStorage'
 import { splitTowerBuild } from '../towerBuildStorage'
 import type { ResearchData } from '../types/research'
 import { combinedLabsSpeedMultiplier } from '../data/workshopRelicWorkshopDisplay'
@@ -138,6 +138,7 @@ export function SelectResearch({
     setScratchWorkspace,
     labLevelOverrides: levelOverrides,
     setLabLevelOverrides: setLevelOverrides,
+    gameResearchLevel,
     workshopFlat,
   } = useTowerWorkspaceContext()
   const [themeOwned] = useThemeOwned()
@@ -503,6 +504,8 @@ export function SelectResearch({
       workshopFlat,
       undefined,
       themes,
+      readGuardianChipState(),
+      gameResearchLevel,
     )
     const blob = new Blob([`\uFEFF${csv}`], {
       type: 'text/csv;charset=utf-8',
@@ -514,7 +517,7 @@ export function SelectResearch({
     a.rel = 'noopener'
     a.click()
     URL.revokeObjectURL(url)
-  }, [levelOverrides, workshopFlat])
+  }, [gameResearchLevel, levelOverrides, workshopFlat])
 
   const handleShowShareQr = useCallback(async () => {
     const url = await publishForQrUrl()
@@ -660,6 +663,7 @@ export function SelectResearch({
         }
         if (tower.tag === 'ok') {
           if (tower.themes) applyTowerThemes(tower.themes)
+          if (tower.guardianChips) writeGuardianChipState(tower.guardianChips)
           const primary = towerUnifiedPrimaryBuild(tower)
           const sanitized = sanitizeLevelOverrides(
             data,
@@ -667,8 +671,12 @@ export function SelectResearch({
           )
           setLevelOverrides(sanitized)
           const build = splitTowerBuild(primary.workshop)
-          setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
-          setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab: { levelOverrides: sanitized } }, build))
+          const lab: LabPersistedV1 = { levelOverrides: sanitized }
+          if (primary.gameResearchLevel !== undefined) {
+            lab.gameResearchLevel = primary.gameResearchLevel
+          }
+          setWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab }, build))
+          setScratchWorkspace((prev) => mergeWorkspaceBuild({ ...prev, lab }, build))
           const buildName = primary.name?.trim()
           setImportNoticeBugInitial(null)
           publishImportNotice(
@@ -962,6 +970,7 @@ export function SelectResearch({
               onClose={closeCompareDialog}
               currentOverrides={levelOverrides}
               currentWorkshop={workshopFlat}
+              currentGameResearchLevel={gameResearchLevel}
               initialCompare={compareInit}
               t={t}
               fmt={fmt}

@@ -10,6 +10,7 @@ import {
   type WorkshopPersistedV1,
 } from './labPresetsStorage'
 import type { ResearchData } from './types/research'
+import type { GuardianChipState } from './guardianChipStorage'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from './towerDataThemes'
 import { getGalleryTower } from './towerGallery/api'
 import { extractGalleryBuildIdFromText } from './towerGallery/shareLink'
@@ -27,6 +28,8 @@ export type ParseLabLevelsResult =
       overrides: Record<string, number>
       workshop?: WorkshopPersistedV1
       themes?: TowerThemesSnapshot
+      guardianChips?: GuardianChipState
+      gameResearchLevel?: number[]
     }
   | { ok: false; error: ParseLabLevelsError }
 
@@ -94,6 +97,10 @@ export async function parseLabLevelsPayload(
       ),
       workshop: primary.workshop,
       ...(tower.themes ? { themes: tower.themes } : {}),
+      ...(tower.guardianChips ? { guardianChips: tower.guardianChips } : {}),
+      ...(primary.gameResearchLevel !== undefined
+        ? { gameResearchLevel: primary.gameResearchLevel }
+        : {}),
     }
   }
 
