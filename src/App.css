@@ -1176,28 +1176,40 @@ html[data-color-scheme='high-contrast'] {
   gap: 0.35rem;
 }
 
+.select-research__inpanel-tabs--eight,
+.select-research__inpanel-tabs--seven,
+.select-research__inpanel-tabs--six,
+.select-research__inpanel-tabs--seven-no-tools {
+  grid-template-columns: minmax(0, 1.14fr) repeat(3, minmax(0, 0.953fr));
+}
+
 .select-research__inpanel-tabs--eight {
   grid-template-areas:
     'workshop lab cards gallery'
     'bots themes relics tools';
 }
 
+.select-research__inpanel-tabs--nine,
+.select-research__inpanel-tabs--nine-admin,
+.select-research__inpanel-tabs--ten,
+.select-research__inpanel-tabs--nine-no-tools,
+.select-research__inpanel-tabs--eight-no-tools {
+  grid-template-columns: minmax(0, 1.16fr) repeat(4, minmax(0, 0.96fr));
+}
+
 .select-research__inpanel-tabs--nine {
-  grid-template-columns: repeat(5, 1fr);
   grid-template-areas:
     'workshop lab cards modules gallery'
     'bots themes relics . tools';
 }
 
 .select-research__inpanel-tabs--nine-admin {
-  grid-template-columns: repeat(5, 1fr);
   grid-template-areas:
     'workshop lab cards gallery admin'
     'bots themes relics . tools';
 }
 
 .select-research__inpanel-tabs--ten {
-  grid-template-columns: repeat(5, 1fr);
   grid-template-areas:
     'workshop lab cards modules gallery'
     'bots themes relics admin tools';
@@ -1216,16 +1228,15 @@ html[data-color-scheme='high-contrast'] {
 }
 
 .select-research__inpanel-tabs--nine-no-tools {
-  grid-template-columns: repeat(5, 1fr);
   grid-template-areas:
-    'workshop lab cards modules gallery'
-    'bots themes relics guardians .';
+    'workshop lab cards modules bots'
+    'guardians themes relics gallery .';
 }
 
 .select-research__inpanel-tabs--eight-no-tools {
   grid-template-areas:
-    'workshop lab cards gallery'
-    'bots themes relics guardians';
+    'workshop lab cards bots .'
+    'guardians themes relics gallery .';
 }
 
 .select-research__inpanel-tabs--seven-no-tools {
@@ -1266,6 +1277,12 @@ html[data-color-scheme='high-contrast'] {
   grid-area: guardians;
 }
 
+.select-research__inpanel-tab--workshop,
+.select-research__inpanel-tab--guardians {
+  letter-spacing: 0.01em;
+  padding-inline: 0.32rem;
+}
+
 .select-research__inpanel-tab--tools-settings {
   grid-area: tools;
 }
@@ -1286,11 +1303,11 @@ html[data-color-scheme='high-contrast'] {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.15rem 0.2rem;
-  font-size: 0.58rem;
+  padding: 0.15rem 0.28rem;
+  font-size: 0.56rem;
   font-weight: 700;
   font-family: inherit;
-  letter-spacing: 0.03em;
+  letter-spacing: 0.02em;
   line-height: 1.1;
   text-align: center;
   white-space: nowrap;

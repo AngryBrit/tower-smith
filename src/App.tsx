@@ -161,9 +161,9 @@ export default function App() {
       { key: '3', panel: 'cards' as const },
       { key: '4', panel: 'modules' as const, enabled: MODULES_PANEL_ENABLED },
       { key: '5', panel: 'bots' as const },
-      { key: '6', panel: 'themes' as const },
-      { key: '7', panel: 'relics' as const },
-      { key: '8', panel: 'guardians' as const },
+      { key: '6', panel: 'guardians' as const },
+      { key: '7', panel: 'themes' as const },
+      { key: '8', panel: 'relics' as const },
       { key: '9', panel: 'gallery' as const },
     ],
     [],
@@ -377,6 +377,21 @@ export default function App() {
                     {t('app_nav_bots')}
                   </button>
                   <button
+                    id="inpanel-tab-guardians"
+                    type="button"
+                    role="tab"
+                    aria-selected={mainPanel === 'guardians'}
+                    aria-controls="inpanel-panel-guardians"
+                    className={
+                      mainPanel === 'guardians'
+                        ? 'select-research__inpanel-tab select-research__inpanel-tab--guardians select-research__inpanel-tab--on'
+                        : 'select-research__inpanel-tab select-research__inpanel-tab--guardians'
+                    }
+                    onClick={() => setMainPanel('guardians')}
+                  >
+                    {t('app_nav_guardians')}
+                  </button>
+                  <button
                     id="inpanel-tab-themes"
                     type="button"
                     role="tab"
@@ -405,21 +420,6 @@ export default function App() {
                     onClick={() => setMainPanel('relics')}
                   >
                     {t('app_nav_relics')}
-                  </button>
-                  <button
-                    id="inpanel-tab-guardians"
-                    type="button"
-                    role="tab"
-                    aria-selected={mainPanel === 'guardians'}
-                    aria-controls="inpanel-panel-guardians"
-                    className={
-                      mainPanel === 'guardians'
-                        ? 'select-research__inpanel-tab select-research__inpanel-tab--guardians select-research__inpanel-tab--on'
-                        : 'select-research__inpanel-tab select-research__inpanel-tab--guardians'
-                    }
-                    onClick={() => setMainPanel('guardians')}
-                  >
-                    {t('app_nav_guardians')}
                   </button>
                   <button
                     id="inpanel-tab-gallery"
