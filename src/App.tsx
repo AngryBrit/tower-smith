@@ -163,7 +163,8 @@ export default function App() {
       { key: '5', panel: 'bots' as const },
       { key: '6', panel: 'themes' as const },
       { key: '7', panel: 'relics' as const },
-      { key: '8', panel: 'gallery' as const },
+      { key: '8', panel: 'guardians' as const },
+      { key: '9', panel: 'gallery' as const },
     ],
     [],
   )
@@ -208,8 +209,8 @@ export default function App() {
   }, [])
 
   const inpanelTabsClass = MODULES_PANEL_ENABLED
-    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--eight-no-tools'
-    : 'select-research__inpanel-tabs select-research__inpanel-tabs--seven-no-tools'
+    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--nine-no-tools'
+    : 'select-research__inpanel-tabs select-research__inpanel-tabs--eight-no-tools'
 
   return (
     <div className="app-root">
@@ -255,7 +256,8 @@ export default function App() {
               mainPanel === 'modules' ||
               mainPanel === 'cards' ||
               mainPanel === 'relics' ||
-              mainPanel === 'themes'
+              mainPanel === 'themes' ||
+              mainPanel === 'guardians'
             }
           />
           <div className="app-shell">
@@ -405,6 +407,21 @@ export default function App() {
                     {t('app_nav_relics')}
                   </button>
                   <button
+                    id="inpanel-tab-guardians"
+                    type="button"
+                    role="tab"
+                    aria-selected={mainPanel === 'guardians'}
+                    aria-controls="inpanel-panel-guardians"
+                    className={
+                      mainPanel === 'guardians'
+                        ? 'select-research__inpanel-tab select-research__inpanel-tab--guardians select-research__inpanel-tab--on'
+                        : 'select-research__inpanel-tab select-research__inpanel-tab--guardians'
+                    }
+                    onClick={() => setMainPanel('guardians')}
+                  >
+                    {t('app_nav_guardians')}
+                  </button>
+                  <button
                     id="inpanel-tab-gallery"
                     type="button"
                     role="tab"
@@ -449,7 +466,8 @@ export default function App() {
                     mainPanel !== 'cards' &&
                     mainPanel !== 'relics' &&
                     mainPanel !== 'modules' &&
-                    mainPanel !== 'themes'
+                    mainPanel !== 'themes' &&
+                    mainPanel !== 'guardians'
                   }
                 />
 

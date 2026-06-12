@@ -22,6 +22,9 @@ const ThemesPage = lazy(() =>
 const RelicsPage = lazy(() =>
   import('./RelicsPage').then((m) => ({ default: m.RelicsPage })),
 )
+const GuardiansPage = lazy(() =>
+  import('./GuardiansPage').then((m) => ({ default: m.GuardiansPage })),
+)
 const ToolsSettingsPage = lazy(() =>
   import('./ToolsSettingsPage').then((m) => ({ default: m.ToolsSettingsPage })),
 )
@@ -120,7 +123,8 @@ export function MainPanelContent({
     mainPanel === 'cards' ||
     mainPanel === 'relics' ||
     mainPanel === 'modules' ||
-    mainPanel === 'themes'
+    mainPanel === 'themes' ||
+    mainPanel === 'guardians'
       ? inpanelWorkshopToolbarMount
       : null
 
@@ -227,6 +231,18 @@ export function MainPanelContent({
           {...shellProps}
         >
           <RelicsPage embeddedInPanel toolbarMount={workshopToolbarMount} />
+        </PanelTabShell>
+      ) : null}
+
+      {mainPanel === 'guardians' ? (
+        <PanelTabShell
+          panel="guardians"
+          panelLabel={t('app_nav_guardians')}
+          id="inpanel-panel-guardians"
+          labelledBy="inpanel-tab-guardians"
+          {...shellProps}
+        >
+          <GuardiansPage embeddedInPanel toolbarMount={workshopToolbarMount} />
         </PanelTabShell>
       ) : null}
 

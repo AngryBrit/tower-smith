@@ -60,6 +60,8 @@ function mainPanelLabelKey(panel: MainPanel): StringId {
       return 'app_nav_relics'
     case 'themes':
       return 'app_nav_themes'
+    case 'guardians':
+      return 'app_nav_guardians'
     case 'gallery':
       return 'app_nav_gallery'
     case 'toolsSettings':
