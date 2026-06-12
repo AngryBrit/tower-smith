@@ -5144,28 +5144,15 @@ button.workshop__uw-plus-cost--display:hover {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 0.82;
-  overflow: visible;
+  overflow: hidden;
+  border-radius: 0.55rem;
 }
 
 .modules-hub__pcb {
+  --circuit-panel-image: url('/modules/blue-circuit.webp');
   position: absolute;
   inset: 0;
   border-radius: 0.55rem;
-  background-color: var(--sr-modules-pcb-bg);
-  background-image:
-    radial-gradient(circle at 12% 18%, var(--sr-cyan-a14) 0 1px, transparent 1px 100%),
-    radial-gradient(circle at 88% 24%, color-mix(in srgb, var(--sr-green) 12%, transparent) 0 1px, transparent 1px 100%),
-    radial-gradient(circle at 22% 82%, color-mix(in srgb, var(--sr-green) 10%, transparent) 0 1px, transparent 1px 100%),
-    radial-gradient(circle at 78% 78%, var(--sr-cyan-a10) 0 1px, transparent 1px 100%),
-    linear-gradient(var(--sr-cyan-a06) 1px, transparent 1px),
-    linear-gradient(90deg, var(--sr-cyan-a06) 1px, transparent 1px);
-  background-size:
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    100% 100%,
-    1.35rem 1.35rem,
-    1.35rem 1.35rem;
   box-shadow: var(--sr-modules-pcb-shadow);
 }
 
@@ -9807,26 +9794,33 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   min-height: 0;
 }
 
-.guardians-page__profile {
-  position: relative;
-  padding: 1rem 0.75rem 1.25rem;
+.guardians-page__profile,
+.modules-hub__pcb {
   overflow: hidden;
   background-color: #0f172a;
+}
+
+.guardians-page__profile {
+  --circuit-panel-image: url('/guardians/blue-circuit.webp');
+  position: relative;
+  padding: 1rem 0.75rem 1.25rem;
   border-bottom: none;
 }
 
-.guardians-page__profile::before {
+.guardians-page__profile::before,
+.modules-hub__pcb::before {
   content: '';
   position: absolute;
   inset: -12% -6% -18%;
   opacity: 0.88;
   background-image:
     linear-gradient(rgba(15, 23, 42, 0.2), rgba(15, 23, 42, 0.35)),
-    radial-gradient(ellipse 115% 95% at 50% 42%, transparent 32%, rgba(15, 23, 42, 0.97) 100%),
-    linear-gradient(to right, #0f172a 0%, transparent 14%, transparent 86%, #0f172a 100%),
-    linear-gradient(to bottom, #0f172a 0%, transparent 14%, transparent 68%, #0f172a 100%),
+    radial-gradient(ellipse 118% 102% at 50% 42%, transparent 22%, rgba(15, 23, 42, 0.98) 100%),
+    linear-gradient(to right, #0f172a 0%, transparent 18%, transparent 82%, #0f172a 100%),
+    linear-gradient(to bottom, #0f172a 0%, transparent 16%, transparent 58%, #0f172a 100%),
+    linear-gradient(to top, #0f172a 0%, transparent 12%, transparent 88%, #0f172a 100%),
     linear-gradient(180deg, rgba(15, 23, 42, 0.45), rgba(15, 23, 42, 0.72)),
-    url('/guardians/blue-circuit.webp');
+    var(--circuit-panel-image);
   background-position: center top;
   background-size: cover;
   background-repeat: no-repeat;
@@ -9834,14 +9828,16 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   z-index: 0;
 }
 
-.guardians-page__profile::after {
+.guardians-page__profile::after,
+.modules-hub__pcb::after {
   content: '';
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 2rem;
-  background: linear-gradient(to bottom, transparent, #0f172a 85%);
+  inset: 0;
+  background:
+    linear-gradient(to bottom, transparent 68%, rgba(15, 23, 42, 0.55) 88%, #0f172a 100%),
+    linear-gradient(to top, transparent 82%, rgba(15, 23, 42, 0.35) 96%, #0f172a 100%),
+    linear-gradient(to right, transparent 78%, rgba(15, 23, 42, 0.45) 94%, #0f172a 100%),
+    linear-gradient(to left, transparent 78%, rgba(15, 23, 42, 0.45) 94%, #0f172a 100%);
   pointer-events: none;
   z-index: 0;
 }
