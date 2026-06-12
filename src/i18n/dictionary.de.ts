@@ -144,6 +144,7 @@ export const STRINGS_DE = {
   guardians_edit_guardian_aria: 'Aktiven Wächter ändern',
   guardians_slot_locked_aria: 'Gesperrter Chip-Slot',
   guardians_slot_empty_aria: 'Leerer Chip-Slot',
+  guardians_slot_empty_label: 'LEER',
   guardians_slot_unequip_aria: '{{chip}} ablegen',
   guardians_chip_equip_aria: '{{chip}} ausrüsten',
   guardians_chip_equipped_aria: '{{chip}} ausgerüstet — zum Ablegen klicken',

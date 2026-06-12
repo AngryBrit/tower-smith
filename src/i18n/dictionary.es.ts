@@ -144,6 +144,7 @@ export const STRINGS_ES = {
   guardians_edit_guardian_aria: 'Cambiar guardián activo',
   guardians_slot_locked_aria: 'Ranura de chip bloqueada',
   guardians_slot_empty_aria: 'Ranura de chip vacía',
+  guardians_slot_empty_label: 'VACÍO',
   guardians_slot_unequip_aria: 'Desequipar {{chip}}',
   guardians_chip_equip_aria: 'Equipar {{chip}}',
   guardians_chip_equipped_aria: '{{chip}} equipado — clic para desequipar',

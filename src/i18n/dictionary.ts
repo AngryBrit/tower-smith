@@ -146,6 +146,7 @@ export const STRINGS_EN = {
   guardians_edit_guardian_aria: 'Change active guardian',
   guardians_slot_locked_aria: 'Locked chip slot',
   guardians_slot_empty_aria: 'Empty chip slot',
+  guardians_slot_empty_label: 'EMPTY',
   guardians_slot_unequip_aria: 'Unequip {{chip}}',
   guardians_chip_equip_aria: 'Equip {{chip}}',
   guardians_chip_equipped_aria: '{{chip}} equipped — click to unequip',

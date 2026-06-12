@@ -9788,6 +9788,8 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 
 /* —— Guardians page —— */
 .guardians-page {
+  --guardians-chip-tile-size: 4.5rem;
+  --guardians-chip-tile-radius: 1.05rem;
   display: flex;
   flex-direction: column;
   gap: 0;
@@ -9803,6 +9805,9 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 .guardians-page__profile {
   --circuit-panel-image: url('/guardians/blue-circuit.webp');
   position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 1rem 0.75rem 1.25rem;
   border-bottom: none;
 }
@@ -9846,18 +9851,22 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(4.5rem, 1fr) minmax(7rem, 9rem) minmax(4.5rem, 1fr);
+  grid-template-columns:
+    minmax(var(--guardians-chip-tile-size), 1fr)
+    minmax(7rem, 9rem)
+    minmax(var(--guardians-chip-tile-size), 1fr);
   grid-template-rows: auto auto;
   gap: 0.5rem 0.35rem;
   align-items: center;
   justify-items: center;
+  width: 100%;
   max-width: 22rem;
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .guardians-page__guardian-card,
 .guardians-page__slot.guardians-page__chip-tile {
-  border-radius: 0.65rem;
+  border-radius: var(--guardians-chip-tile-radius);
   border: 2px solid rgba(56, 189, 248, 0.55);
   box-shadow:
     0 0 18px rgba(56, 189, 248, 0.2),
@@ -9936,6 +9945,7 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   --guardian-corner-dot-size: 0.28rem;
   --guardian-corner-dot-inset: 0.32rem;
   --guardians-chip-tile-surface: none;
+  border-radius: var(--guardians-chip-tile-radius);
   position: relative;
   box-sizing: border-box;
   display: flex;
@@ -9943,8 +9953,11 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   align-items: center;
   justify-content: center;
   gap: 0.2rem;
-  width: 4.5rem;
-  height: 4.5rem;
+  width: var(--guardians-chip-tile-size);
+  height: var(--guardians-chip-tile-size);
+  min-width: var(--guardians-chip-tile-size);
+  min-height: var(--guardians-chip-tile-size);
+  flex-shrink: 0;
   padding: 0.35rem;
   color: #f8fafc;
   cursor: pointer;
@@ -9975,7 +9988,6 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 }
 
 .guardians-page__chip {
-  border-radius: 0.55rem;
   border: 2px solid rgba(226, 232, 240, 0.45);
   background-color: rgba(15, 23, 42, 0.55);
 }
@@ -10027,9 +10039,25 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   border-color: rgba(56, 189, 248, 0.55);
 }
 
+.guardians-page__slot--empty.guardians-page__chip-tile {
+  justify-content: center;
+  background-image:
+    linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.7)),
+    url('/guardians/chipSlot.webp'),
+    linear-gradient(180deg, rgba(15, 23, 42, 0.9), rgba(30, 41, 59, 0.85));
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-position: center, center, center;
+  background-repeat: no-repeat;
+}
+
 .guardians-page__slot--locked {
   opacity: 0.65;
   cursor: not-allowed;
+}
+
+.guardians-page__slot--locked .guardians-page__chip-icon {
+  width: 4rem;
+  height: 4rem;
 }
 
 .guardians-page__slot:disabled:not(.guardians-page__slot--locked) {
@@ -10066,8 +10094,8 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 
 .guardians-page__chip-grid {
   display: grid;
-  grid-template-columns: repeat(4, 4.5rem);
-  grid-template-rows: repeat(2, 4.5rem);
+  grid-template-columns: repeat(4, var(--guardians-chip-tile-size));
+  grid-template-rows: repeat(2, var(--guardians-chip-tile-size));
   justify-content: center;
   gap: 0.55rem;
   list-style: none;
@@ -10077,7 +10105,10 @@ html[data-color-scheme='high-contrast'] .cards-tile {
 
 .guardians-page__chip-grid > li {
   display: flex;
+  align-items: center;
   justify-content: center;
+  width: var(--guardians-chip-tile-size);
+  height: var(--guardians-chip-tile-size);
 }
 
 .guardians-page__chip--equipped {
@@ -10091,6 +10122,12 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   text-transform: uppercase;
   line-height: 1.1;
   text-align: center;
+}
+
+.guardians-page__chip-label--empty {
+  position: relative;
+  z-index: 1;
+  color: rgba(226, 232, 240, 0.75);
 }
 
 .guardians-page__chip-check {

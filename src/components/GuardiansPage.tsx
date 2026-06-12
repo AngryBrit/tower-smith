@@ -162,7 +162,9 @@ export function GuardiansPage({
                 type="button"
                 className={`guardians-page__chip-tile guardians-page__slot guardians-page__slot--${position}${
                   locked ? ' guardians-page__slot--locked' : ''
-                }${chipId ? ' guardians-page__slot--filled' : ''}`}
+                }${chipId ? ' guardians-page__slot--filled' : ''}${
+                  !locked && !chipId ? ' guardians-page__slot--empty' : ''
+                }`}
                 onClick={() => handleSlotClick(slotIndex)}
                 disabled={locked || !chipId}
                 aria-label={
@@ -185,7 +187,11 @@ export function GuardiansPage({
                       {t(`guardian_chip_${chipId}` as StringId)}
                     </span>
                   </>
-                ) : null}
+                ) : (
+                  <span className="guardians-page__chip-label guardians-page__chip-label--empty">
+                    {t('guardians_slot_empty_label')}
+                  </span>
+                )}
               </button>
             )
           })}
@@ -234,7 +240,7 @@ export function GuardiansPage({
                 <button
                   type="button"
                   className={`guardians-page__chip-tile guardians-page__chip${
-                    equipped ? ' guardians-page__chip--equipped guardians-page__slot--filled' : ''
+                    equipped ? ' guardians-page__chip--equipped' : ''
                   }`}
                   onClick={() => handleInventoryChipClick(chip.id)}
                   aria-pressed={equipped}
