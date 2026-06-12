@@ -4,6 +4,7 @@ import { mergeLabOverridesForDisplayedDamage } from '../data/workshopLabOverride
 import { useCommunityBuild } from '../lab/communityBuildContext'
 import { importNotice } from '../importNotice'
 import { useLabHydration } from '../lab/labHydrationContext'
+import { writeGuardianChipState } from '../guardianChipStorage'
 import { applyTowerThemes } from '../towerDataThemes'
 import { resolveGuildNameById } from '../towerGallery/api'
 import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
@@ -86,6 +87,7 @@ export function usePlayerSaveImport(
         )
         const build = splitTowerBuild(imported.workshop)
         applyTowerThemes(imported.themes)
+        writeGuardianChipState(imported.guardianChips)
         const nextWorkspace = applyImportedLabAndBuild(
           workspace,
           mergedOverrides,

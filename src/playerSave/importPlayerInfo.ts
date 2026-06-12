@@ -1,6 +1,7 @@
 import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import { PROFILE_DISPLAY_NAME_MAX, PROFILE_GUILD_MAX } from '../profile/profileApi'
 import type { ResearchData } from '../types/research'
+import type { GuardianChipState } from '../guardianChipStorage'
 import type { TowerThemesSnapshot } from '../towerDataThemes'
 import { decodePlayerInfoFile } from './decodePlayerInfo'
 import { mapPlayerSaveToTower } from './mapPlayerDataToTower'
@@ -20,6 +21,7 @@ export type ImportPlayerInfoResult =
       gameResearchLevel: number[]
       workshop: ReturnType<typeof mapPlayerSaveToTower>['workshop']
       themes: TowerThemesSnapshot
+      guardianChips: GuardianChipState
       guild: string | null
       userName: string | null
       fakeUserName: string | null
@@ -59,13 +61,14 @@ export async function importPlayerInfoDat(
   if (sizeError) return { ok: false, error: sizeError }
   try {
     const save = await decodePlayerInfoFile(bytes)
-    const { overrides, workshop, themes } = mapPlayerSaveToTower(data, save)
+    const { overrides, workshop, themes, guardianChips } = mapPlayerSaveToTower(data, save)
     return {
       ok: true,
       overrides: sanitizeLevelOverrides(data, overrides),
       gameResearchLevel: [...save.researchLevel],
       workshop,
       themes,
+      guardianChips,
       guild: sanitizeImportedGuild(save.lastGuildID),
       userName: sanitizeImportedUserName(save.userName),
       fakeUserName: sanitizeImportedUserName(save.fakeUserName),

@@ -123,7 +123,9 @@ describe('guardianChipGodTables — Ally chip', () => {
       value: 100,
       totalCost: 89,
     })
-    expect(formatGuardianChipAllyValue('maxRecovery', 90)).toBe('x10.0')
+    expect(formatGuardianChipAllyValue('maxRecovery', 1)).toBe('x1.10')
+    expect(formatGuardianChipAllyValue('maxRecovery', 10)).toBe('x2.00')
+    expect(formatGuardianChipAllyValue('maxRecovery', 90)).toBe('x10.00')
   })
 
   it('matches supplied cooldown rows', () => {
@@ -156,13 +158,15 @@ describe('guardianChipGodTables — Bounty chip', () => {
       value: 1,
       totalCost: 0,
     })
-    expect(formatGuardianChipBountyValue('multiplier', 1)).toBe('x0.01')
+    expect(formatGuardianChipBountyValue('multiplier', 1)).toBe('x1.01')
     expect(guardianChipBountyTrackLevel('multiplier', 10)).toEqual({
       level: 10,
       value: 10,
       totalCost: 9,
     })
-    expect(formatGuardianChipBountyValue('multiplier', 100)).toBe('x1.00')
+    expect(formatGuardianChipBountyValue('multiplier', 10)).toBe('x1.10')
+    expect(formatGuardianChipBountyValue('multiplier', 45)).toBe('x1.45')
+    expect(formatGuardianChipBountyValue('multiplier', 100)).toBe('x2.00')
     expect(guardianChipBountyTrackLevel('cooldown', 2)).toEqual({
       level: 2,
       value: 119,

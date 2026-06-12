@@ -94,6 +94,8 @@ import type {
   DecodedPlayerSave,
   DecodedUserBotData,
 } from './decodePlayerInfo'
+import { playerSaveToGuardianChips } from './gameGuardianChipMapping'
+import type { GuardianChipState } from '../guardianChipStorage'
 import { sanitizeThemeOwnedIds, type TowerThemesSnapshot } from '../towerDataThemes'
 import type { ThemeSelectionState } from '../themeSelectionStorage'
 
@@ -754,6 +756,7 @@ export function mapPlayerSaveToTower(
   overrides: Record<string, number>
   workshop: WorkshopPersistedV1
   themes: TowerThemesSnapshot
+  guardianChips: GuardianChipState
 } {
   const overrides = {
     ...researchLevelsToOverrides(data, save.researchLevel),
@@ -774,5 +777,6 @@ export function mapPlayerSaveToTower(
     overrides,
     workshop: playerSaveToWorkshop(save),
     themes: playerSaveToThemes(save),
+    guardianChips: playerSaveToGuardianChips(save),
   }
 }

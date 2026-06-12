@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { decodePlayerInfoFile } from './decodePlayerInfo'
+import { GAME_GUARDIAN_CHIP_INDEX, gameGuardianChipLevelFromSave } from './gameGuardianChipMapping'
 import { mapPlayerSaveToTower, researchLevelsToOverrides } from './mapPlayerDataToTower'
 import { importPlayerInfoDat } from './importPlayerInfo'
 import {
@@ -291,7 +292,7 @@ describe('importPlayerInfo', () => {
     if (!existsSync(SAMPLE)) return
     const data = loadResearchDataSync()
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE)))
-    const { workshop: ws, themes } = mapPlayerSaveToTower(data, save)
+    const { workshop: ws, themes, guardianChips } = mapPlayerSaveToTower(data, save)
     expect(ws.relicOwnedIds.length).toBeGreaterThan(0)
     expect(save.botsLevel.length).toBeGreaterThan(0)
     expect(save.botPresets.golden?.[0]?.unlocked).toBe(true)
@@ -304,6 +305,15 @@ describe('importPlayerInfo', () => {
     expect(save.guardianUnlocked).toBe(true)
     expect(save.guardianSkinUnlocked.some(Boolean)).toBe(true)
     expect(save.guardianSkinIndex).toBeGreaterThanOrEqual(0)
+    expect(save.guardianSlotsUnlocked).toBeGreaterThanOrEqual(0)
+    expect(save.guardianChipUnlocked.some(Boolean)).toBe(true)
+    expect(save.guardianChipSlot.length).toBeGreaterThan(0)
+    expect(save.guardianChipLevel.some((n) => n > 0)).toBe(true)
+    expect(guardianChips.slots.filter(Boolean).length).toBeGreaterThan(0)
+    expect(guardianChips.slots[1]).toBe('bounty')
+    expect(guardianChips.upgrades.bounty.multiplier).toBe(
+      gameGuardianChipLevelFromSave(save.guardianChipLevel[GAME_GUARDIAN_CHIP_INDEX.bounty * 3]!),
+    )
     expect(save.ultimateWeaponLevel.length).toBeGreaterThan(0)
     expect(themes.selection?.tower).toBeTruthy()
     expect(themes.selection?.guardian).toBeTruthy()

@@ -220,7 +220,7 @@ export function formatGuardianChipAllyValue(
     case 'recovery':
       return `${value}%`
     case 'maxRecovery':
-      return `x${(value / 10).toFixed(1)}`
+      return `x${(value / 10).toFixed(2)}`
     case 'cooldown':
       return `${value}s`
     default:
@@ -279,7 +279,7 @@ export function formatGuardianChipBountyValue(
   if (value == null) return '—'
   switch (track) {
     case 'multiplier':
-      return `x${(value / 100).toFixed(2)}`
+      return `x${(1 + value / 100).toFixed(2)}`
     case 'cooldown':
       return `${value}s`
     case 'targets':
