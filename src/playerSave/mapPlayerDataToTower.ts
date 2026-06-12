@@ -665,12 +665,10 @@ function applyAssistModuleSlots(
         row.uniqueEffectEfficiencyLevel,
       )
     }
-    if (row.mainEffectEfficiencyLevel > 0) {
+    if (row.unlocked) {
       ws[ASSIST_MAIN_STONE_EFFICIENCY_KEY[slot]] = clampAssistStoneEfficiency(
         row.mainEffectEfficiencyLevel,
       )
-    }
-    if (row.substatEfficiencyLevel > 0) {
       ws[ASSIST_SUB_STONE_EFFICIENCY_KEY[slot]] = clampAssistStoneEfficiency(
         row.substatEfficiencyLevel,
       )

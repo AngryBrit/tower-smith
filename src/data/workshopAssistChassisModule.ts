@@ -18,10 +18,14 @@ import {
 } from './workshopChassisModuleSelection'
 import type { WorkshopAssistModuleSlot } from './workshopSimModules'
 
+/** Max stone efficiency from upgrades (display %). */
 export const ASSIST_STONE_EFFICIENCY_MAX = 70
+/** Max game level for main/sub stone efficiency (70% → level 69; 1% is free at level 0). */
+export const ASSIST_STONE_EFFICIENCY_MAX_LEVEL = ASSIST_STONE_EFFICIENCY_MAX - 1
 /** Sub stone (70%) + Assist Module Substats lab (30%). */
 export const ASSIST_SUBMODULE_EFFICIENCY_MAX = 100
-export const ASSIST_STONE_EFFICIENCY_DEFAULT = 1
+/** Default game level (1% stone efficiency is free). */
+export const ASSIST_STONE_EFFICIENCY_DEFAULT = 0
 
 export const ASSIST_CHASSIS_UNLOCKED_KEY = {
   cannon: 'simCannonAssistUnlocked',
@@ -94,9 +98,15 @@ export type WorkshopAssistChassisPersisted = {
 export type WorkshopAssistChassisModulePersisted = WorkshopAssistChassisPersisted &
   WorkshopChassisModulePersisted
 
+/** Clamp persisted stone-efficiency **level** (0…69). Display % = level + 1. */
 export function clampAssistStoneEfficiency(n: number): number {
   if (!Number.isFinite(n)) return ASSIST_STONE_EFFICIENCY_DEFAULT
-  return Math.max(0, Math.min(ASSIST_STONE_EFFICIENCY_MAX, Math.trunc(n)))
+  return Math.max(0, Math.min(ASSIST_STONE_EFFICIENCY_MAX_LEVEL, Math.trunc(n)))
+}
+
+/** Display / scaling percent from persisted game level (first 1% is free at level 0). */
+export function assistStoneEfficiencyPercentFromLevel(level: number): number {
+  return clampAssistStoneEfficiency(level) + 1
 }
 
 /** Sub stone % plus Assist Module Substats lab % (wiki combined cap 100%). */
@@ -105,14 +115,26 @@ export function clampAssistSubmoduleEfficiencyPercent(n: number): number {
   return Math.max(0, Math.min(ASSIST_SUBMODULE_EFFICIENCY_MAX, Math.trunc(n)))
 }
 
+function assistStoneEfficiencyLevelFromLegacyPercent(raw: unknown): number {
+  const legacy = Math.trunc(Number(raw))
+  if (!Number.isFinite(legacy)) return ASSIST_STONE_EFFICIENCY_DEFAULT
+  // Pre-level storage saved display percent (1–70); game level = percent − 1.
+  return clampAssistStoneEfficiency(legacy > 0 ? legacy - 1 : 0)
+}
+
 export function assistMainStoneEfficiencyFromPersisted(
   ws: WorkshopAssistChassisPersisted,
   slot: WorkshopAssistModuleSlot,
 ): number {
   const mainKey = ASSIST_MAIN_STONE_EFFICIENCY_KEY[slot]
   const legacyKey = ASSIST_STONE_EFFICIENCY_KEY[slot]
-  const raw = (ws as Record<string, unknown>)[mainKey] ?? (ws as Record<string, unknown>)[legacyKey]
-  return clampAssistStoneEfficiency(Number(raw))
+  const rawMain = (ws as Record<string, unknown>)[mainKey]
+  if (rawMain != null) {
+    return clampAssistStoneEfficiency(Number(rawMain))
+  }
+  return assistStoneEfficiencyLevelFromLegacyPercent(
+    (ws as Record<string, unknown>)[legacyKey],
+  )
 }
 
 export function assistSubStoneEfficiencyFromPersisted(
@@ -121,8 +143,13 @@ export function assistSubStoneEfficiencyFromPersisted(
 ): number {
   const subKey = ASSIST_SUB_STONE_EFFICIENCY_KEY[slot]
   const legacyKey = ASSIST_STONE_EFFICIENCY_KEY[slot]
-  const raw = (ws as Record<string, unknown>)[subKey] ?? (ws as Record<string, unknown>)[legacyKey]
-  return clampAssistStoneEfficiency(Number(raw))
+  const rawSub = (ws as Record<string, unknown>)[subKey]
+  if (rawSub != null) {
+    return clampAssistStoneEfficiency(Number(rawSub))
+  }
+  return assistStoneEfficiencyLevelFromLegacyPercent(
+    (ws as Record<string, unknown>)[legacyKey],
+  )
 }
 
 export function assistUniqueRarityFromPersisted(
@@ -146,8 +173,11 @@ export function workshopAssistChassisModuleSelection(
 ): WorkshopChassisModuleSelection & {
   unlocked: boolean
   uniqueRarity: WorkshopChassisModuleEffectTier
+  /** Persisted game level (0…69); display % = level + 1. */
   mainStoneEfficiency: number
   subStoneEfficiency: number
+  mainStoneEfficiencyPercent: number
+  subStoneEfficiencyPercent: number
   /** @deprecated Use mainStoneEfficiency */
   stoneEfficiency: number
 } {
@@ -156,11 +186,15 @@ export function workshopAssistChassisModuleSelection(
   const unlocked = ws[ASSIST_CHASSIS_UNLOCKED_KEY[slot]] === true
   const mainStoneEfficiency = assistMainStoneEfficiencyFromPersisted(ws, slot)
   const subStoneEfficiency = assistSubStoneEfficiencyFromPersisted(ws, slot)
+  const mainStoneEfficiencyPercent = assistStoneEfficiencyPercentFromLevel(mainStoneEfficiency)
+  const subStoneEfficiencyPercent = assistStoneEfficiencyPercentFromLevel(subStoneEfficiency)
   return {
     unlocked,
     uniqueRarity: assistUniqueRarityFromPersisted(ws, slot),
     mainStoneEfficiency,
     subStoneEfficiency,
+    mainStoneEfficiencyPercent,
+    subStoneEfficiencyPercent,
     stoneEfficiency: mainStoneEfficiency,
     moduleId: unlocked
       ? sanitizeAssistModuleIdAgainstMain(
@@ -256,8 +290,8 @@ export function assistStoneEfficiencyPatch(
 }
 
 /** Assist unique-effect efficiency as a fraction (1% → 0.01). */
-export function assistChassisEfficiencyFraction(stoneEfficiency: number): number {
-  return clampAssistStoneEfficiency(stoneEfficiency) / 100
+export function assistChassisEfficiencyFraction(stoneEfficiencyLevel: number): number {
+  return assistStoneEfficiencyPercentFromLevel(stoneEfficiencyLevel) / 100
 }
 
 export function formatAssistChassisModuleLabel(

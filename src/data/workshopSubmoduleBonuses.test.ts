@@ -34,7 +34,7 @@ describe('workshopSubmoduleBonuses', () => {
       ...defaultWorkshopPersisted(),
       simCannonAssistUnlocked: true,
       simCannonAssistChassisModuleId: 'deathPenalty',
-      simCannonAssistSubStoneEfficiency: 70,
+      simCannonAssistSubStoneEfficiency: 69,
       simCannonModuleLevel: 1,
       simCannonChassisModuleLevel: 1,
       simSubmoduleSelections: selections,

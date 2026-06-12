@@ -64,7 +64,7 @@ describe('workshopSubmoduleSelection', () => {
         research: null,
         labOverrides: {},
       }),
-    ).toBeCloseTo(1.15, 5)
+    ).toBeCloseTo(1.153, 5)
   })
 
   it('syncs simAttackSpeedModuleSubEffect when main cannon selections change', () => {

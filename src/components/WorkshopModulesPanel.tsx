@@ -329,7 +329,7 @@ function ModulesLabDetail({
                 assistEquipped.values[assist.uniqueRarity],
               )}
               {' · '}
-              {assist.mainStoneEfficiency}% / {assist.subStoneEfficiency}%
+              {assist.mainStoneEfficiencyPercent}% / {assist.subStoneEfficiencyPercent}%
             </span>
           </div>
           <p className="workshop__sim-foot">
@@ -616,8 +616,8 @@ export function WorkshopModulesPanel({
                       />
                       <AssistStoneEfficiencyDisplay
                         slot={key}
-                        main={assistChassis.mainStoneEfficiency}
-                        sub={assistChassis.subStoneEfficiency}
+                        main={assistChassis.mainStoneEfficiencyPercent}
+                        sub={assistChassis.subStoneEfficiencyPercent}
                       />
                     </div>
                   </div>

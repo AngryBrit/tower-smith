@@ -22,6 +22,7 @@ import {
 
 import type { WorkshopChassisModuleEffectTier } from './workshopChassisModuleShared'
 import {
+  assistStoneEfficiencyPercentFromLevel,
   assistSubStoneEfficiencyFromPersisted,
   assistUniqueRarityFromPersisted,
   clampAssistSubmoduleEfficiencyPercent,
@@ -53,7 +54,9 @@ export function assistSubmoduleSubEfficiencyPercent(
   research: ResearchData | null,
   labOverrides: Record<string, number>,
 ): number {
-  const stone = assistSubStoneEfficiencyFromPersisted(ws, slot)
+  const stone = assistStoneEfficiencyPercentFromLevel(
+    assistSubStoneEfficiencyFromPersisted(ws, slot),
+  )
   const lab =
     research != null
       ? workshopAssistModuleLabPercentPoints(research, labOverrides, slot).substatsPercent

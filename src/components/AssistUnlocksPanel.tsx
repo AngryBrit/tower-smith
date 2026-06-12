@@ -1,6 +1,7 @@
 import { useCallback } from 'react'
 import {
   ASSIST_CHASSIS_UNLOCKED_KEY,
+  ASSIST_STONE_EFFICIENCY_MAX_LEVEL,
   ASSIST_UNIQUE_RARITY_KEY,
   assistStoneEfficiencyPatch,
   workshopAssistChassisModuleSelection,
@@ -198,15 +199,15 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
   }, [onPatch, unlockedKey])
 
   const rarityMaxed = assist.uniqueRarity === 'ancestral'
-  const mainMaxed = assist.mainStoneEfficiency >= 70
-  const subMaxed = assist.subStoneEfficiency >= 70
+  const mainMaxed = assist.mainStoneEfficiency >= ASSIST_STONE_EFFICIENCY_MAX_LEVEL
+  const subMaxed = assist.subStoneEfficiency >= ASSIST_STONE_EFFICIENCY_MAX_LEVEL
   const rarityCost = assistUniqueRarityUpgradeCost(assist.uniqueRarity)
   const mainNext = mainMaxed
     ? null
-    : assistStoneEfficiencyMarginalCost(assist.mainStoneEfficiency + 1)
+    : assistStoneEfficiencyMarginalCost(assist.mainStoneEfficiencyPercent + 1)
   const subNext = subMaxed
     ? null
-    : assistStoneEfficiencyMarginalCost(assist.subStoneEfficiency + 1)
+    : assistStoneEfficiencyMarginalCost(assist.subStoneEfficiencyPercent + 1)
 
   const uniqueRarityClass = assist.unlocked
     ? workshopChassisModuleEffectTierCssClass(assist.uniqueRarity)
@@ -287,29 +288,29 @@ function AssistUnlockCard({ slot, workshop, onPatch }: AssistUnlockCardProps) {
             />
             <AssistUnlockCol
               label={t('ws_assist_unlocks_multiplier')}
-              value={`${assist.mainStoneEfficiency}%`}
+              value={`${assist.mainStoneEfficiencyPercent}%`}
               nextCost={mainNext}
               maxed={mainMaxed}
               active
-              decreaseDisabled={assist.mainStoneEfficiency <= 1}
+              decreaseDisabled={assist.mainStoneEfficiency <= 0}
               increaseDisabled={mainMaxed}
               onDecrease={() => setEfficiency('main', -1)}
               onIncrease={() => setEfficiency('main', 1)}
-              onHoldMin={() => setEfficiencyTo('main', 1)}
-              onHoldMax={() => setEfficiencyTo('main', 70)}
+              onHoldMin={() => setEfficiencyTo('main', 0)}
+              onHoldMax={() => setEfficiencyTo('main', ASSIST_STONE_EFFICIENCY_MAX_LEVEL)}
             />
             <AssistUnlockCol
               label={t('ws_assist_unlocks_substat')}
-              value={`${assist.subStoneEfficiency}%`}
+              value={`${assist.subStoneEfficiencyPercent}%`}
               nextCost={subNext}
               maxed={subMaxed}
               active
-              decreaseDisabled={assist.subStoneEfficiency <= 1}
+              decreaseDisabled={assist.subStoneEfficiency <= 0}
               increaseDisabled={subMaxed}
               onDecrease={() => setEfficiency('sub', -1)}
               onIncrease={() => setEfficiency('sub', 1)}
-              onHoldMin={() => setEfficiencyTo('sub', 1)}
-              onHoldMax={() => setEfficiencyTo('sub', 70)}
+              onHoldMin={() => setEfficiencyTo('sub', 0)}
+              onHoldMax={() => setEfficiencyTo('sub', ASSIST_STONE_EFFICIENCY_MAX_LEVEL)}
             />
           </div>
         </div>

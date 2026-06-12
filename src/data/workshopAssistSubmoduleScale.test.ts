@@ -78,7 +78,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+2.2% Package Chance')
+    ).toBe('+2.31% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '11',
@@ -91,7 +91,7 @@ describe('workshopAssistSubmoduleScale', () => {
         },
         'generator',
       ),
-    ).toBe('+2.09% Package Chance')
+    ).toBe('+2.2% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '11',
@@ -108,7 +108,7 @@ describe('workshopAssistSubmoduleScale', () => {
         },
         'generator',
       ),
-    ).toBe('+2.2% Package Chance')
+    ).toBe('+2.31% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '8',
@@ -117,7 +117,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+1.6% Enemy Attack Level Skip')
+    ).toBe('+1.68% Enemy Attack Level Skip')
   })
 
   it('formats Primordial Collapse assist core picker like in-game (petethered)', () => {
@@ -184,7 +184,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'armor',
       ),
-    ).toBe('+0.19 Land Mine Radius')
+    ).toBe('+0.2 Land Mine Radius')
     expect(
       assistSubmodulePickerSlotText(
         '20',
@@ -202,7 +202,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'armor',
       ),
-    ).toBe('+2.25% Land Mine Chance')
+    ).toBe('+2.34% Land Mine Chance')
   })
 
   it('adds unique-effect tier level to assist picker scaling (petethered Pulsar Harvester)', () => {
@@ -214,7 +214,7 @@ describe('workshopAssistSubmoduleScale', () => {
       simGeneratorAssistSubStoneEfficiency: 19,
     }
     const ctx = { ws, research: null, labOverrides: {} }
-    expect(assistSubmoduleSubEfficiencyPercent(ws, 'generator', null, {})).toBe(19)
+    expect(assistSubmoduleSubEfficiencyPercent(ws, 'generator', null, {})).toBe(20)
     expect(
       assistSubmodulePickerSlotText(
         '11',
@@ -223,7 +223,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+2.2% Package Chance')
+    ).toBe('+2.31% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '8',
@@ -232,7 +232,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+1.6% Enemy Attack Level Skip')
+    ).toBe('+1.68% Enemy Attack Level Skip')
     expect(
       assistSubmodulePickerSlotText(
         '8',
@@ -241,7 +241,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+1.6% Enemy Health Level Skip')
+    ).toBe('+1.68% Enemy Health Level Skip')
   })
 
   it('scales sub-stats by sub stone + substats lab %', () => {
@@ -251,7 +251,7 @@ describe('workshopAssistSubmoduleScale', () => {
       simCannonAssistChassisModuleId: 'deathPenalty',
       simCannonAssistSubStoneEfficiency: 50,
     }
-    expect(assistSubmoduleSubEfficiencyPercent(ws, 'cannon', null, {})).toBe(50)
+    expect(assistSubmoduleSubEfficiencyPercent(ws, 'cannon', null, {})).toBe(51)
     expect(
       scaleAssistSubmoduleRawValue(6, submoduleEffectId('Crit Chance [%]'), 50),
     ).toBe(3)
@@ -310,7 +310,7 @@ describe('workshopAssistSubmoduleScale', () => {
       ...defaultWorkshopPersisted(),
       simCoreAssistUnlocked: true,
       simCoreAssistChassisModuleId: 'multiverseNexus',
-      simCoreAssistSubStoneEfficiency: 70,
+      simCoreAssistSubStoneEfficiency: 69,
       simCoreModuleLevel: 1,
       simCoreChassisModuleLevel: 1,
       simSubmoduleSelections: selections,

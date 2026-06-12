@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { defaultWorkshopPersisted, type WorkshopPersistedV1 } from '../labPresetsStorage'
 import {
   assistModuleConflictsWithMain,
+  assistStoneEfficiencyPercentFromLevel,
   mainModuleConflictsWithAssist,
   sanitizeAssistModuleIdAgainstMain,
   clampAssistStoneEfficiency,
@@ -17,9 +18,11 @@ describe('workshopAssistChassisModule', () => {
       moduleId: null,
       rarity: 'epic',
       uniqueRarity: 'epic',
-      mainStoneEfficiency: 1,
-      subStoneEfficiency: 1,
-      stoneEfficiency: 1,
+      mainStoneEfficiency: 0,
+      subStoneEfficiency: 0,
+      mainStoneEfficiencyPercent: 1,
+      subStoneEfficiencyPercent: 1,
+      stoneEfficiency: 0,
     })
   })
 
@@ -31,8 +34,10 @@ describe('workshopAssistChassisModule', () => {
     } = defaultWorkshopPersisted()
     const ws = { ...rest, simCannonAssistStoneEfficiency: 12 } as WorkshopPersistedV1
     expect(workshopAssistChassisModuleSelection(ws, 'cannon')).toMatchObject({
-      mainStoneEfficiency: 12,
-      subStoneEfficiency: 12,
+      mainStoneEfficiency: 11,
+      subStoneEfficiency: 11,
+      mainStoneEfficiencyPercent: 12,
+      subStoneEfficiencyPercent: 12,
     })
   })
 
@@ -84,10 +89,16 @@ describe('workshopAssistChassisModule', () => {
     })
   })
 
-  it('clamps stone efficiency to 0–70', () => {
+  it('clamps stone efficiency level to 0–69', () => {
     expect(clampAssistStoneEfficiency(0)).toBe(0)
-    expect(clampAssistStoneEfficiency(71)).toBe(70)
+    expect(clampAssistStoneEfficiency(71)).toBe(69)
     expect(clampAssistStoneEfficiency(34)).toBe(34)
+  })
+
+  it('maps stone efficiency level to display percent (first 1% is free)', () => {
+    expect(assistStoneEfficiencyPercentFromLevel(0)).toBe(1)
+    expect(assistStoneEfficiencyPercentFromLevel(29)).toBe(30)
+    expect(assistStoneEfficiencyPercentFromLevel(69)).toBe(70)
   })
 
   it('clamps combined sub stone + SE lab efficiency to 0–100', () => {
