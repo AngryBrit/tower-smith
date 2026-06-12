@@ -49,6 +49,7 @@ function minimalSave(partial: Partial<DecodedPlayerSave> = {}): DecodedPlayerSav
     menuUnlocked: [],
     profileBannerUnlocked: [],
     guardianSkinUnlocked: [],
+    trackAvailable: [],
     guardianUnlocked: false,
     guardianSlotsUnlocked: 0,
     guardianChipSlot: [],

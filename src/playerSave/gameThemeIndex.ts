@@ -10,6 +10,7 @@ import {
   buildBannerThemeIdsByGameIndex,
   buildMenuThemeIdsByGameIndex,
 } from './gameGuildSeasonTimeline'
+import { buildMusicThemeIdsByGameIndex } from './musicSaveSlotMap'
 
 const GUARDIAN_THEME_IDS = GAME_THEMES.filter((t) => t.category === 'guardian').map((t) => t.id)
 
@@ -27,6 +28,9 @@ const MENU_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
 
 const BANNER_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
   buildBannerThemeIdsByGameIndex()
+
+const MUSIC_THEME_IDS_BY_GAME_INDEX: readonly (string | undefined)[] =
+  buildMusicThemeIdsByGameIndex()
 
 /**
  * Game guardian skin index order includes non-theme slots:
@@ -61,6 +65,7 @@ const THEME_IDS_BY_CATEGORY_GAME_INDEX: Record<ThemeCategory, readonly (string |
   ...THEME_IDS_BY_CATEGORY,
   tower: TOWER_THEME_IDS_BY_GAME_INDEX,
   background: BACKGROUND_THEME_IDS_BY_GAME_INDEX,
+  music: MUSIC_THEME_IDS_BY_GAME_INDEX,
   menus: MENU_THEME_IDS_BY_GAME_INDEX,
   banners: BANNER_THEME_IDS_BY_GAME_INDEX,
   guardian: GUARDIAN_THEME_IDS_BY_GAME_INDEX,
@@ -80,6 +85,7 @@ export function gameThemeOwnedIdsFromUnlockArrays(save: {
   menuUnlocked: boolean[]
   profileBannerUnlocked: boolean[]
   guardianSkinUnlocked: boolean[]
+  trackAvailable: boolean[]
 }): string[] {
   const owned = new Set<string>()
   const add = (category: ThemeCategory, flags: boolean[]) => {
@@ -96,5 +102,6 @@ export function gameThemeOwnedIdsFromUnlockArrays(save: {
   add('menus', save.menuUnlocked)
   add('banners', save.profileBannerUnlocked)
   add('guardian', save.guardianSkinUnlocked)
+  add('music', save.trackAvailable)
   return [...owned].sort()
 }

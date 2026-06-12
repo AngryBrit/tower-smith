@@ -36,6 +36,7 @@ import {
   GAME_RELIC_INDEX_TO_WORKSHOP_ID,
 } from '../src/playerSave/gameRelicMapping'
 import { GAME_THEMES, type ThemeCategory } from '../src/data/gameThemes'
+import { MUSIC_SAVE_INDEX_BY_THEME_ID } from '../src/playerSave/musicSaveSlotMap'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const out =
@@ -323,6 +324,18 @@ for (const { category, saveField } of THEME_CATEGORIES) {
       notes: `selected: selectedTower/Background/Menu/ProfileBanner`,
     })
   }
+}
+
+for (const [id, saveIndex] of Object.entries(MUSIC_SAVE_INDEX_BY_THEME_ID)) {
+  push({
+    category: 'theme_owned',
+    save_array: 'trackAvailable',
+    save_index: saveIndex,
+    towersmith_field: `themes.ownedIds (${id})`,
+    display_name: id,
+    import_mapped: 'yes',
+    notes: 'Krisu event-shop song; base OST uses slots 0–3, 6–7 (not imported)',
+  })
 }
 
 push({

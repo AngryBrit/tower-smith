@@ -50,6 +50,7 @@ export type DecodedPlayerSave = {
   menuUnlocked: boolean[]
   profileBannerUnlocked: boolean[]
   guardianSkinUnlocked: boolean[]
+  trackAvailable: boolean[]
   guardianUnlocked: boolean
   guardianSlotsUnlocked: number
   guardianChipSlot: number[]
@@ -121,6 +122,7 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     menuUnlocked: getBoolArray(ctx, 'menuUnlocked'),
     profileBannerUnlocked: getBoolArray(ctx, 'profileBannerUnlocked'),
     guardianSkinUnlocked: getBoolArray(ctx, 'guardianSkinUnlocked'),
+    trackAvailable: getBoolArray(ctx, 'trackAvailable'),
     guardianUnlocked: getBool(ctx, 'guardianUnlocked'),
     guardianSlotsUnlocked: getInt32(ctx, 'guardianSlotsUnlocked'),
     guardianChipSlot: getEnumIntArray(ctx, 'guardianChipSlot'),

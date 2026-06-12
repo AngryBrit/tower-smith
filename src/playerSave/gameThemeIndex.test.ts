@@ -35,6 +35,7 @@ describe('gameThemeIndex menus', () => {
       menuUnlocked: SAMPLE_MENU_FLAGS,
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(
       expect.arrayContaining([
@@ -107,6 +108,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(['bg-guild-mech-world'])
   })
@@ -120,6 +122,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(['bg-koi-pond'])
   })
@@ -134,6 +137,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(
       expect.arrayContaining(['bg-snowstorm', 'bg-clock-tower']),
@@ -152,6 +156,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(
       expect.arrayContaining([
@@ -177,6 +182,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(
       expect.arrayContaining(['bg-virus-field', 'bg-autumn-forest']),
@@ -194,6 +200,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(
       expect.arrayContaining([
@@ -220,6 +227,7 @@ describe('gameThemeIndex backgrounds', () => {
       menuUnlocked: [],
       profileBannerUnlocked: [],
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual([])
   })
@@ -247,6 +255,7 @@ describe('gameThemeIndex banners', () => {
       menuUnlocked: [],
       profileBannerUnlocked: flags,
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual([])
   })
@@ -258,6 +267,7 @@ describe('gameThemeIndex banners', () => {
       menuUnlocked: [],
       profileBannerUnlocked: SAMPLE_BANNER_FLAGS,
       guardianSkinUnlocked: [],
+      trackAvailable: [],
     })
     expect(owned).toEqual(
       expect.arrayContaining([
@@ -272,5 +282,61 @@ describe('gameThemeIndex banners', () => {
     )
     expect(owned).not.toContain('banner-magician')
     expect(owned).toHaveLength(7)
+  })
+})
+
+describe('gameThemeIndex music', () => {
+  /** Mirrors CLEAN.dat — base OST only, no Krisu themes purchased. */
+  const CLEAN_TRACK_FLAGS = (() => {
+    const flags = Array<boolean>(12).fill(false)
+    for (const i of [0, 1, 2, 3, 6, 7]) flags[i] = true
+    return flags
+  })()
+
+  /** Mirrors playerInfo.dat when all three Krisu themes are owned. */
+  const OWNED_KRISU_TRACK_FLAGS = (() => {
+    const flags = [...CLEAN_TRACK_FLAGS]
+    flags[4] = true
+    flags[5] = true
+    flags[8] = true
+    return flags
+  })()
+
+  it('maps Krisu catalog ids to trackAvailable indices 4, 5, 8', () => {
+    expect(gameThemeIdAtIndex('music', 4)).toBe('music-krisu-oceans-sings')
+    expect(gameThemeIdAtIndex('music', 5)).toBe('music-krisu-hiding-himalaya')
+    expect(gameThemeIdAtIndex('music', 8)).toBe('music-krisu-forest-bathing')
+    expect(gameThemeIdAtIndex('music', 9)).toBeUndefined()
+  })
+
+  it('does not import base OST slots as owned theme ids', () => {
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: [],
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+      trackAvailable: CLEAN_TRACK_FLAGS,
+    })
+    expect(owned.some((id) => id.startsWith('music-'))).toBe(false)
+  })
+
+  it('imports Krisu songs when trackAvailable slots 4, 5, 8 are true', () => {
+    const owned = gameThemeOwnedIdsFromUnlockArrays({
+      towerUnlocked: [],
+      backgroundUnlocked: [],
+      menuUnlocked: [],
+      profileBannerUnlocked: [],
+      guardianSkinUnlocked: [],
+      trackAvailable: OWNED_KRISU_TRACK_FLAGS,
+    })
+    expect(owned).toEqual(
+      expect.arrayContaining([
+        'music-krisu-oceans-sings',
+        'music-krisu-hiding-himalaya',
+        'music-krisu-forest-bathing',
+      ]),
+    )
+    expect(owned.filter((id) => id.startsWith('music-'))).toHaveLength(3)
   })
 })

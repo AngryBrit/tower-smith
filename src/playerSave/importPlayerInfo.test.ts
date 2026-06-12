@@ -30,6 +30,7 @@ function loadResearchDataSync(): ResearchData {
 }
 
 const SAMPLE = 'h:/The Tower/playerInfo.dat'
+const CLEAN_SAVE = 'h:/The Tower/CLEAN.dat'
 
 function minimalResearchData(): ResearchData {
   return {
@@ -359,6 +360,26 @@ describe('importPlayerInfo', () => {
     expect(themes.ownedIds).toContain('bg-guild-mech-world')
     expect(themes.ownedIds).not.toContain('bg-guild-throne-room')
     expect(themes.ownedIds).toContain('bg-guild-magician')
+    expect(save.trackAvailable[4]).toBe(true)
+    expect(save.trackAvailable[5]).toBe(true)
+    expect(save.trackAvailable[8]).toBe(true)
+    expect(themes.ownedIds).toContain('music-krisu-oceans-sings')
+    expect(themes.ownedIds).toContain('music-krisu-hiding-himalaya')
+    expect(themes.ownedIds).toContain('music-krisu-forest-bathing')
+  })
+
+  it('imports no Krisu songs from clean new-game save', async () => {
+    if (!existsSync(CLEAN_SAVE)) return
+    const data = loadResearchDataSync()
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(CLEAN_SAVE)))
+    expect(save.trackAvailable.filter(Boolean)).toHaveLength(6)
+    expect(save.trackAvailable[4]).toBe(false)
+    expect(save.trackAvailable[5]).toBe(false)
+    expect(save.trackAvailable[8]).toBe(false)
+    const { themes } = mapPlayerSaveToTower(data, save)
+    expect(themes.ownedIds).not.toContain('music-krisu-oceans-sings')
+    expect(themes.ownedIds).not.toContain('music-krisu-hiding-himalaya')
+    expect(themes.ownedIds).not.toContain('music-krisu-forest-bathing')
   })
 
   it('maps card stars from cardLevel/cardUnlocked save slot layout', async () => {
