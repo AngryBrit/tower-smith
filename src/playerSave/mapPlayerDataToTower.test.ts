@@ -398,13 +398,26 @@ describe('playerSaveToWorkshop', () => {
     })
   })
 
-  it('imports Orbital Augment armor submodule effects from petethered save', async () => {
+  it('imports Sharp Fortitude armor main submodule effects from petethered save', async () => {
     if (!existsSync(PETETHERED_SAVE)) return
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
     const ws = playerSaveToWorkshop(save)
-    expect(ws.simArmorChassisModuleId).toBe('orbitalAugment')
+    expect(ws.simArmorChassisModuleId).toBe('sharpFortitude')
     expect(ws.simArmorChassisModuleRarity).toBe('ancestral')
     expect(ws.simSubmoduleSelections.armor.main).toEqual({
+      defense: 'ancestral',
+      'wall-health': 'ancestral',
+      'health-regen': 'ancestral',
+      'thorns-damage': 'mythic',
+    })
+  })
+
+  it('imports Orbital Augment armor assist submodule effects from petethered save', async () => {
+    if (!existsSync(PETETHERED_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simArmorAssistChassisModuleId).toBe('orbitalAugment')
+    expect(ws.simSubmoduleSelections.armor.assist).toEqual({
       defense: 'ancestral',
       'wall-health': 'mythic',
       'health-regen': 'ancestral',
@@ -412,30 +425,56 @@ describe('playerSaveToWorkshop', () => {
     })
   })
 
-  it('imports Dimension Core submodule effects from petethered save', async () => {
+  it('imports Black Hole Digestor generator main submodule effects from petethered save', async () => {
     if (!existsSync(PETETHERED_SAVE)) return
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
     const ws = playerSaveToWorkshop(save)
-    expect(ws.simCoreChassisModuleId).toBe('dimensionCore')
-    expect(ws.simCoreChassisModuleRarity).toBe('ancestral')
-    expect(ws.simSubmoduleSelections.core.main).toEqual({
-      'chain-lightning-chance': 'mythic',
-      'chain-lightning-quantity': 'mythic',
-      'spotlight-angle': 'legendary',
-      'black-hole-cooldown-s': 'mythic',
+    expect(ws.simGeneratorChassisModuleId).toBe('blackHoleDigestor')
+    expect(ws.simSubmoduleSelections.generator.main).toEqual({
+      'package-chance': 'mythic',
+      'coins-kill-bonus': 'mythic',
+      'free-utility-upgrade': 'epic',
+      'enemy-attack-level-skip': 'mythic',
     })
   })
 
-  it('imports Primordial Collapse assist submodule effects from petethered save', async () => {
+  it('imports Singularity Harness generator assist submodule effects from petethered save', async () => {
     if (!existsSync(PETETHERED_SAVE)) return
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
     const ws = playerSaveToWorkshop(save)
-    expect(ws.simCoreAssistChassisModuleId).toBe('primordialCollapse')
-    expect(ws.simSubmoduleSelections.core.assist).toEqual({
+    expect(ws.simGeneratorAssistChassisModuleId).toBe('singularityHarness')
+    expect(ws.simSubmoduleSelections.generator.assist).toEqual({
+      'enemy-attack-level-skip': 'mythic',
+      'free-utility-upgrade': 'mythic',
+      'package-chance': 'mythic',
+      'cash-wave': 'rare',
+    })
+  })
+
+  it('imports Primordial Collapse core main submodule effects from petethered save', async () => {
+    if (!existsSync(PETETHERED_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simCoreChassisModuleId).toBe('primordialCollapse')
+    expect(ws.simCoreChassisModuleRarity).toBe('star_1')
+    expect(ws.simSubmoduleSelections.core.main).toEqual({
       'black-hole-cooldown-s': 'mythic',
       'golden-tower-bonus': 'ancestral',
       'spotlight-angle': 'ancestral',
       'poison-swamp-cooldown-s': 'mythic',
+    })
+  })
+
+  it('imports Harmony Conductor core assist submodule effects from petethered save', async () => {
+    if (!existsSync(PETETHERED_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(PETETHERED_SAVE)))
+    const ws = playerSaveToWorkshop(save)
+    expect(ws.simCoreAssistChassisModuleId).toBe('harmonyConductor')
+    expect(ws.simSubmoduleSelections.core.assist).toEqual({
+      'golden-tower-duration-s': 'mythic',
+      'golden-tower-bonus': 'ancestral',
+      'spotlight-angle': 'ancestral',
+      'black-hole-size-m': 'epic',
     })
   })
 

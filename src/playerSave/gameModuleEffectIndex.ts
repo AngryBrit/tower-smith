@@ -408,6 +408,40 @@ function isAncestralFamilyChassisMerge(
   )
 }
 
+/** Mythic+ / ancestral-family chassis use sparse generator indices stored as actual − 3. */
+function isHighTierGeneratorChassisMerge(
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): boolean {
+  if (chassisMerge == null) return false
+  const tier = workshopChassisModuleEffectTier(chassisMerge)
+  return tier === 'mythic' || tier === 'ancestral'
+}
+
+function decodeGeneratorSparsePlusThree(
+  rawIndex: number,
+  moduleLevel: number,
+  primaryModuleLevel: number,
+  naive: GameModuleEffectDecode | null,
+): GameModuleEffectDecode | null {
+  if (rawIndex + 3 >= GAME_MODULE_EFFECT_COUNT) return null
+  const bumped =
+    decodeGeneratorEffectAtIndex(rawIndex + 3, moduleLevel) ??
+    decodeGeneratorEffectAtIndex(rawIndex + 3, 0)
+  if (bumped == null) return null
+  if (bumped.rarity !== 'mythic' && bumped.rarity !== 'ancestral') return null
+  if (naive != null && bumped.effectId === naive.effectId) {
+    if (bumped.rarity === 'ancestral' && naive.rarity === 'epic') return bumped
+    return null
+  }
+  const primaryLevel = Math.max(0, Math.trunc(primaryModuleLevel))
+  const level = Math.max(0, Math.trunc(moduleLevel))
+  if (bumped.effectId !== naive?.effectId) {
+    if (primaryLevel > level) return bumped
+    if (primaryLevel === 0 && level >= 130) return bumped
+  }
+  return null
+}
+
 /** Common-start armor rows use sparse offset 6 for Ancestral on ancestral-family chassis. */
 const ARMOR_COMMON_START_ANCESTRAL_ROWS: readonly {
   base: number
@@ -506,6 +540,14 @@ function decodeCoreAncestralFamilyRemap(
   if (rawIndex === CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX) {
     return { slot: 'core', effectId: 'golden-tower-bonus', rarity: 'ancestral' }
   }
+  if (primaryModuleLevel > 0) {
+    if (rawIndex === 286) {
+      return findCoreEffectWithRarity('golden-tower-duration-s', 'mythic')
+    }
+    if (rawIndex === 307) {
+      return findCoreEffectWithRarity('black-hole-size-m', 'epic')
+    }
+  }
   if (decoded == null) return null
 
   const row = findCoreRowSpanForIndex(rawIndex)
@@ -569,20 +611,11 @@ function gameModuleEffectForSubmoduleImport(
   const rawIndex = Math.trunc(raw)
 
   if (slot === 'generator' && primaryLevel > 0) {
-    const candidates: number[] = []
     const levelEncoded = rawIndex + 10 - primaryLevel
-    if (levelEncoded >= 0) candidates.push(levelEncoded)
-    if (
-      chassisMerge != null &&
-      workshopChassisModuleEffectTier(chassisMerge) === 'ancestral' &&
-      rawIndex + 3 < GAME_MODULE_EFFECT_COUNT
-    ) {
-      candidates.push(rawIndex + 3)
-    }
-    for (const cand of candidates) {
+    if (levelEncoded >= 0) {
       const hit =
-        decodeGeneratorEffectAtIndex(cand, moduleLevel) ??
-        decodeGeneratorEffectAtIndex(cand, 0)
+        decodeGeneratorEffectAtIndex(levelEncoded, moduleLevel) ??
+        decodeGeneratorEffectAtIndex(levelEncoded, 0)
       if (hit != null) return hit
     }
   }
@@ -590,6 +623,9 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const ancestralRow = decodeArmorAncestralCommonStartRow(rawIndex)
     if (ancestralRow != null) return ancestralRow
+    if (rawIndex === 150) {
+      return { slot: 'armor', effectId: 'wall-health', rarity: 'ancestral' }
+    }
   }
 
   if (slot === 'core' && isAncestralFamilyChassisMerge(chassisMerge)) {
@@ -612,19 +648,14 @@ function gameModuleEffectForSubmoduleImport(
     const coreRemap = decodeCoreAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
     if (coreRemap != null) return coreRemap
   }
-  if (
-    slot === 'generator' &&
-    chassisMerge != null &&
-    workshopChassisModuleEffectTier(chassisMerge) === 'ancestral' &&
-    rawIndex < GAME_MODULE_EFFECT_COUNT &&
-    decoded.rarity === 'epic'
-  ) {
-    const ancestral =
-      decodeGeneratorEffectAtIndex(rawIndex + 3, moduleLevel) ??
-      decodeGeneratorEffectAtIndex(rawIndex + 3, 0)
-    if (ancestral?.effectId === decoded.effectId && ancestral.rarity === 'ancestral') {
-      return ancestral
-    }
+  if (slot === 'generator' && isHighTierGeneratorChassisMerge(chassisMerge)) {
+    const sparse = decodeGeneratorSparsePlusThree(
+      rawIndex,
+      moduleLevel,
+      primaryLevel,
+      decoded,
+    )
+    if (sparse != null) return sparse
   }
   return decoded
 }

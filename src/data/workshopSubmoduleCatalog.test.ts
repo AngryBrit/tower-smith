@@ -65,6 +65,9 @@ describe('workshopSubmoduleCatalog', () => {
       assistSubmodulePickerCellFromScaledNumber(5.2, '20', 'Health Regen [%]'),
     ).toBe('5%')
     expect(
+      assistSubmodulePickerCellFromScaledNumber(22.5, '90', 'Wall Health [%]'),
+    ).toBe('22.5%')
+    expect(
       assistSubmodulePickerCellFromScaledNumber(2.25, '9', 'Land Mine Chance [%]'),
     ).toBe('2.25%')
     expect(assistSubmodulePickerCellFromScaledNumber(0.1875, '0.75', 'Land Mine Radius')).toBe(

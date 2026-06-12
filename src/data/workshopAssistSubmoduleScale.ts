@@ -20,11 +20,9 @@ import {
   submoduleEffectPickerSlotText,
 } from './workshopSubmoduleCatalog'
 
-import type { WorkshopChassisModuleEffectTier } from './workshopChassisModuleShared'
 import {
   assistStoneEfficiencyPercentFromLevel,
   assistSubStoneEfficiencyFromPersisted,
-  assistUniqueRarityFromPersisted,
   clampAssistSubmoduleEfficiencyPercent,
   workshopAssistChassisModuleSelection,
 } from './workshopAssistChassisModule'
@@ -64,34 +62,14 @@ export function assistSubmoduleSubEfficiencyPercent(
   return stone + lab
 }
 
-const ASSIST_UNIQUE_EFFECT_TIER_ORDER: readonly WorkshopChassisModuleEffectTier[] = [
-  'epic',
-  'legendary',
-  'mythic',
-  'ancestral',
-]
-
-/** +1% picker scaling when unique effect is above Epic (legendary/mythic/ancestral). */
-function assistUniqueEffectLevelPickerBonus(
-  ws: WorkshopPersistedV1,
-  slot: WorkshopAssistModuleSlot,
-): number {
-  const tier = assistUniqueRarityFromPersisted(ws, slot)
-  const idx = ASSIST_UNIQUE_EFFECT_TIER_ORDER.indexOf(tier)
-  return idx >= 1 ? 1 : 0
-}
-
-/** In-game assist module picker combines sub stone, substats lab, and unique-effect tier level. */
+/** In-game assist module picker scales by sub stone % + Assist Module Substats lab only. */
 export function assistSubmodulePickerDisplayEfficiencyPercent(
   ws: WorkshopPersistedV1,
   slot: WorkshopAssistModuleSlot,
   research: ResearchData | null,
   labOverrides: Record<string, number>,
 ): number {
-  return clampAssistSubmoduleEfficiencyPercent(
-    assistSubmoduleSubEfficiencyPercent(ws, slot, research, labOverrides) +
-      assistUniqueEffectLevelPickerBonus(ws, slot),
-  )
+  return assistSubmoduleSubEfficiencyPercent(ws, slot, research, labOverrides)
 }
 
 

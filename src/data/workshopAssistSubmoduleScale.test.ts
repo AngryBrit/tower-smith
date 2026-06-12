@@ -108,7 +108,7 @@ describe('workshopAssistSubmoduleScale', () => {
         },
         'generator',
       ),
-    ).toBe('+2.31% Package Chance')
+    ).toBe('+2.2% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '8',
@@ -184,7 +184,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'armor',
       ),
-    ).toBe('+0.2 Land Mine Radius')
+    ).toBe('+0.19 Land Mine Radius')
     expect(
       assistSubmodulePickerSlotText(
         '20',
@@ -202,7 +202,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'armor',
       ),
-    ).toBe('+2.34% Land Mine Chance')
+    ).toBe('+2.25% Land Mine Chance')
   })
 
   it('adds unique-effect tier level to assist picker scaling (petethered Pulsar Harvester)', () => {
@@ -223,7 +223,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+2.31% Package Chance')
+    ).toBe('+2.2% Package Chance')
     expect(
       assistSubmodulePickerSlotText(
         '8',
@@ -232,7 +232,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+1.68% Enemy Attack Level Skip')
+    ).toBe('+1.6% Enemy Attack Level Skip')
     expect(
       assistSubmodulePickerSlotText(
         '8',
@@ -241,7 +241,7 @@ describe('workshopAssistSubmoduleScale', () => {
         ctx,
         'generator',
       ),
-    ).toBe('+1.68% Enemy Health Level Skip')
+    ).toBe('+1.6% Enemy Health Level Skip')
   })
 
   it('scales sub-stats by sub stone + substats lab %', () => {

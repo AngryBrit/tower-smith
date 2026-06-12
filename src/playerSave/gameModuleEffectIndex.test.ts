@@ -166,16 +166,16 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
-  it('decodes Primordial Collapse assist core effects (petethered)', () => {
+  it('decodes Harmony Conductor assist core effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'core',
-      [315, 284, 326, 303, 0, 0, 0, 0],
+      [286, 284, 326, 307, 0, 0, 0, 0],
       41,
       138,
       'star_1',
     )
     expect(imported.ordered[0]).toMatchObject({
-      effectId: 'black-hole-cooldown-s',
+      effectId: 'golden-tower-duration-s',
       rarity: 'mythic',
     })
     expect(imported.ordered[1]).toMatchObject({
@@ -187,21 +187,53 @@ describe('gameModuleEffectIndex', () => {
       rarity: 'ancestral',
     })
     expect(imported.ordered[3]).toMatchObject({
-      effectId: 'poison-swamp-cooldown-s',
-      rarity: 'mythic',
+      effectId: 'black-hole-size-m',
+      rarity: 'epic',
     })
     expect(imported.map).toMatchObject({
-      'black-hole-cooldown-s': 'mythic',
+      'golden-tower-duration-s': 'mythic',
       'golden-tower-bonus': 'ancestral',
       'spotlight-angle': 'ancestral',
-      'poison-swamp-cooldown-s': 'mythic',
+      'black-hole-size-m': 'epic',
     })
   })
 
-  it('decodes Orbital Augment armor main effects (petethered)', () => {
+  it('decodes Black Hole Digestor main generator sparse indices (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [207, 171, 193, 211, 0, 0, 0, 0],
+      134,
+      0,
+      'mythic_plus',
+    )
+    expect(imported.map).toMatchObject({
+      'package-chance': 'mythic',
+      'coins-kill-bonus': 'mythic',
+      'free-utility-upgrade': 'epic',
+      'enemy-attack-level-skip': 'mythic',
+    })
+  })
+
+  it('decodes Singularity Harness assist generator sparse indices (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [211, 195, 207, 162, 0, 0, 0, 0],
+      66,
+      134,
+      'mythic_plus',
+    )
+    expect(imported.map).toMatchObject({
+      'enemy-attack-level-skip': 'mythic',
+      'free-utility-upgrade': 'mythic',
+      'package-chance': 'mythic',
+      'cash-wave': 'rare',
+    })
+  })
+
+  it('decodes Sharp Fortitude armor main effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'armor',
-      [92, 149, 86, 139, 0, 0, 0, 0],
+      [92, 150, 86, 101, 0, 0, 0, 0],
       130,
       0,
       'ancestral',
@@ -212,16 +244,32 @@ describe('gameModuleEffectIndex', () => {
     })
     expect(imported.ordered[1]).toMatchObject({
       effectId: 'wall-health',
-      rarity: 'mythic',
+      rarity: 'ancestral',
     })
     expect(imported.ordered[2]).toMatchObject({
       effectId: 'health-regen',
       rarity: 'ancestral',
     })
     expect(imported.ordered[3]).toMatchObject({
-      effectId: 'land-mine-radius',
-      rarity: 'rare',
+      effectId: 'thorns-damage',
+      rarity: 'mythic',
     })
+    expect(imported.map).toMatchObject({
+      defense: 'ancestral',
+      'wall-health': 'ancestral',
+      'health-regen': 'ancestral',
+      'thorns-damage': 'mythic',
+    })
+  })
+
+  it('decodes Orbital Augment armor assist effects (petethered)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [92, 149, 86, 139, 0, 0, 0, 0],
+      90,
+      130,
+      'ancestral',
+    )
     expect(imported.map).toMatchObject({
       defense: 'ancestral',
       'wall-health': 'mythic',

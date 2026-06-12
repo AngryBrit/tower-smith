@@ -267,7 +267,12 @@ export function assistSubmodulePickerCellFromScaledNumber(
   if (isPercent) {
     const peak = effectLabel != null ? submoduleRowPeakValue(effectLabel) : 0
     if (peak >= 20) {
-      return `${sign}${Math.floor(abs + 1e-9)}%`
+      const whole = Math.floor(abs + 1e-9)
+      const frac = abs - whole
+      if (frac < 0.5 - 1e-9) {
+        return `${sign}${whole}%`
+      }
+      return `${sign}${trimTrailingDisplayZeros(assistPickerRound1(abs).toFixed(1))}%`
     }
     const truncated = assistPickerTrunc2(abs)
     return `${sign}${trimTrailingDisplayZeros(truncated.toFixed(2))}%`
