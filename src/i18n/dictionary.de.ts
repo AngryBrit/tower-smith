@@ -1335,7 +1335,7 @@ export const STRINGS_DE = {
   ep_sync_open_btn: 'Effective Paths Sync…',
   ep_sync_title: 'Effective Paths Sync',
   ep_sync_intro:
-    'Verknüpfte Arbeitsmappen aus dem IDS Master laden (in den Einstellungen), dann pro Kategorie importieren oder exportieren.',
+    'Verknüpfte Arbeitsmappen aus dem IDS Master laden (in den Einstellungen), dann pro Kategorie importieren oder exportieren. Exporte legen zuerst Vorschau-Tabs an — prüfen, dann übernehmen oder verwerfen.',
   ep_sync_syncing: 'Sync läuft…',
   ep_labs_sync_section_hint:
     'Lab-Level ins Laboratory-Arbeitsblatt exportieren oder daraus importieren. IDS-Master-URL zuerst unter Einstellungen setzen.',
@@ -1365,6 +1365,21 @@ export const STRINGS_DE = {
   ep_export_all_syncing: 'Exportiere alle…',
   ep_import_all_success: '{{count}} Kategorien aus Effective Paths importiert.',
   ep_export_all_success: '{{count}} Kategorien nach Effective Paths exportiert.',
+  ep_export_all_staged_success:
+    '{{count}} Vorschau-Exporte erstellt. Unten prüfen, dann übernehmen oder verwerfen.',
+  ep_export_staged_section_title: 'Vorschau-Exporte',
+  ep_export_staged_row_badge: 'Vorschau bereit',
+  ep_export_staged_verify_hint:
+    'Öffne die Vorschau-Tabs in deinem Arbeitsbuch, vergleiche sie mit den Originalen und übernimm oder verwerfe sie dann.',
+  ep_export_staged_open_preview: '„{{sheet}}“ öffnen',
+  ep_export_staged_apply_btn: 'Änderungen übernehmen',
+  ep_export_staged_discard_btn: 'Vorschau verwerfen',
+  ep_export_staged_apply_all_btn: 'Alle Vorschauen übernehmen',
+  ep_export_staged_discard_all_btn: 'Alle Vorschauen verwerfen',
+  ep_export_staged_promoting: 'Übernehmen…',
+  ep_export_staged_discarding: 'Verwerfen…',
+  ep_export_staged_apply_success: 'Live-Tabs aktualisiert.',
+  ep_export_staged_discard_success: 'Vorschau-Tabs entfernt.',
   ep_import_all_none: 'Keine verknüpften Arbeitsmappen zum Importieren verfügbar.',
   ep_export_all_none: 'Keine verknüpften Arbeitsmappen zum Exportieren verfügbar.',
   ep_import_syncing: 'Import läuft…',
@@ -1459,15 +1474,18 @@ export const STRINGS_DE = {
   ep_export_syncing_themes: 'Themes werden exportiert…',
   ep_export_syncing_cards: 'Karten & Presets werden exportiert…',
   ep_export_syncing_workshop: 'Werkstatt wird exportiert…',
-  ep_export_relics_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Reliktzeilen).',
-  ep_export_themes_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Theme-Zeilen).',
-  ep_export_cards_success: '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Kartenzeilen).',
+  ep_export_relics_success:
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Reliktzeilen).',
+  ep_export_themes_success:
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Theme-Zeilen).',
+  ep_export_cards_success:
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Kartenzeilen).',
   ep_export_workshop_success:
-    '{{cells}} Zellen in „{{sheet}}“ aktualisiert ({{rows}} Werkstattzeilen).',
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Werkstattzeilen).',
   ep_export_workshop_enhance_success_suffix:
-    'Außerdem {{enhanceRows}} Werkstatt-Verbesserungslevel aktualisiert.',
+    'Außerdem {{enhanceRows}} Werkstatt-Verbesserungslevel in den Vorschau-Tab geschrieben.',
   ep_export_cards_presets_success_suffix:
-    'Außerdem {{presetRows}} Preset-Slots in „{{presetSheet}}“ aktualisiert.',
+    'Außerdem {{presetRows}} Preset-Slots in Vorschau-Tab „{{presetSheet}}“ geschrieben.',
   ep_export_relics_unmapped_hint: '{{count}} Reliktname(n) konnten nicht zugeordnet werden und blieben unverändert.',
   ep_export_themes_unmapped_hint: '{{count}} Theme-Name(n) konnten nicht zugeordnet werden und blieben unverändert.',
   ep_export_cards_unmapped_hint: '{{count}} Kartenname(n) konnten nicht zugeordnet werden und blieben unverändert.',
@@ -1524,19 +1542,19 @@ export const STRINGS_DE = {
   ep_export_syncing_guardians: 'Wächter-Chips werden exportiert…',
   ep_export_syncing_modules: 'Module werden exportiert…',
   ep_export_bots_success:
-    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Bot-Stat-Zeilen).',
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Bot-Stat-Zeilen).',
   ep_export_bots_lab_success_suffix:
-    'Außerdem {{labRows}} BOTS-Laborstufen aktualisiert.',
+    'Außerdem {{labRows}} BOTS-Laborstufen in den Vorschau-Tab geschrieben.',
   ep_export_bots_unmapped_hint:
     '{{count}} Bot-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
   ep_export_bots_unmapped_sample: 'Beispiele: {{names}}',
-  ep_export_labs_success: '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Lab-Zeilen).',
+  ep_export_labs_success: '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Lab-Zeilen).',
   ep_export_uws_success:
-    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Ultimate-Weapon-Level-Zeilen).',
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Ultimate-Weapon-Level-Zeilen).',
   ep_export_guardians_success:
-    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Wächter-Chip-Level-Zeilen).',
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} Wächter-Chip-Level-Zeilen).',
   ep_export_modules_success:
-    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} ausgerüstete Modul-Spalten, {{effects}} Effekte).',
+    '{{cells}} Zellen in Vorschau-Tab „{{sheet}}“ geschrieben ({{rows}} ausgerüstete Modul-Spalten, {{effects}} Effekte).',
   ep_export_labs_unmapped_hint:
     '{{count}} Lab-Namen im Blatt wurden nicht zugeordnet und blieben unverändert.',
   ep_export_labs_unmapped_sample: 'Beispiele: {{names}}',

@@ -21,7 +21,10 @@ import {
 } from './assembleEffectivePathsListResult'
 import type { EffectivePathsLinkedWorkbook } from './parseIdsMasterWorkbooks'
 
-export type { EffectivePathsIdsGateway, EffectivePathsListResult }
+import type { EffectivePathsStagedSheetRef } from './effectivePathsStaging'
+
+export type { EffectivePathsIdsGateway, EffectivePathsListResult } from './assembleEffectivePathsListResult'
+export type { EffectivePathsStagedSheetRef }
 
 export type EffectivePathsLoadProgress = {
   phase: 'gateway' | 'workbook'
@@ -92,6 +95,7 @@ export type EffectivePathsRelicsExportResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   relicsWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsThemesExportResult = {
@@ -102,6 +106,7 @@ export type EffectivePathsThemesExportResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   themesWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsCardsExportResult = {
@@ -115,6 +120,7 @@ export type EffectivePathsCardsExportResult = {
   presetSheetTitle: string | null
   presetMatchedRows: number
   presetUpdatedCells: number
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsWorkshopExportResult = {
@@ -126,6 +132,7 @@ export type EffectivePathsWorkshopExportResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   workshopWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsBotsExportResult = {
@@ -137,6 +144,7 @@ export type EffectivePathsBotsExportResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   botsWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsLabsExportResult = {
@@ -147,6 +155,7 @@ export type EffectivePathsLabsExportResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   laboratoryWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsLabsImportResult = {
@@ -300,6 +309,7 @@ export type EffectivePathsUwsExportResult = {
   matchedRows: number
   sheetTitle: string
   uwsWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsGuardiansExportResult = {
@@ -309,6 +319,7 @@ export type EffectivePathsGuardiansExportResult = {
   matchedRows: number
   sheetTitle: string
   guardiansWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type EffectivePathsModulesExportResult = {
@@ -319,6 +330,7 @@ export type EffectivePathsModulesExportResult = {
   matchedSubstats: number
   sheetTitle: string
   modulesWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 async function parseApiError(res: Response, body: unknown): Promise<{
@@ -1027,7 +1039,7 @@ async function exportToEffectivePaths(options: {
       return { ok: false, ...err }
     }
 
-    if (!body || typeof body !== 'object' || !('matchedRows' in body)) {
+    if (!body || typeof body !== 'object' || !('matchedRows' in body) || !('stagedSheets' in body)) {
       return { ok: false, error: 'unknown' }
     }
 
@@ -1044,6 +1056,60 @@ async function exportToEffectivePaths(options: {
         | EffectivePathsGuardiansExportResult
         | EffectivePathsModulesExportResult,
     }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
+export async function promoteEffectivePathsStagedSheets(options: {
+  googleAccessToken: string
+  stagedSheets: readonly EffectivePathsStagedSheetRef[]
+}): Promise<{ ok: true } | { ok: false; error: EffectivePathsExportError; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/effective-paths/export`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Google-Access-Token': options.googleAccessToken,
+      },
+      body: JSON.stringify({
+        phase: 'promote',
+        stagedSheets: options.stagedSheets,
+      }),
+    })
+    const body = await res.json().catch(() => null)
+    if (!res.ok) {
+      const err = await parseApiError(res, body)
+      return { ok: false, ...err }
+    }
+    return { ok: true }
+  } catch {
+    return { ok: false, error: 'network' }
+  }
+}
+
+export async function discardEffectivePathsStagedSheets(options: {
+  googleAccessToken: string
+  stagedSheets: readonly EffectivePathsStagedSheetRef[]
+}): Promise<{ ok: true } | { ok: false; error: EffectivePathsExportError; message?: string }> {
+  try {
+    const res = await fetch(`${API_BASE}/effective-paths/export`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Google-Access-Token': options.googleAccessToken,
+      },
+      body: JSON.stringify({
+        phase: 'discard',
+        stagedSheets: options.stagedSheets,
+      }),
+    })
+    const body = await res.json().catch(() => null)
+    if (!res.ok) {
+      const err = await parseApiError(res, body)
+      return { ok: false, ...err }
+    }
+    return { ok: true }
   } catch {
     return { ok: false, error: 'network' }
   }

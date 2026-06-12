@@ -9,6 +9,7 @@ import {
 } from '../effectivePaths/effectivePathsExportDialogSupport'
 import type { EffectivePathsExportTarget } from '../effectivePaths/effectivePathsExportSyncingLabel'
 import { sortLinkedWorkbookAccess } from '../effectivePaths/effectivePathsIdsWorkbooks'
+import { googleSpreadsheetEditUrl } from '../effectivePaths/parseSpreadsheetRef'
 import type { LinkedWorkbookAccess } from '../effectivePaths/exportEffectivePathsApi'
 import type { StringId } from '../i18n'
 
@@ -28,6 +29,7 @@ export type EffectivePathsLinkedWorkbooksListProps = {
     busy: boolean
     canExportTarget: (target: EffectivePathsExportTarget) => boolean
     onExportTarget: (target: EffectivePathsExportTarget) => void
+    pendingExportTargets?: ReadonlySet<EffectivePathsExportTarget>
   }
   bulkActions?: {
     busy: boolean
@@ -123,7 +125,25 @@ export function EffectivePathsLinkedWorkbooksList({
               >
                 {accessible ? '✓' : '✗'}
               </span>
-              <span className="effective-paths-export-dialog__workbook-name">{workbook.name}</span>
+              <span className="effective-paths-export-dialog__workbook-name">
+                <a
+                  className="effective-paths-export-dialog__workbook-link"
+                  href={googleSpreadsheetEditUrl(workbook.spreadsheetId)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {workbook.name}
+                </a>
+                {exportTarget &&
+                exportActions?.pendingExportTargets?.has(exportTarget) ? (
+                  <span
+                    className="effective-paths-export-dialog__workbook-staged-badge"
+                    title={t('ep_export_staged_row_badge')}
+                  >
+                    {t('ep_export_staged_row_badge')}
+                  </span>
+                ) : null}
+              </span>
               {syncTarget && (importActions || exportActions) ? (
                 <span className="effective-paths-export-dialog__workbook-actions">
                   {importActions && importTarget && importUi ? (

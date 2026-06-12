@@ -37,7 +37,14 @@ import {
   exportThemesToGoogleSheet,
   exportWorkshopToGoogleSheet,
   GoogleSheetsApiError,
+  discardStagedSheets,
+  promoteStagedSheets,
 } from './lib/googleSheets'
+import {
+  accessContextForSyncTarget,
+  type EffectivePathsStagedSheetRef,
+  type EffectivePathsWorkbookAccessContext,
+} from '../../src/effectivePaths/effectivePathsStaging'
 
 type ExportSyncTarget =
   | 'relics'
@@ -467,6 +474,62 @@ function mapExportError(message: string | undefined): string {
   return 'sheets_api_error'
 }
 
+const WORKBOOK_ACCESS_CONTEXTS = new Set<EffectivePathsWorkbookAccessContext>([
+  'relic_workbook',
+  'themes_workbook',
+  'cards_workbook',
+  'workshop_workbook',
+  'bots_workbook',
+  'laboratory_workbook',
+  'uws_workbook',
+  'guardians_workbook',
+  'modules_workbook',
+])
+
+function parseAccessContext(raw: unknown): EffectivePathsWorkbookAccessContext | null {
+  return typeof raw === 'string' && WORKBOOK_ACCESS_CONTEXTS.has(raw as EffectivePathsWorkbookAccessContext)
+    ? (raw as EffectivePathsWorkbookAccessContext)
+    : null
+}
+
+function parseStagedSheets(raw: unknown): EffectivePathsStagedSheetRef[] | null {
+  if (!Array.isArray(raw)) return null
+  const out: EffectivePathsStagedSheetRef[] = []
+  for (const entry of raw) {
+    if (!entry || typeof entry !== 'object') return null
+    const workbookId = (entry as { workbookId?: unknown }).workbookId
+    const originalSheetId = (entry as { originalSheetId?: unknown }).originalSheetId
+    const originalTitle = (entry as { originalTitle?: unknown }).originalTitle
+    const stagingSheetId = (entry as { stagingSheetId?: unknown }).stagingSheetId
+    const stagingTitle = (entry as { stagingTitle?: unknown }).stagingTitle
+    const accessContext = parseAccessContext((entry as { accessContext?: unknown }).accessContext)
+    const syncTarget =
+      typeof (entry as { syncTarget?: unknown }).syncTarget === 'string'
+        ? (entry as { syncTarget: string }).syncTarget
+        : null
+    if (
+      typeof workbookId !== 'string' ||
+      typeof originalSheetId !== 'number' ||
+      !Number.isInteger(originalSheetId) ||
+      typeof originalTitle !== 'string' ||
+      typeof stagingSheetId !== 'number' ||
+      !Number.isInteger(stagingSheetId) ||
+      typeof stagingTitle !== 'string'
+    ) {
+      return null
+    }
+    out.push({
+      workbookId,
+      originalSheetId,
+      originalTitle,
+      stagingSheetId,
+      stagingTitle,
+      accessContext: accessContext ?? accessContextForSyncTarget(syncTarget ?? 'relics'),
+    })
+  }
+  return out.length > 0 ? out : null
+}
+
 export default async (req: Request): Promise<Response> => {
   const origin = req.headers.get('Origin')
   const cors = effectivePathsCors(origin)
@@ -489,6 +552,31 @@ export default async (req: Request): Promise<Response> => {
     raw = await req.json()
   } catch {
     return jsonResponse(400, { error: 'invalid_json' }, cors)
+  }
+
+  const phaseRaw = raw && typeof raw === 'object' ? (raw as { phase?: unknown }).phase : undefined
+  if (phaseRaw === 'promote' || phaseRaw === 'discard') {
+    const stagedSheets = parseStagedSheets(
+      raw && typeof raw === 'object' ? (raw as { stagedSheets?: unknown }).stagedSheets : null,
+    )
+    if (!stagedSheets) {
+      return jsonResponse(400, { error: 'invalid_json' }, cors)
+    }
+    try {
+      if (phaseRaw === 'promote') {
+        await promoteStagedSheets(token, stagedSheets)
+        return jsonResponse(200, { ok: true, phase: 'promote' }, cors)
+      }
+      await discardStagedSheets(token, stagedSheets)
+      return jsonResponse(200, { ok: true, phase: 'discard' }, cors)
+    } catch (err) {
+      if (err instanceof GoogleSheetsApiError) {
+        const status = err.reason === 'sheets_auth_failed' ? 401 : err.status >= 400 ? err.status : 502
+        const detail = summarizeGoogleSheetsApiError(err.message) ?? err.message
+        return jsonResponse(status, { error: err.reason, message: detail }, cors)
+      }
+      return jsonResponse(502, { error: 'sheets_api_error' }, cors)
+    }
   }
 
   const parsed = parseBody(raw)

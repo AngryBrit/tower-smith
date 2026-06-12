@@ -175,16 +175,33 @@ import {
 } from './idsMasterSheets'
 import { loadBundledResearchData } from './researchData'
 import {
+  duplicateSheetAsStaging,
+  type EffectivePathsStagedSheetRef,
+} from './effectivePathsExportStaging'
+import { isEffectivePathsStagingTabTitle } from '../../../src/effectivePaths/effectivePathsStaging'
+
+import {
   GoogleSheetsApiError,
   sheetsFetch,
   throwIfSheetsAccessDenied,
   type SheetProperties,
 } from './googleSheetsClient'
 
+export type { EffectivePathsStagedSheetRef } from './effectivePathsExportStaging'
+export {
+  discardStagedSheets,
+  promoteStagedSheets,
+} from './effectivePathsExportStaging'
 export { GoogleSheetsApiError } from './googleSheetsClient'
 
 type SpreadsheetMetadata = {
   sheets?: { properties: SheetProperties }[]
+}
+
+function withoutStagingWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+): { properties: SheetProperties }[] {
+  return sheets.filter((sheet) => !isEffectivePathsStagingTabTitle(sheet.properties.title))
 }
 
 export type ExportRelicsToSheetResult = {
@@ -193,6 +210,7 @@ export type ExportRelicsToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   relicsWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type ExportThemesToSheetResult = {
@@ -201,6 +219,7 @@ export type ExportThemesToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   themesWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type ExportCardsToSheetResult = {
@@ -212,6 +231,7 @@ export type ExportCardsToSheetResult = {
   presetSheetTitle: string | null
   presetMatchedRows: number
   presetUpdatedCells: number
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type ExportWorkshopToSheetResult = {
@@ -221,6 +241,7 @@ export type ExportWorkshopToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   workshopWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export type ExportBotsToSheetResult = {
@@ -230,16 +251,18 @@ export type ExportBotsToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   botsWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export function orderedRelicsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const preferred = pickEffectivePathsRelicTab(sheets, sheetGid)
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const preferred = pickEffectivePathsRelicTab(filtered, sheetGid)
   const out: SheetProperties[] = []
   if (preferred) out.push(preferred)
-  for (const sheet of sheets) {
+  for (const sheet of filtered) {
     if (!out.some((tab) => tab.sheetId === sheet.properties.sheetId)) {
       out.push(sheet.properties)
     }
@@ -306,6 +329,7 @@ export async function exportRelicsToGoogleSheet(options: {
   let layout: ReturnType<typeof detectRelicSheetLayout> = null
   let rawRows: string[][] = []
   let sheetTitle = ''
+  let originalSheetId: number | null = null
 
   for (const tab of orderedRelicsWorkbookTabs(sheets, options.sheetGid ?? null)) {
     rawRows = await readRelicTabGrid(options.accessToken, relicsWorkbookId, tab.title)
@@ -314,17 +338,26 @@ export async function exportRelicsToGoogleSheet(options: {
     relicRows = parseRelicRowsWithLayout(rawRows, layout)
     if (relicRows.length > 0) {
       sheetTitle = tab.title
+      originalSheetId = tab.sheetId
       break
     }
   }
 
-  if (!layout || relicRows.length === 0 || !sheetTitle) {
+  if (!layout || relicRows.length === 0 || !sheetTitle || originalSheetId == null) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_relic_rows')
   }
 
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    relicsWorkbookId,
+    originalSheetId,
+    sheetTitle,
+    'relic_workbook',
+  )
+
   const owned = new Set(options.relicOwnedIds)
   const batch = buildRelicUnlockedUpdates(
-    sheetTitle,
+    staged.stagingTitle,
     relicRows,
     owned,
     layout.unlockedCol,
@@ -356,8 +389,9 @@ export async function exportRelicsToGoogleSheet(options: {
     updatedCells: updateBody.totalUpdatedCells ?? batch.length,
     matchedRows: relicRows.length,
     unmappedSheetNames: unmappedRelicNamesWithLayout(rawRows, layout),
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     relicsWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -365,7 +399,8 @@ export function orderedThemesWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isThemesInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -376,7 +411,7 @@ export function orderedThemesWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsThemesTab(sheets, null)
+  const preferred = pickEffectivePathsThemesTab(filtered, null)
   const out: SheetProperties[] = []
   if (
     preferred &&
@@ -478,9 +513,23 @@ export async function exportThemesToGoogleSheet(options: {
   }
 
   const { themeRows, layout, rawRows, sheetTitle } = primary
+  const originalSheetId =
+    sheets.map((sheet) => sheet.properties).find((tab) => tab.title === sheetTitle)?.sheetId ??
+    null
+  if (originalSheetId == null) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_theme_rows')
+  }
+
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    themesWorkbookId,
+    originalSheetId,
+    sheetTitle,
+    'themes_workbook',
+  )
 
   const owned = new Set(options.themeOwnedIds)
-  const batch = buildThemeOwnedUpdates(sheetTitle, themeRows, owned)
+  const batch = buildThemeOwnedUpdates(staged.stagingTitle, themeRows, owned)
   if (batch.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_theme_rows')
   }
@@ -508,8 +557,9 @@ export async function exportThemesToGoogleSheet(options: {
     updatedCells: updateBody.totalUpdatedCells ?? batch.length,
     matchedRows: themeRows.length,
     unmappedSheetNames: unmappedThemeNamesWithLayout(rawRows, layout),
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     themesWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -517,7 +567,8 @@ export function orderedCardsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isCardsInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -528,7 +579,7 @@ export function orderedCardsWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsCardsTab(sheets, null)
+  const preferred = pickEffectivePathsCardsTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isCardsInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -581,7 +632,8 @@ function orderedWorkshopWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isWorkshopInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -592,7 +644,7 @@ function orderedWorkshopWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsWorkshopTab(sheets, null)
+  const preferred = pickEffectivePathsWorkshopTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isWorkshopInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -652,11 +704,13 @@ function buildCardPresetBatchForWorkbook(
   batch: ReturnType<typeof buildCardPresetSheetUpdates>
   presetSlots: number
   presetSheetTitle: string | null
+  presetSheetId: number | null
 }> {
   return (async () => {
     let presetSlots: ReturnType<typeof parseCardPresetSlotsWithLayout> = []
     let presetLayout: ReturnType<typeof detectCardPresetSheetLayout> = null
     let presetSheetTitle: string | null = null
+    let presetSheetId: number | null = null
     let presetGrid: string[][] | null = null
 
     for (const tab of orderedCardPresetWorkbookTabs(sheets, sheetGid)) {
@@ -671,12 +725,13 @@ function buildCardPresetBatchForWorkbook(
         presetSlots = tabSlots
         presetLayout = tabLayout
         presetSheetTitle = tab.title
+        presetSheetId = tab.sheetId
         presetGrid = grid
       }
     }
 
-    if (!presetLayout || presetSlots.length === 0 || !presetSheetTitle) {
-      return { batch: [], presetSlots: 0, presetSheetTitle: null }
+    if (!presetLayout || presetSlots.length === 0 || !presetSheetTitle || presetSheetId == null) {
+      return { batch: [], presetSlots: 0, presetSheetTitle: null, presetSheetId: null }
     }
 
     const sheetLabels = mergeEffectivePathsCardSheetLabels(
@@ -694,6 +749,7 @@ function buildCardPresetBatchForWorkbook(
       ),
       presetSlots: presetSlots.length,
       presetSheetTitle,
+      presetSheetId,
     }
   })()
 }
@@ -741,6 +797,7 @@ export async function exportCardsToGoogleSheet(options: {
   let layout: ReturnType<typeof detectCardSheetLayout> = null
   let rawRows: string[][] = []
   let sheetTitle = ''
+  let originalSheetId: number | null = null
 
   for (const tab of orderedCardsWorkbookTabs(sheets, options.sheetGid ?? null)) {
     const grid = await readCardTabGrid(options.accessToken, cardsWorkbookId, tab)
@@ -753,16 +810,27 @@ export async function exportCardsToGoogleSheet(options: {
       layout = tabLayout
       rawRows = grid
       sheetTitle = tab.title
+      originalSheetId = tab.sheetId
     }
   }
 
-  if (!layout || cardRows.length === 0 || !sheetTitle) {
+  if (!layout || cardRows.length === 0 || !sheetTitle || originalSheetId == null) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_card_rows')
   }
 
+  const stagedSheets: EffectivePathsStagedSheetRef[] = []
+  const cardStaged = await duplicateSheetAsStaging(
+    options.accessToken,
+    cardsWorkbookId,
+    originalSheetId,
+    sheetTitle,
+    'cards_workbook',
+  )
+  stagedSheets.push(cardStaged)
+
   const mastery = new Set(options.cardMasteryUnlockedIds)
   const cardBatch = buildCardSheetUpdates(
-    sheetTitle,
+    cardStaged.stagingTitle,
     cardRows,
     options.cardStars,
     mastery,
@@ -785,7 +853,33 @@ export async function exportCardsToGoogleSheet(options: {
     options.cardPresetLoadouts,
     masterSheetLabels,
   )
-  const batch = [...cardBatch, ...presetWork.batch]
+
+  let presetBatch = presetWork.batch
+  let presetStagingTitle: string | null = null
+  if (
+    presetBatch.length > 0 &&
+    presetWork.presetSheetId != null &&
+    presetWork.presetSheetTitle
+  ) {
+    const presetStaged = await duplicateSheetAsStaging(
+      options.accessToken,
+      cardsWorkbookId,
+      presetWork.presetSheetId,
+      presetWork.presetSheetTitle,
+      'cards_workbook',
+    )
+    stagedSheets.push(presetStaged)
+    presetStagingTitle = presetStaged.stagingTitle
+    presetBatch = presetBatch.map((entry) => ({
+      ...entry,
+      range: entry.range.replace(
+        quoteSheetTitleForRange(presetWork.presetSheetTitle!),
+        quoteSheetTitleForRange(presetStaged.stagingTitle),
+      ),
+    }))
+  }
+
+  const batch = [...cardBatch, ...presetBatch]
 
   const updateRes = await sheetsFetch(
     options.accessToken,
@@ -805,17 +899,18 @@ export async function exportCardsToGoogleSheet(options: {
   }
 
   const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
-  const presetUpdatedCells = presetWork.batch.length
+  const presetUpdatedCells = presetBatch.length
 
   return {
     updatedCells: updateBody.totalUpdatedCells ?? batch.length,
     matchedRows: cardRows.length,
     unmappedSheetNames: unmappedCardNamesWithLayout(rawRows, layout),
-    sheetTitle,
+    sheetTitle: cardStaged.stagingTitle,
     cardsWorkbookId,
-    presetSheetTitle: presetWork.presetSheetTitle,
+    presetSheetTitle: presetStagingTitle,
     presetMatchedRows: presetWork.presetSlots,
     presetUpdatedCells,
+    stagedSheets,
   }
 }
 
@@ -826,6 +921,7 @@ type WorkshopMasterSheetData = {
   enhanceLayout: ReturnType<typeof detectWorkshopEnhanceSheetLayout>
   rawRows: string[][]
   sheetTitle: string
+  sheetId: number
 }
 
 async function loadWorkshopMasterSheet(options: {
@@ -854,6 +950,7 @@ async function loadWorkshopMasterSheet(options: {
   let enhanceLayout: ReturnType<typeof detectWorkshopEnhanceSheetLayout> = null
   let rawRows: string[][] = []
   let sheetTitle = ''
+  let sheetId: number | null = null
 
   for (const tab of orderedWorkshopWorkbookTabs(sheets, options.sheetGid ?? null)) {
     const grid = await readWorkshopTabGrid(options.accessToken, options.workshopWorkbookId, tab)
@@ -866,6 +963,7 @@ async function loadWorkshopMasterSheet(options: {
       layout = tabLayout
       rawRows = grid
       sheetTitle = tab.title
+      sheetId = tab.sheetId
       const tabEnhanceLayout = detectWorkshopEnhanceSheetLayout(grid)
       enhanceLayout = tabEnhanceLayout
       enhanceRows = tabEnhanceLayout
@@ -874,9 +972,9 @@ async function loadWorkshopMasterSheet(options: {
     }
   }
 
-  if (!layout || workshopRows.length === 0 || !sheetTitle) return null
+  if (!layout || workshopRows.length === 0 || !sheetTitle || sheetId == null) return null
 
-  return { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle }
+  return { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle, sheetId }
 }
 
 export type ImportWorkshopFromSheetResult = {
@@ -970,13 +1068,21 @@ export async function exportWorkshopToGoogleSheet(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_workshop_rows')
   }
 
-  const { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle } = loaded
+  const { workshopRows, layout, enhanceRows, enhanceLayout, rawRows, sheetTitle, sheetId } = loaded
+
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    workshopWorkbookId,
+    sheetId,
+    sheetTitle,
+    'workshop_workbook',
+  )
 
   const batch = [
-    ...buildWorkshopSheetUpdates(sheetTitle, workshopRows, options.workshopLevels, layout),
+    ...buildWorkshopSheetUpdates(staged.stagingTitle, workshopRows, options.workshopLevels, layout),
     ...(enhanceLayout
       ? buildWorkshopEnhanceSheetUpdates(
-          sheetTitle,
+          staged.stagingTitle,
           enhanceRows,
           options.workshopLevels,
           enhanceLayout,
@@ -1016,8 +1122,9 @@ export async function exportWorkshopToGoogleSheet(options: {
     matchedRows: workshopRows.length,
     enhanceMatchedRows: enhanceRows.length,
     unmappedSheetNames,
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     workshopWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -1025,7 +1132,8 @@ export function orderedBotsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isBotsInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -1036,7 +1144,7 @@ export function orderedBotsWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsBotsTab(sheets, null)
+  const preferred = pickEffectivePathsBotsTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isBotsInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -1203,13 +1311,21 @@ export async function exportBotsToGoogleSheet(options: {
     }
   }
 
-  if (!layout || statRows.length === 0 || !sheetTitle) {
+  if (!layout || statRows.length === 0 || !sheetTitle || sheetId == null) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_bot_rows')
   }
 
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    botsWorkbookId,
+    sheetId,
+    sheetTitle,
+    'bots_workbook',
+  )
+
   const farmingCells = buildBotFarmingLevelCellUpdates(statRows, options.botsEpState)
   const batch = buildBotSheetUpdates(
-    sheetTitle,
+    staged.stagingTitle,
     statRows,
     headerRows,
     labRows,
@@ -1220,28 +1336,17 @@ export async function exportBotsToGoogleSheet(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_bot_rows')
   }
 
-  await clearBotFarmingLevelColumn(options.accessToken, botsWorkbookId, sheetTitle)
+  await clearBotFarmingLevelColumn(options.accessToken, botsWorkbookId, staged.stagingTitle)
 
   let updatedCells = 0
   let valueBatch = batch
 
-  if (sheetId != null) {
-    updatedCells += await applyBotFarmingLevelCells(
-      options.accessToken,
-      botsWorkbookId,
-      sheetId,
-      farmingCells,
-    )
-  } else if (farmingCells.length > 0) {
-    const quoted = quoteSheetTitleForRange(sheetTitle)
-    valueBatch = [
-      ...batch,
-      ...farmingCells.map(({ rowIndex, label }) => ({
-        range: `${quoted}!G${rowIndex}`,
-        values: [[label]] as (string | number | boolean)[][],
-      })),
-    ]
-  }
+  updatedCells += await applyBotFarmingLevelCells(
+    options.accessToken,
+    botsWorkbookId,
+    staged.stagingSheetId,
+    farmingCells,
+  )
 
   if (valueBatch.length > 0) {
     const updateRes = await sheetsFetch(
@@ -1269,8 +1374,9 @@ export async function exportBotsToGoogleSheet(options: {
     matchedRows: statRows.length,
     labMatchedRows: labRows.length,
     unmappedSheetNames: unmappedBotNamesWithLayout(rawRows, layout),
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     botsWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -1278,27 +1384,29 @@ export function orderedCardPresetWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
+  const filtered = withoutStagingWorkbookTabs(sheets)
   const out: SheetProperties[] = []
 
   const push = (tab: SheetProperties) => {
     if (isCardPresetTabExcluded(tab.title)) return
+    if (isEffectivePathsStagingTabTitle(tab.title)) return
     if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
   }
 
   if (sheetGid != null) {
-    const byGid = sheets.find((sheet) => sheet.properties.sheetId === sheetGid)
+    const byGid = filtered.find((sheet) => sheet.properties.sheetId === sheetGid)
     if (byGid) push(byGid.properties)
   }
 
-  const preferred = pickEffectivePathsCardPresetTab(sheets, null)
+  const preferred = pickEffectivePathsCardPresetTab(filtered, null)
   if (preferred) push(preferred)
 
-  for (const sheet of sheets) {
+  for (const sheet of filtered) {
     const tab = sheet.properties
     if (isCardPresetInputTabCandidate(tab.title, tab.gridProperties)) push(tab)
   }
 
-  for (const sheet of sheets) {
+  for (const sheet of filtered) {
     const tab = sheet.properties
     if (/card\s*preset/i.test(tab.title)) push(tab)
   }
@@ -1350,13 +1458,15 @@ export type ExportLabsToSheetResult = {
   unmappedSheetNames: string[]
   sheetTitle: string
   laboratoryWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 function orderedLaboratoryWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isLaboratoryInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -1367,7 +1477,7 @@ function orderedLaboratoryWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsLaboratoryTab(sheets, null)
+  const preferred = pickEffectivePathsLaboratoryTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isLaboratoryInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -1410,6 +1520,7 @@ type LaboratoryMasterSheetData = {
   blocks: ReturnType<typeof detectLabSheetBlocks>
   rawRows: string[][]
   sheetTitle: string
+  sheetId: number
   nameIndex: ReturnType<typeof buildLabSheetNameIndex>
 }
 
@@ -1439,6 +1550,7 @@ async function loadLaboratoryMasterSheet(options: {
   let blocks: ReturnType<typeof detectLabSheetBlocks> = []
   let rawRows: string[][] = []
   let sheetTitle = ''
+  let sheetId: number | null = null
 
   for (const tab of orderedLaboratoryWorkbookTabs(sheets, options.sheetGid ?? null)) {
     const grid = await readLaboratoryTabGrid(
@@ -1455,12 +1567,13 @@ async function loadLaboratoryMasterSheet(options: {
       blocks = tabBlocks
       rawRows = grid
       sheetTitle = tab.title
+      sheetId = tab.sheetId
     }
   }
 
-  if (labRows.length === 0 || !sheetTitle) return null
+  if (labRows.length === 0 || !sheetTitle || sheetId == null) return null
 
-  return { labRows, blocks, rawRows, sheetTitle, nameIndex }
+  return { labRows, blocks, rawRows, sheetTitle, sheetId, nameIndex }
 }
 
 export type ImportLabsFromSheetResult = {
@@ -1547,10 +1660,18 @@ export async function exportLabsToGoogleSheet(options: {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_lab_rows')
   }
 
-  const { labRows, blocks, rawRows, sheetTitle, nameIndex } = loaded
+  const { labRows, blocks, rawRows, sheetTitle, sheetId, nameIndex } = loaded
   const research = loadBundledResearchData()
 
-  const batch = buildLabSheetUpdates(sheetTitle, labRows, research, options.labLevelOverrides)
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    laboratoryWorkbookId,
+    sheetId,
+    sheetTitle,
+    'laboratory_workbook',
+  )
+
+  const batch = buildLabSheetUpdates(staged.stagingTitle, labRows, research, options.labLevelOverrides)
   if (batch.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_lab_rows')
   }
@@ -1578,8 +1699,9 @@ export async function exportLabsToGoogleSheet(options: {
     updatedCells: updateBody.totalUpdatedCells ?? batch.length,
     matchedRows: labRows.length,
     unmappedSheetNames: unmappedLabNamesWithLayout(rawRows, blocks, nameIndex),
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     laboratoryWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -1590,13 +1712,15 @@ export type ExportUwsToSheetResult = {
   matchedRows: number
   sheetTitle: string
   uwsWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export function orderedUwsWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isUwsInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -1607,7 +1731,7 @@ export function orderedUwsWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsUwsTab(sheets, null)
+  const preferred = pickEffectivePathsUwsTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isUwsInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -1772,47 +1896,42 @@ export async function exportUwsToGoogleSheet(options: {
     }
   }
 
-  if (!sheetTitle) {
+  if (!sheetTitle || sheetId == null) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'uws_tab_not_found')
   }
 
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    uwsWorkbookId,
+    sheetId,
+    sheetTitle,
+    'uws_workbook',
+  )
+
   const farmingCells = buildUwFarmingLevelCellUpdates(options.uwsEpState)
-  const unlockBatch = buildUwSheetUpdates(sheetTitle, options.uwsEpState)
+  const unlockBatch = buildUwSheetUpdates(staged.stagingTitle, options.uwsEpState)
   if (farmingCells.length === 0 && unlockBatch.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_uws_rows')
   }
 
-  await clearUwLevelColumn(options.accessToken, uwsWorkbookId, sheetTitle)
+  await clearUwLevelColumn(options.accessToken, uwsWorkbookId, staged.stagingTitle)
 
   let updatedCells = 0
-  let valueBatch = unlockBatch
 
-  if (sheetId != null) {
-    updatedCells += await applyUwUnlockCells(
-      options.accessToken,
-      uwsWorkbookId,
-      sheetId,
-      options.uwsEpState,
-    )
-    updatedCells += await applyUwLevelCells(
-      options.accessToken,
-      uwsWorkbookId,
-      sheetId,
-      farmingCells,
-    )
-    valueBatch = []
-  } else if (farmingCells.length > 0) {
-    const quoted = quoteSheetTitleForRange(sheetTitle)
-    valueBatch = [
-      ...unlockBatch,
-      ...farmingCells.map(({ rowIndex, label }) => ({
-        range: `${quoted}!G${rowIndex}`,
-        values: [[label]] as (string | number | boolean)[][],
-      })),
-    ]
-  }
+  updatedCells += await applyUwUnlockCells(
+    options.accessToken,
+    uwsWorkbookId,
+    staged.stagingSheetId,
+    options.uwsEpState,
+  )
+  updatedCells += await applyUwLevelCells(
+    options.accessToken,
+    uwsWorkbookId,
+    staged.stagingSheetId,
+    farmingCells,
+  )
 
-  if (valueBatch.length > 0) {
+  if (unlockBatch.length > 0) {
     const updateRes = await sheetsFetch(
       options.accessToken,
       `/${encodeURIComponent(uwsWorkbookId)}/values:batchUpdate`,
@@ -1821,7 +1940,7 @@ export async function exportUwsToGoogleSheet(options: {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           valueInputOption: 'USER_ENTERED',
-          data: valueBatch,
+          data: unlockBatch,
         }),
       },
     )
@@ -1830,14 +1949,15 @@ export async function exportUwsToGoogleSheet(options: {
       throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
     }
     const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
-    updatedCells += updateBody.totalUpdatedCells ?? valueBatch.length
+    updatedCells += updateBody.totalUpdatedCells ?? unlockBatch.length
   }
 
   return {
     updatedCells,
     matchedRows: farmingCells.length,
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     uwsWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -1846,13 +1966,15 @@ export type ExportGuardiansToSheetResult = {
   matchedRows: number
   sheetTitle: string
   guardiansWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export function orderedGuardiansWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isGuardiansInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -1863,7 +1985,7 @@ export function orderedGuardiansWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsGuardiansTab(sheets, null)
+  const preferred = pickEffectivePathsGuardiansTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isGuardiansInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -2029,48 +2151,42 @@ export async function exportGuardiansToGoogleSheet(options: {
     }
   }
 
-  if (!sheetTitle) {
+  if (!sheetTitle || sheetId == null) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'guardians_tab_not_found')
   }
 
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    guardiansWorkbookId,
+    sheetId,
+    sheetTitle,
+    'guardians_workbook',
+  )
+
   const levelCells = buildGuardianLevelCellUpdates(options.guardiansEpState)
-  const unlockBatch = buildGuardianSheetUpdates(sheetTitle, options.guardiansEpState)
+  const unlockBatch = buildGuardianSheetUpdates(staged.stagingTitle, options.guardiansEpState)
   if (levelCells.length === 0 && unlockBatch.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_guardians_rows')
   }
 
-  await clearGuardianLevelColumn(options.accessToken, guardiansWorkbookId, sheetTitle)
+  await clearGuardianLevelColumn(options.accessToken, guardiansWorkbookId, staged.stagingTitle)
 
   let updatedCells = 0
-  let valueBatch = unlockBatch
 
-  if (sheetId != null) {
-    updatedCells += await applyGuardianUnlockCells(
-      options.accessToken,
-      guardiansWorkbookId,
-      sheetId,
-      options.guardiansEpState,
-    )
-    updatedCells += await applyGuardianLevelCells(
-      options.accessToken,
-      guardiansWorkbookId,
-      sheetId,
-      levelCells,
-    )
-    valueBatch = []
-  } else if (levelCells.length > 0) {
-    const quoted = quoteSheetTitleForRange(sheetTitle)
-    const levelCol = columnIndexToA1Letter(GUARDIAN_EP_V302_LEVEL_COL)
-    valueBatch = [
-      ...unlockBatch,
-      ...levelCells.map(({ rowIndex, label }) => ({
-        range: `${quoted}!${levelCol}${rowIndex}`,
-        values: [[label]] as (string | number | boolean)[][],
-      })),
-    ]
-  }
+  updatedCells += await applyGuardianUnlockCells(
+    options.accessToken,
+    guardiansWorkbookId,
+    staged.stagingSheetId,
+    options.guardiansEpState,
+  )
+  updatedCells += await applyGuardianLevelCells(
+    options.accessToken,
+    guardiansWorkbookId,
+    staged.stagingSheetId,
+    levelCells,
+  )
 
-  if (valueBatch.length > 0) {
+  if (unlockBatch.length > 0) {
     const updateRes = await sheetsFetch(
       options.accessToken,
       `/${encodeURIComponent(guardiansWorkbookId)}/values:batchUpdate`,
@@ -2079,7 +2195,7 @@ export async function exportGuardiansToGoogleSheet(options: {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           valueInputOption: 'USER_ENTERED',
-          data: valueBatch,
+          data: unlockBatch,
         }),
       },
     )
@@ -2088,14 +2204,15 @@ export async function exportGuardiansToGoogleSheet(options: {
       throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
     }
     const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
-    updatedCells += updateBody.totalUpdatedCells ?? valueBatch.length
+    updatedCells += updateBody.totalUpdatedCells ?? unlockBatch.length
   }
 
   return {
     updatedCells,
     matchedRows: levelCells.length,
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     guardiansWorkbookId,
+    stagedSheets: [staged],
   }
 }
 
@@ -2105,13 +2222,15 @@ export type ExportModulesToSheetResult = {
   matchedSubstats: number
   sheetTitle: string
   modulesWorkbookId: string
+  stagedSheets: EffectivePathsStagedSheetRef[]
 }
 
 export function orderedModulesWorkbookTabs(
   sheets: readonly { properties: SheetProperties }[],
   sheetGid: number | null,
 ): SheetProperties[] {
-  const candidates = sheets
+  const filtered = withoutStagingWorkbookTabs(sheets)
+  const candidates = filtered
     .map((sheet) => sheet.properties)
     .filter((tab) => isModulesInputTabCandidate(tab.title, tab.gridProperties))
 
@@ -2122,7 +2241,7 @@ export function orderedModulesWorkbookTabs(
     }
   }
 
-  const preferred = pickEffectivePathsModulesTab(sheets, null)
+  const preferred = pickEffectivePathsModulesTab(filtered, null)
   const out: SheetProperties[] = []
   if (preferred && isModulesInputTabCandidate(preferred.title, preferred.gridProperties)) {
     out.push(preferred)
@@ -2170,18 +2289,28 @@ export async function exportModulesToGoogleSheet(options: {
   const sheets = meta.sheets ?? []
 
   let sheetTitle = ''
+  let sheetId: number | null = null
   for (const tab of orderedModulesWorkbookTabs(sheets, options.sheetGid ?? null)) {
     if (isModulesInputTabCandidate(tab.title, tab.gridProperties)) {
       sheetTitle = tab.title
+      sheetId = tab.sheetId
       break
     }
   }
 
-  if (!sheetTitle) {
+  if (!sheetTitle || sheetId == null) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'modules_tab_not_found')
   }
 
-  const quotedTitle = quoteSheetTitleForRange(sheetTitle)
+  const staged = await duplicateSheetAsStaging(
+    options.accessToken,
+    modulesWorkbookId,
+    sheetId,
+    sheetTitle,
+    'modules_workbook',
+  )
+
+  const quotedTitle = quoteSheetTitleForRange(staged.stagingTitle)
   const gridRes = await sheetsFetch(
     options.accessToken,
     `/${encodeURIComponent(modulesWorkbookId)}/values/${encodeURIComponent(`${quotedTitle}!A1:AS55`)}?valueRenderOption=FORMATTED_VALUE`,
@@ -2192,7 +2321,7 @@ export async function exportModulesToGoogleSheet(options: {
   }
   const gridBody = (await gridRes.json()) as { values?: unknown[][] }
   const layout = resolveModuleEpInventoryLayout(gridBody.values ?? [])
-  const batch = buildModuleSheetUpdates(sheetTitle, options.modulesEpState, layout)
+  const batch = buildModuleSheetUpdates(staged.stagingTitle, options.modulesEpState, layout)
   const matchedRows = countModulesEpEquippedSlots(options.modulesEpState)
   const matchedSubstats = countModulesEpEquippedSubstats(options.modulesEpState)
   if (batch.length === 0 || matchedRows === 0) {
@@ -2221,7 +2350,8 @@ export async function exportModulesToGoogleSheet(options: {
     updatedCells: updateBody.totalUpdatedCells ?? batch.length,
     matchedRows,
     matchedSubstats,
-    sheetTitle,
+    sheetTitle: staged.stagingTitle,
     modulesWorkbookId,
+    stagedSheets: [staged],
   }
 }

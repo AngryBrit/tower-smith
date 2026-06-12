@@ -7,7 +7,10 @@
   node_bundler = "esbuild"
 
 [dev]
-  command = "npm run dev"
+  # Vite only — avoid copy-god-tables wiping public/tables on every Netlify Dev start.
+  # That mass rewrite rebundles functions-serve and can trigger Windows EBUSY during reloads.
+  # Run `node scripts/copy-god-tables-to-public.mjs` after GOD table changes, or use `npm run dev`.
+  command = "vite"
   targetPort = 5173
   framework = "#custom"
 

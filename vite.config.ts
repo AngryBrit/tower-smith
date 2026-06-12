@@ -14,6 +14,11 @@ export default defineConfig({
   cacheDir: path.join(os.tmpdir(), 'vite-cache-tower_export'),
   server: {
     host: true,
+    watch: {
+      // Netlify Dev bundles functions under .netlify/functions-serve; on Windows those
+      // files are locked (EBUSY) while Vite's watcher tries to observe them.
+      ignored: ['**/.netlify/**'],
+    },
     proxy: {
       '/api': {
         target: 'http://127.0.0.1:8888',

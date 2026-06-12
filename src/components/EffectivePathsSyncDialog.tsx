@@ -42,6 +42,8 @@ import {
   exportRelicsToEffectivePaths,
   exportThemesToEffectivePaths,
   exportWorkshopToEffectivePaths,
+  promoteEffectivePathsStagedSheets,
+  discardEffectivePathsStagedSheets,
   importBotsFromEffectivePaths,
   importCardsFromEffectivePaths,
   importLabsFromEffectivePaths,
@@ -54,8 +56,17 @@ import {
   listEffectivePathsWorkbooks,
   type EffectivePathsExportError,
   type EffectivePathsLoadProgress,
+  type EffectivePathsStagedSheetRef,
   type LinkedWorkbookAccess,
 } from '../effectivePaths/exportEffectivePathsApi'
+import {
+  addPendingEffectivePathsExport,
+  readPendingEffectivePathsExports,
+  removePendingEffectivePathsExport,
+  removePendingExportsForTarget,
+  type EffectivePathsPendingExport,
+} from '../effectivePaths/effectivePathsPendingExportStorage'
+import { accessContextForSyncTarget } from '../effectivePaths/effectivePathsStaging'
 import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import {
   getCachedGoogleSheetsAccessToken,
@@ -70,6 +81,7 @@ import {
 import { parseSpreadsheetRef } from '../effectivePaths/parseSpreadsheetRef'
 import { useI18n, type StringId } from '../i18n'
 import { EffectivePathsLinkedWorkbooksList } from './EffectivePathsLinkedWorkbooksList'
+import { EffectivePathsPendingExportsPanel } from './EffectivePathsPendingExportsPanel'
 import { EffectivePathsWorkbooksLoadingProgress } from './EffectivePathsWorkbooksLoadingProgress'
 import { ImportNoticeBlock } from './ImportNoticeBlock'
 import { labOverlayPortal } from './lab/labOverlayPortal'
@@ -226,9 +238,23 @@ export function EffectivePathsSyncDialog({
   const [importingAll, setImportingAll] = useState(false)
   const [exportingAll, setExportingAll] = useState(false)
   const bulkSyncRef = useRef<
-    | { collect: true; messages: string[]; payloads: EffectivePathsImportPayload[] }
+    | {
+        collect: true
+        messages: string[]
+        payloads: EffectivePathsImportPayload[]
+        pendingEntries: EffectivePathsPendingExport[]
+      }
     | { collect: false }
   >({ collect: false })
+  const [pendingExports, setPendingExports] = useState<EffectivePathsPendingExport[]>(() =>
+    readPendingEffectivePathsExports(),
+  )
+  const pendingExportTargets = useMemo(
+    () => new Set(pendingExports.map((entry) => entry.syncTarget)),
+    [pendingExports],
+  )
+  const [promotingExportId, setPromotingExportId] = useState<string | null>(null)
+  const [discardingExportId, setDiscardingExportId] = useState<string | null>(null)
   const [notice, setNotice] = useState<{ message: string; variant: ImportNoticeVariant } | null>(
     null,
   )
@@ -360,7 +386,8 @@ export function EffectivePathsSyncDialog({
   )
   const exporting = exportingTarget != null || exportingAll
   const importing = importingTarget != null || importingAll
-  const busy = loadingSheets || exporting || importing
+  const stagingBusy = promotingExportId != null || discardingExportId != null
+  const busy = loadingSheets || exporting || importing || stagingBusy
   const importableTargetCount = useMemo(
     () => EFFECTIVE_PATHS_IMPORT_TARGET_ORDER.filter((target) => canImportTarget(target)).length,
     [canImportTarget],
@@ -377,6 +404,7 @@ export function EffectivePathsSyncDialog({
     const frameId = window.requestAnimationFrame(() => {
       setSpreadsheetRef(readStoredSpreadsheetRef())
       setNotice(null)
+      setPendingExports(readPendingEffectivePathsExports())
       const cached = getCachedGoogleSheetsAccessToken()
       if (cached) setGoogleToken(cached)
     })
@@ -387,16 +415,43 @@ export function EffectivePathsSyncDialog({
     setNotice({ message, variant })
   }, [])
 
-  const finishExportSuccess = useCallback(
-    (message: string) => {
+  const enrichStagedSheets = useCallback(
+    (
+      syncTarget: EffectivePathsExportTarget,
+      stagedSheets: readonly EffectivePathsStagedSheetRef[],
+    ): EffectivePathsStagedSheetRef[] =>
+      stagedSheets.map((sheet) => ({
+        ...sheet,
+        accessContext: sheet.accessContext ?? accessContextForSyncTarget(syncTarget),
+      })),
+    [],
+  )
+
+  const registerStagedExport = useCallback(
+    (
+      target: EffectivePathsExportTarget,
+      stagedSheets: readonly EffectivePathsStagedSheetRef[],
+      summary: string,
+    ) => {
+      removePendingExportsForTarget(target)
+      const entry: EffectivePathsPendingExport = {
+        id: `${target}-${Date.now()}`,
+        syncTarget: target,
+        createdAt: Date.now(),
+        stagedSheets: enrichStagedSheets(target, stagedSheets),
+        summary,
+      }
+      addPendingEffectivePathsExport(entry)
+      setPendingExports(readPendingEffectivePathsExports())
+
       if (bulkSyncRef.current.collect) {
-        bulkSyncRef.current.messages.push(message)
+        bulkSyncRef.current.messages.push(summary)
+        bulkSyncRef.current.pendingEntries.push(entry)
         return
       }
-      onSuccess(message)
-      onClose()
+      showNotice(summary, 'info')
     },
-    [onClose, onSuccess],
+    [enrichStagedSheets, showNotice],
   )
 
   const reportSyncProgress = useCallback(
@@ -691,7 +746,7 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, stagedSheets } = result.result
       let message = t('ep_export_relics_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
@@ -699,7 +754,7 @@ export function EffectivePathsSyncDialog({
       if (unmappedSheetNames.length > 0) {
         message += ` ${t('ep_export_relics_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
       }
-      finishExportSuccess(message)
+      registerStagedExport('relics', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -712,7 +767,7 @@ export function EffectivePathsSyncDialog({
     relicsWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -767,7 +822,7 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, stagedSheets } = result.result
       let message = t('ep_export_themes_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
@@ -779,7 +834,7 @@ export function EffectivePathsSyncDialog({
           message += ` ${t('ep_export_themes_unmapped_sample').replace('{{names}}', sample)}`
         }
       }
-      finishExportSuccess(message)
+      registerStagedExport('themes', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -792,7 +847,7 @@ export function EffectivePathsSyncDialog({
     themesWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -857,6 +912,7 @@ export function EffectivePathsSyncDialog({
         unmappedSheetNames,
         presetSheetTitle,
         presetMatchedRows,
+        stagedSheets,
       } = result.result
       let message = t('ep_export_cards_success')
         .replace('{{rows}}', String(matchedRows))
@@ -874,7 +930,7 @@ export function EffectivePathsSyncDialog({
           message += ` ${t('ep_export_cards_unmapped_sample').replace('{{names}}', sample)}`
         }
       }
-      finishExportSuccess(message)
+      registerStagedExport('cards', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -890,7 +946,7 @@ export function EffectivePathsSyncDialog({
     cardsWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -945,7 +1001,7 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, stagedSheets } = result.result
       const enhanceMatchedRows = result.result.enhanceMatchedRows ?? 0
       let message = t('ep_export_workshop_success')
         .replace('{{rows}}', String(matchedRows))
@@ -964,7 +1020,7 @@ export function EffectivePathsSyncDialog({
           message += ` ${t('ep_export_workshop_unmapped_sample').replace('{{names}}', sample)}`
         }
       }
-      finishExportSuccess(message)
+      registerStagedExport('workshop', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -977,7 +1033,7 @@ export function EffectivePathsSyncDialog({
     workshopWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -1032,7 +1088,7 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, labMatchedRows } =
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, labMatchedRows, stagedSheets } =
         result.result
       let message = t('ep_export_bots_success')
         .replace('{{rows}}', String(matchedRows))
@@ -1051,7 +1107,7 @@ export function EffectivePathsSyncDialog({
           message += ` ${t('ep_export_bots_unmapped_sample').replace('{{names}}', sample)}`
         }
       }
-      finishExportSuccess(message)
+      registerStagedExport('bots', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -1064,7 +1120,7 @@ export function EffectivePathsSyncDialog({
     botsWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -1119,7 +1175,7 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames } = result.result
+      const { matchedRows, updatedCells, sheetTitle, unmappedSheetNames, stagedSheets } = result.result
       let message = t('ep_export_labs_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
@@ -1131,7 +1187,7 @@ export function EffectivePathsSyncDialog({
           message += ` ${t('ep_export_labs_unmapped_sample').replace('{{names}}', sample)}`
         }
       }
-      finishExportSuccess(message)
+      registerStagedExport('labs', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -1144,7 +1200,7 @@ export function EffectivePathsSyncDialog({
     laboratoryWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -1199,12 +1255,12 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle } = result.result
+      const { matchedRows, updatedCells, sheetTitle, stagedSheets } = result.result
       const message = t('ep_export_uws_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
         .replace('{{sheet}}', sheetTitle)
-      finishExportSuccess(message)
+      registerStagedExport('uws', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -1217,7 +1273,7 @@ export function EffectivePathsSyncDialog({
     uwsWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -1272,12 +1328,12 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, updatedCells, sheetTitle } = result.result
+      const { matchedRows, updatedCells, sheetTitle, stagedSheets } = result.result
       const message = t('ep_export_guardians_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{cells}}', String(updatedCells))
         .replace('{{sheet}}', sheetTitle)
-      finishExportSuccess(message)
+      registerStagedExport('guardians', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -1290,7 +1346,7 @@ export function EffectivePathsSyncDialog({
     guardiansWorkbook,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -1350,13 +1406,13 @@ export function EffectivePathsSyncDialog({
         return
       }
 
-      const { matchedRows, matchedSubstats, updatedCells, sheetTitle } = result.result
+      const { matchedRows, matchedSubstats, updatedCells, sheetTitle, stagedSheets } = result.result
       const message = t('ep_export_modules_success')
         .replace('{{rows}}', String(matchedRows))
         .replace('{{effects}}', String(matchedSubstats))
         .replace('{{cells}}', String(updatedCells))
         .replace('{{sheet}}', sheetTitle)
-      finishExportSuccess(message)
+      registerStagedExport('modules', stagedSheets, message)
     } finally {
       setExportingTarget(null)
     }
@@ -1369,7 +1425,7 @@ export function EffectivePathsSyncDialog({
     modulesWorkbookResolved,
     formatExportError,
     showNotice,
-    finishExportSuccess,
+    registerStagedExport,
     t,
   ])
 
@@ -1535,6 +1591,118 @@ export function EffectivePathsSyncDialog({
     [runExportTarget],
   )
 
+  const handlePromotePendingExport = useCallback(
+    async (entry: EffectivePathsPendingExport) => {
+      setPromotingExportId(entry.id)
+      setNotice(null)
+      try {
+        const token = await ensureGoogleToken()
+        if (!token) return
+        const result = await promoteEffectivePathsStagedSheets({
+          googleAccessToken: token,
+          stagedSheets: enrichStagedSheets(
+            entry.syncTarget as EffectivePathsExportTarget,
+            entry.stagedSheets,
+          ),
+        })
+        if (!result.ok) {
+          showNotice(formatExportError(result.error, result.message), 'error')
+          return
+        }
+        removePendingEffectivePathsExport(entry.id)
+        setPendingExports(readPendingEffectivePathsExports())
+        onSuccess(t('ep_export_staged_apply_success'))
+      } finally {
+        setPromotingExportId(null)
+      }
+    },
+    [ensureGoogleToken, enrichStagedSheets, formatExportError, onSuccess, showNotice, t],
+  )
+
+  const handleDiscardPendingExport = useCallback(
+    async (entry: EffectivePathsPendingExport) => {
+      setDiscardingExportId(entry.id)
+      setNotice(null)
+      try {
+        const token = await ensureGoogleToken()
+        if (!token) return
+        const result = await discardEffectivePathsStagedSheets({
+          googleAccessToken: token,
+          stagedSheets: enrichStagedSheets(
+            entry.syncTarget as EffectivePathsExportTarget,
+            entry.stagedSheets,
+          ),
+        })
+        if (!result.ok) {
+          showNotice(formatExportError(result.error, result.message), 'error')
+          return
+        }
+        removePendingEffectivePathsExport(entry.id)
+        setPendingExports(readPendingEffectivePathsExports())
+        showNotice(t('ep_export_staged_discard_success'), 'info')
+      } finally {
+        setDiscardingExportId(null)
+      }
+    },
+    [ensureGoogleToken, enrichStagedSheets, formatExportError, showNotice, t],
+  )
+
+  const handlePromoteAllPendingExports = useCallback(async () => {
+    if (pendingExports.length === 0) return
+    setPromotingExportId('__all__')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+      const stagedSheets = pendingExports.flatMap((entry) =>
+        enrichStagedSheets(entry.syncTarget as EffectivePathsExportTarget, entry.stagedSheets),
+      )
+      const result = await promoteEffectivePathsStagedSheets({
+        googleAccessToken: token,
+        stagedSheets,
+      })
+      if (!result.ok) {
+        showNotice(formatExportError(result.error, result.message), 'error')
+        return
+      }
+      for (const entry of pendingExports) {
+        removePendingEffectivePathsExport(entry.id)
+      }
+      setPendingExports(readPendingEffectivePathsExports())
+      onSuccess(t('ep_export_staged_apply_success'))
+    } finally {
+      setPromotingExportId(null)
+    }
+  }, [ensureGoogleToken, enrichStagedSheets, formatExportError, onSuccess, pendingExports, showNotice, t])
+
+  const handleDiscardAllPendingExports = useCallback(async () => {
+    if (pendingExports.length === 0) return
+    setDiscardingExportId('__all__')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+      const stagedSheets = pendingExports.flatMap((entry) =>
+        enrichStagedSheets(entry.syncTarget as EffectivePathsExportTarget, entry.stagedSheets),
+      )
+      const result = await discardEffectivePathsStagedSheets({
+        googleAccessToken: token,
+        stagedSheets,
+      })
+      if (!result.ok) {
+        showNotice(formatExportError(result.error, result.message), 'error')
+        return
+      }
+      for (const entry of pendingExports) {
+        removePendingEffectivePathsExport(entry.id)
+      }
+      setPendingExports(readPendingEffectivePathsExports())
+      showNotice(t('ep_export_staged_discard_success'), 'info')
+    } finally {
+      setDiscardingExportId(null)
+    }
+  }, [ensureGoogleToken, enrichStagedSheets, formatExportError, pendingExports, showNotice, t])
+
   const handleImportAll = useCallback(async () => {
     if (importableTargetCount === 0) {
       showNotice(t('ep_import_all_none'), 'info')
@@ -1551,7 +1719,7 @@ export function EffectivePathsSyncDialog({
     const targets = EFFECTIVE_PATHS_IMPORT_TARGET_ORDER.filter((target) =>
       canImportTarget(target),
     )
-    bulkSyncRef.current = { collect: true, messages: [], payloads: [] }
+    bulkSyncRef.current = { collect: true, messages: [], payloads: [], pendingEntries: [] }
     setImportingAll(true)
     setNotice(null)
     try {
@@ -1601,7 +1769,7 @@ export function EffectivePathsSyncDialog({
     const targets = EFFECTIVE_PATHS_EXPORT_TARGET_ORDER.filter((target) =>
       canExportTarget(target),
     )
-    bulkSyncRef.current = { collect: true, messages: [], payloads: [] }
+    bulkSyncRef.current = { collect: true, messages: [], payloads: [], pendingEntries: [] }
     setExportingAll(true)
     setNotice(null)
     try {
@@ -1609,9 +1777,13 @@ export function EffectivePathsSyncDialog({
         await runExportTarget(targets[index]!, { completed: index, total: targets.length })
       }
       const collected = bulkSyncRef.current
-      if (collected.collect && collected.messages.length > 0) {
-        onSuccess(
-          t('ep_export_all_success').replace('{{count}}', String(collected.messages.length)),
+      if (collected.collect && collected.pendingEntries.length > 0) {
+        showNotice(
+          t('ep_export_all_staged_success').replace(
+            '{{count}}',
+            String(collected.pendingEntries.length),
+          ),
+          'info',
         )
       }
     } finally {
@@ -1622,7 +1794,6 @@ export function EffectivePathsSyncDialog({
   }, [
     canExportTarget,
     exportableTargetCount,
-    onSuccess,
     parsedMaster,
     runExportTarget,
     showNotice,
@@ -1717,9 +1888,27 @@ export function EffectivePathsSyncDialog({
               busy,
               canExportTarget,
               onExportTarget: handleExportTarget,
+              pendingExportTargets,
             }}
           />
         ) : null}
+        <EffectivePathsPendingExportsPanel
+          pendingExports={pendingExports}
+          busy={busy}
+          promotingId={promotingExportId}
+          discardingId={discardingExportId}
+          t={t}
+          categoryLabel={(entry) =>
+            syncWorkbookNameForTarget(
+              entry.syncTarget as EffectivePathsImportTarget,
+              workbookByTarget[entry.syncTarget as EffectivePathsImportTarget]?.workbook?.name,
+            )
+          }
+          onApply={(entry) => void handlePromotePendingExport(entry)}
+          onDiscard={(entry) => void handleDiscardPendingExport(entry)}
+          onApplyAll={() => void handlePromoteAllPendingExports()}
+          onDiscardAll={() => void handleDiscardAllPendingExports()}
+        />
         <EffectivePathsWorkbooksLoadingProgress
           label={
             syncProgress

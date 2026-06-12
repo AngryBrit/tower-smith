@@ -19,6 +19,7 @@ import {
 } from '../towerGallery/api'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
+import { EffectivePathsSettingsSection } from './settings/EffectivePathsSettingsSection'
 
 function profileErrorId(error: ProfileError): StringId {
   switch (error) {
@@ -342,6 +343,8 @@ export function ProfileSettings() {
           </button>
         </div>
       ) : null}
+
+      <EffectivePathsSettingsSection />
 
       {notice ? (
         <p className="profile-settings__notice" role="status">

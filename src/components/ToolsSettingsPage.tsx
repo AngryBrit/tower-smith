@@ -1,6 +1,7 @@
 import { GalleryAdminPage } from './GalleryAdminPage'
 import { ProfileSettings } from './ProfileSettings'
 import { SettingsPage } from './SettingsPage'
+import { EffectivePathsSettingsSection } from './settings/EffectivePathsSettingsSection'
 import { ToolsPage } from './ToolsPage'
 import { useAuth } from '../auth/useAuth'
 import { supabaseBrowserConfigured } from '../supabase/client'
@@ -40,7 +41,12 @@ export function ToolsSettingsPage({
           <ProfileSettings />
           <hr className="tools-settings-page__divider" aria-hidden />
         </>
-      ) : null}
+      ) : (
+        <>
+          <EffectivePathsSettingsSection />
+          <hr className="tools-settings-page__divider" aria-hidden />
+        </>
+      )}
       <ToolsPage onOpenTowerBackup={onOpenTowerBackup} />
       <hr className="tools-settings-page__divider" aria-hidden />
       <SettingsPage

@@ -3,6 +3,7 @@ export const SHEETS_API = 'https://sheets.googleapis.com/v4/spreadsheets'
 export type SheetProperties = {
   sheetId: number
   title: string
+  index?: number
   gridProperties?: {
     rowCount?: number
     columnCount?: number

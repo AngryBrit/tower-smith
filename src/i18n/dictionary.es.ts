@@ -1398,7 +1398,7 @@ export const STRINGS_ES = {
   ep_sync_open_btn: 'Sincronizar Effective Paths…',
   ep_sync_title: 'Sincronización Effective Paths',
   ep_sync_intro:
-    'Carga los libros vinculados desde tu IDS Master (en Ajustes) e importa o exporta cada categoría.',
+    'Carga los libros vinculados desde tu IDS Master (en Ajustes) e importa o exporta cada categoría. Las exportaciones crean primero pestañas de vista previa — revísalas y luego aplica o descarta.',
   ep_sync_syncing: 'Sincronizando…',
   ep_labs_sync_section_hint:
     'Exporta o importa niveles de laboratorio con tu libro Laboratory. Configura primero la URL de IDS Master en Ajustes.',
@@ -1428,6 +1428,21 @@ export const STRINGS_ES = {
   ep_export_all_syncing: 'Exportando todo…',
   ep_import_all_success: 'Se importaron {{count}} categorías desde Effective Paths.',
   ep_export_all_success: 'Se exportaron {{count}} categorías a Effective Paths.',
+  ep_export_all_staged_success:
+    'Se crearon {{count}} exportaciones de vista previa. Revísalas abajo y luego aplica o descarta.',
+  ep_export_staged_section_title: 'Exportaciones de vista previa',
+  ep_export_staged_row_badge: 'Vista previa lista',
+  ep_export_staged_verify_hint:
+    'Abre las pestañas de vista previa en tu libro, compáralas con los originales y luego aplica o descarta.',
+  ep_export_staged_open_preview: 'Abrir “{{sheet}}”',
+  ep_export_staged_apply_btn: 'Aplicar cambios',
+  ep_export_staged_discard_btn: 'Descartar vista previa',
+  ep_export_staged_apply_all_btn: 'Aplicar todas las vistas previas',
+  ep_export_staged_discard_all_btn: 'Descartar todas las vistas previas',
+  ep_export_staged_promoting: 'Aplicando…',
+  ep_export_staged_discarding: 'Descartando…',
+  ep_export_staged_apply_success: 'Pestañas en vivo actualizadas.',
+  ep_export_staged_discard_success: 'Pestañas de vista previa eliminadas.',
   ep_import_all_none: 'No hay libros vinculados disponibles para importar.',
   ep_export_all_none: 'No hay libros vinculados disponibles para exportar.',
   ep_import_syncing: 'Importando…',
@@ -1523,15 +1538,18 @@ export const STRINGS_ES = {
   ep_export_syncing_themes: 'Exportando temas…',
   ep_export_syncing_cards: 'Exportando cartas y presets…',
   ep_export_syncing_workshop: 'Exportando taller…',
-  ep_export_relics_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de reliquias).',
-  ep_export_themes_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de temas).',
-  ep_export_cards_success: 'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de cartas).',
+  ep_export_relics_success:
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de reliquias).',
+  ep_export_themes_success:
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de temas).',
+  ep_export_cards_success:
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de cartas).',
   ep_export_workshop_success:
-    'Actualizadas {{cells}} celdas en “{{sheet}}” ({{rows}} filas de taller).',
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de taller).',
   ep_export_workshop_enhance_success_suffix:
-    'También actualizados {{enhanceRows}} niveles de mejoras del taller.',
+    'También se escribieron {{enhanceRows}} niveles de mejoras del taller en la pestaña de vista previa.',
   ep_export_cards_presets_success_suffix:
-    'También actualizadas {{presetRows}} ranuras de preset en “{{presetSheet}}”.',
+    'También se escribieron {{presetRows}} ranuras de preset en la pestaña de vista previa “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',
   ep_export_themes_unmapped_hint: '{{count}} nombres de tema no se mapearon y no se cambiaron.',
   ep_export_cards_unmapped_hint: '{{count}} nombres de carta no se mapearon y no se cambiaron.',
@@ -1588,20 +1606,20 @@ export const STRINGS_ES = {
   ep_export_syncing_guardians: 'Exportando chips de guardián…',
   ep_export_syncing_modules: 'Exportando módulos…',
   ep_export_bots_success:
-    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de estadísticas de bots).',
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de estadísticas de bots).',
   ep_export_bots_lab_success_suffix:
-    'También se actualizaron {{labRows}} niveles de laboratorio BOTS.',
+    'También se escribieron {{labRows}} niveles de laboratorio BOTS en la pestaña de vista previa.',
   ep_export_bots_unmapped_hint:
     '{{count}} nombres de bots de la hoja no se mapearon y se dejaron sin cambios.',
   ep_export_bots_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_labs_success:
-    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de labs).',
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de labs).',
   ep_export_uws_success:
-    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de niveles de armas definitivas).',
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de niveles de armas definitivas).',
   ep_export_guardians_success:
-    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de niveles de chips de guardián).',
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} filas de niveles de chips de guardián).',
   ep_export_modules_success:
-    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} columnas de módulos equipados, {{effects}} efectos).',
+    'Se escribieron {{cells}} celdas en la pestaña de vista previa “{{sheet}}” ({{rows}} columnas de módulos equipados, {{effects}} efectos).',
   ep_export_labs_unmapped_hint:
     '{{count}} nombres de labs de la hoja no se mapearon y se dejaron sin cambios.',
   ep_export_labs_unmapped_sample: 'Ejemplos: {{names}}',
