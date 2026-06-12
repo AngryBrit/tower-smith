@@ -4137,6 +4137,18 @@ button.workshop__uw-plus-cost--display:hover {
     align-self: start;
   }
 
+  #inpanel-panel-guardians .workshop__grid--ultimate .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
+    align-items: stretch;
+  }
+
+  #inpanel-panel-guardians
+    .workshop__grid--ultimate
+    .workshop__uw-stats:not(.workshop__uw-stats--unlock)
+    .workshop__uw-col {
+    height: 100%;
+    align-self: stretch;
+  }
+
   :is(#inpanel-panel-workshop, #inpanel-panel-guardians) .workshop__grid--ultimate .workshop__uw-col--uw-unlock {
     height: auto;
     min-height: var(--workshop-uw-stats-row-min-height);
@@ -10259,6 +10271,29 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   padding: 0.85rem 0.75rem 1.1rem;
   background: rgba(15, 23, 42, 0.92);
   border-top: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+/* Chip upgrade stat columns share one height when labels wrap (e.g. Double Find Chance). */
+#inpanel-panel-guardians .workshop__grid--ultimate .workshop__uw-stats:not(.workshop__uw-stats--unlock) {
+  align-items: stretch;
+}
+
+#inpanel-panel-guardians
+  .workshop__grid--ultimate
+  .workshop__uw-stats:not(.workshop__uw-stats--unlock)
+  .workshop__uw-col {
+  height: 100%;
+  align-self: stretch;
+}
+
+#inpanel-panel-guardians .workshop__grid--ultimate .workshop__uw-stat-label {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: calc(0.72rem * 1.2 * 2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
 .guardians-page__upgrade-head {
