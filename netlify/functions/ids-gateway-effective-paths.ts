@@ -59,6 +59,7 @@ export default async (req: Request): Promise<Response> => {
         botsWorkbook: gateway.botsWorkbook,
         laboratoryWorkbook: gateway.laboratoryWorkbook,
         uwsWorkbook: gateway.uwsWorkbook,
+        guardiansWorkbook: gateway.guardiansWorkbook,
         modulesWorkbook: gateway.modulesWorkbook,
       },
       cors,

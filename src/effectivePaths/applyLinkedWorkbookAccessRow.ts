@@ -2,6 +2,7 @@ import {
   isBotsWorkbookName,
   isCardsWorkbookName,
   isLaboratoryWorkbookName,
+  isGuardiansWorkbookName,
   isModulesWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -20,6 +21,7 @@ export type LinkedWorkbookAccessSetters = {
   setBotsWorkbookAccess?: (access: WorkbookAccessState) => void
   setLaboratoryWorkbookAccess?: (access: WorkbookAccessState) => void
   setUwsWorkbookAccess?: (access: WorkbookAccessState) => void
+  setGuardiansWorkbookAccess?: (access: WorkbookAccessState) => void
   setModulesWorkbookAccess?: (access: WorkbookAccessState) => void
 }
 
@@ -34,5 +36,6 @@ export function applyLinkedWorkbookAccessRow(
   if (isBotsWorkbookName(row.name)) setters.setBotsWorkbookAccess?.(row.access)
   if (isLaboratoryWorkbookName(row.name)) setters.setLaboratoryWorkbookAccess?.(row.access)
   if (isUwsWorkbookName(row.name)) setters.setUwsWorkbookAccess?.(row.access)
+  if (isGuardiansWorkbookName(row.name)) setters.setGuardiansWorkbookAccess?.(row.access)
   if (isModulesWorkbookName(row.name)) setters.setModulesWorkbookAccess?.(row.access)
 }

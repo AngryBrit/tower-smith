@@ -1353,6 +1353,7 @@ export const STRINGS_DE = {
   ep_import_workshop_btn: 'Workshop aus Workshop-Arbeitsmappe importieren',
   ep_import_bots_btn: 'Bots aus Bots-Arbeitsmappe importieren',
   ep_import_uws_btn: 'UWs aus UWs-Arbeitsmappe importieren',
+  ep_import_guardians_btn: 'Chips aus Guardians-Arbeitsmappe importieren',
   ep_import_modules_btn: 'Module aus Modules-Arbeitsmappe importieren',
   ep_import_row_btn: 'Import',
   ep_import_row_syncing: 'Import…',
@@ -1373,6 +1374,7 @@ export const STRINGS_DE = {
   ep_import_syncing_workshop: 'Workshop wird importiert…',
   ep_import_syncing_bots: 'Bots werden importiert…',
   ep_import_syncing_uws: 'UWs werden importiert…',
+  ep_import_syncing_guardians: 'Wächter-Chips werden importiert…',
   ep_import_syncing_modules: 'Module werden importiert…',
   ep_import_relics_success: '{{rows}} Relikt-Zeilen aus „{{sheet}}“ importiert.',
   ep_import_themes_success: '{{rows}} Theme-Zeilen aus „{{sheet}}“ importiert.',
@@ -1387,6 +1389,7 @@ export const STRINGS_DE = {
   ep_import_bots_success: '{{rows}} Bot-Farming-Level aus „{{sheet}}“ importiert.',
   ep_import_bots_lab_success_suffix: 'Außerdem {{labRows}} BOTS-Labor-Level importiert.',
   ep_import_uws_success: '{{rows}} Ultimate-Weapon-Level aus „{{sheet}}“ importiert.',
+  ep_import_guardians_success: '{{rows}} Wächter-Chip-Freischaltungen aus „{{sheet}}“ importiert.',
   ep_import_modules_success:
     '{{rows}} ausgerüstete Modul-Spalten ({{effects}} Effekte) aus „{{sheet}}“ importiert.',
   ep_export_intro:
@@ -1416,6 +1419,7 @@ export const STRINGS_DE = {
   ep_export_bots_sync_target: 'Bots-Sync-Ziel',
   ep_export_labs_sync_target: 'Labor-Sync-Ziel',
   ep_export_uws_sync_target: 'Ultimate-Weapons-Sync-Ziel',
+  ep_export_guardians_sync_target: 'Wächter-Chips-Sync-Ziel',
   ep_export_modules_sync_target: 'Module-Sync-Ziel',
   ep_export_relics_missing_in_master:
     'Keine Relics-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
@@ -1427,6 +1431,8 @@ export const STRINGS_DE = {
     'Keine Workshop-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_uws_missing_in_master:
     'Keine Ultimate-Weapons-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
+  ep_export_guardians_missing_in_master:
+    'Keine Guardians-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_modules_missing_in_master:
     'Keine Modules-Zeile mit Spreadsheet-ID auf dem IDS-Tab gefunden.',
   ep_export_labs_missing_in_master:
@@ -1444,6 +1450,7 @@ export const STRINGS_DE = {
   ep_export_sync_bots_btn: 'Bots ins Bots-Buch exportieren',
   ep_export_sync_labs_btn: 'Labs ins Laboratory-Buch exportieren',
   ep_export_sync_uws_btn: 'Ultimate Weapons ins UWs-Buch exportieren',
+  ep_export_sync_guardians_btn: 'Wächter-Chips ins Guardians-Buch exportieren',
   ep_export_sync_modules_btn: 'Module ins Modules-Buch exportieren',
   ep_export_syncing_workbook_named: 'Exportiere {{name}}…',
   ep_export_syncing_relics: 'Relikte werden exportiert…',
@@ -1512,6 +1519,7 @@ export const STRINGS_DE = {
   ep_export_syncing_bots: 'Bots werden exportiert…',
   ep_export_syncing_labs: 'Labs werden exportiert…',
   ep_export_syncing_uws: 'Ultimate Weapons werden exportiert…',
+  ep_export_syncing_guardians: 'Wächter-Chips werden exportiert…',
   ep_export_syncing_modules: 'Module werden exportiert…',
   ep_export_bots_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Bot-Stat-Zeilen).',
@@ -1523,6 +1531,8 @@ export const STRINGS_DE = {
   ep_export_labs_success: '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Lab-Zeilen).',
   ep_export_uws_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Ultimate-Weapon-Level-Zeilen).',
+  ep_export_guardians_success:
+    '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} Wächter-Chip-Level-Zeilen).',
   ep_export_modules_success:
     '{{cells}} Zellen auf „{{sheet}}“ aktualisiert ({{rows}} ausgerüstete Modul-Spalten, {{effects}} Effekte).',
   ep_export_labs_unmapped_hint:
@@ -1552,6 +1562,14 @@ export const STRINGS_DE = {
     'Master-Sheet-Tab im UWs-Arbeitsbuch nicht gefunden.',
   ep_export_error_no_uws_rows:
     'Keine Ultimate-Weapon-Zeilen auf dem Master-Sheet-Tab gefunden. Prüfe Layout oder Tab-Namen.',
+  ep_export_error_guardians_workbook_not_found:
+    'IDS Master hat keine Guardians-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
+  ep_export_error_guardians_workbook_access_denied:
+    'Das verknüpfte Guardians-Arbeitsbuch ({{id}}) kann nicht bearbeitet werden. Öffne es in Google Sheets mit Editor-Zugriff oder korrigiere den Link auf dem IDS-Tab.',
+  ep_export_error_guardians_tab_not_found:
+    'Master-Sheet-Tab im Guardians-Arbeitsbuch nicht gefunden.',
+  ep_export_error_no_guardians_rows:
+    'Keine Wächter-Chip-Zeilen auf dem Master-Sheet-Tab gefunden. Prüfe Layout oder Tab-Namen.',
   ep_export_error_modules_workbook_not_found:
     'IDS Master hat keine Modules-Arbeitsmappen-Zeile. Prüfe die verknüpfte ID-Tabelle.',
   ep_export_error_modules_workbook_access_denied:

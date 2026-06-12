@@ -2,6 +2,7 @@ import {
   isBotsWorkbookName,
   isCardsWorkbookName,
   isLaboratoryWorkbookName,
+  isGuardiansWorkbookName,
   isModulesWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -27,6 +28,7 @@ export type EffectivePathsIdsGateway = {
   botsWorkbook: EffectivePathsLinkedWorkbook | null
   laboratoryWorkbook: EffectivePathsLinkedWorkbook | null
   uwsWorkbook: EffectivePathsLinkedWorkbook | null
+  guardiansWorkbook: EffectivePathsLinkedWorkbook | null
   modulesWorkbook: EffectivePathsLinkedWorkbook | null
 }
 
@@ -40,6 +42,7 @@ export type EffectivePathsListResult = {
   botsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   laboratoryWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   uwsWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
+  guardiansWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   modulesWorkbookAccess: 'ok' | 'denied' | 'not_found' | null
   workbookAccess: LinkedWorkbookAccess[]
 }
@@ -56,6 +59,7 @@ export function workbooksToAuthorizeFromGateway(
     ...(gateway.botsWorkbook ? [gateway.botsWorkbook] : []),
     ...(gateway.laboratoryWorkbook ? [gateway.laboratoryWorkbook] : []),
     ...(gateway.uwsWorkbook ? [gateway.uwsWorkbook] : []),
+    ...(gateway.guardiansWorkbook ? [gateway.guardiansWorkbook] : []),
     ...(gateway.modulesWorkbook ? [gateway.modulesWorkbook] : []),
   ])
   const seen = new Set<string>()
@@ -100,6 +104,8 @@ export function assembleEffectivePathsListResult(
     laboratoryWorkbookAccess: categoryAccess(knownAccess, isLaboratoryWorkbookName),
     uwsWorkbook: gateway.uwsWorkbook,
     uwsWorkbookAccess: categoryAccess(knownAccess, isUwsWorkbookName),
+    guardiansWorkbook: gateway.guardiansWorkbook,
+    guardiansWorkbookAccess: categoryAccess(knownAccess, isGuardiansWorkbookName),
     modulesWorkbook: gateway.modulesWorkbook,
     modulesWorkbookAccess: categoryAccess(knownAccess, isModulesWorkbookName),
     workbookAccess: [...knownAccess],

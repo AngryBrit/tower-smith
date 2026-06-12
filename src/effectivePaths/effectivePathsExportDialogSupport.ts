@@ -58,6 +58,11 @@ export const EXPORT_TARGET_UI: readonly ExportTargetUiConfig[] = [
     syncingKey: 'ep_export_syncing_uws',
   },
   {
+    target: 'guardians',
+    btnKey: 'ep_export_sync_guardians_btn',
+    syncingKey: 'ep_export_syncing_guardians',
+  },
+  {
     target: 'modules',
     btnKey: 'ep_export_sync_modules_btn',
     syncingKey: 'ep_export_syncing_modules',

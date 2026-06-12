@@ -10,6 +10,11 @@ import {
   type BotFarmingLevelCellUpdate,
 } from '../../../src/effectivePaths/buildBotSheetUpdates'
 import {
+  buildGuardianLevelCellUpdates,
+  buildGuardianSheetUpdates,
+  type GuardianLevelCellUpdate,
+} from '../../../src/effectivePaths/buildGuardianSheetUpdates'
+import {
   buildUwFarmingLevelCellUpdates,
   buildUwSheetUpdates,
   type UwFarmingLevelCellUpdate,
@@ -21,8 +26,18 @@ import {
 } from '../../../src/effectivePaths/buildModuleSheetUpdates'
 import { resolveModuleEpInventoryLayout } from '../../../src/effectivePaths/moduleEpInventoryLayoutFromSheet'
 import type { ModulesEpSyncState } from '../../../src/effectivePaths/modulesEpStateFromPersisted'
+import type { GuardiansEpSyncState } from '../../../src/effectivePaths/guardiansEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../../src/effectivePaths/uwsEpStateFromPersisted'
 import { WORKSHOP_ULTIMATE_WEAPON_ORDER } from '../../../src/data/workshopUltimateData'
+import {
+  GUARDIAN_EP_V302_LEVEL_COL,
+  GUARDIAN_EP_V302_LEVEL_FIRST_ROW,
+  GUARDIAN_EP_V302_LEVEL_LAST_ROW,
+} from '../../../src/effectivePaths/guardianEpSheetNames'
+import {
+  isGuardiansInputTabCandidate,
+  pickEffectivePathsGuardiansTab,
+} from '../../../src/effectivePaths/pickGuardiansTab'
 import {
   UW_EP_V31_LEVEL_FIRST_ROW,
   UW_EP_V31_LEVEL_LAST_ROW,
@@ -148,6 +163,7 @@ import {
   resolveCardsWorkbookId,
   resolveLaboratoryWorkbookId,
   resolveUwsWorkbookId,
+  resolveGuardiansWorkbookId,
   resolveModulesWorkbookId,
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
@@ -1818,6 +1834,210 @@ export async function exportUwsToGoogleSheet(options: {
     matchedRows: farmingCells.length,
     sheetTitle,
     uwsWorkbookId,
+  }
+}
+
+export type ExportGuardiansToSheetResult = {
+  updatedCells: number
+  matchedRows: number
+  sheetTitle: string
+  guardiansWorkbookId: string
+}
+
+export function orderedGuardiansWorkbookTabs(
+  sheets: readonly { properties: SheetProperties }[],
+  sheetGid: number | null,
+): SheetProperties[] {
+  const candidates = sheets
+    .map((sheet) => sheet.properties)
+    .filter((tab) => isGuardiansInputTabCandidate(tab.title, tab.gridProperties))
+
+  if (sheetGid != null) {
+    const byGid = candidates.find((tab) => tab.sheetId === sheetGid)
+    if (byGid) {
+      return [byGid, ...candidates.filter((tab) => tab.sheetId !== byGid.sheetId)]
+    }
+  }
+
+  const preferred = pickEffectivePathsGuardiansTab(sheets, null)
+  const out: SheetProperties[] = []
+  if (preferred && isGuardiansInputTabCandidate(preferred.title, preferred.gridProperties)) {
+    out.push(preferred)
+  }
+  for (const tab of candidates) {
+    if (!out.some((entry) => entry.sheetId === tab.sheetId)) out.push(tab)
+  }
+  return out
+}
+
+async function clearGuardianLevelColumn(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetTitle: string,
+): Promise<void> {
+  const quoted = quoteSheetTitleForRange(sheetTitle)
+  const range = encodeURIComponent(
+    `${quoted}!C${GUARDIAN_EP_V302_LEVEL_FIRST_ROW}:C${GUARDIAN_EP_V302_LEVEL_LAST_ROW}`,
+  )
+  const clearRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values/${range}:clear`,
+    { method: 'POST' },
+  )
+  throwIfSheetsAccessDenied(clearRes.status, 'guardians_workbook')
+  if (!clearRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', clearRes.status, await clearRes.text())
+  }
+}
+
+async function applyGuardianLevelCells(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetId: number,
+  cells: readonly GuardianLevelCellUpdate[],
+): Promise<number> {
+  if (cells.length === 0) return 0
+
+  const requests = cells.map(({ rowIndex, label }) => ({
+    updateCells: {
+      range: {
+        sheetId,
+        startRowIndex: rowIndex - 1,
+        endRowIndex: rowIndex,
+        startColumnIndex: GUARDIAN_EP_V302_LEVEL_COL,
+        endColumnIndex: GUARDIAN_EP_V302_LEVEL_COL + 1,
+      },
+      rows: [
+        {
+          values: [{ userEnteredValue: { stringValue: label } }],
+        },
+      ],
+      fields: 'userEnteredValue',
+    },
+  }))
+
+  const updateRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}:batchUpdate`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ requests }),
+    },
+  )
+  throwIfSheetsAccessDenied(updateRes.status, 'guardians_workbook')
+  if (!updateRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+  }
+
+  return cells.length
+}
+
+export async function exportGuardiansToGoogleSheet(options: {
+  accessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  spreadsheetId?: string | null
+  sheetGid?: number | null
+  guardiansEpState: GuardiansEpSyncState
+}): Promise<ExportGuardiansToSheetResult> {
+  const overrideId = options.spreadsheetId?.trim() ?? ''
+  let guardiansWorkbookId = overrideId
+  if (!guardiansWorkbookId && options.masterSpreadsheetId) {
+    guardiansWorkbookId = await resolveGuardiansWorkbookId({
+      accessToken: options.accessToken,
+      masterSpreadsheetId: options.masterSpreadsheetId,
+      sheetGid: options.masterSheetGid ?? null,
+    })
+  }
+  if (!guardiansWorkbookId) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'invalid_spreadsheet')
+  }
+
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(guardiansWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'guardians_workbook')
+  if (metaRes.status === 404) {
+    throw new GoogleSheetsApiError('sheet_not_found', metaRes.status)
+  }
+  if (!metaRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', metaRes.status, await metaRes.text())
+  }
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+
+  let sheetTitle = ''
+  let sheetId: number | null = null
+  for (const tab of orderedGuardiansWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    if (isGuardiansInputTabCandidate(tab.title, tab.gridProperties)) {
+      sheetTitle = tab.title
+      sheetId = tab.sheetId ?? null
+      break
+    }
+  }
+
+  if (!sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'guardians_tab_not_found')
+  }
+
+  const levelCells = buildGuardianLevelCellUpdates(options.guardiansEpState)
+  const unlockBatch = buildGuardianSheetUpdates(sheetTitle, options.guardiansEpState)
+  if (levelCells.length === 0 && unlockBatch.length === 0) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'no_guardians_rows')
+  }
+
+  await clearGuardianLevelColumn(options.accessToken, guardiansWorkbookId, sheetTitle)
+
+  let updatedCells = 0
+  let valueBatch = unlockBatch
+
+  if (sheetId != null) {
+    updatedCells += await applyGuardianLevelCells(
+      options.accessToken,
+      guardiansWorkbookId,
+      sheetId,
+      levelCells,
+    )
+  } else if (levelCells.length > 0) {
+    const quoted = quoteSheetTitleForRange(sheetTitle)
+    valueBatch = [
+      ...unlockBatch,
+      ...levelCells.map(({ rowIndex, label }) => ({
+        range: `${quoted}!C${rowIndex}`,
+        values: [[label]] as (string | number | boolean)[][],
+      })),
+    ]
+  }
+
+  if (valueBatch.length > 0) {
+    const updateRes = await sheetsFetch(
+      options.accessToken,
+      `/${encodeURIComponent(guardiansWorkbookId)}/values:batchUpdate`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          valueInputOption: 'USER_ENTERED',
+          data: valueBatch,
+        }),
+      },
+    )
+    throwIfSheetsAccessDenied(updateRes.status, 'guardians_workbook')
+    if (!updateRes.ok) {
+      throw new GoogleSheetsApiError('sheets_api_error', updateRes.status, await updateRes.text())
+    }
+    const updateBody = (await updateRes.json()) as { totalUpdatedCells?: number }
+    updatedCells += updateBody.totalUpdatedCells ?? valueBatch.length
+  }
+
+  return {
+    updatedCells,
+    matchedRows: levelCells.length,
+    sheetTitle,
+    guardiansWorkbookId,
   }
 }
 

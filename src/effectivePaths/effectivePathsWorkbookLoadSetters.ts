@@ -22,6 +22,8 @@ export type EffectivePathsWorkbookLoadSetters = {
   setLaboratoryWorkbookAccess: (access: WorkbookAccessState) => void
   setUwsWorkbook: (workbook: EffectivePathsLinkedWorkbook | null) => void
   setUwsWorkbookAccess: (access: WorkbookAccessState) => void
+  setGuardiansWorkbook: (workbook: EffectivePathsLinkedWorkbook | null) => void
+  setGuardiansWorkbookAccess: (access: WorkbookAccessState) => void
   setModulesWorkbook: (workbook: EffectivePathsLinkedWorkbook | null) => void
   setModulesWorkbookAccess: (access: WorkbookAccessState) => void
   setWorkbookAccess: (
@@ -46,6 +48,8 @@ export function resetEffectivePathsWorkbookLoadState(setters: EffectivePathsWork
   setters.setLaboratoryWorkbookAccess(null)
   setters.setUwsWorkbook(null)
   setters.setUwsWorkbookAccess(null)
+  setters.setGuardiansWorkbook(null)
+  setters.setGuardiansWorkbookAccess(null)
   setters.setModulesWorkbook(null)
   setters.setModulesWorkbookAccess(null)
   setters.setWorkbookAccess(null)
@@ -64,6 +68,7 @@ export function applyEffectivePathsGateway(
   setters.setBotsWorkbook(gateway.botsWorkbook)
   setters.setLaboratoryWorkbook(gateway.laboratoryWorkbook)
   setters.setUwsWorkbook(gateway.uwsWorkbook)
+  setters.setGuardiansWorkbook(gateway.guardiansWorkbook)
   setters.setModulesWorkbook(gateway.modulesWorkbook)
 }
 
@@ -102,6 +107,7 @@ export function applyEffectivePathsWorkbookAccessRow(
     setBotsWorkbookAccess: setters.setBotsWorkbookAccess,
     setLaboratoryWorkbookAccess: setters.setLaboratoryWorkbookAccess,
     setUwsWorkbookAccess: setters.setUwsWorkbookAccess,
+    setGuardiansWorkbookAccess: setters.setGuardiansWorkbookAccess,
     setModulesWorkbookAccess: setters.setModulesWorkbookAccess,
   })
 }

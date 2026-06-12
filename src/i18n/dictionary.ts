@@ -1402,6 +1402,7 @@ export const STRINGS_EN = {
   ep_import_workshop_btn: 'Import workshop from Workshop workbook',
   ep_import_bots_btn: 'Import bots from Bots workbook',
   ep_import_uws_btn: 'Import UWs from UWs workbook',
+  ep_import_guardians_btn: 'Import chips from Guardians workbook',
   ep_import_modules_btn: 'Import modules from Modules workbook',
   ep_import_row_btn: 'Import',
   ep_import_row_syncing: 'Importing…',
@@ -1422,6 +1423,7 @@ export const STRINGS_EN = {
   ep_import_syncing_workshop: 'Importing workshop…',
   ep_import_syncing_bots: 'Importing bots…',
   ep_import_syncing_uws: 'Importing UWs…',
+  ep_import_syncing_guardians: 'Importing guardian chips…',
   ep_import_syncing_modules: 'Importing modules…',
   ep_import_relics_success: 'Imported {{rows}} relic rows from “{{sheet}}”.',
   ep_import_themes_success: 'Imported {{rows}} theme rows from “{{sheet}}”.',
@@ -1435,6 +1437,7 @@ export const STRINGS_EN = {
   ep_import_bots_success: 'Imported {{rows}} bot farming levels from “{{sheet}}”.',
   ep_import_bots_lab_success_suffix: 'Also imported {{labRows}} BOTS laboratory levels.',
   ep_import_uws_success: 'Imported {{rows}} ultimate weapon levels from “{{sheet}}”.',
+  ep_import_guardians_success: 'Imported {{rows}} guardian chip unlock rows from “{{sheet}}”.',
   ep_import_modules_success:
     'Imported {{rows}} equipped module columns ({{effects}} effects) from “{{sheet}}”.',
   ep_export_intro:
@@ -1464,6 +1467,7 @@ export const STRINGS_EN = {
   ep_export_bots_sync_target: 'bots sync target',
   ep_export_labs_sync_target: 'laboratory sync target',
   ep_export_uws_sync_target: 'ultimate weapons sync target',
+  ep_export_guardians_sync_target: 'guardian chips sync target',
   ep_export_modules_sync_target: 'modules sync target',
   ep_export_relics_missing_in_master:
     'No Relics row with a spreadsheet ID was found on the IDS tab.',
@@ -1477,6 +1481,8 @@ export const STRINGS_EN = {
     'No Bots row with a spreadsheet ID was found on the IDS tab.',
   ep_export_uws_missing_in_master:
     'IDS Master has no Ultimate Weapons workbook row. Add a UWs v3.1.2 link on the IDS tab.',
+  ep_export_guardians_missing_in_master:
+    'IDS Master has no Guardians workbook row. Add a Guardians v3.0.2 link on the IDS tab.',
   ep_export_modules_missing_in_master:
     'IDS Master has no Modules workbook row. Add a Modules v6.x link on the IDS tab.',
   ep_export_labs_missing_in_master:
@@ -1494,6 +1500,7 @@ export const STRINGS_EN = {
   ep_export_sync_bots_btn: 'Export bots to Bots workbook',
   ep_export_sync_labs_btn: 'Export labs to Laboratory workbook',
   ep_export_sync_uws_btn: 'Export ultimate weapons to UWs workbook',
+  ep_export_sync_guardians_btn: 'Export guardian chips to Guardians workbook',
   ep_export_sync_modules_btn: 'Export modules to Modules workbook',
   ep_export_syncing_workbook_named: 'Exporting {{name}}…',
   ep_export_syncing_relics: 'Exporting relics…',
@@ -1503,6 +1510,7 @@ export const STRINGS_EN = {
   ep_export_syncing_bots: 'Exporting bots…',
   ep_export_syncing_labs: 'Exporting labs…',
   ep_export_syncing_uws: 'Exporting ultimate weapons…',
+  ep_export_syncing_guardians: 'Exporting guardian chips…',
   ep_export_syncing_modules: 'Exporting modules…',
   ep_export_relics_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} relic rows).',
   ep_export_themes_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} theme rows).',
@@ -1515,6 +1523,8 @@ export const STRINGS_EN = {
   ep_export_labs_success: 'Updated {{cells}} cells on “{{sheet}}” ({{rows}} lab rows).',
   ep_export_uws_success:
     'Updated {{cells}} cells on “{{sheet}}” ({{rows}} ultimate weapon level rows).',
+  ep_export_guardians_success:
+    'Updated {{cells}} cells on “{{sheet}}” ({{rows}} guardian chip level rows).',
   ep_export_modules_success:
     'Updated {{cells}} cells on “{{sheet}}” ({{rows}} equipped module columns, {{effects}} effects).',
   ep_export_bots_lab_success_suffix: 'Also updated {{labRows}} BOTS laboratory levels.',
@@ -1599,6 +1609,14 @@ export const STRINGS_EN = {
     'Could not find the Master Sheet tab in the UWs workbook.',
   ep_export_error_no_uws_rows:
     'No ultimate weapon rows were found on the Master Sheet tab. Check the sheet layout or tab name.',
+  ep_export_error_guardians_workbook_not_found:
+    'IDS Master has no Guardians workbook row. Check the linked-ID table.',
+  ep_export_error_guardians_workbook_access_denied:
+    'Cannot edit the IDS-linked Guardians workbook ({{id}}). Open it in Google Sheets and confirm you have Editor access, or fix the link on the IDS tab.',
+  ep_export_error_guardians_tab_not_found:
+    'Could not find the Master Sheet tab in the Guardians workbook.',
+  ep_export_error_no_guardians_rows:
+    'No guardian chip rows were found on the Master Sheet tab. Check the sheet layout or tab name.',
   ep_export_error_modules_workbook_not_found:
     'IDS Master has no Modules workbook row. Check the linked-ID table.',
   ep_export_error_modules_workbook_access_denied:

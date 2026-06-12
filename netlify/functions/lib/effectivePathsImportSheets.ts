@@ -24,6 +24,7 @@ import {
 } from '../../../src/effectivePaths/resolveThemesSheetTab'
 import { modulesEpStateFromSheetGrid } from '../../../src/effectivePaths/modulesEpStateFromSheet'
 import { resolveModuleEpInventoryLayout } from '../../../src/effectivePaths/moduleEpInventoryLayoutFromSheet'
+import { guardiansEpStateFromSheetGrid } from '../../../src/effectivePaths/guardiansEpStateFromSheet'
 import { uwsEpStateFromSheetGrid } from '../../../src/effectivePaths/uwsEpStateFromSheet'
 import {
   parseBotLabRowsWithLayout,
@@ -31,7 +32,12 @@ import {
   unmappedBotNamesWithLayout,
 } from '../../../src/effectivePaths/botSheetLayout'
 import { isModulesInputTabCandidate } from '../../../src/effectivePaths/pickModulesTab'
+import { isGuardiansInputTabCandidate } from '../../../src/effectivePaths/pickGuardiansTab'
 import { isUwsInputTabCandidate } from '../../../src/effectivePaths/pickUwsTab'
+import {
+  GUARDIAN_EP_V302_LEVEL_FIRST_ROW,
+  GUARDIAN_EP_V302_LEVEL_LAST_ROW,
+} from '../../../src/effectivePaths/guardianEpSheetNames'
 import {
   UW_EP_V31_LEVEL_FIRST_ROW,
   UW_EP_V31_LEVEL_LAST_ROW,
@@ -43,11 +49,13 @@ import {
   resolveRelicsWorkbookId,
   resolveThemesWorkbookId,
   resolveUwsWorkbookId,
+  resolveGuardiansWorkbookId,
 } from './idsMasterSheets'
 import {
   orderedBotsWorkbookTabs,
   orderedCardPresetWorkbookTabs,
   orderedCardsWorkbookTabs,
+  orderedGuardiansWorkbookTabs,
   orderedModulesWorkbookTabs,
   orderedRelicsWorkbookTabs,
   orderedThemesWorkbookTabs,
@@ -138,6 +146,45 @@ async function readUwsImportGrid(
   }
   for (let i = 0; i < gValues.length; i += 1) {
     grid[UW_EP_V31_LEVEL_FIRST_ROW - 1 + i]![6] = cellValueToString(gValues[i]?.[0])
+  }
+  return grid
+}
+
+async function readGuardiansImportGrid(
+  accessToken: string,
+  spreadsheetId: string,
+  sheetTitle: string,
+): Promise<string[][]> {
+  const quoted = quoteSheetTitleForRange(sheetTitle)
+  const firstRow = GUARDIAN_EP_V302_LEVEL_FIRST_ROW
+  const lastRow = GUARDIAN_EP_V302_LEVEL_LAST_ROW
+  const rangeParams = [
+    `${quoted}!B${firstRow}:B${lastRow}`,
+    `${quoted}!C${firstRow}:C${lastRow}`,
+  ]
+    .map((range) => `ranges=${encodeURIComponent(range)}`)
+    .join('&')
+  const batchRes = await sheetsFetch(
+    accessToken,
+    `/${encodeURIComponent(spreadsheetId)}/values:batchGet?${rangeParams}&valueRenderOption=UNFORMATTED_VALUE`,
+  )
+  throwIfSheetsAccessDenied(batchRes.status, 'guardians_workbook')
+  if (!batchRes.ok) {
+    throw new GoogleSheetsApiError('sheets_api_error', batchRes.status, await batchRes.text())
+  }
+  const batchBody = (await batchRes.json()) as {
+    valueRanges?: { range?: string; values?: unknown[][] }[]
+  }
+  const valueRanges = batchBody.valueRanges ?? []
+  const bValues = valueRanges.find((entry) => /!B\d/i.test(entry.range ?? ''))?.values ?? []
+  const cValues = valueRanges.find((entry) => /!C\d/i.test(entry.range ?? ''))?.values ?? []
+  const rowCount = GUARDIAN_EP_V302_LEVEL_LAST_ROW
+  const grid: string[][] = Array.from({ length: rowCount }, () => Array(4).fill(''))
+  for (let i = 0; i < bValues.length; i += 1) {
+    grid[GUARDIAN_EP_V302_LEVEL_FIRST_ROW - 1 + i]![1] = cellValueToString(bValues[i]?.[0])
+  }
+  for (let i = 0; i < cValues.length; i += 1) {
+    grid[GUARDIAN_EP_V302_LEVEL_FIRST_ROW - 1 + i]![2] = cellValueToString(cValues[i]?.[0])
   }
   return grid
 }
@@ -417,6 +464,50 @@ export async function importUwsFromGoogleSheet(
     matchedRows: Object.keys(uwsEpState.levels).length,
     sheetTitle,
     uwsWorkbookId,
+  }
+}
+
+export type ImportGuardiansFromSheetResult = {
+  guardiansEpState: ReturnType<typeof guardiansEpStateFromSheetGrid>
+  matchedRows: number
+  sheetTitle: string
+  guardiansWorkbookId: string
+}
+
+export async function importGuardiansFromGoogleSheet(
+  options: WorkbookResolveOptions & { sheetGid?: number | null },
+): Promise<ImportGuardiansFromSheetResult> {
+  const guardiansWorkbookId = await resolveWorkbookId(options, resolveGuardiansWorkbookId)
+  const metaRes = await sheetsFetch(
+    options.accessToken,
+    `/${encodeURIComponent(guardiansWorkbookId)}?fields=sheets.properties(sheetId,title,gridProperties(rowCount,columnCount))`,
+  )
+  throwIfSheetsAccessDenied(metaRes.status, 'guardians_workbook')
+  if (!metaRes.ok) throw new GoogleSheetsApiError('sheets_api_error', metaRes.status)
+
+  const meta = (await metaRes.json()) as SpreadsheetMetadata
+  const sheets = meta.sheets ?? []
+  let sheetTitle = ''
+
+  for (const tab of orderedGuardiansWorkbookTabs(sheets, options.sheetGid ?? null)) {
+    if (isGuardiansInputTabCandidate(tab.title, tab.gridProperties)) {
+      sheetTitle = tab.title
+      break
+    }
+  }
+
+  if (!sheetTitle) {
+    throw new GoogleSheetsApiError('sheets_api_error', 400, 'guardians_tab_not_found')
+  }
+
+  const rawRows = await readGuardiansImportGrid(options.accessToken, guardiansWorkbookId, sheetTitle)
+  const guardiansEpState = guardiansEpStateFromSheetGrid(rawRows)
+
+  return {
+    guardiansEpState,
+    matchedRows: guardiansEpState.unlockedChipIds.length,
+    sheetTitle,
+    guardiansWorkbookId,
   }
 }
 

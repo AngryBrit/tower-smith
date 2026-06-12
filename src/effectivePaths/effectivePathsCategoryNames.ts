@@ -4,6 +4,7 @@ import {
   EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_LABORATORY_WORKBOOK_NAME,
   EFFECTIVE_PATHS_UWS_WORKBOOK_NAME,
+  EFFECTIVE_PATHS_GUARDIANS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME,
   EFFECTIVE_PATHS_RELICS_WORKBOOK_NAME,
   EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
@@ -182,6 +183,24 @@ export function findModulesWorkbook(
   const byAlias = workbooks.find((workbook) => isModulesWorkbookName(workbook.name))
   if (byAlias) return byAlias
   const norm = categoryNameKey(EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME)
+  return (
+    workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
+    workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??
+    null
+  )
+}
+
+export function isGuardiansWorkbookName(name: string): boolean {
+  const key = categoryNameKey(name)
+  return key === 'guardians' || key.startsWith('guardians ')
+}
+
+export function findGuardiansWorkbook(
+  workbooks: readonly EffectivePathsLinkedWorkbook[],
+): EffectivePathsLinkedWorkbook | null {
+  const byAlias = workbooks.find((workbook) => isGuardiansWorkbookName(workbook.name))
+  if (byAlias) return byAlias
+  const norm = categoryNameKey(EFFECTIVE_PATHS_GUARDIANS_WORKBOOK_NAME)
   return (
     workbooks.find((workbook) => categoryNameKey(workbook.name) === norm) ??
     workbooks.find((workbook) => categoryNameKey(workbook.name).includes(norm)) ??

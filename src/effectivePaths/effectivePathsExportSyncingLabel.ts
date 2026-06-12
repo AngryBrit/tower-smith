@@ -8,6 +8,7 @@ export type EffectivePathsExportTarget =
   | 'bots'
   | 'labs'
   | 'uws'
+  | 'guardians'
   | 'modules'
 
 const EXPORT_SYNCING_LABEL_KEYS: Record<EffectivePathsExportTarget, StringId> = {
@@ -18,6 +19,7 @@ const EXPORT_SYNCING_LABEL_KEYS: Record<EffectivePathsExportTarget, StringId> = 
   bots: 'ep_export_syncing_bots',
   labs: 'ep_export_syncing_labs',
   uws: 'ep_export_syncing_uws',
+  guardians: 'ep_export_syncing_guardians',
   modules: 'ep_export_syncing_modules',
 }
 

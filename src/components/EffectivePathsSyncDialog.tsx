@@ -3,6 +3,7 @@ import type { ImportNoticeVariant } from '../importNotice'
 import type { BotsEpSyncState } from '../effectivePaths/botsEpStateFromPersisted'
 import { countModulesEpEquippedSlots } from '../effectivePaths/buildModuleSheetUpdates'
 import type { ModulesEpSyncState } from '../effectivePaths/modulesEpStateFromPersisted'
+import type { GuardiansEpSyncState } from '../effectivePaths/guardiansEpStateFromPersisted'
 import type { UwsEpSyncState } from '../effectivePaths/uwsEpStateFromPersisted'
 import {
   EFFECTIVE_PATHS_IMPORT_TARGET_ORDER,
@@ -36,6 +37,7 @@ import {
   exportLabsToEffectivePaths,
   exportModulesToEffectivePaths,
   exportUwsToEffectivePaths,
+  exportGuardiansToEffectivePaths,
   exportCardsToEffectivePaths,
   exportRelicsToEffectivePaths,
   exportThemesToEffectivePaths,
@@ -47,6 +49,7 @@ import {
   importRelicsFromEffectivePaths,
   importThemesFromEffectivePaths,
   importUwsFromEffectivePaths,
+  importGuardiansFromEffectivePaths,
   importWorkshopFromEffectivePaths,
   listEffectivePathsWorkbooks,
   type EffectivePathsExportError,
@@ -107,6 +110,10 @@ const EXPORT_ERROR_KEYS: Record<EffectivePathsExportError, StringId> = {
   uws_workbook_access_denied: 'ep_export_error_uws_workbook_access_denied',
   uws_tab_not_found: 'ep_export_error_uws_tab_not_found',
   no_uws_rows: 'ep_export_error_no_uws_rows',
+  guardians_workbook_not_found: 'ep_export_error_guardians_workbook_not_found',
+  guardians_workbook_access_denied: 'ep_export_error_guardians_workbook_access_denied',
+  guardians_tab_not_found: 'ep_export_error_guardians_tab_not_found',
+  no_guardians_rows: 'ep_export_error_no_guardians_rows',
   modules_workbook_not_found: 'ep_export_error_modules_workbook_not_found',
   modules_workbook_access_denied: 'ep_export_error_modules_workbook_access_denied',
   modules_tab_not_found: 'ep_export_error_modules_tab_not_found',
@@ -128,6 +135,7 @@ export type EffectivePathsSyncDialogProps = {
   labLevelOverrides: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
   uwsEpState: UwsEpSyncState
+  guardiansEpState: GuardiansEpSyncState
   modulesEpState: ModulesEpSyncState
   /** Success notice after export completes. */
   onSuccess: (message: string) => void
@@ -151,6 +159,7 @@ export function EffectivePathsSyncDialog({
   labLevelOverrides,
   botsEpState,
   uwsEpState,
+  guardiansEpState,
   modulesEpState,
   onSuccess,
   onImported,
@@ -192,6 +201,11 @@ export function EffectivePathsSyncDialog({
   >(null)
   const [uwsWorkbook, setUwsWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
   const [uwsWorkbookAccess, setUwsWorkbookAccess] = useState<
+    'ok' | 'denied' | 'not_found' | null
+  >(null)
+  const [guardiansWorkbook, setGuardiansWorkbook] =
+    useState<EffectivePathsLinkedWorkbook | null>(null)
+  const [guardiansWorkbookAccess, setGuardiansWorkbookAccess] = useState<
     'ok' | 'denied' | 'not_found' | null
   >(null)
   const [modulesWorkbook, setModulesWorkbook] = useState<EffectivePathsLinkedWorkbook | null>(null)
@@ -248,6 +262,10 @@ export function EffectivePathsSyncDialog({
     uwsWorkbook != null &&
     uwsWorkbookAccess !== 'denied' &&
     uwsWorkbookAccess !== 'not_found'
+  const canSyncGuardians =
+    guardiansWorkbook != null &&
+    guardiansWorkbookAccess !== 'denied' &&
+    guardiansWorkbookAccess !== 'not_found'
   const modulesEquippedCount = countModulesEpEquippedSlots(modulesEpState)
   const modulesWorkbookResolved = useMemo(
     () =>
@@ -272,6 +290,7 @@ export function EffectivePathsSyncDialog({
       bots: { workbook: botsWorkbook, access: botsWorkbookAccess },
       labs: { workbook: laboratoryWorkbook, access: laboratoryWorkbookAccess },
       uws: { workbook: uwsWorkbook, access: uwsWorkbookAccess },
+      guardians: { workbook: guardiansWorkbook, access: guardiansWorkbookAccess },
       modules: {
         workbook: modulesWorkbookResolved.workbook,
         access: modulesWorkbookResolved.access,
@@ -292,6 +311,8 @@ export function EffectivePathsSyncDialog({
       laboratoryWorkbookAccess,
       uwsWorkbook,
       uwsWorkbookAccess,
+      guardiansWorkbook,
+      guardiansWorkbookAccess,
       modulesWorkbookResolved,
     ],
   )
@@ -319,6 +340,8 @@ export function EffectivePathsSyncDialog({
           return canSyncLabs
         case 'uws':
           return canSyncUws
+        case 'guardians':
+          return canSyncGuardians
         case 'modules':
           return canSyncModules
       }
@@ -331,6 +354,7 @@ export function EffectivePathsSyncDialog({
       canSyncBots,
       canSyncLabs,
       canSyncUws,
+      canSyncGuardians,
       canSyncModules,
     ],
   )
@@ -483,6 +507,8 @@ export function EffectivePathsSyncDialog({
       setLaboratoryWorkbookAccess,
       setUwsWorkbook,
       setUwsWorkbookAccess,
+      setGuardiansWorkbook,
+      setGuardiansWorkbookAccess,
       setModulesWorkbook,
       setModulesWorkbookAccess,
       setWorkbookAccess,
@@ -520,6 +546,8 @@ export function EffectivePathsSyncDialog({
             setLaboratoryWorkbookAccess,
             setUwsWorkbook,
             setUwsWorkbookAccess,
+            setGuardiansWorkbook,
+            setGuardiansWorkbookAccess,
             setModulesWorkbook,
             setModulesWorkbookAccess,
             setWorkbookAccess,
@@ -543,6 +571,8 @@ export function EffectivePathsSyncDialog({
             setLaboratoryWorkbookAccess,
             setUwsWorkbook,
             setUwsWorkbookAccess,
+            setGuardiansWorkbook,
+            setGuardiansWorkbookAccess,
             setModulesWorkbook,
             setModulesWorkbookAccess,
             setWorkbookAccess,
@@ -571,6 +601,8 @@ export function EffectivePathsSyncDialog({
       setLaboratoryWorkbookAccess(result.laboratoryWorkbookAccess)
       setUwsWorkbook(result.uwsWorkbook)
       setUwsWorkbookAccess(result.uwsWorkbookAccess)
+      setGuardiansWorkbook(result.guardiansWorkbook)
+      setGuardiansWorkbookAccess(result.guardiansWorkbookAccess)
       setModulesWorkbook(result.modulesWorkbook)
       setModulesWorkbookAccess(result.modulesWorkbookAccess)
       setWorkbookAccess(result.workbookAccess)
@@ -591,6 +623,7 @@ export function EffectivePathsSyncDialog({
         !result.botsWorkbook &&
         !result.laboratoryWorkbook &&
         !result.uwsWorkbook &&
+        !result.guardiansWorkbook &&
         !result.modulesWorkbook
       ) {
         const loaded = result.workbooks.map((workbook) => workbook.name).join(', ')
@@ -1188,6 +1221,79 @@ export function EffectivePathsSyncDialog({
     t,
   ])
 
+  const handleExportGuardians = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+    if (!canSyncGuardians) {
+      showNotice(
+        guardiansWorkbook
+          ? t('ep_export_error_guardians_workbook_access_denied').replace(
+              '{{id}}',
+              guardiansWorkbook.spreadsheetId,
+            )
+          : t('ep_export_guardians_missing_in_master'),
+        'error',
+      )
+      return
+    }
+
+    setExportingTarget('guardians')
+    setNotice(null)
+    try {
+      const token = await ensureGoogleToken()
+      if (!token) return
+
+      writeStoredSpreadsheetRef(spreadsheetRef)
+
+      const result = await exportGuardiansToEffectivePaths({
+        googleAccessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        guardiansEpState,
+      })
+
+      if (!result.ok) {
+        if (result.error === 'guardians_workbook_access_denied') {
+          showNotice(
+            t('ep_export_error_guardians_workbook_access_denied').replace(
+              '{{id}}',
+              guardiansWorkbook?.spreadsheetId ?? '',
+            ),
+            'error',
+          )
+        } else {
+          showNotice(formatExportError(result.error, result.message), 'error')
+        }
+        return
+      }
+
+      const { matchedRows, updatedCells, sheetTitle } = result.result
+      const message = t('ep_export_guardians_success')
+        .replace('{{rows}}', String(matchedRows))
+        .replace('{{cells}}', String(updatedCells))
+        .replace('{{sheet}}', sheetTitle)
+      finishExportSuccess(message)
+    } finally {
+      setExportingTarget(null)
+    }
+  }, [
+    parsedMaster,
+    canSyncGuardians,
+    ensureGoogleToken,
+    spreadsheetRef,
+    guardiansEpState,
+    guardiansWorkbook,
+    formatExportError,
+    showNotice,
+    finishExportSuccess,
+    t,
+  ])
+
   const handleExportModules = useCallback(async () => {
     if (!parsedMaster) {
       showNotice(
@@ -1324,7 +1430,9 @@ export function EffectivePathsSyncDialog({
                       ? await importBotsFromEffectivePaths(apiOptions)
                       : target === 'uws'
                         ? await importUwsFromEffectivePaths(apiOptions)
-                        : await importModulesFromEffectivePaths(apiOptions)
+                        : target === 'guardians'
+                          ? await importGuardiansFromEffectivePaths(apiOptions)
+                          : await importModulesFromEffectivePaths(apiOptions)
 
         if (!result.ok) {
           if (workbook && result.error.endsWith('_workbook_access_denied')) {
@@ -1391,6 +1499,9 @@ export function EffectivePathsSyncDialog({
           case 'uws':
             await handleExportUws()
             break
+          case 'guardians':
+            await handleExportGuardians()
+            break
           case 'modules':
             await handleExportModules()
             break
@@ -1411,6 +1522,7 @@ export function EffectivePathsSyncDialog({
       handleExportBots,
       handleExportLabs,
       handleExportUws,
+      handleExportGuardians,
       handleExportModules,
       reportSyncProgress,
     ],

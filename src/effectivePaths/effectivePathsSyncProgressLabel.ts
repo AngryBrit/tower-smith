@@ -20,6 +20,7 @@ export const EFFECTIVE_PATHS_SYNC_TARGET_DISPLAY_NAMES: Record<
   cards: 'Cards',
   modules: 'Modules',
   bots: 'Bots',
+  guardians: 'Guardians',
   themes: 'Themes & Songs',
   relics: 'Relics',
 }

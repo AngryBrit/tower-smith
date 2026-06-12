@@ -37,8 +37,10 @@ import { sanitizeLevelOverrides } from '../labLevelOverridesSanitize'
 import type { BotsEpSyncState } from './botsEpStateFromPersisted'
 import type { CardStateFromSheet } from './cardStateFromSheet'
 import type { EffectivePathsImportPayload } from './effectivePathsImportDialogSupport'
+import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
 import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
+import { readGuardianChipState, type GuardianChipState } from '../guardianChipStorage'
 import { WORKSHOP_EP_ENHANCE_KEYS, WORKSHOP_EP_UPGRADE_KEYS } from './workshopSheetNames'
 
 export type EffectivePathsImportApplyResult = {
@@ -46,6 +48,8 @@ export type EffectivePathsImportApplyResult = {
   levelOverrides: Record<string, number>
   /** When set, caller should invoke applyTowerThemes with these ids. */
   themeOwnedIdsToApply: string[] | null
+  /** When set, caller should persist guardian chip state (local storage). */
+  guardianChipStateToApply: GuardianChipState | null
 }
 
 /** Fold one Effective Paths import payload onto workshop + lab override state. */
@@ -60,6 +64,7 @@ export function applyEffectivePathsImportPayload(
       workshopFlat,
       levelOverrides: sanitizeLevelOverrides(data, payload.labLevelOverrides),
       themeOwnedIdsToApply: null,
+      guardianChipStateToApply: null,
     }
   }
 
@@ -76,6 +81,17 @@ export function applyEffectivePathsImportPayload(
         workshopFlat,
         levelOverrides: nextOverrides,
         themeOwnedIdsToApply: [...payload.themeOwnedIds],
+        guardianChipStateToApply: null,
+      }
+    case 'guardians':
+      return {
+        workshopFlat,
+        levelOverrides: nextOverrides,
+        themeOwnedIdsToApply: null,
+        guardianChipStateToApply: guardiansEpStateAppliedToPersisted(
+          readGuardianChipState(),
+          payload.guardiansEpState,
+        ),
       }
     case 'cards': {
       mergedFlat = cardStateAppliedToPersisted(workshopFlat, {
@@ -117,7 +133,12 @@ export function applyEffectivePathsImportPayload(
   }
 
   if (labPatch) nextOverrides = labPatch
-  return { workshopFlat: mergedFlat, levelOverrides: nextOverrides, themeOwnedIdsToApply: null }
+  return {
+    workshopFlat: mergedFlat,
+    levelOverrides: nextOverrides,
+    themeOwnedIdsToApply: null,
+    guardianChipStateToApply: null,
+  }
 }
 
 export function applyEffectivePathsImportPayloads(
@@ -129,13 +150,43 @@ export function applyEffectivePathsImportPayloads(
   let mergedFlat = workshopFlat
   let nextOverrides = { ...levelOverrides }
   let themeOwnedIdsToApply: string[] | null = null
+  let guardianChipStateToApply: GuardianChipState | null = null
+  let guardianBase = readGuardianChipState()
   for (const payload of payloads) {
+    if (payload.syncTarget === 'guardians') {
+      guardianBase = guardiansEpStateAppliedToPersisted(guardianBase, payload.guardiansEpState)
+      guardianChipStateToApply = guardianBase
+      continue
+    }
     const applied = applyEffectivePathsImportPayload(data, mergedFlat, nextOverrides, payload)
     mergedFlat = applied.workshopFlat
     nextOverrides = applied.levelOverrides
     if (applied.themeOwnedIdsToApply) themeOwnedIdsToApply = applied.themeOwnedIdsToApply
   }
-  return { workshopFlat: mergedFlat, levelOverrides: nextOverrides, themeOwnedIdsToApply }
+  return {
+    workshopFlat: mergedFlat,
+    levelOverrides: nextOverrides,
+    themeOwnedIdsToApply,
+    guardianChipStateToApply,
+  }
+}
+
+export function guardiansEpStateAppliedToPersisted(
+  base: GuardianChipState,
+  state: GuardiansEpSyncState,
+): GuardianChipState {
+  return {
+    ...base,
+    unlockedChipIds: [...state.unlockedChipIds],
+    upgrades: {
+      attack: { ...state.upgrades.attack },
+      ally: { ...state.upgrades.ally },
+      bounty: { ...state.upgrades.bounty },
+      fetch: { ...state.upgrades.fetch },
+      summon: { ...state.upgrades.summon },
+      scout: { ...state.upgrades.scout },
+    },
+  }
 }
 
 export function relicOwnedIdsAppliedToPersisted(

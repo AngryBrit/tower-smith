@@ -11,7 +11,17 @@ import {
   type ModulesEpSectionLevels,
   type ModulesEpSyncState,
 } from '../../src/effectivePaths/modulesEpStateFromPersisted'
+import type { GuardiansEpSyncState } from '../../src/effectivePaths/guardiansEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../src/effectivePaths/uwsEpStateFromPersisted'
+import { GUARDIAN_CHIP_IDS, type GuardianChipId } from '../../src/data/guardianChips'
+import {
+  DEFAULT_GUARDIAN_ALLY_UPGRADES,
+  DEFAULT_GUARDIAN_ATTACK_UPGRADES,
+  DEFAULT_GUARDIAN_BOUNTY_UPGRADES,
+  DEFAULT_GUARDIAN_FETCH_UPGRADES,
+  DEFAULT_GUARDIAN_SCOUT_UPGRADES,
+  DEFAULT_GUARDIAN_SUMMON_UPGRADES,
+} from '../../src/guardianChipStorage'
 import { WORKSHOP_ASSIST_MODULE_SLOTS } from '../../src/data/workshopSimModules'
 import type { WorkshopSubmoduleRarity } from '../../src/data/workshopSubmoduleEffects'
 import { sanitizeChassisModuleMergeTier } from '../../src/data/workshopChassisModuleSelection'
@@ -20,6 +30,7 @@ import {
   exportBotsToGoogleSheet,
   exportLabsToGoogleSheet,
   exportUwsToGoogleSheet,
+  exportGuardiansToGoogleSheet,
   exportModulesToGoogleSheet,
   exportCardsToGoogleSheet,
   exportRelicsToGoogleSheet,
@@ -28,7 +39,57 @@ import {
   GoogleSheetsApiError,
 } from './lib/googleSheets'
 
-type ExportSyncTarget = 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'modules'
+type ExportSyncTarget =
+  | 'relics'
+  | 'themes'
+  | 'cards'
+  | 'workshop'
+  | 'bots'
+  | 'labs'
+  | 'uws'
+  | 'guardians'
+  | 'modules'
+
+function parseGuardiansEpState(raw: unknown): GuardiansEpSyncState {
+  const state: GuardiansEpSyncState = {
+    upgrades: {
+      attack: { ...DEFAULT_GUARDIAN_ATTACK_UPGRADES },
+      ally: { ...DEFAULT_GUARDIAN_ALLY_UPGRADES },
+      bounty: { ...DEFAULT_GUARDIAN_BOUNTY_UPGRADES },
+      fetch: { ...DEFAULT_GUARDIAN_FETCH_UPGRADES },
+      summon: { ...DEFAULT_GUARDIAN_SUMMON_UPGRADES },
+      scout: { ...DEFAULT_GUARDIAN_SCOUT_UPGRADES },
+    },
+    unlockedChipIds: [],
+  }
+  if (!raw || typeof raw !== 'object') return state
+
+  const upgradesRaw = (raw as { upgrades?: unknown }).upgrades
+  if (upgradesRaw && typeof upgradesRaw === 'object') {
+    for (const chipId of GUARDIAN_CHIP_IDS) {
+      const chipRaw = (upgradesRaw as Record<string, unknown>)[chipId]
+      if (!chipRaw || typeof chipRaw !== 'object') continue
+      for (const [trackId, val] of Object.entries(chipRaw)) {
+        if (typeof val === 'number' && Number.isFinite(val)) {
+          ;(state.upgrades[chipId] as Record<string, number>)[trackId] = Math.max(
+            1,
+            Math.trunc(val),
+          )
+        }
+      }
+    }
+  }
+
+  const unlockedRaw = (raw as { unlockedChipIds?: unknown }).unlockedChipIds
+  if (Array.isArray(unlockedRaw)) {
+    state.unlockedChipIds = unlockedRaw.filter(
+      (id): id is GuardianChipId =>
+        typeof id === 'string' && GUARDIAN_CHIP_IDS.includes(id as GuardianChipId),
+    )
+  }
+
+  return state
+}
 
 function parseBody(raw: unknown):
   | {
@@ -47,6 +108,7 @@ function parseBody(raw: unknown):
       workshopLevels: Record<string, number>
       botsEpState: BotsEpSyncState
       uwsEpState: UwsEpSyncState
+      guardiansEpState: GuardiansEpSyncState
       modulesEpState: ModulesEpSyncState
       labLevelOverrides: Record<string, number>
     }
@@ -94,9 +156,11 @@ function parseBody(raw: unknown):
               ? 'labs'
               : targetRaw === 'uws'
                 ? 'uws'
-                : targetRaw === 'modules'
-                  ? 'modules'
-                  : 'relics'
+                : targetRaw === 'guardians'
+                  ? 'guardians'
+                  : targetRaw === 'modules'
+                    ? 'modules'
+                    : 'relics'
 
   const relicRaw = (raw as { relicOwnedIds?: unknown }).relicOwnedIds
   const relicOwnedIds = Array.isArray(relicRaw)
@@ -354,6 +418,9 @@ function parseBody(raw: unknown):
       levels: uwsLevels,
       ownedByWeaponId: uwsOwnedByWeaponId,
     },
+    guardiansEpState: parseGuardiansEpState(
+      (raw as { guardiansEpState?: unknown }).guardiansEpState,
+    ),
     modulesEpState,
   }
 }
@@ -367,6 +434,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'no_bot_rows') return 'no_bot_rows'
   if (message === 'no_lab_rows') return 'no_lab_rows'
   if (message === 'no_uws_rows') return 'no_uws_rows'
+  if (message === 'no_guardians_rows') return 'no_guardians_rows'
   if (message === 'no_modules_rows') return 'no_modules_rows'
   if (message === 'relic_workbook_not_found') return 'relic_workbook_not_found'
   if (message === 'themes_workbook_not_found') return 'themes_workbook_not_found'
@@ -375,6 +443,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'bots_workbook_not_found') return 'bots_workbook_not_found'
   if (message === 'laboratory_workbook_not_found') return 'laboratory_workbook_not_found'
   if (message === 'uws_workbook_not_found') return 'uws_workbook_not_found'
+  if (message === 'guardians_workbook_not_found') return 'guardians_workbook_not_found'
   if (message === 'modules_workbook_not_found') return 'modules_workbook_not_found'
   if (message === 'relic_workbook_access_denied') return 'relic_workbook_access_denied'
   if (message === 'themes_workbook_access_denied') return 'themes_workbook_access_denied'
@@ -383,6 +452,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'bots_workbook_access_denied') return 'bots_workbook_access_denied'
   if (message === 'laboratory_workbook_access_denied') return 'laboratory_workbook_access_denied'
   if (message === 'uws_workbook_access_denied') return 'uws_workbook_access_denied'
+  if (message === 'guardians_workbook_access_denied') return 'guardians_workbook_access_denied'
   if (message === 'modules_workbook_access_denied') return 'modules_workbook_access_denied'
   if (message === 'relic_tab_not_found') return 'relic_tab_not_found'
   if (message === 'themes_tab_not_found') return 'themes_tab_not_found'
@@ -391,6 +461,7 @@ function mapExportError(message: string | undefined): string {
   if (message === 'bots_tab_not_found') return 'bots_tab_not_found'
   if (message === 'laboratory_tab_not_found') return 'laboratory_tab_not_found'
   if (message === 'uws_tab_not_found') return 'uws_tab_not_found'
+  if (message === 'guardians_tab_not_found') return 'guardians_tab_not_found'
   if (message === 'modules_tab_not_found') return 'modules_tab_not_found'
   if (message === 'ids_master_empty') return 'ids_master_empty'
   return 'sheets_api_error'
@@ -503,6 +574,18 @@ export default async (req: Request): Promise<Response> => {
         uwsEpState: parsed.uwsEpState,
       })
       return jsonResponse(200, { ok: true, syncTarget: 'uws', ...result }, cors)
+    }
+
+    if (parsed.syncTarget === 'guardians') {
+      const result = await exportGuardiansToGoogleSheet({
+        accessToken: token,
+        masterSpreadsheetId: parsed.masterSpreadsheetId,
+        masterSheetGid: parsed.masterSheetGid,
+        spreadsheetId: parsed.spreadsheetId,
+        sheetGid: parsed.sheetGid,
+        guardiansEpState: parsed.guardiansEpState,
+      })
+      return jsonResponse(200, { ok: true, syncTarget: 'guardians', ...result }, cors)
     }
 
     if (parsed.syncTarget === 'modules') {

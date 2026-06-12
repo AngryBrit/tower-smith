@@ -8,6 +8,7 @@ import {
   isBotsWorkbookName,
   isLaboratoryWorkbookName,
   isUwsWorkbookName,
+  isGuardiansWorkbookName,
   isModulesWorkbookName,
   isCardsWorkbookName,
   isRelicsWorkbookName,
@@ -89,6 +90,7 @@ export default async (req: Request): Promise<Response> => {
       ...(gateway.botsWorkbook ? [gateway.botsWorkbook] : []),
       ...(gateway.laboratoryWorkbook ? [gateway.laboratoryWorkbook] : []),
       ...(gateway.uwsWorkbook ? [gateway.uwsWorkbook] : []),
+      ...(gateway.guardiansWorkbook ? [gateway.guardiansWorkbook] : []),
       ...(gateway.modulesWorkbook ? [gateway.modulesWorkbook] : []),
     ])
     const workbookAccess = (
@@ -108,6 +110,8 @@ export default async (req: Request): Promise<Response> => {
       workbookAccess.find((row) => isLaboratoryWorkbookName(row.name))?.access ?? null
     const uwsWorkbookAccess =
       workbookAccess.find((row) => isUwsWorkbookName(row.name))?.access ?? null
+    const guardiansWorkbookAccess =
+      workbookAccess.find((row) => isGuardiansWorkbookName(row.name))?.access ?? null
     const modulesWorkbookAccess =
       workbookAccess.find((row) => isModulesWorkbookName(row.name))?.access ?? null
     return jsonResponse(
@@ -130,6 +134,8 @@ export default async (req: Request): Promise<Response> => {
         laboratoryWorkbookAccess,
         uwsWorkbook: gateway.uwsWorkbook,
         uwsWorkbookAccess,
+        guardiansWorkbook: gateway.guardiansWorkbook,
+        guardiansWorkbookAccess,
         modulesWorkbook: gateway.modulesWorkbook,
         modulesWorkbookAccess,
         workbookAccess,

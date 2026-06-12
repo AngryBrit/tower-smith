@@ -1416,6 +1416,7 @@ export const STRINGS_ES = {
   ep_import_workshop_btn: 'Importar taller desde el libro Workshop',
   ep_import_bots_btn: 'Importar bots desde el libro Bots',
   ep_import_uws_btn: 'Importar UWs desde el libro UWs',
+  ep_import_guardians_btn: 'Importar chips desde el libro Guardians',
   ep_import_modules_btn: 'Importar módulos desde el libro Modules',
   ep_import_row_btn: 'Importar',
   ep_import_row_syncing: 'Importando…',
@@ -1436,6 +1437,7 @@ export const STRINGS_ES = {
   ep_import_syncing_workshop: 'Importando taller…',
   ep_import_syncing_bots: 'Importando bots…',
   ep_import_syncing_uws: 'Importando UWs…',
+  ep_import_syncing_guardians: 'Importando chips de guardián…',
   ep_import_syncing_modules: 'Importando módulos…',
   ep_import_relics_success: 'Se importaron {{rows}} filas de reliquias desde “{{sheet}}”.',
   ep_import_themes_success: 'Se importaron {{rows}} filas de temas desde “{{sheet}}”.',
@@ -1451,6 +1453,7 @@ export const STRINGS_ES = {
   ep_import_bots_lab_success_suffix:
     'También se importaron {{labRows}} niveles de laboratorio BOTS.',
   ep_import_uws_success: 'Se importaron {{rows}} niveles de armas definitivas desde “{{sheet}}”.',
+  ep_import_guardians_success: 'Se importaron {{rows}} filas de desbloqueo de chips desde “{{sheet}}”.',
   ep_import_modules_success:
     'Se importaron {{rows}} columnas de módulos equipados ({{effects}} efectos) desde “{{sheet}}”.',
   ep_export_intro:
@@ -1480,6 +1483,7 @@ export const STRINGS_ES = {
   ep_export_bots_sync_target: 'objetivo de sincronización de bots',
   ep_export_labs_sync_target: 'objetivo de sincronización de laboratorio',
   ep_export_uws_sync_target: 'objetivo de sincronización de armas definitivas',
+  ep_export_guardians_sync_target: 'objetivo de sincronización de chips de guardián',
   ep_export_modules_sync_target: 'objetivo de sincronización de módulos',
   ep_export_relics_missing_in_master:
     'No se encontró una fila Relics con ID de hoja en la pestaña IDS.',
@@ -1491,6 +1495,8 @@ export const STRINGS_ES = {
     'No se encontró una fila Workshop con ID de hoja en la pestaña IDS.',
   ep_export_uws_missing_in_master:
     'No se encontró ninguna fila Ultimate Weapons con ID de hoja de cálculo en la pestaña IDS.',
+  ep_export_guardians_missing_in_master:
+    'No se encontró ninguna fila Guardians con ID de hoja de cálculo en la pestaña IDS.',
   ep_export_modules_missing_in_master:
     'No se encontró ninguna fila Modules con ID de hoja de cálculo en la pestaña IDS.',
   ep_export_labs_missing_in_master:
@@ -1508,6 +1514,7 @@ export const STRINGS_ES = {
   ep_export_sync_bots_btn: 'Exportar bots al libro Bots',
   ep_export_sync_labs_btn: 'Exportar labs al libro Laboratory',
   ep_export_sync_uws_btn: 'Exportar armas definitivas al libro UWs',
+  ep_export_sync_guardians_btn: 'Exportar chips de guardián al libro Guardians',
   ep_export_sync_modules_btn: 'Exportar módulos al libro Modules',
   ep_export_syncing_workbook_named: 'Exportando {{name}}…',
   ep_export_syncing_relics: 'Exportando reliquias…',
@@ -1576,6 +1583,7 @@ export const STRINGS_ES = {
   ep_export_syncing_bots: 'Exportando bots…',
   ep_export_syncing_labs: 'Exportando labs…',
   ep_export_syncing_uws: 'Exportando armas definitivas…',
+  ep_export_syncing_guardians: 'Exportando chips de guardián…',
   ep_export_syncing_modules: 'Exportando módulos…',
   ep_export_bots_success:
     'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de estadísticas de bots).',
@@ -1588,6 +1596,8 @@ export const STRINGS_ES = {
     'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de labs).',
   ep_export_uws_success:
     'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de niveles de armas definitivas).',
+  ep_export_guardians_success:
+    'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} filas de niveles de chips de guardián).',
   ep_export_modules_success:
     'Se actualizaron {{cells}} celdas en “{{sheet}}” ({{rows}} columnas de módulos equipados, {{effects}} efectos).',
   ep_export_labs_unmapped_hint:
@@ -1617,6 +1627,14 @@ export const STRINGS_ES = {
     'No se encontró la pestaña Master Sheet en el libro UWs.',
   ep_export_error_no_uws_rows:
     'No se encontraron filas de armas definitivas en la pestaña Master Sheet. Comprueba el diseño o el nombre de la pestaña.',
+  ep_export_error_guardians_workbook_not_found:
+    'IDS Master no tiene fila del libro Guardians. Comprueba la tabla de IDs vinculados.',
+  ep_export_error_guardians_workbook_access_denied:
+    'No se puede editar el libro Guardians vinculado ({{id}}). Ábrelo en Google Sheets y confirma acceso de Editor, o corrige el enlace en la pestaña IDS.',
+  ep_export_error_guardians_tab_not_found:
+    'No se encontró la pestaña Master Sheet en el libro Guardians.',
+  ep_export_error_no_guardians_rows:
+    'No se encontraron filas de chips de guardián en la pestaña Master Sheet. Comprueba el diseño o el nombre de la pestaña.',
   ep_export_error_modules_workbook_not_found:
     'IDS Master no tiene fila del libro Modules. Comprueba la tabla de IDs vinculados.',
   ep_export_error_modules_workbook_access_denied:

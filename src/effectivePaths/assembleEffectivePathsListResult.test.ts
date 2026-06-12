@@ -15,6 +15,7 @@ const gateway: EffectivePathsIdsGateway = {
   botsWorkbook: null,
   laboratoryWorkbook: { name: 'Laboratory', spreadsheetId: 'lab-id' },
   uwsWorkbook: null,
+  guardiansWorkbook: null,
   modulesWorkbook: null,
 }
 

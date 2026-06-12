@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent } from 'react'
 import type { BotsEpSyncState } from '../../effectivePaths/botsEpStateFromPersisted'
 import type { ModulesEpSyncState } from '../../effectivePaths/modulesEpStateFromPersisted'
+import type { GuardiansEpSyncState } from '../../effectivePaths/guardiansEpStateFromPersisted'
 import type { UwsEpSyncState } from '../../effectivePaths/uwsEpStateFromPersisted'
 import { EffectivePathsSyncDialog } from '../EffectivePathsSyncDialog'
 import type { EffectivePathsImportPayload } from '../../effectivePaths/effectivePathsImportDialogSupport'
@@ -56,6 +57,7 @@ export type LabImportExportPanelProps = {
   labLevelOverrides: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
   uwsEpState: UwsEpSyncState
+  guardiansEpState: GuardiansEpSyncState
   modulesEpState: ModulesEpSyncState
   onEffectivePathsSuccess: (message: string) => void
   onEffectivePathsImported: (payload: EffectivePathsImportPayload, message: string) => void
@@ -89,6 +91,7 @@ export function LabImportExportPanel({
   labLevelOverrides,
   botsEpState,
   uwsEpState,
+  guardiansEpState,
   modulesEpState,
   onEffectivePathsSuccess,
   onEffectivePathsImported,
@@ -290,6 +293,7 @@ export function LabImportExportPanel({
         labLevelOverrides={labLevelOverrides}
         botsEpState={botsEpState}
         uwsEpState={uwsEpState}
+        guardiansEpState={guardiansEpState}
         modulesEpState={modulesEpState}
         onSuccess={onEffectivePathsSuccess}
         onImported={onEffectivePathsImported}

@@ -3,7 +3,16 @@ import {
   modulesEpDefaultSectionLevels,
   type ModulesEpSyncState,
 } from './modulesEpStateFromPersisted'
+import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
+import {
+  DEFAULT_GUARDIAN_ALLY_UPGRADES,
+  DEFAULT_GUARDIAN_ATTACK_UPGRADES,
+  DEFAULT_GUARDIAN_BOUNTY_UPGRADES,
+  DEFAULT_GUARDIAN_FETCH_UPGRADES,
+  DEFAULT_GUARDIAN_SCOUT_UPGRADES,
+  DEFAULT_GUARDIAN_SUMMON_UPGRADES,
+} from '../guardianChipStorage'
 import {
   assembleEffectivePathsListResult,
   workbooksToAuthorizeFromGateway,
@@ -64,6 +73,10 @@ export type EffectivePathsExportError =
   | 'uws_workbook_access_denied'
   | 'uws_tab_not_found'
   | 'no_uws_rows'
+  | 'guardians_workbook_not_found'
+  | 'guardians_workbook_access_denied'
+  | 'guardians_tab_not_found'
+  | 'no_guardians_rows'
   | 'modules_workbook_not_found'
   | 'modules_workbook_access_denied'
   | 'modules_tab_not_found'
@@ -212,6 +225,15 @@ export type EffectivePathsUwsImportResult = {
   uwsEpState: import('./uwsEpStateFromPersisted').UwsEpSyncState
 }
 
+export type EffectivePathsGuardiansImportResult = {
+  ok: true
+  syncTarget: 'guardians'
+  matchedRows: number
+  sheetTitle: string
+  guardiansWorkbookId: string
+  guardiansEpState: GuardiansEpSyncState
+}
+
 export type EffectivePathsModulesImportResult = {
   ok: true
   syncTarget: 'modules'
@@ -280,6 +302,15 @@ export type EffectivePathsUwsExportResult = {
   uwsWorkbookId: string
 }
 
+export type EffectivePathsGuardiansExportResult = {
+  ok: true
+  syncTarget: 'guardians'
+  updatedCells: number
+  matchedRows: number
+  sheetTitle: string
+  guardiansWorkbookId: string
+}
+
 export type EffectivePathsModulesExportResult = {
   ok: true
   syncTarget: 'modules'
@@ -336,6 +367,7 @@ function parseIdsGatewayBody(body: unknown): EffectivePathsIdsGateway | null {
       (body as { laboratoryWorkbook?: unknown }).laboratoryWorkbook,
     ),
     uwsWorkbook: parseLinkedWorkbook((body as { uwsWorkbook?: unknown }).uwsWorkbook),
+    guardiansWorkbook: parseLinkedWorkbook((body as { guardiansWorkbook?: unknown }).guardiansWorkbook),
     modulesWorkbook: parseLinkedWorkbook((body as { modulesWorkbook?: unknown }).modulesWorkbook),
   }
 }
@@ -494,6 +526,7 @@ export async function exportRelicsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsRelicsExportResult>>
@@ -523,6 +556,7 @@ export async function exportThemesToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsThemesExportResult>>
@@ -555,6 +589,7 @@ export async function exportCardsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsCardsExportResult>>
@@ -584,6 +619,7 @@ export async function exportWorkshopToEffectivePaths(options: {
     workshopLevels: options.workshopLevels,
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsWorkshopExportResult>>
@@ -687,6 +723,17 @@ export function importBotsFromEffectivePaths(
   )
 }
 
+export function importGuardiansFromEffectivePaths(
+  options: EffectivePathsImportApiOptions,
+): Promise<EffectivePathsImportApiResult<EffectivePathsGuardiansImportResult>> {
+  return postEffectivePathsImport(
+    'guardians',
+    options,
+    (body): body is EffectivePathsGuardiansImportResult =>
+      !!body && typeof body === 'object' && 'guardiansEpState' in body && 'matchedRows' in body,
+  )
+}
+
 export function importUwsFromEffectivePaths(
   options: EffectivePathsImportApiOptions,
 ): Promise<EffectivePathsImportApiResult<EffectivePathsUwsImportResult>> {
@@ -733,6 +780,7 @@ export async function exportLabsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: options.labLevelOverrides,
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsLabsExportResult>>
@@ -762,9 +810,40 @@ export async function exportBotsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: options.botsEpState,
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsBotsExportResult>>
+}
+
+export async function exportGuardiansToEffectivePaths(options: {
+  googleAccessToken: string
+  masterSpreadsheetId?: string | null
+  masterSheetGid?: number | null
+  guardiansSpreadsheetId?: string | null
+  guardiansSheetGid?: number | null
+  guardiansEpState: GuardiansEpSyncState
+}): Promise<EffectivePathsExportCallResult<EffectivePathsGuardiansExportResult>> {
+  return exportToEffectivePaths({
+    googleAccessToken: options.googleAccessToken,
+    masterSpreadsheetId: options.masterSpreadsheetId ?? null,
+    masterSheetGid: options.masterSheetGid ?? null,
+    syncTarget: 'guardians',
+    spreadsheetId: options.guardiansSpreadsheetId ?? null,
+    sheetGid: options.guardiansSheetGid ?? null,
+    relicOwnedIds: [],
+    themeOwnedIds: [],
+    cardStars: {},
+    cardMasteryUnlockedIds: [],
+    cardEquipSlots: 0,
+    cardPresetLoadouts: [],
+    workshopLevels: {},
+    botsEpState: emptyBotsEpState(),
+    uwsEpState: emptyUwsEpState(),
+    guardiansEpState: options.guardiansEpState,
+    modulesEpState: emptyModulesEpState(),
+    labLevelOverrides: {},
+  }) as Promise<EffectivePathsExportCallResult<EffectivePathsGuardiansExportResult>>
 }
 
 export async function exportUwsToEffectivePaths(options: {
@@ -791,6 +870,7 @@ export async function exportUwsToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: options.uwsEpState,
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: emptyModulesEpState(),
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsUwsExportResult>>
@@ -820,6 +900,7 @@ export async function exportModulesToEffectivePaths(options: {
     workshopLevels: {},
     botsEpState: emptyBotsEpState(),
     uwsEpState: emptyUwsEpState(),
+    guardiansEpState: emptyGuardiansEpState(),
     modulesEpState: options.modulesEpState,
     labLevelOverrides: {},
   }) as Promise<EffectivePathsExportCallResult<EffectivePathsModulesExportResult>>
@@ -836,6 +917,20 @@ function emptyBotsEpState(): BotsEpSyncState {
       botBot: false,
     },
     labLevels: {},
+  }
+}
+
+function emptyGuardiansEpState(): GuardiansEpSyncState {
+  return {
+    upgrades: {
+      attack: { ...DEFAULT_GUARDIAN_ATTACK_UPGRADES },
+      ally: { ...DEFAULT_GUARDIAN_ALLY_UPGRADES },
+      bounty: { ...DEFAULT_GUARDIAN_BOUNTY_UPGRADES },
+      fetch: { ...DEFAULT_GUARDIAN_FETCH_UPGRADES },
+      summon: { ...DEFAULT_GUARDIAN_SUMMON_UPGRADES },
+      scout: { ...DEFAULT_GUARDIAN_SCOUT_UPGRADES },
+    },
+    unlockedChipIds: [],
   }
 }
 
@@ -864,7 +959,7 @@ async function exportToEffectivePaths(options: {
   googleAccessToken: string
   masterSpreadsheetId?: string | null
   masterSheetGid?: number | null
-  syncTarget: 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'modules'
+  syncTarget: 'relics' | 'themes' | 'cards' | 'workshop' | 'bots' | 'labs' | 'uws' | 'guardians' | 'modules'
   spreadsheetId?: string | null
   sheetGid?: number | null
   relicOwnedIds: readonly string[]
@@ -876,6 +971,7 @@ async function exportToEffectivePaths(options: {
   workshopLevels: Readonly<Record<string, number>>
   botsEpState: BotsEpSyncState
   uwsEpState: UwsEpSyncState
+  guardiansEpState: GuardiansEpSyncState
   modulesEpState: ModulesEpSyncState
   labLevelOverrides: Readonly<Record<string, number>>
 }): Promise<
@@ -889,6 +985,7 @@ async function exportToEffectivePaths(options: {
         | EffectivePathsBotsExportResult
         | EffectivePathsLabsExportResult
         | EffectivePathsUwsExportResult
+        | EffectivePathsGuardiansExportResult
         | EffectivePathsModulesExportResult
     }
   | { ok: false; error: EffectivePathsExportError; message?: string }
@@ -918,6 +1015,7 @@ async function exportToEffectivePaths(options: {
         botLabLevels: options.botsEpState.labLevels,
         uwsLevels: options.uwsEpState.levels,
         uwsOwnedByWeaponId: options.uwsEpState.ownedByWeaponId,
+        guardiansEpState: options.guardiansEpState,
         modulesEpState: options.modulesEpState,
         labLevelOverrides: options.labLevelOverrides,
       }),
@@ -943,6 +1041,7 @@ async function exportToEffectivePaths(options: {
         | EffectivePathsBotsExportResult
         | EffectivePathsLabsExportResult
         | EffectivePathsUwsExportResult
+        | EffectivePathsGuardiansExportResult
         | EffectivePathsModulesExportResult,
     }
   } catch {
@@ -986,6 +1085,10 @@ function isExportError(value: unknown): value is EffectivePathsExportError {
     value === 'uws_workbook_access_denied' ||
     value === 'uws_tab_not_found' ||
     value === 'no_uws_rows' ||
+    value === 'guardians_workbook_not_found' ||
+    value === 'guardians_workbook_access_denied' ||
+    value === 'guardians_tab_not_found' ||
+    value === 'no_guardians_rows' ||
     value === 'modules_workbook_not_found' ||
     value === 'modules_workbook_access_denied' ||
     value === 'modules_tab_not_found' ||

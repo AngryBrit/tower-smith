@@ -7,6 +7,7 @@ import {
   importRelicsFromGoogleSheet,
   importThemesFromGoogleSheet,
   importUwsFromGoogleSheet,
+  importGuardiansFromGoogleSheet,
 } from './lib/effectivePathsImportSheets'
 import { jsonResponse } from './lib/http'
 import { summarizeGoogleSheetsApiError } from '../../src/effectivePaths/googleSheetsError'
@@ -24,6 +25,7 @@ type ImportSyncTarget =
   | 'bots'
   | 'labs'
   | 'uws'
+  | 'guardians'
   | 'modules'
 
 const IMPORT_SYNC_TARGETS = new Set<ImportSyncTarget>([
@@ -34,6 +36,7 @@ const IMPORT_SYNC_TARGETS = new Set<ImportSyncTarget>([
   'bots',
   'labs',
   'uws',
+  'guardians',
   'modules',
 ])
 
@@ -135,6 +138,12 @@ function mapImportError(syncTarget: ImportSyncTarget, message: string | undefine
     if (message === 'uws_workbook_access_denied') return 'uws_workbook_access_denied'
     if (message === 'uws_tab_not_found') return 'uws_tab_not_found'
   }
+  if (syncTarget === 'guardians') {
+    if (message === 'no_guardians_rows') return 'no_guardians_rows'
+    if (message === 'guardians_workbook_not_found') return 'guardians_workbook_not_found'
+    if (message === 'guardians_workbook_access_denied') return 'guardians_workbook_access_denied'
+    if (message === 'guardians_tab_not_found') return 'guardians_tab_not_found'
+  }
   if (syncTarget === 'modules') {
     if (message === 'no_modules_rows') return 'no_modules_rows'
     if (message === 'modules_workbook_not_found') return 'modules_workbook_not_found'
@@ -215,6 +224,10 @@ export default async (req: Request): Promise<Response> => {
       case 'uws': {
         const result = await importUwsFromGoogleSheet(sheetOptions)
         return jsonResponse(200, { ok: true, syncTarget: 'uws', ...result }, cors)
+      }
+      case 'guardians': {
+        const result = await importGuardiansFromGoogleSheet(sheetOptions)
+        return jsonResponse(200, { ok: true, syncTarget: 'guardians', ...result }, cors)
       }
       case 'modules': {
         const result = await importModulesFromGoogleSheet(sheetOptions)

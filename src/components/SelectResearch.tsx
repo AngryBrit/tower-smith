@@ -38,7 +38,9 @@ import {
 import { workshopCardMasteryUnlockedSet } from '../data/workshopCardMastery'
 import { botsEpStateFromPersisted } from '../effectivePaths/botsEpStateFromPersisted'
 import { modulesEpStateFromPersisted } from '../effectivePaths/modulesEpStateFromPersisted'
+import { guardiansEpStateFromPersisted } from '../effectivePaths/guardiansEpStateFromPersisted'
 import { uwsEpStateFromPersisted } from '../effectivePaths/uwsEpStateFromPersisted'
+import { readGuardianChipState, writeGuardianChipState } from '../guardianChipStorage'
 import {
   applyEffectivePathsImportPayload,
   applyEffectivePathsImportPayloads,
@@ -156,6 +158,7 @@ export function SelectResearch({
     () => uwsEpStateFromPersisted(workshopFlat),
     [workshopFlat],
   )
+  const guardiansEpStateForEp = guardiansEpStateFromPersisted(readGuardianChipState())
   const modulesEpStateForEp = useMemo(
     () => modulesEpStateFromPersisted(workshopFlat),
     [workshopFlat],
@@ -562,6 +565,9 @@ export function SelectResearch({
       if (applied.themeOwnedIdsToApply) {
         applyTowerThemes({ ownedIds: applied.themeOwnedIdsToApply })
       }
+      if (applied.guardianChipStateToApply) {
+        writeGuardianChipState(applied.guardianChipStateToApply)
+      }
       const build = splitTowerBuild(applied.workshopFlat)
       setWorkspace((prev) => {
         const next = mergeWorkspaceBuild(prev, build)
@@ -584,6 +590,10 @@ export function SelectResearch({
       } else if (payload.syncTarget === 'themes') {
         if (applied.themeOwnedIdsToApply) {
           applyTowerThemes({ ownedIds: applied.themeOwnedIdsToApply })
+        }
+      } else if (payload.syncTarget === 'guardians') {
+        if (applied.guardianChipStateToApply) {
+          writeGuardianChipState(applied.guardianChipStateToApply)
         }
       } else {
         commitEffectivePathsImportResult(applied)
@@ -935,6 +945,7 @@ export function SelectResearch({
             labLevelOverrides={levelOverrides}
             botsEpState={botsEpStateForEp}
             uwsEpState={uwsEpStateForEp}
+            guardiansEpState={guardiansEpStateForEp}
             modulesEpState={modulesEpStateForEp}
             onEffectivePathsSuccess={(message) => publishImportNotice(message, 'success')}
             onEffectivePathsImported={handleEffectivePathsImported}

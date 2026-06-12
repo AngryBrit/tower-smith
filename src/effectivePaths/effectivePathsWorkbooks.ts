@@ -14,6 +14,7 @@
  *   BOTS lab levels in OTHERS (T=name, V=level).
  * - **Ultimate Weapon / UWs** — UW unlocked in C (C4, C8, …); basic + Plus levels in G (dropdown labels).
  * - **Modules** — equipped chassis modules on Inventory tab (rarity, level, stat, main substats).
+ * - **Guardians** — chip unlock in B (Unlocked/Locked); upgrade levels in C (dropdown labels).
  *
  * TowerSmith reads linked IDs from IDS Master, then writes to the linked child workbooks.
  */
@@ -68,3 +69,9 @@ export const EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME = 'Modules'
 
 /** Tab title inside the Modules workbook (v6.x Inventory). */
 export const EFFECTIVE_PATHS_MODULES_TAB_TITLE = 'Inventory'
+
+/** Workbook name in the IDS Master linked-ID table. */
+export const EFFECTIVE_PATHS_GUARDIANS_WORKBOOK_NAME = 'Guardians'
+
+/** Tab title inside the Guardians workbook (v3.x Master Sheet). */
+export const EFFECTIVE_PATHS_GUARDIANS_TAB_TITLE = 'Master Sheet'

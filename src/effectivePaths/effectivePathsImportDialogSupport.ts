@@ -2,6 +2,7 @@ import {
   isBotsWorkbookName,
   isCardsWorkbookName,
   isLaboratoryWorkbookName,
+  isGuardiansWorkbookName,
   isModulesWorkbookName,
   isRelicsWorkbookName,
   isThemesWorkbookName,
@@ -16,9 +17,11 @@ import type {
   EffectivePathsModulesImportResult,
   EffectivePathsRelicsImportResult,
   EffectivePathsThemesImportResult,
+  EffectivePathsGuardiansImportResult,
   EffectivePathsUwsImportResult,
   EffectivePathsWorkshopImportResult,
 } from './exportEffectivePathsApi'
+import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
 import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
 import type { WorkshopGameCardId } from '../data/workshopGameCards'
@@ -32,6 +35,7 @@ export type EffectivePathsImportTarget =
   | 'bots'
   | 'labs'
   | 'uws'
+  | 'guardians'
   | 'modules'
 
 export const EFFECTIVE_PATHS_IMPORT_TARGET_ORDER: readonly EffectivePathsImportTarget[] = [
@@ -41,6 +45,7 @@ export const EFFECTIVE_PATHS_IMPORT_TARGET_ORDER: readonly EffectivePathsImportT
   'cards',
   'modules',
   'bots',
+  'guardians',
   'themes',
   'relics',
 ]
@@ -59,6 +64,7 @@ export type EffectivePathsImportPayload =
   | { syncTarget: 'bots'; botsEpState: BotsEpSyncState }
   | { syncTarget: 'labs'; labLevelOverrides: Record<string, number> }
   | { syncTarget: 'uws'; uwsEpState: UwsEpSyncState }
+  | { syncTarget: 'guardians'; guardiansEpState: GuardiansEpSyncState }
   | { syncTarget: 'modules'; modulesEpState: ModulesEpSyncState }
 
 type Translate = (id: StringId) => string
@@ -87,6 +93,7 @@ export function importTargetForWorkbookName(name: string): EffectivePathsImportT
   if (isBotsWorkbookName(name)) return 'bots'
   if (isLaboratoryWorkbookName(name)) return 'labs'
   if (isUwsWorkbookName(name)) return 'uws'
+  if (isGuardiansWorkbookName(name)) return 'guardians'
   if (isModulesWorkbookName(name)) return 'modules'
   return null
 }
@@ -146,6 +153,13 @@ export const IMPORT_TARGET_UI: readonly ImportTargetUiConfig[] = [
     accessDeniedKey: 'ep_export_error_uws_workbook_access_denied',
   },
   {
+    target: 'guardians',
+    btnKey: 'ep_import_guardians_btn',
+    syncingKey: 'ep_import_syncing_guardians',
+    missingKey: 'ep_export_guardians_missing_in_master',
+    accessDeniedKey: 'ep_export_error_guardians_workbook_access_denied',
+  },
+  {
     target: 'modules',
     btnKey: 'ep_import_modules_btn',
     syncingKey: 'ep_import_syncing_modules',
@@ -163,6 +177,7 @@ export function importPayloadFromResult(
     | EffectivePathsBotsImportResult
     | EffectivePathsLabsImportResult
     | EffectivePathsUwsImportResult
+    | EffectivePathsGuardiansImportResult
     | EffectivePathsModulesImportResult,
 ): EffectivePathsImportPayload {
   switch (result.syncTarget) {
@@ -186,6 +201,8 @@ export function importPayloadFromResult(
       return { syncTarget: 'labs', labLevelOverrides: result.labLevelOverrides }
     case 'uws':
       return { syncTarget: 'uws', uwsEpState: result.uwsEpState }
+    case 'guardians':
+      return { syncTarget: 'guardians', guardiansEpState: result.guardiansEpState }
     case 'modules':
       return { syncTarget: 'modules', modulesEpState: result.modulesEpState }
   }
@@ -205,6 +222,7 @@ export function importSuccessMessage(
     | EffectivePathsBotsImportResult
     | EffectivePathsLabsImportResult
     | EffectivePathsUwsImportResult
+    | EffectivePathsGuardiansImportResult
     | EffectivePathsModulesImportResult,
 ): string {
   switch (result.syncTarget) {
@@ -290,6 +308,11 @@ export function importSuccessMessage(
     }
     case 'uws':
       return fillTemplate(t('ep_import_uws_success'), {
+        rows: result.matchedRows,
+        sheet: result.sheetTitle,
+      })
+    case 'guardians':
+      return fillTemplate(t('ep_import_guardians_success'), {
         rows: result.matchedRows,
         sheet: result.sheetTitle,
       })
