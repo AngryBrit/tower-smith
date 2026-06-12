@@ -18,7 +18,7 @@ function isEditableTarget(target: EventTarget | null): boolean {
   )
 }
 
-/** Switch main in-panel tabs with number keys 1–8 on desktop. */
+/** Switch main in-panel tabs with number keys on desktop. */
 export function useInpanelTabHotkeys(
   bindings: InpanelTabHotkey[],
   onSelectPanel: (panel: MainPanel) => void,

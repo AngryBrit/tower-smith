@@ -22,6 +22,9 @@ const ThemesPage = lazy(() =>
 const RelicsPage = lazy(() =>
   import('./RelicsPage').then((m) => ({ default: m.RelicsPage })),
 )
+const VaultPage = lazy(() =>
+  import('./VaultPage').then((m) => ({ default: m.VaultPage })),
+)
 const GuardiansPage = lazy(() =>
   import('./GuardiansPage').then((m) => ({ default: m.GuardiansPage })),
 )
@@ -231,6 +234,18 @@ export function MainPanelContent({
           {...shellProps}
         >
           <RelicsPage embeddedInPanel toolbarMount={workshopToolbarMount} />
+        </PanelTabShell>
+      ) : null}
+
+      {mainPanel === 'vault' ? (
+        <PanelTabShell
+          panel="vault"
+          panelLabel={t('app_nav_vault')}
+          id="inpanel-panel-vault"
+          labelledBy="inpanel-tab-vault"
+          {...shellProps}
+        >
+          <VaultPage embeddedInPanel />
         </PanelTabShell>
       ) : null}
 

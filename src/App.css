@@ -1193,6 +1193,8 @@ html[data-color-scheme='high-contrast'] {
 .select-research__inpanel-tabs--nine-admin,
 .select-research__inpanel-tabs--ten,
 .select-research__inpanel-tabs--nine-no-tools,
+.select-research__inpanel-tabs--ten-no-tools,
+.select-research__inpanel-tabs--nine-vault-no-tools,
 .select-research__inpanel-tabs--eight-no-tools {
   grid-template-columns: minmax(0, 1.16fr) repeat(4, minmax(0, 0.96fr));
 }
@@ -1233,6 +1235,18 @@ html[data-color-scheme='high-contrast'] {
     'guardians themes relics gallery .';
 }
 
+.select-research__inpanel-tabs--ten-no-tools {
+  grid-template-areas:
+    'workshop lab cards modules bots'
+    'guardians themes relics vault gallery';
+}
+
+.select-research__inpanel-tabs--nine-vault-no-tools {
+  grid-template-areas:
+    'workshop lab cards bots guardians'
+    'themes relics vault gallery .';
+}
+
 .select-research__inpanel-tabs--eight-no-tools {
   grid-template-areas:
     'workshop lab cards bots .'
@@ -1271,6 +1285,28 @@ html[data-color-scheme='high-contrast'] {
 
 .select-research__inpanel-tab--relics {
   grid-area: relics;
+}
+
+.select-research__inpanel-tab--vault {
+  grid-area: vault;
+}
+
+.vault-page {
+  padding: 0.75rem 0.35rem 1rem;
+}
+
+.vault-page__heading {
+  margin: 0 0 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--sr-text);
+}
+
+.vault-page__placeholder {
+  margin: 0;
+  font-size: 0.72rem;
+  color: var(--sr-muted);
 }
 
 .select-research__inpanel-tab--guardians {

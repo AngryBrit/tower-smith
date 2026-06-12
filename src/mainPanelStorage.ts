@@ -5,6 +5,7 @@ export type MainPanel =
   | 'modules'
   | 'cards'
   | 'relics'
+  | 'vault'
   | 'themes'
   | 'guardians'
   | 'gallery'
@@ -19,6 +20,7 @@ const MAIN_PANELS: readonly MainPanel[] = [
   'modules',
   'cards',
   'relics',
+  'vault',
   'themes',
   'guardians',
   'gallery',

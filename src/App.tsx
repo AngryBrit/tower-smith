@@ -164,7 +164,8 @@ export default function App() {
       { key: '6', panel: 'guardians' as const },
       { key: '7', panel: 'themes' as const },
       { key: '8', panel: 'relics' as const },
-      { key: '9', panel: 'gallery' as const },
+      { key: '9', panel: 'vault' as const },
+      { key: '0', panel: 'gallery' as const },
     ],
     [],
   )
@@ -209,8 +210,8 @@ export default function App() {
   }, [])
 
   const inpanelTabsClass = MODULES_PANEL_ENABLED
-    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--nine-no-tools'
-    : 'select-research__inpanel-tabs select-research__inpanel-tabs--eight-no-tools'
+    ? 'select-research__inpanel-tabs select-research__inpanel-tabs--ten-no-tools'
+    : 'select-research__inpanel-tabs select-research__inpanel-tabs--nine-vault-no-tools'
 
   return (
     <div className="app-root">
@@ -420,6 +421,21 @@ export default function App() {
                     onClick={() => setMainPanel('relics')}
                   >
                     {t('app_nav_relics')}
+                  </button>
+                  <button
+                    id="inpanel-tab-vault"
+                    type="button"
+                    role="tab"
+                    aria-selected={mainPanel === 'vault'}
+                    aria-controls="inpanel-panel-vault"
+                    className={
+                      mainPanel === 'vault'
+                        ? 'select-research__inpanel-tab select-research__inpanel-tab--vault select-research__inpanel-tab--on'
+                        : 'select-research__inpanel-tab select-research__inpanel-tab--vault'
+                    }
+                    onClick={() => setMainPanel('vault')}
+                  >
+                    {t('app_nav_vault')}
                   </button>
                   <button
                     id="inpanel-tab-gallery"
