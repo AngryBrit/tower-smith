@@ -77,5 +77,14 @@ export async function persistEffectivePathsIdsMasterRef(
   writeStoredSpreadsheetRef(value, userId)
   const id = userId?.trim()
   if (!id) return { ok: true }
-  return updateUserEffectivePathsIdsMasterRef(id, value)
+  const result = await updateUserEffectivePathsIdsMasterRef(id, value)
+  if (result.ok) return result
+  if (
+    result.error === 'not_configured' ||
+    result.error === 'invalid_effective_paths_ids_master_ref' ||
+    result.error === 'network'
+  ) {
+    return { ok: false, error: result.error }
+  }
+  return { ok: false, error: 'network' }
 }

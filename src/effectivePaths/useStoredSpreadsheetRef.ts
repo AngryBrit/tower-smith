@@ -10,14 +10,17 @@ export function useStoredSpreadsheetRef(userId?: string | null): {
   spreadsheetRef: string
   setSpreadsheetRef: (value: string) => void
   persistSpreadsheetRef: () => void
+  reloadSpreadsheetRef: () => void
 } {
   const [spreadsheetRef, setSpreadsheetRefState] = useState(() =>
     readStoredSpreadsheetRef(userId),
   )
+  const [trackedUserId, setTrackedUserId] = useState(userId)
 
-  useEffect(() => {
+  if (userId !== trackedUserId) {
+    setTrackedUserId(userId)
     setSpreadsheetRefState(readStoredSpreadsheetRef(userId))
-  }, [userId])
+  }
 
   useEffect(() => {
     const onChange = () => {

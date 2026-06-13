@@ -183,7 +183,7 @@ export function EffectivePathsSyncDialog({
   const spreadsheetUserId = user?.id ?? null
   const titleId = useId()
   const listId = useId()
-  const { spreadsheetRef, setSpreadsheetRef, persistSpreadsheetRef, reloadSpreadsheetRef } =
+  const { spreadsheetRef, persistSpreadsheetRef, reloadSpreadsheetRef } =
     useStoredSpreadsheetRef(spreadsheetUserId)
   const [googleToken, setGoogleToken] = useState<string | null>(() =>
     getCachedGoogleSheetsAccessToken(),
