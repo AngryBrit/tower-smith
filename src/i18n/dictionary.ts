@@ -692,7 +692,12 @@ export const STRINGS_EN = {
   app_settings_ep_ids_master_label: 'IDS Master spreadsheet ID or URL',
   app_settings_ep_ids_master_placeholder: '1RnNttj_… or https://docs.google.com/spreadsheets/d/…',
   app_settings_ep_ids_master_hint:
-    'Your IDS Master gateway spreadsheet. TowerSmith reads the IDS tab and linked workbook IDs from column D (“Go to my … Sheet”).',
+    'Your IDS Master gateway spreadsheet. TowerSmith reads the IDS tab and linked workbook IDs from column D (“Go to my … Sheet”). Press Save to store locally and sync to your account when signed in.',
+  app_settings_ep_ids_master_save_btn: 'Save IDS',
+  app_settings_ep_ids_master_saving: 'Saving…',
+  app_settings_ep_ids_master_saved: 'IDS Master saved.',
+  app_settings_ep_ids_master_save_failed: 'Could not save IDS Master. Try again when signed in.',
+  app_settings_ep_ids_master_save_invalid: 'IDS Master URL or ID is too long (max 500 characters).',
   app_settings_relic_workshop_bonus_hint:
     'When on, each relic card shows how its effect applies in the simulator (e.g. +10% workshop damage). Off by default.',
   settings_shortcuts_title: 'Keyboard shortcuts',

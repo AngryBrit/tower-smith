@@ -692,7 +692,14 @@ export const STRINGS_DE = {
   app_settings_ep_ids_master_label: 'IDS-Master-Spreadsheet-ID oder URL',
   app_settings_ep_ids_master_placeholder: '1RnNttj_… oder https://docs.google.com/spreadsheets/d/…',
   app_settings_ep_ids_master_hint:
-    'Deine IDS-Master-Gateway-Tabelle. TowerSmith liest den IDS-Tab und verknüpfte IDs aus Spalte D („Go to my … Sheet“).',
+    'Deine IDS-Master-Gateway-Tabelle. TowerSmith liest den IDS-Tab und verknüpfte IDs aus Spalte D („Go to my … Sheet“). Mit Speichern lokal sichern und bei Anmeldung mit dem Konto synchronisieren.',
+  app_settings_ep_ids_master_save_btn: 'IDS speichern',
+  app_settings_ep_ids_master_saving: 'Speichern…',
+  app_settings_ep_ids_master_saved: 'IDS Master gespeichert.',
+  app_settings_ep_ids_master_save_failed:
+    'IDS Master konnte nicht gespeichert werden. Bitte erneut versuchen, wenn du angemeldet bist.',
+  app_settings_ep_ids_master_save_invalid:
+    'IDS-Master-URL oder -ID ist zu lang (max. 500 Zeichen).',
   app_settings_relic_workshop_bonus_hint:
     'Wenn aktiv, zeigt jede Reliktkarte, wie der Effekt im Simulator wirkt (z. B. +10 % Werkstatt-Schaden). Standardmäßig aus.',
   settings_shortcuts_title: 'Tastenkürzel',

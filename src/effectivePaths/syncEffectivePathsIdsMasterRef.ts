@@ -65,3 +65,17 @@ export function schedulePersistEffectivePathsIdsMasterRefToProfile(
     }, PROFILE_SAVE_DEBOUNCE_MS),
   )
 }
+
+/** Write IDS Master ref to local storage and Supabase profile (when signed in). */
+export async function persistEffectivePathsIdsMasterRef(
+  userId: string | null | undefined,
+  value: string,
+): Promise<
+  | { ok: true }
+  | { ok: false; error: 'not_configured' | 'invalid_effective_paths_ids_master_ref' | 'network' }
+> {
+  writeStoredSpreadsheetRef(value, userId)
+  const id = userId?.trim()
+  if (!id) return { ok: true }
+  return updateUserEffectivePathsIdsMasterRef(id, value)
+}

@@ -4,7 +4,6 @@ import {
   readStoredSpreadsheetRef,
   writeStoredSpreadsheetRef,
 } from './effectivePathsStorage'
-import { schedulePersistEffectivePathsIdsMasterRefToProfile } from './syncEffectivePathsIdsMasterRef'
 
 /** Live view of the per-account IDS Master ref (updates after account cloud sync). */
 export function useStoredSpreadsheetRef(userId?: string | null): {
@@ -34,8 +33,6 @@ export function useStoredSpreadsheetRef(userId?: string | null): {
     (value: string) => {
       setSpreadsheetRefState(value)
       writeStoredSpreadsheetRef(value, userId)
-      const id = userId?.trim()
-      if (id) schedulePersistEffectivePathsIdsMasterRefToProfile(id, value)
     },
     [userId],
   )

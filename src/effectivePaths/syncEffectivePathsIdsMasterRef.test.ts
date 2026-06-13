@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from './effectivePathsStorage'
 import {
   migrateIdsMasterRefFromWorkspaceBackup,
+  persistEffectivePathsIdsMasterRef,
   syncEffectivePathsIdsMasterRefOnLogin,
 } from './syncEffectivePathsIdsMasterRef'
 
@@ -83,5 +84,21 @@ describe('migrateIdsMasterRefFromWorkspaceBackup', () => {
     )
     expect(migrated).toBe(false)
     expect(readStoredSpreadsheetRef('user-1')).toBe('local-sheet')
+  })
+})
+
+describe('persistEffectivePathsIdsMasterRef', () => {
+  it('writes local storage and profile when signed in', async () => {
+    const result = await persistEffectivePathsIdsMasterRef('user-1', 'saved-sheet')
+    expect(result).toEqual({ ok: true })
+    expect(readStoredSpreadsheetRef('user-1')).toBe('saved-sheet')
+    expect(updateUserEffectivePathsIdsMasterRef).toHaveBeenCalledWith('user-1', 'saved-sheet')
+  })
+
+  it('writes local storage only when anonymous', async () => {
+    const result = await persistEffectivePathsIdsMasterRef(null, 'anon-sheet')
+    expect(result).toEqual({ ok: true })
+    expect(readStoredSpreadsheetRef(null)).toBe('anon-sheet')
+    expect(updateUserEffectivePathsIdsMasterRef).not.toHaveBeenCalled()
   })
 })

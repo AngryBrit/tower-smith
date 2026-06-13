@@ -699,7 +699,14 @@ export const STRINGS_ES = {
   app_settings_ep_ids_master_label: 'ID o URL de IDS Master',
   app_settings_ep_ids_master_placeholder: '1RnNttj_… o https://docs.google.com/spreadsheets/d/…',
   app_settings_ep_ids_master_hint:
-    'Tu hoja IDS Master. TowerSmith lee la pestaña IDS y los IDs vinculados de la columna D (“Ir a mi hoja …”).',
+    'Tu hoja IDS Master. TowerSmith lee la pestaña IDS y los IDs vinculados de la columna D (“Ir a mi hoja …”). Pulsa Guardar para almacenar localmente y sincronizar con tu cuenta si has iniciado sesión.',
+  app_settings_ep_ids_master_save_btn: 'Guardar IDS',
+  app_settings_ep_ids_master_saving: 'Guardando…',
+  app_settings_ep_ids_master_saved: 'IDS Master guardado.',
+  app_settings_ep_ids_master_save_failed:
+    'No se pudo guardar IDS Master. Inténtalo de nuevo con la sesión iniciada.',
+  app_settings_ep_ids_master_save_invalid:
+    'La URL o ID de IDS Master es demasiado larga (máx. 500 caracteres).',
   app_settings_relic_workshop_bonus_hint:
     'Si está activado, cada reliquia muestra cómo aplica su efecto en el simulador (p. ej. +10% daño de taller). Desactivado por defecto.',
   settings_shortcuts_title: 'Atajos de teclado',
