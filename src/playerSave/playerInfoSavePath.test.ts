@@ -4,6 +4,7 @@ import {
   TOWER_ANDROID_SAVE_FOLDER,
   isAndroidBrowser,
   isIosBrowser,
+  isPlayerInfoDatFileName,
   tryOpenAndroidPlayerSaveFolder,
 } from './playerInfoSavePath'
 
@@ -15,6 +16,13 @@ describe('playerInfoSavePath', () => {
     expect(TOWER_ANDROID_SAVE_FILE).toBe(
       'Android/data/com.TechTreeGames.TheTower/files/playerInfo.dat',
     )
+  })
+
+  it('accepts only .dat save file names', () => {
+    expect(isPlayerInfoDatFileName('playerInfo.dat')).toBe(true)
+    expect(isPlayerInfoDatFileName('backup.DAT')).toBe(true)
+    expect(isPlayerInfoDatFileName('tower.csv')).toBe(false)
+    expect(isPlayerInfoDatFileName('save.zip')).toBe(false)
   })
 
   it('detects Android user agents', () => {

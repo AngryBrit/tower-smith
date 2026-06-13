@@ -126,7 +126,7 @@ export function LabImportExportPanel({
         ref={importPlayerInfoFileInputRef}
         className="visually-hidden"
         type="file"
-        accept=".dat,application/octet-stream"
+        accept=".dat"
         aria-hidden
         tabIndex={-1}
         onChange={onImportPlayerSaveFile}

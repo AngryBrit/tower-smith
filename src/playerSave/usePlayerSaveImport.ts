@@ -22,6 +22,7 @@ import type { PlayerSaveImportStage } from '../components/lab/LabImportExportPan
 import { useI18n } from '../i18n'
 import type { ResearchData } from '../types/research'
 import { importPlayerInfoDat } from './importPlayerInfo'
+import { isPlayerInfoDatFileName } from './playerInfoSavePath'
 import { validatePlayerInfoSize } from './playerInfoLimits'
 
 export type UsePlayerSaveImportOptions = {
@@ -57,6 +58,10 @@ export function usePlayerSaveImport(
 
   const importPlayerSaveFile = useCallback(
     async (file: File): Promise<boolean> => {
+      if (!isPlayerInfoDatFileName(file.name)) {
+        reportImportProblem(t('sr_notice_import_player_dat_only'))
+        return false
+      }
       const sizeError = validatePlayerInfoSize(file.size)
       if (sizeError === 'too_large') {
         reportImportProblem(t('sr_notice_import_player_too_large'))

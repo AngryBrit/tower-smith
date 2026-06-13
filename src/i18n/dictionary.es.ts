@@ -1385,7 +1385,7 @@ export const STRINGS_ES = {
   sr_lab_data_share_hint:
     'Los enlaces cortos usan ?build=… (torre en el servidor). Si la galería no está disponible, se copia automáticamente un enlace largo sin conexión.',
   sr_lab_import_file: 'Importar tower desde CSV',
-  sr_lab_import_player_save: 'Importar playerInfo.dat',
+  sr_lab_import_player_save: 'Importar guardado',
   sr_lab_import_player_save_android_hint:
     'Guardado en Android: {{path}}/playerInfo.dat — la ruta se copia al pulsar Importar; elige ese archivo en el selector.',
   sr_lab_import_player_save_ios_hint:
@@ -1852,6 +1852,7 @@ export const STRINGS_ES = {
     'Importado en este dispositivo, pero no se pudo guardar en tu cuenta. Comprueba la conexión e importa de nuevo.',
   sr_notice_import_player_invalid:
     'No se pudo leer playerInfo.dat — se espera un guardado BinaryFormatter gzip de The Tower.',
+  sr_notice_import_player_dat_only: 'Elige un archivo de guardado .dat (p. ej. playerInfo.dat).',
   sr_notice_import_player_too_large:
     'Archivo demasiado grande para playerInfo.dat (máx. 200 KB). Elige la copia de torre, no otro .dat.',
   sr_notice_import_player_gzip_unsupported:

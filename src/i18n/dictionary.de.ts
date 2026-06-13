@@ -1322,7 +1322,7 @@ export const STRINGS_DE = {
   sr_lab_data_share_hint:
     'Kurzlinks nutzen ?build=… (Turm auf dem Server). Ist die Galerie nicht verfügbar, wird automatisch ein langer Offline-Link kopiert.',
   sr_lab_import_file: 'Tower aus CSV importieren',
-  sr_lab_import_player_save: 'playerInfo.dat importieren',
+  sr_lab_import_player_save: 'Speicher importieren',
   sr_lab_import_player_save_android_hint:
     'Android-Speicher: {{path}}/playerInfo.dat — Pfad wird beim Import antippen kopiert; Datei im Datei-Dialog wählen.',
   sr_lab_import_player_save_ios_hint:
@@ -1759,6 +1759,7 @@ export const STRINGS_DE = {
     'Auf diesem Gerät importiert, aber nicht im Konto gespeichert. Verbindung prüfen und erneut importieren.',
   sr_notice_import_player_invalid:
     'playerInfo.dat konnte nicht gelesen werden — erwartet gzip-komprimierten BinaryFormatter-Speicherstand von The Tower.',
+  sr_notice_import_player_dat_only: 'Wähle eine .dat-Speicherdatei (z. B. playerInfo.dat).',
   sr_notice_import_player_too_large:
     'Datei zu groß für playerInfo.dat (max. 200 KB). Wähle die Turm-Sicherung, nicht eine andere .dat-Datei.',
   sr_notice_import_player_gzip_unsupported:

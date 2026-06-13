@@ -5,6 +5,11 @@ export const TOWER_ANDROID_SAVE_FOLDER = `Android/data/${TOWER_ANDROID_PACKAGE}/
 
 export const TOWER_ANDROID_SAVE_FILE = `${TOWER_ANDROID_SAVE_FOLDER}/playerInfo.dat`
 
+/** Whether a picked file name is a Tower .dat save (e.g. playerInfo.dat). */
+export function isPlayerInfoDatFileName(fileName: string): boolean {
+  return /\.dat$/i.test(fileName.trim())
+}
+
 export function isAndroidBrowser(): boolean {
   if (typeof navigator === 'undefined') return false
   return /Android/i.test(navigator.userAgent)

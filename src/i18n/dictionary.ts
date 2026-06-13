@@ -1371,7 +1371,7 @@ export const STRINGS_EN = {
   sr_lab_data_share_hint:
     'Share links are short URLs with ?build=… (tower stored on the server). If the gallery is unavailable, a long offline link is copied automatically.',
   sr_lab_import_file: 'Import tower CSV',
-  sr_lab_import_player_save: 'Import playerInfo.dat',
+  sr_lab_import_player_save: 'Import Save',
   sr_lab_import_player_save_android_hint:
     'Android save: {{path}}/playerInfo.dat — the path is copied when you tap Import; pick that file in the file picker.',
   sr_lab_import_player_save_ios_hint:
@@ -1823,6 +1823,7 @@ export const STRINGS_EN = {
     'Imported on this device, but could not save to your account. Check your connection and try importing again.',
   sr_notice_import_player_invalid:
     'Could not read playerInfo.dat — expected a gzip-compressed BinaryFormatter save from The Tower.',
+  sr_notice_import_player_dat_only: 'Choose a .dat save file (e.g. playerInfo.dat).',
   sr_notice_import_player_too_large:
     'That file is too large for a playerInfo.dat save (max 200 KB). Pick your tower backup file, not another .dat.',
   sr_notice_import_player_gzip_unsupported:

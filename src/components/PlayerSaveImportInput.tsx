@@ -17,7 +17,7 @@ export function PlayerSaveImportInput({ data, inputRef }: PlayerSaveImportInputP
       ref={inputRef}
       className="visually-hidden"
       type="file"
-      accept=".dat,application/octet-stream"
+      accept=".dat"
       aria-hidden
       tabIndex={-1}
       disabled={playerSaveImporting}
