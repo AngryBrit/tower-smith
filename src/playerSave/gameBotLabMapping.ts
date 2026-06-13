@@ -24,12 +24,13 @@ export const BOT_COOLDOWN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
 } as const satisfies Record<BotCooldownLabName, number>
 
 /**
- * Bot duration labs use ids 107–109; ids 110–111 are enemies (see gameEnemiesResearchMapping.ts).
+ * Bot duration labs use ids 107–109 (108 = Golden Duration before Thunder Linger in save order).
+ * Ids 110–111 are enemies (see gameEnemiesResearchMapping.ts).
  */
 export const BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Flame Bot - Burn Stack': 107,
-  'Thunder Bot - Linger Time': 108,
-  'Golden Bot - Duration': 109,
+  'Golden Bot - Duration': 108,
+  'Thunder Bot - Linger Time': 109,
 } as const satisfies Record<string, number>
 
 export type BotResearchLabName = keyof typeof BOT_RESEARCH_LEVEL_ID_BY_LAB_NAME

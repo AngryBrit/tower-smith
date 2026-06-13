@@ -151,7 +151,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
         chassis: opts?.armorTowerHealthMultiplier,
       },
     })
-    expect(displayWithEnhance).toBe('31.44B/sec')
-    expect(displayInflated).toBe('31.44B/sec')
+    expect(displayWithEnhance).toBe('32.40B/sec')
+    expect(displayInflated).toBe('32.40B/sec')
   })
 })

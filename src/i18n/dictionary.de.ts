@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_314_headline: 'Neu in v3.1.4',
+  whats_new_314_body:
+    'Golden Bot - Duration wird jetzt aus dem richtigen researchLevel-Slot (108) importiert — Spielstand erneut importieren, falls das Lab oder der +0,5s-Dauer-Bonus falsch wirkte.',
   whats_new_313_headline: 'Neu in v3.1.3',
   whats_new_313_body:
     'Google-Anmeldung für Effective Paths ist zuverlässiger: Zustimmung sofort, Pop-ups in Chrome am Desktop, FedCM auf Mobilgeräten — eingebettete IDE-Browser erhalten den Hinweis, Chrome oder Firefox zu verwenden.',

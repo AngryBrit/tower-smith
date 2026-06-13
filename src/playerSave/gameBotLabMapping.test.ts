@@ -109,11 +109,18 @@ describe('botLabsToOverrides', () => {
     expect(overrides['0-2']).toBe(2)
   })
 
+  it('maps Golden Bot - Duration from researchLevel[108]', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[108] = 1
+    const overrides = botLabsToOverrides(botsResearchData(), minimalSave({ researchLevel }))
+    expect(overrides['0-7']).toBe(1)
+  })
+
   it('maps secondary bot labs from researchLevel ids 107–109', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[107] = 1
-    researchLevel[108] = 10
-    researchLevel[109] = 15
+    researchLevel[108] = 15
+    researchLevel[109] = 10
     researchLevel[110] = 20
     researchLevel[111] = 19
     const overrides = botLabsToOverrides(botsResearchData(), minimalSave({ researchLevel }))

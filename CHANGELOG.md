@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.4] - 2026-06-13
+
+### Fixed
+
+- **Golden Bot - Duration lab import** — `researchLevel[108]` (not 109) maps to the Golden Bot - Duration BOTS lab; Thunder Bot - Linger Time uses slot 109. Re-import your save if Golden Duration showed Lv.0 while Thunder Linger looked upgraded.
+
+### Docs
+
+- README: BOTS `researchLevel` slot table for cooldown/duration labs; version **3.1.4**.
+- What's new banner (en/de/es).
+
 ## [3.1.3] - 2026-06-13
 
 ### Fixed

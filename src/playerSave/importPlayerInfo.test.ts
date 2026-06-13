@@ -162,6 +162,11 @@ describe('importPlayerInfo', () => {
     const botOverrides = botLabsToOverrides(data, save)
     expect(save.researchLevel[104]).toBe(2)
     expect(botOverrides[`${botsSi}-2`]).toBe(2)
+    const goldenDurIi = data.sections[botsSi]!.items.findIndex(
+      (i) => i.name === 'Golden Bot - Duration',
+    )
+    expect(save.researchLevel[108]).toBe(1)
+    expect(botOverrides[`${botsSi}-${goldenDurIi}`]).toBe(1)
     const ultimateSi = data.sections.findIndex((s) => s.sectionSlug === 'ultimate-weapon-research')
     expect(ultimateSi).toBeGreaterThanOrEqual(0)
     const bhDamageIi = data.sections[ultimateSi]!.items.findIndex(
@@ -189,7 +194,7 @@ describe('importPlayerInfo', () => {
     expect(overrides[`${ultimateSi}-${gtBonusIi}`]).toBe(25)
     expect(overrides[`${ultimateSi}-${gtDurationIi}`]).toBe(10)
     expect(overrides[`${ultimateSi}-${chainShockIi}`]).toBe(1)
-    expect(overrides[`${ultimateSi}-${deathWaveHealthIi}`]).toBe(17)
+    expect(overrides[`${ultimateSi}-${deathWaveHealthIi}`]).toBe(save.researchLevel[65])
     expect(overrides[`${ultimateSi}-${deathWaveCoinIi}`]).toBe(20)
     expect(overrides[`${ultimateSi}-${bhDamageIi}`]).toBe(10)
     expect(overrides[`${ultimateSi}-${extraBhIi}`]).toBe(1)

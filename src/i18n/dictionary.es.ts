@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_314_headline: 'Novedades en v3.1.4',
+  whats_new_314_body:
+    'Golden Bot - Duration se importa ahora del slot researchLevel correcto (108) — vuelve a importar playerInfo.dat si ese lab o el bono de +0,5 s de duración estaban mal.',
   whats_new_313_headline: 'Novedades en v3.1.3',
   whats_new_313_body:
     'El inicio de sesión de Google para Effective Paths es más fiable: consentimiento inmediato, ventanas emergentes en Chrome de escritorio, FedCM en móvil — los navegadores integrados del IDE indican usar Chrome o Firefox.',
