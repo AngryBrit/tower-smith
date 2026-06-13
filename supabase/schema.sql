@@ -1,7 +1,8 @@
 -- TowerSmith community gallery — canonical schema (fresh Supabase project).
--- Run once in the Supabase SQL editor. Incremental local changes: supabase/migrations/ (gitignored).
+-- Run once in the Supabase SQL editor.
 
-create extension if not exists pg_trgm;
+create schema if not exists extensions;
+create extension if not exists pg_trgm with schema extensions;
 
 -- ---------------------------------------------------------------------------
 -- Tables
@@ -85,7 +86,7 @@ create index if not exists builds_list_idx
   on public.builds (created_at desc, id desc);
 
 create index if not exists builds_title_trgm_idx
-  on public.builds using gin (title gin_trgm_ops);
+  on public.builds using gin (title extensions.gin_trgm_ops);
 
 create index if not exists builds_user_idx
   on public.builds (user_id, created_at desc);
@@ -138,6 +139,13 @@ create policy guild_identities_select_all
   using (true);
 
 -- Votes are written only via Netlify Functions (service role).
+drop policy if exists build_votes_no_client_access on public.build_votes;
+create policy build_votes_no_client_access
+  on public.build_votes
+  for all
+  to anon, authenticated
+  using (false)
+  with check (false);
 
 -- ---------------------------------------------------------------------------
 -- Auth: auto-create profile on sign-up
@@ -170,6 +178,9 @@ begin
 end;
 $$;
 
+revoke all on function public.handle_new_user() from public;
+revoke all on function public.handle_new_user() from anon, authenticated;
+
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created
   after insert on auth.users
@@ -200,6 +211,9 @@ begin
 end;
 $$;
 
+revoke all on function public.sync_build_upvote_count() from public;
+revoke all on function public.sync_build_upvote_count() from anon, authenticated;
+
 drop trigger if exists build_votes_count_insert on public.build_votes;
 create trigger build_votes_count_insert
   after insert on public.build_votes
@@ -213,7 +227,8 @@ create trigger build_votes_count_delete
   execute function public.sync_build_upvote_count();
 
 -- ---------------------------------------------------------------------------
--- Storage: user avatars (public read; users manage files under their folder)
+-- Storage: user avatars (public bucket URLs; users manage files under their folder)
+-- No broad SELECT policy — public URLs work without RLS; listing is owner-only.
 -- ---------------------------------------------------------------------------
 
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
@@ -230,10 +245,15 @@ on conflict (id) do update set
   allowed_mime_types = excluded.allowed_mime_types;
 
 drop policy if exists avatars_public_read on storage.objects;
-create policy avatars_public_read
+drop policy if exists avatars_select_own on storage.objects;
+create policy avatars_select_own
   on storage.objects
   for select
-  using (bucket_id = 'avatars');
+  to authenticated
+  using (
+    bucket_id = 'avatars'
+    and auth.uid()::text = (storage.foldername(name))[1]
+  );
 
 drop policy if exists avatars_insert_own on storage.objects;
 create policy avatars_insert_own
@@ -300,6 +320,13 @@ set guild_name = excluded.guild_name,
     updated_at = now();
 
 -- ---------------------------------------------------------------------------
+-- Upgrade (existing project): Auth leaked password protection (Dashboard)
+-- ---------------------------------------------------------------------------
+-- Authentication → Sign In / Providers → Email → Password security
+-- Enable "Prevent use of leaked passwords" (HaveIBeenPwned). Requires Pro plan+.
+-- Applies to email/password sign-up and password changes only (not OAuth).
+
+-- ---------------------------------------------------------------------------
 -- Upgrade (existing project): harden tower-payloads storage (run once)
 -- ---------------------------------------------------------------------------
 -- update storage.buckets
@@ -319,7 +346,7 @@ set guild_name = excluded.guild_name,
 -- drop index if exists public.builds_category_list_idx;
 -- drop index if exists public.builds_top_list_idx;
 -- create index if not exists builds_list_idx on public.builds (created_at desc, id desc);
--- create index if not exists builds_title_trgm_idx on public.builds using gin (title gin_trgm_ops);
+-- create index if not exists builds_title_trgm_idx on public.builds using gin (title extensions.gin_trgm_ops);
 -- create index if not exists builds_user_idx on public.builds (user_id, created_at desc);
 -- create index if not exists builds_category_list_idx on public.builds (category, created_at desc, id desc);
 -- create index if not exists builds_top_list_idx on public.builds (upvote_count desc, created_at desc, id desc);

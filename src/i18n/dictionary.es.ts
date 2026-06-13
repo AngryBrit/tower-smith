@@ -1836,7 +1836,7 @@ export const STRINGS_ES = {
   sr_notice_account_sync_project_mismatch:
     'Sincronización mal configurada (proyecto Supabase distinto). El inicio de sesión y el servidor deben usar el mismo proyecto.',
   sr_notice_account_sync_storage_failed:
-    'No se pudo acceder al almacenamiento en la nube. Crea el bucket tower-payloads en Supabase (harden-tower-payloads-storage.sql).',
+    'No se pudo acceder al almacenamiento en la nube. Crea el bucket tower-payloads en Supabase (consulta supabase/schema.sql).',
   sr_notice_account_sync_too_large:
     'Los datos del torre son demasiado grandes para la copia en la nube. Exporta un Tower CSV como alternativa.',
   sr_notice_account_sync_load_failed:

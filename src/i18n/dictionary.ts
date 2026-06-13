@@ -1807,7 +1807,7 @@ export const STRINGS_EN = {
   sr_notice_account_sync_project_mismatch:
     'Account sync is misconfigured (Supabase project mismatch). Gallery sign-in and server env must use the same project.',
   sr_notice_account_sync_storage_failed:
-    'Could not reach cloud storage for your account. Ensure the tower-payloads bucket exists in Supabase (run harden-tower-payloads-storage.sql).',
+    'Could not reach cloud storage for your account. Ensure the tower-payloads bucket exists in Supabase (see supabase/schema.sql).',
   sr_notice_account_sync_too_large:
     'Your tower data is too large for cloud backup. Try exporting a Tower CSV as a fallback.',
   sr_notice_account_sync_load_failed:

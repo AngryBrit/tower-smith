@@ -1743,7 +1743,7 @@ export const STRINGS_DE = {
   sr_notice_account_sync_project_mismatch:
     'Synchronisierung falsch konfiguriert (Supabase-Projekt stimmt nicht). Anmeldung und Server müssen dasselbe Projekt nutzen.',
   sr_notice_account_sync_storage_failed:
-    'Cloud-Speicher nicht erreichbar. Bucket tower-payloads in Supabase anlegen (harden-tower-payloads-storage.sql).',
+    'Cloud-Speicher nicht erreichbar. Bucket tower-payloads in Supabase anlegen (siehe supabase/schema.sql).',
   sr_notice_account_sync_too_large:
     'Turmdaten sind zu groß für die Cloud-Sicherung. Tower-CSV als Alternative exportieren.',
   sr_notice_account_sync_load_failed:
