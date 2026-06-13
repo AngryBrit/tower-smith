@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.4-2ea44f)
+![Version](https://img.shields.io/badge/version-3.1.5-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -271,6 +271,7 @@ Legacy snapshot strings in `public/research/sections/*.json` (e.g. `0.25 q`) are
 | `upgradeWorkshopLevel[]` | Workshop upgrade levels |
 | `*BotPresets` / legacy `bots*Presets` | Bots tab ([`gameBotPresetMapping.ts`](src/playerSave/gameBotPresetMapping.ts), [`gameBotLegacyPresetMapping.ts`](src/playerSave/gameBotLegacyPresetMapping.ts)) — `levels[]` = `[cooldown, range, weaponStat2, weaponStat4]` |
 | `*BotLevelCooldownSelected` + bot `researchLevel[102–109]` | BOTS lab overrides ([`gameBotLabMapping.ts`](src/playerSave/gameBotLabMapping.ts)) — cooldown labs 102–106; burn stack 107; **Golden Bot - Duration 108**; Thunder Bot - Linger Time 109 |
+| Main / Modules `researchLevel` anchors | **Reroll Daily Mission 148** ([`gameMainResearchMapping.ts`](src/playerSave/gameMainResearchMapping.ts)); **Common Drop Chance 134**, **Unmerge Module 151** ([`gameModulesResearchMapping.ts`](src/playerSave/gameModulesResearchMapping.ts)) |
 | Module `infoIndex` / effects | Chassis and assist modules ([`gameModuleIndex.ts`](src/playerSave/gameModuleIndex.ts); `node scripts/gen-game-module-index.mjs`) |
 | `guardianChipSlot`, `guardianChipUnlocked`, `guardianChipLevel` | Guardians tab ([`gameGuardianChipMapping.ts`](src/playerSave/gameGuardianChipMapping.ts)) |
 | Relic unlock arrays | Owned relic IDs |

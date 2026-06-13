@@ -1,6 +1,6 @@
 researchLevel import coverage
 ===========================
-Generated: 2026-06-13T18:16:22.333Z
+Generated: 2026-06-13T20:45:39.595Z
 Dump: C:\Dev\towersmith\docs\player-save-field-dump.json
 Dump decodedAt: 2026-06-13T18:07:26.175Z
 Slots: 250 (game uses researchLevel[0..249])
@@ -77,7 +77,7 @@ All nonzero slots
   [131] = 4  @ player-save-field-dump.json:13169  explicit  (attack: Max Rend Armor Multiplier)
   [132] = 1  @ player-save-field-dump.json:13170  explicit  (ultimate: Black Hole Disable Ranged Enemies)
   [133] = 1  @ player-save-field-dump.json:13171  explicit  (main: Workshop Enhancements)
-  [134] = 10  @ player-save-field-dump.json:13172  explicit  (main: Enhancement Attack - Coin Discount)
+  [134] = 10  @ player-save-field-dump.json:13172  explicit  (modules: Common Drop Chance)
   [139] = 70  @ player-save-field-dump.json:13177  explicit  (modules: Reroll Shards)
   [140] = 46  @ player-save-field-dump.json:13178  explicit  (modules: Daily Mission Shards)
   [143] = 10  @ player-save-field-dump.json:13181  explicit  (modules: Rare Drop Chance)
@@ -86,7 +86,7 @@ All nonzero slots
   [146] = 1  @ player-save-field-dump.json:13184  explicit  (cards: Recharge Demon Mode)
   [149] = 6  @ player-save-field-dump.json:13187  explicit  (cards: Recharge Nuke)
   [150] = 1  @ player-save-field-dump.json:13188  explicit  (attack: Light Speed Shots)
-  [151] = 1  @ player-save-field-dump.json:13189  explicit  (main: Reroll Daily Mission)
+  [151] = 1  @ player-save-field-dump.json:13189  explicit  (modules: Unmerge Module)
   [153] = 5  @ player-save-field-dump.json:13191  explicit  (perks: Auto Pick Ranking)
   [190] = 20  @ player-save-field-dump.json:13228  explicit  (ultimate: Death Wave Cells Bonus)
   [193] = 10  @ player-save-field-dump.json:13231  explicit  (defense: Garlic Thorns)

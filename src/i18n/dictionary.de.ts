@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_315_headline: 'Neu in v3.1.5',
+  whats_new_315_body:
+    'Import-Fixes für Main- und Modul-Labs: Reroll Daily Mission (Slot 148), Common Drop Chance (134) und Unmerge Module (151). Spielstand erneut importieren, falls eines davon falsch wirkte.',
   whats_new_314_headline: 'Neu in v3.1.4',
   whats_new_314_body:
     'Golden Bot - Duration wird jetzt aus dem richtigen researchLevel-Slot (108) importiert — Spielstand erneut importieren, falls das Lab oder der +0,5s-Dauer-Bonus falsch wirkte.',

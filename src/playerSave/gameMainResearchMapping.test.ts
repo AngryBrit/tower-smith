@@ -104,11 +104,18 @@ describe('mainLabsToOverrides', () => {
     expect(overrides['0-11']).toBe(1)
   })
 
-  it('maps Reroll Daily Mission from researchLevel id 151', () => {
+  it('maps Reroll Daily Mission from researchLevel id 148', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[148] = 1
+    const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
+    expect(overrides['0-12']).toBe(1)
+  })
+
+  it('leaves Reroll Daily Mission unmapped when researchLevel[148] is 0', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[151] = 1
     const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
-    expect(overrides['0-12']).toBe(1)
+    expect(overrides['0-12']).toBeUndefined()
   })
 
   it('maps Workshop Enhancements from researchLevel id 133', () => {
@@ -118,13 +125,12 @@ describe('mainLabsToOverrides', () => {
     expect(overrides['0-13']).toBe(1)
   })
 
-  it('maps Enhancement coin discount labs from researchLevel ids 134–136', () => {
+  it('maps Enhancement coin discount labs from researchLevel ids 135–136', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
-    researchLevel[134] = 10
     researchLevel[135] = 34
     researchLevel[136] = 5
     const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
-    expect(overrides['0-14']).toBe(10)
+    expect(overrides['0-14']).toBeUndefined()
     expect(overrides['0-15']).toBe(34)
     expect(overrides['0-16']).toBe(5)
   })

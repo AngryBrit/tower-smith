@@ -100,7 +100,8 @@ describe('importPlayerInfo', () => {
     const rerollDailyMissionIi = data.sections[mainSi]!.items.findIndex(
       (i) => i.name === 'Reroll Daily Mission',
     )
-    expect(overrides[`${mainSi}-${rerollDailyMissionIi}`]).toBe(save.researchLevel[151])
+    expect(save.researchLevel[148]).toBe(0)
+    expect(overrides[`${mainSi}-${rerollDailyMissionIi}`]).toBeUndefined()
     const attackSi = data.sections.findIndex((s) => s.sectionSlug === 'attack-research')
     expect(attackSi).toBeGreaterThanOrEqual(0)
     expect(overrides[`${attackSi}-0`]).toBe(46)
@@ -118,6 +119,8 @@ describe('importPlayerInfo', () => {
     const rerollIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Reroll Shards')
     const dailyIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Daily Mission Shards')
     const rareIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Rare Drop Chance')
+    const commonIi = data.sections[modulesSi]!.items.findIndex((i) => i.name === 'Common Drop Chance')
+    expect(overrides[`${modulesSi}-${commonIi}`]).toBe(save.researchLevel[134])
     expect(overrides[`${modulesSi}-${rerollIi}`]).toBe(save.researchLevel[139])
     expect(overrides[`${modulesSi}-${dailyIi}`]).toBe(save.researchLevel[140])
     expect(overrides[`${modulesSi}-${rareIi}`]).toBe(save.researchLevel[143])

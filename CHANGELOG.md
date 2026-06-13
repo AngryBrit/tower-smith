@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.5] - 2026-06-13
+
+### Fixed
+
+- **Reroll Daily Mission lab import** — `researchLevel[148]` (not 151) maps to the Main Research unlock; re-import if Reroll showed unlocked when it was not (or locked when you had bought it).
+- **Common Drop Chance lab import** — `researchLevel[134]` maps to the first Modules lab (was wrongly attributed to Enhancement Attack - Coin Discount).
+- **Unmerge Module lab import** — `researchLevel[151]` maps to Unmerge Module (was wrongly sharing slot 148 with Reroll).
+
+### Docs
+
+- README: Main/Modules `researchLevel` anchor table; version **3.1.5**.
+- What's new banner (en/de/es).
+
 ## [3.1.4] - 2026-06-13
 
 ### Fixed

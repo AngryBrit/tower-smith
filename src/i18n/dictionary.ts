@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_315_headline: "What's new in v3.1.5",
+  whats_new_315_body:
+    'Main and Modules lab import fixes: Reroll Daily Mission (slot 148), Common Drop Chance (134), and Unmerge Module (151). Re-import playerInfo.dat if any of those looked wrong.',
   whats_new_314_headline: "What's new in v3.1.4",
   whats_new_314_body:
     'Golden Bot - Duration now imports from the correct researchLevel slot (108) — re-import playerInfo.dat if that lab or its +0.5s duration bonus looked wrong.',

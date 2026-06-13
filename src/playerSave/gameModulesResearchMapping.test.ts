@@ -23,6 +23,13 @@ function modulesResearchData(): ResearchData {
 }
 
 describe('modulesLabsToOverrides', () => {
+  it('maps Common Drop Chance from researchLevel id 134', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[134] = 10
+    const overrides = modulesLabsToOverrides(modulesResearchData(), researchLevel)
+    expect(overrides['0-0']).toBe(10)
+  })
+
   it('maps confirmed module labs from researchLevel ids 139–143', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
     researchLevel[139] = 31
@@ -36,9 +43,9 @@ describe('modulesLabsToOverrides', () => {
     expect(overrides['0-5']).toBe(2)
   })
 
-  it('maps Unmerge Module from researchLevel id 148', () => {
+  it('maps Unmerge Module from researchLevel id 151', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
-    researchLevel[148] = 1
+    researchLevel[151] = 1
     const overrides = modulesLabsToOverrides(modulesResearchData(), researchLevel)
     expect(overrides['0-6']).toBe(1)
   })

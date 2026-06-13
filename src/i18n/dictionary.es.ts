@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_315_headline: 'Novedades en v3.1.5',
+  whats_new_315_body:
+    'Correcciones de importación en Main y Módulos: Reroll Daily Mission (slot 148), Common Drop Chance (134) y Unmerge Module (151). Vuelve a importar playerInfo.dat si alguno estaba mal.',
   whats_new_314_headline: 'Novedades en v3.1.4',
   whats_new_314_body:
     'Golden Bot - Duration se importa ahora del slot researchLevel correcto (108) — vuelve a importar playerInfo.dat si ese lab o el bono de +0,5 s de duración estaban mal.',

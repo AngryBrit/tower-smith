@@ -1,7 +1,7 @@
 /**
  * Main research lab ↔ game `researchLevel[id]`.
  * First twelve main labs use sequential ids 30–41 (UI order).
- * Workshop Enhancements unlock uses save id 133; Reroll Daily Mission uses id 151.
+ * Reroll Daily Mission uses id 148; Workshop Enhancements uses id 133.
  */
 export const MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Game Speed': 30,
@@ -16,9 +16,8 @@ export const MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Target Priority': 39,
   'Card Presets': 40,
   'Workshop Respec': 41,
-  'Reroll Daily Mission': 151,
+  'Reroll Daily Mission': 148,
   'Workshop Enhancements': 133,
-  'Enhancement Attack - Coin Discount': 134,
   'Enhancement Defense - Coin Discount': 135,
   'Enhancement Utility - Coin Discount': 136,
   'Dissonant Echo - Attack': 238,
