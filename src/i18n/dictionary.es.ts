@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_316_headline: 'Novedades en v3.1.6',
+  whats_new_316_body:
+    'Correcciones de importación: Dissonant Echo Ataque/Utilidad (slots 240/238), Shatter Shards (152) y Battle Condition Reduction (199). Los presets de bots usan niveles de medalla comprados. Effective Paths detecta libros IDS Collection.',
   whats_new_315_headline: 'Novedades en v3.1.5',
   whats_new_315_body:
     'Correcciones de importación en Main y Módulos: Reroll Daily Mission (slot 148), Common Drop Chance (134) y Unmerge Module (151). Vuelve a importar playerInfo.dat si alguno estaba mal.',

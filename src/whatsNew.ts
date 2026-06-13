@@ -7,6 +7,10 @@ export type WhatsNewCopy = {
 
 /** Per-release in-app highlight — add an entry when shipping user-visible changes. */
 export const WHATS_NEW_BY_VERSION: Partial<Record<string, WhatsNewCopy>> = {
+  '3.1.6': {
+    headline: 'whats_new_316_headline',
+    body: 'whats_new_316_body',
+  },
   '3.1.5': {
     headline: 'whats_new_315_headline',
     body: 'whats_new_315_body',

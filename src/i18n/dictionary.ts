@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_316_headline: "What's new in v3.1.6",
+  whats_new_316_body:
+    'Lab import fixes: Dissonant Echo Attack/Utility (slots 240/238), Shatter Shards (152), and Battle Condition Reduction (199). Bot presets now use purchased medal levels. Effective Paths detects IDS Collection workbooks.',
   whats_new_315_headline: "What's new in v3.1.5",
   whats_new_315_body:
     'Main and Modules lab import fixes: Reroll Daily Mission (slot 148), Common Drop Chance (134), and Unmerge Module (151). Re-import playerInfo.dat if any of those looked wrong.',

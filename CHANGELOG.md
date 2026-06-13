@@ -5,6 +5,20 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.6] - 2026-06-13
+
+### Fixed
+
+- **Dissonant Echo lab import** — `researchLevel[240]` maps to Dissonant Echo - Attack and `[238]` to Utility (IDs were swapped).
+- **Shatter Shards / Battle Condition Reduction lab import** — `researchLevel[152]` maps to Shatter Shards; `[199]` maps to Battle Condition Reduction (IDs were swapped).
+- **Bot preset import** — Uses purchased medal tiers from `levels[]` instead of the farming slider in `selectedLevels[]`.
+- **Effective Paths IDS Collection workbooks** — Detect combined category workbooks and pick the correct tab per area (Laboratory, Workshop, Cards, Modules, Bots, Guardians, Themes, Relics, UWS).
+
+### Docs
+
+- README: extended `researchLevel` anchor table, IDS Collection note, bot preset import behavior; version **3.1.6**.
+- What's new banner (en/de/es).
+
 ## [3.1.5] - 2026-06-13
 
 ### Fixed

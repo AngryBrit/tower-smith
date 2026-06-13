@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_316_headline: 'Neu in v3.1.6',
+  whats_new_316_body:
+    'Import-Fixes: Dissonant Echo Angriff/Nutzen (Slots 240/238), Shatter Shards (152) und Battle Condition Reduction (199). Bot-Presets nutzen gekaufte Medaillen-Stufen. Effective Paths erkennt IDS-Collection-Arbeitsmappen.',
   whats_new_315_headline: 'Neu in v3.1.5',
   whats_new_315_body:
     'Import-Fixes für Main- und Modul-Labs: Reroll Daily Mission (Slot 148), Common Drop Chance (134) und Unmerge Module (151). Spielstand erneut importieren, falls eines davon falsch wirkte.',
