@@ -17,6 +17,17 @@ function isIsoTimestamp(value: string): boolean {
   return Number.isFinite(ms)
 }
 
+const EFFECTIVE_PATHS_IDS_MASTER_REF_MAX_LEN = 500
+
+function parseEffectivePathsIdsMasterRef(value: unknown): string | undefined {
+  if (value === undefined) return undefined
+  if (typeof value !== 'string') return undefined
+  const trimmed = value.trim()
+  if (!trimmed) return ''
+  if (trimmed.length > EFFECTIVE_PATHS_IDS_MASTER_REF_MAX_LEN) return undefined
+  return trimmed
+}
+
 export function parseAccountWorkspaceBackup(raw: unknown): AccountWorkspaceBackupV1 | null {
   if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return null
   const o = raw as Record<string, unknown>
@@ -27,12 +38,21 @@ export function parseAccountWorkspaceBackup(raw: unknown): AccountWorkspaceBacku
   if (!labPresets) return null
 
   const guardianChips = sanitizeGuardianChipState(o.guardianChips)
+  const effectivePathsIdsMasterRef = parseEffectivePathsIdsMasterRef(
+    o.effectivePathsIdsMasterRef,
+  )
+  if (o.effectivePathsIdsMasterRef !== undefined && effectivePathsIdsMasterRef === undefined) {
+    return null
+  }
 
   return {
     v: ACCOUNT_WORKSPACE_BACKUP_VERSION,
     updatedAt: o.updatedAt,
     labPresets,
     guardianChips,
+    ...(effectivePathsIdsMasterRef !== undefined
+      ? { effectivePathsIdsMasterRef }
+      : {}),
   }
 }
 
@@ -47,11 +67,14 @@ export function buildAccountWorkspaceBackup(
   labPresets: LabPresetsFileV1,
   guardianChips: GuardianChipState,
   updatedAt: string = new Date().toISOString(),
+  effectivePathsIdsMasterRef?: string,
 ): AccountWorkspaceBackupV1 {
+  const ref = effectivePathsIdsMasterRef?.trim()
   return {
     v: ACCOUNT_WORKSPACE_BACKUP_VERSION,
     updatedAt,
     labPresets,
     guardianChips,
+    ...(ref ? { effectivePathsIdsMasterRef: ref } : {}),
   }
 }

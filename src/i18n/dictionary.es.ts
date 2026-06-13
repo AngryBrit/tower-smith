@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_311_headline: 'Novedades en v3.1.1',
+  whats_new_311_body:
+    'La URL del IDS Master de Effective Paths se guarda por cuenta y se sincroniza entre dispositivos. El inicio de sesión de Google Sheets ya no se queda colgado al reintentar y la sincronización en la nube es más fiable.',
   whats_new_310_headline: 'Novedades en v3.1.0',
   whats_new_310_body:
     'Nueva pestaña GUARDIANES con loadouts de chips y rutas de mejora. Sincroniza labs, taller, reliquias, temas, cartas, bots, módulos y guardianes con Google Sheets Effective Paths de la comunidad — con pestañas de vista previa al exportar. Las copias CSV Tower incluyen chips de guardián y niveles de investigación completos. Galería: inicio con Twitch, votos y controles del autor.',

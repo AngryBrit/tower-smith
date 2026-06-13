@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.1] - 2026-06-13
+
+### Added
+
+- **Effective Paths IDS Master per account** — The IDS Master spreadsheet URL/ID in Tools / Settings is stored per signed-in user and synced with account workspace backup (Supabase Storage JSON), so it follows you across devices. Pre-login entries migrate on first sign-in.
+
+### Fixed
+
+- **Effective Paths Google OAuth** — GIS script load no longer hangs on retry when the Google client is already on the page; stalled consent now times out with a clear error instead of an infinite progress bar.
+- **Account workspace sync** — More reliable Supabase access-token refresh on fetch/save; fewer spurious 401s and sign-out loops during cloud sync.
+
+### Docs
+
+- README: Effective Paths IDS storage and account persistence; version **3.1.1**.
+- What's new banner (en/de/es).
+
 ## [3.1.0] - 2026-06-13
 
 ### Added

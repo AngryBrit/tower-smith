@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_311_headline: 'Neu in v3.1.1',
+  whats_new_311_body:
+    'Die IDS-Master-URL für Effective Paths wird pro Konto gespeichert und geräteübergreifend synchronisiert. Google-Sheets-Anmeldung hängt nicht mehr beim erneuten Versuch; Cloud-Sync ist zuverlässiger.',
   whats_new_310_headline: 'Neu in v3.1.0',
   whats_new_310_body:
     'Neuer Tab WÄCHTER mit Chip-Loadouts und Upgrade-Pfaden. Synchronisiere Labs, Werkstatt, Relikte, Themes, Karten, Bots, Module und Wächter mit community Effective Paths Google Sheets — inklusive Export-Vorschau-Tabs. Tower-CSV-Backups enthalten jetzt Wächter-Chips und volle Forschungslevel. Galerie: Twitch-Anmeldung, Upvotes und Eigentümer-Steuerung.',

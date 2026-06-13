@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_311_headline: "What's new in v3.1.1",
+  whats_new_311_body:
+    'Effective Paths IDS Master URL now saves per signed-in account and syncs across devices. Google Sheets sign-in no longer hangs on retry, and account cloud sync is more reliable.',
   whats_new_310_headline: "What's new in v3.1.0",
   whats_new_310_body:
     'New GUARDIANS tab with chip loadouts and upgrade tracks. Sync labs, workshop, relics, themes, cards, bots, modules, and guardians with community Effective Paths Google Sheets — including staged export previews. Tower CSV backups now include guardian chips and full research levels. Gallery adds Twitch sign-in, upvotes, and owner controls.',

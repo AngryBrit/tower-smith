@@ -79,6 +79,7 @@ import {
   summarizeGoogleSheetsApiError,
 } from '../effectivePaths/googleSheetsError'
 import { parseSpreadsheetRef } from '../effectivePaths/parseSpreadsheetRef'
+import { useAuth } from '../auth/useAuth'
 import { useI18n, type StringId } from '../i18n'
 import { EffectivePathsLinkedWorkbooksList } from './EffectivePathsLinkedWorkbooksList'
 import { EffectivePathsPendingExportsPanel } from './EffectivePathsPendingExportsPanel'
@@ -178,9 +179,13 @@ export function EffectivePathsSyncDialog({
   onImportedAll,
 }: EffectivePathsSyncDialogProps) {
   const { t } = useI18n()
+  const { user } = useAuth()
+  const spreadsheetUserId = user?.id ?? null
   const titleId = useId()
   const listId = useId()
-  const [spreadsheetRef, setSpreadsheetRef] = useState(() => readStoredSpreadsheetRef())
+  const [spreadsheetRef, setSpreadsheetRef] = useState(() =>
+    readStoredSpreadsheetRef(spreadsheetUserId),
+  )
   const [googleToken, setGoogleToken] = useState<string | null>(() =>
     getCachedGoogleSheetsAccessToken(),
   )
@@ -402,17 +407,21 @@ export function EffectivePathsSyncDialog({
   const hasGoogleSheetsAccess =
     googleToken != null || getCachedGoogleSheetsAccessToken() != null
 
+  const persistSpreadsheetRef = useCallback(() => {
+    writeStoredSpreadsheetRef(spreadsheetRef, spreadsheetUserId)
+  }, [spreadsheetRef, spreadsheetUserId])
+
   useEffect(() => {
     if (!open) return
     const frameId = window.requestAnimationFrame(() => {
-      setSpreadsheetRef(readStoredSpreadsheetRef())
+      setSpreadsheetRef(readStoredSpreadsheetRef(spreadsheetUserId))
       setNotice(null)
       setPendingExports(readPendingEffectivePathsExports())
       const cached = getCachedGoogleSheetsAccessToken()
       if (cached) setGoogleToken(cached)
     })
     return () => window.cancelAnimationFrame(frameId)
-  }, [open])
+  }, [open, spreadsheetUserId])
 
   const showNotice = useCallback((message: string, variant: ImportNoticeVariant) => {
     setNotice({ message, variant })
@@ -582,7 +591,7 @@ export function EffectivePathsSyncDialog({
       }
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
       const result = await listEffectivePathsWorkbooks({
         googleAccessToken: token,
         masterSpreadsheetId: parsedMaster.spreadsheetId,
@@ -698,7 +707,7 @@ export function EffectivePathsSyncDialog({
       setLoadingSheets(false)
       setLoadProgress(null)
     }
-  }, [parsedMaster, ensureGoogleToken, spreadsheetRef, formatExportError, showNotice, t])
+  }, [parsedMaster, ensureGoogleToken, persistSpreadsheetRef, spreadsheetRef, formatExportError, showNotice, t])
 
   const handleExportRelics = useCallback(async () => {
     if (!parsedMaster) {
@@ -727,7 +736,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportRelicsToEffectivePaths({
         googleAccessToken: token,
@@ -767,6 +776,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncRelics,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     relicOwnedIds,
     relicsWorkbook,
@@ -803,7 +813,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportThemesToEffectivePaths({
         googleAccessToken: token,
@@ -847,6 +857,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncThemes,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     themeOwnedIds,
     themesWorkbook,
@@ -883,7 +894,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportCardsToEffectivePaths({
         googleAccessToken: token,
@@ -943,6 +954,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncCards,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     cardStars,
     cardMasteryUnlockedIds,
@@ -982,7 +994,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportWorkshopToEffectivePaths({
         googleAccessToken: token,
@@ -1033,6 +1045,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncWorkshop,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     workshopLevels,
     workshopWorkbook,
@@ -1069,7 +1082,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportBotsToEffectivePaths({
         googleAccessToken: token,
@@ -1120,6 +1133,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncBots,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     botsEpState,
     botsWorkbook,
@@ -1156,7 +1170,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportLabsToEffectivePaths({
         googleAccessToken: token,
@@ -1200,6 +1214,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncLabs,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     labLevelOverrides,
     laboratoryWorkbook,
@@ -1236,7 +1251,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportUwsToEffectivePaths({
         googleAccessToken: token,
@@ -1273,6 +1288,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncUws,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     uwsEpState,
     uwsWorkbook,
@@ -1309,7 +1325,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportGuardiansToEffectivePaths({
         googleAccessToken: token,
@@ -1346,6 +1362,7 @@ export function EffectivePathsSyncDialog({
     parsedMaster,
     canSyncGuardians,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     guardiansEpState,
     guardiansWorkbook,
@@ -1387,7 +1404,7 @@ export function EffectivePathsSyncDialog({
       const token = await ensureGoogleToken()
       if (!token) return
 
-      writeStoredSpreadsheetRef(spreadsheetRef)
+      persistSpreadsheetRef()
 
       const result = await exportModulesToEffectivePaths({
         googleAccessToken: token,
@@ -1424,6 +1441,7 @@ export function EffectivePathsSyncDialog({
   }, [
     parsedMaster,
     ensureGoogleToken,
+    persistSpreadsheetRef,
     spreadsheetRef,
     modulesEpState,
     modulesEquippedCount,
@@ -1467,7 +1485,7 @@ export function EffectivePathsSyncDialog({
         const token = await ensureGoogleToken()
         if (!token) return
 
-        writeStoredSpreadsheetRef(spreadsheetRef)
+        persistSpreadsheetRef()
 
         const apiOptions = {
           googleAccessToken: token,
@@ -1520,6 +1538,7 @@ export function EffectivePathsSyncDialog({
       workbookByTarget,
       canImportTarget,
       ensureGoogleToken,
+      persistSpreadsheetRef,
       spreadsheetRef,
       formatExportError,
       showNotice,

@@ -113,7 +113,12 @@ export function usePlayerSaveImport(
         if (auth.user && accountWorkspaceSyncAvailable()) {
           const token = await auth.getAccessToken()
           if (token) {
-            const backup = buildAccountWorkspaceBackupFromContext(nextWorkspace, nextScratch)
+            const backup = buildAccountWorkspaceBackupFromContext(
+              nextWorkspace,
+              nextScratch,
+              undefined,
+              auth.user.id,
+            )
             const saved = await saveAccountWorkspace(token, backup)
             if (saved.ok) {
               writeLocalAccountWorkspaceUpdatedAt(backup.updatedAt)

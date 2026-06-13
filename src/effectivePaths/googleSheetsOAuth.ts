@@ -104,7 +104,7 @@ function loadGisScript(): Promise<void> {
   }
   if (gisScriptPromise) return gisScriptPromise
 
-  gisScriptPromise = new Promise((resolve, reject) => {
+  gisScriptPromise = new Promise<void>((resolve, reject) => {
     let settled = false
     const finish = (result: 'resolve' | 'reject', err?: Error) => {
       if (settled) return
@@ -151,10 +151,10 @@ function loadGisScript(): Promise<void> {
     }
     script.onerror = () => finish('reject', new Error('google_oauth_script_failed'))
     document.head.appendChild(script)
-  }).catch((err) => {
+  }).catch((err: unknown) => {
     gisScriptPromise = null
     throw err
-  })
+  }) as Promise<void>
 
   return gisScriptPromise
 }

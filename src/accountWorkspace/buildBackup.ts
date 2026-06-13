@@ -1,4 +1,5 @@
 import { readGuardianChipState } from '../guardianChipStorage'
+import { readStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import { parseLabPresetsFile, type LabPreset } from '../labPresetsStorage'
 import {
   buildLabPresetsPayloadWithWorkspace,
@@ -26,6 +27,7 @@ export function buildAccountWorkspaceBackupFromContext(
   workspace: TowerWorkspaceV1,
   scratchWorkspace: TowerWorkspaceV1,
   updatedAt: string = new Date().toISOString(),
+  userId?: string | null,
 ): AccountWorkspaceBackupV1 {
   let activePresetId: string | null = null
   let presets: readonly LabPreset[] = []
@@ -53,6 +55,7 @@ export function buildAccountWorkspaceBackupFromContext(
     labPresets,
     readGuardianChipState(),
     updatedAt,
+    readStoredSpreadsheetRef(userId),
   )
 }
 

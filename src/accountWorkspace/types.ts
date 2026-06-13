@@ -10,4 +10,6 @@ export type AccountWorkspaceBackupV1 = {
   updatedAt: string
   labPresets: LabPresetsFileV1
   guardianChips: GuardianChipState
+  /** IDS Master spreadsheet URL or ID for Effective Paths sync. */
+  effectivePathsIdsMasterRef?: string
 }

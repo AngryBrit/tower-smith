@@ -1,4 +1,5 @@
 import { useId, useState } from 'react'
+import { useAuth } from '../../auth/useAuth'
 import {
   readStoredSpreadsheetRef,
   writeStoredSpreadsheetRef,
@@ -6,12 +7,14 @@ import {
 import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
 import { useI18n } from '../../i18n'
 
-export function EffectivePathsSettingsSection() {
+type EffectivePathsSettingsFieldsProps = {
+  userId: string | null
+}
+
+function EffectivePathsSettingsFields({ userId }: EffectivePathsSettingsFieldsProps) {
   const { t } = useI18n()
   const inputId = useId()
-  const [spreadsheetRef, setSpreadsheetRef] = useState(() => readStoredSpreadsheetRef())
-
-  if (!googleSheetsOAuthConfigured()) return null
+  const [spreadsheetRef, setSpreadsheetRef] = useState(() => readStoredSpreadsheetRef(userId))
 
   return (
     <div className="settings-page__field">
@@ -32,10 +35,19 @@ export function EffectivePathsSettingsSection() {
         onChange={(e) => {
           const next = e.target.value
           setSpreadsheetRef(next)
-          writeStoredSpreadsheetRef(next)
+          writeStoredSpreadsheetRef(next, userId)
         }}
       />
       <p className="settings-page__hint">{t('app_settings_ep_ids_master_hint')}</p>
     </div>
   )
+}
+
+export function EffectivePathsSettingsSection() {
+  const { user } = useAuth()
+  const userId = user?.id ?? null
+
+  if (!googleSheetsOAuthConfigured()) return null
+
+  return <EffectivePathsSettingsFields key={userId ?? 'anon'} userId={userId} />
 }
