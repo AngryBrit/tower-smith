@@ -53,3 +53,6 @@ public/tables/
 
 # Local Netlify folder
 .netlify
+
+# Local Supabase CLI link state
+supabase/.temp/
