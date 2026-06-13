@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.1-2ea44f)
+![Version](https://img.shields.io/badge/version-3.1.2-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -90,7 +90,7 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 
 **User flow**
 
-1. **Tools / Settings** → paste your **IDS Master** spreadsheet URL or ID (saved per signed-in account and synced across devices; device-local when signed out).
+1. **Tools / Settings** → paste your **IDS Master** spreadsheet URL or ID and press **Save IDS** (stored on your Supabase profile when signed in and synced across devices; device-local when signed out).
 2. **LAB tab** → **Tower Backup & Sharing** → **Effective Paths sync…**
 3. Sign in with Google (OAuth; scope: Google Sheets). TowerSmith reads linked workbook IDs from the IDS tab and shows per-category import/export actions.
 4. **Import** pulls lab levels, workshop stats, relic ownership, themes, cards, bots, guardians, modules, and related data into your workspace.
@@ -113,7 +113,7 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 - **Bug Buster** — Floating report button attaches an optional tower CSV and player save excerpt to bug reports (email or clipboard).
 - **Deep links** — Link directly to a lab card, workshop stat, ultimate weapon, or relic via URL hash or query param.
 - **PWA** — Install to your home screen (Tools / Settings → **Install app** on Android; Safari Share → Add to Home Screen on iOS). Works with limited offline support.
-- **Persistence** — All settings, snapshots, presets, and owned IDs survive reloads. Signed-in users sync lab presets, guardian chips, and the Effective Paths IDS Master URL via account workspace backup. Full reset available in Tools / Settings.
+- **Persistence** — All settings, snapshots, presets, and owned IDs survive reloads. Signed-in users sync lab presets and guardian chips via account workspace backup, and the Effective Paths IDS Master URL on their Supabase profile. Full reset available in Tools / Settings.
 
 For release history, see [`CHANGELOG.md`](CHANGELOG.md).
 
@@ -193,6 +193,7 @@ Requires Supabase env vars for the gallery — copy `.env.example` to `.env` and
 | Group | Functions | Purpose |
 |-------|-----------|---------|
 | **Gallery** | `submit-tower`, `list-towers`, `get-tower`, `delete-tower`, `vote-tower`, `set-tower-visibility`, `set-tower-category`, `regenerate-tower-link`, `admin-me` | Publish, browse, upvote, and manage community builds |
+| **Account** | `account-workspace` | Per-user lab preset and guardian chip cloud backup (`GET`/`PUT` `/api/account/workspace`) |
 | **Guild** | `register-guild`, `update-guild`, `resolve-guild` | Registered guild names for profile and gallery filters |
 | **Effective Paths** | `import-effective-paths`, `export-effective-paths`, `ids-gateway-effective-paths`, `list-effective-paths-sheets`, `workbook-access-effective-paths` | Google Sheets import/export and workbook access checks |
 
@@ -207,7 +208,7 @@ The gallery uses Netlify Functions as the API layer and Supabase (Postgres + Sto
 ### Supabase setup
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor.
+2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor. **Existing projects:** run the upgrade blocks at the bottom of that file when noted (e.g. `effective_paths_ids_master_ref` on `profiles` for IDS Master sync).
 3. **Storage** — the schema creates a **private** `tower-payloads` bucket (JSON only, 2 MB per file). Gallery builds and per-account workspace backups are read/written only via Netlify Functions (service role), not public URLs. If you created this bucket earlier as public, run the hardening upgrade in [`supabase/schema.sql`](supabase/schema.sql) (search for `harden tower-payloads`).
 4. **Auth** — enable Google, Discord, and Twitch providers. In **Authentication → URL Configuration**:
    - **Site URL:** your production origin (e.g. `https://www.towersmith.com/`)

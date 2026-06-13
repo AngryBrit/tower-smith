@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_312_headline: 'Novedades en v3.1.2',
+  whats_new_312_body:
+    'La URL del IDS Master de Effective Paths está ahora en tu perfil de Supabase, con un botón Guardar IDS en Ajustes — sincronización fiable entre dispositivos al iniciar sesión. Las copias antiguas del workspace se migran al entrar.',
   whats_new_311_headline: 'Novedades en v3.1.1',
   whats_new_311_body:
     'La URL del IDS Master de Effective Paths se guarda por cuenta y se sincroniza entre dispositivos. El inicio de sesión de Google Sheets ya no se queda colgado al reintentar y la sincronización en la nube es más fiable.',

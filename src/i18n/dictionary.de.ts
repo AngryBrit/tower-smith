@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_312_headline: 'Neu in v3.1.2',
+  whats_new_312_body:
+    'Die IDS-Master-URL für Effective Paths liegt jetzt in deinem Supabase-Profil — mit Speichern-Button in den Einstellungen für zuverlässige geräteübergreifende Sync bei Anmeldung. Alte Workspace-Backups werden beim Login migriert.',
   whats_new_311_headline: 'Neu in v3.1.1',
   whats_new_311_body:
     'Die IDS-Master-URL für Effective Paths wird pro Konto gespeichert und geräteübergreifend synchronisiert. Google-Sheets-Anmeldung hängt nicht mehr beim erneuten Versuch; Cloud-Sync ist zuverlässiger.',

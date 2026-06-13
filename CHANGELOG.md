@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.2] - 2026-06-13
+
+### Added
+
+- **Save IDS button** — Tools / Settings → Effective Paths: explicit **Save IDS** control writes local storage and your Supabase profile when signed in.
+- **IDS on Supabase profiles** — `profiles.effective_paths_ids_master_ref` is the primary cross-device store for the IDS Master URL; legacy workspace-backup values migrate on sign-in.
+
+### Fixed
+
+- **IDS cross-device sync** — Profile hydration on sign-in, legacy workspace backup migration, and settings UI refresh when the cloud value arrives.
+- **Import Save** — Button label clarified; file picker restricted to `.dat` saves.
+- **CI / Netlify build** — ESLint and TypeScript fixes for the IDS settings hook.
+
+### Docs
+
+- README: Save IDS flow, profile column, account workspace function, Supabase upgrade note; version **3.1.2**.
+- What's new banner (en/de/es).
+
 ## [3.1.1] - 2026-06-13
 
 ### Added
