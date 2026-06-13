@@ -1831,6 +1831,18 @@ export const STRINGS_ES = {
     'Datos de torre cargados desde tu cuenta.',
   sr_notice_account_sync_failed:
     'No se pudo sincronizar los datos con tu cuenta. Los datos quedaron solo en este dispositivo.',
+  sr_notice_account_sync_auth_failed:
+    'Falló la sincronización — tu sesión puede haber expirado. Cierra sesión y vuelve a entrar.',
+  sr_notice_account_sync_project_mismatch:
+    'Sincronización mal configurada (proyecto Supabase distinto). El inicio de sesión y el servidor deben usar el mismo proyecto.',
+  sr_notice_account_sync_storage_failed:
+    'No se pudo acceder al almacenamiento en la nube. Crea el bucket tower-payloads en Supabase (harden-tower-payloads-storage.sql).',
+  sr_notice_account_sync_too_large:
+    'Los datos del torre son demasiado grandes para la copia en la nube. Exporta un Tower CSV como alternativa.',
+  sr_notice_account_sync_load_failed:
+    'No se pudieron leer los datos guardados en la nube. Importa de nuevo en el escritorio.',
+  sr_notice_account_sync_network_failed:
+    'Error de red al sincronizar con tu cuenta. Comprueba la conexión e inténtalo de nuevo.',
   sr_notice_account_sync_save_failed:
     'Importado en este dispositivo, pero no se pudo guardar en tu cuenta. Comprueba la conexión e importa de nuevo.',
   sr_notice_import_player_invalid:

@@ -11,6 +11,8 @@ import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
 import { touchLocalAccountWorkspaceUpdatedAt, writeLocalAccountWorkspaceUpdatedAt } from '../accountWorkspace/localUpdatedAt'
 import { accountWorkspaceSyncAvailable, saveAccountWorkspace } from '../accountWorkspace/api'
 import { buildAccountWorkspaceBackupFromContext } from '../accountWorkspace/buildBackup'
+import { refreshAccessTokenForSync } from '../accountWorkspace/refreshAccessToken'
+import { accountWorkspaceErrorMessage } from '../accountWorkspace/syncErrorMessage'
 import {
   applyImportedLabAndBuild,
 } from '../towerWorkspaceStorage'
@@ -108,8 +110,9 @@ export function usePlayerSaveImport(
         persistLabWorkspacesToLocalStorage(nextWorkspace, nextScratch)
         touchLocalAccountWorkspaceUpdatedAt()
         let accountCloudSaved = true
+        let accountCloudSaveError: string | null = null
         if (auth.user && accountWorkspaceSyncAvailable()) {
-          const token = await auth.getAccessToken()
+          const token = (await refreshAccessTokenForSync()) ?? (await auth.getAccessToken())
           if (token) {
             const backup = buildAccountWorkspaceBackupFromContext(nextWorkspace, nextScratch)
             const saved = await saveAccountWorkspace(token, backup)
@@ -117,9 +120,11 @@ export function usePlayerSaveImport(
               writeLocalAccountWorkspaceUpdatedAt(backup.updatedAt)
             } else {
               accountCloudSaved = false
+              accountCloudSaveError = accountWorkspaceErrorMessage(t, saved.error)
             }
           } else {
             accountCloudSaved = false
+            accountCloudSaveError = accountWorkspaceErrorMessage(t, 'invalid_token')
           }
         }
         let shouldRefreshProfile = false
@@ -149,7 +154,10 @@ export function usePlayerSaveImport(
         })
         options?.onImportSuccess?.()
         if (auth.user && accountWorkspaceSyncAvailable() && !accountCloudSaved) {
-          publishImportNotice(t('sr_notice_account_sync_save_failed'), 'error')
+          publishImportNotice(
+            accountCloudSaveError ?? t('sr_notice_account_sync_save_failed'),
+            'error',
+          )
         } else {
           publishImportNotice(t('sr_notice_import_player_ok'), 'success')
         }

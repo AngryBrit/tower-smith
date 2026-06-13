@@ -1802,6 +1802,18 @@ export const STRINGS_EN = {
     'Loaded your tower data from your account.',
   sr_notice_account_sync_failed:
     'Could not sync tower data with your account. Your data is saved on this device only.',
+  sr_notice_account_sync_auth_failed:
+    'Account sync failed — your sign-in may have expired. Sign out and sign in again.',
+  sr_notice_account_sync_project_mismatch:
+    'Account sync is misconfigured (Supabase project mismatch). Gallery sign-in and server env must use the same project.',
+  sr_notice_account_sync_storage_failed:
+    'Could not reach cloud storage for your account. Ensure the tower-payloads bucket exists in Supabase (run harden-tower-payloads-storage.sql).',
+  sr_notice_account_sync_too_large:
+    'Your tower data is too large for cloud backup. Try exporting a Tower CSV as a fallback.',
+  sr_notice_account_sync_load_failed:
+    'Could not read your saved tower data from the cloud. Try importing your save again on desktop.',
+  sr_notice_account_sync_network_failed:
+    'Network error while syncing with your account. Check your connection and try again.',
   sr_notice_account_sync_save_failed:
     'Imported on this device, but could not save to your account. Check your connection and try importing again.',
   sr_notice_import_player_invalid:

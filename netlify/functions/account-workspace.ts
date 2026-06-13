@@ -8,9 +8,18 @@ import {
   verifySupabaseAccessTokenDetailed,
 } from './lib/supabaseAdmin'
 import {
+  mapAccountWorkspaceStorageError,
   readAccountWorkspaceBackup,
   writeAccountWorkspaceBackup,
 } from './lib/supabaseAccountWorkspace'
+
+async function ensureProfileSafe(user: Parameters<typeof ensureProfileForUser>[0]): Promise<void> {
+  try {
+    await ensureProfileForUser(user)
+  } catch {
+    /* profile row may already exist from a concurrent sign-up */
+  }
+}
 
 export default async (req: Request): Promise<Response> => {
   const origin = req.headers.get('Origin')
@@ -38,14 +47,15 @@ export default async (req: Request): Promise<Response> => {
     return jsonResponse(401, { error: verified.error }, cors)
   }
 
-  await ensureProfileForUser(verified.user)
+  await ensureProfileSafe(verified.user)
 
   if (req.method === 'GET') {
     try {
       const backup = await readAccountWorkspaceBackup(verified.user.id)
       return jsonResponse(200, { ok: true, backup }, cors)
-    } catch {
-      return jsonResponse(503, { error: 'sync_unavailable' }, cors)
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : ''
+      return jsonResponse(503, { error: mapAccountWorkspaceStorageError(msg) }, cors)
     }
   }
 
@@ -72,7 +82,7 @@ export default async (req: Request): Promise<Response> => {
     if (msg === 'too_large') {
       return jsonResponse(413, { error: 'too_large' }, cors)
     }
-    return jsonResponse(503, { error: 'sync_unavailable' }, cors)
+    return jsonResponse(503, { error: mapAccountWorkspaceStorageError(msg) }, cors)
   }
 
   return jsonResponse(200, { ok: true }, cors)

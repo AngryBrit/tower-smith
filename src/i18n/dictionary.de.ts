@@ -1738,6 +1738,18 @@ export const STRINGS_DE = {
     'Turmdaten von deinem Konto geladen.',
   sr_notice_account_sync_failed:
     'Turmdaten konnten nicht mit deinem Konto synchronisiert werden. Daten nur auf diesem Gerät gespeichert.',
+  sr_notice_account_sync_auth_failed:
+    'Synchronisierung fehlgeschlagen — Anmeldung evtl. abgelaufen. Abmelden und erneut anmelden.',
+  sr_notice_account_sync_project_mismatch:
+    'Synchronisierung falsch konfiguriert (Supabase-Projekt stimmt nicht). Anmeldung und Server müssen dasselbe Projekt nutzen.',
+  sr_notice_account_sync_storage_failed:
+    'Cloud-Speicher nicht erreichbar. Bucket tower-payloads in Supabase anlegen (harden-tower-payloads-storage.sql).',
+  sr_notice_account_sync_too_large:
+    'Turmdaten sind zu groß für die Cloud-Sicherung. Tower-CSV als Alternative exportieren.',
+  sr_notice_account_sync_load_failed:
+    'Gespeicherte Turmdaten in der Cloud konnten nicht gelesen werden. Auf dem Desktop erneut importieren.',
+  sr_notice_account_sync_network_failed:
+    'Netzwerkfehler bei der Kontosynchronisierung. Verbindung prüfen und erneut versuchen.',
   sr_notice_account_sync_save_failed:
     'Auf diesem Gerät importiert, aber nicht im Konto gespeichert. Verbindung prüfen und erneut importieren.',
   sr_notice_import_player_invalid:

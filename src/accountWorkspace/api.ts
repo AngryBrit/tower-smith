@@ -9,6 +9,7 @@ const API_BASE =
 export type AccountWorkspaceApiError =
   | 'network'
   | 'sync_unavailable'
+  | 'storage_unavailable'
   | 'auth_required'
   | 'invalid_token'
   | 'project_mismatch'
@@ -41,6 +42,7 @@ function errorFromStatus(status: number, body: unknown): AccountWorkspaceApiErro
   if (code === 'invalid_payload') return 'invalid_payload'
   if (code === 'too_large') return 'too_large'
   if (code === 'sync_unavailable') return 'sync_unavailable'
+  if (code === 'storage_unavailable') return 'storage_unavailable'
   if (status === 401) return 'auth_required'
   if (status === 503) return 'sync_unavailable'
   return 'unknown'
