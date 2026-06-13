@@ -1,8 +1,9 @@
+import { EFFECTIVE_PATHS_IDS_MASTER_REF_MAX_LEN } from '../effectivePaths/effectivePathsIdsMasterRef'
+import { getSupabaseBrowserClient } from '../supabase/client'
 import {
   TOWER_GALLERY_MAX_AUTHOR_LEN,
   TOWER_GALLERY_MAX_GUILD_LEN,
 } from '../towerGallery/types'
-import { getSupabaseBrowserClient } from '../supabase/client'
 
 export const PROFILE_AVATAR_BUCKET = 'avatars'
 export const PROFILE_DISPLAY_NAME_MAX = TOWER_GALLERY_MAX_AUTHOR_LEN
@@ -20,12 +21,14 @@ export type UserProfile = {
   guildId: string | null
   playfabId: string | null
   avatarUrl: string | null
+  effectivePathsIdsMasterRef: string | null
 }
 
 export type ProfileError =
   | 'not_configured'
   | 'invalid_display_name'
   | 'invalid_guild'
+  | 'invalid_effective_paths_ids_master_ref'
   | 'display_name_taken'
   | 'invalid_avatar_type'
   | 'avatar_too_large'
@@ -37,6 +40,7 @@ type ProfileRow = {
   guild_id: string | null
   playfab_id: string | null
   avatar_url: string | null
+  effective_paths_ids_master_ref?: string | null
   updated_at?: string | null
 }
 
@@ -54,6 +58,7 @@ function rowToProfile(row: ProfileRow): UserProfile {
     guildId: row.guild_id?.trim() || null,
     playfabId: row.playfab_id?.trim() || null,
     avatarUrl: avatarUrlForDisplay(row.avatar_url, row.updated_at),
+    effectivePathsIdsMasterRef: row.effective_paths_ids_master_ref?.trim() || null,
   }
 }
 
@@ -78,7 +83,9 @@ export async function fetchUserProfile(userId: string): Promise<UserProfile | nu
 
   const { data, error } = await sb
     .from('profiles')
-    .select('display_name, guild_id, playfab_id, avatar_url, updated_at')
+    .select(
+      'display_name, guild_id, playfab_id, avatar_url, effective_paths_ids_master_ref, updated_at',
+    )
     .eq('id', userId)
     .maybeSingle()
 
@@ -147,6 +154,30 @@ export async function updateUserGuildId(
     .from('profiles')
     .update({
       guild_id: trimmed.length > 0 ? trimmed : null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+
+  if (error) return { ok: false, error: 'network' }
+  return { ok: true }
+}
+
+export async function updateUserEffectivePathsIdsMasterRef(
+  userId: string,
+  ref: string,
+): Promise<{ ok: true } | { ok: false; error: ProfileError }> {
+  const sb = getSupabaseBrowserClient()
+  if (!sb) return { ok: false, error: 'not_configured' }
+
+  const trimmed = ref.trim()
+  if (trimmed.length > EFFECTIVE_PATHS_IDS_MASTER_REF_MAX_LEN) {
+    return { ok: false, error: 'invalid_effective_paths_ids_master_ref' }
+  }
+
+  const { error } = await sb
+    .from('profiles')
+    .update({
+      effective_paths_ids_master_ref: trimmed.length > 0 ? trimmed : null,
       updated_at: new Date().toISOString(),
     })
     .eq('id', userId)

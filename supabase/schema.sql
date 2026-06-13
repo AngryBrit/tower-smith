@@ -14,6 +14,7 @@ create table if not exists public.profiles (
   avatar_url text,
   playfab_id text,
   guild_id text,
+  effective_paths_ids_master_ref text,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   constraint profiles_playfab_id_format_check check (
@@ -30,6 +31,13 @@ create table if not exists public.profiles (
       char_length(trim(guild_id)) >= 1
       and char_length(trim(guild_id)) <= 40
       and trim(guild_id) ~ '^[A-Za-z0-9_-]+$'
+    )
+  ),
+  constraint profiles_effective_paths_ids_master_ref_len_check check (
+    effective_paths_ids_master_ref is null
+    or (
+      char_length(trim(effective_paths_ids_master_ref)) >= 1
+      and char_length(trim(effective_paths_ids_master_ref)) <= 500
     )
   )
 );
@@ -352,3 +360,19 @@ set guild_name = excluded.guild_name,
 -- create index if not exists builds_top_list_idx on public.builds (upvote_count desc, created_at desc, id desc);
 -- drop policy if exists builds_select_public on public.builds;
 -- create policy builds_select_public on public.builds for select using (visibility = 'public');
+
+-- ---------------------------------------------------------------------------
+-- Upgrade (existing project): Effective Paths IDS Master ref on profiles
+-- ---------------------------------------------------------------------------
+-- alter table public.profiles
+--   add column if not exists effective_paths_ids_master_ref text;
+-- alter table public.profiles
+--   drop constraint if exists profiles_effective_paths_ids_master_ref_len_check;
+-- alter table public.profiles
+--   add constraint profiles_effective_paths_ids_master_ref_len_check check (
+--     effective_paths_ids_master_ref is null
+--     or (
+--       char_length(trim(effective_paths_ids_master_ref)) >= 1
+--       and char_length(trim(effective_paths_ids_master_ref)) <= 500
+--     )
+--   );

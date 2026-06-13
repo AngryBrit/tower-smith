@@ -1,6 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { readGuardianChipState } from '../guardianChipStorage'
-import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import { reconcileAccountWorkspaceOnLogin } from './reconcile'
 import type { AccountWorkspaceBackupV1 } from './types'
 import { ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY } from './localUpdatedAt'
@@ -58,12 +57,12 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
         scratchOverrides: { 'attack-damage': 1 },
       }),
     )
-    expect(reconcileAccountWorkspaceOnLogin(null, null)).toEqual({ action: 'push_local' })
+    expect(reconcileAccountWorkspaceOnLogin(null)).toEqual({ action: 'push_local' })
   })
 
   it('applies cloud when local has no timestamp', () => {
     const backup = cloudBackup('2026-06-13T12:00:00.000Z')
-    expect(reconcileAccountWorkspaceOnLogin(backup, null)).toEqual({
+    expect(reconcileAccountWorkspaceOnLogin(backup)).toEqual({
       action: 'apply_cloud',
       backup,
     })
@@ -72,7 +71,7 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
   it('applies cloud when cloud is newer than local', () => {
     const backup = cloudBackup('2026-06-13T13:00:00.000Z')
     localStorage.setItem(ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY, '2026-06-13T12:00:00.000Z')
-    expect(reconcileAccountWorkspaceOnLogin(backup, null)).toEqual({
+    expect(reconcileAccountWorkspaceOnLogin(backup)).toEqual({
       action: 'apply_cloud',
       backup,
     })
@@ -89,17 +88,12 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
       }),
     )
     localStorage.setItem(ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY, '2026-06-13T14:00:00.000Z')
-    expect(
-      reconcileAccountWorkspaceOnLogin(cloudBackup('2026-06-13T13:00:00.000Z'), null),
-    ).toEqual({ action: 'push_local' })
+    expect(reconcileAccountWorkspaceOnLogin(cloudBackup('2026-06-13T13:00:00.000Z'))).toEqual({
+      action: 'push_local',
+    })
   })
 
-  it('pushes local when only the Effective Paths IDS ref is set', () => {
-    writeStoredSpreadsheetRef('1IdsMasterWorkbookIdXXXXXXXXX', 'user-1')
-    expect(reconcileAccountWorkspaceOnLogin(null, 'user-1')).toEqual({ action: 'push_local' })
-  })
-
-  it('applies cloud when only the Effective Paths IDS ref is stored remotely', () => {
+  it('noops when cloud backup only contains a legacy IDS ref', () => {
     const backup: AccountWorkspaceBackupV1 = {
       v: 1,
       updatedAt: '2026-06-13T12:00:00.000Z',
@@ -112,36 +106,6 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
       guardianChips: readGuardianChipState(),
       effectivePathsIdsMasterRef: '1IdsMasterWorkbookIdXXXXXXXXX',
     }
-    expect(reconcileAccountWorkspaceOnLogin(backup, 'user-1')).toEqual({
-      action: 'apply_cloud',
-      backup,
-    })
-  })
-
-  it('noop when timestamps match leaves IDS merge to login sync', () => {
-    localStorage.setItem(
-      'tower-export-lab-presets-v1',
-      JSON.stringify({
-        v: 1,
-        activePresetId: null,
-        presets: [],
-        scratchOverrides: { 'attack-damage': 1 },
-      }),
-    )
-    localStorage.setItem(ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY, '2026-06-13T12:00:00.000Z')
-    const backup: AccountWorkspaceBackupV1 = {
-      v: 1,
-      updatedAt: '2026-06-13T12:00:00.000Z',
-      labPresets: {
-        v: 1,
-        activePresetId: null,
-        presets: [],
-        scratchOverrides: { 'attack-damage': 5 },
-      },
-      guardianChips: readGuardianChipState(),
-      effectivePathsIdsMasterRef: '1IdsMasterWorkbookIdXXXXXXXXX',
-    }
-    expect(reconcileAccountWorkspaceOnLogin(backup, 'user-1')).toEqual({ action: 'noop' })
-    expect(readStoredSpreadsheetRef('user-1')).toBe('')
+    expect(reconcileAccountWorkspaceOnLogin(backup)).toEqual({ action: 'noop' })
   })
 })

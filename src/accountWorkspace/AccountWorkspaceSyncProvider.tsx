@@ -7,19 +7,14 @@ import {
   saveAccountWorkspace,
   type AccountWorkspaceApiError,
 } from './api'
-import {
-  applyAccountWorkspaceBackup,
-  applyCloudEffectivePathsIdsMasterRef,
-  mergeMissingCloudIdsMasterRef,
-} from './applyBackup'
+import { applyAccountWorkspaceBackup } from './applyBackup'
 import {
   buildAccountWorkspaceBackupFromContext,
   hasMeaningfulWorkspaceData,
 } from './buildBackup'
-import { touchLocalAccountWorkspaceUpdatedAt, writeLocalAccountWorkspaceUpdatedAt } from './localUpdatedAt'
+import { writeLocalAccountWorkspaceUpdatedAt } from './localUpdatedAt'
 import {
   reconcileAccountWorkspaceOnLogin,
-  shouldApplyCloudEffectivePathsIdsMasterRef,
   shouldApplyCloudWorkspaceBackup,
 } from './reconcile'
 import { resolveAccessToken } from '../auth/resolveAccessToken'
@@ -27,10 +22,7 @@ import {
   accountWorkspaceErrorMessage,
   isAccountWorkspaceAuthError,
 } from './syncErrorMessage'
-import {
-  EFFECTIVE_PATHS_SPREADSHEET_REF_CHANGE_EVENT,
-  migrateLegacySpreadsheetRef,
-} from '../effectivePaths/effectivePathsStorage'
+import { migrateIdsMasterRefFromWorkspaceBackup } from '../effectivePaths/syncEffectivePathsIdsMasterRef'
 import { useLabHydration } from '../lab/labHydrationContext'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 
@@ -76,7 +68,6 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
       workspace,
       scratchWorkspace,
       updatedAt,
-      auth.user.id,
     )
     const result = await saveBackupWithAuth(backup)
     if (result.ok) {
@@ -130,24 +121,19 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
         }
 
         loginSyncCompletedRef.current = userId
-        migrateLegacySpreadsheetRef(userId)
-        const idsMergedFromCloud = mergeMissingCloudIdsMasterRef(fetched.backup, userId)
+        const idsMigratedFromBackup = await migrateIdsMasterRefFromWorkspaceBackup(
+          userId,
+          fetched.backup?.effectivePathsIdsMasterRef,
+        )
 
-        const decision = reconcileAccountWorkspaceOnLogin(fetched.backup, userId)
+        const decision = reconcileAccountWorkspaceOnLogin(fetched.backup)
         if (decision.action === 'apply_cloud') {
           skipPushRef.current = true
           try {
-            let appliedNotice = false
             if (shouldApplyCloudWorkspaceBackup(decision.backup)) {
-              const applied = applyAccountWorkspaceBackup(decision.backup, userId)
+              const applied = applyAccountWorkspaceBackup(decision.backup)
               setWorkspace(applied.workspace)
               setScratchWorkspace(applied.scratchWorkspace)
-              appliedNotice = true
-            } else if (shouldApplyCloudEffectivePathsIdsMasterRef(decision.backup)) {
-              applyCloudEffectivePathsIdsMasterRef(decision.backup, userId)
-              appliedNotice = true
-            }
-            if (appliedNotice) {
               publishImportNotice(t('sr_notice_account_sync_loaded'), 'success')
             }
           } finally {
@@ -160,13 +146,13 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
           const saved = await pushToCloud()
           if (!saved.ok && !cancelled) {
             publishImportNotice(saved.error, 'error')
-          } else if (idsMergedFromCloud && !cancelled) {
+          } else if (idsMigratedFromBackup && !cancelled) {
             publishImportNotice(t('sr_notice_account_sync_loaded'), 'success')
           }
           return
         }
 
-        if (idsMergedFromCloud && !cancelled) {
+        if (idsMigratedFromBackup && !cancelled) {
           publishImportNotice(t('sr_notice_account_sync_loaded'), 'success')
         }
       } finally {
@@ -206,22 +192,6 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
     window.addEventListener(GUARDIAN_CHIP_CHANGE_EVENT, onGuardianChange)
     return () => {
       window.removeEventListener(GUARDIAN_CHIP_CHANGE_EVENT, onGuardianChange)
-    }
-  }, [auth.user, hydrated, schedulePush])
-
-  useEffect(() => {
-    if (!hydrated || !auth.user) return
-
-    const onSpreadsheetRefChange = () => {
-      touchLocalAccountWorkspaceUpdatedAt()
-      schedulePush()
-    }
-    window.addEventListener(EFFECTIVE_PATHS_SPREADSHEET_REF_CHANGE_EVENT, onSpreadsheetRefChange)
-    return () => {
-      window.removeEventListener(
-        EFFECTIVE_PATHS_SPREADSHEET_REF_CHANGE_EVENT,
-        onSpreadsheetRefChange,
-      )
     }
   }, [auth.user, hydrated, schedulePush])
 

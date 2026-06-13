@@ -67,14 +67,11 @@ export function buildAccountWorkspaceBackup(
   labPresets: LabPresetsFileV1,
   guardianChips: GuardianChipState,
   updatedAt: string = new Date().toISOString(),
-  effectivePathsIdsMasterRef?: string,
 ): AccountWorkspaceBackupV1 {
-  const ref = effectivePathsIdsMasterRef?.trim()
   return {
     v: ACCOUNT_WORKSPACE_BACKUP_VERSION,
     updatedAt,
     labPresets,
     guardianChips,
-    ...(ref ? { effectivePathsIdsMasterRef: ref } : {}),
   }
 }

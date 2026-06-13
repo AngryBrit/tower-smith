@@ -1,4 +1,3 @@
-import { readStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import { readTowerWorkspaceFromPresetsFile } from '../towerWorkspacePresets'
 import { readLocalAccountWorkspaceUpdatedAt } from './localUpdatedAt'
 import type { AccountWorkspaceBackupV1 } from './types'
@@ -25,30 +24,13 @@ export function hasMeaningfulCloudBackup(backup: AccountWorkspaceBackupV1): bool
   return hasMeaningfulCloudWorkspaceBackup(backup)
 }
 
-function hasCloudEffectivePathsIdsMasterRef(backup: AccountWorkspaceBackupV1): boolean {
-  return Boolean(backup.effectivePathsIdsMasterRef?.trim())
-}
-
-function hasLocalEffectivePathsIdsMasterRef(userId: string | null): boolean {
-  return Boolean(readStoredSpreadsheetRef(userId)?.trim())
-}
-
-function hasCloudSyncableData(backup: AccountWorkspaceBackupV1): boolean {
-  return hasMeaningfulCloudWorkspaceBackup(backup) || hasCloudEffectivePathsIdsMasterRef(backup)
-}
-
-function hasLocalSyncableData(userId: string | null): boolean {
-  return hasMeaningfulLocalBackup() || hasLocalEffectivePathsIdsMasterRef(userId)
-}
-
 export function reconcileAccountWorkspaceOnLogin(
   cloud: AccountWorkspaceBackupV1 | null,
-  userId: string | null,
 ): AccountWorkspaceReconcileAction {
   const localUpdatedAt = readLocalAccountWorkspaceUpdatedAt()
-  const localSyncable = hasLocalSyncableData(userId)
+  const localSyncable = hasMeaningfulLocalBackup()
 
-  if (!cloud || !hasCloudSyncableData(cloud)) {
+  if (!cloud || !hasMeaningfulCloudWorkspaceBackup(cloud)) {
     return localSyncable ? { action: 'push_local' } : { action: 'noop' }
   }
 
@@ -68,10 +50,4 @@ export function reconcileAccountWorkspaceOnLogin(
 
 export function shouldApplyCloudWorkspaceBackup(backup: AccountWorkspaceBackupV1): boolean {
   return hasMeaningfulCloudWorkspaceBackup(backup)
-}
-
-export function shouldApplyCloudEffectivePathsIdsMasterRef(
-  backup: AccountWorkspaceBackupV1,
-): boolean {
-  return backup.effectivePathsIdsMasterRef !== undefined
 }

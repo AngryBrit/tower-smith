@@ -10,6 +10,6 @@ export type AccountWorkspaceBackupV1 = {
   updatedAt: string
   labPresets: LabPresetsFileV1
   guardianChips: GuardianChipState
-  /** IDS Master spreadsheet URL or ID for Effective Paths sync. */
+  /** @deprecated Legacy field from workspace backups; IDS now lives on profiles. */
   effectivePathsIdsMasterRef?: string
 }

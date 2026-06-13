@@ -29,18 +29,20 @@ describe('parseAccountWorkspaceBackup', () => {
     expect(parseAccountWorkspaceBackup({ v: 2, updatedAt: '2026-06-13T10:00:00.000Z' })).toBeNull()
   })
 
-  it('accepts an optional Effective Paths IDS Master ref', () => {
-    const backup = buildAccountWorkspaceBackup(
-      {
-        v: 1,
+  it('accepts an optional legacy Effective Paths IDS Master ref', () => {
+    const backup = {
+      v: 1 as const,
+      updatedAt: '2026-06-13T10:00:00.000Z',
+      labPresets: {
+        v: 1 as const,
         activePresetId: null,
         presets: [],
         scratchOverrides: {},
       },
-      readGuardianChipState(),
-      '2026-06-13T10:00:00.000Z',
-      'https://docs.google.com/spreadsheets/d/1IdsMasterWorkbookIdXXXXXXXXX/edit',
-    )
+      guardianChips: readGuardianChipState(),
+      effectivePathsIdsMasterRef:
+        'https://docs.google.com/spreadsheets/d/1IdsMasterWorkbookIdXXXXXXXXX/edit',
+    }
     const parsed = parseAccountWorkspaceBackup(backup)
     expect(parsed?.effectivePathsIdsMasterRef).toBe(
       'https://docs.google.com/spreadsheets/d/1IdsMasterWorkbookIdXXXXXXXXX/edit',

@@ -7,6 +7,7 @@ import {
 } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { fetchUserProfile } from '../profile/profileApi'
+import { syncEffectivePathsIdsMasterRefOnLogin } from '../effectivePaths/syncEffectivePathsIdsMasterRef'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
 import { resolveGuildNameById } from '../towerGallery/api'
 import { deferInEffect } from '../deferInEffect'
@@ -50,6 +51,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       setProfileGuild(resolvedGuild)
       setProfileAvatarUrl(profile?.avatarUrl ?? null)
+      if (profile) {
+        await syncEffectivePathsIdsMasterRefOnLogin(
+          userId,
+          profile.effectivePathsIdsMasterRef,
+        )
+      }
     } finally {
       setProfileLoading(false)
       setProfileResolved(true)

@@ -121,8 +121,6 @@ export function usePlayerSaveImport(
             const backup = buildAccountWorkspaceBackupFromContext(
               nextWorkspace,
               nextScratch,
-              undefined,
-              auth.user.id,
             )
             const saved = await saveAccountWorkspace(token, backup)
             if (saved.ok) {
