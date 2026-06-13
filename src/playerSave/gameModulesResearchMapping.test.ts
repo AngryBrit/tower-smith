@@ -50,9 +50,9 @@ describe('modulesLabsToOverrides', () => {
     expect(overrides['0-6']).toBe(1)
   })
 
-  it('maps Shatter Shards from researchLevel id 199', () => {
+  it('maps Shatter Shards from researchLevel id 152', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
-    researchLevel[199] = 5
+    researchLevel[152] = 5
     const data: ResearchData = {
       sections: [
         {

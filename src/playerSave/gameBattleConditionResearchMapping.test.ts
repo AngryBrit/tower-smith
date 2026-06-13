@@ -3,9 +3,9 @@ import { battleConditionLabsToOverrides } from './mapPlayerDataToTower'
 import type { ResearchData } from '../types/research'
 
 describe('gameBattleConditionResearchMapping', () => {
-  it('maps Battle Condition Reduction from researchLevel id 152', () => {
+  it('maps Battle Condition Reduction from researchLevel id 199', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
-    researchLevel[152] = 5
+    researchLevel[199] = 5
     const data: ResearchData = {
       sections: [
         {

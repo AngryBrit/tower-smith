@@ -10,7 +10,7 @@ export const MODULES_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Module Coin Cost': 142,
   'Rare Drop Chance': 143,
   'Unmerge Module': 151,
-  'Shatter Shards': 199,
+  'Shatter Shards': 152,
   'Cannon Effect Bans': 194,
   'Armor Effect Bans': 195,
   'Generator Effect Bans': 196,
