@@ -126,8 +126,14 @@ describe('botEpFarmingLevelDropdownLabel', () => {
 
   it('matches Bot Bot Bonus mult dropdown spelling from Bots v3.1', () => {
     const s = BOT_EP_STONES_SYMBOL
+    expect(botEpFarmingLevelDropdownLabel('botBotBonusLevel', 0)).toBe(
+      `00 | x1.05 | Cost 0 ${s} | Next 100 ${s}`,
+    )
     expect(botEpFarmingLevelDropdownLabel('botBotBonusLevel', 10)).toBe(
       `10 | x1.55 | Cost 460 ${s} | Next 500 ${s}`,
+    )
+    expect(botEpFarmingLevelDropdownLabel('botBotBonusLevel', 19)).toBe(
+      `19 | x2.00 | Cost 820 ${s} | Maxed`,
     )
   })
 

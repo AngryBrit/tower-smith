@@ -43,8 +43,8 @@ const amplifyRange = lin(25, 2, 19)
 
 const botBotDuration = lin(20, 0.5, 31)
 const botBotCooldown = lin(120, -3, 16)
-/** Bonus ×1.0–×2.5 (levels 0–30); range caps at level 20 (60m) per EP v3.1. */
-const botBotBonus = lin(1, 0.05, 31).map((v) => Math.round(v * 100) / 100)
+/** Bonus ×1.05–×2.00 (20 levels, 0–19); +0.05/level — one distinct value per medal step. */
+const botBotBonus = lin(1.05, 0.05, 20).map((v) => Math.round(v * 100) / 100)
 const botBotRange = lin(20, 2, 21)
 
 const flameDamageReduction = lin(20, 3, 26)

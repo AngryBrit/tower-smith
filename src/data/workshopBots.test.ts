@@ -207,14 +207,15 @@ describe('workshopBots Bot Bot basic upgrades', () => {
   it('matches wiki table (max levels, spot values, medal totals)', () => {
     expect(workshopBotMaxLevel('botBotDurationLevel')).toBe(30)
     expect(workshopBotMaxLevel('botBotCooldownLevel')).toBe(15)
-    expect(workshopBotMaxLevel('botBotBonusLevel')).toBe(30)
+    expect(workshopBotMaxLevel('botBotBonusLevel')).toBe(19)
     expect(workshopBotMaxLevel('botBotRangeLevel')).toBe(20)
 
     expect(workshopBotStatDisplay('botBotDurationLevel', 30)).toBe('35s')
     expect(workshopBotStatDisplay('botBotCooldownLevel', 15)).toBe('75s')
-    expect(workshopBotStatDisplay('botBotBonusLevel', 0)).toBe('x1.00')
-    expect(workshopBotStatDisplay('botBotBonusLevel', 1)).toBe('x1.05')
-    expect(workshopBotStatDisplay('botBotBonusLevel', 30)).toBe('x2.50')
+    expect(workshopBotStatDisplay('botBotBonusLevel', 0)).toBe('x1.05')
+    expect(workshopBotStatDisplay('botBotBonusLevel', 1)).toBe('x1.10')
+    expect(workshopBotStatDisplay('botBotBonusLevel', 2)).toBe('x1.15')
+    expect(workshopBotStatDisplay('botBotBonusLevel', 19)).toBe('x2.00')
     expect(workshopBotStatDisplay('botBotRangeLevel', 18)).toBe('56.00m')
     expect(workshopBotStatDisplay('botBotRangeLevel', 20)).toBe('60.00m')
 
@@ -226,7 +227,7 @@ describe('workshopBots Bot Bot basic upgrades', () => {
     ).toBe(5_700)
     expect(
       workshopUltimateTrackTotalStonesToMax(WORKSHOP_BOT_TRACKS.botBotBonusLevel, 0),
-    ).toBe(20_400)
+    ).toBe(8_740)
     expect(
       workshopUltimateTrackTotalStonesToMax(WORKSHOP_BOT_TRACKS.botBotRangeLevel, 0),
     ).toBe(9_600)

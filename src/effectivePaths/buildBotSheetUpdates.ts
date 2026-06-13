@@ -106,14 +106,10 @@ function botEpMultDecimalPlaces(track: WorkshopUltimateTrack): number {
 }
 
 function botEpMultStatValue(
-  levelKey: string,
+  _levelKey: string,
   track: WorkshopUltimateTrack,
   level: number,
 ): number {
-  // Bots v3.1 Bot Bot Bonus always shows the next-tier mult (L19 → x2.00 at EP max).
-  if (levelKey === 'botBotBonusLevel' && level + 1 < track.milestones.length) {
-    return track.milestones[level + 1]!.value
-  }
   return track.milestones[level]!.value
 }
 
