@@ -266,6 +266,29 @@ create policy avatars_delete_own
   );
 
 -- ---------------------------------------------------------------------------
+-- Storage: tower payloads (private — gallery + account workspace backups)
+-- All reads/writes go through Netlify Functions (service role). No public URLs.
+-- Gallery JSON: `{build-id}.json`
+-- Account workspace backup: `private/{user-id}/workspace.json`
+-- ---------------------------------------------------------------------------
+
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'tower-payloads',
+  'tower-payloads',
+  false,
+  524288,
+  array['application/json']
+)
+on conflict (id) do update set
+  public = excluded.public,
+  file_size_limit = excluded.file_size_limit,
+  allowed_mime_types = excluded.allowed_mime_types;
+
+-- No storage.objects policies for tower-payloads: anon/authenticated cannot read
+-- or write. Netlify Functions use the service role, which bypasses RLS.
+
+-- ---------------------------------------------------------------------------
 -- Optional seed data
 -- ---------------------------------------------------------------------------
 
@@ -277,9 +300,13 @@ set guild_name = excluded.guild_name,
     updated_at = now();
 
 -- ---------------------------------------------------------------------------
--- Manual step (Dashboard): create a **public** storage bucket `tower-payloads`
--- for LabsShareFile JSON. Uploads use the service role from Netlify Functions.
+-- Upgrade (existing project): harden tower-payloads storage (run once)
 -- ---------------------------------------------------------------------------
+-- update storage.buckets
+-- set public = false,
+--     file_size_limit = 524288,
+--     allowed_mime_types = array['application/json']
+-- where id = 'tower-payloads';
 
 -- ---------------------------------------------------------------------------
 -- Upgrade (existing project that used soft delete): run once in SQL editor.

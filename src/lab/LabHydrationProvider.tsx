@@ -16,6 +16,8 @@ import {
   buildLabPresetsPayloadWithWorkspace,
   TOWER_LAB_PRESETS_STORAGE_KEY,
 } from '../towerWorkspacePresets'
+import { hasMeaningfulWorkspaceData } from '../accountWorkspace/buildBackup'
+import { touchLocalAccountWorkspaceUpdatedAt } from '../accountWorkspace/localUpdatedAt'
 import type { LabPersistedV1 } from '../towerWorkspaceStorage'
 import { syncWorkspaceThemesFromStorage } from '../towerWorkspaceStorage'
 import { LabHydrationContext } from './labHydrationContext'
@@ -99,6 +101,9 @@ export function LabHydrationProvider({
         syncWorkspaceThemesFromStorage(scratchWorkspace),
       )
       localStorage.setItem(TOWER_LAB_PRESETS_STORAGE_KEY, JSON.stringify(payload))
+      if (hasMeaningfulWorkspaceData(workspace, scratchWorkspace)) {
+        touchLocalAccountWorkspaceUpdatedAt()
+      }
     } catch {
       /* quota / private mode */
     }

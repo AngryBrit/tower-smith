@@ -208,7 +208,7 @@ The gallery uses Netlify Functions as the API layer and Supabase (Postgres + Sto
 
 1. Create a project at [supabase.com](https://supabase.com).
 2. Run [`supabase/schema.sql`](supabase/schema.sql) in the SQL editor.
-3. **Storage** — create a **public** bucket named `tower-payloads`.
+3. **Storage** — the schema creates a **private** `tower-payloads` bucket (JSON only, 512 KB per file). Gallery builds and per-account workspace backups are read/written only via Netlify Functions (service role), not public URLs. If you created this bucket earlier as public, run the hardening upgrade in [`supabase/schema.sql`](supabase/schema.sql) (search for `harden tower-payloads`).
 4. **Auth** — enable Google, Discord, and Twitch providers. In **Authentication → URL Configuration**:
    - **Site URL:** your production origin (e.g. `https://www.towersmith.com/`)
    - **Redirect URLs:** add both production and local dev origins (e.g. `http://localhost:5173/**`). If sign-in from localhost lands on production, localhost is missing here.

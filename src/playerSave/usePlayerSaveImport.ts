@@ -8,6 +8,9 @@ import { writeGuardianChipState } from '../guardianChipStorage'
 import { applyTowerThemes } from '../towerDataThemes'
 import { resolveGuildNameById } from '../towerGallery/api'
 import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
+import { touchLocalAccountWorkspaceUpdatedAt, writeLocalAccountWorkspaceUpdatedAt } from '../accountWorkspace/localUpdatedAt'
+import { accountWorkspaceSyncAvailable, saveAccountWorkspace } from '../accountWorkspace/api'
+import { buildAccountWorkspaceBackupFromContext } from '../accountWorkspace/buildBackup'
 import {
   applyImportedLabAndBuild,
 } from '../towerWorkspaceStorage'
@@ -103,6 +106,17 @@ export function usePlayerSaveImport(
         setWorkspace(nextWorkspace)
         setScratchWorkspace(nextScratch)
         persistLabWorkspacesToLocalStorage(nextWorkspace, nextScratch)
+        touchLocalAccountWorkspaceUpdatedAt()
+        if (auth.user && accountWorkspaceSyncAvailable()) {
+          const token = await auth.getAccessToken()
+          if (token) {
+            const backup = buildAccountWorkspaceBackupFromContext(nextWorkspace, nextScratch)
+            const saved = await saveAccountWorkspace(token, backup)
+            if (saved.ok) {
+              writeLocalAccountWorkspaceUpdatedAt(backup.updatedAt)
+            }
+          }
+        }
         let shouldRefreshProfile = false
         if (imported.guild) {
           prefillPublishGuildId(imported.guild)

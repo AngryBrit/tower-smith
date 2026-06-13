@@ -18,6 +18,7 @@ import type { SelectResearchHandle } from './lab/labToolsTypes'
 import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1 } from './towerWorkspaceStorage'
 import { TowerWorkspaceProvider } from './TowerBuildContext'
 import { LabHydrationProvider } from './lab/LabHydrationProvider'
+import { AccountWorkspaceSyncProvider } from './accountWorkspace/AccountWorkspaceSyncProvider'
 import { LabToolsBridgeProvider } from './lab/LabToolsBridge'
 import { CommunityBuildProvider } from './lab/CommunityBuildProvider'
 import { WorkspaceUndoProvider } from './lab/WorkspaceUndoProvider'
@@ -242,6 +243,7 @@ export default function App() {
             setScratchWorkspace={setScratchWorkspace}
           >
           <LabHydrationProvider data={data}>
+          <AccountWorkspaceSyncProvider>
           <WorkspaceUndoProvider>
           <LabToolsBridgeProvider data={data}>
           <CommunityBuildProvider>
@@ -557,6 +559,7 @@ export default function App() {
           </CommunityBuildProvider>
           </LabToolsBridgeProvider>
           </WorkspaceUndoProvider>
+          </AccountWorkspaceSyncProvider>
           </LabHydrationProvider>
           </TowerWorkspaceProvider>
         ) : null}
