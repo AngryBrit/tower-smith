@@ -12,6 +12,7 @@ import { resolveGuildNameById } from '../towerGallery/api'
 import { deferInEffect } from '../deferInEffect'
 import { AuthContext, displayNameFromUser, resolveAuthAvatarUrl, type AuthContextValue, type OAuthProvider } from './authContext'
 import { oauthRedirectUrl } from './oauthRedirect'
+import { resolveAccessToken } from './resolveAccessToken'
 
 export type { OAuthProvider } from './authContext'
 
@@ -106,26 +107,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (error) throw error
   }, [])
 
-  const getAccessToken = useCallback(async () => {
-    const sb = getSupabaseBrowserClient()
-    if (!sb) return null
-
-    let current = session?.access_token ? session : null
-    if (!current) {
-      const { data } = await sb.auth.getSession()
-      current = data.session
-    }
-    if (!current?.access_token) return null
-
-    const expiresAt = current.expires_at
-    const needsRefresh =
-      expiresAt != null && expiresAt * 1000 < Date.now() + 30_000
-    if (!needsRefresh) return current.access_token
-
-    const { data: refreshed, error: refreshError } = await sb.auth.refreshSession()
-    if (refreshError || !refreshed.session?.access_token) return null
-    return refreshed.session.access_token
-  }, [session])
+  const getAccessToken = useCallback(() => resolveAccessToken(), [])
 
   const prefillProfileFromImport = useCallback(
     (hints: { displayName?: string | null; guild?: string | null }) => {

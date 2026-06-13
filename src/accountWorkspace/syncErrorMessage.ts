@@ -1,6 +1,10 @@
 import type { StringId } from '../i18n/dictionary'
 import type { AccountWorkspaceApiError } from './api'
 
+export function isAccountWorkspaceAuthError(error: AccountWorkspaceApiError): boolean {
+  return error === 'auth_required' || error === 'invalid_token'
+}
+
 export function accountWorkspaceErrorMessage(
   t: (key: StringId) => string,
   error: AccountWorkspaceApiError,

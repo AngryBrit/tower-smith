@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { accountWorkspaceErrorMessage } from './syncErrorMessage'
+import { accountWorkspaceErrorMessage, isAccountWorkspaceAuthError } from './syncErrorMessage'
 
 describe('accountWorkspaceErrorMessage', () => {
   const t = (key: string) => key
@@ -8,6 +8,8 @@ describe('accountWorkspaceErrorMessage', () => {
     expect(accountWorkspaceErrorMessage(t, 'invalid_token')).toBe(
       'sr_notice_account_sync_auth_failed',
     )
+    expect(isAccountWorkspaceAuthError('invalid_token')).toBe(true)
+    expect(isAccountWorkspaceAuthError('network')).toBe(false)
   })
 
   it('maps storage errors', () => {
