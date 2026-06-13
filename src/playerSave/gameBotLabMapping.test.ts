@@ -130,4 +130,18 @@ describe('botLabsToOverrides', () => {
     expect(overrides['0-8']).toBeUndefined()
     expect(overrides['0-9']).toBeUndefined()
   })
+
+  it('maps Amplify Bot - Duration from researchLevel[100]', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[100] = 10
+    const overrides = botLabsToOverrides(botsResearchData(), minimalSave({ researchLevel }))
+    expect(overrides['0-8']).toBe(10)
+  })
+
+  it('maps Bot Bot - Duration from researchLevel[213]', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[213] = 20
+    const overrides = botLabsToOverrides(botsResearchData(), minimalSave({ researchLevel }))
+    expect(overrides['0-9']).toBe(20)
+  })
 })

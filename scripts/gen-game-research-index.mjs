@@ -448,6 +448,8 @@ const MANUAL_ANCHORS = [
   [107, 'Flame Bot - Burn Stack'],
   [108, 'Golden Bot - Duration'],
   [109, 'Thunder Bot - Linger Time'],
+  [100, 'Amplify Bot - Duration'],
+  [213, 'Bot Bot - Duration'],
   [110, 'Common Enemy Health'],
   [111, 'Common Enemy Attack'],
   [112, 'Fast Enemy Health'],
