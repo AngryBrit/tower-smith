@@ -1798,6 +1798,12 @@ export const STRINGS_EN = {
     'Imported {{count}} builds from tower CSV (first build is now active).',
   sr_notice_import_player_ok:
     'Imported lab, workshop, relics, themes, modules, bots, and ultimates from playerInfo.dat.',
+  sr_notice_account_sync_loaded:
+    'Loaded your tower data from your account.',
+  sr_notice_account_sync_failed:
+    'Could not sync tower data with your account. Your data is saved on this device only.',
+  sr_notice_account_sync_save_failed:
+    'Imported on this device, but could not save to your account. Check your connection and try importing again.',
   sr_notice_import_player_invalid:
     'Could not read playerInfo.dat — expected a gzip-compressed BinaryFormatter save from The Tower.',
   sr_notice_import_player_too_large:

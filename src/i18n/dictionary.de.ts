@@ -1734,6 +1734,12 @@ export const STRINGS_DE = {
   sr_notice_import_tower_many: '{{count}} Builds aus Tower-CSV importiert (erster Build ist jetzt aktiv).',
   sr_notice_import_player_ok:
     'Lab, Werkstatt, Relikte, Themes, Module, Bots und Ultimates aus playerInfo.dat importiert.',
+  sr_notice_account_sync_loaded:
+    'Turmdaten von deinem Konto geladen.',
+  sr_notice_account_sync_failed:
+    'Turmdaten konnten nicht mit deinem Konto synchronisiert werden. Daten nur auf diesem Gerät gespeichert.',
+  sr_notice_account_sync_save_failed:
+    'Auf diesem Gerät importiert, aber nicht im Konto gespeichert. Verbindung prüfen und erneut importieren.',
   sr_notice_import_player_invalid:
     'playerInfo.dat konnte nicht gelesen werden — erwartet gzip-komprimierten BinaryFormatter-Speicherstand von The Tower.',
   sr_notice_import_player_too_large:

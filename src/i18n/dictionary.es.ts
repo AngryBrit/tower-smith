@@ -1827,6 +1827,12 @@ export const STRINGS_ES = {
     'Se importaron {{count}} builds desde CSV tower (el primero quedó activo).',
   sr_notice_import_player_ok:
     'Lab, taller, reliquias, temas, módulos, bots y ultimates importados desde playerInfo.dat.',
+  sr_notice_account_sync_loaded:
+    'Datos de torre cargados desde tu cuenta.',
+  sr_notice_account_sync_failed:
+    'No se pudo sincronizar los datos con tu cuenta. Los datos quedaron solo en este dispositivo.',
+  sr_notice_account_sync_save_failed:
+    'Importado en este dispositivo, pero no se pudo guardar en tu cuenta. Comprueba la conexión e importa de nuevo.',
   sr_notice_import_player_invalid:
     'No se pudo leer playerInfo.dat — se espera un guardado BinaryFormatter gzip de The Tower.',
   sr_notice_import_player_too_large:

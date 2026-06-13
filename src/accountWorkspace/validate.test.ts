@@ -32,7 +32,7 @@ describe('parseAccountWorkspaceBackup', () => {
 
 describe('validateAccountWorkspaceBackupBytes', () => {
   it('flags oversized payloads', () => {
-    expect(validateAccountWorkspaceBackupBytes(600_000)).toBe('too_large')
-    expect(validateAccountWorkspaceBackupBytes(1000)).toBeNull()
+    expect(validateAccountWorkspaceBackupBytes(600_000)).toBeNull()
+    expect(validateAccountWorkspaceBackupBytes(3_000_000)).toBe('too_large')
   })
 })

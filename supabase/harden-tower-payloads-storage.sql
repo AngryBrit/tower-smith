@@ -7,7 +7,7 @@ values (
   'tower-payloads',
   'tower-payloads',
   false,
-  524288,
+  2097152,
   array['application/json']
 )
 on conflict (id) do update set

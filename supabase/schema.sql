@@ -277,7 +277,7 @@ values (
   'tower-payloads',
   'tower-payloads',
   false,
-  524288,
+  2097152,
   array['application/json']
 )
 on conflict (id) do update set
@@ -304,7 +304,7 @@ set guild_name = excluded.guild_name,
 -- ---------------------------------------------------------------------------
 -- update storage.buckets
 -- set public = false,
---     file_size_limit = 524288,
+--     file_size_limit = 2097152,
 --     allowed_mime_types = array['application/json']
 -- where id = 'tower-payloads';
 

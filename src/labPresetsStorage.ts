@@ -131,7 +131,11 @@ import {
   type TowerThemesSnapshot,
 } from './towerDataThemes'
 import type { TowerBuildPersistedV1 } from './towerBuildStorage'
-import type { TowerWorkspaceV1 } from './towerWorkspaceStorage'
+import { sanitizeTowerBuild } from './towerBuildStorage'
+import {
+  sanitizeTowerWorkspace,
+  type TowerWorkspaceV1,
+} from './towerWorkspaceStorage'
 
 type WorkshopUltimateLevels = { [K in WorkshopUltimateUpgradeKey]: number }
 
@@ -1258,11 +1262,26 @@ export function parseLabPresetsFile(raw: unknown): LabPresetsFileV1 | null {
   const scratchWorkshop =
     sw !== undefined && sw !== null ? sanitizeWorkshopPersisted(sw) : undefined
 
+  const scratchBuild =
+    o.scratchBuild !== undefined && o.scratchBuild !== null
+      ? sanitizeTowerBuild(o.scratchBuild)
+      : undefined
+  const scratchWorkspace =
+    o.scratchWorkspace !== undefined && o.scratchWorkspace !== null
+      ? sanitizeTowerWorkspace(o.scratchWorkspace)
+      : undefined
+
   const presets = (o.presets as LabPreset[]).map((p) => {
     const base: LabPreset = {
       id: p.id,
       name: p.name,
       levelOverrides: p.levelOverrides,
+    }
+    if (p.workspace !== undefined && p.workspace !== null) {
+      return { ...base, workspace: sanitizeTowerWorkspace(p.workspace) }
+    }
+    if (p.build !== undefined && p.build !== null) {
+      return { ...base, build: sanitizeTowerBuild(p.build) }
     }
     if (p.workshop !== undefined && p.workshop !== null) {
       return { ...base, workshop: sanitizeWorkshopPersisted(p.workshop) }
@@ -1287,6 +1306,8 @@ export function parseLabPresetsFile(raw: unknown): LabPresetsFileV1 | null {
       scratch && typeof scratch === 'object' && !Array.isArray(scratch)
         ? (scratch as Record<string, number>)
         : {},
+    ...(scratchWorkspace !== undefined ? { scratchWorkspace } : {}),
+    ...(scratchBuild !== undefined ? { scratchBuild } : {}),
     ...(scratchWorkshop !== undefined ? { scratchWorkshop } : {}),
     ...(themeSelection !== undefined ? { themeSelection } : {}),
     ...(themeOwnedIds !== undefined ? { themeOwnedIds } : {}),

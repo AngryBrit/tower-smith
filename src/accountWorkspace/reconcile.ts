@@ -1,6 +1,7 @@
+import { readTowerWorkspaceFromPresetsFile } from '../towerWorkspacePresets'
 import { readLocalAccountWorkspaceUpdatedAt } from './localUpdatedAt'
 import type { AccountWorkspaceBackupV1 } from './types'
-import { hasMeaningfulLocalBackup } from './buildBackup'
+import { hasMeaningfulLocalBackup, hasMeaningfulWorkspaceData } from './buildBackup'
 
 export type AccountWorkspaceReconcileAction =
   | { action: 'apply_cloud'; backup: AccountWorkspaceBackupV1 }
@@ -11,16 +12,24 @@ function compareIsoTimestamps(a: string, b: string): number {
   return Date.parse(a) - Date.parse(b)
 }
 
+export function hasMeaningfulCloudBackup(backup: AccountWorkspaceBackupV1): boolean {
+  const { workspace, scratchWorkspace } = readTowerWorkspaceFromPresetsFile(
+    backup.labPresets,
+  )
+  return hasMeaningfulWorkspaceData(workspace, scratchWorkspace)
+}
+
 export function reconcileAccountWorkspaceOnLogin(
   cloud: AccountWorkspaceBackupV1 | null,
 ): AccountWorkspaceReconcileAction {
   const localUpdatedAt = readLocalAccountWorkspaceUpdatedAt()
+  const localMeaningful = hasMeaningfulLocalBackup()
 
-  if (!cloud) {
-    return hasMeaningfulLocalBackup() ? { action: 'push_local' } : { action: 'noop' }
+  if (!cloud || !hasMeaningfulCloudBackup(cloud)) {
+    return localMeaningful ? { action: 'push_local' } : { action: 'noop' }
   }
 
-  if (!localUpdatedAt) {
+  if (!localUpdatedAt || !localMeaningful) {
     return { action: 'apply_cloud', backup: cloud }
   }
 

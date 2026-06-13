@@ -77,7 +77,16 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
     })
   })
 
-  it('pushes local when local is newer than cloud', () => {
+  it('pushes local when local is newer than cloud and has data', () => {
+    localStorage.setItem(
+      'tower-export-lab-presets-v1',
+      JSON.stringify({
+        v: 1,
+        activePresetId: null,
+        presets: [],
+        scratchOverrides: { 'attack-damage': 9 },
+      }),
+    )
     localStorage.setItem(ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY, '2026-06-13T14:00:00.000Z')
     expect(
       reconcileAccountWorkspaceOnLogin(cloudBackup('2026-06-13T13:00:00.000Z')),

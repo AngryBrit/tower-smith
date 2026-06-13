@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react'
 import { useAuth } from '../auth/useAuth'
+import { useI18n } from '../i18n'
 import { accountWorkspaceSyncAvailable, fetchAccountWorkspace, saveAccountWorkspace } from './api'
 import { applyAccountWorkspaceBackup } from './applyBackup'
 import {
@@ -13,10 +14,21 @@ import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 
 const GUARDIAN_CHIP_CHANGE_EVENT = 'tower-export-guardian-chips-change'
 const PUSH_DEBOUNCE_MS = 3000
+const TOKEN_RETRY_MS = 500
+
+async function getAccessTokenWithRetry(
+  getAccessToken: () => Promise<string | null>,
+): Promise<string | null> {
+  const first = await getAccessToken()
+  if (first) return first
+  await new Promise((resolve) => setTimeout(resolve, TOKEN_RETRY_MS))
+  return getAccessToken()
+}
 
 export function AccountWorkspaceSyncProvider({ children }: { children: React.ReactNode }) {
+  const { t } = useI18n()
   const auth = useAuth()
-  const { hydrated } = useLabHydration()
+  const { hydrated, publishImportNotice } = useLabHydration()
   const { workspace, setWorkspace, scratchWorkspace, setScratchWorkspace } =
     useTowerWorkspaceContext()
 
@@ -24,10 +36,10 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
   const pushTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const loginSyncKeyRef = useRef<string | null>(null)
 
-  const pushToCloud = useCallback(async () => {
-    if (!accountWorkspaceSyncAvailable() || !auth.user) return
-    const token = await auth.getAccessToken()
-    if (!token) return
+  const pushToCloud = useCallback(async (): Promise<boolean> => {
+    if (!accountWorkspaceSyncAvailable() || !auth.user) return false
+    const token = await getAccessTokenWithRetry(auth.getAccessToken)
+    if (!token) return false
 
     const updatedAt = new Date().toISOString()
     const backup = buildAccountWorkspaceBackupFromContext(
@@ -38,7 +50,9 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
     const result = await saveAccountWorkspace(token, backup)
     if (result.ok) {
       writeLocalAccountWorkspaceUpdatedAt(updatedAt)
+      return true
     }
+    return false
   }, [auth, scratchWorkspace, workspace])
 
   const schedulePush = useCallback(() => {
@@ -51,8 +65,10 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
   }, [auth.user, pushToCloud])
 
   useEffect(() => {
-    if (!hydrated || !auth.user || !accountWorkspaceSyncAvailable()) {
-      loginSyncKeyRef.current = null
+    if (auth.loading) return
+
+    if (!hydrated || !auth.user || !auth.session || !accountWorkspaceSyncAvailable()) {
+      if (!auth.user) loginSyncKeyRef.current = null
       return
     }
 
@@ -63,11 +79,15 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
     let cancelled = false
 
     void (async () => {
-      const token = await auth.getAccessToken()
+      const token = await getAccessTokenWithRetry(auth.getAccessToken)
       if (!token || cancelled) return
 
       const fetched = await fetchAccountWorkspace(token)
-      if (!fetched.ok || cancelled) return
+      if (cancelled) return
+      if (!fetched.ok) {
+        publishImportNotice(t('sr_notice_account_sync_failed'), 'error')
+        return
+      }
 
       const decision = reconcileAccountWorkspaceOnLogin(fetched.backup)
       if (decision.action === 'apply_cloud') {
@@ -76,6 +96,7 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
           const applied = applyAccountWorkspaceBackup(decision.backup)
           setWorkspace(applied.workspace)
           setScratchWorkspace(applied.scratchWorkspace)
+          publishImportNotice(t('sr_notice_account_sync_loaded'), 'success')
         } finally {
           skipPushRef.current = false
         }
@@ -83,7 +104,10 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
       }
 
       if (decision.action === 'push_local') {
-        await pushToCloud()
+        const saved = await pushToCloud()
+        if (!saved && cancelled === false) {
+          publishImportNotice(t('sr_notice_account_sync_failed'), 'error')
+        }
       }
     })()
 
@@ -92,11 +116,15 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
     }
   }, [
     auth,
+    auth.loading,
+    auth.session,
     auth.user,
     hydrated,
+    publishImportNotice,
     pushToCloud,
     setScratchWorkspace,
     setWorkspace,
+    t,
   ])
 
   useEffect(() => {

@@ -107,6 +107,7 @@ export function usePlayerSaveImport(
         setScratchWorkspace(nextScratch)
         persistLabWorkspacesToLocalStorage(nextWorkspace, nextScratch)
         touchLocalAccountWorkspaceUpdatedAt()
+        let accountCloudSaved = true
         if (auth.user && accountWorkspaceSyncAvailable()) {
           const token = await auth.getAccessToken()
           if (token) {
@@ -114,7 +115,11 @@ export function usePlayerSaveImport(
             const saved = await saveAccountWorkspace(token, backup)
             if (saved.ok) {
               writeLocalAccountWorkspaceUpdatedAt(backup.updatedAt)
+            } else {
+              accountCloudSaved = false
             }
+          } else {
+            accountCloudSaved = false
           }
         }
         let shouldRefreshProfile = false
@@ -143,7 +148,11 @@ export function usePlayerSaveImport(
           displayName: imported.fakeUserName ?? imported.userName,
         })
         options?.onImportSuccess?.()
-        publishImportNotice(t('sr_notice_import_player_ok'), 'success')
+        if (auth.user && accountWorkspaceSyncAvailable() && !accountCloudSaved) {
+          publishImportNotice(t('sr_notice_account_sync_save_failed'), 'error')
+        } else {
+          publishImportNotice(t('sr_notice_import_player_ok'), 'success')
+        }
         return true
       } catch {
         reportImportProblem(t('sr_notice_import_read_fail'))
