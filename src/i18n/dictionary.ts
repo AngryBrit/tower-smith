@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_313_headline: "What's new in v3.1.3",
+  whats_new_313_body:
+    'Effective Paths Google sign-in is more reliable: consent opens immediately, popups work on desktop Chrome, FedCM on mobile, and embedded IDE browsers get a clear message to use Chrome or Firefox instead.',
   whats_new_312_headline: "What's new in v3.1.2",
   whats_new_312_body:
     'Effective Paths IDS Master URL now lives on your Supabase profile with a Save IDS button in Settings — reliable cross-device sync when signed in. Legacy workspace backups migrate automatically on login.',
@@ -1581,7 +1584,7 @@ export const STRINGS_EN = {
   ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
   ep_export_cancelled: 'Google sign-in was cancelled.',
   ep_export_oauth_timeout:
-    'Google sign-in timed out. Allow popups for this site, complete the consent screen, then try again.',
+    'Google sign-in timed out. Allow popups for this site, complete the consent screen, then try again. Embedded IDE browsers (including Cursor) cannot finish Google sign-in — use Chrome or Firefox instead.',
   ep_export_error_network: 'Could not reach the export service. Try npm run dev:netlify locally.',
   ep_export_error_invalid_spreadsheet: 'Invalid spreadsheet ID.',
   ep_export_error_sheets_auth_failed:

@@ -533,7 +533,7 @@ export function EffectivePathsSyncDialog({
         const code = err instanceof Error ? err.message : 'unknown'
         if (code === 'popup_closed_by_user' || code === 'access_denied') {
           showNotice(t('ep_export_cancelled'), 'info')
-        } else if (code === 'google_oauth_timeout') {
+        } else if (code === 'google_oauth_timeout' || code === 'popup_blocked') {
           showNotice(t('ep_export_oauth_timeout'), 'error')
         } else {
           showNotice(t('ep_export_error_unknown'), 'error')
@@ -580,8 +580,9 @@ export function EffectivePathsSyncDialog({
     setLoadProgress(null)
     setNotice(null)
     try {
-      let token = await ensureGoogleToken()
-      if (!token) {
+      const cachedToken = googleToken ?? getCachedGoogleSheetsAccessToken()
+      let token = await ensureGoogleToken(cachedToken ? undefined : { consent: true })
+      if (!token && cachedToken) {
         token = await ensureGoogleToken({ consent: true })
       }
       if (!token) return
@@ -702,7 +703,7 @@ export function EffectivePathsSyncDialog({
       setLoadingSheets(false)
       setLoadProgress(null)
     }
-  }, [parsedMaster, ensureGoogleToken, persistSpreadsheetRef, spreadsheetRef, formatExportError, showNotice, t])
+  }, [parsedMaster, googleToken, ensureGoogleToken, persistSpreadsheetRef, spreadsheetRef, formatExportError, showNotice, t])
 
   const handleExportRelics = useCallback(async () => {
     if (!parsedMaster) {
@@ -1879,7 +1880,8 @@ export function EffectivePathsSyncDialog({
                 : t('ep_export_loading_sheets')
           }
           active={loadingSheets}
-          percent={loadProgress ? effectivePathsLoadProgressPercent(loadProgress) : 5}
+          percent={loadProgress ? effectivePathsLoadProgressPercent(loadProgress) : undefined}
+          simulate={loadingSheets && loadProgress == null}
         />
         {workbookAccess && workbookAccess.length > 0 ? (
           <EffectivePathsLinkedWorkbooksList

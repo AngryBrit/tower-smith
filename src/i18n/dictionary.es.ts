@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_313_headline: 'Novedades en v3.1.3',
+  whats_new_313_body:
+    'El inicio de sesión de Google para Effective Paths es más fiable: consentimiento inmediato, ventanas emergentes en Chrome de escritorio, FedCM en móvil — los navegadores integrados del IDE indican usar Chrome o Firefox.',
   whats_new_312_headline: 'Novedades en v3.1.2',
   whats_new_312_body:
     'La URL del IDS Master de Effective Paths está ahora en tu perfil de Supabase, con un botón Guardar IDS en Ajustes — sincronización fiable entre dispositivos al iniciar sesión. Las copias antiguas del workspace se migran al entrar.',
@@ -1580,7 +1583,7 @@ export const STRINGS_ES = {
   ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
   ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
   ep_export_oauth_timeout:
-    'Tiempo de espera agotado en el inicio de sesión de Google. Permite ventanas emergentes, completa el consentimiento e inténtalo de nuevo.',
+    'Tiempo de espera agotado en el inicio de sesión de Google. Permite ventanas emergentes, completa el consentimiento e inténtalo de nuevo. Los navegadores integrados del IDE (incluido Cursor) no pueden completar el inicio de sesión — usa Chrome o Firefox.',
   ep_export_error_network:
     'No se pudo contactar el servicio de exportación. Prueba npm run dev:netlify en local.',
   ep_export_error_invalid_spreadsheet: 'ID de hoja no válido.',

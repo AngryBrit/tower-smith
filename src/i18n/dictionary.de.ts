@@ -86,6 +86,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_313_headline: 'Neu in v3.1.3',
+  whats_new_313_body:
+    'Google-Anmeldung für Effective Paths ist zuverlässiger: Zustimmung sofort, Pop-ups in Chrome am Desktop, FedCM auf Mobilgeräten — eingebettete IDE-Browser erhalten den Hinweis, Chrome oder Firefox zu verwenden.',
   whats_new_312_headline: 'Neu in v3.1.2',
   whats_new_312_body:
     'Die IDS-Master-URL für Effective Paths liegt jetzt in deinem Supabase-Profil — mit Speichern-Button in den Einstellungen für zuverlässige geräteübergreifende Sync bei Anmeldung. Alte Workspace-Backups werden beim Login migriert.',
@@ -1516,7 +1519,7 @@ export const STRINGS_DE = {
   ep_export_oauth_not_configured: 'Google-Sheets-Export ist auf dieser Seite nicht konfiguriert.',
   ep_export_cancelled: 'Google-Anmeldung abgebrochen.',
   ep_export_oauth_timeout:
-    'Google-Anmeldung abgelaufen. Pop-ups für diese Seite erlauben, Zustimmung abschließen und erneut versuchen.',
+    'Google-Anmeldung abgelaufen. Pop-ups erlauben, Zustimmung abschließen und erneut versuchen. Eingebettete IDE-Browser (z. B. Cursor) schließen Google-Anmeldung nicht ab — Chrome oder Firefox verwenden.',
   ep_export_error_network:
     'Export-Dienst nicht erreichbar. Lokal npm run dev:netlify versuchen.',
   ep_export_error_invalid_spreadsheet: 'Ungültige Spreadsheet-ID.',

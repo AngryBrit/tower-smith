@@ -14,6 +14,12 @@
   targetPort = 5173
   framework = "#custom"
 
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Google Identity Services OAuth popups need postMessage back to the opener.
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+
 [[redirects]]
   from = "/*"
   to = "/index.html"

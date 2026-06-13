@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.2-2ea44f)
+![Version](https://img.shields.io/badge/version-3.1.3-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -101,6 +101,13 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 - A configured **Google OAuth Web client** with the Google Sheets API enabled. Set `VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID` in `.env` (local) and Netlify build env (production). See [`.env.example`](.env.example).
 - **Netlify Functions** for server-side Sheets API calls: use `npm run dev:netlify` locally or deploy to Netlify. Plain `npm run dev` runs the UI only (OAuth may work for listing, but import/export endpoints need Functions).
 - Your Google account must have edit access to the IDS Master sheet and each linked workbook.
+
+**OAuth troubleshooting**
+
+- Use **Chrome or Firefox** at the site URL — embedded IDE browsers (including Cursor’s built-in preview) can show Google sign-in but cannot return the access token.
+- Allow **popups** for the TowerSmith origin and complete the **Google Sheets** consent step after choosing your account.
+- Local dev: run **`npm run dev:netlify`** and open `http://localhost:8888` (Functions + COOP headers). Plain `npm run dev` on port 5173 also sets COOP for OAuth, but import/export still needs Functions.
+- If sign-in times out, hard-refresh and retry; check that your OAuth client’s **Authorized JavaScript origins** include your exact origin (e.g. `https://www.towersmith.com`, `http://localhost:8888`).
 
 **Maintainer code paths:** [`src/effectivePaths/`](src/effectivePaths/) (parsers, sheet layouts, staging), [`netlify/functions/import-effective-paths.ts`](netlify/functions/import-effective-paths.ts), [`export-effective-paths.ts`](netlify/functions/export-effective-paths.ts), [`ids-gateway-effective-paths.ts`](netlify/functions/ids-gateway-effective-paths.ts).
 

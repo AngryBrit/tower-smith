@@ -4,6 +4,8 @@ const TOKEN_CACHE_KEY = 'towersmith_google_sheets_token'
 const TOKEN_EXPIRY_BUFFER_MS = 60_000
 /** Max wait for GIS token callback (consent popup dismissed, blocked, or lost). */
 const OAUTH_CALLBACK_TIMEOUT_MS = 120_000
+/** Silent GIS auth should fail quickly when no session exists. */
+const OAUTH_SILENT_TIMEOUT_MS = 15_000
 
 type TokenClient = {
   requestAccessToken: (overrideConfig?: { prompt?: string }) => void
@@ -16,11 +18,18 @@ type GisTokenResponse = {
   error_subtype?: string
 }
 
+type GisOAuthError = {
+  type?: string
+  message?: string
+}
+
 type GisOAuth2 = {
   initTokenClient: (config: {
     client_id: string
     scope: string
     callback: (response: GisTokenResponse) => void
+    error_callback?: (error: GisOAuthError) => void
+    use_fedcm_for_prompt?: boolean
   }) => TokenClient
 }
 
@@ -159,7 +168,55 @@ function loadGisScript(): Promise<void> {
   return gisScriptPromise
 }
 
-async function requestTokenWithPrompt(prompt: '' | 'none' | 'consent'): Promise<string> {
+type TokenPromptOptions = {
+  useFedcm?: boolean
+}
+
+function isEmbeddedOAuthHost(): boolean {
+  if (typeof window === 'undefined') return false
+  const ua = navigator.userAgent
+  if (/\bElectron\b/i.test(ua)) return true
+  if (/\bVSCode\b/i.test(ua)) return true
+  if (window.self !== window.top) return true
+  return false
+}
+
+function shouldUseFedcmForPrompt(): boolean {
+  if (typeof window === 'undefined') return false
+  if (isEmbeddedOAuthHost()) return false
+  if (!('IdentityCredential' in globalThis)) return false
+  // Mobile Chrome handles FedCM more reliably than popups.
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+}
+
+function interactiveFedcmAttempts(): readonly boolean[] {
+  return shouldUseFedcmForPrompt() ? [true, false] : [false, true]
+}
+
+function isAlternateOAuthUxRetry(code: string): boolean {
+  return (
+    code === 'google_oauth_timeout' ||
+    code === 'popup_blocked' ||
+    isRetryableGoogleAuthError(code)
+  )
+}
+
+function oauthCallbackTimeoutMs(prompt: '' | 'none' | 'consent'): number {
+  if (prompt === 'none') return OAUTH_SILENT_TIMEOUT_MS
+  return OAUTH_CALLBACK_TIMEOUT_MS
+}
+
+function oauthErrorFromGis(err: GisOAuthError): Error {
+  const type = err.type ?? 'unknown'
+  if (type === 'popup_closed') return new Error('popup_closed_by_user')
+  if (type === 'popup_failed_to_open') return new Error('popup_blocked')
+  return new Error(type)
+}
+
+async function requestTokenWithPrompt(
+  prompt: '' | 'none' | 'consent',
+  options: TokenPromptOptions = {},
+): Promise<string> {
   await loadGisScript()
   const oauth2 = window.google?.accounts?.oauth2
   if (!oauth2) {
@@ -167,6 +224,7 @@ async function requestTokenWithPrompt(prompt: '' | 'none' | 'consent'): Promise<
   }
 
   const clientId = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID as string
+  const useFedcm = options.useFedcm ?? shouldUseFedcmForPrompt()
 
   return new Promise((resolve, reject) => {
     let settled = false
@@ -174,7 +232,7 @@ async function requestTokenWithPrompt(prompt: '' | 'none' | 'consent'): Promise<
       if (settled) return
       settled = true
       reject(new Error('google_oauth_timeout'))
-    }, OAUTH_CALLBACK_TIMEOUT_MS)
+    }, oauthCallbackTimeoutMs(prompt))
 
     const finish = (result: 'resolve' | 'reject', value?: string, err?: Error) => {
       if (settled) return
@@ -187,6 +245,7 @@ async function requestTokenWithPrompt(prompt: '' | 'none' | 'consent'): Promise<
     const client = oauth2.initTokenClient({
       client_id: clientId,
       scope: SHEETS_SCOPE,
+      use_fedcm_for_prompt: useFedcm,
       callback: (response) => {
         if (response.error) {
           finish('reject', undefined, new Error(response.error))
@@ -199,9 +258,30 @@ async function requestTokenWithPrompt(prompt: '' | 'none' | 'consent'): Promise<
         writeCachedSheetsToken(response.access_token, response.expires_in)
         finish('resolve', response.access_token)
       },
+      error_callback: (err) => {
+        finish('reject', undefined, oauthErrorFromGis(err))
+      },
     })
     client.requestAccessToken({ prompt })
   })
+}
+
+async function requestInteractiveToken(prompt: '' | 'consent'): Promise<string> {
+  const attempts = interactiveFedcmAttempts()
+  let lastErr: Error | undefined
+
+  for (let index = 0; index < attempts.length; index++) {
+    try {
+      return await requestTokenWithPrompt(prompt, { useFedcm: attempts[index] })
+    } catch (err) {
+      lastErr = err instanceof Error ? err : new Error('google_oauth_failed')
+      const code = lastErr.message
+      if (code === 'popup_closed_by_user') throw lastErr
+      if (index === attempts.length - 1 || !isAlternateOAuthUxRetry(code)) throw lastErr
+    }
+  }
+
+  throw lastErr ?? new Error('google_oauth_failed')
 }
 
 export type GoogleSheetsOAuthOptions = {
@@ -227,20 +307,20 @@ export async function requestGoogleSheetsAccessToken(
 
   if (!options.consent) {
     try {
-      return await requestTokenWithPrompt('none')
+      return await requestTokenWithPrompt('none', { useFedcm: false })
     } catch (err) {
       const code = err instanceof Error ? err.message : ''
       if (!isRetryableGoogleAuthError(code)) throw err
     }
     try {
-      return await requestTokenWithPrompt('')
+      return await requestInteractiveToken('')
     } catch (err) {
       const code = err instanceof Error ? err.message : ''
       if (!isRetryableGoogleAuthError(code)) throw err
     }
   }
 
-  return requestTokenWithPrompt(options.consent ? 'consent' : '')
+  return requestInteractiveToken(options.consent ? 'consent' : '')
 }
 
 /** Cached spreadsheets token for this browser tab session, if still valid. */

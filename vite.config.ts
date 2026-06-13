@@ -14,6 +14,9 @@ export default defineConfig({
   cacheDir: path.join(os.tmpdir(), 'vite-cache-tower_export'),
   server: {
     host: true,
+    headers: {
+      'Cross-Origin-Opener-Policy': 'same-origin-allow-popups',
+    },
     watch: {
       // Netlify Dev bundles functions under .netlify/functions-serve; on Windows those
       // files are locked (EBUSY) while Vite's watcher tries to observe them.

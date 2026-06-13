@@ -5,6 +5,18 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.3] - 2026-06-13
+
+### Fixed
+
+- **Effective Paths Google OAuth** — Consent goes straight to the Google prompt when no cached token (no silent-auth hang). Popup mode on desktop, FedCM on mobile, with automatic UX fallback; `error_callback` fails fast when popups are blocked; progress bar animates during sign-in; clearer timeout message for embedded IDE browsers (e.g. Cursor).
+- **OAuth popup delivery** — `Cross-Origin-Opener-Policy: same-origin-allow-popups` on Netlify and Vite dev so Google sign-in can return the access token to the app.
+
+### Docs
+
+- README: Effective Paths OAuth troubleshooting (Chrome/Firefox, popups, embedded browsers); version **3.1.3**.
+- What's new banner (en/de/es).
+
 ## [3.1.2] - 2026-06-13
 
 ### Added
