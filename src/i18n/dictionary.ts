@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_310_headline: "What's new in v3.1.0",
+  whats_new_310_body:
+    'New GUARDIANS tab with chip loadouts and upgrade tracks. Sync labs, workshop, relics, themes, cards, bots, modules, and guardians with community Effective Paths Google Sheets — including staged export previews. Tower CSV backups now include guardian chips and full research levels. Gallery adds Twitch sign-in, upvotes, and owner controls.',
   whats_new_308_headline: "What's new in v3.0.8",
   whats_new_308_body:
     'Module submodule picks from your save now match in-game for ancestral and star-tier chassis and assist modules — including Orbital Augment, Dimension Core, and Primordial Collapse — with corrected assist picker scaling and formatting.',
@@ -717,7 +720,9 @@ export const STRINGS_EN = {
   settings_shortcut_tab_8_key: '8',
   settings_shortcut_tab_8_desc: 'Relics tab',
   settings_shortcut_tab_9_key: '9',
-  settings_shortcut_tab_9_desc: 'Gallery tab',
+  settings_shortcut_tab_9_desc: 'Vault tab',
+  settings_shortcut_tab_0_key: '0',
+  settings_shortcut_tab_0_desc: 'Gallery tab',
   workspace_undo_done: 'Restored previous workspace snapshot.',
   catalog_section_expand: 'Expand section',
   catalog_section_collapse: 'Collapse section',
@@ -1356,7 +1361,7 @@ export const STRINGS_EN = {
 
   sr_lab_data_title: 'Tower Backup & Sharing',
   sr_lab_data_intro:
-    'Export/import one CSV with lab, workshop, cards, modules, relics, and themes (tower_csv_v1), import a local The Tower playerInfo.dat save (labs + workshop), or copy a short share link.',
+    'Export/import one CSV with lab, workshop, cards, modules, relics, themes, guardians, and research-level data (tower_csv_v1), import a local The Tower playerInfo.dat save (labs + workshop + guardian chips), or copy a short share link.',
   sr_lab_data_files: 'Tower CSV (full backup)',
   sr_lab_data_save_game: 'Save Game',
   sr_lab_data_share: 'Share link',
@@ -1651,7 +1656,7 @@ export const STRINGS_EN = {
   sr_compare_launcher: 'Compare builds…',
   sr_compare_title: 'Compare two lab snapshots',
   sr_compare_intro:
-    'Paste a tower CSV (first line tower_csv_v1; lab, ws, card, module, theme, and build rows), a short URL with ?build=…, a long URL with ?tower=…, a raw share payload (u… / z…), or JSON { "v":4, "o", "w", "t", "n" }. Imports restore lab, workshop, cards, module loadout presets, relics, and owned themes. Each compare side uses its own Labs Coin Discount level.',
+    'Paste a tower CSV (first line tower_csv_v1; lab, ws, card, module, relic, theme, guardian, and build rows), a short URL with ?build=…, a long URL with ?tower=…, a raw share payload (u… / z…), or JSON { "v":4, "o", "w", "t", "n" }. Imports restore lab, workshop, cards, module loadout presets, relics, guardian chips, and owned themes. Each compare side uses its own Labs Coin Discount level.',
   sr_compare_build_a: 'Build A',
   sr_compare_build_b: 'Build B',
   sr_compare_label_yours: 'Your build',

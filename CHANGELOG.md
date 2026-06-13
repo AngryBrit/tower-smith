@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0] - 2026-06-13
+
+### Added
+
+- **Guardians tab** — Chip loadout (four slots, six chip types, Bits unlock costs), GOD tables under `tables/guardians/`, save import via `gameGuardianChipMapping.ts`, and `guardian,state` tower CSV row.
+- **Effective Paths sync** — Google Sheets import/export for IDS Master linked workbooks (Laboratory, Workshop, UWs, Cards, Modules, Bots, Guardians, Themes, Relics); staged export preview tabs; Netlify Functions + OAuth client ID.
+- **Vault tab** — Placeholder shell for future vault tooling.
+- **Tower CSV extensions** — `lab,gameResearchLevel` (full save research array), `theme,selection` (active skin picks), guardian chip state row.
+- **Gallery** — Twitch OAuth; owner category/visibility controls, upvotes, share-link regeneration; guild name registry and gallery filters.
+
+### Fixed
+
+- **Netlify build** — TypeScript fix for Effective Paths pending export target set; ESLint clean pass.
+
+### Docs
+
+- README: Guardians, Vault, Effective Paths sync, expanded tower CSV row table, Netlify Functions overview, player-save mapping, maintainer `docs/` workflow, keyboard shortcuts `1`–`0`, Twitch auth.
+- Keyboard shortcut i18n: tab `9` = Vault, tab `0` = Gallery.
+- README: version **3.1.0**.
+- What's new banner (en/de/es).
 
 ## [3.0.8] - 2026-06-10
 

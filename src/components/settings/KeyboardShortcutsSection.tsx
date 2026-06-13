@@ -13,6 +13,7 @@ const SHORTCUT_KEYS = [
   'settings_shortcut_tab_7',
   'settings_shortcut_tab_8',
   'settings_shortcut_tab_9',
+  'settings_shortcut_tab_0',
 ] as const
 
 export function KeyboardShortcutsSection() {

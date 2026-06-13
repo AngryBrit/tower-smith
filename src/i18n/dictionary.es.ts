@@ -86,6 +86,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_310_headline: 'Novedades en v3.1.0',
+  whats_new_310_body:
+    'Nueva pestaña GUARDIANES con loadouts de chips y rutas de mejora. Sincroniza labs, taller, reliquias, temas, cartas, bots, módulos y guardianes con Google Sheets Effective Paths de la comunidad — con pestañas de vista previa al exportar. Las copias CSV Tower incluyen chips de guardián y niveles de investigación completos. Galería: inicio con Twitch, votos y controles del autor.',
   whats_new_308_headline: 'Novedades en v3.0.8',
   whats_new_308_body:
     'Las subestadísticas de módulos importadas desde tu guardado coinciden con el juego en chasis y módulos assist Ancestral y de estrellas — p. ej. Orbital Augment, Dimension Core y Primordial Collapse — con escala y formato del selector assist corregidos.',
@@ -724,7 +727,9 @@ export const STRINGS_ES = {
   settings_shortcut_tab_8_key: '8',
   settings_shortcut_tab_8_desc: 'Pestaña Reliquias',
   settings_shortcut_tab_9_key: '9',
-  settings_shortcut_tab_9_desc: 'Pestaña Galería',
+  settings_shortcut_tab_9_desc: 'Pestaña Bóveda',
+  settings_shortcut_tab_0_key: '0',
+  settings_shortcut_tab_0_desc: 'Pestaña Galería',
   workspace_undo_done: 'Instantánea anterior del espacio de trabajo restaurada.',
   catalog_section_expand: 'Expandir sección',
   catalog_section_collapse: 'Contraer sección',
@@ -1370,7 +1375,7 @@ export const STRINGS_ES = {
 
   sr_lab_data_title: 'Tower — copia de seguridad y compartir',
   sr_lab_data_intro:
-    'Un CSV exporta/importa lab, taller, cartas, módulos, reliquias, temas y todos los builds (tower_csv_v1), o copia un enlace corto para compartir.',
+    'Un CSV exporta/importa lab, taller, cartas, módulos, reliquias, temas, guardianes y niveles de investigación (tower_csv_v1), importa playerInfo.dat (labs + taller + chips de guardián), o copia un enlace corto para compartir.',
   sr_lab_data_files: 'CSV Tower (copia completa)',
   sr_lab_data_save_game: 'Partida guardada',
   sr_lab_data_share: 'Enlace para compartir',
@@ -1674,7 +1679,7 @@ export const STRINGS_ES = {
   sr_compare_launcher: 'Comparar builds…',
   sr_compare_title: 'Comparar dos instantáneas de labs',
   sr_compare_intro:
-    'Pega un CSV tower (tower_csv_v1; filas lab, ws, card, module, theme, build), URL corta con ?build=…, URL larga con ?tower=…, payload u…/z… o JSON { "v":4, "o", "w", "t", "n" }. Restaura lab, taller, cartas, presets de módulos, reliquias y temas en posesión. Cada lado usa su propio Labs Coin Discount.',
+    'Pega un CSV tower (tower_csv_v1; filas lab, ws, card, module, relic, theme, guardian, build), URL corta con ?build=…, URL larga con ?tower=…, payload u…/z… o JSON { "v":4, "o", "w", "t", "n" }. Restaura lab, taller, cartas, presets de módulos, reliquias, chips de guardián y temas en posesión. Cada lado usa su propio Labs Coin Discount.',
   sr_compare_build_a: 'Build A',
   sr_compare_build_b: 'Build B',
   sr_compare_label_yours: 'Tu build',
