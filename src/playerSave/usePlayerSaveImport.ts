@@ -11,7 +11,6 @@ import { persistLabWorkspacesToLocalStorage } from '../towerWorkspacePresets'
 import { touchLocalAccountWorkspaceUpdatedAt, writeLocalAccountWorkspaceUpdatedAt } from '../accountWorkspace/localUpdatedAt'
 import { accountWorkspaceSyncAvailable, saveAccountWorkspace } from '../accountWorkspace/api'
 import { buildAccountWorkspaceBackupFromContext } from '../accountWorkspace/buildBackup'
-import { refreshAccessTokenForSync } from '../accountWorkspace/refreshAccessToken'
 import { accountWorkspaceErrorMessage } from '../accountWorkspace/syncErrorMessage'
 import {
   applyImportedLabAndBuild,
@@ -112,7 +111,7 @@ export function usePlayerSaveImport(
         let accountCloudSaved = true
         let accountCloudSaveError: string | null = null
         if (auth.user && accountWorkspaceSyncAvailable()) {
-          const token = (await refreshAccessTokenForSync()) ?? (await auth.getAccessToken())
+          const token = await auth.getAccessToken()
           if (token) {
             const backup = buildAccountWorkspaceBackupFromContext(nextWorkspace, nextScratch)
             const saved = await saveAccountWorkspace(token, backup)

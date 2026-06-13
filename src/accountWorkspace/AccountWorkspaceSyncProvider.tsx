@@ -7,7 +7,6 @@ import {
   buildAccountWorkspaceBackupFromContext,
   hasMeaningfulWorkspaceData,
 } from './buildBackup'
-import { refreshAccessTokenForSync } from './refreshAccessToken'
 import { writeLocalAccountWorkspaceUpdatedAt } from './localUpdatedAt'
 import { reconcileAccountWorkspaceOnLogin } from './reconcile'
 import { accountWorkspaceErrorMessage } from './syncErrorMessage'
@@ -16,14 +15,6 @@ import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 
 const GUARDIAN_CHIP_CHANGE_EVENT = 'tower-export-guardian-chips-change'
 const PUSH_DEBOUNCE_MS = 3000
-
-async function accessTokenForSync(
-  getAccessToken: () => Promise<string | null>,
-): Promise<string | null> {
-  const refreshed = await refreshAccessTokenForSync()
-  if (refreshed) return refreshed
-  return getAccessToken()
-}
 
 export function AccountWorkspaceSyncProvider({ children }: { children: React.ReactNode }) {
   const { t } = useI18n()
@@ -40,7 +31,7 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
     if (!accountWorkspaceSyncAvailable() || !auth.user) {
       return { ok: false, error: accountWorkspaceErrorMessage(t, 'sync_unavailable') }
     }
-    const token = await accessTokenForSync(auth.getAccessToken)
+    const token = await auth.getAccessToken()
     if (!token) {
       return { ok: false, error: accountWorkspaceErrorMessage(t, 'invalid_token') }
     }
@@ -76,13 +67,13 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
       return
     }
 
-    const syncKey = `${auth.user.id}:${auth.session.access_token}`
-    if (loginSyncCompletedRef.current === syncKey) return
+    const userId = auth.user.id
+    if (loginSyncCompletedRef.current === userId) return
 
     let cancelled = false
 
     void (async () => {
-      const token = await accessTokenForSync(auth.getAccessToken)
+      const token = await auth.getAccessToken()
       if (!token || cancelled) return
 
       const fetched = await fetchAccountWorkspace(token)
@@ -92,7 +83,7 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
         return
       }
 
-      loginSyncCompletedRef.current = syncKey
+      loginSyncCompletedRef.current = userId
 
       const decision = reconcileAccountWorkspaceOnLogin(fetched.backup)
       if (decision.action === 'apply_cloud') {
