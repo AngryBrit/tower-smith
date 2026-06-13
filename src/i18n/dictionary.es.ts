@@ -1566,6 +1566,8 @@ export const STRINGS_ES = {
   ep_export_invalid_spreadsheet: 'Introduce un ID o URL válido de Google Spreadsheet.',
   ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
   ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
+  ep_export_oauth_timeout:
+    'Tiempo de espera agotado en el inicio de sesión de Google. Permite ventanas emergentes, completa el consentimiento e inténtalo de nuevo.',
   ep_export_error_network:
     'No se pudo contactar el servicio de exportación. Prueba npm run dev:netlify en local.',
   ep_export_error_invalid_spreadsheet: 'ID de hoja no válido.',

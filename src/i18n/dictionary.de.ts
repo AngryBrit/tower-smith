@@ -1502,6 +1502,8 @@ export const STRINGS_DE = {
   ep_export_invalid_spreadsheet: 'Gültige Google-Spreadsheet-ID oder docs.google.com-URL eingeben.',
   ep_export_oauth_not_configured: 'Google-Sheets-Export ist auf dieser Seite nicht konfiguriert.',
   ep_export_cancelled: 'Google-Anmeldung abgebrochen.',
+  ep_export_oauth_timeout:
+    'Google-Anmeldung abgelaufen. Pop-ups für diese Seite erlauben, Zustimmung abschließen und erneut versuchen.',
   ep_export_error_network:
     'Export-Dienst nicht erreichbar. Lokal npm run dev:netlify versuchen.',
   ep_export_error_invalid_spreadsheet: 'Ungültige Spreadsheet-ID.',

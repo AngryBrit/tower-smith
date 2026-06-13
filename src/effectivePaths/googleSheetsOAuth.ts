@@ -2,6 +2,8 @@ const GIS_SCRIPT_SRC = 'https://accounts.google.com/gsi/client'
 const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets'
 const TOKEN_CACHE_KEY = 'towersmith_google_sheets_token'
 const TOKEN_EXPIRY_BUFFER_MS = 60_000
+/** Max wait for GIS token callback (consent popup dismissed, blocked, or lost). */
+const OAUTH_CALLBACK_TIMEOUT_MS = 120_000
 
 type TokenClient = {
   requestAccessToken: (overrideConfig?: { prompt?: string }) => void
@@ -89,26 +91,54 @@ function isRetryableGoogleAuthError(code: string): boolean {
   )
 }
 
+function gisOAuth2Ready(): boolean {
+  return Boolean(window.google?.accounts?.oauth2)
+}
+
 function loadGisScript(): Promise<void> {
   if (typeof window === 'undefined') {
     return Promise.reject(new Error('google_oauth_unavailable'))
   }
-  if (window.google?.accounts?.oauth2) {
+  if (gisOAuth2Ready()) {
     return Promise.resolve()
   }
   if (gisScriptPromise) return gisScriptPromise
 
   gisScriptPromise = new Promise((resolve, reject) => {
+    let settled = false
+    const finish = (result: 'resolve' | 'reject', err?: Error) => {
+      if (settled) return
+      settled = true
+      if (result === 'resolve') resolve()
+      else reject(err ?? new Error('google_oauth_unavailable'))
+    }
+
+    const finishIfReady = () => {
+      if (gisOAuth2Ready()) finish('resolve')
+      return settled
+    }
+
     const existing = document.querySelector<HTMLScriptElement>(
       `script[src="${GIS_SCRIPT_SRC}"]`,
     )
     if (existing) {
-      existing.addEventListener('load', () => resolve(), { once: true })
+      if (finishIfReady()) return
       existing.addEventListener(
-        'error',
-        () => reject(new Error('google_oauth_script_failed')),
+        'load',
+        () => {
+          if (!finishIfReady()) finish('reject', new Error('google_oauth_unavailable'))
+        },
         { once: true },
       )
+      existing.addEventListener(
+        'error',
+        () => finish('reject', new Error('google_oauth_script_failed')),
+        { once: true },
+      )
+      // Script may have finished loading before listeners were attached.
+      queueMicrotask(() => {
+        finishIfReady()
+      })
       return
     }
 
@@ -116,9 +146,14 @@ function loadGisScript(): Promise<void> {
     script.src = GIS_SCRIPT_SRC
     script.async = true
     script.defer = true
-    script.onload = () => resolve()
-    script.onerror = () => reject(new Error('google_oauth_script_failed'))
+    script.onload = () => {
+      if (!finishIfReady()) finish('reject', new Error('google_oauth_unavailable'))
+    }
+    script.onerror = () => finish('reject', new Error('google_oauth_script_failed'))
     document.head.appendChild(script)
+  }).catch((err) => {
+    gisScriptPromise = null
+    throw err
   })
 
   return gisScriptPromise
@@ -134,20 +169,35 @@ async function requestTokenWithPrompt(prompt: '' | 'none' | 'consent'): Promise<
   const clientId = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID as string
 
   return new Promise((resolve, reject) => {
+    let settled = false
+    const timeoutId = window.setTimeout(() => {
+      if (settled) return
+      settled = true
+      reject(new Error('google_oauth_timeout'))
+    }, OAUTH_CALLBACK_TIMEOUT_MS)
+
+    const finish = (result: 'resolve' | 'reject', value?: string, err?: Error) => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timeoutId)
+      if (result === 'resolve' && value) resolve(value)
+      else reject(err ?? new Error('google_oauth_no_token'))
+    }
+
     const client = oauth2.initTokenClient({
       client_id: clientId,
       scope: SHEETS_SCOPE,
       callback: (response) => {
         if (response.error) {
-          reject(new Error(response.error))
+          finish('reject', undefined, new Error(response.error))
           return
         }
         if (!response.access_token) {
-          reject(new Error('google_oauth_no_token'))
+          finish('reject', undefined, new Error('google_oauth_no_token'))
           return
         }
         writeCachedSheetsToken(response.access_token, response.expires_in)
-        resolve(response.access_token)
+        finish('resolve', response.access_token)
       },
     })
     client.requestAccessToken({ prompt })

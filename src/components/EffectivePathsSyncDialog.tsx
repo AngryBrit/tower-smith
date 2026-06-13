@@ -529,6 +529,8 @@ export function EffectivePathsSyncDialog({
         const code = err instanceof Error ? err.message : 'unknown'
         if (code === 'popup_closed_by_user' || code === 'access_denied') {
           showNotice(t('ep_export_cancelled'), 'info')
+        } else if (code === 'google_oauth_timeout') {
+          showNotice(t('ep_export_oauth_timeout'), 'error')
         } else {
           showNotice(t('ep_export_error_unknown'), 'error')
         }

@@ -1569,6 +1569,8 @@ export const STRINGS_EN = {
   ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
   ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
   ep_export_cancelled: 'Google sign-in was cancelled.',
+  ep_export_oauth_timeout:
+    'Google sign-in timed out. Allow popups for this site, complete the consent screen, then try again.',
   ep_export_error_network: 'Could not reach the export service. Try npm run dev:netlify locally.',
   ep_export_error_invalid_spreadsheet: 'Invalid spreadsheet ID.',
   ep_export_error_sheets_auth_failed:
