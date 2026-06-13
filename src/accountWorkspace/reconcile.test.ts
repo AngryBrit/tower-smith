@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { readGuardianChipState } from '../guardianChipStorage'
-import { writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
+import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
 import { reconcileAccountWorkspaceOnLogin } from './reconcile'
 import type { AccountWorkspaceBackupV1 } from './types'
 import { ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY } from './localUpdatedAt'
@@ -116,5 +116,32 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
       action: 'apply_cloud',
       backup,
     })
+  })
+
+  it('noop when timestamps match leaves IDS merge to login sync', () => {
+    localStorage.setItem(
+      'tower-export-lab-presets-v1',
+      JSON.stringify({
+        v: 1,
+        activePresetId: null,
+        presets: [],
+        scratchOverrides: { 'attack-damage': 1 },
+      }),
+    )
+    localStorage.setItem(ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY, '2026-06-13T12:00:00.000Z')
+    const backup: AccountWorkspaceBackupV1 = {
+      v: 1,
+      updatedAt: '2026-06-13T12:00:00.000Z',
+      labPresets: {
+        v: 1,
+        activePresetId: null,
+        presets: [],
+        scratchOverrides: { 'attack-damage': 5 },
+      },
+      guardianChips: readGuardianChipState(),
+      effectivePathsIdsMasterRef: '1IdsMasterWorkbookIdXXXXXXXXX',
+    }
+    expect(reconcileAccountWorkspaceOnLogin(backup, 'user-1')).toEqual({ action: 'noop' })
+    expect(readStoredSpreadsheetRef('user-1')).toBe('')
   })
 })

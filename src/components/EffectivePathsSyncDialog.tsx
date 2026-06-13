@@ -67,7 +67,7 @@ import {
   type EffectivePathsPendingExport,
 } from '../effectivePaths/effectivePathsPendingExportStorage'
 import { accessContextForSyncTarget } from '../effectivePaths/effectivePathsStaging'
-import { readStoredSpreadsheetRef, writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
+import { useStoredSpreadsheetRef } from '../effectivePaths/useStoredSpreadsheetRef'
 import {
   getCachedGoogleSheetsAccessToken,
   googleSheetsOAuthConfigured,
@@ -183,9 +183,8 @@ export function EffectivePathsSyncDialog({
   const spreadsheetUserId = user?.id ?? null
   const titleId = useId()
   const listId = useId()
-  const [spreadsheetRef, setSpreadsheetRef] = useState(() =>
-    readStoredSpreadsheetRef(spreadsheetUserId),
-  )
+  const { spreadsheetRef, setSpreadsheetRef, persistSpreadsheetRef, reloadSpreadsheetRef } =
+    useStoredSpreadsheetRef(spreadsheetUserId)
   const [googleToken, setGoogleToken] = useState<string | null>(() =>
     getCachedGoogleSheetsAccessToken(),
   )
@@ -407,21 +406,17 @@ export function EffectivePathsSyncDialog({
   const hasGoogleSheetsAccess =
     googleToken != null || getCachedGoogleSheetsAccessToken() != null
 
-  const persistSpreadsheetRef = useCallback(() => {
-    writeStoredSpreadsheetRef(spreadsheetRef, spreadsheetUserId)
-  }, [spreadsheetRef, spreadsheetUserId])
-
   useEffect(() => {
     if (!open) return
     const frameId = window.requestAnimationFrame(() => {
-      setSpreadsheetRef(readStoredSpreadsheetRef(spreadsheetUserId))
+      reloadSpreadsheetRef()
       setNotice(null)
       setPendingExports(readPendingEffectivePathsExports())
       const cached = getCachedGoogleSheetsAccessToken()
       if (cached) setGoogleToken(cached)
     })
     return () => window.cancelAnimationFrame(frameId)
-  }, [open, spreadsheetUserId])
+  }, [open, reloadSpreadsheetRef, spreadsheetUserId])
 
   const showNotice = useCallback((message: string, variant: ImportNoticeVariant) => {
     setNotice({ message, variant })

@@ -1,10 +1,7 @@
-import { useId, useState } from 'react'
+import { useId } from 'react'
 import { useAuth } from '../../auth/useAuth'
-import {
-  readStoredSpreadsheetRef,
-  writeStoredSpreadsheetRef,
-} from '../../effectivePaths/effectivePathsStorage'
 import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
+import { useStoredSpreadsheetRef } from '../../effectivePaths/useStoredSpreadsheetRef'
 import { useI18n } from '../../i18n'
 
 type EffectivePathsSettingsFieldsProps = {
@@ -14,7 +11,7 @@ type EffectivePathsSettingsFieldsProps = {
 function EffectivePathsSettingsFields({ userId }: EffectivePathsSettingsFieldsProps) {
   const { t } = useI18n()
   const inputId = useId()
-  const [spreadsheetRef, setSpreadsheetRef] = useState(() => readStoredSpreadsheetRef(userId))
+  const { spreadsheetRef, setSpreadsheetRef } = useStoredSpreadsheetRef(userId)
 
   return (
     <div className="settings-page__field">
@@ -32,11 +29,7 @@ function EffectivePathsSettingsFields({ userId }: EffectivePathsSettingsFieldsPr
         placeholder={t('app_settings_ep_ids_master_placeholder')}
         autoComplete="off"
         spellCheck={false}
-        onChange={(e) => {
-          const next = e.target.value
-          setSpreadsheetRef(next)
-          writeStoredSpreadsheetRef(next, userId)
-        }}
+        onChange={(e) => setSpreadsheetRef(e.target.value)}
       />
       <p className="settings-page__hint">{t('app_settings_ep_ids_master_hint')}</p>
     </div>

@@ -7,7 +7,11 @@ import {
   saveAccountWorkspace,
   type AccountWorkspaceApiError,
 } from './api'
-import { applyAccountWorkspaceBackup, applyCloudEffectivePathsIdsMasterRef } from './applyBackup'
+import {
+  applyAccountWorkspaceBackup,
+  applyCloudEffectivePathsIdsMasterRef,
+  mergeMissingCloudIdsMasterRef,
+} from './applyBackup'
 import {
   buildAccountWorkspaceBackupFromContext,
   hasMeaningfulWorkspaceData,
@@ -127,6 +131,7 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
 
         loginSyncCompletedRef.current = userId
         migrateLegacySpreadsheetRef(userId)
+        const idsMergedFromCloud = mergeMissingCloudIdsMasterRef(fetched.backup, userId)
 
         const decision = reconcileAccountWorkspaceOnLogin(fetched.backup, userId)
         if (decision.action === 'apply_cloud') {
@@ -155,7 +160,14 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
           const saved = await pushToCloud()
           if (!saved.ok && !cancelled) {
             publishImportNotice(saved.error, 'error')
+          } else if (idsMergedFromCloud && !cancelled) {
+            publishImportNotice(t('sr_notice_account_sync_loaded'), 'success')
           }
+          return
+        }
+
+        if (idsMergedFromCloud && !cancelled) {
+          publishImportNotice(t('sr_notice_account_sync_loaded'), 'success')
         }
       } finally {
         if (loginSyncInFlightRef.current === userId) {

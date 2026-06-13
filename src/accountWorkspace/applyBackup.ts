@@ -1,6 +1,9 @@
 import { applyTowerThemes } from '../towerDataThemes'
 import { writeGuardianChipState } from '../guardianChipStorage'
-import { writeStoredSpreadsheetRef } from '../effectivePaths/effectivePathsStorage'
+import {
+  readStoredSpreadsheetRef,
+  writeStoredSpreadsheetRef,
+} from '../effectivePaths/effectivePathsStorage'
 import {
   persistLabWorkspacesToLocalStorage,
   readTowerWorkspaceFromPresetsFile,
@@ -38,5 +41,17 @@ export function applyCloudEffectivePathsIdsMasterRef(
   if (backup.effectivePathsIdsMasterRef === undefined) return false
   writeStoredSpreadsheetRef(backup.effectivePathsIdsMasterRef, userId)
   writeLocalAccountWorkspaceUpdatedAt(backup.updatedAt)
+  return true
+}
+
+/** Copy cloud IDS Master ref into local storage when this device has none yet. */
+export function mergeMissingCloudIdsMasterRef(
+  backup: AccountWorkspaceBackupV1 | null,
+  userId?: string | null,
+): boolean {
+  const cloudRef = backup?.effectivePathsIdsMasterRef?.trim()
+  if (!cloudRef) return false
+  if (readStoredSpreadsheetRef(userId)?.trim()) return false
+  writeStoredSpreadsheetRef(cloudRef, userId)
   return true
 }
