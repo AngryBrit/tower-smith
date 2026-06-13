@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { useI18n } from '../i18n'
 
 type GalleryAuthorLineProps = {
@@ -23,11 +23,8 @@ export function GalleryAuthorLine({
   const { fmt } = useI18n()
   const guildName = guild?.trim() ?? ''
   const authorInitial = author.trim().charAt(0).toUpperCase() || '?'
-  const [imageFailed, setImageFailed] = useState(false)
-
-  useEffect(() => {
-    setImageFailed(false)
-  }, [avatarUrl])
+  const [failedAvatarUrl, setFailedAvatarUrl] = useState<string | null>(null)
+  const imageFailed = avatarUrl != null && failedAvatarUrl === avatarUrl
 
   const classes = [
     'gallery-author-line',
@@ -48,7 +45,7 @@ export function GalleryAuthorLine({
           height={20}
           loading="lazy"
           decoding="async"
-          onError={() => setImageFailed(true)}
+          onError={() => setFailedAvatarUrl(avatarUrl ?? null)}
         />
       ) : (
         <span

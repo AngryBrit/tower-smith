@@ -1339,7 +1339,7 @@ export async function exportBotsToGoogleSheet(options: {
   await clearBotFarmingLevelColumn(options.accessToken, botsWorkbookId, staged.stagingTitle)
 
   let updatedCells = 0
-  let valueBatch = batch
+  const valueBatch = batch
 
   updatedCells += await applyBotFarmingLevelCells(
     options.accessToken,

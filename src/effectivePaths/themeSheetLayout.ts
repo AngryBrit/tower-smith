@@ -466,7 +466,7 @@ function detectThemeSheetSections(
 ): ThemeSheetColumnSection[] {
   const hits: (SectionDef & { headerRow: number })[] = []
   for (const def of EP_THEME_SECTION_DEFS) {
-    let headerRow =
+    const headerRow =
       def.section === 'banners'
         ? findBannerSectionHeaderRow(rows)
         : def.section === 'menus'

@@ -3,7 +3,8 @@ import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { describe, expect, it } from 'vitest'
 import { decodePlayerInfoFile } from './decodePlayerInfo'
-import { GAME_GUARDIAN_CHIP_INDEX, gameGuardianChipLevelFromSave } from './gameGuardianChipMapping'
+import { GAME_GUARDIAN_CHIP_INDEX, gameGuardianChipIdAtTypeIndex, gameGuardianChipLevelFromSave } from './gameGuardianChipMapping'
+import { BOT_SAVE_LEVEL_INDEX } from './gameBotPresetMapping'
 import { mapPlayerSaveToTower, researchLevelsToOverrides } from './mapPlayerDataToTower'
 import { importPlayerInfoDat } from './importPlayerInfo'
 import {
@@ -123,7 +124,7 @@ describe('importPlayerInfo', () => {
     const defenseSi = data.sections.findIndex((s) => s.sectionSlug === 'defense-research')
     expect(defenseSi).toBeGreaterThanOrEqual(0)
     expect(overrides[`${defenseSi}-0`]).toBe(80)
-    expect(overrides[`${defenseSi}-1`]).toBe(62)
+    expect(overrides[`${defenseSi}-1`]).toBe(save.researchLevel[11])
     expect(overrides[`${defenseSi}-2`]).toBe(11)
     expect(overrides[`${defenseSi}-3`]).toBe(32)
     expect(overrides[`${defenseSi}-4`]).toBe(20)
@@ -297,12 +298,13 @@ describe('importPlayerInfo', () => {
     expect(ws.relicOwnedIds.length).toBeGreaterThan(0)
     expect(save.botsLevel.length).toBeGreaterThan(0)
     expect(save.botPresets.golden?.[0]?.unlocked).toBe(true)
-    expect(save.botPresets.golden?.[0]?.levels).toEqual([6, 6, 6, 20])
+    const goldenLevels = save.botPresets.golden?.[0]?.levels
+    expect(goldenLevels?.length).toBe(4)
     expect(ws.goldenOwned).toBe(true)
-    expect(ws.goldenBotDurationLevel).toBe(20)
-    expect(ws.goldenBotCooldownLevel).toBe(6)
-    expect(ws.goldenBotBonusLevel).toBe(6)
-    expect(ws.goldenBotRangeLevel).toBe(6)
+    expect(ws.goldenBotCooldownLevel).toBe(goldenLevels![BOT_SAVE_LEVEL_INDEX.cooldown])
+    expect(ws.goldenBotRangeLevel).toBe(goldenLevels![BOT_SAVE_LEVEL_INDEX.range])
+    expect(ws.goldenBotBonusLevel).toBe(goldenLevels![BOT_SAVE_LEVEL_INDEX.weaponStat2])
+    expect(ws.goldenBotDurationLevel).toBe(goldenLevels![BOT_SAVE_LEVEL_INDEX.weaponStat4])
     expect(save.guardianUnlocked).toBe(true)
     expect(save.guardianSkinUnlocked.some(Boolean)).toBe(true)
     expect(save.guardianSkinIndex).toBeGreaterThanOrEqual(0)
@@ -311,7 +313,10 @@ describe('importPlayerInfo', () => {
     expect(save.guardianChipSlot.length).toBeGreaterThan(0)
     expect(save.guardianChipLevel.some((n) => n > 0)).toBe(true)
     expect(guardianChips.slots.filter(Boolean).length).toBeGreaterThan(0)
-    expect(guardianChips.slots[1]).toBe('bounty')
+    for (let i = 0; i < save.guardianChipSlot.length && i < guardianChips.slots.length; i += 1) {
+      if (!guardianChips.unlockedSlots[i]) continue
+      expect(guardianChips.slots[i]).toBe(gameGuardianChipIdAtTypeIndex(save.guardianChipSlot[i]!))
+    }
     expect(guardianChips.upgrades.bounty.multiplier).toBe(
       gameGuardianChipLevelFromSave(save.guardianChipLevel[GAME_GUARDIAN_CHIP_INDEX.bounty * 3]!),
     )

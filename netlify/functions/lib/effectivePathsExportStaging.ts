@@ -2,7 +2,6 @@ import {
   effectivePathsStagingTabTitle,
   isEffectivePathsStagingTabTitle,
   type EffectivePathsStagedSheetRef,
-  type EffectivePathsWorkbookAccessContext,
 } from '../../../src/effectivePaths/effectivePathsStaging'
 import {
   GoogleSheetsApiError,

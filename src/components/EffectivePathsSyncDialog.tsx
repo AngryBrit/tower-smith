@@ -250,7 +250,10 @@ export function EffectivePathsSyncDialog({
     readPendingEffectivePathsExports(),
   )
   const pendingExportTargets = useMemo(
-    () => new Set(pendingExports.map((entry) => entry.syncTarget)),
+    (): ReadonlySet<EffectivePathsExportTarget> =>
+      new Set(
+        pendingExports.map((entry) => entry.syncTarget as EffectivePathsExportTarget),
+      ),
     [pendingExports],
   )
   const [promotingExportId, setPromotingExportId] = useState<string | null>(null)

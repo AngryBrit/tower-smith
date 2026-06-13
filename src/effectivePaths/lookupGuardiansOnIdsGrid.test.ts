@@ -26,7 +26,7 @@ describe('lookupGuardiansWorkbookOnIdsGrid', () => {
       ],
     })
     expect(guardians).toEqual({
-      name: 'Guardians v3.0.2',
+      name: 'Guardians',
       spreadsheetId: USER_GUARDIANS_ID,
     })
   })

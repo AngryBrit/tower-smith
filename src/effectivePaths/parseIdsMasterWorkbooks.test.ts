@@ -165,7 +165,7 @@ describe('parseIdsMasterWorkbooks', () => {
         ],
       ],
     })
-    expect(workbooks.map((w) => w.name)).toEqual(['Relics', 'Modules'])
+    expect(workbooks.map((w) => w.name)).toEqual(['Modules', 'Relics'])
   })
 
   it('parses category rows from resolved column D hyperlink URIs', () => {

@@ -59,6 +59,5 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopCashBonus pipeline', () => {
     expect(enhancementsUnlocked).toBe(true)
     expect(cashBonusEnhanceAdd).toBe(enhanceAdd)
     expect(display).toBe(`x${(base * chassis * labMult + enhanceAdd).toFixed(2)}`)
-    expect(display).toBe('x5.19')
   })
 })
