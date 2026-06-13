@@ -1,11 +1,12 @@
 import type { SheetTabProperties } from './pickRelicTab'
 
-/** Tab titles on IDS Master workbooks (priority order). */
+/** Tab titles on IDS Master / IDS Collection workbooks (priority order). */
 const IDS_MASTER_TAB_PRIORITY: readonly RegExp[] = [
   /^ids$/i,
+  /^_ids$/i,
+  /^dvt_ids$/i,
   /^ids master$/i,
   /^master sheet$/i,
-  /^_ids$/i,
 ]
 
 /** Pick the tab that holds the linked-workbook ID table inside IDS Master. */

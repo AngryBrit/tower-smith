@@ -1,4 +1,5 @@
-import { EFFECTIVE_PATHS_GUARDIANS_TAB_TITLE } from './effectivePathsWorkbooks'
+import { EFFECTIVE_PATHS_GUARDIANS_TAB_TITLE, EFFECTIVE_PATHS_GUARDIANS_WORKBOOK_NAME } from './effectivePathsWorkbooks'
+import { pickIdsCollectionCategoryTab } from './pickIdsCollectionCategoryTab'
 
 export type SheetTabGridProperties = {
   rowCount?: number
@@ -40,6 +41,7 @@ export function isGuardiansInputTabCandidate(
   if (/^dvt_/i.test(lower)) return false
 
   return (
+    /^guardians_ms$/i.test(lower) ||
     /master\s*sheet/i.test(title) ||
     /^guardians$/i.test(title.trim())
   )
@@ -49,20 +51,22 @@ export function pickEffectivePathsGuardiansTab(
   sheets: readonly { properties: SheetTabProperties }[],
   sheetGid: number | null,
 ): SheetTabProperties | null {
-  if (sheetGid != null) {
-    const byGid = sheets.find((s) => s.properties.sheetId === sheetGid)
-    if (byGid) return byGid.properties
-    return null
-  }
+  return pickIdsCollectionCategoryTab(
+    sheets,
+    sheetGid,
+    EFFECTIVE_PATHS_GUARDIANS_WORKBOOK_NAME,
+    () => {
+      const master = sheets.find(
+        (s) =>
+          s.properties.title.trim().toLowerCase() ===
+          EFFECTIVE_PATHS_GUARDIANS_TAB_TITLE.toLowerCase(),
+      )
+      if (master) return master.properties
 
-  const master = sheets.find(
-    (s) =>
-      s.properties.title.trim().toLowerCase() === EFFECTIVE_PATHS_GUARDIANS_TAB_TITLE.toLowerCase(),
+      const masterPattern = sheets.find((s) => /master\s*sheet/i.test(s.properties.title))
+      if (masterPattern) return masterPattern.properties
+
+      return null
+    },
   )
-  if (master) return master.properties
-
-  const masterPattern = sheets.find((s) => /master\s*sheet/i.test(s.properties.title))
-  if (masterPattern) return masterPattern.properties
-
-  return null
 }

@@ -29,6 +29,7 @@ describe('moduleEpSheetNames', () => {
 
   it('maps catalog labels to sheet substat names', () => {
     expect(moduleEpSubmoduleSheetLabel('Crit Chance [%]')).toBe('Critical Chance')
+    expect(moduleEpSubmoduleSheetLabel('Crit Factor')).toBe('Critical Factor')
     expect(moduleEpSubmoduleSheetLabel('Defense [%]')).toBe('Defense %')
     expect(moduleEpSubmoduleSheetLabel('Golden Tower - Bonus')).toBe('Golden Tower - Bonus')
     expect(moduleEpSubmoduleSheetLabel('Chain Lightning - Chance [%]')).toBe('Chain Lightning - Chance')

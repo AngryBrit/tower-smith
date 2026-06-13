@@ -12,6 +12,10 @@ import {
   findWorkshopWorkbook,
 } from '../../../src/effectivePaths/effectivePathsCategoryNames'
 import { filterKnownIdsWorkbooks } from '../../../src/effectivePaths/effectivePathsIdsWorkbooks'
+import {
+  buildIdsCollectionWorkbooks,
+  isIdsCollectionSpreadsheet,
+} from '../../../src/effectivePaths/idsCollectionLayout'
 import { lookupRelicsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupRelicsOnIdsGrid'
 import { lookupCardsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupCardsOnIdsGrid'
 import { lookupBotsWorkbookOnIdsGrid } from '../../../src/effectivePaths/lookupBotsOnIdsGrid'
@@ -158,10 +162,32 @@ function pickIdsGatewayTab(
   const ordered = orderedIdsMasterTabs(sheets, sheetGid)
   return (
     ordered.find((tab) => /^ids$/i.test(tab.title.trim())) ??
+    ordered.find((tab) => /^_ids$/i.test(tab.title.trim())) ??
+    ordered.find((tab) => /^dvt_ids$/i.test(tab.title.trim())) ??
     ordered.find((tab) => !/^home page$/i.test(tab.title.trim())) ??
     ordered[0] ??
     null
   )
+}
+
+function readIdsCollectionGateway(
+  spreadsheetId: string,
+  sheetTitles: readonly string[],
+): IdsGatewayLookup {
+  const workbooks = buildIdsCollectionWorkbooks(spreadsheetId, sheetTitles)
+  return {
+    idsTabTitle: sheetTitles.find((title) => /^_ids$/i.test(title.trim())) ?? 'IDS Collection',
+    workbooks,
+    relicsWorkbook: findRelicsWorkbook(workbooks),
+    themesWorkbook: findThemesWorkbook(workbooks),
+    cardsWorkbook: findCardsWorkbook(workbooks),
+    workshopWorkbook: findWorkshopWorkbook(workbooks),
+    botsWorkbook: findBotsWorkbook(workbooks),
+    laboratoryWorkbook: findLaboratoryWorkbook(workbooks),
+    uwsWorkbook: findUwsWorkbook(workbooks),
+    guardiansWorkbook: findGuardiansWorkbook(workbooks),
+    modulesWorkbook: findModulesWorkbook(workbooks),
+  }
 }
 
 export async function readIdsGatewayLookup(options: {
@@ -187,6 +213,26 @@ export async function readIdsGatewayLookup(options: {
   const sheets = meta.sheets ?? []
   if (sheets.length === 0) {
     throw new GoogleSheetsApiError('sheets_api_error', 400, 'ids_master_empty')
+  }
+
+  const sheetTitles = sheets.map((sheet) => sheet.properties.title)
+  if (isIdsCollectionSpreadsheet(sheetTitles)) {
+    const gateway = readIdsCollectionGateway(options.masterSpreadsheetId, sheetTitles)
+    if (
+      gateway.workbooks.length === 0 &&
+      !gateway.relicsWorkbook &&
+      !gateway.themesWorkbook &&
+      !gateway.cardsWorkbook &&
+      !gateway.workshopWorkbook &&
+      !gateway.botsWorkbook &&
+      !gateway.laboratoryWorkbook &&
+      !gateway.uwsWorkbook &&
+      !gateway.guardiansWorkbook &&
+      !gateway.modulesWorkbook
+    ) {
+      throw new GoogleSheetsApiError('sheets_api_error', 400, 'ids_master_empty')
+    }
+    return gateway
   }
 
   const idsTab = pickIdsGatewayTab(sheets, options.sheetGid)

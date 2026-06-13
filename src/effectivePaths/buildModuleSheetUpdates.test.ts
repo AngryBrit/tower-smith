@@ -108,6 +108,9 @@ describe('buildModuleSheetUpdates', () => {
 
     expect(byRange["'Inventory'!F3"]).toBe('Critical Chance')
     expect(byRange["'Inventory'!G3"]).toBe('Epic')
+    expect(byRange["'Inventory'!F4"]).toBe('Super Crit Multi')
+    expect(byRange["'Inventory'!F5"]).toBe('Critical Factor')
+    expect(byRange["'Inventory'!G5"]).toBe('Epic')
 
     expect(byRange["'Inventory'!F6"]).toBe('Ancestral')
 

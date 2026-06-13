@@ -533,10 +533,12 @@ export function applyBotPresetsToWorkshop(
     ws[workshopBotOwnedKey(botId)] = slot.unlocked as never
     ws[workshopBotActiveKey(botId)] = slot.active as never
 
+    // Purchased medal tiers live in `levels[]`; `selectedLevels[]` is the in-preset
+    // farming slider and can be below max (e.g. Bonus 15 selected while purchased to 30).
     const levelRow =
-      slot.selectedLevels.length >= WORKSHOP_BOT_WEAPON_STATS[botId].length
-        ? slot.selectedLevels
-        : slot.levels
+      slot.levels.length >= WORKSHOP_BOT_WEAPON_STATS[botId].length
+        ? slot.levels
+        : slot.selectedLevels
 
     WORKSHOP_BOT_WEAPON_STATS[botId].forEach((stat, statIndex) => {
       const saveIndex = botSaveLevelIndex(botId, stat.key, statIndex)

@@ -31,6 +31,7 @@ const MODULE_EP_SUBMODULE_RARITY_SHEET_LABEL: Record<WorkshopSubmoduleRarity, st
 /** Wiki / catalog label → Inventory substat name dropdown spelling. */
 const MODULE_EP_SUBMODULE_SHEET_LABEL_OVERRIDES: Record<string, string> = {
   'Crit Chance [%]': 'Critical Chance',
+  'Crit Factor': 'Critical Factor',
   'Multishot Chance [%]': 'MultiShot Chance',
   'Defense [%]': 'Defense %',
   'Health Regen [%]': 'Health Regen',

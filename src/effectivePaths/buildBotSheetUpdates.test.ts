@@ -115,6 +115,9 @@ describe('botEpFarmingLevelDropdownLabel', () => {
     expect(botEpFarmingLevelDropdownLabel('goldenBotBonusLevel', 10)).toBe(
       `10 | x4.0 | Cost 460 ${s} | Next 500 ${s}`,
     )
+    expect(botEpFarmingLevelDropdownLabel('goldenBotBonusLevel', 30)).toBe(
+      `30 | x8.0 | Cost 1260 ${s} | Maxed`,
+    )
   })
 
   it('matches Golden Bot Cooldown dropdown spelling from Bots v3.1', () => {
@@ -150,6 +153,8 @@ describe('botEpFarmingLevelSheetValue', () => {
     expect(botEpFarmingLevelSheetValue('flameBotCooldownLevel', 6)).toBe(6)
     expect(botEpFarmingLevelSheetValue('flameBotCooldownLevel', 99)).toBe(15)
     expect(botEpFarmingLevelSheetValue('goldenBotDurationLevel', 99)).toBe(30)
+    expect(botEpFarmingLevelSheetValue('goldenBotBonusLevel', 30)).toBe(30)
+    expect(botEpFarmingLevelSheetValue('goldenBotBonusLevel', 99)).toBe(30)
   })
 })
 

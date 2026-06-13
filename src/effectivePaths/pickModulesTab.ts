@@ -1,4 +1,8 @@
-import { EFFECTIVE_PATHS_MODULES_TAB_TITLE } from './effectivePathsWorkbooks'
+import {
+  EFFECTIVE_PATHS_MODULES_TAB_TITLE,
+  EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME,
+} from './effectivePathsWorkbooks'
+import { pickIdsCollectionCategoryTab } from './pickIdsCollectionCategoryTab'
 
 export type SheetTabGridProperties = {
   rowCount?: number
@@ -45,31 +49,34 @@ export function isModulesInputTabCandidate(
   if (/^optimal/i.test(lower)) return false
   if (/^master\s*sheet$/i.test(lower)) return false
 
-  return /inventory/i.test(title)
+  return /inventory/i.test(title) || /^modules inventory$/i.test(title.trim())
 }
 
 export function pickEffectivePathsModulesTab(
   sheets: readonly { properties: SheetTabProperties }[],
   sheetGid: number | null,
 ): SheetTabProperties | null {
-  if (sheetGid != null) {
-    const byGid = sheets.find((s) => s.properties.sheetId === sheetGid)
-    if (byGid && isModulesInputTabCandidate(byGid.properties.title, byGid.properties.gridProperties)) {
-      return byGid.properties
-    }
-    return null
-  }
+  return pickIdsCollectionCategoryTab(
+    sheets,
+    sheetGid,
+    EFFECTIVE_PATHS_MODULES_WORKBOOK_NAME,
+    () => {
+      const exact = sheets.find(
+        (s) =>
+          s.properties.title.trim().toLowerCase() ===
+          EFFECTIVE_PATHS_MODULES_TAB_TITLE.toLowerCase(),
+      )
+      if (
+        exact &&
+        isModulesInputTabCandidate(exact.properties.title, exact.properties.gridProperties)
+      ) {
+        return exact.properties
+      }
 
-  const exact = sheets.find(
-    (s) =>
-      s.properties.title.trim().toLowerCase() === EFFECTIVE_PATHS_MODULES_TAB_TITLE.toLowerCase(),
+      const pattern = sheets.find((s) =>
+        isModulesInputTabCandidate(s.properties.title, s.properties.gridProperties),
+      )
+      return pattern?.properties ?? null
+    },
   )
-  if (exact && isModulesInputTabCandidate(exact.properties.title, exact.properties.gridProperties)) {
-    return exact.properties
-  }
-
-  const pattern = sheets.find((s) =>
-    isModulesInputTabCandidate(s.properties.title, s.properties.gridProperties),
-  )
-  return pattern?.properties ?? null
 }

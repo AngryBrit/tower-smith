@@ -1,4 +1,5 @@
-import { EFFECTIVE_PATHS_CARDS_TAB_TITLE } from './effectivePathsWorkbooks'
+import { EFFECTIVE_PATHS_CARDS_TAB_TITLE, EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME } from './effectivePathsWorkbooks'
+import { pickIdsCollectionCategoryTab } from './pickIdsCollectionCategoryTab'
 
 export type SheetTabGridProperties = {
   rowCount?: number
@@ -37,8 +38,13 @@ export function isCardsInputTabCandidate(
   if (/card\s*preset/i.test(title)) return false
 
   return (
+    /^cards_ms$/i.test(title.trim()) ||
+    /^workshop_ms$/i.test(title.trim()) ||
+    /^bots_ms$/i.test(title.trim()) ||
     /master\s*sheet/i.test(title) ||
     /^cards$/i.test(title.trim()) ||
+    /^workshop$/i.test(title.trim()) ||
+    /^bots$/i.test(title.trim()) ||
     /cards.*input/i.test(title)
   )
 }
@@ -48,22 +54,18 @@ export function pickEffectivePathsCardsTab(
   sheets: readonly { properties: SheetTabProperties }[],
   sheetGid: number | null,
 ): SheetTabProperties | null {
-  if (sheetGid != null) {
-    const byGid = sheets.find((s) => s.properties.sheetId === sheetGid)
-    if (byGid) return byGid.properties
-    return null
-  }
+  return pickIdsCollectionCategoryTab(sheets, sheetGid, EFFECTIVE_PATHS_CARDS_WORKBOOK_NAME, () => {
+    const master = sheets.find(
+      (s) =>
+        s.properties.title.trim().toLowerCase() ===
+        EFFECTIVE_PATHS_CARDS_TAB_TITLE.toLowerCase(),
+    )
+    if (master) return master.properties
 
-  const master = sheets.find(
-    (s) =>
-      s.properties.title.trim().toLowerCase() ===
-      EFFECTIVE_PATHS_CARDS_TAB_TITLE.toLowerCase(),
-  )
-  if (master) return master.properties
+    const masterPattern = sheets.find((s) => /master\s*sheet/i.test(s.properties.title))
+    if (masterPattern) return masterPattern.properties
 
-  const masterPattern = sheets.find((s) => /master\s*sheet/i.test(s.properties.title))
-  if (masterPattern) return masterPattern.properties
-
-  const cardsTab = sheets.find((s) => /^cards$/i.test(s.properties.title.trim()))
-  return cardsTab?.properties ?? null
+    const cardsTab = sheets.find((s) => /^cards$/i.test(s.properties.title.trim()))
+    return cardsTab?.properties ?? null
+  })
 }

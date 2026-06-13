@@ -30,4 +30,14 @@ describe('gameResearchIndex', () => {
     expect(gameResearchIdForManifest(data, 0, 0)).toBe(30)
     expect(gameResearchIdForManifest(data, 1, 0)).toBe(0)
   })
+
+  it('maps Dissonant Echo Attack/Utility to game research ids 240/238', () => {
+    const data = loadResearchDataSync()
+    const main = data.sections.find((s) => s.sectionSlug === 'main-research')!
+    const si = data.sections.indexOf(main)
+    const attackIi = main.items.findIndex((i) => i.name === 'Dissonant Echo - Attack')
+    const utilityIi = main.items.findIndex((i) => i.name === 'Dissonant Echo - Utility')
+    expect(gameResearchIdForManifest(data, si, attackIi)).toBe(240)
+    expect(gameResearchIdForManifest(data, si, utilityIi)).toBe(238)
+  })
 })

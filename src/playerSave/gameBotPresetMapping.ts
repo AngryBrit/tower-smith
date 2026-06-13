@@ -10,6 +10,7 @@ import {
 /**
  * Per-bot medal upgrade state: `List<UserBotData>` (4 entries = bot presets 0–3).
  * Each `UserBotData`: `unlocked`, `active`, `levels[4]`, `selectedLevels[4]`, `plusUnlocked`, `plusLevel`.
+ * Import maps **purchased** tiers from `levels[]` (not `selectedLevels[]`, which is the farming slider).
  * Import uses `currentBotPreset` to pick the slot for every bot at once.
  */
 export const BOT_PRESET_LIST_FIELD_BY_BOT_ID = {

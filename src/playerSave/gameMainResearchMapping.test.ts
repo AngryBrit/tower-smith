@@ -68,6 +68,38 @@ function mainResearchData(): ResearchData {
             cost: '',
             state: 'default',
           },
+          {
+            name: 'Dissonant Echo - Attack',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
+          {
+            name: 'Dissonant Echo - Defense',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
+          {
+            name: 'Dissonant Echo - Utility',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
+          {
+            name: 'Dissonant Echo - Ultimate Weapons',
+            level: '0',
+            benefit: '',
+            time: '',
+            cost: '',
+            state: 'default',
+          },
         ],
       },
     ],
@@ -133,5 +165,14 @@ describe('mainLabsToOverrides', () => {
     expect(overrides['0-14']).toBeUndefined()
     expect(overrides['0-15']).toBe(34)
     expect(overrides['0-16']).toBe(5)
+  })
+
+  it('maps Dissonant Echo Attack/Utility from swapped researchLevel ids 240/238', () => {
+    const researchLevel = Array.from({ length: 250 }, () => 0)
+    researchLevel[240] = 3
+    researchLevel[238] = 7
+    const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
+    expect(overrides['0-17']).toBe(3)
+    expect(overrides['0-19']).toBe(7)
   })
 })

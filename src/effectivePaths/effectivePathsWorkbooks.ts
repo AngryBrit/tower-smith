@@ -2,7 +2,7 @@
  * Effective Paths Google Drive layout (workbook titles in Drive may change; IDS tab links are authoritative).
  *
  * - **IDS Master** — paste its URL in TowerSmith; linked IDs live on the **IDS** tab (category rows).
- * - **IDS Collection** — all sheets combined into one workbook.
+ * - **IDS Collection** — all category sheets in one workbook (`Lab_MS`, `Workshop_MS`, …); TowerSmith detects this layout automatically.
  * - **Relics** — relic data; tab **Relics** lists every relic (name col C, Unlocked col F).
  * - **Themes & Songs** — owned/name pairs in B/C, E/F, L/M (milestone/songs/guardians), and Q/R.
  * - **Workshop** — upgrade data; Master Sheet tab with unlocked in B, names in C, farming levels in D, max in N;

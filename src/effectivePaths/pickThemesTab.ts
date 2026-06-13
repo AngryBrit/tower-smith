@@ -1,4 +1,8 @@
-import { EFFECTIVE_PATHS_THEMES_TAB_TITLE } from './effectivePathsWorkbooks'
+import {
+  EFFECTIVE_PATHS_THEMES_TAB_TITLE,
+  EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
+} from './effectivePathsWorkbooks'
+import { pickIdsCollectionCategoryTab } from './pickIdsCollectionCategoryTab'
 
 export type SheetTabGridProperties = {
   rowCount?: number
@@ -48,25 +52,26 @@ export function pickEffectivePathsThemesTab(
   sheets: readonly { properties: SheetTabProperties }[],
   sheetGid: number | null,
 ): SheetTabProperties | null {
-  if (sheetGid != null) {
-    const byGid = sheets.find((s) => s.properties.sheetId === sheetGid)
-    if (byGid) return byGid.properties
-    return null
-  }
+  return pickIdsCollectionCategoryTab(
+    sheets,
+    sheetGid,
+    EFFECTIVE_PATHS_THEMES_WORKBOOK_NAME,
+    () => {
+      const inputTab = sheets.find((s) => /themes.*songs.*input/i.test(s.properties.title))
+      if (inputTab) return inputTab.properties
 
-  const inputTab = sheets.find((s) => /themes.*songs.*input/i.test(s.properties.title))
-  if (inputTab) return inputTab.properties
+      const redInput = sheets.find((s) => /red.*input/i.test(s.properties.title))
+      if (redInput) return redInput.properties
 
-  const redInput = sheets.find((s) => /red.*input/i.test(s.properties.title))
-  if (redInput) return redInput.properties
+      const exact = sheets.find(
+        (s) =>
+          s.properties.title.trim().toLowerCase() ===
+          EFFECTIVE_PATHS_THEMES_TAB_TITLE.toLowerCase(),
+      )
+      if (exact) return exact.properties
 
-  const exact = sheets.find(
-    (s) =>
-      s.properties.title.trim().toLowerCase() ===
-      EFFECTIVE_PATHS_THEMES_TAB_TITLE.toLowerCase(),
+      const themesTab = sheets.find((s) => /themes.*songs/i.test(s.properties.title))
+      return themesTab?.properties ?? null
+    },
   )
-  if (exact) return exact.properties
-
-  const themesTab = sheets.find((s) => /themes.*songs/i.test(s.properties.title))
-  return themesTab?.properties ?? null
 }

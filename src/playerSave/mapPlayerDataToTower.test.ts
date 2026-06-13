@@ -259,6 +259,30 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.flameBotDamageReductionLevel).toBe(10)
   })
 
+  it('maps purchased Golden Bot bonus from levels[] not selectedLevels[] (regression)', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        currentBotPreset: 0,
+        botPresets: {
+          golden: [
+            {
+              unlocked: true,
+              active: true,
+              levels: [15, 20, 30, 30],
+              selectedLevels: [15, 20, 15, 30],
+              plusUnlocked: false,
+              plusLevel: 0,
+            },
+          ],
+        },
+      }),
+    )
+    expect(ws.goldenBotCooldownLevel).toBe(15)
+    expect(ws.goldenBotRangeLevel).toBe(20)
+    expect(ws.goldenBotBonusLevel).toBe(30)
+    expect(ws.goldenBotDurationLevel).toBe(30)
+  })
+
   it('maps Golden Bot range before bonus in save array (regression)', () => {
     const ws = playerSaveToWorkshop(
       minimalSave({
