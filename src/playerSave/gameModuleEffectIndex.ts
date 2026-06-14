@@ -408,6 +408,15 @@ function isAncestralFamilyChassisMerge(
   )
 }
 
+/** Mythic / Mythic+ / ancestral-family core modules store sparse indices needing row remaps. */
+function isHighTierCoreChassisMerge(
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): boolean {
+  if (chassisMerge == null) return false
+  const tier = workshopChassisModuleEffectTier(chassisMerge)
+  return tier === 'mythic' || tier === 'ancestral'
+}
+
 /** Mythic+ / ancestral-family chassis use sparse generator indices stored as actual − 3. */
 function isHighTierGeneratorChassisMerge(
   chassisMerge?: WorkshopChassisModuleMergeTier | null,
@@ -532,12 +541,19 @@ function findCoreEffectWithRarity(
 /** Game table includes Golden Tower Bonus Ancestral at 284; import table starts ILM CD there. */
 const CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX = 284
 
-function decodeCoreAncestralFamilyRemap(
+function decodeCoreHighTierRemap(
   rawIndex: number,
   decoded: GameModuleEffectDecode | null,
   primaryModuleLevel: number,
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
 ): GameModuleEffectDecode | null {
-  if (rawIndex === CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX) {
+  const chassisEffectTier =
+    chassisMerge != null ? workshopChassisModuleEffectTier(chassisMerge) : null
+
+  if (
+    rawIndex === CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX &&
+    chassisEffectTier === 'ancestral'
+  ) {
     return { slot: 'core', effectId: 'golden-tower-bonus', rarity: 'ancestral' }
   }
   if (primaryModuleLevel > 0) {
@@ -546,6 +562,17 @@ function decodeCoreAncestralFamilyRemap(
     }
     if (rawIndex === 307) {
       return findCoreEffectWithRarity('black-hole-size-m', 'epic')
+    }
+  }
+  if (chassisEffectTier === 'mythic' && primaryModuleLevel === 0) {
+    if (rawIndex === 250) {
+      return findCoreEffectWithRarity('death-wave-damage-x', 'mythic')
+    }
+    if (rawIndex === 285) {
+      return findCoreEffectWithRarity('golden-tower-duration-s', 'mythic')
+    }
+    if (rawIndex === 311) {
+      return findCoreEffectWithRarity('black-hole-duration-s', 'mythic')
     }
   }
   if (decoded == null) return null
@@ -595,8 +622,9 @@ function decodeCoreAncestralFamilyRemap(
  * Generator assist encodes vs primary chassis level: sparse+primary≥330 → stored as sparse+primary−10;
  * ancestral-family assist may store mythic/ancestral picks as raw−3.
  * Ancestral-family armor common-start rows store Ancestral at sparse offset 6 (index table omits it).
- * Ancestral-family core modules remap sparse indices missing Ancestral tiers (e.g. 284 → GT Bonus
- * Ancestral) and paired rows; main modules also forward block-2 tiers to follow-on stats.
+ * High-tier core modules (Mythic+ and ancestral-family) remap sparse indices missing tiers
+ * (e.g. 284 → GT Bonus Ancestral, 285 → GT Duration Mythic on Mythic+ main) and paired rows;
+ * main modules also forward block-2 tiers to follow-on stats.
  */
 function gameModuleEffectForSubmoduleImport(
   raw: number,
@@ -628,8 +656,8 @@ function gameModuleEffectForSubmoduleImport(
     }
   }
 
-  if (slot === 'core' && isAncestralFamilyChassisMerge(chassisMerge)) {
-    const earlyCore = decodeCoreAncestralFamilyRemap(rawIndex, null, primaryLevel)
+  if (slot === 'core' && isHighTierCoreChassisMerge(chassisMerge)) {
+    const earlyCore = decodeCoreHighTierRemap(rawIndex, null, primaryLevel, chassisMerge)
     if (earlyCore != null) return earlyCore
   }
 
@@ -644,8 +672,8 @@ function gameModuleEffectForSubmoduleImport(
     const landMine = decodeArmorLandMineRadiusOnAncestralChassis(rawIndex, decoded)
     if (landMine != null) return landMine
   }
-  if (slot === 'core' && isAncestralFamilyChassisMerge(chassisMerge)) {
-    const coreRemap = decodeCoreAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
+  if (slot === 'core' && isHighTierCoreChassisMerge(chassisMerge)) {
+    const coreRemap = decodeCoreHighTierRemap(rawIndex, decoded, primaryLevel, chassisMerge)
     if (coreRemap != null) return coreRemap
   }
   if (slot === 'generator' && isHighTierGeneratorChassisMerge(chassisMerge)) {

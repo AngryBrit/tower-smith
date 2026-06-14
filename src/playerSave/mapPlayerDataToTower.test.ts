@@ -404,7 +404,7 @@ describe('playerSaveToWorkshop', () => {
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(FUDGYRELLA_SAVE)))
     const ws = playerSaveToWorkshop(save)
     expect(ws.simSubmoduleSelections.core.main).toEqual({
-      'death-wave-damage-x': 'legendary',
+      'death-wave-damage-x': 'mythic',
       'spotlight-bonus': 'mythic',
       'golden-tower-bonus': 'mythic',
       'chain-lightning-damage-x': 'mythic',

@@ -334,6 +334,43 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Mythic+ Primordial Collapse main core sparse indices to in-game substat picks', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [250, 315, 285, 311, 283, 0, 0, 0],
+      160,
+      0,
+      'mythic_plus',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'death-wave-damage-x',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'black-hole-cooldown-s',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'golden-tower-duration-s',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'black-hole-duration-s',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[4]).toMatchObject({
+      effectId: 'golden-tower-bonus',
+      rarity: 'mythic',
+    })
+    expect(imported.map).toMatchObject({
+      'death-wave-damage-x': 'mythic',
+      'black-hole-cooldown-s': 'mythic',
+      'golden-tower-duration-s': 'mythic',
+      'black-hole-duration-s': 'mythic',
+      'golden-tower-bonus': 'mythic',
+    })
+  })
+
   it('maps Fudgyrella core effect indices to death wave damage, spotlight, golden tower, chain lightning', () => {
     expect(gameModuleEffectByIndex(250)).toMatchObject({
       effectId: 'death-wave-damage-x',
