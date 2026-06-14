@@ -8,12 +8,10 @@ import {
   useRef,
   useState,
 } from 'react'
-import { APP_VERSION, CHANGELOG_URL, DISCORD_URL } from './appVersion'
 import { BugBusterProvider } from './bugBuster/BugBusterProvider'
 import { BugBusterDialog } from './components/BugBusterDialog'
 import { BugBusterFab } from './components/BugBusterFab'
 import { BugBusterTrigger } from './components/BugBusterTrigger'
-import { BuyMeACoffeeButton } from './components/BuyMeACoffeeButton'
 import type { SelectResearchHandle } from './lab/labToolsTypes'
 import { defaultTowerWorkspace, mergeWorkspaceBuildDomain, type TowerWorkspaceV1 } from './towerWorkspaceStorage'
 import { TowerWorkspaceProvider } from './TowerBuildContext'
@@ -33,6 +31,7 @@ import { AppHintsBanner } from './components/AppHintsBanner'
 import { LabImportNoticeBanner } from './components/LabImportNoticeBanner'
 import { PlayerSaveImportInput } from './components/PlayerSaveImportInput'
 import { MainPanelContent } from './components/MainPanelContent'
+import { SiteFooter } from './components/SiteFooter'
 import { useI18n } from './i18n'
 import { loadGodTables } from './loadGodTables'
 import { loadResearchData } from './loadResearchData'
@@ -90,6 +89,13 @@ export default function App() {
   const [scratchWorkspace, setScratchWorkspace] = useState<TowerWorkspaceV1>(() =>
     defaultTowerWorkspace(),
   )
+
+  useEffect(() => {
+    document.documentElement.classList.add('app-shell-ready')
+    return () => {
+      document.documentElement.classList.remove('app-shell-ready')
+    }
+  }, [])
 
   useEffect(() => {
     if (!MODULES_PANEL_ENABLED && workspace.build.workshop.mainTab === 'modules') {
@@ -501,45 +507,14 @@ export default function App() {
                   researchRefreshing={researchRefreshing}
                 />
 
-                <footer className="select-research__site-footer">
-                  <nav
-                    className="select-research__version-badge"
-                    aria-label={t('sr_footer_nav_aria')}
-                  >
-                    <div className="select-research__footer-top-row">
-                      <a
-                        className="select-research__version-label"
-                        href={CHANGELOG_URL}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title={t('sr_changelog_title')}
-                        aria-label={`${fmt.versionAria(APP_VERSION)} — ${t('sr_changelog_title')}`}
-                      >
-                        v{APP_VERSION}
-                      </a>
-                      <div className="select-research__footer-legal">
-                        <a
-                          href={DISCORD_URL}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          title={t('sr_footer_discord_title')}
-                        >
-                          {t('sr_footer_discord')}
-                        </a>
-                        <span aria-hidden="true">·</span>
-                        <a href="/privacy">{t('sr_footer_privacy')}</a>
-                        <span aria-hidden="true">·</span>
-                        <a href="/terms">{t('sr_footer_terms')}</a>
-                        <span aria-hidden="true">·</span>
-                        <BugBusterTrigger
-                          variant="link"
-                          labelKey="bug_buster_footer_link"
-                        />
-                      </div>
-                    </div>
-                    <BuyMeACoffeeButton className="select-research__bmc-button" />
-                  </nav>
-                </footer>
+                <SiteFooter
+                  bugBuster={
+                    <BugBusterTrigger
+                      variant="link"
+                      labelKey="bug_buster_footer_link"
+                    />
+                  }
+                />
               </section>
             </div>
           </div>
@@ -562,7 +537,9 @@ export default function App() {
           </AccountWorkspaceSyncProvider>
           </LabHydrationProvider>
           </TowerWorkspaceProvider>
-        ) : null}
+        ) : (
+          <SiteFooter />
+        )}
       </main>
     </div>
   )

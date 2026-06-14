@@ -1742,7 +1742,7 @@ export const STRINGS_DE = {
   sr_footer_nav_aria: 'App-Version, Änderungsprotokoll, Community, Rechtliches und Patronat',
   sr_footer_discord: 'Discord',
   sr_footer_discord_title: 'TowerSmith-Community auf Discord (öffnet in neuem Tab)',
-  sr_footer_privacy: 'Datenschutz',
+  sr_footer_privacy: 'Datenschutzerklärung',
   sr_footer_terms: 'Nutzungsbedingungen',
   sr_version_aria: 'Version {{version}}',
   sr_changelog: 'Änderungsprotokoll',

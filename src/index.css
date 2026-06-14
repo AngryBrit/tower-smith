@@ -38,6 +38,29 @@ body {
   min-height: 100svh;
 }
 
+.static-legal-footer {
+  padding: 0.65rem 1rem 1rem;
+  text-align: center;
+  font-size: 0.72rem;
+  line-height: 1.4;
+  color: #64748b;
+  border-top: 1px solid rgba(34, 211, 238, 0.15);
+}
+
+.static-legal-footer a {
+  color: #0369a1;
+  text-decoration: none;
+}
+
+.static-legal-footer a:hover,
+.static-legal-footer a:focus-visible {
+  text-decoration: underline;
+}
+
+html.app-shell-ready .static-legal-footer {
+  display: none;
+}
+
 .legal-page {
   min-height: 100svh;
   background: #f8fafc;
