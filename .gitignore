@@ -40,9 +40,14 @@ tmp-kept-en-keys.json
 # Local IL2CPP / asset extraction scratch (not for the repo)
 tools/
 
-# Local player save dumps (never commit)
+# Local maintainer scratch under docs/ (never commit generated dumps or research reports)
 docs/player-save-*-dump.json
 docs/player-save-*-dump.txt
+docs/*-save-dump.json
+docs/*-save-dump.txt
+docs/research-level-unmapped*.txt
+docs/game-workshop-index-map.csv
+docs/player-save-research-level.previous.json
 
 # Playwright
 test-results/
