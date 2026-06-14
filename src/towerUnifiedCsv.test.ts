@@ -105,6 +105,26 @@ describe('towerUnifiedCsv', () => {
     }
   })
 
+  it('roundtrips independent card and module preset labels', () => {
+    const ws = {
+      ...defaultWorkshopPersisted(),
+      cardPresetLabels: ['Farming', '', 'Tourney', '', 'Boss'],
+      modulePresetLabels: ['Raid', 'Defense', '', '', 'Push'],
+    }
+    const csv = serializeTowerUnifiedCsv({}, ws)
+    expect(csv).toContain('card,presetLabel.0,Farming')
+    expect(csv).toContain('card,presetLabel.2,Tourney')
+    expect(csv).toContain('module,presetLabel.0,Raid')
+    expect(csv).toContain('module,presetLabel.1,Defense')
+    const parsed = parseTowerUnifiedCsv(csv)
+    expect(parsed.tag).toBe('ok')
+    if (parsed.tag === 'ok') {
+      const b = towerUnifiedPrimaryBuild(parsed)
+      expect(b.workshop.cardPresetLabels).toEqual(['Farming', '', 'Tourney', '', 'Boss'])
+      expect(b.workshop.modulePresetLabels).toEqual(['Raid', 'Defense', '', '', 'Push'])
+    }
+  })
+
   it('roundtrips guardian chips and gameResearchLevel', () => {
     const researchLevel = Array.from({ length: GAME_RESEARCH_SLOT_COUNT }, (_, i) =>
       i === 0 ? 42 : 0,

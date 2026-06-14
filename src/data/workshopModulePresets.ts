@@ -25,6 +25,7 @@ import {
   clampWorkshopAssistModuleLevel,
   type WorkshopAssistModuleSlot,
 } from './workshopSimModules'
+import { defaultWorkshopPresetLabels } from './workshopPresetLabels'
 
 export const WORKSHOP_MODULE_PRESET_COUNT = 5 as const
 
@@ -547,7 +548,10 @@ export function workshopPersistedWithModulePresets(
 /** Module fields restored by {@link resetWorkshopModules}. */
 export function defaultWorkshopModulesPersistedFields(): Pick<
   WorkshopPersistedV1,
-  keyof WorkshopModulePresetSnapshot | 'modulePresetSnapshots' | 'moduleActivePresetIndex'
+  | keyof WorkshopModulePresetSnapshot
+  | 'modulePresetSnapshots'
+  | 'moduleActivePresetIndex'
+  | 'modulePresetLabels'
 > {
   const snapshots = defaultModulePresetSnapshots()
   const snap = snapshots[0]!
@@ -555,5 +559,6 @@ export function defaultWorkshopModulesPersistedFields(): Pick<
     ...snap,
     modulePresetSnapshots: snapshots,
     moduleActivePresetIndex: 0,
+    modulePresetLabels: defaultWorkshopPresetLabels(WORKSHOP_MODULE_PRESET_COUNT),
   }
 }

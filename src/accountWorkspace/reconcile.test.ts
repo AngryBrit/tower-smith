@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { readGuardianChipState } from '../guardianChipStorage'
+import { defaultTowerBuild } from '../towerBuildStorage'
 import { reconcileAccountWorkspaceOnLogin } from './reconcile'
 import type { AccountWorkspaceBackupV1 } from './types'
 import { ACCOUNT_WORKSPACE_LOCAL_UPDATED_AT_KEY } from './localUpdatedAt'
@@ -62,6 +63,27 @@ describe('reconcileAccountWorkspaceOnLogin', () => {
 
   it('applies cloud when local has no timestamp', () => {
     const backup = cloudBackup('2026-06-13T12:00:00.000Z')
+    expect(reconcileAccountWorkspaceOnLogin(backup)).toEqual({
+      action: 'apply_cloud',
+      backup,
+    })
+  })
+
+  it('applies cloud when backup only has custom preset labels', () => {
+    const scratchBuild = defaultTowerBuild()
+    scratchBuild.cards.cardPresetLabels[0] = 'Farming'
+    const backup: AccountWorkspaceBackupV1 = {
+      v: 1,
+      updatedAt: '2026-06-13T12:00:00.000Z',
+      labPresets: {
+        v: 1,
+        activePresetId: null,
+        presets: [],
+        scratchOverrides: {},
+        scratchBuild,
+      },
+      guardianChips: readGuardianChipState(),
+    }
     expect(reconcileAccountWorkspaceOnLogin(backup)).toEqual({
       action: 'apply_cloud',
       backup,

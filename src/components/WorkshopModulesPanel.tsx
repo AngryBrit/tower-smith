@@ -56,6 +56,7 @@ import {
   buildTowerHealthHeroStatContext,
 } from '../data/workshopChassisModuleHeroStat'
 import { ChassisModulePickerDialog } from './ChassisModulePickerDialog'
+import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
 import { ChassisModulesCatalog } from './ChassisModulesCatalog'
 import { AssistModuleReference } from './AssistModuleReference'
 import { AssistUnlocksPanel } from './AssistUnlocksPanel'
@@ -100,11 +101,11 @@ const SLOT_LABEL: Record<WorkshopAssistModuleSlot, StringId> = {
 }
 
 const MODULE_PRESET_KEYS = [
-  'ws_cards_preset_1',
-  'ws_cards_preset_2',
-  'ws_cards_preset_3',
-  'ws_cards_preset_4',
-  'ws_cards_preset_5',
+  'ws_modules_preset_1',
+  'ws_modules_preset_2',
+  'ws_modules_preset_3',
+  'ws_modules_preset_4',
+  'ws_modules_preset_5',
 ] as const satisfies readonly StringId[]
 
 type WorkshopModulesPanelProps = {
@@ -414,6 +415,15 @@ export function WorkshopModulesPanel({
     [onWorkshopPersistedChange, workshopPersisted],
   )
 
+  const setPresetLabel = useCallback(
+    (index: number, label: string) => {
+      const modulePresetLabels = [...workshopPersisted.modulePresetLabels]
+      modulePresetLabels[index] = label
+      patch({ modulePresetLabels })
+    },
+    [patch, workshopPersisted.modulePresetLabels],
+  )
+
   const labPercents = useMemo(() => {
     if (researchData == null) {
       return { substatsPercent: 0, bonusPercent: 0, totalPercent: 0 }
@@ -535,19 +545,15 @@ export function WorkshopModulesPanel({
 
   return (
     <div className="modules-layout">
-      <div className="cards-presets" role="toolbar" aria-label={t('ws_cards_presets_aria')}>
-        {MODULE_PRESET_KEYS.map((key, i) => (
-          <button
-            key={key}
-            type="button"
-            className={presetIndex === i ? 'cards-preset cards-preset--on' : 'cards-preset'}
-            aria-pressed={presetIndex === i}
-            onClick={() => selectPreset(i)}
-          >
-            {t(key)}
-          </button>
-        ))}
-      </div>
+      <WorkshopPresetToolbar
+        ariaLabel="ws_modules_presets_aria"
+        renameHint="ws_modules_presets_rename_hint"
+        fallbackKeys={MODULE_PRESET_KEYS}
+        labels={workshopPersisted.modulePresetLabels}
+        activeIndex={presetIndex}
+        onSelect={selectPreset}
+        onLabelChange={setPresetLabel}
+      />
       <div className="modules-hub" role="group" aria-label={t('ws_modules_hub_aria')}>
         <div className="modules-hub__stage">
           <div className="modules-hub__pcb" aria-hidden />

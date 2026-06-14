@@ -22,6 +22,7 @@ import {
   type WorkshopGameCardId,
 } from './data/workshopGameCards'
 import { WORKSHOP_CARD_PRESET_COUNT } from './data/workshopGameCardWiki'
+import { defaultWorkshopPresetLabels } from './data/workshopPresetLabels'
 import {
   modulePresetSnapshotsFromPersisted,
   sanitizeModulePresetSnapshots,
@@ -201,7 +202,9 @@ const WS_FIELDS: readonly (keyof WorkshopPersistedV1)[] = [
 const LEGACY_WS_FIELDS = ['relicOwnedIds', 'simRelicsBonusFraction'] as const satisfies readonly (keyof WorkshopPersistedV1)[]
 const CARD_STAR_PREFIX = 'star.'
 const CARD_PRESET_PREFIX = 'preset.'
+const CARD_PRESET_LABEL_PREFIX = 'presetLabel.'
 const MODULE_PRESET_PREFIX = 'preset.'
+const MODULE_PRESET_LABEL_PREFIX = 'presetLabel.'
 
 export type TowerUnifiedCsvBuild = {
   name?: string
@@ -248,6 +251,12 @@ function appendCardRows(lines: string[], workshop: WorkshopPersistedV1): void {
     const ids = workshop.cardPresetLoadouts[i] ?? []
     lines.push(`card,${CARD_PRESET_PREFIX}${i},${escapeCsvCell(ids.join('|'))}`)
   }
+  for (let i = 0; i < WORKSHOP_CARD_PRESET_COUNT; i++) {
+    const label = workshop.cardPresetLabels[i]?.trim()
+    if (label) {
+      lines.push(`card,${CARD_PRESET_LABEL_PREFIX}${i},${escapeCsvCell(label)}`)
+    }
+  }
   lines.push(`card,activePresetIndex,${workshop.cardActivePresetIndex}`)
   lines.push(`card,equipSlots,${workshop.cardEquipSlots}`)
 }
@@ -259,6 +268,12 @@ function appendModuleRows(lines: string[], workshop: WorkshopPersistedV1): void 
     lines.push(
       `module,${MODULE_PRESET_PREFIX}${i},${escapeCsvCell(JSON.stringify(snapshots[i]))}`,
     )
+  }
+  for (let i = 0; i < WORKSHOP_MODULE_PRESET_COUNT; i++) {
+    const label = workshop.modulePresetLabels[i]?.trim()
+    if (label) {
+      lines.push(`module,${MODULE_PRESET_LABEL_PREFIX}${i},${escapeCsvCell(label)}`)
+    }
   }
   lines.push(
     `module,activePresetIndex,${clampWorkshopModuleActivePresetIndex(synced.moduleActivePresetIndex)}`,
@@ -364,7 +379,9 @@ type BuildAccumulator = {
   wsRaw: Record<string, unknown>
   cardStars: Record<string, number>
   cardPresetLoadouts: string[][]
+  cardPresetLabels: string[]
   modulePresetSnapshots: (unknown | undefined)[]
+  modulePresetLabels: string[]
   moduleActivePresetIndex?: number
 }
 
@@ -374,7 +391,9 @@ function newBuildAccumulator(): BuildAccumulator {
     wsRaw: {},
     cardStars: {},
     cardPresetLoadouts: Array.from({ length: WORKSHOP_CARD_PRESET_COUNT }, () => []),
+    cardPresetLabels: defaultWorkshopPresetLabels(WORKSHOP_CARD_PRESET_COUNT),
     modulePresetSnapshots: Array.from({ length: WORKSHOP_MODULE_PRESET_COUNT }, () => undefined),
+    modulePresetLabels: defaultWorkshopPresetLabels(WORKSHOP_MODULE_PRESET_COUNT),
   }
 }
 
@@ -382,14 +401,20 @@ function flushBuildAccumulator(
   builds: TowerUnifiedCsvBuild[],
   acc: BuildAccumulator,
 ): BuildAccumulator {
-  const hasModuleRows =
+  const hasCardRows =
+    Object.keys(acc.cardStars).length > 0 ||
+    acc.cardPresetLoadouts.some((tab) => tab.length > 0) ||
+    acc.cardPresetLabels.some((label) => label.trim())
+  const hasModuleDataRows =
     acc.moduleActivePresetIndex !== undefined ||
     acc.modulePresetSnapshots.some((snap) => snap !== undefined)
+  const hasModuleRows =
+    hasModuleDataRows || acc.modulePresetLabels.some((label) => label.trim())
   if (
     Object.keys(acc.overrides).length === 0 &&
     acc.gameResearchLevel === undefined &&
     Object.keys(acc.wsRaw).length === 0 &&
-    Object.keys(acc.cardStars).length === 0 &&
+    !hasCardRows &&
     !hasModuleRows
   ) {
     return newBuildAccumulator()
@@ -401,7 +426,10 @@ function flushBuildAccumulator(
   if (acc.cardPresetLoadouts.some((tab) => tab.length > 0)) {
     wsRaw.cardPresetLoadouts = acc.cardPresetLoadouts
   }
-  if (hasModuleRows) {
+  if (acc.cardPresetLabels.some((label) => label.trim())) {
+    wsRaw.cardPresetLabels = acc.cardPresetLabels
+  }
+  if (hasModuleDataRows) {
     const live = sanitizeWorkshopPersisted(wsRaw)
     wsRaw.modulePresetSnapshots = sanitizeModulePresetSnapshots(
       acc.modulePresetSnapshots,
@@ -410,6 +438,9 @@ function flushBuildAccumulator(
     wsRaw.moduleActivePresetIndex = clampWorkshopModuleActivePresetIndex(
       acc.moduleActivePresetIndex ?? live.moduleActivePresetIndex,
     )
+  }
+  if (acc.modulePresetLabels.some((label) => label.trim())) {
+    wsRaw.modulePresetLabels = acc.modulePresetLabels
   }
   builds.push({
     name: acc.name,
@@ -659,6 +690,14 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
         acc.cardStars[cardId] = n
         continue
       }
+      if (key.startsWith(CARD_PRESET_LABEL_PREFIX)) {
+        const tab = Number(key.slice(CARD_PRESET_LABEL_PREFIX.length))
+        if (!Number.isInteger(tab) || tab < 0 || tab >= WORKSHOP_CARD_PRESET_COUNT) {
+          return { tag: 'invalid' }
+        }
+        acc.cardPresetLabels[tab] = valCell.trim()
+        continue
+      }
       if (key.startsWith(CARD_PRESET_PREFIX)) {
         const tab = Number(key.slice(CARD_PRESET_PREFIX.length))
         if (!Number.isInteger(tab) || tab < 0 || tab >= WORKSHOP_CARD_PRESET_COUNT) {
@@ -680,6 +719,14 @@ export function parseTowerUnifiedCsv(text: string): ParseTowerUnifiedCsv {
     }
 
     if (kind === 'module') {
+      if (key.startsWith(MODULE_PRESET_LABEL_PREFIX)) {
+        const tab = Number(key.slice(MODULE_PRESET_LABEL_PREFIX.length))
+        if (!Number.isInteger(tab) || tab < 0 || tab >= WORKSHOP_MODULE_PRESET_COUNT) {
+          return { tag: 'invalid' }
+        }
+        acc.modulePresetLabels[tab] = valCell.trim()
+        continue
+      }
       if (key.startsWith(MODULE_PRESET_PREFIX)) {
         const tab = Number(key.slice(MODULE_PRESET_PREFIX.length))
         if (!Number.isInteger(tab) || tab < 0 || tab >= WORKSHOP_MODULE_PRESET_COUNT) {

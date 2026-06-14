@@ -116,6 +116,7 @@ import {
   defaultWorkshopModulesPersistedFields,
   extractWorkshopModulePresetSnapshot,
   sanitizeModulePresetSnapshots,
+  WORKSHOP_MODULE_PRESET_COUNT,
   workshopPersistedWithModulePresets,
   type WorkshopModulePresetSnapshot,
 } from './data/workshopModulePresets'
@@ -124,7 +125,12 @@ import {
   defaultCardPresetLoadouts,
   sanitizeCardPresetLoadouts,
   WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
+  WORKSHOP_CARD_PRESET_COUNT,
 } from './data/workshopGameCardWiki'
+import {
+  defaultWorkshopPresetLabels,
+  sanitizeWorkshopPresetLabels,
+} from './data/workshopPresetLabels'
 import {
   sanitizeThemeOwnedIds,
   sanitizeThemeSelection,
@@ -323,6 +329,8 @@ export type WorkshopPersistedV1 = {
   cardStars: WorkshopCardStarsState
   /** Equipped card ids per preset tab (Preset 1…5). */
   cardPresetLoadouts: WorkshopGameCardId[][]
+  /** User-defined card preset tab labels (TowerSmith-only; empty → default i18n). */
+  cardPresetLabels: string[]
   /** Preset tab used for workshop displayed-damage / attack-speed card sim. */
   cardActivePresetIndex: number
   /** Max cards equippable at once (wiki: up to 28 with Harmony keys). */
@@ -399,6 +407,8 @@ export type WorkshopPersistedV1 = {
   simCoreAssistSubStoneEfficiency: number
   /** Full module hub snapshot per preset tab (Preset 1…5). */
   modulePresetSnapshots: WorkshopModulePresetSnapshot[]
+  /** User-defined module preset tab labels (TowerSmith-only; empty → default i18n). */
+  modulePresetLabels: string[]
   /** Active module preset tab (drives sim* module fields). */
   moduleActivePresetIndex: number
 } & WorkshopUltimateLevels &
@@ -436,11 +446,13 @@ export function resetWorkshopRelics(current: WorkshopPersistedV1): WorkshopPersi
 export function resetWorkshopCards(current: WorkshopPersistedV1): WorkshopPersistedV1 {
   const cardStars = defaultWorkshopCardStars()
   const cardPresetLoadouts = defaultCardPresetLoadouts()
+  const cardPresetLabels = defaultWorkshopPresetLabels(WORKSHOP_CARD_PRESET_COUNT)
   const cardActivePresetIndex = 0
   return {
     ...current,
     cardStars,
     cardPresetLoadouts,
+    cardPresetLabels,
     cardActivePresetIndex,
     cardEquipSlots: WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
     ...workshopCardStarMirrorsForPersisted({
@@ -699,6 +711,7 @@ export function defaultWorkshopPersisted(): WorkshopPersistedV1 {
     enhanceEnemyLevelSkipLevel: 0,
     cardStars,
     cardPresetLoadouts,
+    cardPresetLabels: defaultWorkshopPresetLabels(WORKSHOP_CARD_PRESET_COUNT),
     cardActivePresetIndex,
     cardEquipSlots: WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
     ...workshopCardStarMirrorsForPersisted({
@@ -980,6 +993,10 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     ...(() => {
       const cardStars = workshopCardStarsFromLegacy(o)
       const cardPresetLoadouts = sanitizeCardPresetLoadouts(o.cardPresetLoadouts)
+      const cardPresetLabels = sanitizeWorkshopPresetLabels(
+        o.cardPresetLabels,
+        WORKSHOP_CARD_PRESET_COUNT,
+      )
       const cardActivePresetIndex = clampWorkshopCardActivePresetIndex(
         Number(o.cardActivePresetIndex),
       )
@@ -991,6 +1008,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
       return {
         cardStars,
         cardPresetLoadouts,
+        cardPresetLabels,
         cardActivePresetIndex,
         cardEquipSlots,
         ...workshopCardStarMirrorsForPersisted({
@@ -1167,12 +1185,16 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
   const moduleActivePresetIndex = clampWorkshopModuleActivePresetIndex(
     Number(o.moduleActivePresetIndex),
   )
+  const modulePresetLabels = sanitizeWorkshopPresetLabels(
+    o.modulePresetLabels,
+    WORKSHOP_MODULE_PRESET_COUNT,
+  )
 
   if (o.modulePresetSnapshots != null) {
     return applyLegacyBotOwned(
       applyLegacyUltimateOwned(
         workshopPersistedWithModulePresets(
-          base,
+          { ...base, modulePresetLabels },
           sanitizeModulePresetSnapshots(o.modulePresetSnapshots, base),
           moduleActivePresetIndex,
         ),
@@ -1186,6 +1208,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     applyLegacyUltimateOwned({
       ...base,
       moduleActivePresetIndex,
+      modulePresetLabels,
       modulePresetSnapshots,
     }),
   )

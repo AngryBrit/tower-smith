@@ -114,6 +114,7 @@ export type WorkshopUpgradePersistedKey = (typeof WORKSHOP_UPGRADES_KEYS)[number
 const CARDS_KEYS = [
   'cardStars',
   'cardPresetLoadouts',
+  'cardPresetLabels',
   'cardActivePresetIndex',
   'cardEquipSlots',
   'simDamageCardStars',
@@ -171,6 +172,7 @@ const MODULES_KEYS = [
   'simGeneratorAssistSubStoneEfficiency',
   'simCoreAssistSubStoneEfficiency',
   'modulePresetSnapshots',
+  'modulePresetLabels',
   'moduleActivePresetIndex',
 ] as const satisfies readonly (keyof WorkshopPersistedV1)[]
 

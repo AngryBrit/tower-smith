@@ -8,8 +8,19 @@ import {
   syncWorkspaceThemesFromStorage,
   type TowerWorkspaceV1,
 } from '../towerWorkspaceStorage'
+import {
+  sanitizeTowerBuild,
+  type TowerBuildPersistedV1,
+} from '../towerBuildStorage'
 import { buildAccountWorkspaceBackup } from './validate'
 import type { AccountWorkspaceBackupV1 } from './types'
+
+export function hasNonEmptyPresetLabelsInBuild(build: TowerBuildPersistedV1): boolean {
+  return (
+    build.cards.cardPresetLabels.some((label) => label.trim().length > 0) ||
+    build.modules.modulePresetLabels.some((label) => label.trim().length > 0)
+  )
+}
 
 export function hasMeaningfulWorkspaceData(
   workspace: TowerWorkspaceV1,
@@ -19,6 +30,8 @@ export function hasMeaningfulWorkspaceData(
   if (workspace.lab.gameResearchLevel?.length) return true
   if (Object.keys(scratchWorkspace.lab.levelOverrides).length > 0) return true
   if (scratchWorkspace.lab.gameResearchLevel?.length) return true
+  if (hasNonEmptyPresetLabelsInBuild(workspace.build)) return true
+  if (hasNonEmptyPresetLabelsInBuild(scratchWorkspace.build)) return true
   return false
 }
 
@@ -74,6 +87,23 @@ export function hasMeaningfulLocalBackup(): boolean {
       : undefined
     if (active?.workspace && hasMeaningfulWorkspaceData(active.workspace, active.workspace)) {
       return true
+    }
+    const scratchBuild = parsed.scratchBuild
+      ? sanitizeTowerBuild(parsed.scratchBuild)
+      : parsed.scratchWorkspace
+        ? sanitizeTowerBuild(parsed.scratchWorkspace.build)
+        : null
+    if (scratchBuild && hasNonEmptyPresetLabelsInBuild(scratchBuild)) return true
+    for (const preset of parsed.presets) {
+      if (preset.build && hasNonEmptyPresetLabelsInBuild(sanitizeTowerBuild(preset.build))) {
+        return true
+      }
+      if (
+        preset.workspace &&
+        hasNonEmptyPresetLabelsInBuild(sanitizeTowerBuild(preset.workspace.build))
+      ) {
+        return true
+      }
     }
     return false
   } catch {

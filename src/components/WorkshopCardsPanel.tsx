@@ -31,6 +31,7 @@ import {
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { useI18n } from '../i18n'
 import { HoldStepButton } from './HoldStepButton'
+import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
 import type { StringId } from '../i18n/dictionary'
 import type { ResearchData } from '../types/research'
 
@@ -459,6 +460,15 @@ export function WorkshopCardsPanel({
     [patch],
   )
 
+  const setPresetLabel = useCallback(
+    (index: number, label: string) => {
+      const cardPresetLabels = [...workshopPersisted.cardPresetLabels]
+      cardPresetLabels[index] = label
+      patch({ cardPresetLabels })
+    },
+    [patch, workshopPersisted.cardPresetLabels],
+  )
+
   const setCardStar = useCallback(
     (id: WorkshopGameCardId, stars: number) => {
       const nextStars = clampWorkshopGameCardStars(stars, id)
@@ -564,21 +574,15 @@ export function WorkshopCardsPanel({
 
   return (
     <div className="cards-layout">
-      <div className="cards-presets" role="toolbar" aria-label={t('ws_cards_presets_aria')}>
-        {CARD_PRESET_KEYS.map((key, i) => (
-          <button
-            key={key}
-            type="button"
-            className={
-              presetIndex === i ? 'cards-preset cards-preset--on' : 'cards-preset'
-            }
-            aria-pressed={presetIndex === i}
-            onClick={() => selectPreset(i)}
-          >
-            {t(key)}
-          </button>
-        ))}
-      </div>
+      <WorkshopPresetToolbar
+        ariaLabel="ws_cards_presets_aria"
+        renameHint="ws_cards_presets_rename_hint"
+        fallbackKeys={CARD_PRESET_KEYS}
+        labels={workshopPersisted.cardPresetLabels}
+        activeIndex={presetIndex}
+        onSelect={selectPreset}
+        onLabelChange={setPresetLabel}
+      />
 
       <section className="cards-zone" aria-labelledby="cards-zone-active-title">
         <header className="cards-zone__head">
