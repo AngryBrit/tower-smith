@@ -580,11 +580,7 @@ export function EffectivePathsSyncDialog({
     setLoadProgress(null)
     setNotice(null)
     try {
-      const cachedToken = googleToken ?? getCachedGoogleSheetsAccessToken()
-      let token = await ensureGoogleToken(cachedToken ? undefined : { consent: true })
-      if (!token && cachedToken) {
-        token = await ensureGoogleToken({ consent: true })
-      }
+      const token = await ensureGoogleToken({ consent: true })
       if (!token) return
 
       persistSpreadsheetRef()
@@ -703,7 +699,7 @@ export function EffectivePathsSyncDialog({
       setLoadingSheets(false)
       setLoadProgress(null)
     }
-  }, [parsedMaster, googleToken, ensureGoogleToken, persistSpreadsheetRef, spreadsheetRef, formatExportError, showNotice, t])
+  }, [parsedMaster, ensureGoogleToken, persistSpreadsheetRef, spreadsheetRef, formatExportError, showNotice, t])
 
   const handleExportRelics = useCallback(async () => {
     if (!parsedMaster) {
