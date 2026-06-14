@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_319_headline: 'Neu in v3.1.9',
+  whats_new_319_body:
+    'Assist-Modul-Labs importieren aus researchLevel 230–237. Enhancement Attack- und Utility-Münzrabatt-Labs nutzen Slots 154 und 227. Krisu-Musikvorschauen liegen unter public/themes/music/.',
   whats_new_318_headline: 'Neu in v3.1.8',
   whats_new_318_body:
     'Bug Buster kann ein Discord-Support-Ticket im Kanal bug-reports öffnen. Mythisch+-Kernmodul-Substat-Import behoben — Spielstand erneut importieren, falls Submodule falsch wirkten.',

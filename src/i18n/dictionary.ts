@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_319_headline: "What's new in v3.1.9",
+  whats_new_319_body:
+    'Assist Module labs import from researchLevel slots 230–237. Enhancement Attack and Utility coin discount labs use slots 154 and 227. Krisu music previews moved under public/themes/music/.',
   whats_new_318_headline: "What's new in v3.1.8",
   whats_new_318_body:
     'Bug Buster can open a Discord support ticket in the bug-reports channel. Mythic+ core module substat import fixed — re-import playerInfo.dat if submodule picks looked wrong.',

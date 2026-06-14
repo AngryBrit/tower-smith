@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_319_headline: 'Novedades en v3.1.9',
+  whats_new_319_body:
+    'Los labs Assist Module importan desde researchLevel 230–237. Los descuentos de monedas Enhancement Attack y Utility usan los slots 154 y 227. Las vistas previas de música Krisu están en public/themes/music/.',
   whats_new_318_headline: 'Novedades en v3.1.8',
   whats_new_318_body:
     'Bug Buster puede abrir un ticket de soporte en Discord en el canal bug-reports. Corregida la importación de substat de módulos núcleo Mítico+ — vuelve a importar playerInfo.dat si los submódulos estaban mal.',

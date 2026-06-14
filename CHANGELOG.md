@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.9] - 2026-06-14
+
+### Fixed
+
+- **Assist Module lab import** — All eight Assist Module Substats/Bonus labs map from `researchLevel[230]`–`[237]` so playerInfo.dat import fills those MODULE cards after re-import.
+- **Enhancement coin discount lab import** — **Enhancement Attack - Coin Discount** uses slot **154**; **Enhancement Utility - Coin Discount** uses slot **227** (was **136**).
+
+### Changed
+
+- **Music theme previews** — Krisu track art lives under [`public/themes/music/`](public/themes/music/) (with other theme assets).
+
+### Docs
+
+- README: Assist Module and Enhancement `researchLevel` anchors; version **3.1.9**.
+- What's new banner (en/de/es).
+
 ## [3.1.8] - 2026-06-14
 
 ### Added
