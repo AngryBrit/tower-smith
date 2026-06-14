@@ -13,5 +13,12 @@ export const BUG_REPORT_ISSUES_URL =
 /** Bug reports by email (Bug Buster mailto). */
 export const BUG_REPORT_SUPPORT_EMAIL = 'support@towersmith.com'
 
-/** TowerSmith community Discord (new tab). */
+/** TowerSmith community Discord invite (works for non-members). */
 export const DISCORD_URL = 'https://discord.gg/hUDZ6nCmF3'
+
+/** Support ticket panel channel (members only — deep link). */
+export const DISCORD_SUPPORT_TICKET_CHANNEL_URL =
+  'https://discord.com/channels/1513949363653705819/1515029805618429992'
+
+/** Support ticket panel invite (join + land on ticket channel). */
+export const DISCORD_SUPPORT_TICKET_URL = 'https://discord.gg/nvKCVbMGNb'

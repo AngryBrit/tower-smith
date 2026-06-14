@@ -34,7 +34,7 @@ export const STRINGS_ES = {
   bug_buster_description_label: '¿Qué pasó?',
   bug_buster_description_placeholder: '¿Qué esperabas y qué viste en su lugar?',
   bug_buster_description_required:
-    'Describe qué pasó antes de copiar, enviar por correo o abrir GitHub.',
+    'Describe qué pasó antes de copiar, enviar por correo, abrir Discord o abrir GitHub.',
   bug_buster_steps_label: 'Pasos para reproducir (opcional)',
   bug_buster_steps_placeholder: '1. Abre … 2. Pulsa …',
   bug_buster_diagnostics_label: 'Informe de diagnóstico (vista previa)',
@@ -72,6 +72,15 @@ export const STRINGS_ES = {
   bug_buster_share_ok_files: 'Informe y archivos adjuntos compartidos.',
   bug_buster_copy: 'Copiar soporte',
   bug_buster_email: 'Correo al soporte',
+  bug_buster_discord: 'Ticket de soporte en Discord',
+  bug_buster_discord_ready:
+    'Informe copiado — únete al Discord de TowerSmith si te lo pide, abre un ticket de soporte y pega tu informe.',
+  bug_buster_discord_files_downloaded:
+    'Discord abierto — se descargaron los archivos adjuntos; súbelos en tu ticket si hace falta.',
+  bug_buster_discord_save_downloaded:
+    'Discord abierto — se descargó playerInfo.zip; súbelo en tu ticket si hace falta.',
+  bug_buster_discord_csv_downloaded:
+    'Discord abierto — se descargó el CSV tower; súbelo en tu ticket si hace falta.',
   bug_buster_github: 'Abrir issue en GitHub',
   bug_buster_copied: 'Informe copiado al portapapeles.',
   bug_buster_email_ready:

@@ -30,6 +30,7 @@ import {
   shareBugReportWithFiles,
   type BugReportSaveAttachment,
 } from '../bugReportSaveAttachment'
+import { DISCORD_SUPPORT_TICKET_URL } from '../appVersion'
 import type { BugBusterInitial } from '../bugBuster/bugBusterTypes'
 import { useBugBuster } from '../bugBuster/useBugBuster'
 import { useI18n, type StringId } from '../i18n'
@@ -249,21 +250,27 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
   }, [clearCsvFile, clearSaveFile])
 
   const offerAttachedFilesDownload = useCallback(
-    (context: 'email' | 'github') => {
+    (context: 'discord' | 'email' | 'github') => {
       if (attachedFiles.length === 0) return
       void downloadBugReportAttachedFiles(attachedFiles).then(() => {
         const noticeKey: StringId =
           attachedFiles.length > 1
             ? context === 'email'
               ? 'bug_buster_email_files_downloaded'
-              : 'bug_buster_github_files_downloaded'
+              : context === 'github'
+                ? 'bug_buster_github_files_downloaded'
+                : 'bug_buster_discord_files_downloaded'
             : saveFile
               ? context === 'email'
                 ? 'bug_buster_email_save_downloaded'
-                : 'bug_buster_github_save_downloaded'
+                : context === 'github'
+                  ? 'bug_buster_github_save_downloaded'
+                  : 'bug_buster_discord_save_downloaded'
               : context === 'email'
                 ? 'bug_buster_email_csv_downloaded'
-                : 'bug_buster_github_csv_downloaded'
+                : context === 'github'
+                  ? 'bug_buster_github_csv_downloaded'
+                  : 'bug_buster_discord_csv_downloaded'
         setNotice(t(noticeKey))
         window.setTimeout(() => setNotice(null), 6000)
       })
@@ -282,6 +289,26 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
       () => setNotice(t('bug_buster_copy_fail')),
     )
   }, [buildEnv, reportInput, requireDescription, t])
+
+  const handleDiscord = useCallback(() => {
+    if (!requireDescription()) return
+    const reportText = buildBugReport(reportInput, buildEnv())
+    const openDiscord = () => {
+      window.open(DISCORD_SUPPORT_TICKET_URL, '_blank', 'noopener,noreferrer')
+      offerAttachedFilesDownload('discord')
+    }
+    void navigator.clipboard.writeText(reportText).then(
+      () => {
+        setNotice(t('bug_buster_discord_ready'))
+        window.setTimeout(() => setNotice(null), 6000)
+        openDiscord()
+      },
+      () => {
+        setNotice(t('bug_buster_copy_fail'))
+        openDiscord()
+      },
+    )
+  }, [buildEnv, offerAttachedFilesDownload, reportInput, requireDescription, t])
 
   const handleGitHub = useCallback(() => {
     if (!requireDescription()) return
@@ -534,14 +561,24 @@ function BugBusterDialogBody({ initial, mainPanel, closeBugBuster }: BugBusterDi
               {t('bug_buster_email')}
             </button>
           </div>
-          <button
-            type="button"
-            className="glow-btn glow-btn--block"
-            disabled={!descriptionReady || attachBusy}
-            onClick={handleGitHub}
-          >
-            {t('bug_buster_github')}
-          </button>
+          <div className="bug-buster-dialog__actions-row">
+            <button
+              type="button"
+              className="glow-btn glow-btn--block"
+              disabled={!descriptionReady || attachBusy}
+              onClick={handleDiscord}
+            >
+              {t('bug_buster_discord')}
+            </button>
+            <button
+              type="button"
+              className="glow-btn glow-btn--block"
+              disabled={!descriptionReady || attachBusy}
+              onClick={handleGitHub}
+            >
+              {t('bug_buster_github')}
+            </button>
+          </div>
         </div>
 
         {notice ? (
