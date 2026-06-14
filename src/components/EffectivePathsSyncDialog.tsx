@@ -403,9 +403,6 @@ export function EffectivePathsSyncDialog({
     () => EFFECTIVE_PATHS_EXPORT_TARGET_ORDER.filter((target) => canExportTarget(target)).length,
     [canExportTarget],
   )
-  const hasGoogleSheetsAccess =
-    googleToken != null || getCachedGoogleSheetsAccessToken() != null
-
   useEffect(() => {
     if (!open) return
     const frameId = window.requestAnimationFrame(() => {
@@ -1818,12 +1815,8 @@ export function EffectivePathsSyncDialog({
   ])
 
   const loadWorkbooksLabel = loadingSheets
-    ? hasGoogleSheetsAccess
-      ? t('ep_export_loading_linked_workbooks')
-      : t('ep_export_loading_sheets')
-    : hasGoogleSheetsAccess
-      ? t('ep_export_load_linked_workbooks_btn')
-      : t('ep_export_load_sheets_btn')
+    ? t('ep_export_loading_sheets')
+    : t('ep_export_load_sheets_btn')
 
   if (!open) return null
 
@@ -1871,9 +1864,7 @@ export function EffectivePathsSyncDialog({
           label={
             loadProgress
               ? effectivePathsLoadProgressLabel(loadProgress, t)
-              : hasGoogleSheetsAccess
-                ? t('ep_export_loading_linked_workbooks')
-                : t('ep_export_loading_sheets')
+              : t('ep_export_loading_sheets')
           }
           active={loadingSheets}
           percent={loadProgress ? effectivePathsLoadProgressPercent(loadProgress) : undefined}
