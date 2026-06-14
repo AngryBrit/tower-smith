@@ -1844,9 +1844,16 @@ export function EffectivePathsSyncDialog({
           <li>{t('ep_sync_step3')}</li>
         </ol>
         {!parsedMaster ? (
-          <p className="select-research__lab-data-share-hint" role="status">
-            {t('ep_export_missing_ids_master')}
-          </p>
+          <>
+            <p className="select-research__lab-data-share-hint" role="status">
+              {t('ep_export_missing_ids_master')}
+            </p>
+            {!user ? (
+              <p className="select-research__lab-data-share-hint" role="status">
+                {t('ep_sync_ids_master_account_hint')}
+              </p>
+            ) : null}
+          </>
         ) : null}
         {notice ? (
           <ImportNoticeBlock

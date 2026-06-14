@@ -1420,6 +1420,8 @@ export const STRINGS_EN = {
     'Click below to allow Google Sheets access — this is separate from signing into TowerSmith.',
   ep_sync_step3:
     'Export requires Editor access on your linked workbooks. Exports create preview tabs first — review them, then apply or discard.',
+  ep_sync_ids_master_account_hint:
+    'If you saved IDS Master while signed in, it is stored on your account — sign in to load it, or paste and save it locally in Settings.',
   ep_sync_syncing: 'Syncing…',
   ep_export_open_btn: 'Sync to Effective Paths…',
   ep_export_labs_open_btn: 'Export to Effective Paths…',

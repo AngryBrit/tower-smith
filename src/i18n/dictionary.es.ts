@@ -1434,6 +1434,8 @@ export const STRINGS_ES = {
     'Abajo, permite el acceso a Google Sheets — independiente del inicio de sesión en TowerSmith.',
   ep_sync_step3:
     'La exportación requiere acceso de Editor a tus libros vinculados. Las exportaciones crean primero pestañas de vista previa — revísalas y luego aplica o descarta.',
+  ep_sync_ids_master_account_hint:
+    'Si guardaste IDS Master con sesión iniciada, está en tu cuenta — inicia sesión para cargarlo, o pégalo y guárdalo localmente en Ajustes.',
   ep_sync_syncing: 'Sincronizando…',
   ep_labs_sync_section_hint:
     'Exporta o importa niveles de laboratorio con tu libro Laboratory. Configura primero la URL de IDS Master en Ajustes.',

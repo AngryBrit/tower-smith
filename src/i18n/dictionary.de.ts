@@ -1371,6 +1371,8 @@ export const STRINGS_DE = {
     'Unten Google-Tabellen-Zugriff erlauben — getrennt vom TowerSmith-Login.',
   ep_sync_step3:
     'Export erfordert Bearbeiter-Rechte an deinen verknüpften Arbeitsmappen. Exporte legen zuerst Vorschau-Tabs an — prüfen, dann übernehmen oder verwerfen.',
+  ep_sync_ids_master_account_hint:
+    'Wenn du IDS Master angemeldet gespeichert hast, liegt die URL in deinem Konto — melde dich an, um sie zu laden, oder füge sie lokal in den Einstellungen ein und speichere.',
   ep_sync_syncing: 'Sync läuft…',
   ep_labs_sync_section_hint:
     'Lab-Level ins Laboratory-Arbeitsblatt exportieren oder daraus importieren. IDS-Master-URL zuerst unter Einstellungen setzen.',
