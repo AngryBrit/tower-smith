@@ -1,3 +1,10 @@
+import {
+  clearGoogleSheetsOAuthState,
+  createGoogleSheetsOAuthState,
+  stashGoogleSheetsOAuthState,
+  verifyGoogleSheetsOAuthState,
+} from './googleSheetsOAuthState'
+
 const GIS_SCRIPT_SRC = 'https://accounts.google.com/gsi/client'
 const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets'
 const TOKEN_CACHE_KEY = 'towersmith_google_sheets_token'
@@ -16,6 +23,7 @@ type GisTokenResponse = {
   expires_in?: number
   error?: string
   error_subtype?: string
+  state?: string
 }
 
 type GisOAuthError = {
@@ -27,6 +35,7 @@ type GisOAuth2 = {
   initTokenClient: (config: {
     client_id: string
     scope: string
+    state?: string
     callback: (response: GisTokenResponse) => void
     error_callback?: (error: GisOAuthError) => void
     use_fedcm_for_prompt?: boolean
@@ -225,12 +234,15 @@ async function requestTokenWithPrompt(
 
   const clientId = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID as string
   const useFedcm = options.useFedcm ?? shouldUseFedcmForPrompt()
+  const oauthState = createGoogleSheetsOAuthState()
+  stashGoogleSheetsOAuthState(oauthState)
 
   return new Promise((resolve, reject) => {
     let settled = false
     const timeoutId = window.setTimeout(() => {
       if (settled) return
       settled = true
+      clearGoogleSheetsOAuthState()
       reject(new Error('google_oauth_timeout'))
     }, oauthCallbackTimeoutMs(prompt))
 
@@ -245,8 +257,13 @@ async function requestTokenWithPrompt(
     const client = oauth2.initTokenClient({
       client_id: clientId,
       scope: SHEETS_SCOPE,
+      state: oauthState,
       use_fedcm_for_prompt: useFedcm,
       callback: (response) => {
+        if (!verifyGoogleSheetsOAuthState(response.state)) {
+          finish('reject', undefined, new Error('google_oauth_state_mismatch'))
+          return
+        }
         if (response.error) {
           finish('reject', undefined, new Error(response.error))
           return
@@ -259,6 +276,7 @@ async function requestTokenWithPrompt(
         finish('resolve', response.access_token)
       },
       error_callback: (err) => {
+        clearGoogleSheetsOAuthState()
         finish('reject', undefined, oauthErrorFromGis(err))
       },
     })
