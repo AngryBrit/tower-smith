@@ -1428,7 +1428,12 @@ export const STRINGS_ES = {
   ep_sync_open_btn: 'Sincronizar Effective Paths…',
   ep_sync_title: 'Sincronización Effective Paths',
   ep_sync_intro:
-    'Carga los libros vinculados desde tu IDS Master (en Ajustes) e importa o exporta cada categoría. Las exportaciones crean primero pestañas de vista previa — revísalas y luego aplica o descarta.',
+    'Importa o exporta datos en tus libros Effective Paths vinculados en la pestaña IDS.',
+  ep_sync_step1: 'Configura la URL de IDS Master en Ajustes (Herramientas → Ajustes).',
+  ep_sync_step2:
+    'Abajo, permite el acceso a Google Sheets — independiente del inicio de sesión en TowerSmith.',
+  ep_sync_step3:
+    'La exportación requiere acceso de Editor a tus libros vinculados. Las exportaciones crean primero pestañas de vista previa — revísalas y luego aplica o descarta.',
   ep_sync_syncing: 'Sincronizando…',
   ep_labs_sync_section_hint:
     'Exporta o importa niveles de laboratorio con tu libro Laboratory. Configura primero la URL de IDS Master en Ajustes.',

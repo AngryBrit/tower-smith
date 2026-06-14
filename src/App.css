@@ -2357,6 +2357,19 @@ html[data-color-scheme='high-contrast'] {
   gap: 0.5rem;
 }
 
+.effective-paths-export-dialog__steps {
+  margin: 0 0 0.35rem;
+  padding-left: 1.15rem;
+  font-size: 0.68rem;
+  line-height: 1.45;
+  color: var(--sr-muted);
+  text-align: left;
+}
+
+.effective-paths-export-dialog__steps li + li {
+  margin-top: 0.35rem;
+}
+
 .effective-paths-export-dialog__load-progress {
   margin-top: 0.5rem;
 }

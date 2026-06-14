@@ -1414,7 +1414,12 @@ export const STRINGS_EN = {
   ep_sync_open_btn: 'Effective Paths sync…',
   ep_sync_title: 'Effective Paths sync',
   ep_sync_intro:
-    'Load linked workbooks from your IDS Master (set in Settings), then import from or export to each child workbook. Exports create preview tabs first — review them, then apply or discard.',
+    'Import from or export to your Effective Paths workbooks linked on the IDS tab.',
+  ep_sync_step1: 'Set your IDS Master spreadsheet URL in Settings (Tools → Settings).',
+  ep_sync_step2:
+    'Click below to allow Google Sheets access — this is separate from signing into TowerSmith.',
+  ep_sync_step3:
+    'Export requires Editor access on your linked workbooks. Exports create preview tabs first — review them, then apply or discard.',
   ep_sync_syncing: 'Syncing…',
   ep_export_open_btn: 'Sync to Effective Paths…',
   ep_export_labs_open_btn: 'Export to Effective Paths…',

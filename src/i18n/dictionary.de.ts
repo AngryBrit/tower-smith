@@ -1365,7 +1365,12 @@ export const STRINGS_DE = {
   ep_sync_open_btn: 'Effective Paths Sync…',
   ep_sync_title: 'Effective Paths Sync',
   ep_sync_intro:
-    'Verknüpfte Arbeitsmappen aus dem IDS Master laden (in den Einstellungen), dann pro Kategorie importieren oder exportieren. Exporte legen zuerst Vorschau-Tabs an — prüfen, dann übernehmen oder verwerfen.',
+    'Importiere aus oder exportiere in deine Effective-Paths-Arbeitsmappen, die auf dem IDS-Tab verknüpft sind.',
+  ep_sync_step1: 'IDS-Master-Tabellen-URL in den Einstellungen setzen (Tools → Einstellungen).',
+  ep_sync_step2:
+    'Unten Google-Tabellen-Zugriff erlauben — getrennt vom TowerSmith-Login.',
+  ep_sync_step3:
+    'Export erfordert Bearbeiter-Rechte an deinen verknüpften Arbeitsmappen. Exporte legen zuerst Vorschau-Tabs an — prüfen, dann übernehmen oder verwerfen.',
   ep_sync_syncing: 'Sync läuft…',
   ep_labs_sync_section_hint:
     'Lab-Level ins Laboratory-Arbeitsblatt exportieren oder daraus importieren. IDS-Master-URL zuerst unter Einstellungen setzen.',

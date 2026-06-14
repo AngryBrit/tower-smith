@@ -1838,6 +1838,11 @@ export function EffectivePathsSyncDialog({
           {t('ep_sync_title')}
         </h2>
         <p className="select-research__lab-data-intro">{t('ep_sync_intro')}</p>
+        <ol className="effective-paths-export-dialog__steps">
+          <li>{t('ep_sync_step1')}</li>
+          <li>{t('ep_sync_step2')}</li>
+          <li>{t('ep_sync_step3')}</li>
+        </ol>
         {!parsedMaster ? (
           <p className="select-research__lab-data-share-hint" role="status">
             {t('ep_export_missing_ids_master')}
