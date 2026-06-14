@@ -32,6 +32,7 @@ function loadResearchDataSync(): ResearchData {
 
 const SAMPLE = 'h:/The Tower/playerInfo.dat'
 const CLEAN_SAVE = 'h:/The Tower/CLEAN.dat'
+const RICHARD_SAVE = 'h:/The Tower/Richard.dat'
 
 function minimalResearchData(): ResearchData {
   return {
@@ -408,5 +409,43 @@ describe('importPlayerInfo', () => {
     expect(ws.cardStars.areaOfEffect).toBe(0)
     expect(save.slotsUnlocked).toBe(18)
     expect(ws.cardEquipSlots).toBe(18)
+  })
+
+  it('maps Assist Module labs from Richard save (researchLevel 230–237)', async () => {
+    if (!existsSync(RICHARD_SAVE)) return
+    const data = loadResearchDataSync()
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(RICHARD_SAVE)))
+    expect(save.researchLevel[234]).toBe(2)
+    expect(save.researchLevel[237]).toBe(2)
+    const { overrides } = mapPlayerSaveToTower(data, save)
+    const modulesSi = data.sections.findIndex((s) => s.sectionSlug === 'modules')
+    expect(modulesSi).toBeGreaterThanOrEqual(0)
+    const bonusCannonIi = data.sections[modulesSi]!.items.findIndex(
+      (i) => i.name === 'Assist Module Bonus - Cannon',
+    )
+    const bonusCoreIi = data.sections[modulesSi]!.items.findIndex(
+      (i) => i.name === 'Assist Module Bonus - Core',
+    )
+    expect(overrides[`${modulesSi}-${bonusCannonIi}`]).toBe(2)
+    expect(overrides[`${modulesSi}-${bonusCoreIi}`]).toBe(2)
+  })
+
+  it('maps Enhancement coin discount labs from Richard save', async () => {
+    if (!existsSync(RICHARD_SAVE)) return
+    const data = loadResearchDataSync()
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(RICHARD_SAVE)))
+    expect(save.researchLevel[154]).toBe(2)
+    expect(save.researchLevel[227]).toBe(3)
+    const { overrides } = mapPlayerSaveToTower(data, save)
+    const mainSi = data.sections.findIndex((s) => s.sectionSlug === 'main-research')
+    expect(mainSi).toBeGreaterThanOrEqual(0)
+    const attackDiscountIi = data.sections[mainSi]!.items.findIndex(
+      (i) => i.name === 'Enhancement Attack - Coin Discount',
+    )
+    const utilityDiscountIi = data.sections[mainSi]!.items.findIndex(
+      (i) => i.name === 'Enhancement Utility - Coin Discount',
+    )
+    expect(overrides[`${mainSi}-${attackDiscountIi}`]).toBe(2)
+    expect(overrides[`${mainSi}-${utilityDiscountIi}`]).toBe(3)
   })
 })
