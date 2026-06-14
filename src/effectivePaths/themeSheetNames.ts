@@ -95,7 +95,9 @@ addEventNameAliases('background', BACKGROUND_EVENT_ROWS)
 const EFFECTIVE_PATHS_THEME_NAME_ALIASES: Readonly<
   Record<EffectivePathsThemeSheetSection, Readonly<Record<string, string>>>
 > = {
-  'tower-event': {},
+  'tower-event': {
+    [normalizeEffectivePathsThemeName('Plasma')]: 'tower-event-plasma-ball',
+  },
   'tower-milestone': {
     [normalizeEffectivePathsThemeName('Mush Mush')]: 'tower-mush-mush',
     [normalizeEffectivePathsThemeName('Mush-mush')]: 'tower-mush-mush',
@@ -104,6 +106,7 @@ const EFFECTIVE_PATHS_THEME_NAME_ALIASES: Readonly<
     [normalizeEffectivePathsThemeName('Fried egg')]: 'tower-fried-egg',
   },
   background: {
+    [normalizeEffectivePathsThemeName('Plasma')]: 'bg-plasma-field',
     [normalizeEffectivePathsThemeName('Cosy Cosmos')]: 'bg-guild-cozy-cosmos',
     [normalizeEffectivePathsThemeName('Cozy Cosmos')]: 'bg-guild-cozy-cosmos',
     [normalizeEffectivePathsThemeName('New Years')]: 'bg-new-years',

@@ -130,6 +130,8 @@ const WORKSHOP_ENHANCE_SHEET_ALIASES: Readonly<Record<string, WorkshopEpEnhanceK
   'Unlock Orb Size +': 'enhanceOrbSizeLevel',
   'Super Crit Multi +': 'enhanceSuperCritMultLevel',
   'Orb Size +': 'enhanceOrbSizeLevel',
+  'Cells / Kill Bonus +': 'enhanceCellsKillBonusLevel',
+  'Cells/Kill Bonus +': 'enhanceCellsKillBonusLevel',
 }
 
 for (const [alias, id] of Object.entries(WORKSHOP_ENHANCE_SHEET_ALIASES)) {

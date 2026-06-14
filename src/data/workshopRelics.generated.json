@@ -1332,7 +1332,7 @@
   {
     "order": 134,
     "id": "mystic_bunny_1",
-    "name": "Mystic Bunny[1]",
+    "name": "Mystic Hair",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
     "unlock": "Event Premium: Earn 550 medals during the \"Easter\"",
@@ -2718,5 +2718,25 @@
     "unlock": "Event Premium: Earn 1100 medals during the \"Volcano (IV)\"",
     "unlockGroup": "event",
     "damagePct": 5
+  },
+  {
+    "order": 273,
+    "id": "big_party",
+    "name": "Big Party",
+    "rarity": "rare",
+    "description": "Increase coins earned by 2%",
+    "unlock": "Event: Earn 350 medals during the \"5th Anniversary\"",
+    "unlockGroup": "event",
+    "damagePct": 0
+  },
+  {
+    "order": 274,
+    "id": "celebration",
+    "name": "Celebration",
+    "rarity": "epic",
+    "description": "Increase cash bonus by 5%",
+    "unlock": "Event: Earn 700 medals during the \"5th Anniversary\"",
+    "unlockGroup": "event",
+    "damagePct": 0
   }
 ]

@@ -233,6 +233,10 @@ export function importSuccessMessage(
       })
       if (result.unmappedSheetNames.length > 0) {
         message += ` ${fillTemplate(t('ep_export_relics_unmapped_hint'), { count: result.unmappedSheetNames.length })}`
+        const sample = [...new Set(result.unmappedSheetNames)].slice(0, 5).join(', ')
+        if (sample) {
+          message += ` ${fillTemplate(t('ep_export_relics_unmapped_sample'), { names: sample })}`
+        }
       }
       return message
     }

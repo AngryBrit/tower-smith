@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3110_headline: 'Novedades en v3.1.10',
+  whats_new_3110_body:
+    'Correcciones de exportación Effective Paths: Workshop Cells/Kill Bonus +, atajos Plasma en Themes y reliquias Mystic Hair/Hare. Mystic Hair es el nombre en el catálogo de la reliquia premium de Easter (II). La exportación de reliquias muestra nombres de ejemplo si queda alguna etiqueta sin mapear.',
   whats_new_319_headline: 'Novedades en v3.1.9',
   whats_new_319_body:
     'Los labs Assist Module importan desde researchLevel 230–237. Los descuentos de monedas Enhancement Attack y Utility usan los slots 154 y 227. Las vistas previas de música Krisu están en public/themes/music/.',
@@ -1618,6 +1621,7 @@ export const STRINGS_ES = {
   ep_export_cards_presets_success_suffix:
     'También se escribieron {{presetRows}} ranuras de preset en la pestaña de vista previa “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} nombres de reliquia no se mapearon y no se cambiaron.',
+  ep_export_relics_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_themes_unmapped_hint: '{{count}} nombres de tema no se mapearon y no se cambiaron.',
   ep_export_cards_unmapped_hint: '{{count}} nombres de carta no se mapearon y no se cambiaron.',
   ep_export_workshop_unmapped_hint:

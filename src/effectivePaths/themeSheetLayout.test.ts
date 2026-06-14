@@ -355,6 +355,14 @@ describe('themeSheetLayout', () => {
     )
   })
 
+  it('maps shortened Plasma labels on tower and background rows', () => {
+    const rows = buildInputTabRows()
+    rows[3]![2] = 'Plasma'
+    rows[3]![5] = 'Plasma'
+    const layout = detectThemeSheetLayout(rows)!
+    expect(unmappedThemeNamesWithLayout(rows, layout)).toEqual([])
+  })
+
   it('ignores IDS workbook category labels such as Player & Stuff', () => {
     const rows = buildInputTabRows()
     rows[5]![2] = 'Player & Stuff'

@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3110_headline: 'Neu in v3.1.10',
+  whats_new_3110_body:
+    'Effective-Paths-Export: Workshop Cells/Kill Bonus +, Themes Plasma-Kurzlabels und Relikte Mystic Hair/Hare. Mystic Hair ist der Katalogname für das Easter-(II)-Premium-Relikt. Relikt-Export zeigt Beispielnamen bei nicht zugeordneten Sheet-Labels.',
   whats_new_319_headline: 'Neu in v3.1.9',
   whats_new_319_body:
     'Assist-Modul-Labs importieren aus researchLevel 230–237. Enhancement Attack- und Utility-Münzrabatt-Labs nutzen Slots 154 und 227. Krisu-Musikvorschauen liegen unter public/themes/music/.',
@@ -1554,6 +1557,7 @@ export const STRINGS_DE = {
   ep_export_cards_presets_success_suffix:
     'Außerdem {{presetRows}} Preset-Slots in Vorschau-Tab „{{presetSheet}}“ geschrieben.',
   ep_export_relics_unmapped_hint: '{{count}} Reliktname(n) konnten nicht zugeordnet werden und blieben unverändert.',
+  ep_export_relics_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_themes_unmapped_hint: '{{count}} Theme-Name(n) konnten nicht zugeordnet werden und blieben unverändert.',
   ep_export_cards_unmapped_hint: '{{count}} Kartenname(n) konnten nicht zugeordnet werden und blieben unverändert.',
   ep_export_workshop_unmapped_hint:

@@ -5,6 +5,7 @@ describe('gameThemeIdFromSheetName', () => {
   it('maps tower event labels by skin or event name', () => {
     expect(gameThemeIdFromSheetName('Plasma Ball', 'tower-event')).toBe('tower-event-plasma-ball')
     expect(gameThemeIdFromSheetName('Plasma Returns', 'tower-event')).toBe('tower-event-plasma-ball')
+    expect(gameThemeIdFromSheetName('Plasma', 'tower-event')).toBe('tower-event-plasma-ball')
     expect(gameThemeIdFromSheetName('Ocean Night', 'background')).toBe('bg-ocean-night')
   })
 
@@ -19,6 +20,8 @@ describe('gameThemeIdFromSheetName', () => {
 
   it('maps background, menu, and banner names in their sections', () => {
     expect(gameThemeIdFromSheetName('Ocean Night', 'background')).toBe('bg-ocean-night')
+    expect(gameThemeIdFromSheetName('Plasma Field', 'background')).toBe('bg-plasma-field')
+    expect(gameThemeIdFromSheetName('Plasma', 'background')).toBe('bg-plasma-field')
     expect(gameThemeIdFromSheetName('Mech World', 'background')).toBe('bg-guild-mech-world')
     expect(gameThemeIdFromSheetName('Mech World', 'menus')).toBe('menu-mech')
     expect(gameThemeIdFromSheetName('Mech World', 'banners')).toBe('banner-mech')

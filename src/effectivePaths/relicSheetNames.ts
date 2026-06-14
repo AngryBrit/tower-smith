@@ -4,6 +4,7 @@ import relicRows from '../data/workshopRelics.generated.json'
 export function normalizeEffectivePathsRelicName(name: string): string {
   return name
     .trim()
+    .replace(/\s*\[\d+\]\s*$/g, '')
     .toLowerCase()
     .replace(/\s+/g, ' ')
     .replace(/['']/g, '')
@@ -32,6 +33,8 @@ const EFFECTIVE_PATHS_RELIC_NAME_ALIASES: Readonly<Record<string, string>> = {
   [normalizeEffectivePathsRelicName('Gift Box')]: 'gift_box',
   [normalizeEffectivePathsRelicName('Carousel Of Joy')]: 'carousel_of_joy',
   [normalizeEffectivePathsRelicName('Mystic Bunny')]: 'mystic_bunny_1',
+  [normalizeEffectivePathsRelicName('Mystic Hare')]: 'mystic_bunny_1',
+  [normalizeEffectivePathsRelicName('Mystic Hair')]: 'mystic_bunny_1',
   [normalizeEffectivePathsRelicName('Pet Cat')]: 'pet_cat',
   [normalizeEffectivePathsRelicName('Lunar Cat Paw')]: 'lunar_cat_paw',
   [normalizeEffectivePathsRelicName('Clip Ons')]: 'clip_ons',
@@ -62,6 +65,7 @@ const EFFECTIVE_PATHS_RELIC_NAME_ALIASES: Readonly<Record<string, string>> = {
   [normalizeEffectivePathsRelicName('Tri Flux')]: 't_i_flux',
   [normalizeEffectivePathsRelicName('Till Lumin')]: 't_ii_lumin',
   [normalizeEffectivePathsRelicName('Till Pulse')]: 't_iii_pulse',
+  [normalizeEffectivePathsRelicName('BigParty')]: 'big_party',
 }
 
 const NAME_TO_RELIC_ID = new Map<string, string>()

@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3110_headline: "What's new in v3.1.10",
+  whats_new_3110_body:
+    'Effective Paths export fixes: Workshop Cells/Kill Bonus +, Themes Plasma shortcuts, and Relics Mystic Hair/Hare. Mystic Hair is the catalog display name for the Easter (II) premium relic. Relic export shows example names when a sheet label is still unmapped.',
   whats_new_319_headline: "What's new in v3.1.9",
   whats_new_319_body:
     'Assist Module labs import from researchLevel slots 230–237. Enhancement Attack and Utility coin discount labs use slots 154 and 227. Krisu music previews moved under public/themes/music/.',
@@ -1613,6 +1616,7 @@ export const STRINGS_EN = {
   ep_export_cards_presets_success_suffix:
     'Also wrote {{presetRows}} preset slots to preview tab “{{presetSheet}}”.',
   ep_export_relics_unmapped_hint: '{{count}} sheet relic names were not mapped and were left unchanged.',
+  ep_export_relics_unmapped_sample: 'Examples: {{names}}',
   ep_export_themes_unmapped_hint: '{{count}} sheet theme names were not mapped and were left unchanged.',
   ep_export_cards_unmapped_hint: '{{count}} sheet card names were not mapped and were left unchanged.',
   ep_export_workshop_unmapped_hint:

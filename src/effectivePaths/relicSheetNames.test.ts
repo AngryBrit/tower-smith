@@ -30,4 +30,13 @@ describe('workshopRelicIdFromSheetName', () => {
     expect(workshopRelicIdFromSheetName('T:VI Nova')).toBe('t_vi_nova')
     expect(workshopRelicIdFromSheetName('T:I Flux')).toBe('t_i_flux')
   })
+
+  it('maps relic names with spaced [n] suffixes and anniversary labels', () => {
+    expect(workshopRelicIdFromSheetName('Mystic Bunny [1]')).toBe('mystic_bunny_1')
+    expect(workshopRelicIdFromSheetName('Mystic Hare')).toBe('mystic_bunny_1')
+    expect(workshopRelicIdFromSheetName('Mystic Hair')).toBe('mystic_bunny_1')
+    expect(workshopRelicIdFromSheetName('Big Party')).toBe('big_party')
+    expect(workshopRelicIdFromSheetName('BigParty')).toBe('big_party')
+    expect(workshopRelicIdFromSheetName('Celebration')).toBe('celebration')
+  })
 })

@@ -5,6 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.10] - 2026-06-14
+
+### Fixed
+
+- **Effective Paths Workshop export** — `Cells / Kill Bonus +` enhancement rows map to `enhanceCellsKillBonusLevel` (was left unchanged on the preview tab).
+- **Effective Paths Themes export** — Shortened **Plasma** labels on tower and background rows map to Plasma Ball / Plasma Field.
+- **Effective Paths Relics export** — **Mystic Hair** and **Mystic Hare** map to the Mystic Hare relic; bracket tier suffixes like `[1]` are stripped before matching; unmapped relic exports now show example sheet names.
+
+### Added
+
+- **5th Anniversary relics** — **Big Party** (rare) and **Celebration** (epic) catalog entries and images for Effective Paths sync (unlock text provisional until confirmed in-game).
+
+### Changed
+
+- **Mystic Hair relic display name** — Easter (II) premium relic `mystic_bunny_1` shows **Mystic Hair** in the catalog (was Mystic Bunny[1]).
+
+### Docs
+
+- README: version **3.1.10**.
+- What's new banner (en/de/es).
+
 ## [3.1.9] - 2026-06-14
 
 ### Fixed

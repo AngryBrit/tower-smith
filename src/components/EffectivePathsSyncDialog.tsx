@@ -756,6 +756,10 @@ export function EffectivePathsSyncDialog({
         .replace('{{sheet}}', sheetTitle)
       if (unmappedSheetNames.length > 0) {
         message += ` ${t('ep_export_relics_unmapped_hint').replace('{{count}}', String(unmappedSheetNames.length))}`
+        const sample = [...new Set(unmappedSheetNames)].slice(0, 5).join(', ')
+        if (sample) {
+          message += ` ${t('ep_export_relics_unmapped_sample').replace('{{names}}', sample)}`
+        }
       }
       registerStagedExport('relics', stagedSheets, message)
     } finally {

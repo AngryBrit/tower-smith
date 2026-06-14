@@ -45,6 +45,8 @@ describe('workshopUpgradeIdFromSheetName', () => {
     expect(workshopEnhanceIdFromSheetName('Unlock Orb Size + (426.78 T)')).toBe('enhanceOrbSizeLevel')
     expect(workshopEnhanceIdFromSheetName('Super Crit Multi +')).toBe('enhanceSuperCritMultLevel')
     expect(workshopEnhanceIdFromSheetName('Orb Size +')).toBe('enhanceOrbSizeLevel')
+    expect(workshopEnhanceIdFromSheetName('Cells / Kill Bonus +')).toBe('enhanceCellsKillBonusLevel')
+    expect(workshopEnhanceIdFromSheetName('Cells/Kill Bonus +')).toBe('enhanceCellsKillBonusLevel')
   })
 
   it('covers every basic workshop upgrade key', () => {

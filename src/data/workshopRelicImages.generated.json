@@ -270,5 +270,7 @@
   "magma_river": "rare/MagmaRiver.webp",
   "obsidian": "rare/Obsidian.webp",
   "new_island": "epic/NewIsland.webp",
-  "geological_activity": "epic/GeologicalActivity.webp"
+  "geological_activity": "epic/GeologicalActivity.webp",
+  "big_party": "rare/BigParty.webp",
+  "celebration": "epic/Celebration.webp"
 }
