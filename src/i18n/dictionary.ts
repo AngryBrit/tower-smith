@@ -88,6 +88,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_317_headline: "What's new in v3.1.7",
+  whats_new_317_body:
+    'Bot Bot and Amplify duration lab import (slots 213/100). Renamable card and module preset tabs with account sync. Google OAuth hardening, privacy policy link, and Effective Paths setup guide.',
   whats_new_316_headline: "What's new in v3.1.6",
   whats_new_316_body:
     'Lab import fixes: Dissonant Echo Attack/Utility (slots 240/238), Shatter Shards (152), and Battle Condition Reduction (199). Bot presets now use purchased medal levels. Effective Paths detects IDS Collection workbooks.',

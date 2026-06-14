@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.6-2ea44f)
+![Version](https://img.shields.io/badge/version-3.1.7-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -39,8 +39,8 @@
 | **Labs** | Model upgrade costs and build times, compare configs side by side, save named presets, and use **Max All** to cap every visible lab at once. |
 | **Workshop** | Simulate attack, defense, utility, and ultimate-weapon upgrades with full coin and power-stone costs. Buy-multiplier rail includes **MAX** (+ to cap, − to zero). The **Enhance** tab unlocks once Workshop Enhancements is researched. |
 | **Bots** | Track the five event-shop bots (Flame, Thunder, Golden, Amplify, Bot Bot), medal unlock order, stat upgrades, and Bot+ abilities. BOTS lab levels update cooldown and duration live. |
-| **Cards** | Manage your full 31-card inventory, star levels (Lv.1–7), five preset loadouts, equip-slot limits, and Card Mastery scaling. |
-| **Modules** | Configure chassis modules (cannon / armor / core / generator) across epic→ancestral tiers, sub-module effects, assist unlocks, stone efficiency, and five saved module presets. |
+| **Cards** | Manage your full 31-card inventory, star levels (Lv.1–7), five preset loadouts (double-click a tab to rename labels to match in-game), equip-slot limits, and Card Mastery scaling. |
+| **Modules** | Configure chassis modules (cannon / armor / core / generator) across epic→ancestral tiers, sub-module effects, assist unlocks, stone efficiency, and five saved module presets (renamable tabs, same as Cards). |
 | **Relics** | Catalog all 268 wiki relics with art, filter by unlock group, and have owned relics feed automatically into workshop stat formulas. |
 | **Themes** | Track owned tower skins, backgrounds, banners, music, and guardians — including coin-bonus rollups per category. |
 | **Guardians** | **GUARDIANS** tab: active guardian (ties to Themes), four chip slots (Bits unlock costs), six chips (Attack, Ally, Bounty, Fetch, Scout, Summon) with three upgrade tracks each from GOD tables under `tables/guardians/`. Import from **playerInfo.dat** or tower CSV; respec and workspace undo. |
@@ -90,9 +90,9 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 
 **User flow**
 
-1. **Tools / Settings** → paste your **IDS Master** spreadsheet URL or ID and press **Save IDS** (stored on your Supabase profile when signed in and synced across devices; device-local when signed out).
-2. **LAB tab** → **Tower Backup & Sharing** → **Effective Paths sync…**
-3. Sign in with Google (OAuth; scope: Google Sheets). TowerSmith reads linked workbook IDs from the IDS tab and shows per-category import/export actions.
+1. **Tools / Settings** → paste your **IDS Master** spreadsheet URL or ID and press **Save IDS** (stored on your Supabase profile when signed in and synced across devices; device-local when signed out). If you saved the URL while signed in, sign in to TowerSmith first — the sync dialog explains this when the ref is on your account.
+2. **LAB tab** → **Tower Backup & Sharing** → **Effective Paths sync…** — follow the in-dialog setup steps if this is your first time.
+3. Sign in with Google (OAuth; scope: Google Sheets; CSRF-protected `state` parameter). TowerSmith always prompts Google consent when loading linked workbooks and reads workbook IDs from the IDS tab for per-category import/export actions.
 4. **Import** pulls lab levels, workshop stats, relic ownership, themes, cards, bots, guardians, modules, and related data into your workspace.
 5. **Export** writes TowerSmith state back to the linked sheets. Exports can stage preview tabs titled `… (TowerSmith preview)` so you can review before promoting changes to the live sheet tabs.
 
@@ -120,7 +120,8 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 - **Bug Buster** — Floating report button attaches an optional tower CSV and player save excerpt to bug reports (email or clipboard).
 - **Deep links** — Link directly to a lab card, workshop stat, ultimate weapon, or relic via URL hash or query param.
 - **PWA** — Install to your home screen (Tools / Settings → **Install app** on Android; Safari Share → Add to Home Screen on iOS). Works with limited offline support.
-- **Persistence** — All settings, snapshots, presets, and owned IDs survive reloads. Signed-in users sync lab presets and guardian chips via account workspace backup, and the Effective Paths IDS Master URL on their Supabase profile. Full reset available in Tools / Settings.
+- **Persistence** — All settings, snapshots, presets, and owned IDs survive reloads. Signed-in users sync lab presets, card/module preset tab labels, and guardian chips via account workspace backup, and the Effective Paths IDS Master URL on their Supabase profile. Full reset available in Tools / Settings.
+- **Privacy** — [Privacy Policy](https://www.towersmith.com/privacy) linked from the site footer and static HTML for OAuth verification.
 
 For release history, see [`CHANGELOG.md`](CHANGELOG.md).
 

@@ -5,6 +5,29 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.7] - 2026-06-14
+
+### Added
+
+- **Renamable card and module preset tabs** — Double-click a preset tab to rename; labels persist in CSV export/import and signed-in account workspace backup.
+- **Effective Paths setup guide** — Step-by-step copy in the sync dialog for first-time IDS Master and Google Sheets setup.
+- **Privacy Policy link** — Static HTML footer link so Google OAuth verification crawlers can find the policy before the app loads.
+
+### Fixed
+
+- **Bot Bot / Amplify Bot duration lab import** — `researchLevel[213]` maps to Bot Bot - Duration and `[100]` to Amplify Bot - Duration (slots were unmapped, so Bot Bot - Duration always showed Lv.0).
+
+### Changed
+
+- **Google Sheets OAuth** — OAuth `state` parameter for CSRF protection; always prompt Google consent when loading linked workbooks; auth status label always visible on the load button.
+- **IDS Master sign-in hint** — Effective Paths sync dialog explains that a cloud-stored IDS Master URL loads after TowerSmith sign-in (or can be pasted locally in Settings).
+- **Card preset tab labels** — Default tabs renamed to Preset 1 / Preset 2 (slots 3–5 unchanged).
+
+### Docs
+
+- README: preset rename, OAuth/state, privacy policy, BOTS duration slots; version **3.1.7**.
+- What's new banner (en/de/es).
+
 ## [3.1.6] - 2026-06-13
 
 ### Fixed
