@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_318_headline: 'Novedades en v3.1.8',
+  whats_new_318_body:
+    'Bug Buster puede abrir un ticket de soporte en Discord en el canal bug-reports. Corregida la importación de substat de módulos núcleo Mítico+ — vuelve a importar playerInfo.dat si los submódulos estaban mal.',
   whats_new_317_headline: 'Novedades en v3.1.7',
   whats_new_317_body:
     'Importación de labs Bot Bot y Amplify Duration (slots 213/100). Pestañas de presets de cartas y módulos renombrables con sync de cuenta. Endurecimiento OAuth de Google, enlace de privacidad y guía de configuración de Effective Paths.',

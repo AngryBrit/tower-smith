@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_318_headline: "What's new in v3.1.8",
+  whats_new_318_body:
+    'Bug Buster can open a Discord support ticket in the bug-reports channel. Mythic+ core module substat import fixed — re-import playerInfo.dat if submodule picks looked wrong.',
   whats_new_317_headline: "What's new in v3.1.7",
   whats_new_317_body:
     'Bot Bot and Amplify duration lab import (slots 213/100). Renamable card and module preset tabs with account sync. Google OAuth hardening, privacy policy link, and Effective Paths setup guide.',

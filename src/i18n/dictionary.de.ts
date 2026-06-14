@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_318_headline: 'Neu in v3.1.8',
+  whats_new_318_body:
+    'Bug Buster kann ein Discord-Support-Ticket im Kanal bug-reports öffnen. Mythisch+-Kernmodul-Substat-Import behoben — Spielstand erneut importieren, falls Submodule falsch wirkten.',
   whats_new_317_headline: 'Neu in v3.1.7',
   whats_new_317_body:
     'Bot Bot- und Amplify-Dauer-Lab-Import (Slots 213/100). Umbenennbare Karten- und Modul-Preset-Tabs mit Account-Sync. Google-OAuth-Härtung, Datenschutz-Link und Effective-Paths-Einrichtungsanleitung.',

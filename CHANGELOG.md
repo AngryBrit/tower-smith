@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.8] - 2026-06-14
+
+### Added
+
+- **Bug Buster Discord support ticket** — Copies the report and opens the TowerSmith Discord bug-reports channel invite so new and existing members can file a ticket.
+
+### Fixed
+
+- **Mythic+ core module submodule import** — Core chassis rows now remap sparse save indices for Mythic and Mythic+ tiers (same as star/ancestral), fixing wrong substat picks such as Primordial Collapse after playerInfo.dat import.
+
+### Docs
+
+- README: Bug Buster Discord option; version **3.1.8**.
+- What's new banner (en/de/es).
+
 ## [3.1.7] - 2026-06-14
 
 ### Added

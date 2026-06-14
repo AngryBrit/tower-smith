@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.7-2ea44f)
+![Version](https://img.shields.io/badge/version-3.1.8-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -117,7 +117,7 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 
 - **Appearance** — Dark (default), Light, and High contrast themes in Tools / Settings.
 - **Keyboard shortcuts** — `/` focuses search on Labs, Relics, and Themes; `1`–`9` switches main tabs (Workshop, Labs, Cards, Modules, Bots, Guardians, Themes, Relics, Vault); `0` opens the community Gallery; `Ctrl+Z` undoes the last Max All or reset (up to 20 steps); `Esc` closes the top dialog. Full list under Tools / Settings → **Keyboard shortcuts**.
-- **Bug Buster** — Floating report button attaches an optional tower CSV and player save excerpt to bug reports (email or clipboard).
+- **Bug Buster** — Floating report button attaches an optional tower CSV and player save excerpt to bug reports (email, Discord support ticket, GitHub, or clipboard).
 - **Deep links** — Link directly to a lab card, workshop stat, ultimate weapon, or relic via URL hash or query param.
 - **PWA** — Install to your home screen (Tools / Settings → **Install app** on Android; Safari Share → Add to Home Screen on iOS). Works with limited offline support.
 - **Persistence** — All settings, snapshots, presets, and owned IDs survive reloads. Signed-in users sync lab presets, card/module preset tab labels, and guardian chips via account workspace backup, and the Effective Paths IDS Master URL on their Supabase profile. Full reset available in Tools / Settings.
