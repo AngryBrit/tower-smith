@@ -38,6 +38,91 @@ body {
   min-height: 100svh;
 }
 
+.app-home-intro {
+  padding: 0.85rem 1rem 0.75rem;
+  border-bottom: 1px solid rgba(34, 211, 238, 0.18);
+  background: #0b1220;
+  color: #cbd5e1;
+}
+
+.app-home-intro__inner {
+  max-width: 52rem;
+  margin: 0 auto;
+}
+
+.app-home-intro__title {
+  margin: 0 0 0.35rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.2;
+  color: #e2e8f0;
+}
+
+.app-home-intro__lead,
+.app-home-intro__data {
+  margin: 0 0 0.45rem;
+  font-size: 0.72rem;
+  line-height: 1.45;
+}
+
+.app-home-intro__data {
+  margin-bottom: 0;
+  color: #94a3b8;
+}
+
+.app-home-intro a {
+  color: #22d3ee;
+  text-decoration: none;
+}
+
+.app-home-intro a:hover,
+.app-home-intro a:focus-visible {
+  text-decoration: underline;
+}
+
+html[data-color-scheme='light'] .app-home-intro {
+  background: #e2e8f0;
+  color: #334155;
+  border-bottom-color: rgba(2, 132, 199, 0.2);
+}
+
+html[data-color-scheme='light'] .app-home-intro__title {
+  color: #0f172a;
+}
+
+html[data-color-scheme='light'] .app-home-intro__data {
+  color: #475569;
+}
+
+html[data-color-scheme='light'] .app-home-intro a {
+  color: #0369a1;
+}
+
+html[data-color-scheme='high-contrast'] .app-home-intro {
+  background: #ffffff;
+  color: #000000;
+  border-bottom: 2px solid #000000;
+}
+
+html[data-color-scheme='high-contrast'] .app-home-intro__title {
+  color: #000000;
+}
+
+html[data-color-scheme='high-contrast'] .app-home-intro__data {
+  color: #000000;
+}
+
+html[data-color-scheme='high-contrast'] .app-home-intro a {
+  color: #0000ee;
+  text-decoration: underline;
+}
+
+html.legal-page-active .app-home-intro {
+  display: none;
+}
+
 .static-legal-footer {
   padding: 0.65rem 1rem 1rem;
   text-align: center;
