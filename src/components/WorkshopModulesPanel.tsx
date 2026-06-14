@@ -547,7 +547,6 @@ export function WorkshopModulesPanel({
     <div className="modules-layout">
       <WorkshopPresetToolbar
         ariaLabel="ws_modules_presets_aria"
-        renameHint="ws_modules_presets_rename_hint"
         fallbackKeys={MODULE_PRESET_KEYS}
         labels={workshopPersisted.modulePresetLabels}
         activeIndex={presetIndex}

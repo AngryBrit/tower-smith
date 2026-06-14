@@ -9,7 +9,6 @@ import {
 
 type WorkshopPresetToolbarProps = {
   ariaLabel: StringId
-  renameHint: StringId
   fallbackKeys: readonly StringId[]
   labels: readonly string[]
   activeIndex: number
@@ -19,7 +18,6 @@ type WorkshopPresetToolbarProps = {
 
 export function WorkshopPresetToolbar({
   ariaLabel,
-  renameHint,
   fallbackKeys,
   labels,
   activeIndex,
@@ -114,7 +112,9 @@ export function WorkshopPresetToolbar({
               >
                 {t('ws_preset_rename_title')}
               </h2>
-              <p className="select-research__preset-save-hint">{t(renameHint)}</p>
+              <p className="select-research__preset-save-hint">
+                {t('ws_presets_rename_dialog_hint')}
+              </p>
               <form
                 className="select-research__preset-save-form"
                 onSubmit={(e) => {

@@ -858,8 +858,8 @@ export const STRINGS_ES = {
   ws_relics_owned_toggle_off: 'Marcar {{name}} como no obtenida',
   ws_cards_presets_aria: 'Preset de mazo de cartas',
   ws_presets_rename_callout: 'Doble clic en una pestaña para renombrar.',
-  ws_cards_presets_rename_hint:
-    'Doble clic en una pestaña para renombrar. Se sincroniza con tu cuenta si has iniciado sesión; si no, solo en este navegador. No cambia los nombres del juego.',
+  ws_presets_rename_dialog_hint:
+    'Se sincroniza con tu cuenta si has iniciado sesión; si no, solo en este navegador. No cambia los nombres del juego.',
   ws_cards_preset_1: 'Preset 1',
   ws_cards_preset_2: 'Preset 2',
   ws_cards_preset_3: 'Preset 3',
@@ -943,8 +943,6 @@ export const STRINGS_ES = {
   ws_sim_module_not_cannon: '—',
   ws_modules_hub_aria: 'Chasis de módulo de apoyo',
   ws_modules_presets_aria: 'Preset de mazo de módulos',
-  ws_modules_presets_rename_hint:
-    'Doble clic en una pestaña para renombrar. Se sincroniza con tu cuenta si has iniciado sesión; si no, solo en este navegador. No cambia los nombres del juego.',
   ws_modules_preset_1: 'Preset 1',
   ws_modules_preset_2: 'Preset 2',
   ws_modules_preset_3: 'Preset 3',

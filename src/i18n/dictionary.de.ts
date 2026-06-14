@@ -851,8 +851,8 @@ export const STRINGS_DE = {
   ws_relics_owned_toggle_off: '{{name}} als nicht im Besitz markieren',
   ws_cards_presets_aria: 'Karten-Loadout-Preset',
   ws_presets_rename_callout: 'Doppelklick auf ein Tab zum Umbenennen.',
-  ws_cards_presets_rename_hint:
-    'Doppelklick auf ein Tab zum Umbenennen. Mit deinem Konto synchronisiert, wenn angemeldet; sonst nur in diesem Browser gespeichert. Ändert keine Namen im Spiel.',
+  ws_presets_rename_dialog_hint:
+    'Mit deinem Konto synchronisiert, wenn angemeldet; sonst nur in diesem Browser gespeichert. Ändert keine Namen im Spiel.',
   ws_cards_preset_1: 'Preset 1',
   ws_cards_preset_2: 'Preset 2',
   ws_cards_preset_3: 'Preset 3',
@@ -936,8 +936,6 @@ export const STRINGS_DE = {
   ws_sim_module_not_cannon: '—',
   ws_modules_hub_aria: 'Assist-Modul-Chassis',
   ws_modules_presets_aria: 'Modul-Loadout-Preset',
-  ws_modules_presets_rename_hint:
-    'Doppelklick auf ein Tab zum Umbenennen. Mit deinem Konto synchronisiert, wenn angemeldet; sonst nur in diesem Browser gespeichert. Ändert keine Namen im Spiel.',
   ws_modules_preset_1: 'Preset 1',
   ws_modules_preset_2: 'Preset 2',
   ws_modules_preset_3: 'Preset 3',

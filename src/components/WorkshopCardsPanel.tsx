@@ -576,7 +576,6 @@ export function WorkshopCardsPanel({
     <div className="cards-layout">
       <WorkshopPresetToolbar
         ariaLabel="ws_cards_presets_aria"
-        renameHint="ws_cards_presets_rename_hint"
         fallbackKeys={CARD_PRESET_KEYS}
         labels={workshopPersisted.cardPresetLabels}
         activeIndex={presetIndex}
