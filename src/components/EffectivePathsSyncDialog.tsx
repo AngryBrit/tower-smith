@@ -81,10 +81,12 @@ import {
   resumeMobileEffectivePathsGrant,
 } from '../effectivePaths/effectivePathsMobileGrantFlow'
 import {
+  beginEpMobileResumeRun,
+  claimEpMobileResume,
   consumeEpMobilePickerError,
-  peekEpMobileResume,
+  finishEpMobileResumeRun,
 } from '../effectivePaths/effectivePathsMobileGrantSession'
-import { mobilePickerRedirectPreferred, redirectToMobilePickerAuth } from '../effectivePaths/googleDrivePickerMobile'
+import { mobilePickerRedirectPreferred } from '../effectivePaths/googleDrivePickerMobile'
 import {
   getCachedGoogleSheetsAccessToken,
   googleSheetsOAuthConfigured,
@@ -248,7 +250,6 @@ export function EffectivePathsSyncDialog({
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
   const [pickerUiHidden, setPickerUiHidden] = useState(false)
-  const mobileResumeStartedRef = useRef(false)
   const [loadProgress, setLoadProgress] = useState<EffectivePathsLoadProgress | null>(null)
   const [syncProgress, setSyncProgress] = useState<{
     direction: 'import' | 'export'
@@ -632,44 +633,27 @@ export function EffectivePathsSyncDialog({
         const deniedIds = collectDeniedLinkedSpreadsheetIds(result.workbookAccess)
         if (deniedIds.length > 0) {
           const linkedNames = linkedWorkbookNamesFromGateway(result)
-          if (mobilePickerRedirectPreferred()) {
-            await redirectToMobilePickerAuth({
-              phase: 'linked_workbooks',
-              masterSpreadsheetId: parsedMaster.spreadsheetId,
-              masterSheetGid: parsedMaster.sheetGid,
-              spreadsheetIds: collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
-              multiselect: true,
-              requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
-              titles: {
-                ...pickerTitles,
-                linkedWorkbooks:
+          if (!mobilePickerRedirectPreferred()) {
+            const retryGrant = await grantEffectivePathsSpreadsheetsAccess(
+              token,
+              collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
+              {
+                title:
                   linkedNames.length > 0
                     ? `${t('ep_picker_linked_workbooks_title')} (${linkedNames.join(', ')})`
                     : t('ep_picker_linked_workbooks_title'),
+                multiselect: true,
+                requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
+                onPickerUiActive: setPickerUiHidden,
               },
-            })
-            return
-          }
-
-          const retryGrant = await grantEffectivePathsSpreadsheetsAccess(
-            token,
-            collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
-            {
-              title:
-                linkedNames.length > 0
-                  ? `${t('ep_picker_linked_workbooks_title')} (${linkedNames.join(', ')})`
-                  : t('ep_picker_linked_workbooks_title'),
-              multiselect: true,
-              requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
-              onPickerUiActive: setPickerUiHidden,
-            },
-          )
-          if (!retryGrant.ok) {
-            reportMobilePickerError(retryGrant.reason)
-          } else {
-            result = await listWorkbooks()
-            if (result.ok) {
-              cacheLinkedSpreadsheetIdsFromGateway(parsedMaster.spreadsheetId, result)
+            )
+            if (!retryGrant.ok) {
+              reportMobilePickerError(retryGrant.reason)
+            } else {
+              result = await listWorkbooks()
+              if (result.ok) {
+                cacheLinkedSpreadsheetIdsFromGateway(parsedMaster.spreadsheetId, result)
+              }
             }
           }
         }
@@ -730,11 +714,11 @@ export function EffectivePathsSyncDialog({
         )
       }
     },
-    [formatExportError, parsedMaster, pickerTitles, reportMobilePickerError, showNotice, t],
+    [formatExportError, parsedMaster, reportMobilePickerError, showNotice, t],
   )
 
   useEffect(() => {
-    if (!open || mobileResumeStartedRef.current) return
+    if (!open) return
 
     const mobileError = consumeEpMobilePickerError()
     if (mobileError) {
@@ -742,11 +726,13 @@ export function EffectivePathsSyncDialog({
       return
     }
 
-    if (!peekEpMobileResume()) return
-    mobileResumeStartedRef.current = true
+    const resume = claimEpMobileResume()
+    if (!resume) return
+    if (!beginEpMobileResumeRun()) return
 
     void (async () => {
       setLoadingSheets(true)
+      setPickerUiHidden(false)
       resetEffectivePathsWorkbookLoadState({
         setWorkbooks,
         setIdsTabTitle,
@@ -773,11 +759,11 @@ export function EffectivePathsSyncDialog({
       setLoadProgress(null)
       setNotice(null)
       try {
-        const accessResult = await resumeMobileEffectivePathsGrant()
+        const accessResult = await resumeMobileEffectivePathsGrant(resume)
         if (!accessResult.ok) {
           if (accessResult.reason === 'gateway_failed') {
             showNotice(formatExportError(accessResult.error, accessResult.message), 'error')
-          } else if (accessResult.reason !== 'mobile_resume_missing') {
+          } else {
             reportMobilePickerError(accessResult.reason)
           }
           return
@@ -796,15 +782,11 @@ export function EffectivePathsSyncDialog({
       } finally {
         setLoadingSheets(false)
         setLoadProgress(null)
+        setPickerUiHidden(false)
+        finishEpMobileResumeRun(true)
       }
     })()
   }, [formatExportError, loadLinkedWorkbooks, open, reportMobilePickerError, showNotice, t])
-
-  useEffect(() => {
-    if (!open) {
-      mobileResumeStartedRef.current = false
-    }
-  }, [open])
 
   const handleLoadSheets = useCallback(async () => {
     if (!parsedMaster) {

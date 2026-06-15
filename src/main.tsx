@@ -3,6 +3,7 @@ import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import Root from './Root'
 import { resolveAppNavigationTarget } from './devOrigin'
+import { safeAppReturnPath } from './effectivePaths/epMobileOAuthReturn'
 import { isGooglePickerOAuthCallbackPath } from './effectivePaths/googleDrivePickerEnvironment'
 import { completeMobilePickerOAuthCallback } from './effectivePaths/googleDrivePickerMobile'
 import { stashEpMobilePickerError } from './effectivePaths/effectivePathsMobileGrantSession'
@@ -14,7 +15,7 @@ async function bootstrap(): Promise<void> {
 
   if (isGooglePickerOAuthCallbackPath(window.location.pathname)) {
     const result = await completeMobilePickerOAuthCallback(new URLSearchParams(window.location.search))
-    const returnTarget = resolveAppNavigationTarget(result.returnPath)
+    const returnTarget = resolveAppNavigationTarget(safeAppReturnPath(result.returnPath))
     if (result.ok) {
       window.location.replace(returnTarget)
       return

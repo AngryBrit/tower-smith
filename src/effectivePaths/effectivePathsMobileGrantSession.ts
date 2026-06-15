@@ -1,4 +1,5 @@
 import type { EnsureEffectivePathsSpreadsheetAccessTitles } from './grantEffectivePathsSpreadsheetAccess'
+import { publicAppOrigin } from '../devOrigin'
 
 const PKCE_SESSION_KEY = 'towersmith_ep_mobile_pkce'
 const FLOW_SESSION_KEY = 'towersmith_ep_mobile_grant_flow'
@@ -117,13 +118,45 @@ export function peekEpMobileResume(): EpMobileResumePayload | null {
   return readJson<EpMobileResumePayload>(RESUME_SESSION_KEY)
 }
 
+let activeEpMobileResume: EpMobileResumePayload | null = null
+let epMobileResumeInFlight = false
+
+/** Peek the pending resume payload (StrictMode-safe; does not consume sessionStorage). */
+export function claimEpMobileResume(): EpMobileResumePayload | null {
+  if (epMobileResumeInFlight) return null
+  if (activeEpMobileResume) return activeEpMobileResume
+  const resume = peekEpMobileResume()
+  if (!resume) return null
+  activeEpMobileResume = resume
+  return resume
+}
+
+/** Mark the resume runner as started so a StrictMode remount does not start a second run. */
+export function beginEpMobileResumeRun(): boolean {
+  if (epMobileResumeInFlight) return false
+  epMobileResumeInFlight = true
+  return true
+}
+
+/** End the resume runner and optionally remove the payload from sessionStorage. */
+export function finishEpMobileResumeRun(commit = true): void {
+  if (commit) {
+    consumeEpMobileResume()
+  }
+  activeEpMobileResume = null
+  epMobileResumeInFlight = false
+}
+
+/** @internal Test helper */
+export function resetEpMobileResumeRunStateForTests(): void {
+  activeEpMobileResume = null
+  epMobileResumeInFlight = false
+}
+
 export const EP_RESUME_QUERY_PARAM = 'ep_resume'
 
 export function urlWithEpResumeFlag(target: string): string {
-  const url = new URL(
-    target,
-    typeof window !== 'undefined' ? window.location.origin : 'https://www.towersmith.com',
-  )
+  const url = new URL(target, publicAppOrigin())
   url.searchParams.set(EP_RESUME_QUERY_PARAM, '1')
   return url.toString()
 }

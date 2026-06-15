@@ -1,5 +1,5 @@
 import type { EffectivePathsIdsGateway } from './assembleEffectivePathsListResult'
-import { consumeEpMobileResume } from './effectivePathsMobileGrantSession'
+import type { EpMobileResumePayload } from './effectivePathsMobileGrantSession'
 import { readCachedLinkedSpreadsheetIds } from './effectivePathsLinkedSpreadsheetCache'
 import { fetchEffectivePathsIdsGateway } from './exportEffectivePathsApi'
 import { redirectToMobilePickerAuth } from './googleDrivePickerMobile'
@@ -81,12 +81,9 @@ export type ResumeMobileEffectivePathsGrantResult =
 /**
  * Continue grant after Google redirects back. May start another redirect for linked workbooks.
  */
-export async function resumeMobileEffectivePathsGrant(): Promise<ResumeMobileEffectivePathsGrantResult> {
-  const resume = consumeEpMobileResume()
-  if (!resume) {
-    return { ok: false, reason: 'mobile_resume_missing' }
-  }
-
+export async function resumeMobileEffectivePathsGrant(
+  resume: EpMobileResumePayload,
+): Promise<ResumeMobileEffectivePathsGrantResult> {
   const {
     accessToken,
     pickedSpreadsheetIds,

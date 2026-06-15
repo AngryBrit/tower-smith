@@ -1,4 +1,4 @@
-import { useRef, useState, type ChangeEvent } from 'react'
+import { useEffect, useRef, useState, type ChangeEvent } from 'react'
 import type { BotsEpSyncState } from '../../effectivePaths/botsEpStateFromPersisted'
 import type { ModulesEpSyncState } from '../../effectivePaths/modulesEpStateFromPersisted'
 import type { GuardiansEpSyncState } from '../../effectivePaths/guardiansEpStateFromPersisted'
@@ -109,6 +109,17 @@ export function LabImportExportPanel({
       peekEpMobileResume() != null ||
       peekEpMobilePickerError() != null,
   )
+
+  useEffect(() => {
+    if (
+      !hasEpResumeQuery() &&
+      peekEpMobileResume() == null &&
+      peekEpMobilePickerError() == null
+    ) {
+      return
+    }
+    queueMicrotask(() => setEffectivePathsSyncOpen(true))
+  }, [])
   const effectivePathsAvailable = googleSheetsOAuthConfigured()
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)

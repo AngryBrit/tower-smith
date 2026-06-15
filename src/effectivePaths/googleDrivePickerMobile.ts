@@ -1,4 +1,5 @@
 import { currentAppUrl } from '../devOrigin'
+import { safeAppReturnPath, redirectToCanonicalOriginIfNeeded } from './epMobileOAuthReturn'
 import { DRIVE_FILE_SCOPE, formatPickerFileIds } from './googleDrivePicker'
 import { shouldUsePickerOAuthRedirectFlow, googlePickerOAuthRedirectUri } from './googleDrivePickerEnvironment'
 import { createGoogleSheetsOAuthState } from './googleSheetsOAuthState'
@@ -43,7 +44,7 @@ function oauthClientId(): string | null {
 }
 
 function returnPathFromLocation(): string {
-  return currentAppUrl()
+  return safeAppReturnPath(currentAppUrl())
 }
 
 function failureResult(
@@ -90,6 +91,8 @@ export async function buildMobilePickerAuthUrl(
 export async function redirectToMobilePickerAuth(
   options: MobilePickerRedirectOptions,
 ): Promise<void> {
+  if (redirectToCanonicalOriginIfNeeded()) return
+
   const oauthState = createGoogleSheetsOAuthState()
   const codeVerifier = createPkceVerifier()
   const redirectUri = googlePickerOAuthRedirectUri()
@@ -169,7 +172,7 @@ export async function completeMobilePickerOAuthCallback(
   searchParams: URLSearchParams,
 ): Promise<MobilePickerCallbackResult> {
   const flow = readEpMobileGrantFlow()
-  const fallbackReturnPath = flow?.returnPath ?? currentAppUrl()
+  const fallbackReturnPath = safeAppReturnPath(flow?.returnPath)
   if (!flow) {
     return failureResult('missing_flow', fallbackReturnPath)
   }
@@ -177,30 +180,30 @@ export async function completeMobilePickerOAuthCallback(
   const returnedState = searchParams.get('state')
   if (!returnedState || returnedState !== flow.oauthState) {
     clearEpMobileGrantFlow()
-    return failureResult('state_mismatch', flow.returnPath)
+    return failureResult('state_mismatch', safeAppReturnPath(flow.returnPath))
   }
 
   if (searchParams.get('error')) {
     clearEpMobileGrantFlow()
-    return failureResult('cancelled', flow.returnPath)
+    return failureResult('cancelled', safeAppReturnPath(flow.returnPath))
   }
 
   const code = searchParams.get('code')
   if (!code) {
     clearEpMobileGrantFlow()
-    return failureResult('token_exchange_failed', flow.returnPath)
+    return failureResult('token_exchange_failed', safeAppReturnPath(flow.returnPath))
   }
 
   const redirectUri = googlePickerOAuthRedirectUri()
   const tokenResult = await exchangeAuthorizationCode(code, flow.codeVerifier, redirectUri)
   if (!tokenResult) {
     clearEpMobileGrantFlow()
-    return failureResult('token_exchange_failed', flow.returnPath)
+    return failureResult('token_exchange_failed', safeAppReturnPath(flow.returnPath))
   }
 
   writeCachedSheetsToken(tokenResult.accessToken, tokenResult.expiresInSec)
 
-  const returnPath = flow.returnPath
+  const returnPath = safeAppReturnPath(flow.returnPath)
   stashEpMobileResume({
     accessToken: tokenResult.accessToken,
     expiresInSec: tokenResult.expiresInSec,

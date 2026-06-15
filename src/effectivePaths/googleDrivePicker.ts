@@ -259,8 +259,8 @@ export async function pickGoogleSpreadsheets(
     }
 
     try {
-      options.onPickerUiActive?.(true)
       builder.build().setVisible(true)
+      options.onPickerUiActive?.(true)
     } catch {
       finish({ ok: false, reason: 'picker_failed' })
     }
