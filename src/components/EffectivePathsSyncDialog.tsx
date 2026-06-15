@@ -77,6 +77,10 @@ import {
   linkedWorkbookNamesFromGateway,
 } from '../effectivePaths/grantEffectivePathsSpreadsheetAccess'
 import {
+  isJsPickerGrantFailure,
+  redirectMobilePickerAfterJsFailure,
+} from '../effectivePaths/effectivePathsJsPickerFallback'
+import {
   beginMobileEffectivePathsGrant,
   resumeMobileEffectivePathsGrant,
 } from '../effectivePaths/effectivePathsMobileGrantFlow'
@@ -648,6 +652,17 @@ export function EffectivePathsSyncDialog({
               },
             )
             if (!retryGrant.ok) {
+              if (isJsPickerGrantFailure(retryGrant.reason)) {
+                await redirectMobilePickerAfterJsFailure({
+                  phase: 'linked_workbooks',
+                  masterSpreadsheetId: parsedMaster.spreadsheetId,
+                  masterSheetGid: parsedMaster.sheetGid,
+                  spreadsheetIds: collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
+                  multiselect: true,
+                  titles: pickerTitles,
+                  gateway: result,
+                })
+              }
               reportMobilePickerError(retryGrant.reason)
             } else {
               result = await listWorkbooks()
@@ -714,7 +729,7 @@ export function EffectivePathsSyncDialog({
         )
       }
     },
-    [formatExportError, parsedMaster, reportMobilePickerError, showNotice, t],
+    [formatExportError, parsedMaster, pickerTitles, reportMobilePickerError, showNotice, t],
   )
 
   useEffect(() => {

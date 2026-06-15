@@ -11,6 +11,10 @@ import {
   type EffectivePathsExportError,
 } from './exportEffectivePathsApi'
 import {
+  isJsPickerGrantFailure,
+  redirectMobilePickerAfterJsFailure,
+} from './effectivePathsJsPickerFallback'
+import {
   pickGoogleSpreadsheets,
   type GoogleSpreadsheetPickerResult,
 } from './googleDrivePicker'
@@ -160,7 +164,20 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
         onPickerUiActive,
       },
     )
-    return grant.ok ? { ok: true } : grant
+    if (!grant.ok) {
+      if (isJsPickerGrantFailure(grant.reason)) {
+        await redirectMobilePickerAfterJsFailure({
+          phase: 'all_workbooks',
+          masterSpreadsheetId,
+          masterSheetGid,
+          spreadsheetIds: [masterSpreadsheetId, ...cachedLinked],
+          multiselect: true,
+          titles,
+        })
+      }
+      return grant
+    }
+    return { ok: true }
   }
 
   const masterGrant = await grantIdsMasterSpreadsheetAccess(
@@ -169,7 +186,19 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
     titles.idsMaster,
     onPickerUiActive,
   )
-  if (!masterGrant.ok) return masterGrant
+  if (!masterGrant.ok) {
+    if (isJsPickerGrantFailure(masterGrant.reason)) {
+      await redirectMobilePickerAfterJsFailure({
+        phase: 'master',
+        masterSpreadsheetId,
+        masterSheetGid,
+        spreadsheetIds: [masterSpreadsheetId],
+        multiselect: false,
+        titles,
+      })
+    }
+    return masterGrant
+  }
 
   const gatewayResult = await fetchEffectivePathsIdsGateway({
     googleAccessToken: accessToken,
@@ -196,7 +225,20 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
       requireMasterSpreadsheetId: masterSpreadsheetId,
       onPickerUiActive,
     })
-    if (!grant.ok) return grant
+    if (!grant.ok) {
+      if (isJsPickerGrantFailure(grant.reason)) {
+        await redirectMobilePickerAfterJsFailure({
+          phase: 'linked_workbooks',
+          masterSpreadsheetId,
+          masterSheetGid,
+          spreadsheetIds: allIds,
+          multiselect: true,
+          titles,
+          gateway,
+        })
+      }
+      return grant
+    }
   }
 
   writeCachedLinkedSpreadsheetIds(masterSpreadsheetId, linkedOnly)

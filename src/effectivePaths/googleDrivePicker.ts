@@ -98,17 +98,16 @@ export function googleDrivePickerConfigured(): boolean {
   return googlePickerApiKey() != null
 }
 
-function oauthClientId(): string | null {
-  const id = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID
-  return typeof id === 'string' && id.trim().length > 0 ? id.trim() : null
-}
-
 function pickerAppId(): string | null {
   const projectNumber = import.meta.env.VITE_GOOGLE_CLOUD_PROJECT_NUMBER
   if (typeof projectNumber === 'string' && projectNumber.trim().length > 0) {
     return projectNumber.trim()
   }
-  return oauthClientId()
+  return null
+}
+
+export function googlePickerAppIdConfigured(): boolean {
+  return pickerAppId() != null
 }
 
 function loadGapiScript(): Promise<void> {

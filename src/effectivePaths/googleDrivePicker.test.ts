@@ -3,6 +3,7 @@ import {
   formatPickerFileIds,
   googleDrivePickerConfigured,
   googlePickerApiKey,
+  googlePickerAppIdConfigured,
 } from './googleDrivePicker'
 
 describe('formatPickerFileIds', () => {
@@ -26,5 +27,17 @@ describe('googleDrivePickerConfigured', () => {
     vi.stubEnv('VITE_GOOGLE_PICKER_API_KEY', 'test-picker-key')
     expect(googlePickerApiKey()).toBe('test-picker-key')
     expect(googleDrivePickerConfigured()).toBe(true)
+  })
+
+  it('reports when the cloud project number is missing', () => {
+    vi.stubEnv('VITE_GOOGLE_PICKER_API_KEY', 'test-picker-key')
+    vi.stubEnv('VITE_GOOGLE_CLOUD_PROJECT_NUMBER', '')
+    expect(googlePickerAppIdConfigured()).toBe(false)
+  })
+
+  it('reports when the cloud project number is set', () => {
+    vi.stubEnv('VITE_GOOGLE_PICKER_API_KEY', 'test-picker-key')
+    vi.stubEnv('VITE_GOOGLE_CLOUD_PROJECT_NUMBER', '123456789012')
+    expect(googlePickerAppIdConfigured()).toBe(true)
   })
 })
