@@ -1453,7 +1453,7 @@ export const STRINGS_EN = {
     'Import from or export to your Effective Paths workbooks linked on the IDS tab.',
   ep_sync_step1: 'Set your IDS Master spreadsheet URL in Settings (Tools → Settings).',
   ep_sync_step2:
-    'Click below to allow Google Sheets access — this is separate from signing into TowerSmith.',
+    'Click below to sign in with Google and choose your IDS Master spreadsheet in the file picker — separate from signing into TowerSmith.',
   ep_sync_step3:
     'Export requires Editor access on your linked workbooks. Exports create preview tabs first — review them, then apply or discard.',
   ep_sync_ids_master_account_hint:
@@ -1536,9 +1536,9 @@ export const STRINGS_EN = {
   ep_export_spreadsheet_placeholder: '1RnNttj_… or https://docs.google.com/spreadsheets/d/…',
   ep_export_spreadsheet_hint:
     'Paste your IDS Master URL (any tab is fine — TowerSmith reads the IDS tab). Linked workbook IDs come only from column D (“Go to my … Sheet” hyperlinks).',
-  ep_export_load_sheets_btn: 'Allow Google Sheets & load linked workbooks',
+  ep_export_load_sheets_btn: 'Connect Google Sheets & load linked workbooks',
   ep_export_load_linked_workbooks_btn: 'Load linked workbooks',
-  ep_export_loading_sheets: 'Allowing Google Sheets & checking linked workbooks…',
+  ep_export_loading_sheets: 'Connecting Google Sheets & checking linked workbooks…',
   ep_export_loading_linked_workbooks: 'Loading linked workbooks…',
   ep_export_loading_ids_gateway: 'Reading IDS Master…',
   ep_export_loading_workbook_named: 'Checking {{name}}…',
@@ -1546,7 +1546,7 @@ export const STRINGS_EN = {
   ep_export_workbook_access_denied: 'No access',
   ep_export_workbook_access_not_found: 'Not found',
   ep_export_linked_workbooks_denied:
-    'Google Sheets is connected, but TowerSmith cannot open these linked workbooks: {{names}}. Open each in Google Sheets with the same account (Editor access) or fix the “Go to my … Sheet” link on the IDS tab.',
+    'TowerSmith cannot open these linked workbooks: {{names}}. Click “Connect Google Sheets & load linked workbooks” again and select them in the Google file picker, or fix the “Go to my … Sheet” link on the IDS tab.',
   ep_export_linked_sheets_title: 'IDS tab “{{tab}}” — linked workbooks',
   ep_export_relics_sync_target: 'relic sync target',
   ep_export_themes_sync_target: 'theme sync target',
@@ -1634,14 +1634,22 @@ export const STRINGS_EN = {
     '{{count}} sheet lab names were not mapped and were left unchanged.',
   ep_export_labs_unmapped_sample: 'Examples: {{names}}',
   ep_export_invalid_spreadsheet: 'Enter a valid Google Spreadsheet ID or docs.google.com URL.',
-  ep_export_oauth_not_configured: 'Google Sheets export is not configured on this site.',
+  ep_export_oauth_not_configured:
+    'Google Sheets sync is not configured on this site (OAuth client ID and Picker API key required).',
   ep_export_cancelled: 'Google sign-in was cancelled.',
+  ep_export_picker_cancelled: 'Google file picker was closed before any spreadsheets were selected.',
+  ep_export_picker_failed: 'Could not open the Google file picker. Try again in Chrome or Firefox.',
+  ep_export_picker_wrong_ids_master:
+    'The spreadsheet you selected does not match your saved IDS Master URL. Select that exact spreadsheet in the picker, or update the URL in Settings.',
+  ep_picker_ids_master_title: 'Select your IDS Master spreadsheet',
+  ep_picker_all_workbooks_title: 'Select your IDS Master and linked workbooks',
+  ep_picker_linked_workbooks_title: 'Select linked Effective Paths workbooks',
   ep_export_oauth_timeout:
     'Google sign-in timed out. Allow popups for this site, complete the consent screen, then try again. Embedded IDE browsers (including Cursor) cannot finish Google sign-in — use Chrome or Firefox instead.',
   ep_export_error_network: 'Could not reach the export service. Try npm run dev:netlify locally.',
   ep_export_error_invalid_spreadsheet: 'Invalid spreadsheet ID.',
   ep_export_error_sheets_auth_failed:
-    'Google sign-in failed or the spreadsheets permission was not granted. Try again and allow access to Google Sheets.',
+    'Google sign-in failed or spreadsheet access was not granted. Sign in again and select your spreadsheets in the Google file picker.',
   ep_export_error_sheet_not_found: 'Spreadsheet or tab not found. Check the ID, URL, and gid.',
   ep_export_error_ids_master_not_found: 'Could not read the IDS Master table tab.',
   ep_export_error_ids_master_empty: 'IDS Master has no linked workbook rows.',

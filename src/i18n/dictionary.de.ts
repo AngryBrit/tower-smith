@@ -1404,7 +1404,7 @@ export const STRINGS_DE = {
     'Importiere aus oder exportiere in deine Effective-Paths-Arbeitsmappen, die auf dem IDS-Tab verknüpft sind.',
   ep_sync_step1: 'IDS-Master-Tabellen-URL in den Einstellungen setzen (Tools → Einstellungen).',
   ep_sync_step2:
-    'Unten Google-Tabellen-Zugriff erlauben — getrennt vom TowerSmith-Login.',
+    'Unten mit Google anmelden und deine IDS-Master-Tabelle im Dateiauswahlfenster wählen — getrennt vom TowerSmith-Login.',
   ep_sync_step3:
     'Export erfordert Bearbeiter-Rechte an deinen verknüpften Arbeitsmappen. Exporte legen zuerst Vorschau-Tabs an — prüfen, dann übernehmen oder verwerfen.',
   ep_sync_ids_master_account_hint:
@@ -1490,9 +1490,9 @@ export const STRINGS_DE = {
   ep_export_spreadsheet_placeholder: '1RnNttj_… oder https://docs.google.com/spreadsheets/d/…',
   ep_export_spreadsheet_hint:
     'IDS-Master-URL einfügen. Verknüpfte IDs stammen nur aus Spalte D („Go to my … Sheet“-Links).',
-  ep_export_load_sheets_btn: 'Google Sheets erlauben & verknüpfte Mappen laden',
+  ep_export_load_sheets_btn: 'Google Sheets verbinden & verknüpfte Mappen laden',
   ep_export_load_linked_workbooks_btn: 'Verknüpfte Arbeitsmappen laden',
-  ep_export_loading_sheets: 'Google Sheets wird erlaubt und verknüpfte Arbeitsmappen geprüft…',
+  ep_export_loading_sheets: 'Google Sheets wird verbunden und verknüpfte Arbeitsmappen geprüft…',
   ep_export_loading_linked_workbooks: 'Verknüpfte Arbeitsmappen werden geladen…',
   ep_export_loading_ids_gateway: 'IDS Master wird gelesen…',
   ep_export_loading_workbook_named: '{{name}} wird geprüft…',
@@ -1500,7 +1500,7 @@ export const STRINGS_DE = {
   ep_export_workbook_access_denied: 'Kein Zugriff',
   ep_export_workbook_access_not_found: 'Nicht gefunden',
   ep_export_linked_workbooks_denied:
-    'Google Sheets ist verbunden, aber TowerSmith kann diese verknüpften Arbeitsmappen nicht öffnen: {{names}}. Jeweils in Google Sheets mit demselben Konto öffnen (Editor-Rechte) oder den „Go to my … Sheet“-Link auf dem IDS-Tab korrigieren.',
+    'TowerSmith kann diese verknüpften Arbeitsmappen nicht öffnen: {{names}}. Klicke erneut auf „Google Sheets verbinden & verknüpfte Mappen laden“ und wähle sie im Google-Dateiauswahlfenster, oder korrigiere den „Go to my … Sheet“-Link auf dem IDS-Tab.',
   ep_export_linked_sheets_title: 'IDS-Tab „{{tab}}“ — verknüpfte Arbeitsmappen',
   ep_export_relics_sync_target: 'Relikt-Sync-Ziel',
   ep_export_themes_sync_target: 'Theme-Sync-Ziel',
@@ -1569,15 +1569,25 @@ export const STRINGS_DE = {
   ep_export_cards_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_workshop_unmapped_sample: 'Beispiele: {{names}}',
   ep_export_invalid_spreadsheet: 'Gültige Google-Spreadsheet-ID oder docs.google.com-URL eingeben.',
-  ep_export_oauth_not_configured: 'Google-Sheets-Export ist auf dieser Seite nicht konfiguriert.',
+  ep_export_oauth_not_configured:
+    'Google-Sheets-Sync ist auf dieser Seite nicht konfiguriert (OAuth-Client-ID und Picker-API-Schlüssel erforderlich).',
   ep_export_cancelled: 'Google-Anmeldung abgebrochen.',
+  ep_export_picker_cancelled:
+    'Das Google-Dateiauswahlfenster wurde geschlossen, bevor Tabellen ausgewählt wurden.',
+  ep_export_picker_failed:
+    'Das Google-Dateiauswahlfenster konnte nicht geöffnet werden. Erneut in Chrome oder Firefox versuchen.',
+  ep_export_picker_wrong_ids_master:
+    'Die gewählte Tabelle entspricht nicht deiner gespeicherten IDS-Master-URL. Wähle genau diese Tabelle im Auswahlfenster oder aktualisiere die URL in den Einstellungen.',
+  ep_picker_ids_master_title: 'IDS-Master-Tabelle auswählen',
+  ep_picker_all_workbooks_title: 'IDS Master und verknüpfte Arbeitsmappen auswählen',
+  ep_picker_linked_workbooks_title: 'Verknüpfte Effective-Paths-Arbeitsmappen auswählen',
   ep_export_oauth_timeout:
     'Google-Anmeldung abgelaufen. Pop-ups erlauben, Zustimmung abschließen und erneut versuchen. Eingebettete IDE-Browser (z. B. Cursor) schließen Google-Anmeldung nicht ab — Chrome oder Firefox verwenden.',
   ep_export_error_network:
     'Export-Dienst nicht erreichbar. Lokal npm run dev:netlify versuchen.',
   ep_export_error_invalid_spreadsheet: 'Ungültige Spreadsheet-ID.',
   ep_export_error_sheets_auth_failed:
-    'Google-Anmeldung fehlgeschlagen oder Tabellenberechtigung nicht erteilt. Erneut versuchen und Google Sheets-Zugriff erlauben.',
+    'Google-Anmeldung fehlgeschlagen oder Tabellenzugriff nicht erteilt. Erneut anmelden und die Tabellen im Google-Dateiauswahlfenster auswählen.',
   ep_export_error_sheet_not_found: 'Tabelle oder Tab nicht gefunden. ID, URL und gid prüfen.',
   ep_export_error_ids_master_not_found: 'IDS-Master-Tabellenblatt konnte nicht gelesen werden.',
   ep_export_error_ids_master_empty: 'IDS Master enthält keine verknüpften Arbeitsmappen-Zeilen.',

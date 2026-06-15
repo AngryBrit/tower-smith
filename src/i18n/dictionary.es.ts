@@ -1467,7 +1467,7 @@ export const STRINGS_ES = {
     'Importa o exporta datos en tus libros Effective Paths vinculados en la pestaña IDS.',
   ep_sync_step1: 'Configura la URL de IDS Master en Ajustes (Herramientas → Ajustes).',
   ep_sync_step2:
-    'Abajo, permite el acceso a Google Sheets — independiente del inicio de sesión en TowerSmith.',
+    'Abajo, inicia sesión con Google y elige tu hoja IDS Master en el selector de archivos — independiente del inicio de sesión en TowerSmith.',
   ep_sync_step3:
     'La exportación requiere acceso de Editor a tus libros vinculados. Las exportaciones crean primero pestañas de vista previa — revísalas y luego aplica o descarta.',
   ep_sync_ids_master_account_hint:
@@ -1554,9 +1554,9 @@ export const STRINGS_ES = {
   ep_export_spreadsheet_placeholder: '1RnNttj_… o https://docs.google.com/spreadsheets/d/…',
   ep_export_spreadsheet_hint:
     'Pega la URL de tu IDS Master. Los IDs vinculados se leen solo de la columna D (“Ir a mi hoja …”).',
-  ep_export_load_sheets_btn: 'Permitir Google Sheets y cargar libros vinculados',
+  ep_export_load_sheets_btn: 'Conectar Google Sheets y cargar libros vinculados',
   ep_export_load_linked_workbooks_btn: 'Cargar libros vinculados',
-  ep_export_loading_sheets: 'Permitiendo Google Sheets y comprobando libros vinculados…',
+  ep_export_loading_sheets: 'Conectando Google Sheets y comprobando libros vinculados…',
   ep_export_loading_linked_workbooks: 'Cargando libros vinculados…',
   ep_export_loading_ids_gateway: 'Leyendo IDS Master…',
   ep_export_loading_workbook_named: 'Comprobando {{name}}…',
@@ -1564,7 +1564,7 @@ export const STRINGS_ES = {
   ep_export_workbook_access_denied: 'Sin acceso',
   ep_export_workbook_access_not_found: 'No encontrado',
   ep_export_linked_workbooks_denied:
-    'Google Sheets está conectado, pero TowerSmith no puede abrir estos libros vinculados: {{names}}. Ábrelos en Google Sheets con la misma cuenta (acceso de Editor) o corrige el enlace “Ir a mi hoja …” en la pestaña IDS.',
+    'TowerSmith no puede abrir estos libros vinculados: {{names}}. Pulsa de nuevo «Conectar Google Sheets y cargar libros vinculados» y selecciónalos en el selector de archivos de Google, o corrige el enlace «Ir a mi hoja …» en la pestaña IDS.',
   ep_export_linked_sheets_title: 'Pestaña IDS “{{tab}}” — libros vinculados',
   ep_export_relics_sync_target: 'objetivo de sincronización de reliquias',
   ep_export_themes_sync_target: 'objetivo de sincronización de temas',
@@ -1633,15 +1633,25 @@ export const STRINGS_ES = {
   ep_export_cards_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_workshop_unmapped_sample: 'Ejemplos: {{names}}',
   ep_export_invalid_spreadsheet: 'Introduce un ID o URL válido de Google Spreadsheet.',
-  ep_export_oauth_not_configured: 'La exportación a Google Sheets no está configurada en este sitio.',
+  ep_export_oauth_not_configured:
+    'La sincronización con Google Sheets no está configurada en este sitio (se requieren ID de cliente OAuth y clave API de Picker).',
   ep_export_cancelled: 'Se canceló el inicio de sesión de Google.',
+  ep_export_picker_cancelled:
+    'Se cerró el selector de archivos de Google antes de seleccionar hojas de cálculo.',
+  ep_export_picker_failed:
+    'No se pudo abrir el selector de archivos de Google. Inténtalo de nuevo en Chrome o Firefox.',
+  ep_export_picker_wrong_ids_master:
+    'La hoja seleccionada no coincide con la URL de IDS Master guardada. Selecciona esa hoja exacta en el selector o actualiza la URL en Ajustes.',
+  ep_picker_ids_master_title: 'Selecciona tu hoja IDS Master',
+  ep_picker_all_workbooks_title: 'Selecciona IDS Master y libros vinculados',
+  ep_picker_linked_workbooks_title: 'Selecciona los libros Effective Paths vinculados',
   ep_export_oauth_timeout:
     'Tiempo de espera agotado en el inicio de sesión de Google. Permite ventanas emergentes, completa el consentimiento e inténtalo de nuevo. Los navegadores integrados del IDE (incluido Cursor) no pueden completar el inicio de sesión — usa Chrome o Firefox.',
   ep_export_error_network:
     'No se pudo contactar el servicio de exportación. Prueba npm run dev:netlify en local.',
   ep_export_error_invalid_spreadsheet: 'ID de hoja no válido.',
   ep_export_error_sheets_auth_failed:
-    'Falló el inicio de sesión de Google o no se concedió permiso de hojas de cálculo. Inténtalo de nuevo y permite el acceso a Google Sheets.',
+    'Falló el inicio de sesión de Google o no se concedió acceso a las hojas. Inicia sesión de nuevo y selecciona tus hojas en el selector de archivos de Google.',
   ep_export_error_sheet_not_found: 'Hoja o pestaña no encontrada. Revisa ID, URL y gid.',
   ep_export_error_ids_master_not_found: 'No se pudo leer la pestaña de tabla IDS Master.',
   ep_export_error_ids_master_empty: 'IDS Master no tiene filas de libros vinculados.',

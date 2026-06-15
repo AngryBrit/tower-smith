@@ -92,20 +92,20 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 
 1. **Tools / Settings** → paste your **IDS Master** spreadsheet URL or ID and press **Save IDS** (stored on your Supabase profile when signed in and synced across devices; device-local when signed out). If you saved the URL while signed in, sign in to TowerSmith first — the sync dialog explains this when the ref is on your account.
 2. **LAB tab** → **Tower Backup & Sharing** → **Effective Paths sync…** — follow the in-dialog setup steps if this is your first time.
-3. Sign in with Google (OAuth; scope: Google Sheets; CSRF-protected `state` parameter). TowerSmith always prompts Google consent when loading linked workbooks and reads workbook IDs from the IDS tab for per-category import/export actions.
+3. Sign in with Google (OAuth `drive.file` scope; CSRF-protected `state` parameter). Choose your IDS Master in the Google file picker, then select any linked workbooks TowerSmith cannot open yet. TowerSmith reads workbook IDs from the IDS tab for per-category import/export actions.
 4. **Import** pulls lab levels, workshop stats, relic ownership, themes, cards, bots, guardians, modules, and related data into your workspace.
 5. **Export** writes TowerSmith state back to the linked sheets. Exports can stage preview tabs titled `… (TowerSmith preview)` so you can review before promoting changes to the live sheet tabs.
 
 **Requirements**
 
-- A configured **Google OAuth Web client** with the Google Sheets API enabled. Set `VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID` in `.env` (local) and Netlify build env (production). See [`.env.example`](.env.example).
+- A configured **Google OAuth Web client** with the Google Sheets API and **Google Picker API** enabled. Set `VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID` and `VITE_GOOGLE_PICKER_API_KEY` in `.env` (local) and Netlify build env (production). OAuth uses the non-sensitive `drive.file` scope; users grant access per spreadsheet via Picker. See [`.env.example`](.env.example).
 - **Netlify Functions** for server-side Sheets API calls: use `npm run dev:netlify` locally or deploy to Netlify. Plain `npm run dev` runs the UI only (OAuth may work for listing, but import/export endpoints need Functions).
 - Your Google account must have edit access to the IDS Master sheet and each linked workbook.
 
 **OAuth troubleshooting**
 
 - Use **Chrome or Firefox** at the site URL — embedded IDE browsers (including Cursor’s built-in preview) can show Google sign-in but cannot return the access token.
-- Allow **popups** for the TowerSmith origin and complete the **Google Sheets** consent step after choosing your account.
+- Allow **popups** for the TowerSmith origin and complete the **Google sign-in** and **file picker** steps after choosing your account.
 - Local dev: run **`npm run dev:netlify`** and open `http://localhost:8888` (Functions + COOP headers). Plain `npm run dev` on port 5173 also sets COOP for OAuth, but import/export still needs Functions.
 - If sign-in times out, hard-refresh and retry; check that your OAuth client’s **Authorized JavaScript origins** include your exact origin (e.g. `https://www.towersmith.com`, `http://localhost:8888`).
 
@@ -151,7 +151,7 @@ npm run preview # serve dist/ locally
 npm run dev:netlify
 ```
 
-Requires Supabase env vars for the gallery — copy `.env.example` to `.env` and fill in your keys. For Effective Paths sync, also set `VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID`. See [Community gallery](#community-gallery-netlify--supabase) and [Effective Paths sync](#effective-paths-sync-google-sheets).
+Requires Supabase env vars for the gallery — copy `.env.example` to `.env` and fill in your keys. For Effective Paths sync, also set `VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID` and `VITE_GOOGLE_PICKER_API_KEY`. See [Community gallery](#community-gallery-netlify--supabase) and [Effective Paths sync](#effective-paths-sync-google-sheets).
 
 **Note:** Netlify Dev runs Vite only (see [`netlify.toml`](netlify.toml)); it does not re-run `copy-god-tables-to-public.mjs` on every start. After editing GOD tables under `tables/`, run `node scripts/copy-god-tables-to-public.mjs` or use `npm run dev` / `npm run build`.
 

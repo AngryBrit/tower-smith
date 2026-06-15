@@ -1,3 +1,4 @@
+import { googleDrivePickerConfigured } from './googleDrivePicker'
 import {
   clearGoogleSheetsOAuthState,
   createGoogleSheetsOAuthState,
@@ -6,8 +7,11 @@ import {
 } from './googleSheetsOAuthState'
 
 const GIS_SCRIPT_SRC = 'https://accounts.google.com/gsi/client'
-const SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets'
-const TOKEN_CACHE_KEY = 'towersmith_google_sheets_token'
+/** @deprecated Use {@link DRIVE_FILE_SCOPE} — kept for migration docs only. */
+export const LEGACY_SHEETS_SCOPE = 'https://www.googleapis.com/auth/spreadsheets'
+export const DRIVE_FILE_SCOPE = 'https://www.googleapis.com/auth/drive.file'
+const OAUTH_SCOPE = DRIVE_FILE_SCOPE
+const TOKEN_CACHE_KEY = 'towersmith_google_drive_file_token'
 const TOKEN_EXPIRY_BUFFER_MS = 60_000
 /** Max wait for GIS token callback (consent popup dismissed, blocked, or lost). */
 const OAUTH_CALLBACK_TIMEOUT_MS = 120_000
@@ -61,7 +65,11 @@ let gisScriptPromise: Promise<void> | null = null
 
 export function googleSheetsOAuthConfigured(): boolean {
   const id = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID
-  return typeof id === 'string' && id.trim().length > 0
+  return (
+    typeof id === 'string' &&
+    id.trim().length > 0 &&
+    googleDrivePickerConfigured()
+  )
 }
 
 function readCachedSheetsToken(): string | null {
@@ -256,7 +264,7 @@ async function requestTokenWithPrompt(
 
     const client = oauth2.initTokenClient({
       client_id: clientId,
-      scope: SHEETS_SCOPE,
+      scope: OAUTH_SCOPE,
       state: oauthState,
       use_fedcm_for_prompt: useFedcm,
       callback: (response) => {
@@ -303,12 +311,12 @@ async function requestInteractiveToken(prompt: '' | 'consent'): Promise<string> 
 }
 
 export type GoogleSheetsOAuthOptions = {
-  /** Force Google consent (re-authorize spreadsheets scope). */
+  /** Force Google consent (re-authorize drive.file scope). */
   consent?: boolean
 }
 
 /**
- * Request a short-lived Google access token with spreadsheets scope.
+ * Request a short-lived Google access token with drive.file scope.
  * Reuses a cached session token when valid, then tries silent GIS auth before prompting.
  */
 export async function requestGoogleSheetsAccessToken(
@@ -341,7 +349,7 @@ export async function requestGoogleSheetsAccessToken(
   return requestInteractiveToken(options.consent ? 'consent' : '')
 }
 
-/** Cached spreadsheets token for this browser tab session, if still valid. */
+/** Cached drive.file token for this browser tab session, if still valid. */
 export function getCachedGoogleSheetsAccessToken(): string | null {
   return readCachedSheetsToken()
 }

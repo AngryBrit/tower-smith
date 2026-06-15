@@ -394,7 +394,7 @@ function parseWorkbookAccessBody(body: unknown): LinkedWorkbookAccess | null {
   return { name, spreadsheetId, access }
 }
 
-async function fetchEffectivePathsIdsGateway(options: {
+export async function fetchEffectivePathsIdsGateway(options: {
   googleAccessToken: string
   masterSpreadsheetId: string
   sheetGid: number | null

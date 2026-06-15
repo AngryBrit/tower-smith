@@ -69,6 +69,14 @@ import {
 import { accessContextForSyncTarget } from '../effectivePaths/effectivePathsStaging'
 import { useStoredSpreadsheetRef } from '../effectivePaths/useStoredSpreadsheetRef'
 import {
+  cacheLinkedSpreadsheetIdsFromGateway,
+  collectDeniedLinkedSpreadsheetIds,
+  collectSpreadsheetIdsFromGateway,
+  ensureEffectivePathsSpreadsheetAccess,
+  grantEffectivePathsSpreadsheetsAccess,
+  linkedWorkbookNamesFromGateway,
+} from '../effectivePaths/grantEffectivePathsSpreadsheetAccess'
+import {
   getCachedGoogleSheetsAccessToken,
   googleSheetsOAuthConfigured,
   requestGoogleSheetsAccessToken,
@@ -581,62 +589,104 @@ export function EffectivePathsSyncDialog({
       if (!token) return
 
       persistSpreadsheetRef()
-      const result = await listEffectivePathsWorkbooks({
-        googleAccessToken: token,
+
+      const accessResult = await ensureEffectivePathsSpreadsheetAccess({
+        accessToken: token,
         masterSpreadsheetId: parsedMaster.spreadsheetId,
-        sheetGid: parsedMaster.sheetGid,
-        onProgress: setLoadProgress,
-        onGateway: (gateway) => {
-          applyEffectivePathsGateway(gateway, {
-            setWorkbooks,
-            setIdsTabTitle,
-            setRelicsWorkbook,
-            setRelicsWorkbookAccess,
-            setThemesWorkbook,
-            setThemesWorkbookAccess,
-            setCardsWorkbook,
-            setCardsWorkbookAccess,
-            setWorkshopWorkbook,
-            setWorkshopWorkbookAccess,
-            setBotsWorkbook,
-            setBotsWorkbookAccess,
-            setLaboratoryWorkbook,
-            setLaboratoryWorkbookAccess,
-            setUwsWorkbook,
-            setUwsWorkbookAccess,
-            setGuardiansWorkbook,
-            setGuardiansWorkbookAccess,
-            setModulesWorkbook,
-            setModulesWorkbookAccess,
-            setWorkbookAccess,
-          })
-        },
-        onWorkbookAccess: (row) => {
-          applyEffectivePathsWorkbookAccessRow(row, {
-            setWorkbooks,
-            setIdsTabTitle,
-            setRelicsWorkbook,
-            setRelicsWorkbookAccess,
-            setThemesWorkbook,
-            setThemesWorkbookAccess,
-            setCardsWorkbook,
-            setCardsWorkbookAccess,
-            setWorkshopWorkbook,
-            setWorkshopWorkbookAccess,
-            setBotsWorkbook,
-            setBotsWorkbookAccess,
-            setLaboratoryWorkbook,
-            setLaboratoryWorkbookAccess,
-            setUwsWorkbook,
-            setUwsWorkbookAccess,
-            setGuardiansWorkbook,
-            setGuardiansWorkbookAccess,
-            setModulesWorkbook,
-            setModulesWorkbookAccess,
-            setWorkbookAccess,
-          })
+        masterSheetGid: parsedMaster.sheetGid,
+        titles: {
+          idsMaster: t('ep_picker_ids_master_title'),
+          allWorkbooks: t('ep_picker_all_workbooks_title'),
+          linkedWorkbooks: t('ep_picker_linked_workbooks_title'),
         },
       })
+      if (!accessResult.ok) {
+        if (accessResult.reason === 'gateway_failed') {
+          showNotice(formatExportError(accessResult.error, accessResult.message), 'error')
+        } else if (accessResult.reason === 'cancelled') {
+          showNotice(t('ep_export_picker_cancelled'), 'info')
+        } else if (accessResult.reason === 'wrong_spreadsheet') {
+          showNotice(t('ep_export_picker_wrong_ids_master'), 'error')
+        } else {
+          showNotice(t('ep_export_picker_failed'), 'error')
+        }
+        return
+      }
+
+      const workbookLoadSetters = {
+        setWorkbooks,
+        setIdsTabTitle,
+        setRelicsWorkbook,
+        setRelicsWorkbookAccess,
+        setThemesWorkbook,
+        setThemesWorkbookAccess,
+        setCardsWorkbook,
+        setCardsWorkbookAccess,
+        setWorkshopWorkbook,
+        setWorkshopWorkbookAccess,
+        setBotsWorkbook,
+        setBotsWorkbookAccess,
+        setLaboratoryWorkbook,
+        setLaboratoryWorkbookAccess,
+        setUwsWorkbook,
+        setUwsWorkbookAccess,
+        setGuardiansWorkbook,
+        setGuardiansWorkbookAccess,
+        setModulesWorkbook,
+        setModulesWorkbookAccess,
+        setWorkbookAccess,
+      }
+
+      const listWorkbooks = () =>
+        listEffectivePathsWorkbooks({
+          googleAccessToken: token,
+          masterSpreadsheetId: parsedMaster.spreadsheetId,
+          sheetGid: parsedMaster.sheetGid,
+          onProgress: setLoadProgress,
+          onGateway: (gateway) => {
+            applyEffectivePathsGateway(gateway, workbookLoadSetters)
+          },
+          onWorkbookAccess: (row) => {
+            applyEffectivePathsWorkbookAccessRow(row, workbookLoadSetters)
+          },
+        })
+
+      let result = await listWorkbooks()
+
+      if (result.ok) {
+        cacheLinkedSpreadsheetIdsFromGateway(parsedMaster.spreadsheetId, result)
+
+        const deniedIds = collectDeniedLinkedSpreadsheetIds(result.workbookAccess)
+        if (deniedIds.length > 0) {
+          const linkedNames = linkedWorkbookNamesFromGateway(result)
+          const retryGrant = await grantEffectivePathsSpreadsheetsAccess(
+            token,
+            collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
+            {
+              title:
+                linkedNames.length > 0
+                  ? `${t('ep_picker_linked_workbooks_title')} (${linkedNames.join(', ')})`
+                  : t('ep_picker_linked_workbooks_title'),
+              multiselect: true,
+              requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
+            },
+          )
+          if (!retryGrant.ok) {
+            if (retryGrant.reason === 'cancelled') {
+              showNotice(t('ep_export_picker_cancelled'), 'info')
+            } else if (retryGrant.reason === 'wrong_spreadsheet') {
+              showNotice(t('ep_export_picker_wrong_ids_master'), 'error')
+            } else {
+              showNotice(t('ep_export_picker_failed'), 'error')
+            }
+          } else {
+            result = await listWorkbooks()
+            if (result.ok) {
+              cacheLinkedSpreadsheetIdsFromGateway(parsedMaster.spreadsheetId, result)
+            }
+          }
+        }
+      }
 
       if (!result.ok) {
         showNotice(formatExportError(result.error, result.message), 'error')
