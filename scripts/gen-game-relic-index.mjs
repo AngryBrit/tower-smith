@@ -239,6 +239,8 @@ const ENUM_OVERRIDES = {
   GeologicalActivity: 'geological_activity',
   MagicCards: 'magic_cards',
   DangerousTricks: 'dangerous_tricks',
+  BigParty: 'big_party',
+  Celebration: 'celebration',
   LegendBadge: 'legend_badge',
   AncientTome: 'ancient_tome',
   Sundial: 'space_sundial',

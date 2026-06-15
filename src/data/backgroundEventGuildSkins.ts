@@ -351,6 +351,13 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     image: '/themes/background/NeuronsBackgroundIcon.webp',
     ownedDefault: true,
   },
+  {
+    id: 'bg-5th-anniversary',
+    nameId: 'theme_bg_5th_anniversary',
+    eventNameId: 'theme_event_5th_anniversary',
+    icon: 'menu-party',
+    image: '/themes/background/5ThAnniversaryBackgroundIcon.webp',
+  },
 ]
 
 export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [

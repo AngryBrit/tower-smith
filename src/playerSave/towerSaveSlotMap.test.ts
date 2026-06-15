@@ -142,4 +142,9 @@ describe('towerSaveSlotMap', () => {
     expect(gameThemeIdAtIndex('tower', 74)).toBe('tower-guild-rabbit-in-hat')
     expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-guild-rabbit-in-hat']).toBe(74)
   })
+
+  it('maps cake event tower at index 75', () => {
+    expect(gameThemeIdAtIndex('tower', 75)).toBe('tower-event-cake')
+    expect(TOWER_SAVE_INDEX_BY_THEME_ID['tower-event-cake']).toBe(75)
+  })
 })

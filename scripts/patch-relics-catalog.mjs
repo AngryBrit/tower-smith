@@ -37,62 +37,62 @@ patch('4th_tower_birthday', { unlock: 'Play for 4 years' })
 
 // —— Swapped medal thresholds ——
 patch('confetti_ball', {
-  unlock: 'Event: Earn 350 medals during the "New Year (II)"',
+  unlock: 'Event: Earn 350 medals during the "New Year (II)" event.',
 })
 patch('party_mask', {
-  unlock: 'Event: Earn 700 medals during the "New Year (II)"',
+  unlock: 'Event: Earn 700 medals during the "New Year (II)" event.',
 })
 
 // —— Viral Outbreak event relics (wiki) ——
 patch('bacteriophage', {
   description: 'Increase tower damage by 2%',
-  unlock: 'Event: Earn 350 medals during the "Viral Outbreak"',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak" event.',
   damagePct: 2,
 })
 patch('rabies', {
   description: 'Increase lab speed by 2%',
-  unlock: 'Event: Earn 350 medals during the "Viral Outbreak (II)"',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak (II)" event.',
 })
 patch('neuron', {
   description: 'Increase health by 5%',
-  unlock: 'Event: Earn 700 medals during the "Viral Outbreak"',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak" event.',
 })
 patch('ebola', {
   description: 'Increase defense absolute by 5%',
-  unlock: 'Event: Earn 700 medals during the "Viral Outbreak (II)"',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak (II)" event.',
 })
 patch('viral_infection', {
   description: 'Increase health by 2%',
-  unlock: 'Event: Earn 350 medals during the "Viral Outbreak (III)"',
+  unlock: 'Event: Earn 350 medals during the "Viral Outbreak (III)" event.',
 })
 patch('immunization', {
   description: 'Increase critical chance by 1%',
-  unlock: 'Event Premium: Earn 550 medals during the "Viral Outbreak (III)"',
+  unlock: 'Event Premium: Earn 550 medals during the "Viral Outbreak (III)" event.',
 })
 patch('personal_care', {
   description: 'Increase free defense upgrade by 2%',
-  unlock: 'Event: Earn 700 medals during the "Viral Outbreak (III)"',
+  unlock: 'Event: Earn 700 medals during the "Viral Outbreak (III)" event.',
 })
 patch('global_threat', {
   description: 'Increase critical factor by 5%',
-  unlock: 'Event Premium: Earn 1100 medals during the "Viral Outbreak (III)"',
+  unlock: 'Event Premium: Earn 1100 medals during the "Viral Outbreak (III)" event.',
 })
 
 // —— Event name / tier fixes ——
 patch('warp_gate', {
-  unlock: 'Event: Earn 350 medals during the "Faster Than Light"',
+  unlock: 'Event: Earn 350 medals during the "Faster Than Light" event.',
 })
 patch('summit_starlight', {
-  unlock: 'Event: Earn 350 medals during the "Full Moon (II)"',
+  unlock: 'Event: Earn 350 medals during the "Full Moon (II)" event.',
 })
 patch('mountain_goat', {
-  unlock: 'Event: Earn 700 medals during the "Full Moon (II)"',
+  unlock: 'Event: Earn 700 medals during the "Full Moon (II)" event.',
 })
 patch('koi_fish', {
-  unlock: 'Event: Earn 350 medals during the "Cherry Blossom (III)"',
+  unlock: 'Event: Earn 350 medals during the "Cherry Blossom (III)" event.',
 })
 patch('bonsai_tree', {
-  unlock: 'Event: Earn 700 medals during the "Cherry Blossom (III)"',
+  unlock: 'Event: Earn 700 medals during the "Cherry Blossom (III)" event.',
 })
 patch('tea_ceremony', {
   unlock: 'Purchase: 200 medals during the "Cherry Blossom (III)"',
@@ -101,55 +101,55 @@ patch('kimono', {
   unlock: 'Purchase: 500 medals during the "Cherry Blossom (III)"',
 })
 patch('honey_jar', {
-  unlock: 'Event: Earn 350 medals during the "Honey (III)"',
+  unlock: 'Event: Earn 350 medals during the "Honey (III)" event.',
 })
 patch('heavenly_sweet', {
-  unlock: 'Event Premium: Earn 550 medals during the "Honey (III)"',
+  unlock: 'Event Premium: Earn 550 medals during the "Honey (III)" event.',
 })
 patch('honey_society', {
-  unlock: 'Event: Earn 700 medals during the "Honey (III)"',
+  unlock: 'Event: Earn 700 medals during the "Honey (III)" event.',
 })
 patch('the_queen', {
-  unlock: 'Event Premium: Earn 1100 medals during the "Honey (III)"',
+  unlock: 'Event Premium: Earn 1100 medals during the "Honey (III)" event.',
 })
 patch('plasma_globe', {
-  unlock: 'Event: Earn 350 medals during the "Plasma Returns (III)"',
+  unlock: 'Event: Earn 350 medals during the "Plasma Returns (III)" event.',
 })
 patch('plasma_vortex', {
-  unlock: 'Event Premium: Earn 550 medals during the "Plasma Returns (III)"',
+  unlock: 'Event Premium: Earn 550 medals during the "Plasma Returns (III)" event.',
 })
 patch('plasma_cell', {
-  unlock: 'Event: Earn 700 medals during the "Plasma Returns (III)"',
+  unlock: 'Event: Earn 700 medals during the "Plasma Returns (III)" event.',
 })
 patch('plasma_chamber', {
-  unlock: 'Event Premium: Earn 1100 medals during the "Plasma Returns (III)"',
+  unlock: 'Event Premium: Earn 1100 medals during the "Plasma Returns (III)" event.',
 })
 patch('magic_cube', {
-  unlock: 'Event Premium: Earn 550 medals during the "Retrowave (III)"',
+  unlock: 'Event Premium: Earn 550 medals during the "Retrowave (III)" event.',
 })
 patch('brunch', {
-  unlock: 'Event: Earn 350 medals during the "Autumn (III)"',
+  unlock: 'Event: Earn 350 medals during the "Autumn (III)" event.',
 })
 patch('dry_leaves', {
-  unlock: 'Event Premium: Earn 550 medals during the "Autumn (III)"',
+  unlock: 'Event Premium: Earn 550 medals during the "Autumn (III)" event.',
 })
 patch('glowing_mushrooms', {
-  unlock: 'Event: Earn 700 medals during the "Autumn (III)"',
+  unlock: 'Event: Earn 700 medals during the "Autumn (III)" event.',
 })
 patch('warm_clothes', {
-  unlock: 'Event Premium: Earn 1100 medals during the "Autumn (III)"',
+  unlock: 'Event Premium: Earn 1100 medals during the "Autumn (III)" event.',
 })
 patch('lighthouse', {
-  unlock: 'Event: Earn 350 medals during the "Ocean Night (III)"',
+  unlock: 'Event: Earn 350 medals during the "Ocean Night (III)" event.',
 })
 patch('sailing_at_night', {
-  unlock: 'Event: Earn 700 medals during the "Ocean Night (III)"',
+  unlock: 'Event: Earn 700 medals during the "Ocean Night (III)" event.',
 })
 patch('night_shark', {
-  unlock: 'Event Premium: Earn 550 medals during the "Ocean Night (III)"',
+  unlock: 'Event Premium: Earn 550 medals during the "Ocean Night (III)" event.',
 })
 patch('moonlight', {
-  unlock: 'Event Premium: Earn 1100 medals during the "Ocean Night (III)"',
+  unlock: 'Event Premium: Earn 1100 medals during the "Ocean Night (III)" event.',
 })
 
 // —— New relics (order 241+) ——
@@ -160,7 +160,7 @@ const newRelics = [
     name: 'Festival Lanterns',
     rarity: 'rare',
     description: 'Increase knockback force by 2%',
-    unlock: 'Event: Earn 350 medals during the "Cherry Blossom (IV)"',
+    unlock: 'Event: Earn 350 medals during the "Cherry Blossom (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -170,7 +170,7 @@ const newRelics = [
     name: 'Ramen',
     rarity: 'rare',
     description: 'Increase free utility upgrade by 1%',
-    unlock: 'Event Premium: Earn 550 medals during the "Cherry Blossom (IV)"',
+    unlock: 'Event Premium: Earn 550 medals during the "Cherry Blossom (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -190,7 +190,7 @@ const newRelics = [
     name: 'Broken Security',
     rarity: 'rare',
     description: 'Increase health regen by 2%',
-    unlock: 'Event: Earn 350 medals during the "Glitch"',
+    unlock: 'Event: Earn 350 medals during the "Glitch" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -200,7 +200,7 @@ const newRelics = [
     name: 'Research Object',
     rarity: 'rare',
     description: 'Increase tower damage by 2%',
-    unlock: 'Event Premium: Earn 550 medals during the "Glitch"',
+    unlock: 'Event Premium: Earn 550 medals during the "Glitch" event.',
     unlockGroup: 'event',
     damagePct: 2,
   },
@@ -210,7 +210,7 @@ const newRelics = [
     name: 'Ancient Times',
     rarity: 'rare',
     description: 'Increase defense absolute by 2%',
-    unlock: 'Event: Earn 350 medals during the "What Time Is It? (II)"',
+    unlock: 'Event: Earn 350 medals during the "What Time Is It? (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -220,7 +220,7 @@ const newRelics = [
     name: 'Space Distortion',
     rarity: 'rare',
     description: 'Increase attack speed by 1%',
-    unlock: 'Event Premium: Earn 550 medals during the "What Time Is It? (II)"',
+    unlock: 'Event Premium: Earn 550 medals during the "What Time Is It? (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -230,7 +230,7 @@ const newRelics = [
     name: "Nature's Fury",
     rarity: 'rare',
     description: 'Increase defense percent by 1%',
-    unlock: 'Event: Earn 350 medals during the "Into the Storm (II)"',
+    unlock: 'Event: Earn 350 medals during the "Into the Storm (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -240,7 +240,7 @@ const newRelics = [
     name: 'Big Tornado',
     rarity: 'rare',
     description: 'Increase damage/meter by 2%',
-    unlock: 'Event Premium: Earn 550 medals during the "Into the Storm (II)"',
+    unlock: 'Event Premium: Earn 550 medals during the "Into the Storm (II)" event.',
     unlockGroup: 'event',
     damagePct: 2,
   },
@@ -250,7 +250,7 @@ const newRelics = [
     name: 'Synapse',
     rarity: 'rare',
     description: 'Increase knockback force by 2%',
-    unlock: 'Event: Earn 350 medals during the "Neuron"',
+    unlock: 'Event: Earn 350 medals during the "Neuron" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -260,7 +260,7 @@ const newRelics = [
     name: 'Neural Network',
     rarity: 'rare',
     description: 'Increase coins earned by 2%',
-    unlock: 'Event Premium: Earn 550 medals during the "Neuron"',
+    unlock: 'Event Premium: Earn 550 medals during the "Neuron" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -270,7 +270,7 @@ const newRelics = [
     name: 'Forest Temple',
     rarity: 'epic',
     description: 'Increase thorns by 2%',
-    unlock: 'Event: Earn 700 medals during the "Cherry Blossom (IV)"',
+    unlock: 'Event: Earn 700 medals during the "Cherry Blossom (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -280,7 +280,7 @@ const newRelics = [
     name: 'Tori',
     rarity: 'epic',
     description: 'Increase orb speed by 5%',
-    unlock: 'Event Premium: Earn 1100 medals during the "Cherry Blossom (IV)"',
+    unlock: 'Event Premium: Earn 1100 medals during the "Cherry Blossom (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -300,7 +300,7 @@ const newRelics = [
     name: 'Digital Disaster',
     rarity: 'epic',
     description: 'Increase free defense upgrade by 2%',
-    unlock: 'Event: Earn 700 medals during the "Glitch"',
+    unlock: 'Event: Earn 700 medals during the "Glitch" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -310,7 +310,7 @@ const newRelics = [
     name: 'Instability',
     rarity: 'epic',
     description: 'Increase damage/meter by 5%',
-    unlock: 'Event Premium: Earn 1100 medals during the "Glitch"',
+    unlock: 'Event Premium: Earn 1100 medals during the "Glitch" event.',
     unlockGroup: 'event',
     damagePct: 5,
   },
@@ -320,7 +320,7 @@ const newRelics = [
     name: 'Clock Tower',
     rarity: 'epic',
     description: 'Increase cash bonus by 5%',
-    unlock: 'Event: Earn 700 medals during the "What Time Is It? (II)"',
+    unlock: 'Event: Earn 700 medals during the "What Time Is It? (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -330,7 +330,7 @@ const newRelics = [
     name: 'Time Travel',
     rarity: 'epic',
     description: 'Increase critical chance by 2%',
-    unlock: 'Event Premium: Earn 1100 medals during the "What Time Is It? (II)"',
+    unlock: 'Event Premium: Earn 1100 medals during the "What Time Is It? (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -340,7 +340,7 @@ const newRelics = [
     name: 'Natural Fire',
     rarity: 'epic',
     description: 'Increase health regen by 5%',
-    unlock: 'Event: Earn 700 medals during the "Into the Storm (II)"',
+    unlock: 'Event: Earn 700 medals during the "Into the Storm (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -350,7 +350,7 @@ const newRelics = [
     name: 'Storm Planet',
     rarity: 'epic',
     description: 'Increase lab speed by 4%',
-    unlock: 'Event Premium: Earn 1100 medals during the "Into the Storm (II)"',
+    unlock: 'Event Premium: Earn 1100 medals during the "Into the Storm (II)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -360,7 +360,7 @@ const newRelics = [
     name: 'Brain Net',
     rarity: 'epic',
     description: 'Increase free utility upgrade by 2%',
-    unlock: 'Event: Earn 700 medals during the "Neuron"',
+    unlock: 'Event: Earn 700 medals during the "Neuron" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -370,7 +370,7 @@ const newRelics = [
     name: 'Body Control',
     rarity: 'epic',
     description: 'Increase ultimate damage by 5%',
-    unlock: 'Event Premium: Earn 1100 medals during the "Neuron"',
+    unlock: 'Event Premium: Earn 1100 medals during the "Neuron" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -400,7 +400,7 @@ const newRelics = [
     name: 'Magma River',
     rarity: 'rare',
     description: 'Increase cash by 2%',
-    unlock: 'Event: Earn 350 medals during the "Volcano (IV)"',
+    unlock: 'Event: Earn 350 medals during the "Volcano (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -410,7 +410,7 @@ const newRelics = [
     name: 'Obsidian',
     rarity: 'rare',
     description: 'Increase attack speed by 1%',
-    unlock: 'Event Premium: Earn 550 medals during the "Volcano (IV)"',
+    unlock: 'Event Premium: Earn 550 medals during the "Volcano (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -420,7 +420,7 @@ const newRelics = [
     name: 'New Island',
     rarity: 'epic',
     description: 'Increase free attack upgrade by 2%',
-    unlock: 'Event: Earn 700 medals during the "Volcano (IV)"',
+    unlock: 'Event: Earn 700 medals during the "Volcano (IV)" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -430,7 +430,7 @@ const newRelics = [
     name: 'Geological Activity',
     rarity: 'epic',
     description: 'Increase tower damage by 5%',
-    unlock: 'Event Premium: Earn 1100 medals during the "Volcano (IV)"',
+    unlock: 'Event Premium: Earn 1100 medals during the "Volcano (IV)" event.',
     unlockGroup: 'event',
     damagePct: 5,
   },
@@ -440,7 +440,7 @@ const newRelics = [
     name: 'Big Party',
     rarity: 'rare',
     description: 'Increase coins earned by 2%',
-    unlock: 'Event: Earn 350 medals during the "5th Anniversary"',
+    unlock: 'Free during the "5th Anniversary" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -450,7 +450,7 @@ const newRelics = [
     name: 'Celebration',
     rarity: 'epic',
     description: 'Increase cash bonus by 5%',
-    unlock: 'Event: Earn 700 medals during the "5th Anniversary"',
+    unlock: 'Free during the "5th Anniversary" event.',
     unlockGroup: 'event',
     damagePct: 0,
   },

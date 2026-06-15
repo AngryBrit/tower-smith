@@ -49,6 +49,7 @@ export const EVENT_THEME_DISPLAY_ORDER: readonly StringId[] = [
   'theme_event_valentine',
   'theme_event_glitch',
   'theme_event_neuron',
+  'theme_event_5th_anniversary',
 ] as const
 
 const EVENT_DISPLAY_RANK = new Map<StringId, number>(

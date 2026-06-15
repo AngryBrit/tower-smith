@@ -345,7 +345,7 @@
     "name": "No Spoon",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Into the Matrix\"",
+    "unlock": "Event: Earn 350 medals during the \"Into the Matrix\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -355,7 +355,7 @@
     "name": "Red Pill",
     "rarity": "epic",
     "description": "Increase tower health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Into the Matrix\"",
+    "unlock": "Event: Earn 700 medals during the \"Into the Matrix\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -365,7 +365,7 @@
     "name": "Dreamcatcher",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Full Moon\"",
+    "unlock": "Event: Earn 350 medals during the \"Full Moon\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -375,7 +375,7 @@
     "name": "Spirit Wolf",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Full Moon\"",
+    "unlock": "Event: Earn 700 medals during the \"Full Moon\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -385,7 +385,7 @@
     "name": "Bacteriophage",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak\"",
+    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -395,7 +395,7 @@
     "name": "Neuron",
     "rarity": "epic",
     "description": "Increase health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak\"",
+    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -405,7 +405,7 @@
     "name": "Ionized Plasma",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Plasma Returns\"",
+    "unlock": "Event: Earn 350 medals during the \"Plasma Returns\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -415,7 +415,7 @@
     "name": "Plasma Arc",
     "rarity": "epic",
     "description": "Increase lab speed by 4%",
-    "unlock": "Event: Earn 700 medals during the \"Plasma Returns\"",
+    "unlock": "Event: Earn 700 medals during the \"Plasma Returns\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -425,7 +425,7 @@
     "name": "Honey Drop",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Honey\"",
+    "unlock": "Event: Earn 350 medals during the \"Honey\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -435,7 +435,7 @@
     "name": "Stinger",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Honey\"",
+    "unlock": "Event: Earn 700 medals during the \"Honey\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -445,7 +445,7 @@
     "name": "Aurora Vortex",
     "rarity": "rare",
     "description": "Increase tower health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Aurora (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Aurora (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -455,7 +455,7 @@
     "name": "Contained Ions",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Aurora (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Aurora (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -465,7 +465,7 @@
     "name": "Alien Head",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Aliens\"",
+    "unlock": "Event: Earn 350 medals during the \"Aliens\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -475,7 +475,7 @@
     "name": "Alien Warp Drive",
     "rarity": "epic",
     "description": "Increase damage/meter by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Aliens\"",
+    "unlock": "Event: Earn 700 medals during the \"Aliens\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -485,7 +485,7 @@
     "name": "Ancient Tome",
     "rarity": "rare",
     "description": "Increase lab speed by 1.5%",
-    "unlock": "Event: Earn 350 medals during the \"Sands of Time\"",
+    "unlock": "Event: Earn 350 medals during the \"Sands of Time\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -495,7 +495,7 @@
     "name": "Space Sundial",
     "rarity": "epic",
     "description": "Increase damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Sands of Time\"",
+    "unlock": "Event: Earn 700 medals during the \"Sands of Time\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -505,7 +505,7 @@
     "name": "Spooky Bat",
     "rarity": "rare",
     "description": "Increase crit factor by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Halloween\"",
+    "unlock": "Event: Earn 350 medals during the \"Halloween\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -515,7 +515,7 @@
     "name": "Man Skull",
     "rarity": "epic",
     "description": "Increase health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Halloween\"",
+    "unlock": "Event: Earn 700 medals during the \"Halloween\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -525,7 +525,7 @@
     "name": "Cherry",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Cherry Blossom\"",
+    "unlock": "Event: Earn 350 medals during the \"Cherry Blossom\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -535,7 +535,7 @@
     "name": "Sakura Lantern",
     "rarity": "epic",
     "description": "Increase coins by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Cherry Blossom\"",
+    "unlock": "Event: Earn 700 medals during the \"Cherry Blossom\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -545,7 +545,7 @@
     "name": "Tower Latte",
     "rarity": "rare",
     "description": "Increase damage/meter by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Autumn\"",
+    "unlock": "Event: Earn 350 medals during the \"Autumn\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -555,7 +555,7 @@
     "name": "Pumpkin",
     "rarity": "epic",
     "description": "Increase lab speed by 4%",
-    "unlock": "Event: Earn 700 medals during the \"Autumn\"",
+    "unlock": "Event: Earn 700 medals during the \"Autumn\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -565,7 +565,7 @@
     "name": "Game Joystick",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Retro Arcade\"",
+    "unlock": "Event: Earn 350 medals during the \"Retro Arcade\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -575,7 +575,7 @@
     "name": "Controller",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Retro Arcade\"",
+    "unlock": "Event: Earn 700 medals during the \"Retro Arcade\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -585,7 +585,7 @@
     "name": "Firework",
     "rarity": "rare",
     "description": "Increase tower health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"New Year\"",
+    "unlock": "Event: Earn 350 medals during the \"New Year\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -595,7 +595,7 @@
     "name": "Cheers",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"New Year\"",
+    "unlock": "Event: Earn 700 medals during the \"New Year\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -605,7 +605,7 @@
     "name": "Palm Tree",
     "rarity": "rare",
     "description": "Increase lab speed by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Retrowave\"",
+    "unlock": "Event: Earn 350 medals during the \"Retrowave\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -615,7 +615,7 @@
     "name": "Pixel Cube Heart",
     "rarity": "epic",
     "description": "Increase tower health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Retrowave\"",
+    "unlock": "Event: Earn 700 medals during the \"Retrowave\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -625,7 +625,7 @@
     "name": "Dark Sight",
     "rarity": "rare",
     "description": "Increase damage/meter by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Dark Strands\"",
+    "unlock": "Event: Earn 350 medals during the \"Dark Strands\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -635,7 +635,7 @@
     "name": "Creepy Smile",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Dark Strands\"",
+    "unlock": "Event: Earn 700 medals during the \"Dark Strands\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -645,7 +645,7 @@
     "name": "Submarine",
     "rarity": "rare",
     "description": "Increase crit factor by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Deep Blue Sea\"",
+    "unlock": "Event: Earn 350 medals during the \"Deep Blue Sea\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -655,7 +655,7 @@
     "name": "The Kraken",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Deep Blue Sea\"",
+    "unlock": "Event: Earn 700 medals during the \"Deep Blue Sea\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -665,7 +665,7 @@
     "name": "Warp Gate",
     "rarity": "rare",
     "description": "Increase coins by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Faster Than Light\"",
+    "unlock": "Event: Earn 350 medals during the \"Faster Than Light\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -675,7 +675,7 @@
     "name": "Star Ship",
     "rarity": "epic",
     "description": "Increase lab speed by 4%",
-    "unlock": "Event: Earn 700 medals during the \"Faster Then Light\"",
+    "unlock": "Event: Earn 700 medals during the \"Faster Then Light\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -685,7 +685,7 @@
     "name": "Barnacle",
     "rarity": "rare",
     "description": "Increase health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Ocean Night\"",
+    "unlock": "Event: Earn 350 medals during the \"Ocean Night\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -695,7 +695,7 @@
     "name": "Wave",
     "rarity": "epic",
     "description": "Increase crit factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Ocean Night\"",
+    "unlock": "Event: Earn 700 medals during the \"Ocean Night\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -705,7 +705,7 @@
     "name": "Pizza",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Invaders\"",
+    "unlock": "Event: Earn 350 medals during the \"Invaders\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -715,7 +715,7 @@
     "name": "Illuminati",
     "rarity": "epic",
     "description": "Increase defence absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Invaders\"",
+    "unlock": "Event: Earn 700 medals during the \"Invaders\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -725,7 +725,7 @@
     "name": "Refraction Array",
     "rarity": "rare",
     "description": "Increase Coins by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Prismatic Lines\"",
+    "unlock": "Event: Earn 350 medals during the \"Prismatic Lines\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -735,7 +735,7 @@
     "name": "Prismatic Shard",
     "rarity": "epic",
     "description": "Increase damage/meter by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Prismatic Lines\"",
+    "unlock": "Event: Earn 700 medals during the \"Prismatic Lines\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -745,7 +745,7 @@
     "name": "Hook",
     "rarity": "rare",
     "description": "Increase Damage/Meter by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Sunset Fishing\"",
+    "unlock": "Event: Earn 350 medals during the \"Sunset Fishing\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -755,7 +755,7 @@
     "name": "Fish",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Sunset Fishing\"",
+    "unlock": "Event: Earn 700 medals during the \"Sunset Fishing\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -765,7 +765,7 @@
     "name": "Cobweb",
     "rarity": "rare",
     "description": "Increase Tower Health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Cobweb\"",
+    "unlock": "Event: Earn 350 medals during the \"Cobweb\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -775,7 +775,7 @@
     "name": "The Fly",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Cobweb\"",
+    "unlock": "Event: Earn 700 medals during the \"Cobweb\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -785,7 +785,7 @@
     "name": "Gale Winds",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Into The Storm\"",
+    "unlock": "Event: Earn 350 medals during the \"Into The Storm\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -795,7 +795,7 @@
     "name": "Flying House",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Into The Storm\"",
+    "unlock": "Event: Earn 700 medals during the \"Into The Storm\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -805,7 +805,7 @@
     "name": "Clip Ons",
     "rarity": "rare",
     "description": "Increase Critical Factor by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Into The Matrix\"",
+    "unlock": "Event: Earn 350 medals during the \"Into The Matrix\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -815,7 +815,7 @@
     "name": "Code Stream",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Into The Matrix\"",
+    "unlock": "Event: Earn 700 medals during the \"Into The Matrix\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -825,7 +825,7 @@
     "name": "Rain Jacket",
     "rarity": "rare",
     "description": "Increase Tower Health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Rainfall\"",
+    "unlock": "Event: Earn 350 medals during the \"Rainfall\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -835,7 +835,7 @@
     "name": "Cloud Lightning",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Rainfall\"",
+    "unlock": "Event: Earn 700 medals during the \"Rainfall\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -845,7 +845,7 @@
     "name": "Rabies",
     "rarity": "rare",
     "description": "Increase lab speed by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -855,7 +855,7 @@
     "name": "Ebola",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -865,7 +865,7 @@
     "name": "Comet",
     "rarity": "rare",
     "description": "Increase Tower Damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Interstellar\"",
+    "unlock": "Event: Earn 350 medals during the \"Interstellar\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -875,7 +875,7 @@
     "name": "Planetary Rings",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Interstellar\"",
+    "unlock": "Event: Earn 700 medals during the \"Interstellar\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -885,7 +885,7 @@
     "name": "Remote Control",
     "rarity": "rare",
     "description": "Increase Damage/Meter by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Tower's Channel\"",
+    "unlock": "Event: Earn 350 medals during the \"Tower's Channel\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -895,7 +895,7 @@
     "name": "Cathode Ray Tube",
     "rarity": "epic",
     "description": "Increase coins by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Tower's Channel\"",
+    "unlock": "Event: Earn 700 medals during the \"Tower's Channel\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -905,7 +905,7 @@
     "name": "Anubis",
     "rarity": "rare",
     "description": "Increase Coins by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Sands of Time\"",
+    "unlock": "Event: Earn 350 medals during the \"Sands of Time\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -915,7 +915,7 @@
     "name": "Sphinx",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Sands of Time\"",
+    "unlock": "Event: Earn 700 medals during the \"Sands of Time\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -925,7 +925,7 @@
     "name": "Lava Flow",
     "rarity": "rare",
     "description": "Increase Tower Health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Volcano\"",
+    "unlock": "Event: Earn 350 medals during the \"Volcano\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -935,7 +935,7 @@
     "name": "Ash Cloud",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Volcano\"",
+    "unlock": "Event: Earn 700 medals during the \"Volcano\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -945,7 +945,7 @@
     "name": "Abduction Room",
     "rarity": "rare",
     "description": "Increase Tower Health 2%",
-    "unlock": "Event: Earn 350 medals during the \"Abduction\"",
+    "unlock": "Event: Earn 350 medals during the \"Abduction\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -955,7 +955,7 @@
     "name": "Crop Circle",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Abduction\"",
+    "unlock": "Event: Earn 700 medals during the \"Abduction\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -965,7 +965,7 @@
     "name": "Acorn",
     "rarity": "rare",
     "description": "Increase Damage/Meter by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Autumn (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Autumn (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -975,7 +975,7 @@
     "name": "Scarf",
     "rarity": "epic",
     "description": "Increase defense absolute by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Autumn (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Autumn (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -985,7 +985,7 @@
     "name": "Cauldron",
     "rarity": "rare",
     "description": "Increase Lab Speed by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Halloween (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Halloween (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -995,7 +995,7 @@
     "name": "Witch Hat",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Halloween (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Halloween (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -1005,7 +1005,7 @@
     "name": "Icicle",
     "rarity": "rare",
     "description": "Increase Tower Damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Snowstorm\"",
+    "unlock": "Event: Earn 350 medals during the \"Snowstorm\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -1015,7 +1015,7 @@
     "name": "Sleigh Bell",
     "rarity": "epic",
     "description": "Increase tower health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Snowstorm\"",
+    "unlock": "Event: Earn 700 medals during the \"Snowstorm\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1025,7 +1025,7 @@
     "name": "Koi Fish",
     "rarity": "rare",
     "description": "Increase lab speed by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Cherry Blossom (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Cherry Blossom (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1035,7 +1035,7 @@
     "name": "Bonsai Tree",
     "rarity": "epic",
     "description": "Increase Coins by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Cherry Blossom (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Cherry Blossom (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1065,7 +1065,7 @@
     "name": "Lunar Cat Paw",
     "rarity": "rare",
     "description": "Increase critical chance by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Meowy Night\"",
+    "unlock": "Event: Earn 350 medals during the \"Meowy Night\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1075,7 +1075,7 @@
     "name": "Pet Cat",
     "rarity": "epic",
     "description": "Increase Attack Speed by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Meowy Night\"",
+    "unlock": "Event: Earn 700 medals during the \"Meowy Night\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1085,7 +1085,7 @@
     "name": "Confetti Ball",
     "rarity": "rare",
     "description": "Increase Free Attack Upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"New Year (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"New Year (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1095,7 +1095,7 @@
     "name": "Party Mask",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"New Year (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"New Year (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1105,7 +1105,7 @@
     "name": "Summit Starlight",
     "rarity": "rare",
     "description": "Increase lab speed by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Full Moon (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Full Moon (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1115,7 +1115,7 @@
     "name": "Mountain Goat",
     "rarity": "epic",
     "description": "Increase Health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Full Moon (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Full Moon (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1125,7 +1125,7 @@
     "name": "Falling Apple",
     "rarity": "rare",
     "description": "Increase free defense upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Gravity\"",
+    "unlock": "Event: Earn 350 medals during the \"Gravity\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1135,7 +1135,7 @@
     "name": "3 Body Solution",
     "rarity": "epic",
     "description": "Increase super critical chance by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Gravity\"",
+    "unlock": "Event: Earn 700 medals during the \"Gravity\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1145,7 +1145,7 @@
     "name": "Power Glove",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Retro Arcade (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Retro Arcade (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -1155,7 +1155,7 @@
     "name": "Arcade Token",
     "rarity": "epic",
     "description": "Increase bot range by 2m",
-    "unlock": "Event: Earn 700 medals during the \"Retro Arcade (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Retro Arcade (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1165,7 +1165,7 @@
     "name": "Coral Crown",
     "rarity": "rare",
     "description": "Increase health regen by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Deep Blue Sea (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Deep Blue Sea (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1175,7 +1175,7 @@
     "name": "Angler Fish",
     "rarity": "epic",
     "description": "Increase thorns by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Deep Blue Sea (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Deep Blue Sea (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1185,7 +1185,7 @@
     "name": "Temporal Rift",
     "rarity": "rare",
     "description": "Increase cash by 2%",
-    "unlock": "Event: Earn 350 medals during the \"What Time Is It?\"",
+    "unlock": "Event: Earn 350 medals during the \"What Time Is It?\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1195,7 +1195,7 @@
     "name": "Hourglass",
     "rarity": "rare",
     "description": "Increase coins by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"What Time Is It?\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"What Time Is It?\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1205,7 +1205,7 @@
     "name": "Dream Clock",
     "rarity": "epic",
     "description": "Increase orb speed by 5%",
-    "unlock": "Event: Earn 700 medals during the \"What Time is It?\"",
+    "unlock": "Event: Earn 700 medals during the \"What Time is It?\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1215,7 +1215,7 @@
     "name": "Time Compass",
     "rarity": "epic",
     "description": "Increase attack speed by 2%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"What Time is It?\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"What Time is It?\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1245,7 +1245,7 @@
     "name": "Haunted Mirror",
     "rarity": "rare",
     "description": "Decrease Wall Rebuild Time by 2s",
-    "unlock": "Event: Earn 350 medals during the \"Dark Strands (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Dark Strands (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1255,7 +1255,7 @@
     "name": "Whispering Web",
     "rarity": "rare",
     "description": "Increase free defense upgrade by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Dark Strands (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Dark Strands (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1265,7 +1265,7 @@
     "name": "Shadow Puppet",
     "rarity": "epic",
     "description": "Increase super critical mult by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Dark Strands (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Dark Strands (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1275,7 +1275,7 @@
     "name": "Cursed Candle",
     "rarity": "epic",
     "description": "Increase super critical chance by 2%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Dark Strands (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Dark Strands (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1285,7 +1285,7 @@
     "name": "Pulsar Core",
     "rarity": "rare",
     "description": "Increase recovery amount by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Faster Than Light (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Faster Than Light (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1295,7 +1295,7 @@
     "name": "Quantum Drive",
     "rarity": "rare",
     "description": "Increase Bot Range by 1m",
-    "unlock": "Event Premium: Earn 550 medals during the \"Faster Than Light (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Faster Than Light (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1305,7 +1305,7 @@
     "name": "Light Speedometer",
     "rarity": "epic",
     "description": "Increase enemy attack level skip by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Faster Than Light (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Faster Than Light (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1315,7 +1315,7 @@
     "name": "Photon Blade",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Faster Than Light (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Faster Than Light (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -1325,7 +1325,7 @@
     "name": "Bloom Burst",
     "rarity": "rare",
     "description": "Increase cash bonus by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Easter\"",
+    "unlock": "Event: Earn 350 medals during the \"Easter\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1335,7 +1335,7 @@
     "name": "Mystic Hair",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Easter\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Easter\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1345,7 +1345,7 @@
     "name": "Candy Core",
     "rarity": "epic",
     "description": "Increase damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Easter\"",
+    "unlock": "Event: Earn 700 medals during the \"Easter\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -1355,7 +1355,7 @@
     "name": "Magic Egg",
     "rarity": "epic",
     "description": "Increase free attack upgrade by 2%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Easter\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Easter\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1385,7 +1385,7 @@
     "name": "Infinite Ruler",
     "rarity": "rare",
     "description": "Increase free utility upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Pi\"",
+    "unlock": "Event: Earn 350 medals during the \"Pi\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1395,7 +1395,7 @@
     "name": "Pi Seal",
     "rarity": "rare",
     "description": "Increase lab speed by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Pi\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Pi\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1405,7 +1405,7 @@
     "name": "Do While True",
     "rarity": "epic",
     "description": "Increase orb speed by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Pi\"",
+    "unlock": "Event: Earn 700 medals during the \"Pi\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1415,7 +1415,7 @@
     "name": "Psychohistorian Brain",
     "rarity": "epic",
     "description": "Increase super critical chance by 2%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Pi\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Pi\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1425,7 +1425,7 @@
     "name": "UFO Beam",
     "rarity": "rare",
     "description": "Increase knockback force by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Invaders (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Invaders (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1435,7 +1435,7 @@
     "name": "Abduction Signal",
     "rarity": "rare",
     "description": "Increase crit factor by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Invaders (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Invaders (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1445,7 +1445,7 @@
     "name": "Alien Egg",
     "rarity": "epic",
     "description": "Increase enemy health skip by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Invaders (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Invaders (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1455,7 +1455,7 @@
     "name": "Monolith",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Invaders (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Invaders (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1465,7 +1465,7 @@
     "name": "Honey Jar",
     "rarity": "rare",
     "description": "Increase attack speed by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Honey (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Honey (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1475,7 +1475,7 @@
     "name": "Heavenly Sweet",
     "rarity": "rare",
     "description": "Increase tower health by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Honey (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Honey (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1485,7 +1485,7 @@
     "name": "Honey Society",
     "rarity": "epic",
     "description": "Increase knockback force by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Honey (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Honey (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1495,7 +1495,7 @@
     "name": "The Queen",
     "rarity": "epic",
     "description": "Increase coins earned by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Honey (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Honey (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1505,7 +1505,7 @@
     "name": "Duck",
     "rarity": "rare",
     "description": "Increase ultimate damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Koi Pond\"",
+    "unlock": "Event: Earn 350 medals during the \"Koi Pond\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1515,7 +1515,7 @@
     "name": "Grass",
     "rarity": "rare",
     "description": "Increase free defense upgrade by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Koi Pond\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Koi Pond\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1525,7 +1525,7 @@
     "name": "Wind",
     "rarity": "epic",
     "description": "Increase damage / meter by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Koi Pond\"",
+    "unlock": "Event: Earn 700 medals during the \"Koi Pond\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -1535,7 +1535,7 @@
     "name": "Lilies",
     "rarity": "epic",
     "description": "Increase recovery amount by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Koi Pond\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Koi Pond\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1565,7 +1565,7 @@
     "name": "Plasma Globe",
     "rarity": "rare",
     "description": "Increase bot range by 1m",
-    "unlock": "Event: Earn 350 medals during the \"Plasma Returns (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Plasma Returns (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1575,7 +1575,7 @@
     "name": "Plasma Vortex",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Plasma Returns (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Plasma Returns (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -1585,7 +1585,7 @@
     "name": "Plasma Cell",
     "rarity": "epic",
     "description": "Increase critical chance by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Plasma Returns (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Plasma Returns (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1595,7 +1595,7 @@
     "name": "Plasma Chamber",
     "rarity": "epic",
     "description": "Increase health by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Plasma Returns (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Plasma Returns (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1605,7 +1605,7 @@
     "name": "Floppy Disk",
     "rarity": "rare",
     "description": "Increase free utility upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Retrowave (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Retrowave (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1615,7 +1615,7 @@
     "name": "Magic Cube",
     "rarity": "rare",
     "description": "Increase crit factor by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Retrowave (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Retrowave (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1625,7 +1625,7 @@
     "name": "Retro Camera",
     "rarity": "epic",
     "description": "Increase health regen by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Retrowave (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Retrowave (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1635,7 +1635,7 @@
     "name": "Night City",
     "rarity": "epic",
     "description": "Increase Cash by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Retrowave (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Retrowave (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1645,7 +1645,7 @@
     "name": "Safe Path",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Camping\"",
+    "unlock": "Event: Earn 350 medals during the \"Camping\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -1655,7 +1655,7 @@
     "name": "Shining Light",
     "rarity": "rare",
     "description": "Increase critical chance by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Camping\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Camping\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1665,7 +1665,7 @@
     "name": "Eternal Quest",
     "rarity": "epic",
     "description": "Increase health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Camping\"",
+    "unlock": "Event: Earn 700 medals during the \"Camping\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1675,7 +1675,7 @@
     "name": "Nature's Wrath",
     "rarity": "epic",
     "description": "Increase orb speed by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Camping\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Camping\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1685,7 +1685,7 @@
     "name": "Fisherman Set",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Sunset Fishing (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Sunset Fishing (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1695,7 +1695,7 @@
     "name": "Sunset Boat",
     "rarity": "rare",
     "description": "Increase attack speed by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Sunset Fishing (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Sunset Fishing (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1705,7 +1705,7 @@
     "name": "Good Catch",
     "rarity": "epic",
     "description": "Increase Thorns by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Sunset Fishing (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Sunset Fishing (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1715,7 +1715,7 @@
     "name": "River Of Plenty",
     "rarity": "epic",
     "description": "Increase coins by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Sunset Fishing (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Sunset Fishing (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1745,7 +1745,7 @@
     "name": "Model Training",
     "rarity": "rare",
     "description": "Increase orb speed by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Into the Matrix (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Into the Matrix (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1755,7 +1755,7 @@
     "name": "Gnosis",
     "rarity": "rare",
     "description": "Increase free defense upgrade by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Into the Matrix (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Into the Matrix (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1765,7 +1765,7 @@
     "name": "Tower Agent",
     "rarity": "epic",
     "description": "Increase damage/meter by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Into the Matrix (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Into the Matrix (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -1775,7 +1775,7 @@
     "name": "Fake Reality",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Into the Matrix (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Into the Matrix (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1785,7 +1785,7 @@
     "name": "Rlyeh",
     "rarity": "rare",
     "description": "Increase free attack upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Cthulhu\"",
+    "unlock": "Event: Earn 350 medals during the \"Cthulhu\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1795,7 +1795,7 @@
     "name": "Madness Induced",
     "rarity": "rare",
     "description": "Increase crit factor 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Cthulhu\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Cthulhu\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1805,7 +1805,7 @@
     "name": "Cosmic Freedom",
     "rarity": "epic",
     "description": "Increase health regen by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Cthulhu\"",
+    "unlock": "Event: Earn 700 medals during the \"Cthulhu\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1815,7 +1815,7 @@
     "name": "Omniscience",
     "rarity": "epic",
     "description": "Increase cash by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Cthulhu\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Cthulhu\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1825,7 +1825,7 @@
     "name": "Breaking News",
     "rarity": "rare",
     "description": "Increase bot range by 1m",
-    "unlock": "Event: Earn 350 medals during the \"Tower's Channel (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Tower's Channel (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1835,7 +1835,7 @@
     "name": "Globalization",
     "rarity": "rare",
     "description": "Increase tower damage 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Tower's Channel (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Tower's Channel (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1845,7 +1845,7 @@
     "name": "No Signal",
     "rarity": "epic",
     "description": "Increase crit chance by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Tower's Channel (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Tower's Channel (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1855,7 +1855,7 @@
     "name": "Antenna",
     "rarity": "epic",
     "description": "Increase health by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Tower's Channel (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Tower's Channel (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1865,7 +1865,7 @@
     "name": "Brunch",
     "rarity": "rare",
     "description": "Increase knockback force by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Autumn (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Autumn (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1875,7 +1875,7 @@
     "name": "Dry Leaves",
     "rarity": "rare",
     "description": "Increase free attack upgrade by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Autumn (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Autumn (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1885,7 +1885,7 @@
     "name": "Glowing Mushrooms",
     "rarity": "epic",
     "description": "Increase thorns by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Autumn (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Autumn (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1895,7 +1895,7 @@
     "name": "Warm Clothes",
     "rarity": "epic",
     "description": "Increase lab speed by 4%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Autumn (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Autumn (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1925,7 +1925,7 @@
     "name": "VR",
     "rarity": "rare",
     "description": "Increase thorns by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Cyberpunk\"",
+    "unlock": "Event: Earn 350 medals during the \"Cyberpunk\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1935,7 +1935,7 @@
     "name": "Holographic Ads",
     "rarity": "rare",
     "description": "Increase lab speed by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Cyberpunk\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Cyberpunk\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1945,7 +1945,7 @@
     "name": "Tech Weapon",
     "rarity": "epic",
     "description": "Increase recovery amount by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Cyberpunk\"",
+    "unlock": "Event: Earn 700 medals during the \"Cyberpunk\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1955,7 +1955,7 @@
     "name": "Cybernetics",
     "rarity": "epic",
     "description": "Increase crit chance by 2%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Cyberpunk\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Cyberpunk\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1965,7 +1965,7 @@
     "name": "Good Hunting",
     "rarity": "rare",
     "description": "Increase cash by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Cobweb (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Cobweb (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1975,7 +1975,7 @@
     "name": "Spider Vision",
     "rarity": "rare",
     "description": "Increase orb speed by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Cobweb (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Cobweb (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1985,7 +1985,7 @@
     "name": "Spider Poison",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Cobweb (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Cobweb (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -1995,7 +1995,7 @@
     "name": "Spider Forest",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Cobweb (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Cobweb (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2005,7 +2005,7 @@
     "name": "Pinball",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Retro Arcade (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Retro Arcade (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2015,7 +2015,7 @@
     "name": "To Infinity",
     "rarity": "rare",
     "description": "Increase health regen by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Retro Arcade (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Retro Arcade (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2025,7 +2025,7 @@
     "name": "Let's Play",
     "rarity": "epic",
     "description": "Increase damage by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Retro Arcade (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Retro Arcade (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -2035,7 +2035,7 @@
     "name": "Enemies",
     "rarity": "epic",
     "description": "Increase coins by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Retro Arcade (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Retro Arcade (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2045,7 +2045,7 @@
     "name": "Explorer's Helmet",
     "rarity": "rare",
     "description": "Increase tower health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Crystal Cave\"",
+    "unlock": "Event: Earn 350 medals during the \"Crystal Cave\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2055,7 +2055,7 @@
     "name": "Miner's Tool",
     "rarity": "rare",
     "description": "Increase defense percent by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Crystal Cave\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Crystal Cave\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2065,7 +2065,7 @@
     "name": "Crystals Bag",
     "rarity": "epic",
     "description": "Increase knockback force by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Crystal Cave\"",
+    "unlock": "Event: Earn 700 medals during the \"Crystal Cave\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2075,7 +2075,7 @@
     "name": "Full Minecart",
     "rarity": "epic",
     "description": "Increase bot range by 2m",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Crystal Cave\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Crystal Cave\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2105,7 +2105,7 @@
     "name": "Snow Globe",
     "rarity": "rare",
     "description": "Increase recovery amount by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Snowstorm (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Snowstorm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2115,7 +2115,7 @@
     "name": "Snowflake",
     "rarity": "epic",
     "description": "Increase damage/meter by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Snowstorm (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Snowstorm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -2125,7 +2125,7 @@
     "name": "Winter Gloves",
     "rarity": "rare",
     "description": "Increase thorns by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Snowstorm (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Snowstorm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2135,7 +2135,7 @@
     "name": "Wreath",
     "rarity": "epic",
     "description": "Increase damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Snowstorm (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Snowstorm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -2145,7 +2145,7 @@
     "name": "Party Popper",
     "rarity": "rare",
     "description": "Increase free attack upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"New Year (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"New Year (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2155,7 +2155,7 @@
     "name": "Firework Rocket",
     "rarity": "epic",
     "description": "Increase free utility upgrade by 2%",
-    "unlock": "Event: Earn 700 medals during the \"New Year (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"New Year (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2165,7 +2165,7 @@
     "name": "Champagne",
     "rarity": "rare",
     "description": "Increase attack speed by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"New Year (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"New Year (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2175,7 +2175,7 @@
     "name": "Gift Box",
     "rarity": "epic",
     "description": "Increase lab speed by 4%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"New Year (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"New Year (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2185,7 +2185,7 @@
     "name": "Happiness Balloons",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Amusement Park\"",
+    "unlock": "Event: Earn 350 medals during the \"Amusement Park\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2195,7 +2195,7 @@
     "name": "Amazing Prizes",
     "rarity": "epic",
     "description": "Increase thorns by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Amusement Park\"",
+    "unlock": "Event: Earn 700 medals during the \"Amusement Park\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2205,7 +2205,7 @@
     "name": "Delicious Food",
     "rarity": "rare",
     "description": "Increase cash by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Amusement Park\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Amusement Park\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2215,7 +2215,7 @@
     "name": "Carousel Of Joy",
     "rarity": "epic",
     "description": "Increase coins earned by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Amusement Park\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Amusement Park\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2225,7 +2225,7 @@
     "name": "Sky's Curtain",
     "rarity": "rare",
     "description": "Increase free defense upgrade by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Aurora (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Aurora (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2235,7 +2235,7 @@
     "name": "Northern Mountains",
     "rarity": "epic",
     "description": "Increase defense by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Aurora (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Aurora (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2245,7 +2245,7 @@
     "name": "Solar Flare",
     "rarity": "rare",
     "description": "Increase crit chance by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Aurora (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Aurora (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2255,7 +2255,7 @@
     "name": "Cosmic Impact",
     "rarity": "epic",
     "description": "Increase orb speed by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Aurora (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Aurora (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2285,7 +2285,7 @@
     "name": "Sudden Attack",
     "rarity": "rare",
     "description": "Increase health regen by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Aliens (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Aliens (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2295,7 +2295,7 @@
     "name": "Crop Circles",
     "rarity": "epic",
     "description": "Increase knockback force by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Aliens (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Aliens (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2305,7 +2305,7 @@
     "name": "Alien Experiment",
     "rarity": "rare",
     "description": "Increase bot range by 1m",
-    "unlock": "Event Premium: Earn 550 medals during the \"Aliens (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Aliens (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2315,7 +2315,7 @@
     "name": "Alien Implants",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Aliens (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Aliens (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2325,7 +2325,7 @@
     "name": "Bouquet",
     "rarity": "rare",
     "description": "Increase tower health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Valentine\"",
+    "unlock": "Event: Earn 350 medals during the \"Valentine\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2335,7 +2335,7 @@
     "name": "Lovely Gift",
     "rarity": "epic",
     "description": "Increase knockback force by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Valentine\"",
+    "unlock": "Event: Earn 700 medals during the \"Valentine\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2345,7 +2345,7 @@
     "name": "Love Letter",
     "rarity": "rare",
     "description": "Increase damage/meter by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Valentine\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Valentine\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -2355,7 +2355,7 @@
     "name": "Pierced Heart",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Valentine\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Valentine\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2365,7 +2365,7 @@
     "name": "Lighthouse",
     "rarity": "rare",
     "description": "Increase recovery amount by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Ocean Night (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Ocean Night (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2375,7 +2375,7 @@
     "name": "Sailing At Night",
     "rarity": "epic",
     "description": "Increase health by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Ocean Night (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Ocean Night (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2385,7 +2385,7 @@
     "name": "Night Shark",
     "rarity": "rare",
     "description": "Increase cash by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Ocean Night (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Ocean Night (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2395,7 +2395,7 @@
     "name": "Moonlight",
     "rarity": "epic",
     "description": "Increase crit factor by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Ocean Night (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Ocean Night (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2405,7 +2405,7 @@
     "name": "Festival Lanterns",
     "rarity": "rare",
     "description": "Increase knockback force by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Cherry Blossom (IV)\"",
+    "unlock": "Event: Earn 350 medals during the \"Cherry Blossom (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2415,7 +2415,7 @@
     "name": "Ramen",
     "rarity": "rare",
     "description": "Increase free utility upgrade by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Cherry Blossom (IV)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Cherry Blossom (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2435,7 +2435,7 @@
     "name": "Broken Security",
     "rarity": "rare",
     "description": "Increase health regen by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Glitch\"",
+    "unlock": "Event: Earn 350 medals during the \"Glitch\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2445,7 +2445,7 @@
     "name": "Research Object",
     "rarity": "rare",
     "description": "Increase tower damage by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Glitch\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Glitch\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -2455,7 +2455,7 @@
     "name": "Ancient Times",
     "rarity": "rare",
     "description": "Increase defense absolute by 2%",
-    "unlock": "Event: Earn 350 medals during the \"What Time Is It? (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"What Time Is It? (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2465,7 +2465,7 @@
     "name": "Space Distortion",
     "rarity": "rare",
     "description": "Increase attack speed by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"What Time Is It? (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"What Time Is It? (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2475,7 +2475,7 @@
     "name": "Nature's Fury",
     "rarity": "rare",
     "description": "Increase defense percent by 1%",
-    "unlock": "Event: Earn 350 medals during the \"Into the Storm (II)\"",
+    "unlock": "Event: Earn 350 medals during the \"Into the Storm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2485,7 +2485,7 @@
     "name": "Big Tornado",
     "rarity": "rare",
     "description": "Increase damage/meter by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Into the Storm (II)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Into the Storm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 2
   },
@@ -2495,7 +2495,7 @@
     "name": "Synapse",
     "rarity": "rare",
     "description": "Increase knockback force by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Neuron\"",
+    "unlock": "Event: Earn 350 medals during the \"Neuron\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2505,7 +2505,7 @@
     "name": "Neural Network",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Neuron\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Neuron\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2515,7 +2515,7 @@
     "name": "Forest Temple",
     "rarity": "epic",
     "description": "Increase thorns by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Cherry Blossom (IV)\"",
+    "unlock": "Event: Earn 700 medals during the \"Cherry Blossom (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2525,7 +2525,7 @@
     "name": "Tori",
     "rarity": "epic",
     "description": "Increase orb speed by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Cherry Blossom (IV)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Cherry Blossom (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2545,7 +2545,7 @@
     "name": "Digital Disaster",
     "rarity": "epic",
     "description": "Increase free defense upgrade by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Glitch\"",
+    "unlock": "Event: Earn 700 medals during the \"Glitch\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2555,7 +2555,7 @@
     "name": "Instability",
     "rarity": "epic",
     "description": "Increase damage/meter by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Glitch\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Glitch\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -2565,7 +2565,7 @@
     "name": "Clock Tower",
     "rarity": "epic",
     "description": "Increase cash bonus by 5%",
-    "unlock": "Event: Earn 700 medals during the \"What Time Is It? (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"What Time Is It? (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2575,7 +2575,7 @@
     "name": "Time Travel",
     "rarity": "epic",
     "description": "Increase critical chance by 2%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"What Time Is It? (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"What Time Is It? (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2585,7 +2585,7 @@
     "name": "Natural Fire",
     "rarity": "epic",
     "description": "Increase health regen by 5%",
-    "unlock": "Event: Earn 700 medals during the \"Into the Storm (II)\"",
+    "unlock": "Event: Earn 700 medals during the \"Into the Storm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2595,7 +2595,7 @@
     "name": "Storm Planet",
     "rarity": "epic",
     "description": "Increase lab speed by 4%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Into the Storm (II)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Into the Storm (II)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2605,7 +2605,7 @@
     "name": "Brain Net",
     "rarity": "epic",
     "description": "Increase free utility upgrade by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Neuron\"",
+    "unlock": "Event: Earn 700 medals during the \"Neuron\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2615,7 +2615,7 @@
     "name": "Body Control",
     "rarity": "epic",
     "description": "Increase ultimate damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Neuron\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Neuron\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2645,7 +2645,7 @@
     "name": "Viral Infection",
     "rarity": "rare",
     "description": "Increase health by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event: Earn 350 medals during the \"Viral Outbreak (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2655,7 +2655,7 @@
     "name": "Immunization",
     "rarity": "rare",
     "description": "Increase critical chance by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Viral Outbreak (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2665,7 +2665,7 @@
     "name": "Personal Care",
     "rarity": "epic",
     "description": "Increase free defense upgrade by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event: Earn 700 medals during the \"Viral Outbreak (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2675,7 +2675,7 @@
     "name": "Global Threat",
     "rarity": "epic",
     "description": "Increase critical factor by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Viral Outbreak (III)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Viral Outbreak (III)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2685,7 +2685,7 @@
     "name": "Magma River",
     "rarity": "rare",
     "description": "Increase cash by 2%",
-    "unlock": "Event: Earn 350 medals during the \"Volcano (IV)\"",
+    "unlock": "Event: Earn 350 medals during the \"Volcano (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2695,7 +2695,7 @@
     "name": "Obsidian",
     "rarity": "rare",
     "description": "Increase attack speed by 1%",
-    "unlock": "Event Premium: Earn 550 medals during the \"Volcano (IV)\"",
+    "unlock": "Event Premium: Earn 550 medals during the \"Volcano (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2705,7 +2705,7 @@
     "name": "New Island",
     "rarity": "epic",
     "description": "Increase free attack upgrade by 2%",
-    "unlock": "Event: Earn 700 medals during the \"Volcano (IV)\"",
+    "unlock": "Event: Earn 700 medals during the \"Volcano (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2715,7 +2715,7 @@
     "name": "Geological Activity",
     "rarity": "epic",
     "description": "Increase tower damage by 5%",
-    "unlock": "Event Premium: Earn 1100 medals during the \"Volcano (IV)\"",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Volcano (IV)\" event.",
     "unlockGroup": "event",
     "damagePct": 5
   },
@@ -2725,7 +2725,7 @@
     "name": "Big Party",
     "rarity": "rare",
     "description": "Increase coins earned by 2%",
-    "unlock": "Event: Earn 350 medals during the \"5th Anniversary\"",
+    "unlock": "Free during the \"5th Anniversary\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   },
@@ -2735,7 +2735,7 @@
     "name": "Celebration",
     "rarity": "epic",
     "description": "Increase cash bonus by 5%",
-    "unlock": "Event: Earn 700 medals during the \"5th Anniversary\"",
+    "unlock": "Free during the \"5th Anniversary\" event.",
     "unlockGroup": "event",
     "damagePct": 0
   }

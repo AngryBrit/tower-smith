@@ -11,6 +11,8 @@ describe('gameRelicMapping', () => {
     expect(workshopRelicIdAtGameIndex(23)).toBe('1st_tower_birthday')
     expect(workshopRelicIdAtGameIndex(30)).toBe('ionized_plasma')
     expect(workshopRelicIdAtGameIndex(28)).toBe('bacteriophage')
+    expect(workshopRelicIdAtGameIndex(274)).toBe('big_party')
+    expect(workshopRelicIdAtGameIndex(275)).toBe('celebration')
   })
 
   it('imports 1st Tower Birthday from sample save, not 3rd–6th', async () => {
