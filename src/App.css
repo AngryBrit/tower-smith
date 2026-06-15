@@ -5359,23 +5359,6 @@ button.workshop__uw-plus-cost--display:hover {
   box-shadow: var(--sr-modules-pcb-shadow);
 }
 
-.modules-hub__lines {
-  position: absolute;
-  inset: 8% 6%;
-  width: auto;
-  height: auto;
-  pointer-events: none;
-  z-index: 1;
-  transform: translateY(-0.45rem);
-}
-
-.modules-hub__line {
-  fill: none;
-  stroke: var(--sr-modules-line-stroke);
-  stroke-width: 1.1;
-  vector-effect: non-scaling-stroke;
-}
-
 .modules-hub__grid {
   position: relative;
   z-index: 2;

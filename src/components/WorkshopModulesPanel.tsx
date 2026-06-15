@@ -366,22 +366,6 @@ function ModulesLabDetail({
   )
 }
 
-function ModulesHubLines() {
-  return (
-    <svg
-      className="modules-hub__lines"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      aria-hidden
-    >
-      <polyline className="modules-hub__line" points="26,30 50,42" />
-      <polyline className="modules-hub__line" points="74,30 50,42" />
-      <polyline className="modules-hub__line" points="26,70 50,58" />
-      <polyline className="modules-hub__line" points="74,70 50,58" />
-    </svg>
-  )
-}
-
 export function WorkshopModulesPanel({
   workshopPersisted,
   onWorkshopPersistedChange,
@@ -540,7 +524,6 @@ export function WorkshopModulesPanel({
       <div className="modules-hub" role="group" aria-label={t('ws_modules_hub_aria')}>
         <div className="modules-hub__stage">
           <div className="modules-hub__pcb" aria-hidden />
-          <ModulesHubLines />
           <div className="modules-hub__grid">
           {WORKSHOP_ASSIST_MODULE_SLOTS.map((key) => {
             const art = MODULE_HUB_SLOT_ART[key]
