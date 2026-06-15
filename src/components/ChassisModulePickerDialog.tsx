@@ -107,6 +107,10 @@ const SUB_RARITY_LABEL: Record<WorkshopSubmoduleRarity, StringId> = {
 type ChassisModulePickerDialogProps = {
   slot: WorkshopAssistModuleSlot
   pickerRole?: 'main' | 'assist'
+  /** Inline panel below inventory (no modal). */
+  embedded?: boolean
+  /** Preview this module even when another is equipped on the slot. */
+  initialModuleId?: string | null
   /** Assist unique-effect tier (unlock panel); defaults to selected module tier for main. */
   uniqueEffectRarity?: WorkshopChassisModuleEffectTier
   excludeModuleIds?: readonly string[]
@@ -284,6 +288,8 @@ function submoduleCellDisplayForPicker(
 export function ChassisModulePickerDialog({
   slot,
   pickerRole = 'main',
+  embedded = false,
+  initialModuleId = null,
   uniqueEffectRarity,
   excludeModuleIds = [],
   selectedModuleId,
@@ -343,17 +349,18 @@ export function ChassisModulePickerDialog({
   useEffect(() => {
     deferInEffect(() => {
       setPickerRarity(selectedRarity)
-      setPickerModuleId(selectedModuleId)
+      setPickerModuleId(initialModuleId ?? selectedModuleId)
     })
-  }, [selectedRarity, selectedModuleId, slot])
+  }, [selectedRarity, selectedModuleId, initialModuleId, slot])
 
   useEffect(() => {
+    if (embedded) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
-  }, [onClose])
+  }, [embedded, onClose])
 
   const applyModule = (moduleId: string | null, rarity: WorkshopChassisModuleMergeTier) => {
     if (moduleId == null || moduleId === '') {
@@ -375,27 +382,28 @@ export function ChassisModulePickerDialog({
     setOptionsEffectId('')
   }
 
-  return createPortal(
-    <div
-      className="modules-picker__backdrop"
-      role="presentation"
-      onClick={onClose}
-    >
+  const panel = (
       <div
-        className="modules-picker__dialog modules-picker__dialog--detail"
-        role="dialog"
-        aria-modal="true"
+        className={
+          embedded
+            ? 'modules-picker__panel modules-picker__panel--embedded'
+            : 'modules-picker__dialog modules-picker__dialog--detail'
+        }
+        role={embedded ? 'region' : 'dialog'}
+        aria-modal={embedded ? undefined : true}
         aria-labelledby={titleId}
-        onClick={(e) => e.stopPropagation()}
+        onClick={embedded ? undefined : (e) => e.stopPropagation()}
       >
-        <button
-          type="button"
-          className="modules-picker__close"
-          onClick={onClose}
-          aria-label={t('sr_cancel')}
-        >
-          ×
-        </button>
+        {embedded ? null : (
+          <button
+            type="button"
+            className="modules-picker__close"
+            onClick={onClose}
+            aria-label={t('sr_cancel')}
+          >
+            ×
+          </button>
+        )}
 
         <div className="modules-picker__hero">
           <div className="modules-picker__hero-icon-wrap">
@@ -699,12 +707,31 @@ export function ChassisModulePickerDialog({
           </section>
         ) : null}
 
-        <div className="modules-picker__footer">
-          <button type="button" className="glow-btn glow-btn--block" onClick={onClose}>
-            {t('ws_modules_picker_done')}
-          </button>
-        </div>
+        {embedded ? null : (
+          <div className="modules-picker__footer">
+            <button type="button" className="glow-btn glow-btn--block" onClick={onClose}>
+              {t('ws_modules_picker_done')}
+            </button>
+          </div>
+        )}
       </div>
+  )
+
+  if (embedded) {
+    return (
+      <section className="modules-inventory-detail" aria-label={t('ws_modules_inventory_detail_aria')}>
+        {panel}
+      </section>
+    )
+  }
+
+  return createPortal(
+    <div
+      className="modules-picker__backdrop"
+      role="presentation"
+      onClick={onClose}
+    >
+      {panel}
     </div>,
     document.body,
   )

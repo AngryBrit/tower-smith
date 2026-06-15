@@ -6267,6 +6267,160 @@ button.workshop__uw-plus-cost--display:hover {
   margin-top: 0;
 }
 
+.modules-inventory__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+  padding: 0.55rem 0.75rem;
+  background: rgba(49, 46, 129, 0.35);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.modules-inventory__filters {
+  margin: 0 0 0 auto;
+  justify-content: flex-end;
+}
+
+.modules-inventory__filters.gallery-category-chips {
+  margin-bottom: 0;
+}
+
+.modules-inventory__title {
+  margin: 0;
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #f8fafc;
+}
+
+.modules-inventory {
+  padding: 0.85rem 0.75rem 1.25rem;
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.modules-inventory__section + .modules-inventory__section {
+  margin-top: 1rem;
+}
+
+.modules-inventory__section-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(148, 163, 184, 0.9);
+}
+
+.modules-inventory__grid {
+  --modules-inventory-icon-size: 4.75rem;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 7.25rem));
+  justify-content: center;
+  gap: 0.85rem 0.55rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.modules-inventory__grid > li {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.modules-inventory__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.28rem;
+  width: 100%;
+  max-width: 7.25rem;
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: none;
+  color: #f8fafc;
+  cursor: pointer;
+  font: inherit;
+}
+
+.modules-inventory__tile:hover .modules-inventory__icon-img {
+  filter: brightness(1.08);
+}
+
+.modules-inventory__tile:focus-visible {
+  outline: 2px solid rgba(56, 189, 248, 0.75);
+  outline-offset: 2px;
+  border-radius: 0.25rem;
+}
+
+.modules-inventory__icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--modules-inventory-icon-size);
+  height: var(--modules-inventory-icon-size);
+  flex-shrink: 0;
+}
+
+.modules-inventory__border {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.modules-inventory__icon-img {
+  position: relative;
+  z-index: 1;
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.modules-inventory__label {
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.05;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.modules-inventory-detail {
+  padding: 0 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.modules-picker__panel--embedded {
+  position: static;
+  width: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0.85rem 0.65rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.14);
+  border-radius: 0.5rem;
+  background: rgba(2, 6, 23, 0.55);
+  overflow: visible;
+  box-shadow: none;
+}
+
 .modules-hub .modules-detail .workshop__card--sim-wide {
   width: 100%;
 }

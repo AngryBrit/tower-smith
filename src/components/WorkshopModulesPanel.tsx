@@ -56,6 +56,7 @@ import {
   buildTowerHealthHeroStatContext,
 } from '../data/workshopChassisModuleHeroStat'
 import { ChassisModulePickerDialog } from './ChassisModulePickerDialog'
+import { ModulesInventory } from './ModulesInventory'
 import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
 import { ChassisModulesCatalog } from './ChassisModulesCatalog'
 import { AssistModuleReference } from './AssistModuleReference'
@@ -491,7 +492,11 @@ export function WorkshopModulesPanel({
     [patch, workshopPersisted],
   )
 
-  type ModulePickerTarget = { slot: WorkshopAssistModuleSlot; role: 'main' | 'assist' }
+  type ModulePickerTarget = {
+    slot: WorkshopAssistModuleSlot
+    role: 'main' | 'assist'
+    initialModuleId?: string
+  }
   const [pickerTarget, setPickerTarget] = useState<ModulePickerTarget | null>(null)
 
   const openModulePicker = useCallback(
@@ -500,6 +505,13 @@ export function WorkshopModulesPanel({
       selectSlot(target)
     },
     [selectSlot],
+  )
+
+  const handleInventoryModuleSelect = useCallback(
+    (targetSlot: WorkshopAssistModuleSlot, moduleId: string) => {
+      setPickerTarget({ slot: targetSlot, role: 'main', initialModuleId: moduleId })
+    },
+    [],
   )
 
   const handleMainSlotClick = useCallback(
@@ -518,12 +530,13 @@ export function WorkshopModulesPanel({
 
   const selectSubmoduleEffect = useCallback(
     (
+      targetSlot: WorkshopAssistModuleSlot,
       effectId: string,
       rarity: WorkshopSubmoduleRarity,
       cellValue: string | null,
       role: 'main' | 'assist',
     ) => {
-      const current = workshopSubmoduleSelections(workshopPersisted, slot, role)
+      const current = workshopSubmoduleSelections(workshopPersisted, targetSlot, role)
       const nextRoleSelections = toggleSubmoduleSelection(
         current,
         effectId,
@@ -533,14 +546,14 @@ export function WorkshopModulesPanel({
       patch(
         workshopPersistedWithSubmoduleSelections(
           workshopPersisted,
-          slot,
+          targetSlot,
           role,
           nextRoleSelections,
           effectId,
         ),
       )
     },
-    [patch, slot, workshopPersisted],
+    [patch, workshopPersisted],
   )
 
   return (
@@ -715,6 +728,11 @@ export function WorkshopModulesPanel({
         />
       </div>
 
+      <ModulesInventory
+        workshopPersisted={workshopPersisted}
+        onSelectModule={handleInventoryModuleSelect}
+      />
+
       <AssistUnlocksPanel
         workshopPersisted={workshopPersisted}
         onWorkshopPersistedChange={onWorkshopPersistedChange}
@@ -774,7 +792,7 @@ export function WorkshopModulesPanel({
           slot={slot}
           selectedEffects={activeSubmoduleSelections}
           onSelectEffect={(effectId, rarity, cellValue) =>
-            selectSubmoduleEffect(effectId, rarity, cellValue, 'main')
+            selectSubmoduleEffect(slot, effectId, rarity, cellValue, 'main')
           }
         />
       ) : null}
@@ -785,6 +803,7 @@ export function WorkshopModulesPanel({
         <ChassisModulePickerDialog
           slot={pickerTarget.slot}
           pickerRole={pickerTarget.role}
+          initialModuleId={pickerTarget.initialModuleId ?? null}
           excludeModuleIds={(() => {
             const main = workshopChassisModuleSelection(
               workshopPersisted,
@@ -887,7 +906,7 @@ export function WorkshopModulesPanel({
             }
           }}
           onSelectEffect={(effectId, rarity, cellValue, role) =>
-            selectSubmoduleEffect(effectId, rarity, cellValue, role)
+            selectSubmoduleEffect(pickerTarget.slot, effectId, rarity, cellValue, role)
           }
           onClose={() => setPickerTarget(null)}
         />

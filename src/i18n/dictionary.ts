@@ -1003,6 +1003,12 @@ export const STRINGS_EN = {
   ws_modules_assist_efficiency_prefix: 'Eff.',
   ws_modules_assist_efficiency_hint:
     'Assist applies a weaker copy of the module effect at your stone efficiency % (max 70% from stones; labs add more).',
+  ws_modules_inventory_title: 'INVENTORY',
+  ws_modules_inventory_aria: 'Chassis modules inventory',
+  ws_modules_inventory_filter_aria: 'Filter modules by chassis',
+  ws_modules_inventory_filter_all: 'All',
+  ws_modules_inventory_detail_aria: 'Selected module configuration',
+  ws_modules_module_select_aria: 'Select {{module}}',
   ws_modules_catalog_select_hint: 'Click a module name or tier value to equip it on this chassis.',
   ws_modules_level_prefix: 'Lv.',
   ws_modules_level_input_aria: 'Module level for',

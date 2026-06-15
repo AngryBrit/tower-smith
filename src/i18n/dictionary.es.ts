@@ -1013,6 +1013,12 @@ export const STRINGS_ES = {
   ws_modules_assist_efficiency_prefix: 'Ef.',
   ws_modules_assist_efficiency_hint:
     'El apoyo aplica una versión más débil del efecto según tu % de eficiencia con piedras (máx. 70%; los labs suman más).',
+  ws_modules_inventory_title: 'INVENTARIO',
+  ws_modules_inventory_aria: 'Inventario de módulos de chasis',
+  ws_modules_inventory_filter_aria: 'Filtrar módulos por chasis',
+  ws_modules_inventory_filter_all: 'Todos',
+  ws_modules_inventory_detail_aria: 'Configuración del módulo seleccionado',
+  ws_modules_module_select_aria: 'Seleccionar {{module}}',
   ws_modules_catalog_select_hint:
     'Haz clic en un módulo o en un valor de rareza para equiparlo en este chasis.',
   ws_modules_level_prefix: 'Nv.',
