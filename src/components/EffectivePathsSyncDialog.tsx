@@ -253,7 +253,6 @@ export function EffectivePathsSyncDialog({
   >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
-  const [pickerUiHidden, setPickerUiHidden] = useState(false)
   const [loadProgress, setLoadProgress] = useState<EffectivePathsLoadProgress | null>(null)
   const [syncProgress, setSyncProgress] = useState<{
     direction: 'import' | 'export'
@@ -648,7 +647,6 @@ export function EffectivePathsSyncDialog({
                     : t('ep_picker_linked_workbooks_title'),
                 multiselect: true,
                 requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
-                onPickerUiActive: setPickerUiHidden,
               },
             )
             if (!retryGrant.ok) {
@@ -747,7 +745,6 @@ export function EffectivePathsSyncDialog({
 
     void (async () => {
       setLoadingSheets(true)
-      setPickerUiHidden(false)
       resetEffectivePathsWorkbookLoadState({
         setWorkbooks,
         setIdsTabTitle,
@@ -797,7 +794,6 @@ export function EffectivePathsSyncDialog({
       } finally {
         setLoadingSheets(false)
         setLoadProgress(null)
-        setPickerUiHidden(false)
         finishEpMobileResumeRun(true)
       }
     })()
@@ -858,7 +854,6 @@ export function EffectivePathsSyncDialog({
         masterSpreadsheetId: parsedMaster.spreadsheetId,
         masterSheetGid: parsedMaster.sheetGid,
         titles: pickerTitles,
-        onPickerUiActive: setPickerUiHidden,
       })
       if (!accessResult.ok) {
         if (accessResult.reason === 'gateway_failed') {
@@ -876,7 +871,6 @@ export function EffectivePathsSyncDialog({
     } finally {
       setLoadingSheets(false)
       setLoadProgress(null)
-      setPickerUiHidden(false)
     }
   }, [
     parsedMaster,
@@ -2019,7 +2013,7 @@ export function EffectivePathsSyncDialog({
 
   return labOverlayPortal(
     <div
-      className={`select-research__lab-data-backdrop effective-paths-export-backdrop${pickerUiHidden ? ' effective-paths-export-backdrop--picker-behind' : ''}`}
+      className="select-research__lab-data-backdrop effective-paths-export-backdrop"
       role="presentation"
       onClick={busy ? undefined : onClose}
     >

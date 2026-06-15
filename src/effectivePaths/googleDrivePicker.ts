@@ -70,8 +70,6 @@ export type GoogleSpreadsheetPickerOptions = {
   suggestedFileIds: readonly string[]
   multiselect?: boolean
   title?: string
-  /** Called when the Picker overlay opens or closes (hide blocking UI underneath). */
-  onPickerUiActive?: (active: boolean) => void
 }
 
 export type GoogleSpreadsheetPickerResult =
@@ -83,6 +81,9 @@ let pickerApiPromise: Promise<void> | null = null
 
 /** Desktop Picker callback may never fire on some mobile browsers — fail instead of hanging. */
 const PICKER_UI_TIMEOUT_MS = 180_000
+
+/** Fail fast when setVisible succeeds but Google's overlay never appears in the DOM. */
+const PICKER_OPEN_DETECT_MS = 4_000
 
 /** Picker API expects a comma-separated string, not a JavaScript array. */
 export function formatPickerFileIds(fileIds: readonly string[]): string {
@@ -176,6 +177,45 @@ function loadPickerApi(): Promise<void> {
   return pickerApiPromise
 }
 
+/** True when Google Picker injected its modal or iframe into the page. */
+export function isGooglePickerDomVisible(root: ParentNode = document): boolean {
+  const pickerRoot = root.querySelector('.picker-dialog, .picker.modal-dialog, .picker')
+  if (pickerRoot instanceof HTMLElement) {
+    const style = window.getComputedStyle(pickerRoot)
+    if (style.display !== 'none' && style.visibility !== 'hidden') {
+      return true
+    }
+  }
+  for (const iframe of root.querySelectorAll<HTMLIFrameElement>('iframe')) {
+    const src = iframe.src
+    if (src.includes('docs.google.com/picker') || src.includes('google.com/picker')) {
+      return true
+    }
+  }
+  return false
+}
+
+function waitForPickerOpenOrTimeout(ms: number): Promise<boolean> {
+  return new Promise((resolve) => {
+    if (isGooglePickerDomVisible()) {
+      resolve(true)
+      return
+    }
+    const deadline = Date.now() + ms
+    const intervalId = window.setInterval(() => {
+      if (isGooglePickerDomVisible()) {
+        window.clearInterval(intervalId)
+        resolve(true)
+        return
+      }
+      if (Date.now() >= deadline) {
+        window.clearInterval(intervalId)
+        resolve(false)
+      }
+    }, 100)
+  })
+}
+
 function createSpreadsheetView(picker: PickerNamespace, fileIds: string): PickerDocsView {
   const view = new picker.DocsView(picker.ViewId.SPREADSHEETS)
     .setIncludeFolders(false)
@@ -224,7 +264,6 @@ export async function pickGoogleSpreadsheets(
       if (settled) return
       settled = true
       window.clearTimeout(timeoutId)
-      options.onPickerUiActive?.(false)
       resolve(result)
     }
 
@@ -259,7 +298,11 @@ export async function pickGoogleSpreadsheets(
 
     try {
       builder.build().setVisible(true)
-      options.onPickerUiActive?.(true)
+      void waitForPickerOpenOrTimeout(PICKER_OPEN_DETECT_MS).then((opened) => {
+        if (!opened && !settled) {
+          finish({ ok: false, reason: 'picker_failed' })
+        }
+      })
     } catch {
       finish({ ok: false, reason: 'picker_failed' })
     }

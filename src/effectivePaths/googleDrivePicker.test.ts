@@ -1,9 +1,11 @@
+/** @vitest-environment jsdom */
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   formatPickerFileIds,
   googleDrivePickerConfigured,
   googlePickerApiKey,
   googlePickerAppIdConfigured,
+  isGooglePickerDomVisible,
 } from './googleDrivePicker'
 
 describe('formatPickerFileIds', () => {
@@ -39,5 +41,27 @@ describe('googleDrivePickerConfigured', () => {
     vi.stubEnv('VITE_GOOGLE_PICKER_API_KEY', 'test-picker-key')
     vi.stubEnv('VITE_GOOGLE_CLOUD_PROJECT_NUMBER', '123456789012')
     expect(googlePickerAppIdConfigured()).toBe(true)
+  })
+})
+
+describe('isGooglePickerDomVisible', () => {
+  it('is false when no picker elements exist', () => {
+    expect(isGooglePickerDomVisible(document)).toBe(false)
+  })
+
+  it('detects a visible picker dialog root', () => {
+    const dialog = document.createElement('div')
+    dialog.className = 'picker-dialog'
+    document.body.appendChild(dialog)
+    expect(isGooglePickerDomVisible(document)).toBe(true)
+    dialog.remove()
+  })
+
+  it('detects a picker iframe', () => {
+    const iframe = document.createElement('iframe')
+    iframe.src = 'https://docs.google.com/picker/v2/home?origin=test'
+    document.body.appendChild(iframe)
+    expect(isGooglePickerDomVisible(document)).toBe(true)
+    iframe.remove()
   })
 })
