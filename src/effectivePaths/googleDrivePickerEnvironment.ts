@@ -1,4 +1,4 @@
-import { isLocalDevOrigin, publicAppOrigin } from '../devOrigin'
+import { publicAppOrigin } from '../devOrigin'
 
 const PICKER_OAUTH_CALLBACK_PATH = '/oauth/google-drive-picker'
 
@@ -11,13 +11,10 @@ function isMobileUserAgent(): boolean {
 
 /**
  * Use Google one-pick OAuth redirect instead of the JS Picker overlay.
- * Production JS Picker often never renders (API key referrers, modal stacking); redirect is reliable.
+ * Mobile browsers block or never show the Picker popup; desktop keeps GIS + inline Picker.
  */
-export function shouldUsePickerOAuthRedirectFlow(
-  location: Pick<Location, 'origin' | 'hostname' | 'pathname' | 'search' | 'href'> = window.location,
-): boolean {
-  if (isMobileUserAgent()) return true
-  return !isLocalDevOrigin(location)
+export function shouldUsePickerOAuthRedirectFlow(): boolean {
+  return isMobileUserAgent()
 }
 
 /** @deprecated Use {@link shouldUsePickerOAuthRedirectFlow} */

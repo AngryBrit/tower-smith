@@ -7,27 +7,23 @@ describe('shouldUsePickerOAuthRedirectFlow', () => {
   })
 
   it('uses JS Picker on localhost desktop', () => {
-    expect(
-      shouldUsePickerOAuthRedirectFlow({
-        origin: 'http://localhost:8888',
-        hostname: 'localhost',
-        pathname: '/',
-        search: '',
-        href: 'http://localhost:8888/',
-      }),
-    ).toBe(false)
+    vi.stubGlobal('navigator', {
+      userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      maxTouchPoints: 0,
+    })
+    expect(shouldUsePickerOAuthRedirectFlow()).toBe(false)
   })
 
-  it('uses redirect flow on production', () => {
+  it('uses JS Picker on production desktop', () => {
+    vi.stubGlobal('navigator', {
+      userAgent:
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+      maxTouchPoints: 0,
+    })
     expect(
-      shouldUsePickerOAuthRedirectFlow({
-        origin: 'https://www.towersmith.com',
-        hostname: 'www.towersmith.com',
-        pathname: '/',
-        search: '',
-        href: 'https://www.towersmith.com/',
-      }),
-    ).toBe(true)
+      shouldUsePickerOAuthRedirectFlow(),
+    ).toBe(false)
   })
 
   it('uses redirect flow on LAN dev from a phone user agent', () => {
@@ -35,14 +31,6 @@ describe('shouldUsePickerOAuthRedirectFlow', () => {
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)',
       maxTouchPoints: 5,
     })
-    expect(
-      shouldUsePickerOAuthRedirectFlow({
-        origin: 'http://192.168.1.42:8888',
-        hostname: '192.168.1.42',
-        pathname: '/',
-        search: '',
-        href: 'http://192.168.1.42:8888/',
-      }),
-    ).toBe(true)
+    expect(shouldUsePickerOAuthRedirectFlow()).toBe(true)
   })
 })
