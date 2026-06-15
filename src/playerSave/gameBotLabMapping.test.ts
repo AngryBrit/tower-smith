@@ -76,6 +76,7 @@ function minimalSave(partial: Partial<DecodedPlayerSave> = {}): DecodedPlayerSav
     ultimateWeaponPlusLevel: [],
     ultimateWeaponPlusUnlocked: [],
     moduleEquipped: [],
+    moduleInventory: [],
     assistModuleSlots: [],
     assistModulesAvailable: false,
     lastGuildID: '',

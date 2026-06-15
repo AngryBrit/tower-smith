@@ -74,6 +74,7 @@ import {
 } from './gameThemeIndex'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
 import { gameSubmoduleImportFromEffectIndices } from './gameModuleEffectIndex'
+import { applyModuleConfigLibraryFromPlayerSave } from './mapModuleConfigLibrary'
 import {
   defaultWorkshopSubmoduleSlotSelections,
   totalCannonAttackSpeedFromSelections,
@@ -743,6 +744,7 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   if (save.assistModulesAvailable || assistModuleSlotsHaveData(save.assistModuleSlots)) {
     applyAssistModuleSlots(ws, save.assistModuleSlots)
   }
+  applyModuleConfigLibraryFromPlayerSave(ws, save)
   ws.simAttackSpeedModuleSubEffect = totalCannonAttackSpeedFromSelections(ws.simSubmoduleSelections)
 
   // Drop default empty module presets so sanitize seeds preset 1 from imported sim fields.

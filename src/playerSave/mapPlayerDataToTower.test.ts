@@ -8,6 +8,7 @@ import {
 } from './gameWorkshopMapping'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
+import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
 
 const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
 const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
@@ -65,6 +66,7 @@ function minimalSave(
     ultimateWeaponPlusLevel: [],
     ultimateWeaponPlusUnlocked: [],
     moduleEquipped: [],
+    moduleInventory: [],
     assistModuleSlots: [],
     assistModulesAvailable: false,
     lastGuildID: '',
@@ -397,6 +399,49 @@ describe('playerSaveToWorkshop', () => {
       'golden-tower-bonus': 'legendary',
       'black-hole-duration-s': 'legendary',
     })
+  })
+
+  it('imports per-module config library from inventory and equipped modules', async () => {
+    if (!existsSync(SAMPLE_SAVE)) return
+    const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE)))
+    expect(save.moduleInventory.length).toBeGreaterThan(4)
+    const ws = playerSaveToWorkshop(save)
+
+    const equippedBySlot = {
+      cannon: ws.simCannonChassisModuleId,
+      armor: ws.simArmorChassisModuleId,
+      generator: ws.simGeneratorChassisModuleId,
+      core: ws.simCoreChassisModuleId,
+    } as const
+
+    const levelBySlot = {
+      cannon: ws.simCannonChassisModuleLevel,
+      armor: ws.simArmorChassisModuleLevel,
+      generator: ws.simGeneratorChassisModuleLevel,
+      core: ws.simCoreChassisModuleLevel,
+    } as const
+
+    for (const slot of ['cannon', 'armor', 'generator', 'core'] as const) {
+      const moduleId = equippedBySlot[slot]
+      if (!moduleId) continue
+      expect(workshopModuleConfigEntry(ws, slot, 'main', moduleId)).toMatchObject({
+        level: levelBySlot[slot],
+      })
+    }
+
+    let foundUnequipped = false
+    for (const item of save.moduleInventory) {
+      for (const slot of ['cannon', 'armor', 'generator', 'core'] as const) {
+        const moduleId = gameWorkshopChassisModuleId(item.infoIndex, slot)
+        if (!moduleId || moduleId === equippedBySlot[slot]) continue
+        const entry = workshopModuleConfigEntry(ws, slot, 'main', moduleId)
+        expect(entry.level).toBeGreaterThanOrEqual(0)
+        foundUnequipped = true
+        break
+      }
+      if (foundUnequipped) break
+    }
+    expect(foundUnequipped).toBe(true)
   })
 
   it('imports Fudgyrella core submodule effects from sample save', async () => {

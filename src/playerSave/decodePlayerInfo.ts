@@ -14,6 +14,7 @@ import {
   getInt32,
   getInt32Array,
   getModuleEquipped,
+  getModuleInventory,
   getAssistModuleSlots,
   getString,
   getUserBotDataList,
@@ -77,6 +78,7 @@ export type DecodedPlayerSave = {
   ultimateWeaponPlusLevel: number[]
   ultimateWeaponPlusUnlocked: boolean[]
   moduleEquipped: DecodedModuleItem[]
+  moduleInventory: DecodedModuleItem[]
   assistModuleSlots: DecodedAssistModuleSlot[]
   assistModulesAvailable: boolean
   lastGuildID: string
@@ -149,6 +151,7 @@ function decodeFromContext(ctx: PlayerDataContext): DecodedPlayerSave {
     ultimateWeaponPlusLevel: getInt32Array(ctx, 'ultimateWeaponPlusLevel'),
     ultimateWeaponPlusUnlocked: getBoolArray(ctx, 'ultimateWeaponPlusUnlocked'),
     moduleEquipped: getModuleEquipped(ctx),
+    moduleInventory: getModuleInventory(ctx),
     assistModuleSlots: getAssistModuleSlots(ctx),
     assistModulesAvailable: getBool(ctx, 'assistModulesAvailable'),
     lastGuildID: getString(ctx, 'lastGuildID'),

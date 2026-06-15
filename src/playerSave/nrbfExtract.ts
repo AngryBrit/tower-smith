@@ -239,6 +239,20 @@ export function getModuleEquipped(ctx: PlayerDataContext): DecodedModuleItem[] {
   return out
 }
 
+/** Owned chassis modules (`inventory._items` on `PlayerData`). */
+export function getModuleInventory(ctx: PlayerDataContext): DecodedModuleItem[] {
+  const raw = resolveValue(ctx, ctx.player.getValue('inventory'))
+  if (!(raw instanceof ClassRecord)) return []
+  const items = resolveValue(ctx, raw.getValue('_items'))
+  if (!(items instanceof BinaryArrayRecord)) return []
+  const out: DecodedModuleItem[] = []
+  for (const el of items.elementValues) {
+    const row = readModuleItem(ctx, el)
+    if (row) out.push(row)
+  }
+  return out
+}
+
 export function getAssistModuleSlots(ctx: PlayerDataContext): DecodedAssistModuleSlot[] {
   const raw = resolveValue(ctx, ctx.player.getValue('assistModuleSlots'))
   if (!(raw instanceof BinaryArrayRecord)) return []
