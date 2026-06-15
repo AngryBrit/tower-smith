@@ -9,10 +9,8 @@ export function LegalPageFrame({ title, children }: LegalPageFrameProps) {
   useEffect(() => {
     const previous = document.title
     document.title = `${title} · TowerSmith`
-    document.documentElement.classList.add('legal-page-active')
     return () => {
       document.title = previous
-      document.documentElement.classList.remove('legal-page-active')
     }
   }, [title])
 
