@@ -1,8 +1,6 @@
+import { currentAppUrl } from '../devOrigin'
 import { DRIVE_FILE_SCOPE, formatPickerFileIds } from './googleDrivePicker'
-import {
-  googlePickerOAuthRedirectUri,
-  isMobilePickerRedirectPreferred,
-} from './googleDrivePickerEnvironment'
+import { shouldUsePickerOAuthRedirectFlow, googlePickerOAuthRedirectUri } from './googleDrivePickerEnvironment'
 import { createGoogleSheetsOAuthState } from './googleSheetsOAuthState'
 import { writeCachedSheetsToken } from './googleSheetsOAuth'
 import { createPkceChallenge, createPkceVerifier } from './googlePkce'
@@ -11,6 +9,7 @@ import {
   readEpMobileGrantFlow,
   stashEpMobileGrantFlow,
   stashEpMobileResume,
+  urlWithEpResumeFlag,
   type EpMobileGrantFlow,
   type EpMobileGrantPhase,
 } from './effectivePathsMobileGrantSession'
@@ -32,7 +31,11 @@ export type MobilePickerRedirectOptions = {
 
 export type MobilePickerCallbackResult =
   | { ok: true; returnPath: string }
-  | { ok: false; reason: 'cancelled' | 'state_mismatch' | 'token_exchange_failed' | 'missing_flow' }
+  | {
+      ok: false
+      reason: 'cancelled' | 'state_mismatch' | 'token_exchange_failed' | 'missing_flow'
+      returnPath: string
+    }
 
 function oauthClientId(): string | null {
   const id = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID
@@ -40,8 +43,14 @@ function oauthClientId(): string | null {
 }
 
 function returnPathFromLocation(): string {
-  const { pathname, search, hash } = window.location
-  return `${pathname}${search}${hash}`
+  return currentAppUrl()
+}
+
+function failureResult(
+  reason: Extract<MobilePickerCallbackResult, { ok: false }>['reason'],
+  returnPath: string,
+): MobilePickerCallbackResult {
+  return { ok: false, reason, returnPath: urlWithEpResumeFlag(returnPath) }
 }
 
 export async function buildMobilePickerAuthUrl(
@@ -112,7 +121,7 @@ export async function redirectToMobilePickerAuth(
 }
 
 export function mobilePickerRedirectPreferred(): boolean {
-  return isMobilePickerRedirectPreferred()
+  return shouldUsePickerOAuthRedirectFlow()
 }
 
 async function exchangeAuthorizationCode(
@@ -160,32 +169,33 @@ export async function completeMobilePickerOAuthCallback(
   searchParams: URLSearchParams,
 ): Promise<MobilePickerCallbackResult> {
   const flow = readEpMobileGrantFlow()
+  const fallbackReturnPath = flow?.returnPath ?? currentAppUrl()
   if (!flow) {
-    return { ok: false, reason: 'missing_flow' }
+    return failureResult('missing_flow', fallbackReturnPath)
   }
 
   const returnedState = searchParams.get('state')
   if (!returnedState || returnedState !== flow.oauthState) {
     clearEpMobileGrantFlow()
-    return { ok: false, reason: 'state_mismatch' }
+    return failureResult('state_mismatch', flow.returnPath)
   }
 
   if (searchParams.get('error')) {
     clearEpMobileGrantFlow()
-    return { ok: false, reason: 'cancelled' }
+    return failureResult('cancelled', flow.returnPath)
   }
 
   const code = searchParams.get('code')
   if (!code) {
     clearEpMobileGrantFlow()
-    return { ok: false, reason: 'token_exchange_failed' }
+    return failureResult('token_exchange_failed', flow.returnPath)
   }
 
   const redirectUri = googlePickerOAuthRedirectUri()
   const tokenResult = await exchangeAuthorizationCode(code, flow.codeVerifier, redirectUri)
   if (!tokenResult) {
     clearEpMobileGrantFlow()
-    return { ok: false, reason: 'token_exchange_failed' }
+    return failureResult('token_exchange_failed', flow.returnPath)
   }
 
   writeCachedSheetsToken(tokenResult.accessToken, tokenResult.expiresInSec)
@@ -203,5 +213,5 @@ export async function completeMobilePickerOAuthCallback(
   })
   clearEpMobileGrantFlow()
 
-  return { ok: true, returnPath }
+  return { ok: true, returnPath: urlWithEpResumeFlag(returnPath) }
 }

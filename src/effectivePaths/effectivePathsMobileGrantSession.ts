@@ -116,3 +116,26 @@ export function peekEpMobilePickerError(): string | null {
 export function peekEpMobileResume(): EpMobileResumePayload | null {
   return readJson<EpMobileResumePayload>(RESUME_SESSION_KEY)
 }
+
+export const EP_RESUME_QUERY_PARAM = 'ep_resume'
+
+export function urlWithEpResumeFlag(target: string): string {
+  const url = new URL(
+    target,
+    typeof window !== 'undefined' ? window.location.origin : 'https://www.towersmith.com',
+  )
+  url.searchParams.set(EP_RESUME_QUERY_PARAM, '1')
+  return url.toString()
+}
+
+export function hasEpResumeQuery(search: string = window.location.search): boolean {
+  return new URLSearchParams(search).get(EP_RESUME_QUERY_PARAM) === '1'
+}
+
+export function stripEpResumeQueryFromUrl(): void {
+  if (typeof window === 'undefined') return
+  const url = new URL(window.location.href)
+  if (!url.searchParams.has(EP_RESUME_QUERY_PARAM)) return
+  url.searchParams.delete(EP_RESUME_QUERY_PARAM)
+  window.history.replaceState(null, '', `${url.pathname}${url.search}${url.hash}`)
+}

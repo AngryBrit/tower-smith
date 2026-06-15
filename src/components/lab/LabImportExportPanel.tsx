@@ -7,6 +7,7 @@ import { EffectivePathsSyncDialog } from '../EffectivePathsSyncDialog'
 import type { EffectivePathsImportPayload } from '../../effectivePaths/effectivePathsImportDialogSupport'
 import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
 import {
+  hasEpResumeQuery,
   peekEpMobilePickerError,
   peekEpMobileResume,
 } from '../../effectivePaths/effectivePathsMobileGrantSession'
@@ -103,7 +104,10 @@ export function LabImportExportPanel({
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
   const [effectivePathsSyncOpen, setEffectivePathsSyncOpen] = useState(
-    () => peekEpMobileResume() != null || peekEpMobilePickerError() != null,
+    () =>
+      hasEpResumeQuery() ||
+      peekEpMobileResume() != null ||
+      peekEpMobilePickerError() != null,
   )
   const effectivePathsAvailable = googleSheetsOAuthConfigured()
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)

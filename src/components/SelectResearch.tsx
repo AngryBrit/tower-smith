@@ -14,6 +14,12 @@ import { APP_VERSION, CHANGELOG_URL, DISCORD_URL } from '../appVersion'
 import { BuyMeACoffeeButton } from './BuyMeACoffeeButton'
 import { useBudgetPanelsVisible } from '../budgetPanelsVisibility'
 import { subscribeAppDeepLink } from '../appDeepLink'
+import {
+  hasEpResumeQuery,
+  peekEpMobilePickerError,
+  peekEpMobileResume,
+  stripEpResumeQueryFromUrl,
+} from '../effectivePaths/effectivePathsMobileGrantSession'
 import { buildLabDomIdTables, getLabSlugFromUrl } from '../labSlug'
 import {
   computeSimulatorCoinAggregates,
@@ -174,7 +180,12 @@ export function SelectResearch({
     url: string
   } | null>(null)
   const [resetLevelsConfirmOpen, setResetLevelsConfirmOpen] = useState(false)
-  const [labDataPanelOpen, setLabDataPanelOpen] = useState(false)
+  const [labDataPanelOpen, setLabDataPanelOpen] = useState(
+    () =>
+      hasEpResumeQuery() ||
+      peekEpMobileResume() != null ||
+      peekEpMobilePickerError() != null,
+  )
   const [labCompareOpen, setLabCompareOpen] = useState(false)
   const [compareInit, setCompareInit] = useState<CompareDialogInit | null>(null)
   const [labBudgetCollapsed, setLabBudgetCollapsed] = useState(() => {
@@ -222,6 +233,14 @@ export function SelectResearch({
     () => (importNotice?.variant === 'error' ? importNoticeBugInitial : null),
     [importNotice, importNoticeBugInitial],
   )
+
+  useEffect(() => {
+    if (!hasEpResumeQuery()) return
+    queueMicrotask(() => {
+      setLabDataPanelOpen(true)
+      stripEpResumeQueryFromUrl()
+    })
+  }, [])
 
   useEffect(() => {
     if (importNotice?.variant !== 'error') return

@@ -2,6 +2,7 @@ import { createRoot } from 'react-dom/client'
 import { registerSW } from 'virtual:pwa-register'
 import './index.css'
 import Root from './Root'
+import { resolveAppNavigationTarget } from './devOrigin'
 import { isGooglePickerOAuthCallbackPath } from './effectivePaths/googleDrivePickerEnvironment'
 import { completeMobilePickerOAuthCallback } from './effectivePaths/googleDrivePickerMobile'
 import { stashEpMobilePickerError } from './effectivePaths/effectivePathsMobileGrantSession'
@@ -13,12 +14,13 @@ async function bootstrap(): Promise<void> {
 
   if (isGooglePickerOAuthCallbackPath(window.location.pathname)) {
     const result = await completeMobilePickerOAuthCallback(new URLSearchParams(window.location.search))
+    const returnTarget = resolveAppNavigationTarget(result.returnPath)
     if (result.ok) {
-      window.location.replace(result.returnPath)
+      window.location.replace(returnTarget)
       return
     }
     stashEpMobilePickerError(result.reason)
-    window.location.replace('/')
+    window.location.replace(returnTarget)
     return
   }
 
