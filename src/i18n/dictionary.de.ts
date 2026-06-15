@@ -979,6 +979,10 @@ export const STRINGS_DE = {
   ws_modules_picker_equipped: 'Ausgerüstet',
   ws_modules_picker_equipped_primary: 'Primär',
   ws_modules_picker_equipped_assist: 'Assist',
+  ws_modules_equip: 'Ausrüsten',
+  ws_modules_unequip: 'Ablegen',
+  ws_modules_equip_aria: '{{module}} als {{role}} ausrüsten',
+  ws_modules_equipped_aria: '{{module}} als {{role}} ausgerüstet — zum Ablegen klicken',
   ws_modules_picker_assist_unique_tier:
     'Unique-Effekt: {{unique}} (Modul {{module}}; „Unique-Effekt-Boost“ unter Assist-Freischaltungen).',
   ws_modules_picker_module_aria: 'Chassis-Modul',

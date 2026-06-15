@@ -977,6 +977,10 @@ export const STRINGS_EN = {
   ws_modules_picker_equipped: 'Equipped',
   ws_modules_picker_equipped_primary: 'Primary',
   ws_modules_picker_equipped_assist: 'Assist',
+  ws_modules_equip: 'Equip',
+  ws_modules_unequip: 'Unequip',
+  ws_modules_equip_aria: 'Equip {{module}} as {{role}}',
+  ws_modules_equipped_aria: '{{module}} equipped as {{role}} — click to unequip',
   ws_modules_picker_assist_unique_tier:
     'Unique effect: {{unique}} tier (module at {{module}}; raise Unique effect boost in Assist unlocks).',
   ws_modules_picker_module_aria: 'Chassis module',

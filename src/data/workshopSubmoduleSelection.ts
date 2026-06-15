@@ -347,24 +347,48 @@ function orderedSlotsAfterToggle(
   return next
 }
 
+export function toggleSubmoduleSelectionWithOrder(
+  current: WorkshopSubmoduleSelectionMap,
+  ordered: WorkshopSubmoduleOrderedSlots | undefined,
+  effectId: string,
+  rarity: WorkshopSubmoduleRarity,
+  cellValue: string | null,
+): {
+  selections: WorkshopSubmoduleSelectionMap
+  orderedSlots: WorkshopSubmoduleOrderedSlots
+} {
+  const selections = toggleSubmoduleSelection(current, effectId, rarity, cellValue)
+  return {
+    selections,
+    orderedSlots: orderedSlotsAfterToggle(ordered, current, selections, effectId),
+  }
+}
+
 export function workshopPersistedWithSubmoduleSelections(
   ws: WorkshopPersistedV1,
   slot: WorkshopAssistModuleSlot,
   role: WorkshopSubmoduleModuleRole,
   roleSelections: WorkshopSubmoduleSelectionMap,
   toggledEffectId?: string,
+  orderedSlotsOverride?: WorkshopSubmoduleOrderedSlots,
 ): WorkshopPersistedV1 {
   const prev = ws.simSubmoduleSelections[slot] ?? defaultWorkshopSubmoduleSlotSelections()
   const nextSlot: WorkshopSubmoduleSlotSelections = {
     main: role === 'main' ? roleSelections : prev.main,
     assist: role === 'assist' ? roleSelections : prev.assist,
     mainSlots:
-      role === 'main' && toggledEffectId != null
-        ? orderedSlotsAfterToggle(prev.mainSlots, prev.main, roleSelections, toggledEffectId)
+      role === 'main'
+        ? orderedSlotsOverride ??
+          (toggledEffectId != null
+            ? orderedSlotsAfterToggle(prev.mainSlots, prev.main, roleSelections, toggledEffectId)
+            : prev.mainSlots)
         : prev.mainSlots,
     assistSlots:
-      role === 'assist' && toggledEffectId != null
-        ? orderedSlotsAfterToggle(prev.assistSlots, prev.assist, roleSelections, toggledEffectId)
+      role === 'assist'
+        ? orderedSlotsOverride ??
+          (toggledEffectId != null
+            ? orderedSlotsAfterToggle(prev.assistSlots, prev.assist, roleSelections, toggledEffectId)
+            : prev.assistSlots)
         : prev.assistSlots,
   }
   const simSubmoduleSelections: WorkshopSubmoduleSelections = {

@@ -15,7 +15,6 @@ import {
   type WorkshopChassisModuleMergeTier,
 } from '../data/workshopChassisModuleShared'
 import {
-  CHASSIS_MODULE_ORDERS,
   workshopChassisModuleDefForSlot,
 } from '../data/workshopChassisModuleSelection'
 import {
@@ -109,22 +108,21 @@ type ChassisModulePickerDialogProps = {
   pickerRole?: 'main' | 'assist'
   /** Inline panel below inventory (no modal). */
   embedded?: boolean
-  /** Preview this module even when another is equipped on the slot. */
-  initialModuleId?: string | null
+  viewModuleId: string | null
+  isEquippedOnSlot: boolean
   /** Assist unique-effect tier (unlock panel); defaults to selected module tier for main. */
   uniqueEffectRarity?: WorkshopChassisModuleEffectTier
-  excludeModuleIds?: readonly string[]
-  selectedModuleId: string | null
-  selectedRarity: WorkshopChassisModuleMergeTier
+  moduleRarity: WorkshopChassisModuleMergeTier
   moduleLevel: number
+  onRarityChange: (rarity: WorkshopChassisModuleMergeTier) => void
   onModuleLevelCommit: (level: number) => void
   heroStatContext: WorkshopChassisModuleHeroStatContext
   submoduleSelections: WorkshopSubmoduleSelectionMap
   submoduleOrderedSlots?: WorkshopSubmoduleOrderedSlots
   /** When `pickerRole` is assist, scales equipped sub-effect values by sub-stone + lab %. */
   assistSubmoduleBonusContext?: WorkshopSubmoduleBonusContext
-  onSelect: (moduleId: string, rarity: WorkshopChassisModuleMergeTier) => void
-  onClear: (rarity: WorkshopChassisModuleMergeTier) => void
+  onEquip: () => void
+  onUnequip: () => void
   onSelectEffect: (
     effectId: string,
     rarity: WorkshopSubmoduleRarity,
@@ -289,44 +287,45 @@ export function ChassisModulePickerDialog({
   slot,
   pickerRole = 'main',
   embedded = false,
-  initialModuleId = null,
+  viewModuleId,
+  isEquippedOnSlot,
   uniqueEffectRarity,
-  excludeModuleIds = [],
-  selectedModuleId,
-  selectedRarity,
+  moduleRarity,
   moduleLevel,
+  onRarityChange,
   onModuleLevelCommit,
   heroStatContext,
   submoduleSelections,
   submoduleOrderedSlots,
   assistSubmoduleBonusContext,
-  onSelect,
-  onClear,
+  onEquip,
+  onUnequip,
   onSelectEffect,
   onClose,
 }: ChassisModulePickerDialogProps) {
   const { t } = useI18n()
   const titleId = `modules-picker-title-${slot}-${pickerRole}`
-  const moduleOrder = CHASSIS_MODULE_ORDERS[slot].filter((id) => !excludeModuleIds.includes(id))
-  const [pickerRarity, setPickerRarity] = useState<WorkshopChassisModuleMergeTier>(selectedRarity)
-  const [pickerModuleId, setPickerModuleId] = useState<string | null>(selectedModuleId)
   const [optionsEffectId, setOptionsEffectId] = useState('')
   const [optionsRarity, setOptionsRarity] = useState<WorkshopSubmoduleRarity>('legendary')
 
   const section = WORKSHOP_SUBMODULE_SECTIONS[slot]
-  const equipped =
-    pickerModuleId != null ? workshopChassisModuleDefForSlot(slot, pickerModuleId) : null
+  const previewModule =
+    viewModuleId != null ? workshopChassisModuleDefForSlot(slot, viewModuleId) : null
+  const equipRoleLabel =
+    pickerRole === 'assist'
+      ? t('ws_modules_picker_equipped_assist')
+      : t('ws_modules_picker_equipped_primary')
   const uniqueEffectTier =
-    uniqueEffectRarity ?? workshopChassisModuleEffectTier(pickerRarity)
-  const moduleEffectTier = workshopChassisModuleEffectTier(pickerRarity)
+    uniqueEffectRarity ?? workshopChassisModuleEffectTier(moduleRarity)
+  const moduleEffectTier = workshopChassisModuleEffectTier(moduleRarity)
   const iconUrl =
-    pickerModuleId != null && workshopChassisModuleHasDedicatedArt(slot, pickerModuleId)
-      ? workshopChassisModuleDedicatedImageUrl(slot, pickerModuleId)
+    viewModuleId != null && workshopChassisModuleHasDedicatedArt(slot, viewModuleId)
+      ? workshopChassisModuleDedicatedImageUrl(slot, viewModuleId)
       : null
   const shape = MODULE_HUB_SLOT_ART[slot].shape
   const borderUrl = workshopChassisModuleBorderImageUrl(
     slot,
-    pickerModuleId == null ? 'empty' : pickerRarity,
+    viewModuleId == null ? 'empty' : moduleRarity,
   )
 
   const assignedEffectIds = useMemo(
@@ -347,13 +346,6 @@ export function ChassisModulePickerDialog({
   }, [optionsEffectId, assignedEffectIds])
 
   useEffect(() => {
-    deferInEffect(() => {
-      setPickerRarity(selectedRarity)
-      setPickerModuleId(initialModuleId ?? selectedModuleId)
-    })
-  }, [selectedRarity, selectedModuleId, initialModuleId, slot])
-
-  useEffect(() => {
     if (embedded) return
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose()
@@ -361,14 +353,6 @@ export function ChassisModulePickerDialog({
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [embedded, onClose])
-
-  const applyModule = (moduleId: string | null, rarity: WorkshopChassisModuleMergeTier) => {
-    if (moduleId == null || moduleId === '') {
-      onClear(rarity)
-    } else {
-      onSelect(moduleId, rarity)
-    }
-  }
 
   const optionsRow = availableOptionRows.find(
     (r) => submoduleEffectId(r.label) === optionsEffectId,
@@ -380,6 +364,15 @@ export function ChassisModulePickerDialog({
     if (cell == null) return
     onSelectEffect(optionsEffectId, optionsRarity, cell, pickerRole)
     setOptionsEffectId('')
+  }
+
+  const toggleEquip = () => {
+    if (viewModuleId == null || viewModuleId === '') return
+    if (isEquippedOnSlot) {
+      onUnequip()
+      return
+    }
+    onEquip()
   }
 
   const panel = (
@@ -411,9 +404,9 @@ export function ChassisModulePickerDialog({
               className={[
                 'modules-picker__hero-icon',
                 `modules-picker__hero-icon--${shape}`,
-                pickerModuleId == null ? 'modules-picker__hero-icon--empty' : '',
-                pickerModuleId != null
-                  ? WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[pickerRarity]
+                viewModuleId == null ? 'modules-picker__hero-icon--empty' : '',
+                viewModuleId != null
+                  ? WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[moduleRarity]
                   : '',
               ]
                 .filter(Boolean)
@@ -440,7 +433,7 @@ export function ChassisModulePickerDialog({
             </span>
             <PickerModuleLevelInput
               slot={slot}
-              rarity={pickerRarity}
+              rarity={moduleRarity}
               value={moduleLevel}
               onCommit={onModuleLevelCommit}
             />
@@ -449,69 +442,60 @@ export function ChassisModulePickerDialog({
             <p
               className={[
                 'modules-picker__hero-rarity',
-                WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[pickerRarity],
+                WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[moduleRarity],
               ].join(' ')}
             >
-              {t(MERGE_TIER_LABEL[pickerRarity])}
+              {t(MERGE_TIER_LABEL[moduleRarity])}
             </p>
-            <h2 id={titleId} className="modules-picker__hero-name">
-              {equipped?.name ?? t('ws_modules_none_selected')}
-            </h2>
-            {equipped != null ? (
+            <div className="modules-picker__hero-title-row">
+              <h2 id={titleId} className="modules-picker__hero-name">
+                {previewModule?.name ?? t('ws_modules_none_selected')}
+              </h2>
+              {viewModuleId != null ? (
+                <button
+                  type="button"
+                  className={
+                    isEquippedOnSlot
+                      ? 'workshop__uw-active-toggle workshop__uw-active-toggle--on'
+                      : 'workshop__uw-active-toggle'
+                  }
+                  aria-pressed={isEquippedOnSlot}
+                  aria-label={
+                    isEquippedOnSlot
+                      ? t('ws_modules_equipped_aria')
+                          .replace('{{module}}', previewModule?.name ?? '')
+                          .replace('{{role}}', equipRoleLabel)
+                      : t('ws_modules_equip_aria')
+                          .replace('{{module}}', previewModule?.name ?? '')
+                          .replace('{{role}}', equipRoleLabel)
+                  }
+                  onClick={toggleEquip}
+                >
+                  {isEquippedOnSlot ? t('ws_modules_unequip') : t('ws_modules_equip')}
+                </button>
+              ) : null}
+            </div>
+            {previewModule != null ? (
               <p className="modules-picker__hero-stat">
                 {formatWorkshopChassisModuleHeroStat(
                   slot,
-                  equipped,
-                  pickerRarity,
+                  previewModule,
+                  moduleRarity,
                   heroStatContext,
                 )}
               </p>
             ) : null}
-            <p className="modules-picker__hero-equipped">
-              {t('ws_modules_picker_equipped')}:{' '}
-              {pickerRole === 'assist'
-                ? t('ws_modules_picker_equipped_assist')
-                : t('ws_modules_picker_equipped_primary')}
-            </p>
           </div>
         </div>
-
-        <label className="modules-picker__field">
-          <span className="modules-picker__field-label">{t('ws_modules_col_module')}</span>
-          <select
-            className="modules-picker__select glow-input"
-            value={pickerModuleId ?? ''}
-            aria-label={t('ws_modules_picker_module_aria')}
-            onChange={(e) => {
-              const id = e.target.value
-              setPickerModuleId(id === '' ? null : id)
-              applyModule(id === '' ? null : id, pickerRarity)
-            }}
-          >
-            <option value="">{t('ws_modules_none_selected')}</option>
-            {moduleOrder.map((id) => {
-              const def = workshopChassisModuleDefForSlot(slot, id)
-              return (
-                <option key={id} value={id}>
-                  {def.name}
-                </option>
-              )
-            })}
-          </select>
-        </label>
 
         <label className="modules-picker__field">
           <span className="modules-picker__field-label">{t('ws_modules_picker_rarity')}</span>
           <select
             className="modules-picker__select glow-input"
-            value={pickerRarity}
+            value={moduleRarity}
             aria-label={t('ws_modules_picker_rarity_aria')}
             onChange={(e) => {
-              const rarity = e.target.value as WorkshopChassisModuleMergeTier
-              setPickerRarity(rarity)
-              if (pickerModuleId != null) {
-                applyModule(pickerModuleId, rarity)
-              }
+              onRarityChange(e.target.value as WorkshopChassisModuleMergeTier)
             }}
           >
             {WORKSHOP_CHASSIS_MODULE_MERGE_TIERS.map((rarity) => (
@@ -592,13 +576,13 @@ export function ChassisModulePickerDialog({
           <ul className="modules-picker__effect-slots">
             {Array.from({ length: WORKSHOP_SUBMODULE_SLOT_COUNT }, (_, index) => {
               const unlockAt = WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL[index] ?? 1
-              const rarityMax = workshopChassisModuleMaxLevel(pickerRarity)
+              const rarityMax = workshopChassisModuleMaxLevel(moduleRarity)
               const blockedByRarity = unlockAt > rarityMax
               const rawLevel = clampWorkshopAssistModuleLevel(moduleLevel)
               const levelUnlocked = workshopSubmoduleSlotUnlocked(
                 index,
                 rawLevel,
-                pickerRarity,
+                moduleRarity,
               )
               const pick = submoduleOrderedSlots?.[index] ?? null
               const entry =
@@ -648,12 +632,8 @@ export function ChassisModulePickerDialog({
                           const row = section.rows.find(
                             (r) => submoduleEffectId(r.label) === entry.effectId,
                           )
-                          onSelectEffect(
-                            entry.effectId,
-                            entry.rarity,
-                            row?.cells[entry.rarity] ?? null,
-                            pickerRole,
-                          )
+                          const cell = row?.cells[entry.rarity] ?? null
+                          onSelectEffect(entry.effectId, entry.rarity, cell, pickerRole)
                         }}
                       >
                         ×
@@ -678,7 +658,7 @@ export function ChassisModulePickerDialog({
           </ul>
         </section>
 
-        {equipped != null ? (
+        {previewModule != null ? (
           <section className="modules-picker__section" aria-labelledby={`${titleId}-unique`}>
             <h3
               id={`${titleId}-unique`}
@@ -688,11 +668,11 @@ export function ChassisModulePickerDialog({
             </h3>
             <p className="modules-picker__unique">
               <ModuleAbilityUniqueText
-                text={formatWorkshopChassisModuleAbility(equipped, uniqueEffectTier)}
+                text={formatWorkshopChassisModuleAbility(previewModule, uniqueEffectTier)}
                 highlightTokens={[
                   formatWorkshopChassisModuleValue(
-                    equipped.kind,
-                    equipped.values[uniqueEffectTier],
+                    previewModule.kind,
+                    previewModule.values[uniqueEffectTier],
                   ),
                 ]}
               />
@@ -701,7 +681,7 @@ export function ChassisModulePickerDialog({
               <p className="modules-picker__hero-equipped">
                 {t('ws_modules_picker_assist_unique_tier')
                   .replace('{{unique}}', t(EFFECT_TIER_LABEL[uniqueEffectTier]))
-                  .replace('{{module}}', t(MERGE_TIER_LABEL[pickerRarity]))}
+                  .replace('{{module}}', t(MERGE_TIER_LABEL[moduleRarity]))}
               </p>
             ) : null}
           </section>

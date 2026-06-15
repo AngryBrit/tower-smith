@@ -121,6 +121,12 @@ import {
   type WorkshopModulePresetSnapshot,
 } from './data/workshopModulePresets'
 import {
+  defaultWorkshopModuleConfigLibrary,
+  sanitizeWorkshopModuleConfigLibrary,
+  seedWorkshopModuleConfigLibrary,
+  type WorkshopModuleConfigLibrary,
+} from './data/workshopModuleConfigLibrary'
+import {
   clampWorkshopCardEquipSlots,
   defaultCardPresetLoadouts,
   sanitizeCardPresetLoadouts,
@@ -374,6 +380,8 @@ export type WorkshopPersistedV1 = {
   simCoreChassisModuleRarity: WorkshopChassisModuleMergeTier
   /** Equipped sub-module effect picks per chassis slot. */
   simSubmoduleSelections: WorkshopSubmoduleSelections
+  /** Saved rarity, level, and sub-modules per inventory module (main + assist). */
+  simChassisModuleConfigs: WorkshopModuleConfigLibrary
   /** Assist chassis slot unlocked (stones). */
   simCannonAssistUnlocked: boolean
   simArmorAssistUnlocked: boolean
@@ -724,6 +732,7 @@ export function defaultWorkshopPersisted(): WorkshopPersistedV1 {
     simRelicsBonusFraction: 0,
     simPerkDamageQuantity: 0,
     ...defaultWorkshopModulesPersistedFields(),
+    simChassisModuleConfigs: defaultWorkshopModuleConfigLibrary(),
     ...defaultUltimateLevels(),
     ...defaultUltimateActive(),
     ...defaultUltimateOwned(),
@@ -1028,6 +1037,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
           : Math.max(0, Number(o.simAttackSpeedModuleSubEffect) || 0)
       return { simSubmoduleSelections, simAttackSpeedModuleSubEffect }
     })(),
+    simChassisModuleConfigs: sanitizeWorkshopModuleConfigLibrary(o.simChassisModuleConfigs),
     simBerserkerDamageTaken: Math.max(0, Number(o.simBerserkerDamageTaken) || 0),
     relicOwnedIds: parseRelicOwnedIdsJson(o.relicOwnedIds),
     simRelicsBonusFraction: Math.max(0, Number(o.simRelicsBonusFraction) || 0),
@@ -1191,12 +1201,14 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
   )
 
   if (o.modulePresetSnapshots != null) {
-    return applyLegacyBotOwned(
-      applyLegacyUltimateOwned(
-        workshopPersistedWithModulePresets(
-          { ...base, modulePresetLabels },
-          sanitizeModulePresetSnapshots(o.modulePresetSnapshots, base),
-          moduleActivePresetIndex,
+    return seedWorkshopModuleConfigLibrary(
+      applyLegacyBotOwned(
+        applyLegacyUltimateOwned(
+          workshopPersistedWithModulePresets(
+            { ...base, modulePresetLabels },
+            sanitizeModulePresetSnapshots(o.modulePresetSnapshots, base),
+            moduleActivePresetIndex,
+          ),
         ),
       ),
     )
@@ -1204,13 +1216,15 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
 
   const modulePresetSnapshots = defaultModulePresetSnapshots()
   modulePresetSnapshots[0] = extractWorkshopModulePresetSnapshot(base)
-  return applyLegacyBotOwned(
-    applyLegacyUltimateOwned({
-      ...base,
-      moduleActivePresetIndex,
-      modulePresetLabels,
-      modulePresetSnapshots,
-    }),
+  return seedWorkshopModuleConfigLibrary(
+    applyLegacyBotOwned(
+      applyLegacyUltimateOwned({
+        ...base,
+        moduleActivePresetIndex,
+        modulePresetLabels,
+        modulePresetSnapshots,
+      }),
+    ),
   )
 }
 

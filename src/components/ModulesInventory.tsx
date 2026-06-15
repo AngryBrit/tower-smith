@@ -15,11 +15,13 @@ import {
   workshopChassisModuleMergeTierCssClass,
   type WorkshopChassisModuleMergeTier,
 } from '../data/workshopChassisModuleShared'
+import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
 import {
   WORKSHOP_ASSIST_MODULE_SLOTS,
   type WorkshopAssistModuleSlot,
 } from '../data/workshopSimModules'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
+import { ModuleLevelOverlay } from './ModuleLevelOverlay'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 
@@ -34,6 +36,7 @@ type SlotFilter = WorkshopAssistModuleSlot | ''
 
 type ModulesInventoryProps = {
   workshopPersisted: WorkshopPersistedV1
+  selectedModule?: { slot: WorkshopAssistModuleSlot; moduleId: string } | null
   onSelectModule: (slot: WorkshopAssistModuleSlot, moduleId: string) => void
 }
 
@@ -41,10 +44,12 @@ function ModuleInventoryTileIcon({
   slot,
   moduleId,
   rarity,
+  moduleLevel,
 }: {
   slot: WorkshopAssistModuleSlot
   moduleId: string
   rarity: WorkshopChassisModuleMergeTier
+  moduleLevel: number | null
 }) {
   const shape = MODULE_HUB_SLOT_ART[slot].shape
   const dedicatedUrl = workshopChassisModuleDedicatedImageUrl(slot, moduleId)
@@ -84,12 +89,14 @@ function ModuleInventoryTileIcon({
           onError={() => setIconFailed(true)}
         />
       ) : null}
+      {moduleLevel != null ? <ModuleLevelOverlay value={moduleLevel} /> : null}
     </span>
   )
 }
 
 export function ModulesInventory({
   workshopPersisted,
+  selectedModule = null,
   onSelectModule,
 }: ModulesInventoryProps) {
   const { t } = useI18n()
@@ -168,18 +175,45 @@ export function ModulesInventory({
                   const def = workshopChassisModuleDefForSlot(slot, moduleId)
                   const equippedMain = chassis.moduleId === moduleId
                   const equippedAssist = assist.moduleId === moduleId
+                  const mainConfig = workshopModuleConfigEntry(
+                    workshopPersisted,
+                    slot,
+                    'main',
+                    moduleId,
+                  )
+                  const assistConfig = workshopModuleConfigEntry(
+                    workshopPersisted,
+                    slot,
+                    'assist',
+                    moduleId,
+                  )
                   const tileRarity = equippedMain
                     ? chassis.rarity
                     : equippedAssist
                       ? assist.rarity
-                      : 'epic'
+                      : mainConfig.rarity
+                  const moduleLevel =
+                    equippedAssist && !equippedMain ? assistConfig.level : mainConfig.level
+
+                  const isEquipped = equippedMain || equippedAssist
+                  const isSelected =
+                    selectedModule?.slot === slot && selectedModule.moduleId === moduleId
 
                   return (
                     <li key={moduleId}>
                       <button
                         type="button"
-                        className="modules-inventory__tile"
+                        className={[
+                          'modules-inventory__tile',
+                          isEquipped
+                            ? 'modules-inventory__tile--equipped'
+                            : 'modules-inventory__tile--muted',
+                          isSelected ? 'modules-inventory__tile--selected' : '',
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
                         onClick={() => onSelectModule(slot, moduleId)}
+                        aria-pressed={isSelected}
                         aria-label={t('ws_modules_module_select_aria').replace(
                           '{{module}}',
                           def.name,
@@ -189,8 +223,18 @@ export function ModulesInventory({
                           slot={slot}
                           moduleId={moduleId}
                           rarity={tileRarity}
+                          moduleLevel={moduleLevel}
                         />
-                        <span className="modules-inventory__label">{def.name}</span>
+                        <span
+                          className={[
+                            'modules-inventory__label',
+                            isEquipped ? workshopChassisModuleMergeTierCssClass(tileRarity) : '',
+                          ]
+                            .filter(Boolean)
+                            .join(' ')}
+                        >
+                          {def.name}
+                        </span>
                       </button>
                     </li>
                   )

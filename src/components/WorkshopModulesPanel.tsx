@@ -1,8 +1,6 @@
 import { useCallback, useMemo, useState, type CSSProperties } from 'react'
 import {
-  ASSIST_MODULE_LEVEL_KEY,
   WORKSHOP_ASSIST_MODULE_SLOTS,
-  clampWorkshopAssistModuleLevel,
   workshopAssistModuleLabPercentPoints,
   workshopAssistModuleLevel,
   workshopCannonModulePercentFromLabs,
@@ -21,23 +19,25 @@ import {
 type WorkshopChassisModuleRarity = WorkshopChassisModuleMergeTier
 import {
   ASSIST_CHASSIS_MODULE_ID_KEY,
-  ASSIST_CHASSIS_MODULE_RARITY_KEY,
   assistModuleConflictsWithMain,
   mainModuleConflictsWithAssist,
   workshopAssistChassisModuleSelection,
 } from '../data/workshopAssistChassisModule'
 import {
-  CHASSIS_MODULE_ID_KEY,
-  CHASSIS_MODULE_LEVEL_KEY,
-  CHASSIS_MODULE_RARITY_KEY,
   workshopChassisModuleDefForSlot,
   workshopChassisModuleLevel,
   workshopChassisModuleSelection,
 } from '../data/workshopChassisModuleSelection'
 import {
-  toggleSubmoduleSelection,
-  workshopPersistedWithSubmoduleSelections,
-  workshopSubmoduleOrderedSlots,
+  workshopModuleConfigEntry,
+  workshopModuleConfigSubmoduleOrderedSlots,
+  workshopModuleConfigSubmoduleSelections,
+  workshopPersistedEquipModuleFromLibrary,
+  workshopPersistedUnequipModule,
+  workshopPersistedWithModuleConfigEffectToggle,
+  workshopPersistedWithModuleConfigEntry,
+} from '../data/workshopModuleConfigLibrary'
+import {
   workshopSubmoduleSelections,
 } from '../data/workshopSubmoduleSelection'
 import type { WorkshopSubmoduleRarity } from '../data/workshopSubmoduleEffects'
@@ -55,6 +55,7 @@ import {
   buildTowerDamageHeroStatContext,
   buildTowerHealthHeroStatContext,
 } from '../data/workshopChassisModuleHeroStat'
+import { ModuleLevelOverlay } from './ModuleLevelOverlay'
 import { ChassisModulePickerDialog } from './ChassisModulePickerDialog'
 import { ModulesInventory } from './ModulesInventory'
 import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
@@ -116,12 +117,31 @@ type WorkshopModulesPanelProps = {
   labLevelOverrides: Record<string, number>
 }
 
-function ModuleLevelDisplay({ value }: { value: number }) {
-  const { t } = useI18n()
+function ModuleSlotMetaBelow({
+  name,
+  moduleRarity,
+  frameRole,
+}: {
+  name: string
+  moduleRarity: WorkshopChassisModuleRarity
+  frameRole: 'main' | 'assist'
+}) {
   return (
-    <span className="modules-slot__level" aria-hidden>
-      <span className="modules-slot__level-prefix">{t('ws_modules_level_prefix')}</span>
-      <span className="modules-slot__level-value">{value}</span>
+    <span className="modules-slot__meta-below">
+      <span
+        className={[
+          'modules-slot__name',
+          'modules-slot__name--below',
+          'modules-slot__name--module',
+          frameRole === 'assist' ? 'modules-slot__name--below-assist' : '',
+          workshopChassisModuleMergeTierCssClass(moduleRarity),
+        ]
+          .filter(Boolean)
+          .join(' ')}
+        aria-hidden
+      >
+        {name}
+      </span>
     </span>
   )
 }
@@ -146,38 +166,6 @@ function AssistStoneEfficiencyDisplay({
   )
 }
 
-function ModuleSlotMetaBelow({
-  name,
-  moduleRarity,
-  frameRole,
-  moduleLevel,
-}: {
-  name: string
-  moduleRarity: WorkshopChassisModuleRarity
-  frameRole: 'main' | 'assist'
-  moduleLevel?: number
-}) {
-  return (
-    <span className="modules-slot__meta-below">
-      <span
-        className={[
-          'modules-slot__name',
-          'modules-slot__name--below',
-          'modules-slot__name--module',
-          frameRole === 'assist' ? 'modules-slot__name--below-assist' : '',
-          workshopChassisModuleMergeTierCssClass(moduleRarity),
-        ]
-          .filter(Boolean)
-          .join(' ')}
-        aria-hidden
-      >
-        {name}
-      </span>
-      {moduleLevel != null ? <ModuleLevelDisplay value={moduleLevel} /> : null}
-    </span>
-  )
-}
-
 function ModuleSlotFrame({
   slot,
   shape,
@@ -186,6 +174,7 @@ function ModuleSlotFrame({
   frameRole = 'main',
   locked = false,
   showNameBelow = true,
+  moduleLevel,
 }: {
   slot: WorkshopAssistModuleSlot
   shape: ModuleHubShape
@@ -194,6 +183,7 @@ function ModuleSlotFrame({
   frameRole?: 'main' | 'assist'
   locked?: boolean
   showNameBelow?: boolean
+  moduleLevel?: number
 }) {
   const { t } = useI18n()
   const equipped =
@@ -225,13 +215,18 @@ function ModuleSlotFrame({
   return (
     <span className="modules-slot__frame-wrap">
       <span className={frameClass}>
-        <img
-          className="modules-slot__border"
-          src={borderUrl}
-          alt=""
-          decoding="async"
-          draggable={false}
-        />
+        <span className="modules-slot__artboard" aria-hidden>
+          <img
+            className="modules-slot__border"
+            src={borderUrl}
+            alt=""
+            decoding="async"
+            draggable={false}
+          />
+          {moduleLevel != null && moduleId != null && !locked ? (
+            <ModuleLevelOverlay value={moduleLevel} />
+          ) : null}
+        </span>
         {showIcon ? (
           <span className={`modules-slot__icon modules-slot__icon--${shape}`} aria-hidden>
             <img
@@ -444,50 +439,26 @@ export function WorkshopModulesPanel({
     [patch],
   )
 
-  const setChassisModuleLevel = useCallback(
-    (target: WorkshopAssistModuleSlot, level: number) => {
-      patch({
-        [CHASSIS_MODULE_LEVEL_KEY[target]]: clampWorkshopAssistModuleLevel(level),
-      })
-    },
-    [patch],
-  )
-
-  const setAssistModuleLevel = useCallback(
-    (target: WorkshopAssistModuleSlot, level: number) => {
-      patch({
-        [ASSIST_MODULE_LEVEL_KEY[target]]: clampWorkshopAssistModuleLevel(level),
-      })
-    },
-    [patch],
-  )
-
   const activeChassisSelection = workshopChassisModuleSelection(workshopPersisted, slot)
 
   const selectChassisModule = useCallback(
     (targetSlot: WorkshopAssistModuleSlot, moduleId: string, rarity: WorkshopChassisModuleRarity) => {
-      const next = {
-        ...workshopPersisted,
-        [CHASSIS_MODULE_ID_KEY[targetSlot]]: moduleId,
-        [CHASSIS_MODULE_RARITY_KEY[targetSlot]]: rarity,
-      }
-      if (mainModuleConflictsWithAssist(targetSlot, workshopPersisted, moduleId)) {
-        next[ASSIST_CHASSIS_MODULE_ID_KEY[targetSlot]] = ''
-      }
-      patch(next)
-    },
-    [patch, workshopPersisted],
-  )
-
-  const selectAssistChassisModule = useCallback(
-    (targetSlot: WorkshopAssistModuleSlot, moduleId: string, rarity: WorkshopChassisModuleRarity) => {
-      if (moduleId !== '' && assistModuleConflictsWithMain(targetSlot, workshopPersisted, moduleId)) {
+      if (moduleId === '') {
+        patch(workshopPersistedUnequipModule(workshopPersisted, targetSlot, 'main'))
         return
       }
-      patch({
-        [ASSIST_CHASSIS_MODULE_ID_KEY[targetSlot]]: moduleId,
-        [ASSIST_CHASSIS_MODULE_RARITY_KEY[targetSlot]]: rarity,
-      })
+      let next = workshopPersistedWithModuleConfigEntry(
+        workshopPersisted,
+        targetSlot,
+        'main',
+        moduleId,
+        { rarity },
+      )
+      next = workshopPersistedEquipModuleFromLibrary(next, targetSlot, 'main', moduleId)
+      if (mainModuleConflictsWithAssist(targetSlot, workshopPersisted, moduleId)) {
+        next = { ...next, [ASSIST_CHASSIS_MODULE_ID_KEY[targetSlot]]: '' }
+      }
+      patch(next)
     },
     [patch, workshopPersisted],
   )
@@ -536,20 +507,20 @@ export function WorkshopModulesPanel({
       cellValue: string | null,
       role: 'main' | 'assist',
     ) => {
-      const current = workshopSubmoduleSelections(workshopPersisted, targetSlot, role)
-      const nextRoleSelections = toggleSubmoduleSelection(
-        current,
-        effectId,
-        rarity,
-        cellValue,
-      )
+      const moduleId =
+        role === 'main'
+          ? workshopChassisModuleSelection(workshopPersisted, targetSlot).moduleId
+          : workshopAssistChassisModuleSelection(workshopPersisted, targetSlot).moduleId
+      if (moduleId == null) return
       patch(
-        workshopPersistedWithSubmoduleSelections(
+        workshopPersistedWithModuleConfigEffectToggle(
           workshopPersisted,
           targetSlot,
           role,
-          nextRoleSelections,
+          moduleId,
           effectId,
+          rarity,
+          cellValue,
         ),
       )
     },
@@ -619,6 +590,9 @@ export function WorkshopModulesPanel({
                       locked={!assistChassis.unlocked}
                       moduleId={assistChassis.moduleId}
                       moduleRarity={assistChassis.rarity}
+                      moduleLevel={
+                        assistChassis.moduleId != null ? assistLevel : undefined
+                      }
                       showNameBelow={false}
                     />
                   </button>
@@ -630,7 +604,6 @@ export function WorkshopModulesPanel({
                         name={assistEquipped.name}
                         moduleRarity={assistChassis.rarity}
                         frameRole="assist"
-                        moduleLevel={assistLevel}
                       />
                       <AssistStoneEfficiencyDisplay
                         slot={key}
@@ -689,6 +662,7 @@ export function WorkshopModulesPanel({
                       frameRole="main"
                       moduleId={chassis.moduleId}
                       moduleRarity={chassis.rarity}
+                      moduleLevel={chassis.moduleId != null ? mainLevel : undefined}
                       showNameBelow={false}
                     />
                   </button>
@@ -697,7 +671,6 @@ export function WorkshopModulesPanel({
                       name={equippedName}
                       moduleRarity={chassis.rarity}
                       frameRole="main"
-                      moduleLevel={mainLevel}
                     />
                   ) : null}
                 </div>
@@ -730,6 +703,11 @@ export function WorkshopModulesPanel({
 
       <ModulesInventory
         workshopPersisted={workshopPersisted}
+        selectedModule={
+          pickerTarget?.initialModuleId != null
+            ? { slot: pickerTarget.slot, moduleId: pickerTarget.initialModuleId }
+            : null
+        }
         onSelectModule={handleInventoryModuleSelect}
       />
 
@@ -799,118 +777,154 @@ export function WorkshopModulesPanel({
 
       {assistModuleCatalogVisible ? <AssistModuleReference /> : null}
 
-      {pickerTarget != null ? (
-        <ChassisModulePickerDialog
-          slot={pickerTarget.slot}
-          pickerRole={pickerTarget.role}
-          initialModuleId={pickerTarget.initialModuleId ?? null}
-          excludeModuleIds={(() => {
-            const main = workshopChassisModuleSelection(
-              workshopPersisted,
-              pickerTarget.slot,
-            )
-            const assist = workshopAssistChassisModuleSelection(
-              workshopPersisted,
-              pickerTarget.slot,
-            )
-            if (pickerTarget.role === 'assist' && main.moduleId != null) {
-              return [main.moduleId]
-            }
-            if (pickerTarget.role === 'main' && assist.moduleId != null) {
-              return [assist.moduleId]
-            }
-            return []
-          })()}
-          selectedModuleId={
-            pickerTarget.role === 'main'
-              ? workshopChassisModuleSelection(workshopPersisted, pickerTarget.slot).moduleId
-              : workshopAssistChassisModuleSelection(workshopPersisted, pickerTarget.slot).moduleId
-          }
-          selectedRarity={
-            pickerTarget.role === 'main'
-              ? workshopChassisModuleSelection(workshopPersisted, pickerTarget.slot).rarity
-              : workshopAssistChassisModuleSelection(workshopPersisted, pickerTarget.slot).rarity
-          }
-          uniqueEffectRarity={
-            pickerTarget.role === 'assist'
-              ? workshopAssistChassisModuleSelection(workshopPersisted, pickerTarget.slot)
-                  .uniqueRarity
-              : undefined
-          }
-          moduleLevel={
-            pickerTarget.role === 'main'
-              ? workshopChassisModuleLevel(workshopPersisted, pickerTarget.slot)
-              : workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)
-          }
-          onModuleLevelCommit={(next) => {
-            if (pickerTarget.role === 'main') {
-              setChassisModuleLevel(pickerTarget.slot, next)
-            } else {
-              setAssistModuleLevel(pickerTarget.slot, next)
-            }
-          }}
-          heroStatContext={(() => {
-            const moduleLevel =
-              pickerTarget.role === 'main'
-                ? workshopChassisModuleLevel(workshopPersisted, pickerTarget.slot)
-                : workshopAssistModuleLevel(workshopPersisted, pickerTarget.slot)
-            if (pickerTarget.slot === 'cannon') {
-              return buildTowerDamageHeroStatContext(
-                workshopPersisted,
-                researchData,
-                labLevelOverrides,
-                moduleLevel,
-              )
-            }
-            if (pickerTarget.slot === 'armor') {
-              return buildTowerHealthHeroStatContext(
-                workshopPersisted,
-                researchData,
-                labLevelOverrides,
-                moduleLevel,
-              )
-            }
-            return { moduleLevel }
-          })()}
-          submoduleSelections={workshopSubmoduleSelections(
-            workshopPersisted,
-            pickerTarget.slot,
-            pickerTarget.role,
-          )}
-          submoduleOrderedSlots={workshopSubmoduleOrderedSlots(
-            workshopPersisted,
-            pickerTarget.slot,
-            pickerTarget.role,
-          )}
-          assistSubmoduleBonusContext={
-            pickerTarget.role === 'assist'
-              ? {
-                  ws: workshopPersisted,
-                  research: researchData,
-                  labOverrides: labLevelOverrides,
+      {pickerTarget != null
+        ? (() => {
+            const pickerSlot = pickerTarget.slot
+            const pickerRole = pickerTarget.role
+            const equippedId =
+              pickerRole === 'main'
+                ? workshopChassisModuleSelection(workshopPersisted, pickerSlot).moduleId
+                : workshopAssistChassisModuleSelection(workshopPersisted, pickerSlot).moduleId
+            const viewModuleId = pickerTarget.initialModuleId ?? equippedId
+            const pickerConfig =
+              viewModuleId != null
+                ? workshopModuleConfigEntry(
+                    workshopPersisted,
+                    pickerSlot,
+                    pickerRole,
+                    viewModuleId,
+                  )
+                : null
+            const pickerModuleLevel = pickerConfig?.level ?? 0
+            const pickerModuleRarity = pickerConfig?.rarity ?? 'epic'
+
+            return (
+              <ChassisModulePickerDialog
+                slot={pickerSlot}
+                pickerRole={pickerRole}
+                viewModuleId={viewModuleId}
+                isEquippedOnSlot={viewModuleId != null && viewModuleId === equippedId}
+                uniqueEffectRarity={
+                  pickerRole === 'assist' ? pickerConfig?.uniqueEffectRarity : undefined
                 }
-              : undefined
-          }
-          onSelect={(moduleId, rarity) => {
-            if (pickerTarget.role === 'main') {
-              selectChassisModule(pickerTarget.slot, moduleId, rarity)
-            } else {
-              selectAssistChassisModule(pickerTarget.slot, moduleId, rarity)
-            }
-          }}
-          onClear={(rarity) => {
-            if (pickerTarget.role === 'main') {
-              selectChassisModule(pickerTarget.slot, '', rarity)
-            } else {
-              selectAssistChassisModule(pickerTarget.slot, '', rarity)
-            }
-          }}
-          onSelectEffect={(effectId, rarity, cellValue, role) =>
-            selectSubmoduleEffect(pickerTarget.slot, effectId, rarity, cellValue, role)
-          }
-          onClose={() => setPickerTarget(null)}
-        />
-      ) : null}
+                moduleRarity={pickerModuleRarity}
+                moduleLevel={pickerModuleLevel}
+                onRarityChange={(rarity) => {
+                  if (viewModuleId == null) return
+                  patch(
+                    workshopPersistedWithModuleConfigEntry(
+                      workshopPersisted,
+                      pickerSlot,
+                      pickerRole,
+                      viewModuleId,
+                      { rarity },
+                    ),
+                  )
+                }}
+                onModuleLevelCommit={(next) => {
+                  if (viewModuleId == null) return
+                  patch(
+                    workshopPersistedWithModuleConfigEntry(
+                      workshopPersisted,
+                      pickerSlot,
+                      pickerRole,
+                      viewModuleId,
+                      { level: next },
+                    ),
+                  )
+                }}
+                heroStatContext={(() => {
+                  if (pickerSlot === 'cannon') {
+                    return buildTowerDamageHeroStatContext(
+                      workshopPersisted,
+                      researchData,
+                      labLevelOverrides,
+                      pickerModuleLevel,
+                    )
+                  }
+                  if (pickerSlot === 'armor') {
+                    return buildTowerHealthHeroStatContext(
+                      workshopPersisted,
+                      researchData,
+                      labLevelOverrides,
+                      pickerModuleLevel,
+                    )
+                  }
+                  return { moduleLevel: pickerModuleLevel }
+                })()}
+                submoduleSelections={
+                  viewModuleId != null
+                    ? workshopModuleConfigSubmoduleSelections(
+                        workshopPersisted,
+                        pickerSlot,
+                        pickerRole,
+                        viewModuleId,
+                      )
+                    : {}
+                }
+                submoduleOrderedSlots={
+                  viewModuleId != null
+                    ? workshopModuleConfigSubmoduleOrderedSlots(
+                        workshopPersisted,
+                        pickerSlot,
+                        pickerRole,
+                        viewModuleId,
+                      )
+                    : undefined
+                }
+                assistSubmoduleBonusContext={
+                  pickerRole === 'assist'
+                    ? {
+                        ws: workshopPersisted,
+                        research: researchData,
+                        labOverrides: labLevelOverrides,
+                      }
+                    : undefined
+                }
+                onEquip={() => {
+                  if (viewModuleId == null) return
+                  if (
+                    pickerRole === 'assist' &&
+                    assistModuleConflictsWithMain(pickerSlot, workshopPersisted, viewModuleId)
+                  ) {
+                    return
+                  }
+                  let next = workshopPersistedEquipModuleFromLibrary(
+                    workshopPersisted,
+                    pickerSlot,
+                    pickerRole,
+                    viewModuleId,
+                  )
+                  if (
+                    pickerRole === 'main' &&
+                    mainModuleConflictsWithAssist(pickerSlot, workshopPersisted, viewModuleId)
+                  ) {
+                    next = { ...next, [ASSIST_CHASSIS_MODULE_ID_KEY[pickerSlot]]: '' }
+                  }
+                  patch(next)
+                }}
+                onUnequip={() => {
+                  patch(workshopPersistedUnequipModule(workshopPersisted, pickerSlot, pickerRole))
+                }}
+                onSelectEffect={(effectId, rarity, cellValue, role) => {
+                  if (viewModuleId == null) return
+                  patch(
+                    workshopPersistedWithModuleConfigEffectToggle(
+                      workshopPersisted,
+                      pickerSlot,
+                      role,
+                      viewModuleId,
+                      effectId,
+                      rarity,
+                      cellValue,
+                    ),
+                  )
+                }}
+                onClose={() => setPickerTarget(null)}
+              />
+            )
+          })()
+        : null}
     </div>
   )
 }

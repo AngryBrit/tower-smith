@@ -142,6 +142,7 @@ const MODULES_KEYS = [
   'simGeneratorChassisModuleRarity',
   'simCoreChassisModuleRarity',
   'simSubmoduleSelections',
+  'simChassisModuleConfigs',
   'simAttackSpeedModuleSubEffect',
   'simCannonAssistUnlocked',
   'simArmorAssistUnlocked',
