@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.11] - 2026-06-15
+
+### Added
+
+- **5th Anniversary themes and relics** — Event tower/background skins and relic catalog entries for the anniversary celebration.
+- **Google Picker for Effective Paths** — `drive.file` OAuth scope with per-spreadsheet file picker; linked workbook IDs are cached so split-sheet setups reconnect with one picker after the first link.
+
+### Changed
+
+- **Effective Paths Google access** — Replaced full `spreadsheets` scope with `drive.file` plus Picker `setFileIds` so users grant only IDS Master and linked workbooks (supports Google OAuth verification). Requires `VITE_GOOGLE_PICKER_API_KEY` (and optionally `VITE_GOOGLE_CLOUD_PROJECT_NUMBER`).
+
+### Docs
+
+- README: Effective Paths Picker setup and version **3.1.11**.
+- What's new banner (en/de/es).
+
 ## [3.1.10] - 2026-06-14
 
 ### Fixed

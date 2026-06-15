@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3111_headline: 'Novedades en v3.1.11',
+  whats_new_3111_body:
+    'La sincronización Effective Paths usa Google Picker con alcance drive.file: elige solo IDS Master y libros vinculados. Los libros separados recuerdan IDs para reconectar más rápido. Temas y reliquias del 5.º aniversario añadidos.',
   whats_new_3110_headline: 'Novedades en v3.1.10',
   whats_new_3110_body:
     'Correcciones de exportación Effective Paths: Workshop Cells/Kill Bonus +, atajos Plasma en Themes y reliquias Mystic Hair/Hare. Mystic Hair es el nombre en el catálogo de la reliquia premium de Easter (II). La exportación de reliquias muestra nombres de ejemplo si queda alguna etiqueta sin mapear.',

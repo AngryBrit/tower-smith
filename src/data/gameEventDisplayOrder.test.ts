@@ -3,16 +3,16 @@ import { towerThemesByGroup } from './gameThemes'
 import { EVENT_THEME_DISPLAY_ORDER, sortEventThemesForDisplay } from './gameEventDisplayOrder'
 
 describe('gameEventDisplayOrder', () => {
-  it('lists 43 events starting with Interstellar and ending with Neuron', () => {
-    expect(EVENT_THEME_DISPLAY_ORDER).toHaveLength(43)
+  it('lists 44 events starting with Interstellar and ending with 5th Anniversary', () => {
+    expect(EVENT_THEME_DISPLAY_ORDER).toHaveLength(44)
     expect(EVENT_THEME_DISPLAY_ORDER[0]).toBe('theme_event_interstellar')
-    expect(EVENT_THEME_DISPLAY_ORDER.at(-1)).toBe('theme_event_neuron')
+    expect(EVENT_THEME_DISPLAY_ORDER.at(-1)).toBe('theme_event_5th_anniversary')
   })
 
   it('sorts tower event skins for the themes page', () => {
     const { event } = towerThemesByGroup()
     expect(event[0]?.eventNameId).toBe('theme_event_interstellar')
-    expect(event.at(-1)?.eventNameId).toBe('theme_event_neuron')
+    expect(event.at(-1)?.eventNameId).toBe('theme_event_5th_anniversary')
     expect(event[2]?.id).toBe('tower-event-plasma-ball')
   })
 

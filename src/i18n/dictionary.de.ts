@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3111_headline: 'Neu in v3.1.11',
+  whats_new_3111_body:
+    'Effective-Paths-Sync nutzt jetzt Google Picker mit drive.file — nur IDS Master und verknüpfte Arbeitsmappen auswählen. Getrennte Arbeitsmappen merken sich verknüpfte IDs für schnelleres Wiederverbinden. 5th-Anniversary-Themes und Relikte ergänzt.',
   whats_new_3110_headline: 'Neu in v3.1.10',
   whats_new_3110_body:
     'Effective-Paths-Export: Workshop Cells/Kill Bonus +, Themes Plasma-Kurzlabels und Relikte Mystic Hair/Hare. Mystic Hair ist der Katalogname für das Easter-(II)-Premium-Relikt. Relikt-Export zeigt Beispielnamen bei nicht zugeordneten Sheet-Labels.',

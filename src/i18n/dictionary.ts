@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3111_headline: "What's new in v3.1.11",
+  whats_new_3111_body:
+    'Effective Paths sync now uses Google Picker with drive.file scope — select only your IDS Master and linked workbooks. Split-sheet setups remember linked IDs for faster reconnect. 5th Anniversary themes and relics added.',
   whats_new_3110_headline: "What's new in v3.1.10",
   whats_new_3110_body:
     'Effective Paths export fixes: Workshop Cells/Kill Bonus +, Themes Plasma shortcuts, and Relics Mystic Hair/Hare. Mystic Hair is the catalog display name for the Easter (II) premium relic. Relic export shows example names when a sheet label is still unmapped.',
