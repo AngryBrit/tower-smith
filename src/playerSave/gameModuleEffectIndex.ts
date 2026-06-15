@@ -616,6 +616,44 @@ function decodeCoreHighTierRemap(
 }
 
 /**
+ * Cannon rows with a leading null Common column store Rare at the next compressed index
+ * (e.g. Rapid Fire Duration save index 45 → Rare +0.4s, not Epic +0.8s).
+ */
+function decodeCannonRareAtEpicIndex(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+): GameModuleEffectDecode | null {
+  if (decoded.slot !== 'cannon' || decoded.rarity !== 'epic') return null
+  const prev = gameModuleEffectByIndex(rawIndex - 1, 0)
+  if (prev == null || prev.slot !== 'cannon' || prev.effectId !== decoded.effectId) {
+    return null
+  }
+  if (prev.rarity !== 'rare') return null
+  const twoBack = gameModuleEffectByIndex(rawIndex - 2, 0)
+  if (twoBack?.slot === 'cannon' && twoBack.effectId === decoded.effectId) {
+    return null
+  }
+  return prev
+}
+
+/**
+ * Cannon rows with leading null wiki tiers store Epic at the next compressed index
+ * (e.g. Super Crit Multi save index 68 → Epic +2x, not Legendary +3).
+ */
+function decodeCannonEpicAtLegendaryIndex(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+): GameModuleEffectDecode | null {
+  if (decoded.slot !== 'cannon' || decoded.rarity !== 'legendary') return null
+  const prev = gameModuleEffectByIndex(rawIndex - 1, 0)
+  if (prev == null || prev.slot !== 'cannon' || prev.effectId !== decoded.effectId) {
+    return null
+  }
+  if (prev.rarity !== 'epic') return null
+  return prev
+}
+
+/**
  * Decode save effect index for submodule import.
  * Main ancestral-tier generator modules store the Epic row base index for Epic-only substat rows;
  * bump +3 when that decodes as Epic but Ancestral exists in the same row.
@@ -684,6 +722,12 @@ function gameModuleEffectForSubmoduleImport(
       decoded,
     )
     if (sparse != null) return sparse
+  }
+  if (slot === 'cannon') {
+    const cannonRare = decodeCannonRareAtEpicIndex(rawIndex, decoded)
+    if (cannonRare != null) return cannonRare
+    const cannonEpic = decodeCannonEpicAtLegendaryIndex(rawIndex, decoded)
+    if (cannonEpic != null) return cannonEpic
   }
   return decoded
 }

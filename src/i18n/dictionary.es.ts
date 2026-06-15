@@ -1023,6 +1023,7 @@ export const STRINGS_ES = {
   ws_modules_inventory_filter_all: 'Todos',
   ws_modules_inventory_detail_aria: 'Configuración del módulo seleccionado',
   ws_modules_module_select_aria: 'Seleccionar {{module}}',
+  ws_modules_module_unowned_aria: '{{module}} (no poseído)',
   ws_modules_catalog_select_hint:
     'Haz clic en un módulo o en un valor de rareza para equiparlo en este chasis.',
   ws_modules_level_prefix: 'Nv.',

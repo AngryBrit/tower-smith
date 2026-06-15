@@ -47,6 +47,11 @@ describe('gameModuleIndex', () => {
     expect(gameWorkshopChassisModuleId(40, 'core')).toBe('omChip')
   })
 
+  it('maps Havoc Bringer at infoIndex 7 (index 6 is generic cannon)', () => {
+    expect(gameWorkshopChassisModuleId(6, 'cannon')).toBeNull()
+    expect(gameWorkshopChassisModuleId(7, 'cannon')).toBe('havocBringer')
+  })
+
   it('maps high-tier Shrink Ray on cannon (infoIndex 41)', () => {
     expect(gameWorkshopChassisModuleId(41, 'cannon')).toBe('shrinkRay')
     expect(gameWorkshopChassisModuleId(41, 'core')).toBeNull()

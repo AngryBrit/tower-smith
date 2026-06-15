@@ -69,6 +69,15 @@ export function formatSubmoduleCellDisplay(cell: string, effectLabel?: string): 
   const trimmed = cell.trim()
   if (trimmed === '') return trimmed
 
+  if (effectLabel != null && isSubmoduleMultiplierEffectLabel(effectLabel)) {
+    const n = parseSubmoduleCellNumber(trimmed)
+    if (n != null) {
+      const sign = n < 0 ? '-' : '+'
+      const formatted = trimTrailingDisplayZeros(Math.abs(n).toFixed(2))
+      return `${sign}${formatted}x`
+    }
+  }
+
   const unit = submoduleLabelUnit(effectLabel)
   const hasLeadingSign = /^[+-]/.test(trimmed)
   let display = hasLeadingSign ? trimmed : `+${trimmed}`
@@ -107,7 +116,12 @@ export function formatSubmoduleCellDisplay(cell: string, effectLabel?: string): 
 const SUBMODULE_PICKER_PERCENT_TRAILING_NAME = new Set(['Defense'])
 
 /** Submodule rows whose wiki cells are additive × multipliers (`0.4` → `+0.4x`). */
-const SUBMODULE_MULTIPLIER_EFFECT_LABELS = new Set(['Max Recovery'])
+const SUBMODULE_MULTIPLIER_EFFECT_LABELS = new Set([
+  'Crit Factor',
+  'Damage / Meter',
+  'Max Recovery',
+  'Super Crit Multi',
+])
 
 export function isSubmoduleMultiplierEffectLabel(label: string): boolean {
   return SUBMODULE_MULTIPLIER_EFFECT_LABELS.has(submoduleEffectDisplayName(label))

@@ -29,6 +29,7 @@ import {
   ASSIST_MODULE_LEVEL_KEY,
   clampWorkshopAssistModuleLevel,
   workshopAssistModuleLevel,
+  WORKSHOP_ASSIST_MODULE_SLOTS,
   type WorkshopAssistModuleSlot,
 } from './workshopSimModules'
 import {
@@ -231,6 +232,39 @@ export function workshopModuleConfigEntry(
   if (fromEquipped != null) return fromEquipped
 
   return defaultWorkshopModuleConfigEntry()
+}
+
+function hasModuleOwnershipData(ws: WorkshopPersistedV1): boolean {
+  for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+    const lib = ws.simChassisModuleConfigs?.[slot]
+    if (lib != null && (Object.keys(lib.main).length > 0 || Object.keys(lib.assist).length > 0)) {
+      return true
+    }
+    const mainId = workshopChassisModuleSelection(ws, slot).moduleId
+    const assistId = workshopAssistChassisModuleSelection(ws, slot).moduleId
+    if (mainId != null) return true
+    if (assistId != null) return true
+  }
+  return false
+}
+
+/** Whether the player owns this chassis module (save inventory, library, or currently equipped). */
+export function workshopModuleIsOwned(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+  moduleId: string,
+): boolean {
+  if (!hasModuleOwnershipData(ws)) return true
+  const sanitizedId = sanitizeChassisModuleId(slot, moduleId)
+  if (sanitizedId == null) return false
+  const slotLib = ws.simChassisModuleConfigs?.[slot]
+  if (slotLib?.main[sanitizedId] != null || slotLib?.assist[sanitizedId] != null) {
+    return true
+  }
+  return (
+    workshopChassisModuleSelection(ws, slot).moduleId === sanitizedId ||
+    workshopAssistChassisModuleSelection(ws, slot).moduleId === sanitizedId
+  )
 }
 
 function withUpdatedLibrary(

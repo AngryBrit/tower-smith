@@ -16,7 +16,7 @@ export const GAME_MODULE_INFO_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] =
   null, // 3: generic / unknown
   null, // 4: generic / unknown
   null, // 5: generic / unknown
-  "havocBringer", // 6: havocBringer
+  null, // 6: generic / unknown
   "havocBringer", // 7: havocBringer
   "deathPenalty", // 8: deathPenalty
   "beingAnnihilator", // 9: beingAnnihilator

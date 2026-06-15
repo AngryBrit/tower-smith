@@ -1014,6 +1014,7 @@ export const STRINGS_DE = {
   ws_modules_inventory_filter_all: 'Alle',
   ws_modules_inventory_detail_aria: 'Konfiguration des ausgewählten Moduls',
   ws_modules_module_select_aria: '{{module}} auswählen',
+  ws_modules_module_unowned_aria: '{{module}} (nicht im Besitz)',
   ws_modules_catalog_select_hint: 'Klicke auf einen Modulnamen oder Seltenheitswert, um ihn auf diesem Chassis auszurüsten.',
   ws_modules_level_prefix: 'St.',
   ws_modules_level_input_aria: 'Modulstufe für',

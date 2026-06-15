@@ -21,6 +21,7 @@ const outPath = join(root, 'src/playerSave/gameModuleIndex.ts')
 /** @type {Record<number, string | null>} */
 const MANUAL_OVERRIDES = {
   // Sample save (h:/The Tower/playerInfo.dat) — equipped + inventory calibration.
+  6: null, // generic cannon placeholder — named Havoc Bringer is index 7
   7: 'havocBringer',
   8: 'deathPenalty',
   9: 'beingAnnihilator',

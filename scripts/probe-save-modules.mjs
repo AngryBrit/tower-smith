@@ -69,6 +69,20 @@ modEq.elementValues.forEach((el, i) => {
   printEffects(slots[i] + ' (main)', item, slots[i])
 })
 
+const inv = resolve(player.getValue('inventory'))
+if (inv instanceof ClassRecord) {
+  const items = resolve(inv.getValue('_items'))
+  if (items instanceof BinaryArrayRecord) {
+    for (const el of items.elementValues) {
+      const item = resolve(el)
+      if (!(item instanceof ClassRecord)) continue
+      const infoIndex = item.getValue('infoIndex')
+      if (infoIndex !== 6 && infoIndex !== 7) continue
+      printEffects('inventory havoc infoIndex ' + infoIndex, item, 'cannon')
+    }
+  }
+}
+
 const assistRaw = resolve(player.getValue('assistModuleSlots'))
 if (assistRaw instanceof BinaryArrayRecord) {
   assistRaw.elementValues.forEach((el, i) => {

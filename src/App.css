@@ -6385,6 +6385,19 @@ button.workshop__uw-plus-cost--display:hover {
   transition: color 0.16s ease;
 }
 
+.modules-inventory__tile--unowned {
+  cursor: not-allowed;
+}
+
+.modules-inventory__tile--unowned .modules-inventory__icon {
+  opacity: 0.32;
+  filter: saturate(0.15) brightness(0.72);
+}
+
+.modules-inventory__tile--unowned .modules-inventory__label {
+  color: rgba(100, 116, 139, 0.5);
+}
+
 .modules-inventory__tile--equipped .modules-inventory__icon {
   filter: drop-shadow(0 0 12px rgba(var(--module-rarity-rgb), 0.46));
 }

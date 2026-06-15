@@ -1013,6 +1013,7 @@ export const STRINGS_EN = {
   ws_modules_inventory_filter_all: 'All',
   ws_modules_inventory_detail_aria: 'Selected module configuration',
   ws_modules_module_select_aria: 'Select {{module}}',
+  ws_modules_module_unowned_aria: '{{module}} (not owned)',
   ws_modules_catalog_select_hint: 'Click a module name or tier value to equip it on this chassis.',
   ws_modules_level_prefix: 'Lv.',
   ws_modules_level_input_aria: 'Module level for',

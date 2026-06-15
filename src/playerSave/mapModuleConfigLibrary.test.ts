@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { defaultWorkshopPersisted } from '../labPresetsStorage'
-import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
+import { workshopModuleConfigEntry, workshopModuleIsOwned } from '../data/workshopModuleConfigLibrary'
 import {
   applyModuleConfigLibraryFromPlayerSave,
   moduleConfigEntryFromDecodedItem,
@@ -88,6 +88,28 @@ describe('mapModuleConfigLibrary', () => {
     })
   })
 
+  it('imports Havoc Bringer library entry from infoIndex 7 inventory', () => {
+    const save = minimalSave({
+      moduleInventory: [
+        { infoIndex: 6, level: 1, rarity: 5, effects: [59, 40, 0, 0, 0, 0, 0, 0] },
+        { infoIndex: 7, level: 1, rarity: 4, effects: [27, 19, 0, 0, 0, 0, 0, 0] },
+      ],
+    })
+    const ws = defaultWorkshopPersisted()
+    applyModuleConfigLibraryFromPlayerSave(ws, save)
+
+    expect(workshopModuleIsOwned(ws, 'cannon', 'havocBringer')).toBe(true)
+    const entry = workshopModuleConfigEntry(ws, 'cannon', 'main', 'havocBringer')
+    expect(entry.submoduleSlots?.[0]).toMatchObject({
+      effectId: 'damage-meter-m',
+      rarity: 'epic',
+    })
+    expect(entry.submoduleSlots?.[1]).toMatchObject({
+      effectId: 'attack-range-m',
+      rarity: 'common',
+    })
+  })
+
   it('builds library entries from inventory and equipped modules', () => {
     const save = minimalSave({
       moduleInventory: [
@@ -95,7 +117,7 @@ describe('mapModuleConfigLibrary', () => {
         { infoIndex: 22, level: 5, rarity: 5, effects: [] },
       ],
       moduleEquipped: [
-        { infoIndex: 6, level: 99, rarity: 9, effects: [10, 11, 12, 13] },
+        { infoIndex: 7, level: 99, rarity: 9, effects: [10, 11, 12, 13] },
       ],
     })
 
@@ -132,12 +154,12 @@ describe('mapModuleConfigLibrary', () => {
   it('maps submodule effects from decoded item', () => {
     const entry = moduleConfigEntryFromDecodedItem(
       'cannon',
-      { infoIndex: 6, level: 50, rarity: 8, effects: [0, 1, 2, 3] },
+      { infoIndex: 7, level: 50, rarity: 8, effects: [0, 1, 2, 3] },
       'main',
       0,
     )
     expect(entry).not.toBeNull()
     expect(entry!.submodules).toBeTruthy()
-    expect(gameWorkshopChassisModuleId(6, 'cannon')).toBe('havocBringer')
+    expect(gameWorkshopChassisModuleId(7, 'cannon')).toBe('havocBringer')
   })
 })

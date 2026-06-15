@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { defaultWorkshopPersisted } from '../labPresetsStorage'
 import {
   workshopModuleConfigEntry,
+  workshopModuleIsOwned,
   workshopPersistedEquipModuleFromLibrary,
   workshopPersistedUnequipModule,
   workshopPersistedWithModuleConfigEffectToggle,
@@ -53,6 +54,31 @@ describe('workshopModuleConfigLibrary', () => {
       rarity: 'epic_plus',
       level: 15,
     })
+  })
+
+  it('tracks owned modules from library entries or equip state', () => {
+    let ws = defaultWorkshopPersisted()
+    expect(workshopModuleIsOwned(ws, 'cannon', 'astralDeliverance')).toBe(true)
+
+    ws = {
+      ...ws,
+      simChassisModuleConfigs: {
+        ...ws.simChassisModuleConfigs,
+        cannon: {
+          main: {},
+          assist: {},
+        },
+      },
+    }
+    ws = workshopPersistedWithModuleConfigEntry(ws, 'cannon', 'main', 'astralDeliverance', {
+      rarity: 'epic',
+      level: 10,
+    })
+    expect(workshopModuleIsOwned(ws, 'cannon', 'astralDeliverance')).toBe(true)
+    expect(workshopModuleIsOwned(ws, 'cannon', 'havocBringer')).toBe(false)
+
+    ws = workshopPersistedEquipModuleFromLibrary(ws, 'cannon', 'main', 'havocBringer')
+    expect(workshopModuleIsOwned(ws, 'cannon', 'havocBringer')).toBe(true)
   })
 
   it('persists sub-module effects for unequipped modules', () => {

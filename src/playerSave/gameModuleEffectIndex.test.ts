@@ -96,6 +96,79 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('imports Havoc Bringer substats from infoIndex 7 save row', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [27, 19, 0, 0, 0, 0, 0, 0],
+      1,
+      0,
+      'epic',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'damage-meter-m',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'attack-range-m',
+      rarity: 'common',
+    })
+  })
+
+  it('imports Death Penalty rapid-fire duration from rare-start row save index', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [0, 45, 0, 0, 0, 0, 0, 0],
+      50,
+      0,
+      'epic',
+    )
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'rapid-fire-duration',
+      rarity: 'rare',
+    })
+  })
+
+  it('imports epic rapid-fire duration from legendary save index on rare-start row', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [46, 0, 0, 0, 0, 0, 0, 0],
+      50,
+      0,
+      'epic',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'rapid-fire-duration',
+      rarity: 'epic',
+    })
+  })
+
+  it('imports Astral Deliverance cannon substats from save indices (epic-start row offset)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [9, 68, 15, 0, 0, 0, 0, 0],
+      140,
+      0,
+      'star_1',
+    )
+    expect(imported.ordered[0]).toMatchObject({ effectId: 'crit-chance', rarity: 'epic' })
+    expect(imported.ordered[1]).toMatchObject({ effectId: 'super-crit-multi', rarity: 'epic' })
+    expect(imported.ordered[2]).toMatchObject({ effectId: 'crit-factor', rarity: 'epic' })
+  })
+
+  it('keeps true legendary cannon substat when previous index is also legendary', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [42, 0, 0, 0, 0, 0, 0, 0],
+      50,
+      0,
+      'epic',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'rapid-fire-chance',
+      rarity: 'legendary',
+    })
+  })
+
   it('imports compressed ancestral generator indices on Ancestral-tier Project Funding', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'generator',

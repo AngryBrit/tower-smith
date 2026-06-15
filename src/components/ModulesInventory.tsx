@@ -15,7 +15,10 @@ import {
   workshopChassisModuleMergeTierCssClass,
   type WorkshopChassisModuleMergeTier,
 } from '../data/workshopChassisModuleShared'
-import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
+import {
+  workshopModuleConfigEntry,
+  workshopModuleIsOwned,
+} from '../data/workshopModuleConfigLibrary'
 import {
   WORKSHOP_ASSIST_MODULE_SLOTS,
   type WorkshopAssistModuleSlot,
@@ -192,12 +195,18 @@ export function ModulesInventory({
                     : equippedAssist
                       ? assist.rarity
                       : mainConfig.rarity
-                  const moduleLevel =
-                    equippedAssist && !equippedMain ? assistConfig.level : mainConfig.level
+                  const isOwned = workshopModuleIsOwned(workshopPersisted, slot, moduleId)
+                  const moduleLevel = !isOwned
+                    ? null
+                    : equippedAssist && !equippedMain
+                      ? assistConfig.level
+                      : mainConfig.level
 
                   const isEquipped = equippedMain || equippedAssist
                   const isSelected =
-                    selectedModule?.slot === slot && selectedModule.moduleId === moduleId
+                    isOwned &&
+                    selectedModule?.slot === slot &&
+                    selectedModule.moduleId === moduleId
 
                   return (
                     <li key={moduleId}>
@@ -205,19 +214,24 @@ export function ModulesInventory({
                         type="button"
                         className={[
                           'modules-inventory__tile',
-                          isEquipped
-                            ? 'modules-inventory__tile--equipped'
-                            : 'modules-inventory__tile--muted',
+                          !isOwned
+                            ? 'modules-inventory__tile--unowned'
+                            : isEquipped
+                              ? 'modules-inventory__tile--equipped'
+                              : 'modules-inventory__tile--muted',
                           isSelected ? 'modules-inventory__tile--selected' : '',
                         ]
                           .filter(Boolean)
                           .join(' ')}
+                        disabled={!isOwned}
                         onClick={() => onSelectModule(slot, moduleId)}
                         aria-pressed={isSelected}
-                        aria-label={t('ws_modules_module_select_aria').replace(
-                          '{{module}}',
-                          def.name,
-                        )}
+                        aria-disabled={!isOwned}
+                        aria-label={
+                          isOwned
+                            ? t('ws_modules_module_select_aria').replace('{{module}}', def.name)
+                            : t('ws_modules_module_unowned_aria').replace('{{module}}', def.name)
+                        }
                       >
                         <ModuleInventoryTileIcon
                           slot={slot}
