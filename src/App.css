@@ -2350,6 +2350,11 @@ html[data-color-scheme='high-contrast'] {
   z-index: 120;
 }
 
+.effective-paths-export-backdrop--picker-behind {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .select-research__lab-data-dialog.effective-paths-export-dialog {
   max-width: 24rem;
   display: flex;

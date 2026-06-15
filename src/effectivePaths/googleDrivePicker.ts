@@ -70,6 +70,8 @@ export type GoogleSpreadsheetPickerOptions = {
   suggestedFileIds: readonly string[]
   multiselect?: boolean
   title?: string
+  /** Called when the Picker overlay opens or closes (hide blocking UI underneath). */
+  onPickerUiActive?: (active: boolean) => void
 }
 
 export type GoogleSpreadsheetPickerResult =
@@ -78,6 +80,9 @@ export type GoogleSpreadsheetPickerResult =
 
 let gapiScriptPromise: Promise<void> | null = null
 let pickerApiPromise: Promise<void> | null = null
+
+/** Desktop Picker callback may never fire on some mobile browsers — fail instead of hanging. */
+const PICKER_UI_TIMEOUT_MS = 180_000
 
 /** Picker API expects a comma-separated string, not a JavaScript array. */
 export function formatPickerFileIds(fileIds: readonly string[]): string {
@@ -219,8 +224,14 @@ export async function pickGoogleSpreadsheets(
     const finish = (result: GoogleSpreadsheetPickerResult) => {
       if (settled) return
       settled = true
+      window.clearTimeout(timeoutId)
+      options.onPickerUiActive?.(false)
       resolve(result)
     }
+
+    const timeoutId = window.setTimeout(() => {
+      finish({ ok: false, reason: 'picker_failed' })
+    }, PICKER_UI_TIMEOUT_MS)
 
     const builder = new picker.PickerBuilder()
       .addView(createSpreadsheetView(picker, pickerFileIds))
@@ -248,6 +259,7 @@ export async function pickGoogleSpreadsheets(
     }
 
     try {
+      options.onPickerUiActive?.(true)
       builder.build().setVisible(true)
     } catch {
       finish({ ok: false, reason: 'picker_failed' })

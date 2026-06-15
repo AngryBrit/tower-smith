@@ -74,6 +74,7 @@ export type GrantEffectivePathsSpreadsheetsOptions = {
   multiselect?: boolean
   /** When set, the user must include this spreadsheet in their picker selection. */
   requireMasterSpreadsheetId?: string
+  onPickerUiActive?: (active: boolean) => void
 }
 
 /** Open one picker listing only the given spreadsheet IDs (drive.file grant on pick). */
@@ -90,6 +91,7 @@ export async function grantEffectivePathsSpreadsheetsAccess(
     suggestedFileIds: uniqueIds,
     multiselect: options.multiselect ?? uniqueIds.length > 1,
     title: options.title,
+    onPickerUiActive: options.onPickerUiActive,
   })
   if (!pickerResult.ok) {
     return grantResultFromPicker(pickerResult)
@@ -108,10 +110,12 @@ export async function grantIdsMasterSpreadsheetAccess(
   accessToken: string,
   masterSpreadsheetId: string,
   title?: string,
+  onPickerUiActive?: (active: boolean) => void,
 ): Promise<SpreadsheetAccessGrantResult> {
   return grantEffectivePathsSpreadsheetsAccess(accessToken, [masterSpreadsheetId], {
     title,
     requireMasterSpreadsheetId: masterSpreadsheetId,
+    onPickerUiActive,
   })
 }
 
@@ -140,8 +144,9 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
   masterSpreadsheetId: string
   masterSheetGid: number | null
   titles: EnsureEffectivePathsSpreadsheetAccessTitles
+  onPickerUiActive?: (active: boolean) => void
 }): Promise<EnsureEffectivePathsSpreadsheetAccessResult> {
-  const { accessToken, masterSpreadsheetId, masterSheetGid, titles } = options
+  const { accessToken, masterSpreadsheetId, masterSheetGid, titles, onPickerUiActive } = options
   const cachedLinked = readCachedLinkedSpreadsheetIds(masterSpreadsheetId)
 
   if (cachedLinked.length > 0) {
@@ -152,6 +157,7 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
         title: titles.allWorkbooks,
         multiselect: true,
         requireMasterSpreadsheetId: masterSpreadsheetId,
+        onPickerUiActive,
       },
     )
     return grant.ok ? { ok: true } : grant
@@ -161,6 +167,7 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
     accessToken,
     masterSpreadsheetId,
     titles.idsMaster,
+    onPickerUiActive,
   )
   if (!masterGrant.ok) return masterGrant
 
@@ -187,6 +194,7 @@ export async function ensureEffectivePathsSpreadsheetAccess(options: {
       title: pickerTitleWithWorkbookNames(titles.linkedWorkbooks, gateway),
       multiselect: true,
       requireMasterSpreadsheetId: masterSpreadsheetId,
+      onPickerUiActive,
     })
     if (!grant.ok) return grant
   }

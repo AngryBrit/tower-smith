@@ -77,6 +77,15 @@ import {
   linkedWorkbookNamesFromGateway,
 } from '../effectivePaths/grantEffectivePathsSpreadsheetAccess'
 import {
+  beginMobileEffectivePathsGrant,
+  resumeMobileEffectivePathsGrant,
+} from '../effectivePaths/effectivePathsMobileGrantFlow'
+import {
+  consumeEpMobilePickerError,
+  peekEpMobileResume,
+} from '../effectivePaths/effectivePathsMobileGrantSession'
+import { mobilePickerRedirectPreferred, redirectToMobilePickerAuth } from '../effectivePaths/googleDrivePickerMobile'
+import {
   getCachedGoogleSheetsAccessToken,
   googleSheetsOAuthConfigured,
   requestGoogleSheetsAccessToken,
@@ -238,6 +247,8 @@ export function EffectivePathsSyncDialog({
   >(null)
   const [workbookAccess, setWorkbookAccess] = useState<LinkedWorkbookAccess[] | null>(null)
   const [loadingSheets, setLoadingSheets] = useState(false)
+  const [pickerUiHidden, setPickerUiHidden] = useState(false)
+  const mobileResumeStartedRef = useRef(false)
   const [loadProgress, setLoadProgress] = useState<EffectivePathsLoadProgress | null>(null)
   const [syncProgress, setSyncProgress] = useState<{
     direction: 'import' | 'export'
@@ -549,69 +560,31 @@ export function EffectivePathsSyncDialog({
     [googleToken, showNotice, t],
   )
 
-  const handleLoadSheets = useCallback(async () => {
-    if (!parsedMaster) {
-      showNotice(
-        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
-        'error',
-      )
-      return
-    }
+  const pickerTitles = useMemo(
+    () => ({
+      idsMaster: t('ep_picker_ids_master_title'),
+      allWorkbooks: t('ep_picker_all_workbooks_title'),
+      linkedWorkbooks: t('ep_picker_linked_workbooks_title'),
+    }),
+    [t],
+  )
 
-    setLoadingSheets(true)
-    resetEffectivePathsWorkbookLoadState({
-      setWorkbooks,
-      setIdsTabTitle,
-      setRelicsWorkbook,
-      setRelicsWorkbookAccess,
-      setThemesWorkbook,
-      setThemesWorkbookAccess,
-      setCardsWorkbook,
-      setCardsWorkbookAccess,
-      setWorkshopWorkbook,
-      setWorkshopWorkbookAccess,
-      setBotsWorkbook,
-      setBotsWorkbookAccess,
-      setLaboratoryWorkbook,
-      setLaboratoryWorkbookAccess,
-      setUwsWorkbook,
-      setUwsWorkbookAccess,
-      setGuardiansWorkbook,
-      setGuardiansWorkbookAccess,
-      setModulesWorkbook,
-      setModulesWorkbookAccess,
-      setWorkbookAccess,
-    })
-    setLoadProgress(null)
-    setNotice(null)
-    try {
-      const token = await ensureGoogleToken({ consent: true })
-      if (!token) return
-
-      persistSpreadsheetRef()
-
-      const accessResult = await ensureEffectivePathsSpreadsheetAccess({
-        accessToken: token,
-        masterSpreadsheetId: parsedMaster.spreadsheetId,
-        masterSheetGid: parsedMaster.sheetGid,
-        titles: {
-          idsMaster: t('ep_picker_ids_master_title'),
-          allWorkbooks: t('ep_picker_all_workbooks_title'),
-          linkedWorkbooks: t('ep_picker_linked_workbooks_title'),
-        },
-      })
-      if (!accessResult.ok) {
-        if (accessResult.reason === 'gateway_failed') {
-          showNotice(formatExportError(accessResult.error, accessResult.message), 'error')
-        } else if (accessResult.reason === 'cancelled') {
-          showNotice(t('ep_export_picker_cancelled'), 'info')
-        } else if (accessResult.reason === 'wrong_spreadsheet') {
-          showNotice(t('ep_export_picker_wrong_ids_master'), 'error')
-        } else {
-          showNotice(t('ep_export_picker_failed'), 'error')
-        }
-        return
+  const reportMobilePickerError = useCallback(
+    (reason: string) => {
+      if (reason === 'cancelled') {
+        showNotice(t('ep_export_picker_cancelled'), 'info')
+      } else if (reason === 'wrong_spreadsheet') {
+        showNotice(t('ep_export_picker_wrong_ids_master'), 'error')
+      } else {
+        showNotice(t('ep_export_picker_failed'), 'error')
       }
+    },
+    [showNotice, t],
+  )
+
+  const loadLinkedWorkbooks = useCallback(
+    async (token: string) => {
+      if (!parsedMaster) return
 
       const workbookLoadSetters = {
         setWorkbooks,
@@ -659,6 +632,25 @@ export function EffectivePathsSyncDialog({
         const deniedIds = collectDeniedLinkedSpreadsheetIds(result.workbookAccess)
         if (deniedIds.length > 0) {
           const linkedNames = linkedWorkbookNamesFromGateway(result)
+          if (mobilePickerRedirectPreferred()) {
+            await redirectToMobilePickerAuth({
+              phase: 'linked_workbooks',
+              masterSpreadsheetId: parsedMaster.spreadsheetId,
+              masterSheetGid: parsedMaster.sheetGid,
+              spreadsheetIds: collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
+              multiselect: true,
+              requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
+              titles: {
+                ...pickerTitles,
+                linkedWorkbooks:
+                  linkedNames.length > 0
+                    ? `${t('ep_picker_linked_workbooks_title')} (${linkedNames.join(', ')})`
+                    : t('ep_picker_linked_workbooks_title'),
+              },
+            })
+            return
+          }
+
           const retryGrant = await grantEffectivePathsSpreadsheetsAccess(
             token,
             collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
@@ -669,16 +661,11 @@ export function EffectivePathsSyncDialog({
                   : t('ep_picker_linked_workbooks_title'),
               multiselect: true,
               requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
+              onPickerUiActive: setPickerUiHidden,
             },
           )
           if (!retryGrant.ok) {
-            if (retryGrant.reason === 'cancelled') {
-              showNotice(t('ep_export_picker_cancelled'), 'info')
-            } else if (retryGrant.reason === 'wrong_spreadsheet') {
-              showNotice(t('ep_export_picker_wrong_ids_master'), 'error')
-            } else {
-              showNotice(t('ep_export_picker_failed'), 'error')
-            }
+            reportMobilePickerError(retryGrant.reason)
           } else {
             result = await listWorkbooks()
             if (result.ok) {
@@ -742,11 +729,170 @@ export function EffectivePathsSyncDialog({
           'error',
         )
       }
+    },
+    [formatExportError, parsedMaster, pickerTitles, reportMobilePickerError, showNotice, t],
+  )
+
+  useEffect(() => {
+    if (!open || mobileResumeStartedRef.current) return
+
+    const mobileError = consumeEpMobilePickerError()
+    if (mobileError) {
+      queueMicrotask(() => reportMobilePickerError(mobileError))
+      return
+    }
+
+    if (!peekEpMobileResume()) return
+    mobileResumeStartedRef.current = true
+
+    void (async () => {
+      setLoadingSheets(true)
+      resetEffectivePathsWorkbookLoadState({
+        setWorkbooks,
+        setIdsTabTitle,
+        setRelicsWorkbook,
+        setRelicsWorkbookAccess,
+        setThemesWorkbook,
+        setThemesWorkbookAccess,
+        setCardsWorkbook,
+        setCardsWorkbookAccess,
+        setWorkshopWorkbook,
+        setWorkshopWorkbookAccess,
+        setBotsWorkbook,
+        setBotsWorkbookAccess,
+        setLaboratoryWorkbook,
+        setLaboratoryWorkbookAccess,
+        setUwsWorkbook,
+        setUwsWorkbookAccess,
+        setGuardiansWorkbook,
+        setGuardiansWorkbookAccess,
+        setModulesWorkbook,
+        setModulesWorkbookAccess,
+        setWorkbookAccess,
+      })
+      setLoadProgress(null)
+      setNotice(null)
+      try {
+        const accessResult = await resumeMobileEffectivePathsGrant()
+        if (!accessResult.ok) {
+          if (accessResult.reason === 'gateway_failed') {
+            showNotice(formatExportError(accessResult.error, accessResult.message), 'error')
+          } else if (accessResult.reason !== 'mobile_resume_missing') {
+            reportMobilePickerError(accessResult.reason)
+          }
+          return
+        }
+
+        const token = getCachedGoogleSheetsAccessToken()
+        if (!token) {
+          showNotice(t('ep_export_error_sheets_auth_failed'), 'error')
+          return
+        }
+        setGoogleToken(token)
+        await loadLinkedWorkbooks(token)
+      } catch (err) {
+        if (err instanceof Error && err.message === 'mobile_picker_redirect') return
+        showNotice(t('ep_export_picker_failed'), 'error')
+      } finally {
+        setLoadingSheets(false)
+        setLoadProgress(null)
+      }
+    })()
+  }, [formatExportError, loadLinkedWorkbooks, open, reportMobilePickerError, showNotice, t])
+
+  useEffect(() => {
+    if (!open) {
+      mobileResumeStartedRef.current = false
+    }
+  }, [open])
+
+  const handleLoadSheets = useCallback(async () => {
+    if (!parsedMaster) {
+      showNotice(
+        spreadsheetRef.trim() ? t('ep_export_invalid_spreadsheet') : t('ep_export_missing_ids_master'),
+        'error',
+      )
+      return
+    }
+
+    setLoadingSheets(true)
+    resetEffectivePathsWorkbookLoadState({
+      setWorkbooks,
+      setIdsTabTitle,
+      setRelicsWorkbook,
+      setRelicsWorkbookAccess,
+      setThemesWorkbook,
+      setThemesWorkbookAccess,
+      setCardsWorkbook,
+      setCardsWorkbookAccess,
+      setWorkshopWorkbook,
+      setWorkshopWorkbookAccess,
+      setBotsWorkbook,
+      setBotsWorkbookAccess,
+      setLaboratoryWorkbook,
+      setLaboratoryWorkbookAccess,
+      setUwsWorkbook,
+      setUwsWorkbookAccess,
+      setGuardiansWorkbook,
+      setGuardiansWorkbookAccess,
+      setModulesWorkbook,
+      setModulesWorkbookAccess,
+      setWorkbookAccess,
+    })
+    setLoadProgress(null)
+    setNotice(null)
+    try {
+      persistSpreadsheetRef()
+
+      if (mobilePickerRedirectPreferred()) {
+        await beginMobileEffectivePathsGrant({
+          masterSpreadsheetId: parsedMaster.spreadsheetId,
+          masterSheetGid: parsedMaster.sheetGid,
+          titles: pickerTitles,
+        })
+        return
+      }
+
+      const token = await ensureGoogleToken({ consent: true })
+      if (!token) return
+
+      const accessResult = await ensureEffectivePathsSpreadsheetAccess({
+        accessToken: token,
+        masterSpreadsheetId: parsedMaster.spreadsheetId,
+        masterSheetGid: parsedMaster.sheetGid,
+        titles: pickerTitles,
+        onPickerUiActive: setPickerUiHidden,
+      })
+      if (!accessResult.ok) {
+        if (accessResult.reason === 'gateway_failed') {
+          showNotice(formatExportError(accessResult.error, accessResult.message), 'error')
+        } else {
+          reportMobilePickerError(accessResult.reason)
+        }
+        return
+      }
+
+      await loadLinkedWorkbooks(token)
+    } catch (err) {
+      if (err instanceof Error && err.message === 'mobile_picker_redirect') return
+      showNotice(t('ep_export_picker_failed'), 'error')
     } finally {
       setLoadingSheets(false)
       setLoadProgress(null)
+      setPickerUiHidden(false)
     }
-  }, [parsedMaster, ensureGoogleToken, persistSpreadsheetRef, spreadsheetRef, formatExportError, showNotice, t])
+  }, [
+    parsedMaster,
+    ensureGoogleToken,
+    persistSpreadsheetRef,
+    spreadsheetRef,
+    formatExportError,
+    loadLinkedWorkbooks,
+    pickerTitles,
+    reportMobilePickerError,
+    showNotice,
+    t,
+  ])
 
   const handleExportRelics = useCallback(async () => {
     if (!parsedMaster) {
@@ -1876,7 +2022,7 @@ export function EffectivePathsSyncDialog({
 
   return labOverlayPortal(
     <div
-      className="select-research__lab-data-backdrop effective-paths-export-backdrop"
+      className={`select-research__lab-data-backdrop effective-paths-export-backdrop${pickerUiHidden ? ' effective-paths-export-backdrop--picker-behind' : ''}`}
       role="presentation"
       onClick={busy ? undefined : onClose}
     >

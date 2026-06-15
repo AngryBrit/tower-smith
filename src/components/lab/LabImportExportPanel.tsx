@@ -6,6 +6,10 @@ import type { UwsEpSyncState } from '../../effectivePaths/uwsEpStateFromPersiste
 import { EffectivePathsSyncDialog } from '../EffectivePathsSyncDialog'
 import type { EffectivePathsImportPayload } from '../../effectivePaths/effectivePathsImportDialogSupport'
 import { googleSheetsOAuthConfigured } from '../../effectivePaths/googleSheetsOAuth'
+import {
+  peekEpMobilePickerError,
+  peekEpMobileResume,
+} from '../../effectivePaths/effectivePathsMobileGrantSession'
 import type { BugBusterInitial } from '../../bugBuster/bugBusterTypes'
 import type { ImportNoticeVariant } from '../../importNotice'
 import { TOWER_ANDROID_SAVE_FOLDER } from '../../playerSave/playerInfoSavePath'
@@ -98,7 +102,9 @@ export function LabImportExportPanel({
   onEffectivePathsImportedAll,
 }: LabImportExportPanelProps) {
   const { t } = useI18n()
-  const [effectivePathsSyncOpen, setEffectivePathsSyncOpen] = useState(false)
+  const [effectivePathsSyncOpen, setEffectivePathsSyncOpen] = useState(
+    () => peekEpMobileResume() != null || peekEpMobilePickerError() != null,
+  )
   const effectivePathsAvailable = googleSheetsOAuthConfigured()
   const importLabCsvFileInputRef = useRef<HTMLInputElement>(null)
   const importPlayerInfoFileInputRef = useRef<HTMLInputElement>(null)

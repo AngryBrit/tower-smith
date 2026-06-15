@@ -1578,7 +1578,7 @@ export const STRINGS_DE = {
   ep_export_picker_cancelled:
     'Das Google-Dateiauswahlfenster wurde geschlossen, bevor Tabellen ausgewählt wurden.',
   ep_export_picker_failed:
-    'Das Google-Dateiauswahlfenster konnte nicht geöffnet werden. Erneut in Chrome oder Firefox versuchen.',
+    'Das Google-Dateiauswahlfenster konnte nicht geöffnet werden. Auf dem Handy öffnet TowerSmith die Google-Anmeldung als Vollseite — erneut versuchen und die Rückleitung zulassen. Am Desktop Chrome oder Firefox nutzen.',
   ep_export_picker_wrong_ids_master:
     'Die gewählte Tabelle entspricht nicht deiner gespeicherten IDS-Master-URL. Wähle genau diese Tabelle im Auswahlfenster oder aktualisiere die URL in den Einstellungen.',
   ep_picker_ids_master_title: 'IDS-Master-Tabelle auswählen',

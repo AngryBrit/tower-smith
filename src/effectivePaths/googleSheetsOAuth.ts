@@ -93,7 +93,7 @@ function readCachedSheetsToken(): string | null {
   }
 }
 
-function writeCachedSheetsToken(accessToken: string, expiresInSec?: number): void {
+export function writeCachedSheetsToken(accessToken: string, expiresInSec?: number): void {
   if (typeof sessionStorage === 'undefined') return
   const ttlMs = typeof expiresInSec === 'number' && expiresInSec > 0 ? expiresInSec * 1000 : 3_600_000
   const payload: CachedSheetsToken = {
