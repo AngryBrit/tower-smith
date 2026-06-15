@@ -2,19 +2,12 @@ import { publicAppOrigin } from '../devOrigin'
 
 const PICKER_OAUTH_CALLBACK_PATH = '/oauth/google-drive-picker'
 
-function isMobileUserAgent(): boolean {
-  if (typeof navigator === 'undefined') return false
-  if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) return true
-  // iPadOS 13+ “desktop” Safari reports as Mac with touch.
-  return navigator.maxTouchPoints > 1 && /Macintosh/i.test(navigator.userAgent)
-}
-
 /**
- * Use Google one-pick OAuth redirect instead of the JS Picker overlay.
- * Mobile browsers block or never show the Picker popup; desktop uses GIS + inline Picker.
+ * Primary flow is GIS OAuth + inline JS Picker on all platforms.
+ * One-pick redirect is only used when the JS Picker fails (see effectivePathsJsPickerFallback).
  */
 export function shouldUsePickerOAuthRedirectFlow(): boolean {
-  return isMobileUserAgent()
+  return false
 }
 
 /** @deprecated Use {@link shouldUsePickerOAuthRedirectFlow} */

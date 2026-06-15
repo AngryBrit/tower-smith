@@ -1642,7 +1642,7 @@ export const STRINGS_ES = {
   ep_export_picker_cancelled:
     'Se cerró el selector de archivos de Google antes de seleccionar hojas de cálculo.',
   ep_export_picker_failed:
-    'No se pudo abrir el selector de archivos de Google. En móvil, TowerSmith abre el inicio de sesión de Google a pantalla completa — inténtalo de nuevo y permite la redirección de vuelta. En escritorio, usa Chrome o Firefox.',
+    'No se pudo abrir el selector de archivos de Google. Usa Chrome o Firefox, permite ventanas emergentes en este sitio e inténtalo de nuevo.',
   ep_export_picker_wrong_ids_master:
     'La hoja seleccionada no coincide con la URL de IDS Master guardada. Selecciona esa hoja exacta en el selector o actualiza la URL en Ajustes.',
   ep_picker_ids_master_title: 'Selecciona tu hoja IDS Master',

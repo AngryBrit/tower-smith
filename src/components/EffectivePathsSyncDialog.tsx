@@ -80,17 +80,13 @@ import {
   isJsPickerGrantFailure,
   redirectMobilePickerAfterJsFailure,
 } from '../effectivePaths/effectivePathsJsPickerFallback'
-import {
-  beginMobileEffectivePathsGrant,
-  resumeMobileEffectivePathsGrant,
-} from '../effectivePaths/effectivePathsMobileGrantFlow'
+import { resumeMobileEffectivePathsGrant } from '../effectivePaths/effectivePathsMobileGrantFlow'
 import {
   beginEpMobileResumeRun,
   claimEpMobileResume,
   consumeEpMobilePickerError,
   finishEpMobileResumeRun,
 } from '../effectivePaths/effectivePathsMobileGrantSession'
-import { mobilePickerRedirectPreferred } from '../effectivePaths/googleDrivePickerMobile'
 import {
   getCachedGoogleSheetsAccessToken,
   googleSheetsOAuthConfigured,
@@ -636,37 +632,35 @@ export function EffectivePathsSyncDialog({
         const deniedIds = collectDeniedLinkedSpreadsheetIds(result.workbookAccess)
         if (deniedIds.length > 0) {
           const linkedNames = linkedWorkbookNamesFromGateway(result)
-          if (!mobilePickerRedirectPreferred()) {
-            const retryGrant = await grantEffectivePathsSpreadsheetsAccess(
-              token,
-              collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
-              {
-                title:
-                  linkedNames.length > 0
-                    ? `${t('ep_picker_linked_workbooks_title')} (${linkedNames.join(', ')})`
-                    : t('ep_picker_linked_workbooks_title'),
+          const retryGrant = await grantEffectivePathsSpreadsheetsAccess(
+            token,
+            collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
+            {
+              title:
+                linkedNames.length > 0
+                  ? `${t('ep_picker_linked_workbooks_title')} (${linkedNames.join(', ')})`
+                  : t('ep_picker_linked_workbooks_title'),
+              multiselect: true,
+              requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
+            },
+          )
+          if (!retryGrant.ok) {
+            if (isJsPickerGrantFailure(retryGrant.reason)) {
+              await redirectMobilePickerAfterJsFailure({
+                phase: 'linked_workbooks',
+                masterSpreadsheetId: parsedMaster.spreadsheetId,
+                masterSheetGid: parsedMaster.sheetGid,
+                spreadsheetIds: collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
                 multiselect: true,
-                requireMasterSpreadsheetId: parsedMaster.spreadsheetId,
-              },
-            )
-            if (!retryGrant.ok) {
-              if (isJsPickerGrantFailure(retryGrant.reason)) {
-                await redirectMobilePickerAfterJsFailure({
-                  phase: 'linked_workbooks',
-                  masterSpreadsheetId: parsedMaster.spreadsheetId,
-                  masterSheetGid: parsedMaster.sheetGid,
-                  spreadsheetIds: collectSpreadsheetIdsFromGateway(result, parsedMaster.spreadsheetId),
-                  multiselect: true,
-                  titles: pickerTitles,
-                  gateway: result,
-                })
-              }
-              reportMobilePickerError(retryGrant.reason)
-            } else {
-              result = await listWorkbooks()
-              if (result.ok) {
-                cacheLinkedSpreadsheetIdsFromGateway(parsedMaster.spreadsheetId, result)
-              }
+                titles: pickerTitles,
+                gateway: result,
+              })
+            }
+            reportMobilePickerError(retryGrant.reason)
+          } else {
+            result = await listWorkbooks()
+            if (result.ok) {
+              cacheLinkedSpreadsheetIdsFromGateway(parsedMaster.spreadsheetId, result)
             }
           }
         }
@@ -836,15 +830,6 @@ export function EffectivePathsSyncDialog({
     setNotice(null)
     try {
       persistSpreadsheetRef()
-
-      if (mobilePickerRedirectPreferred()) {
-        await beginMobileEffectivePathsGrant({
-          masterSpreadsheetId: parsedMaster.spreadsheetId,
-          masterSheetGid: parsedMaster.sheetGid,
-          titles: pickerTitles,
-        })
-        return
-      }
 
       const token = await ensureGoogleToken({ consent: true })
       if (!token) return

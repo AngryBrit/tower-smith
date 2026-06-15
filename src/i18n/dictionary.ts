@@ -1642,7 +1642,7 @@ export const STRINGS_EN = {
   ep_export_cancelled: 'Google sign-in was cancelled.',
   ep_export_picker_cancelled: 'Google file picker was closed before any spreadsheets were selected.',
   ep_export_picker_failed:
-    'Could not open the Google file picker. On mobile, TowerSmith opens Google sign-in in a full-page flow — try again and allow the redirect back. On desktop, use Chrome or Firefox.',
+    'Could not open the Google file picker. Use Chrome or Firefox, allow popups for this site, then try again.',
   ep_export_picker_wrong_ids_master:
     'The spreadsheet you selected does not match your saved IDS Master URL. Select that exact spreadsheet in the picker, or update the URL in Settings.',
   ep_picker_ids_master_title: 'Select your IDS Master spreadsheet',

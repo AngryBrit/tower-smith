@@ -24,11 +24,11 @@ describe('shouldUsePickerOAuthRedirectFlow', () => {
     expect(shouldUsePickerOAuthRedirectFlow()).toBe(false)
   })
 
-  it('uses redirect flow on a phone user agent', () => {
+  it('uses JS Picker on a phone user agent', () => {
     vi.stubGlobal('navigator', {
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)',
       maxTouchPoints: 5,
     })
-    expect(shouldUsePickerOAuthRedirectFlow()).toBe(true)
+    expect(shouldUsePickerOAuthRedirectFlow()).toBe(false)
   })
 })
