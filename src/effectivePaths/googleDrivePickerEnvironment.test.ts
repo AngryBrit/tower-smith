@@ -21,12 +21,10 @@ describe('shouldUsePickerOAuthRedirectFlow', () => {
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
       maxTouchPoints: 0,
     })
-    expect(
-      shouldUsePickerOAuthRedirectFlow(),
-    ).toBe(false)
+    expect(shouldUsePickerOAuthRedirectFlow()).toBe(false)
   })
 
-  it('uses redirect flow on LAN dev from a phone user agent', () => {
+  it('uses redirect flow on a phone user agent', () => {
     vi.stubGlobal('navigator', {
       userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X)',
       maxTouchPoints: 5,

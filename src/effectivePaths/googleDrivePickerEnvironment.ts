@@ -11,7 +11,7 @@ function isMobileUserAgent(): boolean {
 
 /**
  * Use Google one-pick OAuth redirect instead of the JS Picker overlay.
- * Mobile browsers block or never show the Picker popup; desktop keeps GIS + inline Picker.
+ * Mobile browsers block or never show the Picker popup; desktop uses GIS + inline Picker.
  */
 export function shouldUsePickerOAuthRedirectFlow(): boolean {
   return isMobileUserAgent()
