@@ -6359,12 +6359,12 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .modules-inventory__tile--muted .modules-inventory__icon {
-  opacity: 0.5;
-  filter: saturate(0.42) brightness(0.86);
+  opacity: 0.72;
+  filter: saturate(0.62) brightness(0.96);
 }
 
 .modules-inventory__tile--muted .modules-inventory__label {
-  color: rgba(148, 163, 184, 0.68);
+  color: rgba(203, 213, 225, 0.82);
   transition: color 0.16s ease;
 }
 
