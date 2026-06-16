@@ -1,6 +1,5 @@
 import { googleDrivePickerConfigured } from './googleDrivePicker'
-import { exchangeGoogleOAuthAuthorizationCode } from './googleOAuthCodeExchange'
-import { createPkceVerifier } from './googlePkce'
+import { exchangeGoogleOAuthCodeViaTowerSmith } from './googleOAuthCodeExchange'
 import {
   clearGoogleSheetsOAuthState,
   createGoogleSheetsOAuthState,
@@ -15,11 +14,17 @@ export const DRIVE_FILE_SCOPE = 'https://www.googleapis.com/auth/drive.file'
 const OAUTH_SCOPE = DRIVE_FILE_SCOPE
 const TOKEN_CACHE_KEY = 'towersmith_google_drive_file_token'
 const TOKEN_EXPIRY_BUFFER_MS = 60_000
-/** Max wait for GIS code callback (consent popup dismissed, blocked, or lost). */
+/** Max wait for GIS code/token callback (consent popup dismissed, blocked, or lost). */
 const OAUTH_CALLBACK_TIMEOUT_MS = 120_000
+/** Silent GIS token auth should fail quickly when no session exists. */
+const OAUTH_SILENT_TIMEOUT_MS = 15_000
 
 type CodeClient = {
   requestCode: () => void
+}
+
+type TokenClient = {
+  requestAccessToken: (overrideConfig?: { prompt?: string }) => void
 }
 
 type CodeResponse = {
@@ -28,6 +33,13 @@ type CodeResponse = {
   state?: string
   error?: string
   error_description?: string
+}
+
+type GisTokenResponse = {
+  access_token?: string
+  expires_in?: number
+  error?: string
+  state?: string
 }
 
 type GisOAuthError = {
@@ -45,6 +57,14 @@ type GisOAuth2 = {
     error_callback?: (error: GisOAuthError) => void
     select_account?: boolean
   }) => CodeClient
+  initTokenClient: (config: {
+    client_id: string
+    scope: string
+    state?: string
+    callback: (response: GisTokenResponse) => void
+    error_callback?: (error: GisOAuthError) => void
+    use_fedcm_for_prompt?: boolean
+  }) => TokenClient
   revoke?: (accessToken: string, done: () => void) => void
 }
 
@@ -217,6 +237,119 @@ async function revokeCachedGoogleAccess(): Promise<void> {
   })
 }
 
+function isEmbeddedOAuthHost(): boolean {
+  if (typeof window === 'undefined') return false
+  const ua = navigator.userAgent
+  if (/\bElectron\b/i.test(ua)) return true
+  if (/\bVSCode\b/i.test(ua)) return true
+  if (window.self !== window.top) return true
+  return false
+}
+
+function shouldUseFedcmForPrompt(): boolean {
+  if (typeof window === 'undefined') return false
+  if (isEmbeddedOAuthHost()) return false
+  if (!('IdentityCredential' in globalThis)) return false
+  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+}
+
+function interactiveFedcmAttempts(): readonly boolean[] {
+  return shouldUseFedcmForPrompt() ? [true, false] : [false, true]
+}
+
+function isAlternateOAuthUxRetry(code: string): boolean {
+  return (
+    code === 'google_oauth_timeout' ||
+    code === 'popup_blocked' ||
+    isRetryableGoogleAuthError(code)
+  )
+}
+
+function oauthCallbackTimeoutMs(prompt: '' | 'none' | 'consent'): number {
+  if (prompt === 'none') return OAUTH_SILENT_TIMEOUT_MS
+  return OAUTH_CALLBACK_TIMEOUT_MS
+}
+
+async function requestTokenWithPrompt(
+  prompt: '' | 'none' | 'consent',
+  options: { useFedcm?: boolean } = {},
+): Promise<string> {
+  await loadGisScript()
+  const oauth2 = window.google?.accounts?.oauth2
+  if (!oauth2) {
+    throw new Error('google_oauth_unavailable')
+  }
+
+  const clientId = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID as string
+  const useFedcm = options.useFedcm ?? shouldUseFedcmForPrompt()
+  const oauthState = createGoogleSheetsOAuthState()
+  stashGoogleSheetsOAuthState(oauthState)
+
+  return new Promise((resolve, reject) => {
+    let settled = false
+    const timeoutId = window.setTimeout(() => {
+      if (settled) return
+      settled = true
+      clearGoogleSheetsOAuthState()
+      reject(new Error('google_oauth_timeout'))
+    }, oauthCallbackTimeoutMs(prompt))
+
+    const finish = (result: 'resolve' | 'reject', value?: string, err?: Error) => {
+      if (settled) return
+      settled = true
+      window.clearTimeout(timeoutId)
+      if (result === 'resolve' && value) resolve(value)
+      else reject(err ?? new Error('google_oauth_no_token'))
+    }
+
+    const client = oauth2.initTokenClient({
+      client_id: clientId,
+      scope: OAUTH_SCOPE,
+      state: oauthState,
+      use_fedcm_for_prompt: useFedcm,
+      callback: (response) => {
+        if (!verifyGoogleSheetsOAuthState(response.state)) {
+          finish('reject', undefined, new Error('google_oauth_state_mismatch'))
+          return
+        }
+        if (response.error) {
+          finish('reject', undefined, new Error(response.error))
+          return
+        }
+        if (!response.access_token) {
+          finish('reject', undefined, new Error('google_oauth_no_token'))
+          return
+        }
+        writeCachedSheetsToken(response.access_token, response.expires_in)
+        finish('resolve', response.access_token)
+      },
+      error_callback: (err) => {
+        clearGoogleSheetsOAuthState()
+        finish('reject', undefined, oauthErrorFromGis(err))
+      },
+    })
+    client.requestAccessToken({ prompt })
+  })
+}
+
+async function requestInteractiveToken(prompt: '' | 'consent'): Promise<string> {
+  const attempts = interactiveFedcmAttempts()
+  let lastErr: Error | undefined
+
+  for (let index = 0; index < attempts.length; index++) {
+    try {
+      return await requestTokenWithPrompt(prompt, { useFedcm: attempts[index] })
+    } catch (err) {
+      lastErr = err instanceof Error ? err : new Error('google_oauth_failed')
+      const code = lastErr.message
+      if (code === 'popup_closed_by_user') throw lastErr
+      if (index === attempts.length - 1 || !isAlternateOAuthUxRetry(code)) throw lastErr
+    }
+  }
+
+  throw lastErr ?? new Error('google_oauth_failed')
+}
+
 async function requestCodeWithPrompt(options: CodePromptOptions = {}): Promise<string> {
   await loadGisScript()
   const oauth2 = window.google?.accounts?.oauth2
@@ -226,7 +359,6 @@ async function requestCodeWithPrompt(options: CodePromptOptions = {}): Promise<s
 
   const clientId = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID as string
   const oauthState = createGoogleSheetsOAuthState()
-  const codeVerifier = createPkceVerifier()
   const redirectUri = gisCodeClientRedirectUri()
   stashGoogleSheetsOAuthState(oauthState)
 
@@ -268,12 +400,14 @@ async function requestCodeWithPrompt(options: CodePromptOptions = {}): Promise<s
             return
           }
 
-          const tokenResult = await exchangeGoogleOAuthAuthorizationCode(
-            clientId,
+          const tokenResult = await exchangeGoogleOAuthCodeViaTowerSmith(
             response.code,
-            codeVerifier,
             redirectUri,
           )
+          if (tokenResult === 'not_configured') {
+            finish('reject', undefined, new Error('google_oauth_token_exchange_not_configured'))
+            return
+          }
           if (!tokenResult) {
             finish('reject', undefined, new Error('google_oauth_no_token'))
             return
@@ -308,8 +442,22 @@ async function requestInteractiveCode(forceConsent = false): Promise<string> {
   } catch (err) {
     const code = err instanceof Error ? err.message : ''
     if (code === 'popup_closed_by_user') throw err
+    if (
+      code === 'google_oauth_token_exchange_not_configured' ||
+      code === 'google_oauth_no_token'
+    ) {
+      return requestInteractiveToken(forceConsent ? 'consent' : '')
+    }
     if (code === 'popup_blocked' || isRetryableGoogleAuthError(code)) {
-      return requestCodeWithPrompt({ forceConsent })
+      try {
+        return await requestCodeWithPrompt({ forceConsent })
+      } catch (retryErr) {
+        const retryCode = retryErr instanceof Error ? retryErr.message : ''
+        if (retryCode === 'google_oauth_token_exchange_not_configured' || retryCode === 'google_oauth_no_token') {
+          return requestInteractiveToken(forceConsent ? 'consent' : '')
+        }
+        throw retryErr
+      }
     }
     throw err
   }
@@ -334,6 +482,15 @@ export async function requestGoogleSheetsAccessToken(
   if (!options.consent) {
     const cached = readCachedSheetsToken()
     if (cached) return cached
+  }
+
+  if (!options.consent) {
+    try {
+      return await requestTokenWithPrompt('none', { useFedcm: false })
+    } catch (err) {
+      const code = err instanceof Error ? err.message : ''
+      if (!isRetryableGoogleAuthError(code)) throw err
+    }
   }
 
   return requestInteractiveCode(Boolean(options.consent))
