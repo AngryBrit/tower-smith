@@ -814,15 +814,29 @@ function decodeArmorEpicAtLegendaryIndex(
   return prev
 }
 
+/** Ancestral-family armor stores Wall Health Legendary at index 147 (not compressed Epic). */
+function decodeArmorEpicAtLegendaryIndexForImport(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): GameModuleEffectDecode | null {
+  if (isAncestralFamilyChassisMerge(chassisMerge) && decoded.effectId === 'wall-health') {
+    return null
+  }
+  return decodeArmorEpicAtLegendaryIndex(rawIndex, decoded)
+}
+
 /**
  * Some epic-start armor rows (e.g. Thorns Damage) store Epic at the second compressed
  * Legendary index (save index 100 → Epic +2, not Legendary +4).
+ * Wall Health Legendary uses index 148 directly (+60%); Epic is 146 or compressed 147.
  */
 function decodeArmorEpicAtSecondLegendaryIndex(
   rawIndex: number,
   decoded: GameModuleEffectDecode,
 ): GameModuleEffectDecode | null {
   if (decoded.slot !== 'armor' || decoded.rarity !== 'legendary') return null
+  if (decoded.effectId === 'wall-health') return null
   const prev = gameModuleEffectByIndex(rawIndex - 1, 0)
   if (prev == null || prev.slot !== 'armor' || prev.effectId !== decoded.effectId) {
     return null
@@ -958,7 +972,11 @@ function gameModuleEffectForSubmoduleImport(
     if (cannonEpic != null) return cannonEpic
   }
   if (slot === 'armor') {
-    const armorEpic = decodeArmorEpicAtLegendaryIndex(rawIndex, decoded)
+    const armorEpic = decodeArmorEpicAtLegendaryIndexForImport(
+      rawIndex,
+      decoded,
+      chassisMerge,
+    )
     if (armorEpic != null) return armorEpic
     const armorEpicSecond = decodeArmorEpicAtSecondLegendaryIndex(rawIndex, decoded)
     if (armorEpicSecond != null) return armorEpicSecond

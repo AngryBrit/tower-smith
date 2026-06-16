@@ -496,6 +496,44 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Sharp Fortitude legendary wall health at index 148 on legendary merge', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [90, 84, 148, 0, 0, 0, 0, 0],
+      100,
+      0,
+      'legendary',
+    )
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'wall-health',
+      rarity: 'legendary',
+    })
+    expect(imported.map).toMatchObject({
+      defense: 'legendary',
+      'health-regen': 'legendary',
+      'wall-health': 'legendary',
+    })
+  })
+
+  it('decodes Sharp Fortitude legendary wall health at sparse index 147 on ancestral chassis', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [92, 150, 147, 101, 0, 0, 0, 0],
+      200,
+      0,
+      'ancestral',
+    )
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'wall-health',
+      rarity: 'legendary',
+    })
+    expect(imported.map).toMatchObject({
+      defense: 'ancestral',
+      'wall-health': 'legendary',
+      'thorns-damage': 'mythic',
+    })
+  })
+
   it('decodes Sharp Fortitude epic thorns at second legendary sparse index 100', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'armor',
