@@ -507,6 +507,25 @@ function decodeGeneratorAncestralFamilyRemap(
   return null
 }
 
+/**
+ * Legendary-merge generator main modules store Epic picks on epic-start rows at index − 3,
+ * overlapping the prior row's Legendary band (e.g. 205 → Package Chance Epic at 208).
+ */
+function decodeGeneratorLegendaryMergeCrossRowEpic(
+  rawIndex: number,
+  moduleLevel: number,
+  naive: GameModuleEffectDecode | null,
+): GameModuleEffectDecode | null {
+  const shifted =
+    decodeGeneratorEffectAtIndex(rawIndex + 3, moduleLevel) ??
+    decodeGeneratorEffectAtIndex(rawIndex + 3, 0)
+  if (shifted == null || shifted.rarity !== 'epic') return null
+  if (naive == null) return shifted
+  if (naive.slot !== 'generator' || naive.effectId === shifted.effectId) return null
+  if (naive.rarity !== 'legendary' && naive.rarity !== 'mythic') return null
+  return shifted
+}
+
 function decodeArmorLandMineRadiusOnAncestralChassis(
   rawIndex: number,
   decoded: GameModuleEffectDecode,
@@ -708,11 +727,33 @@ function decodeCannonEpicAtLegendaryIndex(
 }
 
 /**
+ * Armor rows that start at Epic (e.g. Wall Health) store Epic at the next compressed index
+ * (save index 147 → Epic +40%, not Legendary +60%).
+ */
+function decodeArmorEpicAtLegendaryIndex(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+): GameModuleEffectDecode | null {
+  if (decoded.slot !== 'armor' || decoded.rarity !== 'legendary') return null
+  const prev = gameModuleEffectByIndex(rawIndex - 1, 0)
+  if (prev == null || prev.slot !== 'armor' || prev.effectId !== decoded.effectId) {
+    return null
+  }
+  if (prev.rarity !== 'epic') return null
+  const twoBack = gameModuleEffectByIndex(rawIndex - 2, 0)
+  if (twoBack?.slot === 'armor' && twoBack.effectId === decoded.effectId) {
+    return null
+  }
+  return prev
+}
+
+/**
  * Decode save effect index for submodule import.
  * Main ancestral-tier generator modules store the Epic row base index for Epic-only substat rows;
  * bump +3 when that decodes as Epic but Ancestral exists in the same row.
  * Generator assist encodes vs primary chassis level: sparse+primary≥330 → stored as sparse+primary−10;
  * ancestral-family assist may store mythic/ancestral picks as raw−3.
+ * Legendary-merge generator main modules store Epic picks on epic-start rows at index − 3.
  * Ancestral-family armor common-start rows store Ancestral at sparse offset 6 (index table omits it).
  * High-tier core modules (Mythic+ and ancestral-family) remap sparse indices missing tiers
  * (e.g. 284 → GT Bonus Ancestral, 285 → GT Duration Mythic on Mythic+ main) and paired rows;
@@ -787,11 +828,25 @@ function gameModuleEffectForSubmoduleImport(
     )
     if (sparse != null) return sparse
   }
+  if (
+    slot === 'generator' &&
+    primaryLevel === 0 &&
+    chassisMerge != null &&
+    workshopChassisModuleEffectTier(chassisMerge) === 'legendary' &&
+    !isAncestralFamilyChassisMerge(chassisMerge)
+  ) {
+    const crossRow = decodeGeneratorLegendaryMergeCrossRowEpic(rawIndex, moduleLevel, decoded)
+    if (crossRow != null) return crossRow
+  }
   if (slot === 'cannon') {
     const cannonRare = decodeCannonRareAtEpicIndex(rawIndex, decoded)
     if (cannonRare != null) return cannonRare
     const cannonEpic = decodeCannonEpicAtLegendaryIndex(rawIndex, decoded)
     if (cannonEpic != null) return cannonEpic
+  }
+  if (slot === 'armor') {
+    const armorEpic = decodeArmorEpicAtLegendaryIndex(rawIndex, decoded)
+    if (armorEpic != null) return armorEpic
   }
   return decoded
 }

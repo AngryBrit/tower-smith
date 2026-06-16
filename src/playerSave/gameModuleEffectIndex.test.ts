@@ -408,6 +408,45 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Orbital Augment epic assist wall health at sparse epic index 147', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [89, 83, 147, 0, 0, 0, 0, 0],
+      60,
+      100,
+      'epic',
+    )
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'wall-health',
+      rarity: 'epic',
+    })
+    expect(imported.map).toMatchObject({
+      defense: 'epic',
+      'health-regen': 'epic',
+      'wall-health': 'epic',
+    })
+  })
+
+  it('decodes Galaxy Compressor legendary merge epic substats at compressed indices', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [205, 213, 209, 0, 0, 0, 0, 0],
+      60,
+      0,
+      'legendary',
+    )
+    expect(imported.ordered.slice(0, 3)).toEqual([
+      { effectId: 'package-chance', rarity: 'epic' },
+      { effectId: 'enemy-health-level-skip', rarity: 'epic' },
+      { effectId: 'enemy-attack-level-skip', rarity: 'epic' },
+    ])
+    expect(imported.map).toMatchObject({
+      'package-chance': 'epic',
+      'enemy-health-level-skip': 'epic',
+      'enemy-attack-level-skip': 'epic',
+    })
+  })
+
   it('decodes Space Displacer assist armor effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'armor',
