@@ -485,6 +485,27 @@ function decodeArmorAncestralCommonStartRow(
   return null
 }
 
+/** Common-start cannon rows use sparse offset 6 for Ancestral on ancestral-family chassis. */
+const CANNON_COMMON_START_ANCESTRAL_ROWS: readonly {
+  base: number
+  effectId: string
+}[] = [{ base: 0, effectId: 'attack-speed' }]
+
+function decodeCannonAncestralFamilyEarlyRemap(
+  rawIndex: number,
+): GameModuleEffectDecode | null {
+  for (const { base, effectId } of CANNON_COMMON_START_ANCESTRAL_ROWS) {
+    if (rawIndex - base === 6) {
+      return { slot: 'cannon', effectId, rarity: 'ancestral' }
+    }
+  }
+  // Multishot Targets epic-start row: mythic at 38, ancestral sparse at 39 (table is next row).
+  if (rawIndex === 39) {
+    return { slot: 'cannon', effectId: 'multishot-targets', rarity: 'ancestral' }
+  }
+  return null
+}
+
 /** Free Attack Ancestral on ancestral-family generator main (sparse offset 6; table index is next row). */
 const GENERATOR_FREE_ATTACK_ANCESTRAL_INDEX = 184
 
@@ -501,6 +522,13 @@ function decodeGeneratorAncestralFamilyRemap(
     (rawIndex === 160 || rawIndex === 161) &&
     (decoded == null ||
       (decoded.effectId === 'cash-wave' && decoded.rarity === 'common'))
+  ) {
+    return { slot: 'generator', effectId: 'coins-kill-bonus', rarity: 'ancestral' }
+  }
+  if (
+    (rawIndex === 172 || rawIndex === 173) &&
+    (decoded == null ||
+      (decoded.effectId === 'coins-wave' && decoded.rarity === 'common'))
   ) {
     return { slot: 'generator', effectId: 'coins-kill-bonus', rarity: 'ancestral' }
   }
@@ -748,6 +776,28 @@ function decodeArmorEpicAtLegendaryIndex(
 }
 
 /**
+ * Some epic-start armor rows (e.g. Thorns Damage) store Epic at the second compressed
+ * Legendary index (save index 100 → Epic +2, not Legendary +4).
+ */
+function decodeArmorEpicAtSecondLegendaryIndex(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode,
+): GameModuleEffectDecode | null {
+  if (decoded.slot !== 'armor' || decoded.rarity !== 'legendary') return null
+  const prev = gameModuleEffectByIndex(rawIndex - 1, 0)
+  if (prev == null || prev.slot !== 'armor' || prev.effectId !== decoded.effectId) {
+    return null
+  }
+  if (prev.rarity !== 'legendary') return null
+  const twoBack = gameModuleEffectByIndex(rawIndex - 2, 0)
+  if (twoBack == null || twoBack.slot !== 'armor' || twoBack.effectId !== decoded.effectId) {
+    return null
+  }
+  if (twoBack.rarity !== 'epic') return null
+  return twoBack
+}
+
+/**
  * Decode save effect index for submodule import.
  * Main ancestral-tier generator modules store the Epic row base index for Epic-only substat rows;
  * bump +3 when that decodes as Epic but Ancestral exists in the same row.
@@ -799,6 +849,11 @@ function gameModuleEffectForSubmoduleImport(
     if (earlyGenerator != null) return earlyGenerator
   }
 
+  if (slot === 'cannon' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const cannonAncestral = decodeCannonAncestralFamilyEarlyRemap(rawIndex)
+    if (cannonAncestral != null) return cannonAncestral
+  }
+
   const decoded = gameModuleEffectByIndexForSlot(
     raw,
     slot,
@@ -847,6 +902,8 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'armor') {
     const armorEpic = decodeArmorEpicAtLegendaryIndex(rawIndex, decoded)
     if (armorEpic != null) return armorEpic
+    const armorEpicSecond = decodeArmorEpicAtSecondLegendaryIndex(rawIndex, decoded)
+    if (armorEpicSecond != null) return armorEpicSecond
   }
   return decoded
 }

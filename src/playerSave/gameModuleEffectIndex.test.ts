@@ -142,6 +142,43 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('imports Shrink Ray ancestral substats on ancestral-family cannon chassis', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [39, 15, 6, 24, 0, 0, 0, 0],
+      200,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'multishot-targets',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({ effectId: 'crit-factor', rarity: 'epic' })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'attack-speed',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'damage-meter-m',
+      rarity: 'common',
+    })
+  })
+
+  it('keeps rapid-fire rare at save index 39 on non-ancestral cannon chassis', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [39, 0, 0, 0, 0, 0, 0, 0],
+      50,
+      0,
+      'legendary',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'rapid-fire-chance',
+      rarity: 'rare',
+    })
+  })
+
   it('imports Amplifying Strike legendary substats on common-start cannon rows', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'cannon',
@@ -209,6 +246,46 @@ describe('gameModuleEffectIndex', () => {
     expect(imported.ordered[3]).toMatchObject({
       effectId: 'free-attack-upgrade',
       rarity: 'ancestral',
+    })
+  })
+
+  it('decodes Black Hole Digestor coins-kill ancestral at coins-wave sparse index 172', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [215, 193, 172, 184, 0, 0, 0, 0],
+      200,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'free-utility-upgrade',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'coins-kill-bonus',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'free-attack-upgrade',
+      rarity: 'ancestral',
+    })
+  })
+
+  it('keeps coins-wave common at save index 172 on non-ancestral generator chassis', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [172, 0, 0, 0, 0, 0, 0, 0],
+      50,
+      0,
+      'legendary',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'coins-wave',
+      rarity: 'common',
     })
   })
 
@@ -390,6 +467,31 @@ describe('gameModuleEffectIndex', () => {
       'health-regen': 'ancestral',
       'thorns-damage': 'mythic',
     })
+  })
+
+  it('decodes Sharp Fortitude epic thorns at second legendary sparse index 100', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [92, 86, 150, 100, 0, 0, 0, 0],
+      200,
+      0,
+      'ancestral',
+    )
+    expect(imported.ordered[0]).toMatchObject({ effectId: 'defense', rarity: 'ancestral' })
+    expect(imported.ordered[1]).toMatchObject({ effectId: 'health-regen', rarity: 'ancestral' })
+    expect(imported.ordered[2]).toMatchObject({ effectId: 'wall-health', rarity: 'ancestral' })
+    expect(imported.ordered[3]).toMatchObject({ effectId: 'thorns-damage', rarity: 'epic' })
+  })
+
+  it('decodes Sharp Fortitude epic thorns at first legendary sparse index 99', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [92, 86, 150, 99, 0, 0, 0, 0],
+      200,
+      0,
+      'ancestral',
+    )
+    expect(imported.ordered[3]).toMatchObject({ effectId: 'thorns-damage', rarity: 'epic' })
   })
 
   it('decodes Orbital Augment armor assist effects (petethered)', () => {
