@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.13] - 2026-06-16
+
+### Changed
+
+- **Modules inventory** — Unequipped chassis tiles in the grid are easier to read (less dimmed).
+
+### Fixed
+
+- **Equipped module hub slots** — Empty cannon (or other earlier hub) slots no longer shift armor, generator, and core imports into the wrong chassis positions.
+- **Module submodule import** — Sparse save effect indices decode correctly for Orbital Augment, Galaxy Compressor, Shrink Ray, Sharp Fortitude, Black Hole Digestor, and Dimension Core (epic-tier main core). Re-import `playerInfo.dat` if submodule picks still look wrong.
+
+### Docs
+
+- README: version **3.1.13**.
+- What's new banner (en/de/es).
+
 ## [3.1.12] - 2026-06-16
 
 ### Added

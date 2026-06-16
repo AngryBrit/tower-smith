@@ -341,6 +341,33 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Dimension Core epic main sparse indices (playerInfo)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [229, 219, 248, 0, 0, 0, 0, 0],
+      60,
+      0,
+      'epic_plus',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'chain-lightning-chance',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'chain-lightning-damage-x',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'death-wave-damage-x',
+      rarity: 'epic',
+    })
+    expect(imported.map).toMatchObject({
+      'chain-lightning-chance': 'epic',
+      'chain-lightning-damage-x': 'epic',
+      'death-wave-damage-x': 'epic',
+    })
+  })
+
   it('decodes Dimension Core main effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'core',

@@ -709,6 +709,45 @@ function decodeCoreHighTierRemap(
   return null
 }
 
+function isEpicTierCoreChassisMerge(
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): boolean {
+  return (
+    chassisMerge != null && workshopChassisModuleEffectTier(chassisMerge) === 'epic'
+  )
+}
+
+/**
+ * Epic-tier main core modules (e.g. Dimension Core) store submodule picks on sparse indices
+ * from the ancestral band / adjacent generator row, not the epic block in the table.
+ */
+function decodeCoreEpicMainSparseRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+  primaryModuleLevel: number,
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
+): GameModuleEffectDecode | null {
+  if (!isEpicTierCoreChassisMerge(chassisMerge) || primaryModuleLevel > 0) {
+    return null
+  }
+  if (rawIndex === 219) {
+    return findCoreEffectWithRarity('chain-lightning-damage-x', 'epic')
+  }
+  if (
+    decoded?.effectId === 'chain-lightning-quantity' &&
+    decoded.rarity === 'mythic'
+  ) {
+    return findCoreEffectWithRarity('chain-lightning-chance', 'epic')
+  }
+  if (
+    decoded?.effectId === 'death-wave-damage-x' &&
+    decoded.rarity === 'ancestral'
+  ) {
+    return findCoreEffectWithRarity('death-wave-damage-x', 'epic')
+  }
+  return null
+}
+
 /**
  * Cannon rows with a leading null Common column store Rare at the next compressed index
  * (e.g. Rapid Fire Duration save index 45 → Rare +0.4s, not Epic +0.8s).
@@ -844,6 +883,16 @@ function gameModuleEffectForSubmoduleImport(
     if (earlyCore != null) return earlyCore
   }
 
+  if (slot === 'core' && isEpicTierCoreChassisMerge(chassisMerge)) {
+    const earlyEpicCore = decodeCoreEpicMainSparseRemap(
+      rawIndex,
+      null,
+      primaryLevel,
+      chassisMerge,
+    )
+    if (earlyEpicCore != null) return earlyEpicCore
+  }
+
   if (slot === 'generator' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const earlyGenerator = decodeGeneratorAncestralFamilyRemap(rawIndex, null, primaryLevel)
     if (earlyGenerator != null) return earlyGenerator
@@ -868,6 +917,15 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'core' && isHighTierCoreChassisMerge(chassisMerge)) {
     const coreRemap = decodeCoreHighTierRemap(rawIndex, decoded, primaryLevel, chassisMerge)
     if (coreRemap != null) return coreRemap
+  }
+  if (slot === 'core' && isEpicTierCoreChassisMerge(chassisMerge)) {
+    const epicCoreRemap = decodeCoreEpicMainSparseRemap(
+      rawIndex,
+      decoded,
+      primaryLevel,
+      chassisMerge,
+    )
+    if (epicCoreRemap != null) return epicCoreRemap
   }
   if (slot === 'generator' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const generatorRemap = decodeGeneratorAncestralFamilyRemap(rawIndex, decoded, primaryLevel)

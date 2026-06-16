@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3113_headline: 'Novedades en v3.1.13',
+  whats_new_3113_body:
+    'Correcciones de importación de módulos: las ranuras del hub equipado se mantienen alineadas si una ranura anterior está vacía; submódulos de Orbital Augment, Galaxy Compressor, Shrink Ray, Sharp Fortitude, Black Hole Digestor y Dimension Core. Los módulos no equipados en el inventario se ven mejor. Vuelve a importar playerInfo.dat para actualizar los picks.',
   whats_new_3112_headline: 'Novedades en v3.1.12',
   whats_new_3112_body:
     'Inventario de módulos con filtros de chasis y configuraciones por módulo desde tu guardado. Corregida la importación de substat de módulos núcleo y generador Ancestral — vuelve a importar playerInfo.dat si los picks estaban mal. El inicio de sesión de Google en Effective Paths usa ahora authorization-code con PKCE.',

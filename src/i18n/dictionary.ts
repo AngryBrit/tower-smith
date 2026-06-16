@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3113_headline: "What's new in v3.1.13",
+  whats_new_3113_body:
+    'Module save import fixes: equipped hub slots stay aligned when an earlier slot is empty; submodule picks for Orbital Augment, Galaxy Compressor, Shrink Ray, Sharp Fortitude, Black Hole Digestor, and Dimension Core. Unequipped modules in the inventory grid are easier to see. Re-import playerInfo.dat to refresh picks.',
   whats_new_3112_headline: "What's new in v3.1.12",
   whats_new_3112_body:
     'Modules inventory grid with chassis filters and per-module configs from your save. Ancestral Core and Generator submodule import fixed — re-import playerInfo.dat if picks looked wrong. Effective Paths Google sign-in now uses the authorization-code flow with PKCE.',
