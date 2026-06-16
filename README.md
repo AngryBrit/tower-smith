@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.11-2ea44f)
+![Version](https://img.shields.io/badge/version-3.1.12-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -104,6 +104,8 @@ TowerSmith can **import from** and **export to** the community **Effective Paths
 
 **OAuth troubleshooting**
 
+- **Google Cloud “Use secure flows”** — Keep production and dev on **separate** Web OAuth clients. The production client must use **HTTPS only** (no `http://127.0.0.1`, `http://localhost`, or LAN redirect URIs). TowerSmith uses the GIS **authorization-code** flow with a CSRF `state` parameter and PKCE. After updating the client or code, allow a few days for Google’s security dashboard to clear the warning.
+- **Cross-Account Protection (RISC)** — Google’s security dashboard expects a registered [RISC](https://developers.google.com/identity/protocols/risc) receiver for apps that use Google OAuth. TowerSmith exposes `POST /api/risc/events` (Netlify Function). Set `GOOGLE_RISC_OAUTH_CLIENT_IDS` on Netlify, enable the RISC API in GCP, then run `node scripts/register-google-risc.mjs` with a **RISC Configuration Admin** service-account key. Effective Paths stores Google tokens only in browser `sessionStorage`, so events are logged for audit; TowerSmith sign-in uses Supabase, not this GCP client.
 - Use **Chrome or Firefox** at the site URL — embedded IDE browsers (including Cursor’s built-in preview) can show Google sign-in but cannot return the access token.
 - Allow **popups** for the TowerSmith origin and complete the **Google sign-in** and **file picker** steps after choosing your account.
 - Local dev: run **`npm run dev:netlify`** and open `http://localhost:8888` (Functions + COOP headers). Plain `npm run dev` on port 5173 also sets COOP for OAuth, but import/export still needs Functions.

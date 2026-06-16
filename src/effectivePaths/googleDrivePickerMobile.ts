@@ -4,6 +4,7 @@ import { DRIVE_FILE_SCOPE, formatPickerFileIds } from './googleDrivePicker'
 import { shouldUsePickerOAuthRedirectFlow, googlePickerOAuthRedirectUri } from './googleDrivePickerEnvironment'
 import { createGoogleSheetsOAuthState } from './googleSheetsOAuthState'
 import { writeCachedSheetsToken } from './googleSheetsOAuth'
+import { exchangeGoogleOAuthAuthorizationCode } from './googleOAuthCodeExchange'
 import { createPkceChallenge, createPkceVerifier } from './googlePkce'
 import {
   clearEpMobileGrantFlow,
@@ -17,7 +18,6 @@ import {
 
 const SPREADSHEET_MIME = 'application/vnd.google-apps.spreadsheet'
 const GOOGLE_AUTH_ENDPOINT = 'https://accounts.google.com/o/oauth2/v2/auth'
-const GOOGLE_TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token'
 
 export type MobilePickerRedirectOptions = {
   spreadsheetIds: readonly string[]
@@ -134,28 +134,7 @@ async function exchangeAuthorizationCode(
 ): Promise<{ accessToken: string; expiresInSec?: number } | null> {
   const clientId = oauthClientId()
   if (!clientId) return null
-
-  const body = new URLSearchParams({
-    code,
-    client_id: clientId,
-    code_verifier: codeVerifier,
-    grant_type: 'authorization_code',
-    redirect_uri: redirectUri,
-  })
-
-  const response = await fetch(GOOGLE_TOKEN_ENDPOINT, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body,
-  })
-  if (!response.ok) return null
-
-  const json = (await response.json()) as { access_token?: string; expires_in?: number }
-  if (!json.access_token) return null
-  return {
-    accessToken: json.access_token,
-    expiresInSec: json.expires_in,
-  }
+  return exchangeGoogleOAuthAuthorizationCode(clientId, code, codeVerifier, redirectUri)
 }
 
 function parsePickedFileIds(params: URLSearchParams): string[] {

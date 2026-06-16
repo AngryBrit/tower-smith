@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3112_headline: 'Neu in v3.1.12',
+  whats_new_3112_body:
+    'Modul-Inventar mit Chassis-Filtern und pro-Modul-Konfigurationen aus dem Spielstand. Ancestral-Kern- und Generator-Substat-Import behoben — Spielstand erneut importieren, falls Submodule falsch wirkten. Effective-Paths-Google-Anmeldung nutzt jetzt Authorization-Code mit PKCE.',
   whats_new_3111_headline: 'Neu in v3.1.11',
   whats_new_3111_body:
     'Effective-Paths-Sync nutzt jetzt Google Picker mit drive.file — nur IDS Master und verknüpfte Arbeitsmappen auswählen. Getrennte Arbeitsmappen merken sich verknüpfte IDs für schnelleres Wiederverbinden. 5th-Anniversary-Themes und Relikte ergänzt.',

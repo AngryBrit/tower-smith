@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.12] - 2026-06-16
+
+### Added
+
+- **Modules inventory grid** — Filter owned chassis modules by slot on the Modules page; per-module config library imports from playerInfo.dat inventory and equipped rows.
+- **Google OAuth authorization-code flow** — Effective Paths sign-in uses GIS `initCodeClient` with PKCE and CSRF `state` (replaces implicit token client) for Google’s secure-flow requirements.
+- **Cross-Account Protection (RISC)** — `POST /api/risc/events` Netlify Function verifies Google security event tokens; register with `scripts/register-google-risc.mjs` and `GOOGLE_RISC_OAUTH_CLIENT_IDS`.
+
+### Changed
+
+- **Modules page** — Per-module configs persist in workspace backup; inventory and picker UX polish; hub tower graphic no longer draws connector lines.
+- **Home** — Removed static intro banner (Google OAuth verification).
+
+### Fixed
+
+- **Ancestral-family module submodule import** — Core and Generator chassis rows remap sparse save indices (Death Wave Quantity, Golden Tower Bonus, Black Hole Cooldown, Coins Kill Bonus, Free Attack Upgrade, and related picks).
+- **Amplifying Strike import** — Cannon submodule picks and crit display names decode correctly from save.
+- **Module save import** — Ownership UI and submodule display align with in-game picks after re-import.
+
+### Docs
+
+- README: OAuth secure-flow guidance, RISC setup, version **3.1.12**.
+- What's new banner (en/de/es).
+
 ## [3.1.11] - 2026-06-15
 
 ### Added

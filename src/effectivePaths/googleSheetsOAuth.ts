@@ -1,4 +1,6 @@
 import { googleDrivePickerConfigured } from './googleDrivePicker'
+import { exchangeGoogleOAuthAuthorizationCode } from './googleOAuthCodeExchange'
+import { createPkceVerifier } from './googlePkce'
 import {
   clearGoogleSheetsOAuthState,
   createGoogleSheetsOAuthState,
@@ -13,21 +15,19 @@ export const DRIVE_FILE_SCOPE = 'https://www.googleapis.com/auth/drive.file'
 const OAUTH_SCOPE = DRIVE_FILE_SCOPE
 const TOKEN_CACHE_KEY = 'towersmith_google_drive_file_token'
 const TOKEN_EXPIRY_BUFFER_MS = 60_000
-/** Max wait for GIS token callback (consent popup dismissed, blocked, or lost). */
+/** Max wait for GIS code callback (consent popup dismissed, blocked, or lost). */
 const OAUTH_CALLBACK_TIMEOUT_MS = 120_000
-/** Silent GIS auth should fail quickly when no session exists. */
-const OAUTH_SILENT_TIMEOUT_MS = 15_000
 
-type TokenClient = {
-  requestAccessToken: (overrideConfig?: { prompt?: string }) => void
+type CodeClient = {
+  requestCode: () => void
 }
 
-type GisTokenResponse = {
-  access_token?: string
-  expires_in?: number
-  error?: string
-  error_subtype?: string
+type CodeResponse = {
+  code?: string
+  scope?: string
   state?: string
+  error?: string
+  error_description?: string
 }
 
 type GisOAuthError = {
@@ -36,14 +36,16 @@ type GisOAuthError = {
 }
 
 type GisOAuth2 = {
-  initTokenClient: (config: {
+  initCodeClient: (config: {
     client_id: string
     scope: string
     state?: string
-    callback: (response: GisTokenResponse) => void
+    ux_mode?: 'popup' | 'redirect'
+    callback: (response: CodeResponse) => void
     error_callback?: (error: GisOAuthError) => void
-    use_fedcm_for_prompt?: boolean
-  }) => TokenClient
+    select_account?: boolean
+  }) => CodeClient
+  revoke?: (accessToken: string, done: () => void) => void
 }
 
 declare global {
@@ -185,42 +187,13 @@ function loadGisScript(): Promise<void> {
   return gisScriptPromise
 }
 
-type TokenPromptOptions = {
-  useFedcm?: boolean
+/** GIS popup code flow uses the page origin as redirect_uri (see Google Identity Services docs). */
+function gisCodeClientRedirectUri(): string {
+  return window.location.origin
 }
 
-function isEmbeddedOAuthHost(): boolean {
-  if (typeof window === 'undefined') return false
-  const ua = navigator.userAgent
-  if (/\bElectron\b/i.test(ua)) return true
-  if (/\bVSCode\b/i.test(ua)) return true
-  if (window.self !== window.top) return true
-  return false
-}
-
-function shouldUseFedcmForPrompt(): boolean {
-  if (typeof window === 'undefined') return false
-  if (isEmbeddedOAuthHost()) return false
-  if (!('IdentityCredential' in globalThis)) return false
-  // Mobile Chrome handles FedCM more reliably than popups.
-  return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
-}
-
-function interactiveFedcmAttempts(): readonly boolean[] {
-  return shouldUseFedcmForPrompt() ? [true, false] : [false, true]
-}
-
-function isAlternateOAuthUxRetry(code: string): boolean {
-  return (
-    code === 'google_oauth_timeout' ||
-    code === 'popup_blocked' ||
-    isRetryableGoogleAuthError(code)
-  )
-}
-
-function oauthCallbackTimeoutMs(prompt: '' | 'none' | 'consent'): number {
-  if (prompt === 'none') return OAUTH_SILENT_TIMEOUT_MS
-  return OAUTH_CALLBACK_TIMEOUT_MS
+type CodePromptOptions = {
+  forceConsent?: boolean
 }
 
 function oauthErrorFromGis(err: GisOAuthError): Error {
@@ -230,10 +203,21 @@ function oauthErrorFromGis(err: GisOAuthError): Error {
   return new Error(type)
 }
 
-async function requestTokenWithPrompt(
-  prompt: '' | 'none' | 'consent',
-  options: TokenPromptOptions = {},
-): Promise<string> {
+async function revokeCachedGoogleAccess(): Promise<void> {
+  const cached = readCachedSheetsToken()
+  clearCachedGoogleSheetsAccessToken()
+  if (!cached) return
+
+  await loadGisScript()
+  const revoke = window.google?.accounts?.oauth2?.revoke
+  if (!revoke) return
+
+  await new Promise<void>((resolve) => {
+    revoke(cached, () => resolve())
+  })
+}
+
+async function requestCodeWithPrompt(options: CodePromptOptions = {}): Promise<string> {
   await loadGisScript()
   const oauth2 = window.google?.accounts?.oauth2
   if (!oauth2) {
@@ -241,8 +225,9 @@ async function requestTokenWithPrompt(
   }
 
   const clientId = import.meta.env.VITE_GOOGLE_SHEETS_OAUTH_CLIENT_ID as string
-  const useFedcm = options.useFedcm ?? shouldUseFedcmForPrompt()
   const oauthState = createGoogleSheetsOAuthState()
+  const codeVerifier = createPkceVerifier()
+  const redirectUri = gisCodeClientRedirectUri()
   stashGoogleSheetsOAuthState(oauthState)
 
   return new Promise((resolve, reject) => {
@@ -252,7 +237,7 @@ async function requestTokenWithPrompt(
       settled = true
       clearGoogleSheetsOAuthState()
       reject(new Error('google_oauth_timeout'))
-    }, oauthCallbackTimeoutMs(prompt))
+    }, OAUTH_CALLBACK_TIMEOUT_MS)
 
     const finish = (result: 'resolve' | 'reject', value?: string, err?: Error) => {
       if (settled) return
@@ -262,52 +247,72 @@ async function requestTokenWithPrompt(
       else reject(err ?? new Error('google_oauth_no_token'))
     }
 
-    const client = oauth2.initTokenClient({
+    const client = oauth2.initCodeClient({
       client_id: clientId,
       scope: OAUTH_SCOPE,
       state: oauthState,
-      use_fedcm_for_prompt: useFedcm,
+      ux_mode: 'popup',
+      select_account: options.forceConsent,
       callback: (response) => {
-        if (!verifyGoogleSheetsOAuthState(response.state)) {
-          finish('reject', undefined, new Error('google_oauth_state_mismatch'))
-          return
-        }
-        if (response.error) {
-          finish('reject', undefined, new Error(response.error))
-          return
-        }
-        if (!response.access_token) {
-          finish('reject', undefined, new Error('google_oauth_no_token'))
-          return
-        }
-        writeCachedSheetsToken(response.access_token, response.expires_in)
-        finish('resolve', response.access_token)
+        void (async () => {
+          if (!verifyGoogleSheetsOAuthState(response.state)) {
+            finish('reject', undefined, new Error('google_oauth_state_mismatch'))
+            return
+          }
+          if (response.error) {
+            finish('reject', undefined, new Error(response.error))
+            return
+          }
+          if (!response.code) {
+            finish('reject', undefined, new Error('google_oauth_no_token'))
+            return
+          }
+
+          const tokenResult = await exchangeGoogleOAuthAuthorizationCode(
+            clientId,
+            response.code,
+            codeVerifier,
+            redirectUri,
+          )
+          if (!tokenResult) {
+            finish('reject', undefined, new Error('google_oauth_no_token'))
+            return
+          }
+
+          writeCachedSheetsToken(tokenResult.accessToken, tokenResult.expiresInSec)
+          finish('resolve', tokenResult.accessToken)
+        })().catch((err: unknown) => {
+          finish(
+            'reject',
+            undefined,
+            err instanceof Error ? err : new Error('google_oauth_failed'),
+          )
+        })
       },
       error_callback: (err) => {
         clearGoogleSheetsOAuthState()
         finish('reject', undefined, oauthErrorFromGis(err))
       },
     })
-    client.requestAccessToken({ prompt })
+    client.requestCode()
   })
 }
 
-async function requestInteractiveToken(prompt: '' | 'consent'): Promise<string> {
-  const attempts = interactiveFedcmAttempts()
-  let lastErr: Error | undefined
-
-  for (let index = 0; index < attempts.length; index++) {
-    try {
-      return await requestTokenWithPrompt(prompt, { useFedcm: attempts[index] })
-    } catch (err) {
-      lastErr = err instanceof Error ? err : new Error('google_oauth_failed')
-      const code = lastErr.message
-      if (code === 'popup_closed_by_user') throw lastErr
-      if (index === attempts.length - 1 || !isAlternateOAuthUxRetry(code)) throw lastErr
-    }
+async function requestInteractiveCode(forceConsent = false): Promise<string> {
+  if (forceConsent) {
+    await revokeCachedGoogleAccess()
   }
 
-  throw lastErr ?? new Error('google_oauth_failed')
+  try {
+    return await requestCodeWithPrompt({ forceConsent })
+  } catch (err) {
+    const code = err instanceof Error ? err.message : ''
+    if (code === 'popup_closed_by_user') throw err
+    if (code === 'popup_blocked' || isRetryableGoogleAuthError(code)) {
+      return requestCodeWithPrompt({ forceConsent })
+    }
+    throw err
+  }
 }
 
 export type GoogleSheetsOAuthOptions = {
@@ -317,7 +322,7 @@ export type GoogleSheetsOAuthOptions = {
 
 /**
  * Request a short-lived Google access token with drive.file scope.
- * Reuses a cached session token when valid, then tries silent GIS auth before prompting.
+ * Reuses a cached session token when valid, then runs the GIS authorization-code popup flow.
  */
 export async function requestGoogleSheetsAccessToken(
   options: GoogleSheetsOAuthOptions = {},
@@ -331,22 +336,7 @@ export async function requestGoogleSheetsAccessToken(
     if (cached) return cached
   }
 
-  if (!options.consent) {
-    try {
-      return await requestTokenWithPrompt('none', { useFedcm: false })
-    } catch (err) {
-      const code = err instanceof Error ? err.message : ''
-      if (!isRetryableGoogleAuthError(code)) throw err
-    }
-    try {
-      return await requestInteractiveToken('')
-    } catch (err) {
-      const code = err instanceof Error ? err.message : ''
-      if (!isRetryableGoogleAuthError(code)) throw err
-    }
-  }
-
-  return requestInteractiveToken(options.consent ? 'consent' : '')
+  return requestInteractiveCode(Boolean(options.consent))
 }
 
 /** Cached drive.file token for this browser tab session, if still valid. */

@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3112_headline: "What's new in v3.1.12",
+  whats_new_3112_body:
+    'Modules inventory grid with chassis filters and per-module configs from your save. Ancestral Core and Generator submodule import fixed — re-import playerInfo.dat if picks looked wrong. Effective Paths Google sign-in now uses the authorization-code flow with PKCE.',
   whats_new_3111_headline: "What's new in v3.1.11",
   whats_new_3111_body:
     'Effective Paths sync now uses Google Picker with drive.file scope — select only your IDS Master and linked workbooks. Split-sheet setups remember linked IDs for faster reconnect. 5th Anniversary themes and relics added.',
