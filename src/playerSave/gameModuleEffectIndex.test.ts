@@ -461,6 +461,32 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes ancestral-family core main sparse indices for death wave, spotlight, golden tower, black hole', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [254, 329, 281, 316, 0, 0, 0, 0],
+      100,
+      0,
+      'star_1',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'death-wave-quantity',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'spotlight-angle',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'golden-tower-bonus',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'black-hole-cooldown-s',
+      rarity: 'ancestral',
+    })
+  })
+
   it('maps Fudgyrella core effect indices to death wave damage, spotlight, golden tower, chain lightning', () => {
     expect(gameModuleEffectByIndex(250)).toMatchObject({
       effectId: 'death-wave-damage-x',

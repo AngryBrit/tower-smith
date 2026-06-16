@@ -558,6 +558,14 @@ function decodeCoreHighTierRemap(
   ) {
     return { slot: 'core', effectId: 'golden-tower-bonus', rarity: 'ancestral' }
   }
+  if (chassisEffectTier === 'ancestral' && primaryModuleLevel === 0) {
+    if (rawIndex === 254) {
+      return { slot: 'core', effectId: 'death-wave-quantity', rarity: 'ancestral' }
+    }
+    if (rawIndex === 281) {
+      return findCoreEffectWithRarity('golden-tower-bonus', 'epic')
+    }
+  }
   if (primaryModuleLevel > 0) {
     if (rawIndex === 286) {
       return findCoreEffectWithRarity('golden-tower-duration-s', 'mythic')
@@ -600,6 +608,10 @@ function decodeCoreHighTierRemap(
     row.offset === 1
   ) {
     return findCoreEffectWithRarity('black-hole-cooldown-s', 'mythic')
+  }
+
+  if (decoded.effectId === 'black-hole-size-m' && decoded.rarity === 'ancestral') {
+    return { slot: 'core', effectId: 'black-hole-cooldown-s', rarity: 'ancestral' }
   }
 
   if (decoded.effectId === 'spotlight-angle' && decoded.rarity === 'epic' && row.offset === 0) {
