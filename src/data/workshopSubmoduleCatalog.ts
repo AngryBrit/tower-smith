@@ -47,11 +47,22 @@ export function submoduleEffectId(label: string): string {
 }
 
 /** Wiki label without trailing unit tag (`Defense [%]` → `Defense`, `Spotlight - Angle*` → `Spotlight - Angle`). */
-export function submoduleEffectDisplayName(label: string): string {
+export function submoduleEffectBaseName(label: string): string {
   return label
     .replace(/\s*\[[^\]]*\]\s*\*?\s*$/i, '')
     .replace(/\*+\s*$/, '')
     .trim()
+}
+
+/** In-game spelling overrides; catalog/wiki labels stay stable for effect ids. */
+const SUBMODULE_DISPLAY_NAME_OVERRIDES: Readonly<Record<string, string>> = {
+  'Crit Chance': 'Critical Chance',
+  'Crit Factor': 'Critical Factor',
+}
+
+export function submoduleEffectDisplayName(label: string): string {
+  const base = submoduleEffectBaseName(label)
+  return SUBMODULE_DISPLAY_NAME_OVERRIDES[base] ?? base
 }
 
 const SUBMODULE_LABEL_UNIT_SUFFIX = /\[\s*([^\]]+)\s*\]\s*\*?\s*$/i
@@ -124,7 +135,7 @@ const SUBMODULE_MULTIPLIER_EFFECT_LABELS = new Set([
 ])
 
 export function isSubmoduleMultiplierEffectLabel(label: string): boolean {
-  return SUBMODULE_MULTIPLIER_EFFECT_LABELS.has(submoduleEffectDisplayName(label))
+  return SUBMODULE_MULTIPLIER_EFFECT_LABELS.has(submoduleEffectBaseName(label))
 }
 
 /** In-game module picker slot (`Defense [%]` + `5` → `+5% Defense %`). */

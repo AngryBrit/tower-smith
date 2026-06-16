@@ -3,10 +3,19 @@
  *
  * Game `ModuleItem.effects[]` stores indices into `ModuleManager.effects` (0 = empty slot).
  * Table order: cannon → armor → generator → core (wiki catalog order except core — game
- * SubstatsCluster row order); within each row, common … ancestral, skip null wiki cells.
+ * SubstatsCluster row order).
  *
- * On cannon/armor/generator rows with a Common wiki column, in-game sparse offset N uses the
- * wiki tier at max(0, N − 1) (e.g. crit index 7 → Common +2%, not Rare +3%).
+ * Wiki tiers for each effect row (when present) follow:
+ *   common → rare → epic → legendary → mythic → ancestral.
+ *
+ * Many rows omit leading tiers (e.g. Multishot Chance starts at Rare; Orbs at Mythic). Sparse
+ * slots for a row are anchored **from the last entry backward**: the final slot is the highest
+ * present wiki tier (Ancestral when the row has it, else Mythic, etc.). Earlier slots step down
+ * through present tiers. Some rows insert a duplicate pick one tier below the top compressed
+ * band (second Common on common-start rows, second Legendary on rare/epic-start rows); the top
+ * wiki tier may be omitted from the sparse table when that duplicate slot is present.
+ *
+ * Core rows keep game-verified physical tier order (not wiki backward anchor).
  *
  * Generator rows that start at Epic (no Common/Rare) map sparse offset → wiki tier in order
  * (Package Chance, Enemy Level Skip, etc.). Ancestral merge modules may store the row base
@@ -34,15 +43,18 @@ function wikiTiersForRow(row) {
   return RARITIES.filter((r) => row.cells[r] != null)
 }
 
-/**
- * Map sparse row offset → workshop rarity (wiki column key for substat value).
- */
+/** Generator epic-only rows (Package Chance, level skip) use forward wiki order in sparse table. */
 const GENERATOR_WIKI_TIER_ROW_LABELS = new Set([
   'Package Chance [%]',
   'Enemy Attack Level Skip [%]',
   'Enemy Health Level Skip [%]',
 ])
 
+/**
+ * Map sparse row offset → workshop rarity for the generated lookup table.
+ * Calibrated to game save indices — see `scripts/lib/sparse-row-tier-model.mjs` for the
+ * conceptual backward anchor (ancestral → mythic → …) on partial wiki rows.
+ */
 function gameValueRarityForSparseRowEntry(row, offsetInRow, slot) {
   const firstNonNull = RARITIES.findIndex((r) => row.cells[r] != null)
   if (

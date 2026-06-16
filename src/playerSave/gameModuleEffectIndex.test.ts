@@ -142,6 +142,23 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('imports Amplifying Strike legendary substats on common-start cannon rows', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [10, 16, 4, 33, 0, 0, 0, 0],
+      50,
+      0,
+      'epic',
+    )
+    expect(imported.ordered[0]).toMatchObject({ effectId: 'crit-chance', rarity: 'legendary' })
+    expect(imported.ordered[1]).toMatchObject({ effectId: 'crit-factor', rarity: 'legendary' })
+    expect(imported.ordered[2]).toMatchObject({ effectId: 'attack-speed', rarity: 'legendary' })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'multishot-chance',
+      rarity: 'legendary',
+    })
+  })
+
   it('imports Astral Deliverance cannon substats from save indices (epic-start row offset)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'cannon',

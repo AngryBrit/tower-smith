@@ -10,6 +10,7 @@ import {
   formatSubmoduleCellDisplay,
   parseSubmoduleCellNumber,
   submoduleCellFromScaledNumber,
+  submoduleEffectDisplayName,
   submoduleEffectPickerSlotText,
 } from './workshopSubmoduleCatalog'
 
@@ -75,6 +76,11 @@ describe('workshopSubmoduleCatalog', () => {
     )
   })
 
+  it('uses in-game display names for crit submodule labels', () => {
+    expect(submoduleEffectDisplayName('Crit Chance [%]')).toBe('Critical Chance')
+    expect(submoduleEffectDisplayName('Crit Factor')).toBe('Critical Factor')
+  })
+
   it('formats in-game picker slot text for percent effects', () => {
     expect(submoduleEffectPickerSlotText('5', 'Defense [%]')).toBe('+5% Defense %')
     expect(submoduleEffectPickerSlotText('100', 'Defense Absolute [%]')).toBe(
@@ -82,9 +88,9 @@ describe('workshopSubmoduleCatalog', () => {
     )
     expect(submoduleEffectPickerSlotText('100', 'Health Regen [%]')).toBe('+100% Health Regen')
     expect(submoduleEffectPickerSlotText('40', 'Wall Health [%]')).toBe('+40% Wall Health')
-    expect(submoduleEffectPickerSlotText('6', 'Crit Chance [%]')).toBe('+6% Crit Chance')
+    expect(submoduleEffectPickerSlotText('6', 'Crit Chance [%]')).toBe('+6% Critical Chance')
     expect(submoduleEffectPickerSlotText('2', 'Super Crit Multi')).toBe('+2x Super Crit Multi')
-    expect(submoduleEffectPickerSlotText('6', 'Crit Factor')).toBe('+6x Crit Factor')
+    expect(submoduleEffectPickerSlotText('6', 'Crit Factor')).toBe('+6x Critical Factor')
     expect(submoduleEffectPickerSlotText('0.025', 'Damage / Meter [m]')).toBe(
       '+0.03x Damage / Meter',
     )

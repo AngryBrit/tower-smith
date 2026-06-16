@@ -21,7 +21,9 @@ export type GameModuleEffectDecode = {
 
 export const GAME_MODULE_EFFECT_COUNT = 330 as const
 
-/** Save effect index → decoded pick (`null` if out of range). Index 0 is Attack Speed common. */
+/** Save effect index → decoded pick (`null` if out of range). Index 0 is Attack Speed common.
+ *  Wiki tiers per row: common → rare → epic → legendary → mythic → ancestral (see
+ *  `workshopSubmoduleRowTiers.ts`). Sparse table layout is save-calibrated, not pure wiki order. */
 export const GAME_MODULE_EFFECT_BY_INDEX: readonly GameModuleEffectDecode[] = [
   { slot: "cannon", effectId: "attack-speed", rarity: "common" }, // 0
   { slot: "cannon", effectId: "attack-speed", rarity: "common" }, // 1
@@ -650,6 +652,13 @@ function decodeCannonEpicAtLegendaryIndex(
     return null
   }
   if (prev.rarity !== 'epic') return null
+  const twoBack = gameModuleEffectByIndex(rawIndex - 2, 0)
+  if (twoBack?.slot === 'cannon' && twoBack.effectId === decoded.effectId) {
+    const threeBack = gameModuleEffectByIndex(rawIndex - 3, 0)
+    if (threeBack?.slot === 'cannon' && threeBack.effectId === decoded.effectId) {
+      return null
+    }
+  }
   return prev
 }
 

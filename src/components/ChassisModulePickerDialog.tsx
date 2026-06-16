@@ -38,6 +38,7 @@ import {
   WORKSHOP_SUBMODULE_SLOT_UNLOCK_LEVEL,
   workshopSubmoduleSlotUnlocked,
   formatSubmoduleCellDisplay,
+  submoduleEffectDisplayName,
   submoduleEffectId,
   submoduleEffectPickerSlotText,
 } from '../data/workshopSubmoduleCatalog'
@@ -525,7 +526,7 @@ export function ChassisModulePickerDialog({
                   const id = submoduleEffectId(row.label)
                   return (
                     <option key={id} value={id}>
-                      {row.label}
+                      {submoduleEffectDisplayName(row.label)}
                     </option>
                   )
                 })}

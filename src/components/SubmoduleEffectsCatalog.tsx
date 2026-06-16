@@ -2,6 +2,7 @@ import {
   WORKSHOP_SUBMODULE_GLOBAL_INTRO,
   WORKSHOP_SUBMODULE_GLOBAL_NOTES,
   WORKSHOP_SUBMODULE_SECTIONS,
+  submoduleEffectDisplayName,
   submoduleEffectId,
   type WorkshopSubmoduleSection,
 } from '../data/workshopSubmoduleCatalog'
@@ -79,7 +80,7 @@ function SubmoduleSectionTable({
                     .join(' ')}
                 >
                   <th scope="row" className="modules-catalog__name">
-                    {effectRow.label}
+                    {submoduleEffectDisplayName(effectRow.label)}
                   </th>
                   {WORKSHOP_SUBMODULE_RARITIES.map((rarity) => {
                     const cell = effectRow.cells[rarity]
