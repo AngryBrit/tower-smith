@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { defaultWorkshopPersisted } from '../labPresetsStorage'
+import { workshopPersistedWithModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
 import { modulesEpStateFromPersisted } from './modulesEpStateFromPersisted'
 
 describe('modulesEpStateFromPersisted', () => {
@@ -95,6 +96,50 @@ describe('modulesEpStateFromPersisted', () => {
     expect(main?.substats.map((s) => s.effectId).sort()).toEqual([
       'free-attack-upgrade',
       'free-defense-upgrade',
+    ])
+  })
+
+  it('includes unassigned owned modules from simChassisModuleConfigs', () => {
+    let ws = defaultWorkshopPersisted()
+    ws = workshopPersistedWithModuleConfigEntry(ws, 'cannon', 'main', 'havocBringer', {
+      rarity: 'legendary',
+      level: 55,
+    })
+    ws.simCannonChassisModuleId = 'astralDeliverance'
+    ws.simCannonChassisModuleRarity = 'star_1'
+    ws.simCannonChassisModuleLevel = 140
+
+    const state = modulesEpStateFromPersisted(ws)
+    expect(state.modules.map((m) => `${m.hubSlot}:${m.moduleId}:${m.hubEquipped}`).sort()).toEqual([
+      'cannon:astralDeliverance:true',
+      'cannon:havocBringer:false',
+    ])
+    expect(state.modules.find((m) => m.moduleId === 'havocBringer')).toMatchObject({
+      mergeTier: 'legendary',
+      level: 55,
+      hubEquipped: false,
+    })
+  })
+
+  it('includes every owned library module across slots', () => {
+    let ws = defaultWorkshopPersisted()
+    ws = workshopPersistedWithModuleConfigEntry(ws, 'cannon', 'main', 'astralDeliverance', {
+      rarity: 'legendary',
+      level: 12,
+    })
+    ws = workshopPersistedWithModuleConfigEntry(ws, 'armor', 'main', 'sharpFortitude', {
+      rarity: 'epic_plus',
+      level: 5,
+    })
+    ws.simCannonChassisModuleId = 'havocBringer'
+    ws.simCannonChassisModuleRarity = 'mythic_plus'
+    ws.simCannonChassisModuleLevel = 99
+
+    const state = modulesEpStateFromPersisted(ws)
+    expect(state.modules.map((m) => `${m.hubSlot}:${m.moduleId}:${m.hubEquipped}`).sort()).toEqual([
+      'armor:sharpFortitude:false',
+      'cannon:astralDeliverance:false',
+      'cannon:havocBringer:true',
     ])
   })
 })

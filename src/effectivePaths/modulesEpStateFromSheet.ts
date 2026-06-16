@@ -174,25 +174,26 @@ export function modulesEpStateFromSheetGrid(
 
     const candidates = readEquippedCandidates(grid, section, slot)
     const { main, assist } = assignMainAssist(candidates)
+    const assistEquippedId = assist?.moduleId ?? null
 
-    if (main) {
+    for (const candidate of candidates) {
+      const hubEquipped = candidate.moduleId === main?.moduleId || candidate.moduleId === assistEquippedId
+      const role = candidate.moduleId === assistEquippedId ? 'assist' : 'main'
+      const level =
+        candidate.moduleId === main?.moduleId
+          ? sectionLevels[slot]!.highestPrimaryLevel
+          : candidate.moduleId === assistEquippedId
+            ? sectionLevels[slot]!.highestAssistLevel
+            : 0
+
       modules.push({
-        moduleId: main.moduleId,
+        moduleId: candidate.moduleId,
         hubSlot: slot,
-        role: 'main',
-        mergeTier: main.mergeTier,
-        level: sectionLevels[slot]!.highestPrimaryLevel,
-        substats: readSubstats(grid, section, main.column.baseCol, slot, false),
-      })
-    }
-    if (assist) {
-      modules.push({
-        moduleId: assist.moduleId,
-        hubSlot: slot,
-        role: 'assist',
-        mergeTier: assist.mergeTier,
-        level: sectionLevels[slot]!.highestAssistLevel,
-        substats: readSubstats(grid, section, assist.column.baseCol, slot, true),
+        role,
+        mergeTier: candidate.mergeTier,
+        level,
+        substats: readSubstats(grid, section, candidate.column.baseCol, slot, role === 'assist'),
+        hubEquipped,
       })
     }
   }

@@ -30,6 +30,13 @@ import {
 import { cardMasterySectionIndex } from '../data/workshopCardMastery'
 import { WORKSHOP_GAME_CARD_ORDER } from '../data/workshopGameCards'
 import { patchWorkshopModules } from '../data/workshopModulePresets'
+import {
+  workshopPersistedWithModuleConfigEntry,
+} from '../data/workshopModuleConfigLibrary'
+import {
+  emptySubmoduleOrderedSlots,
+  type WorkshopSubmoduleSelectionMap,
+} from '../data/workshopSubmoduleSelection'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import { sanitizeWorkshopPersisted } from '../labPresetsStorage'
 import type { ResearchData } from '../types/research'
@@ -38,7 +45,7 @@ import type { BotsEpSyncState } from './botsEpStateFromPersisted'
 import type { CardStateFromSheet } from './cardStateFromSheet'
 import type { EffectivePathsImportPayload } from './effectivePathsImportDialogSupport'
 import type { GuardiansEpSyncState } from './guardiansEpStateFromPersisted'
-import type { ModulesEpSyncState } from './modulesEpStateFromPersisted'
+import type { ModulesEpEquippedSubstat, ModulesEpSyncState } from './modulesEpStateFromPersisted'
 import type { UwsEpSyncState } from './uwsEpStateFromPersisted'
 import { readGuardianChipState, type GuardianChipState } from '../guardianChipStorage'
 import { WORKSHOP_EP_ENHANCE_KEYS, WORKSHOP_EP_UPGRADE_KEYS } from './workshopSheetNames'
@@ -326,6 +333,22 @@ function submoduleSelectionsForRole(
   return selections
 }
 
+function substatsToLibraryFields(
+  substats: ModulesEpEquippedSubstat[],
+): {
+  submodules: WorkshopSubmoduleSelectionMap
+  submoduleSlots: ReturnType<typeof emptySubmoduleOrderedSlots>
+} {
+  const submodules: WorkshopSubmoduleSelectionMap = {}
+  const submoduleSlots = emptySubmoduleOrderedSlots()
+  for (let i = 0; i < Math.min(substats.length, submoduleSlots.length); i += 1) {
+    const sub = substats[i]!
+    submodules[sub.effectId] = sub.rarity
+    submoduleSlots[i] = { effectId: sub.effectId, rarity: sub.rarity }
+  }
+  return { submodules, submoduleSlots }
+}
+
 export function modulesEpStateAppliedToPersisted(
   base: WorkshopPersistedV1,
   state: ModulesEpSyncState,
@@ -351,8 +374,9 @@ export function modulesEpStateAppliedToPersisted(
     }
   }
 
-  for (const equipped of state.modules) {
-    const { hubSlot: slot, role, moduleId, mergeTier, level, substats } = equipped
+  for (const mod of state.modules) {
+    if (!mod.hubEquipped) continue
+    const { hubSlot: slot, role, moduleId, mergeTier, level, substats } = mod
     if (role === 'main') {
       patch[CHASSIS_MODULE_ID_KEY[slot]] = moduleId
       patch[CHASSIS_MODULE_RARITY_KEY[slot]] = mergeTier
@@ -366,13 +390,22 @@ export function modulesEpStateAppliedToPersisted(
     }
   }
 
-  // sanitizeWorkshopPersisted reapplies the active module preset tab over live sim fields;
-  // sync the active preset from imported live fields instead (same as WorkshopModulesPanel).
-  const sanitizedLive = sanitizeWorkshopPersisted({
+  let next = sanitizeWorkshopPersisted({
     ...patch,
     modulePresetSnapshots: undefined,
   })
-  return patchWorkshopModules(sanitizedLive, {})
+
+  for (const mod of state.modules) {
+    const { submodules, submoduleSlots } = substatsToLibraryFields(mod.substats)
+    next = workshopPersistedWithModuleConfigEntry(next, mod.hubSlot, mod.role, mod.moduleId, {
+      rarity: mod.mergeTier,
+      level: mod.level,
+      submodules,
+      submoduleSlots,
+    })
+  }
+
+  return patchWorkshopModules(next, {})
 }
 
 export type { WorkshopGameCardId }

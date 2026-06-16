@@ -538,7 +538,25 @@ export function moduleEpResolvedColumnForModule(
   section: ModuleEpResolvedSection,
   moduleId: string,
 ): ModuleEpResolvedModuleColumn | null {
-  return section.modules.find((entry) => entry.moduleId === moduleId) ?? null
+  const direct = section.modules.find((entry) => entry.moduleId === moduleId)
+  if (direct) return direct
+
+  if (moduleId.startsWith('__')) return null
+
+  const order = CHASSIS_MODULE_ORDERS[section.slot]
+  const targetIndex = order.indexOf(moduleId)
+  if (targetIndex < 0) return null
+
+  for (let i = 0; i < order.length; i += 1) {
+    const anchor = section.modules.find((entry) => entry.moduleId === order[i])
+    if (!anchor) continue
+    return {
+      moduleId,
+      baseCol: anchor.baseCol + (targetIndex - i) * section.blockStride,
+    }
+  }
+
+  return null
 }
 
 export function moduleEpResolvedAnyOtherColumn(

@@ -27,6 +27,7 @@ const SAMPLE_STATE: ModulesEpSyncState = {
       role: 'main',
       mergeTier: 'star_1',
       level: 140,
+      hubEquipped: true,
       substats: [
         { effectId: 'crit-chance', catalogLabel: 'Crit Chance [%]', rarity: 'epic' },
         { effectId: 'super-crit-multi', catalogLabel: 'Super Crit Multi', rarity: 'epic' },
@@ -39,6 +40,7 @@ const SAMPLE_STATE: ModulesEpSyncState = {
       role: 'main',
       mergeTier: 'ancestral',
       level: 140,
+      hubEquipped: true,
       substats: [],
     },
     {
@@ -47,6 +49,7 @@ const SAMPLE_STATE: ModulesEpSyncState = {
       role: 'main',
       mergeTier: 'star_1',
       level: 100,
+      hubEquipped: true,
       substats: [
         { effectId: 'free-attack-upgrade', catalogLabel: 'Free Attack Upgrade [%]', rarity: 'epic' },
         { effectId: 'free-defense-upgrade', catalogLabel: 'Free Defense Upgrade [%]', rarity: 'epic' },
@@ -59,6 +62,7 @@ const SAMPLE_STATE: ModulesEpSyncState = {
       role: 'main',
       mergeTier: 'star_1',
       level: 100,
+      hubEquipped: true,
       substats: [],
     },
   ],
@@ -75,6 +79,7 @@ describe('buildModuleSheetUpdates', () => {
           role: 'main',
           mergeTier: 'rare',
           level: 20,
+          hubEquipped: true,
           substats: [],
         },
       ],
@@ -132,6 +137,7 @@ describe('buildModuleSheetUpdates', () => {
           role: 'assist',
           mergeTier: 'legendary_plus',
           level: 100,
+          hubEquipped: true,
           substats: [
             { effectId: 'attack-speed', catalogLabel: 'Attack Speed', rarity: 'epic' },
           ],
@@ -146,6 +152,42 @@ describe('buildModuleSheetUpdates', () => {
     expect(byRange["'Inventory'!AE4"]).toBe('Attack Speed')
     expect(byRange["'Inventory'!AE3"]).toBe('')
     expect(byRange["'Inventory'!AF3"]).toBe('')
+  })
+
+  it('writes unassigned owned modules to their dedicated columns', () => {
+    const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
+      modules: [
+        {
+          moduleId: 'astralDeliverance',
+          hubSlot: 'cannon',
+          role: 'main',
+          mergeTier: 'star_1',
+          level: 140,
+          hubEquipped: true,
+          substats: [],
+        },
+        {
+          moduleId: 'havocBringer',
+          hubSlot: 'cannon',
+          role: 'main',
+          mergeTier: 'legendary',
+          level: 80,
+          hubEquipped: false,
+          substats: [
+            { effectId: 'attack-speed', catalogLabel: 'Attack Speed', rarity: 'rare' },
+          ],
+        },
+      ],
+    }
+    const byRange = Object.fromEntries(
+      buildModuleSheetUpdates('Inventory', state, LEGACY_LAYOUT).map((u) => [u.range, u.values[0]![0]]),
+    )
+
+    expect(byRange["'Inventory'!F2"]).toBe('Ancestral 1*')
+    expect(byRange["'Inventory'!U2"]).toBe('Legendary')
+    expect(byRange["'Inventory'!U3"]).toBe('Attack Speed')
+    expect(byRange["'Inventory'!V3"]).toBe('Rare')
   })
 
   it('counts equipped inventory columns', () => {

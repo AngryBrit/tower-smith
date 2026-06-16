@@ -347,6 +347,8 @@ function parseBody(raw: unknown):
           : moduleEpInventorySlotForModuleId(moduleId)
       if (!hubSlot) return null
       const role = roleRaw === 'assist' ? 'assist' : 'main'
+      const hubEquippedRaw = (entry as { hubEquipped?: unknown }).hubEquipped
+      const hubEquipped = hubEquippedRaw === undefined ? true : hubEquippedRaw === true
       const substats: ModulesEpEquippedSubstat[] = []
       const substatsRaw =
         (entry as { substats?: unknown }).substats ??
@@ -379,6 +381,7 @@ function parseBody(raw: unknown):
         mergeTier: sanitizeChassisModuleMergeTier(mergeRaw),
         level: Math.max(0, Math.trunc(levelRaw)),
         substats,
+        hubEquipped,
       }
     }
 
@@ -387,7 +390,7 @@ function parseBody(raw: unknown):
       const byKey = new Map<string, ModulesEpEquippedModule>()
       for (const entry of modulesListRaw) {
         const mod = parseModule(entry)
-        if (mod) byKey.set(`${mod.hubSlot}:${mod.role}`, mod)
+        if (mod) byKey.set(`${mod.hubSlot}:${mod.moduleId}`, mod)
       }
       modulesEpState.modules = [...byKey.values()]
     } else {

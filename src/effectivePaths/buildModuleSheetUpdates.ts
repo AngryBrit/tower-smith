@@ -64,9 +64,13 @@ function resolveWriteTarget(
     return { section, baseCol: dedicated.baseCol }
   }
 
-  const anyOther = moduleEpResolvedAnyOtherColumn(section, 1)
-  if (!anyOther) return null
-  return { section, baseCol: anyOther.baseCol }
+  if (equipped.hubEquipped) {
+    const anyOther = moduleEpResolvedAnyOtherColumn(section, 1)
+    if (!anyOther) return null
+    return { section, baseCol: anyOther.baseCol }
+  }
+
+  return null
 }
 
 function clearModuleColumn(
@@ -94,13 +98,28 @@ function clearSectionModuleColumns(
   out: ModuleSheetBatchUpdate[],
   quoted: string,
   layout: ModuleEpResolvedLayout,
+  state: ModulesEpSyncState,
 ): void {
+  const cleared = new Set<string>()
+
   for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
     const section = layout.sections[slot]
     if (!section) continue
     for (const column of section.modules) {
+      const key = `${slot}:${column.baseCol}`
+      if (cleared.has(key)) continue
       clearModuleColumn(out, quoted, section, column.baseCol)
+      cleared.add(key)
     }
+  }
+
+  for (const mod of state.modules) {
+    const target = resolveWriteTarget(layout, mod)
+    if (!target) continue
+    const key = `${mod.hubSlot}:${target.baseCol}`
+    if (cleared.has(key)) continue
+    clearModuleColumn(out, quoted, target.section, target.baseCol)
+    cleared.add(key)
   }
 }
 
@@ -208,7 +227,7 @@ function writeSectionSidebarLevels(
 }
 
 /**
- * Modules Inventory tab — sync equipped modules (main + assist) using a resolved sheet layout.
+ * Modules Inventory tab — sync owned inventory modules using a resolved sheet layout.
  */
 export function buildModuleSheetUpdates(
   sheetTitle: string,
@@ -220,7 +239,7 @@ export function buildModuleSheetUpdates(
 
   resetSectionSidebarLevels(out, quoted, layout)
   writeSectionSidebarLevels(out, quoted, layout, state)
-  clearSectionModuleColumns(out, quoted, layout)
+  clearSectionModuleColumns(out, quoted, layout, state)
 
   for (const equipped of state.modules) {
     writeEquippedModule(out, quoted, layout, equipped)
@@ -231,6 +250,10 @@ export function buildModuleSheetUpdates(
 
 export function countModulesEpEquippedSlots(state: ModulesEpSyncState): number {
   return state.modules.length
+}
+
+export function countModulesEpHubEquippedSlots(state: ModulesEpSyncState): number {
+  return state.modules.filter((mod) => mod.hubEquipped).length
 }
 
 export function countModulesEpEquippedSubstats(state: ModulesEpSyncState): number {

@@ -80,6 +80,38 @@ describe('resolveModuleEpInventoryLayout', () => {
 })
 
 describe('buildModuleSheetUpdates v612', () => {
+  it('extrapolates module columns from catalog order when layout omits columns', () => {
+    const layout = parseModuleEpInventoryLayoutV612(V612_GRID)
+    const sparse = {
+      ...layout,
+      sections: {
+        ...layout.sections,
+        cannon: {
+          ...layout.sections.cannon,
+          modules: layout.sections.cannon.modules.filter((m) => m.moduleId === 'astralDeliverance'),
+        },
+      },
+    }
+    const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
+      modules: [
+        {
+          moduleId: 'havocBringer',
+          hubSlot: 'cannon',
+          role: 'main',
+          mergeTier: 'legendary',
+          level: 80,
+          hubEquipped: false,
+          substats: [],
+        },
+      ],
+    }
+    const byRange = Object.fromEntries(
+      buildModuleSheetUpdates('Inventory', state, sparse).map((u) => [u.range, u.values[0]![0]]),
+    )
+    expect(byRange["'Inventory'!M5"]).toBe('Legendary')
+  })
+
   it('writes main cannon data to row 5 column D and assist to its module column', () => {
     const layout = parseModuleEpInventoryLayoutV612(V612_GRID)
     const state: ModulesEpSyncState = {
@@ -94,6 +126,7 @@ describe('buildModuleSheetUpdates v612', () => {
           role: 'main',
           mergeTier: 'star_2',
           level: 140,
+          hubEquipped: true,
           substats: [],
         },
         {
@@ -102,6 +135,7 @@ describe('buildModuleSheetUpdates v612', () => {
           role: 'assist',
           mergeTier: 'legendary_plus',
           level: 100,
+          hubEquipped: true,
           substats: [],
         },
       ],
@@ -168,6 +202,7 @@ describe('compact Inventory layout', () => {
           role: 'assist',
           mergeTier: 'ancestral',
           level: 90,
+          hubEquipped: true,
           substats: [],
         },
       ],
@@ -193,6 +228,7 @@ describe('compact Inventory layout', () => {
           role: 'main',
           mergeTier: 'star_2',
           level: 140,
+          hubEquipped: true,
           substats: [],
         },
         {
@@ -201,6 +237,7 @@ describe('compact Inventory layout', () => {
           role: 'assist',
           mergeTier: 'legendary_plus',
           level: 100,
+          hubEquipped: true,
           substats: [],
         },
       ],
@@ -227,6 +264,7 @@ describe('compact Inventory layout', () => {
           role: 'main',
           mergeTier: 'star_1',
           level: 140,
+          hubEquipped: true,
           substats: [
             { effectId: 'crit-chance', catalogLabel: 'Crit Chance [%]', rarity: 'epic' },
             { effectId: 'super-crit-multi', catalogLabel: 'Super Crit Multi', rarity: 'epic' },
@@ -238,6 +276,7 @@ describe('compact Inventory layout', () => {
           role: 'assist',
           mergeTier: 'legendary_plus',
           level: 100,
+          hubEquipped: true,
           substats: [
             { effectId: 'attack-speed', catalogLabel: 'Attack Speed', rarity: 'epic' },
           ],
@@ -269,6 +308,7 @@ describe('buildModuleSheetUpdates fallback', () => {
           role: 'main',
           mergeTier: 'star_1',
           level: 140,
+          hubEquipped: true,
           substats: [],
         },
       ],

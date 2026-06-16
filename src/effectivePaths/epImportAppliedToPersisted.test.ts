@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
 import { patchWorkshopModules, selectWorkshopModulePreset } from '../data/workshopModulePresets'
 import { defaultWorkshopPersisted } from '../labPresetsStorage'
 import { modulesEpStateAppliedToPersisted, uwsEpStateAppliedToPersisted } from './epImportAppliedToPersisted'
@@ -20,6 +21,7 @@ const IMPORTED_CANNON: ModulesEpSyncState = {
       role: 'main',
       mergeTier: 'star_1',
       level: 140,
+      hubEquipped: true,
       substats: [],
     },
   ],
@@ -122,5 +124,44 @@ describe('modulesEpStateAppliedToPersisted', () => {
     expect(applied.moduleActivePresetIndex).toBe(1)
     expect(applied.simCannonChassisModuleId).toBe('astralDeliverance')
     expect(applied.modulePresetSnapshots[1]?.simCannonChassisModuleId).toBe('astralDeliverance')
+  })
+
+  it('stores unassigned inventory modules in simChassisModuleConfigs', () => {
+    const state: ModulesEpSyncState = {
+      sectionLevels: modulesEpDefaultSectionLevels(),
+      modules: [
+        {
+          moduleId: 'astralDeliverance',
+          hubSlot: 'cannon',
+          role: 'main',
+          mergeTier: 'star_1',
+          level: 140,
+          hubEquipped: true,
+          substats: [],
+        },
+        {
+          moduleId: 'havocBringer',
+          hubSlot: 'cannon',
+          role: 'main',
+          mergeTier: 'legendary',
+          level: 0,
+          hubEquipped: false,
+          substats: [
+            { effectId: 'attack-speed', catalogLabel: 'Attack Speed', rarity: 'rare' },
+          ],
+        },
+      ],
+    }
+
+    const applied = modulesEpStateAppliedToPersisted(defaultWorkshopPersisted(), state)
+
+    expect(applied.simCannonChassisModuleId).toBe('astralDeliverance')
+    expect(workshopModuleConfigEntry(applied, 'cannon', 'main', 'havocBringer')).toMatchObject({
+      rarity: 'legendary',
+      level: 0,
+    })
+    expect(
+      workshopModuleConfigEntry(applied, 'cannon', 'main', 'havocBringer').submodules,
+    ).toHaveProperty('attack-speed', 'rare')
   })
 })

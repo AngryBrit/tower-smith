@@ -1,8 +1,5 @@
 import {
-  ASSIST_CHASSIS_MODULE_ID_KEY,
-  ASSIST_CHASSIS_MODULE_RARITY_KEY,
-} from '../data/workshopAssistChassisModule'
-import {
+  CHASSIS_MODULE_ORDERS,
   CHASSIS_MODULE_ID_KEY,
   CHASSIS_MODULE_LEVEL_KEY,
   CHASSIS_MODULE_RARITY_KEY,
@@ -10,10 +7,16 @@ import {
   sanitizeChassisModuleMergeTier,
 } from '../data/workshopChassisModuleSelection'
 import {
+  ASSIST_CHASSIS_MODULE_ID_KEY,
+  ASSIST_CHASSIS_MODULE_RARITY_KEY,
+  workshopAssistChassisModuleSelection,
+} from '../data/workshopAssistChassisModule'
+import {
   WORKSHOP_SUBMODULE_SECTIONS,
   submoduleEffectId,
 } from '../data/workshopSubmoduleCatalog'
 import {
+  orderedSlotsFromSelectionMap,
   workshopSubmoduleOrderedSlots,
   workshopSubmoduleSelections,
   type WorkshopSubmoduleModuleRole,
@@ -27,6 +30,11 @@ import {
   type WorkshopAssistModuleSlot,
 } from '../data/workshopSimModules'
 import type { WorkshopChassisModuleMergeTier } from '../data/workshopChassisModuleShared'
+import {
+  workshopModuleConfigEntry,
+  workshopModuleIsOwned,
+  type WorkshopModuleConfigEntry,
+} from '../data/workshopModuleConfigLibrary'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 
 export type ModulesEpEquippedSubstat = {
@@ -44,6 +52,8 @@ export type ModulesEpEquippedModule = {
   mergeTier: WorkshopChassisModuleMergeTier
   level: number
   substats: ModulesEpEquippedSubstat[]
+  /** When true, this module is equipped on the hub (main or assist slot). */
+  hubEquipped: boolean
 }
 
 export type ModulesEpSectionLevels = {
@@ -54,7 +64,7 @@ export type ModulesEpSectionLevels = {
 }
 
 export type ModulesEpSyncState = {
-  /** Equipped modules (main + assist per hub slot) from the active workshop tab. */
+  /** Owned inventory modules (equipped + library) for Effective Paths Inventory columns. */
   modules: ModulesEpEquippedModule[]
   /** Per-hub sidebar level caps written to Inventory “Highest Level” / “Assist Level”. */
   sectionLevels: Record<WorkshopAssistModuleSlot, ModulesEpSectionLevels>
@@ -78,6 +88,24 @@ function submoduleCatalogLabel(slot: WorkshopAssistModuleSlot, effectId: string)
     if (submoduleEffectId(row.label) === effectId) return row.label
   }
   return null
+}
+
+function collectSubstatsFromConfigEntry(
+  slot: WorkshopAssistModuleSlot,
+  entry: WorkshopModuleConfigEntry,
+): ModulesEpEquippedSubstat[] {
+  const ordered = entry.submoduleSlots ?? orderedSlotsFromSelectionMap(entry.submodules)
+  const out: ModulesEpEquippedSubstat[] = []
+  for (const pick of ordered) {
+    if (pick == null) continue
+    const { effectId } = pick
+    const rarity = entry.submodules[effectId] ?? pick.rarity
+    if (!rarity) continue
+    const catalogLabel = submoduleCatalogLabel(slot, effectId)
+    if (!catalogLabel) continue
+    out.push({ effectId, catalogLabel, rarity })
+  }
+  return out
 }
 
 function collectSubstats(
@@ -114,6 +142,7 @@ function equippedMainFromSource(
     mergeTier: sanitizeChassisModuleMergeTier(source[CHASSIS_MODULE_RARITY_KEY[slot]]),
     level: Math.max(0, Math.trunc(source[CHASSIS_MODULE_LEVEL_KEY[slot]] ?? 0)),
     substats: collectSubstats(source.simSubmoduleSelections, slot, 'main'),
+    hubEquipped: true,
   }
 }
 
@@ -130,6 +159,44 @@ function equippedAssistFromSource(
     mergeTier: sanitizeChassisModuleMergeTier(source[ASSIST_CHASSIS_MODULE_RARITY_KEY[slot]]),
     level: Math.max(0, Math.trunc(source[ASSIST_MODULE_LEVEL_KEY[slot]] ?? 0)),
     substats: collectSubstats(source.simSubmoduleSelections, slot, 'assist'),
+    hubEquipped: true,
+  }
+}
+
+function moduleHasStoredConfig(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+  moduleId: string,
+): boolean {
+  const lib = ws.simChassisModuleConfigs?.[slot]
+  return lib?.main[moduleId] != null || lib?.assist[moduleId] != null
+}
+
+function preferredInventoryModuleRole(
+  ws: WorkshopPersistedV1,
+  slot: WorkshopAssistModuleSlot,
+  moduleId: string,
+): ModulesEpEquippedModuleRole {
+  if (workshopAssistChassisModuleSelection(ws, slot).moduleId === moduleId) return 'assist'
+  const lib = ws.simChassisModuleConfigs?.[slot]
+  if (lib?.assist[moduleId] != null && lib?.main[moduleId] == null) return 'assist'
+  return 'main'
+}
+
+function inventoryModuleFromLibraryEntry(
+  slot: WorkshopAssistModuleSlot,
+  role: ModulesEpEquippedModuleRole,
+  moduleId: string,
+  entry: WorkshopModuleConfigEntry,
+): ModulesEpEquippedModule {
+  return {
+    moduleId,
+    hubSlot: slot,
+    role,
+    mergeTier: entry.rarity,
+    level: entry.level,
+    substats: collectSubstatsFromConfigEntry(slot, entry),
+    hubEquipped: false,
   }
 }
 
@@ -140,7 +207,9 @@ function sectionLevelsFromPersisted(
   const levels = modulesEpDefaultSectionLevels()
   for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
     const hubAssistLevel = clampWorkshopAssistModuleLevel(ws[ASSIST_MODULE_LEVEL_KEY[slot]] ?? 0)
-    const equippedAssist = modules.find((m) => m.hubSlot === slot && m.role === 'assist')
+    const equippedAssist = modules.find(
+      (m) => m.hubSlot === slot && m.hubEquipped && m.role === 'assist',
+    )
     levels[slot] = {
       highestPrimaryLevel: clampWorkshopAssistModuleLevel(ws[CHASSIS_MODULE_LEVEL_KEY[slot]] ?? 0),
       highestAssistLevel: equippedAssist
@@ -151,14 +220,50 @@ function sectionLevelsFromPersisted(
   return levels
 }
 
-/** Equipped chassis modules (main + assist) from the active workshop tab only. */
+/** Owned chassis modules (equipped + config library) from the active workshop tab. */
 export function modulesEpStateFromPersisted(ws: WorkshopPersistedV1): ModulesEpSyncState {
   const modules: ModulesEpEquippedModule[] = []
+  const seen = new Set<string>()
+
   for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
     const main = equippedMainFromSource(ws, slot)
-    if (main) modules.push(main)
+    if (main) {
+      modules.push(main)
+      seen.add(`${slot}:${main.moduleId}`)
+    }
     const assist = equippedAssistFromSource(ws, slot)
-    if (assist) modules.push(assist)
+    if (assist) {
+      modules.push(assist)
+      seen.add(`${slot}:${assist.moduleId}`)
+    }
   }
+
+  const library = ws.simChassisModuleConfigs
+  if (library) {
+    for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+      for (const role of ['main', 'assist'] as const) {
+        for (const [moduleId, entry] of Object.entries(library[slot][role])) {
+          const key = `${slot}:${moduleId}`
+          if (seen.has(key)) continue
+          modules.push(inventoryModuleFromLibraryEntry(slot, role, moduleId, entry))
+          seen.add(key)
+        }
+      }
+    }
+  }
+
+  for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+    for (const moduleId of CHASSIS_MODULE_ORDERS[slot]) {
+      const key = `${slot}:${moduleId}`
+      if (seen.has(key)) continue
+      if (!workshopModuleIsOwned(ws, slot, moduleId)) continue
+      if (!moduleHasStoredConfig(ws, slot, moduleId)) continue
+      const role = preferredInventoryModuleRole(ws, slot, moduleId)
+      const entry = workshopModuleConfigEntry(ws, slot, role, moduleId)
+      modules.push(inventoryModuleFromLibraryEntry(slot, role, moduleId, entry))
+      seen.add(key)
+    }
+  }
+
   return { modules, sectionLevels: sectionLevelsFromPersisted(ws, modules) }
 }
