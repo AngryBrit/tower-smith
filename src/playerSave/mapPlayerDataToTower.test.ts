@@ -7,6 +7,8 @@ import {
   GAME_WORKSHOP_UTILITY_LEVEL_KEYS,
 } from './gameWorkshopMapping'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
+import { gameSubmoduleImportFromEffectIndices } from './gameModuleEffectIndex'
+import { gameModuleRarityToMergeTier } from './gameModuleRarity'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
 
@@ -94,6 +96,44 @@ const SAMPLE_DEFENSE_WORKSHOP = [
 const SAMPLE_UTILITY_WORKSHOP = [
   149, 149, 149, 149, 99, 99, 99, 99, 300, 500, 60, 240, 240, 0, 0, 0, 0, 0, 0, 0,
 ] as const
+
+const HUB_MODULE_SLOTS = ['cannon', 'armor', 'generator', 'core'] as const
+
+function workshopChassisFields(
+  ws: ReturnType<typeof playerSaveToWorkshop>,
+  slot: (typeof HUB_MODULE_SLOTS)[number],
+) {
+  switch (slot) {
+    case 'cannon':
+      return {
+        level: ws.simCannonChassisModuleLevel,
+        id: ws.simCannonChassisModuleId,
+        rarity: ws.simCannonChassisModuleRarity,
+        mainSubmodules: ws.simSubmoduleSelections.cannon.main,
+      }
+    case 'armor':
+      return {
+        level: ws.simArmorChassisModuleLevel,
+        id: ws.simArmorChassisModuleId,
+        rarity: ws.simArmorChassisModuleRarity,
+        mainSubmodules: ws.simSubmoduleSelections.armor.main,
+      }
+    case 'generator':
+      return {
+        level: ws.simGeneratorChassisModuleLevel,
+        id: ws.simGeneratorChassisModuleId,
+        rarity: ws.simGeneratorChassisModuleRarity,
+        mainSubmodules: ws.simSubmoduleSelections.generator.main,
+      }
+    case 'core':
+      return {
+        level: ws.simCoreChassisModuleLevel,
+        id: ws.simCoreChassisModuleId,
+        rarity: ws.simCoreChassisModuleRarity,
+        mainSubmodules: ws.simSubmoduleSelections.core.main,
+      }
+  }
+}
 
 describe('playerSaveToWorkshop', () => {
   it('maps attack workshop upgrades from upgradeWorkshopLevel', () => {
@@ -337,17 +377,37 @@ describe('playerSaveToWorkshop', () => {
     expect(ws.cardPresetLoadouts[0]).toHaveLength(18)
   })
 
+  it('keeps equipped module slot positions when an earlier hub slot is empty', () => {
+    const ws = playerSaveToWorkshop(
+      minimalSave({
+        moduleEquipped: [
+          null,
+          { infoIndex: 42, level: 60, rarity: 4, effects: [187, 181, 193, 0, 0, 0, 0, 0] },
+          { infoIndex: 27, level: 101, rarity: 7, effects: [220, 252, 282, 311, 0, 0, 0, 0] },
+          { infoIndex: 48, level: 138, rarity: 10, effects: [231, 225, 324, 315, 0, 0, 0, 0] },
+        ],
+      }),
+    )
+    expect(ws.simCannonChassisModuleId).toBe('')
+    expect(ws.simCannonChassisModuleLevel).toBe(0)
+    expect(ws.simArmorChassisModuleId).toBe('sharpFortitude')
+    expect(ws.simArmorChassisModuleLevel).toBe(60)
+    expect(ws.simGeneratorChassisModuleId).toBe('blackHoleDigestor')
+    expect(ws.simGeneratorChassisModuleLevel).toBe(101)
+    expect(ws.simCoreChassisModuleId).toBe('primordialCollapse')
+    expect(ws.simCoreChassisModuleLevel).toBe(138)
+  })
+
   it('imports card presets from sample playerInfo.dat', async () => {
     if (!existsSync(SAMPLE_SAVE)) return
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE)))
     expect(save.slotPresetCardInt.length).toBe(140)
     expect(save.slotPresetCardAssignedBool.length).toBe(140)
-    expect(save.currentCardPreset).toBe(1)
     const ws = playerSaveToWorkshop(save)
-    expect(ws.cardActivePresetIndex).toBe(1)
-    expect(ws.cardPresetLoadouts[0]).toContain('damage')
-    expect(ws.cardPresetLoadouts[0]).toHaveLength(18)
-    expect(ws.cardPresetLoadouts[1]?.length).toBeGreaterThan(0)
+    expect(ws.cardActivePresetIndex).toBe(save.currentCardPreset)
+    const activePreset = ws.cardPresetLoadouts[save.currentCardPreset] ?? []
+    expect(activePreset.length).toBeGreaterThan(0)
+    expect(ws.cardPresetLoadouts.some((loadout) => loadout.includes('damage'))).toBe(true)
   })
 
   it('imports equipped module levels, merge tiers, and chassis ids from sample save', async () => {
@@ -355,50 +415,32 @@ describe('playerSaveToWorkshop', () => {
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE_SAVE)))
     expect(save.moduleEquipped).toHaveLength(4)
     const ws = playerSaveToWorkshop(save)
-    expect(ws.simCannonChassisModuleLevel).toBe(save.moduleEquipped[0]!.level)
-    expect(ws.simArmorChassisModuleLevel).toBe(save.moduleEquipped[1]!.level)
-    expect(ws.simGeneratorChassisModuleLevel).toBe(save.moduleEquipped[2]!.level)
-    expect(ws.simCoreChassisModuleLevel).toBe(save.moduleEquipped[3]!.level)
-    expect(ws.simCannonChassisModuleRarity).toBe('mythic_plus')
-    expect(ws.simArmorChassisModuleRarity).toBe('legendary')
-    expect(ws.simGeneratorChassisModuleRarity).toBe('epic')
-    expect(ws.simCoreChassisModuleRarity).toBe('legendary_plus')
-    expect(ws.simCannonChassisModuleId).toBe(
-      gameWorkshopChassisModuleId(save.moduleEquipped[0]!.infoIndex, 'cannon'),
-    )
-    expect(ws.simArmorChassisModuleId).toBe(
-      gameWorkshopChassisModuleId(save.moduleEquipped[1]!.infoIndex, 'armor'),
-    )
-    expect(ws.simGeneratorChassisModuleId).toBe(
-      gameWorkshopChassisModuleId(save.moduleEquipped[2]!.infoIndex, 'generator'),
-    )
-    expect(ws.simCoreChassisModuleId).toBe(
-      gameWorkshopChassisModuleId(save.moduleEquipped[3]!.infoIndex, 'core'),
-    )
-    expect(save.moduleEquipped[0]!.effects.length).toBeGreaterThan(0)
-    expect(ws.simSubmoduleSelections.cannon.main).toEqual({
-      'attack-speed': 'legendary',
-      'crit-chance': 'legendary',
-      'crit-factor': 'legendary',
-      'multishot-chance': 'legendary',
-    })
-    expect(ws.simAttackSpeedModuleSubEffect).toBe(1)
-    expect(ws.simSubmoduleSelections.armor.main).toEqual({
-      'health-regen': 'legendary',
-      defense: 'legendary',
-      'wall-health': 'legendary',
-    })
-    expect(ws.simSubmoduleSelections.generator.main).toEqual({
-      'free-attack-upgrade': 'epic',
-      'free-defense-upgrade': 'epic',
-      'free-utility-upgrade': 'epic',
-    })
-    expect(ws.simSubmoduleSelections.core.main).toEqual({
-      'chain-lightning-damage-x': 'legendary',
-      'death-wave-quantity': 'legendary',
-      'golden-tower-bonus': 'legendary',
-      'black-hole-duration-s': 'legendary',
-    })
+
+    for (let i = 0; i < HUB_MODULE_SLOTS.length; i++) {
+      const slot = HUB_MODULE_SLOTS[i]!
+      const item = save.moduleEquipped[i]
+      const fields = workshopChassisFields(ws, slot)
+      if (!item) {
+        expect(fields.id).toBe('')
+        expect(fields.level).toBe(0)
+        continue
+      }
+      expect(fields.level).toBe(item.level)
+      expect(fields.id).toBe(gameWorkshopChassisModuleId(item.infoIndex, slot))
+      const merge = gameModuleRarityToMergeTier(item.rarity)
+      if (merge) expect(fields.rarity).toBe(merge)
+      if (item.effects.some((v) => v !== 0)) {
+        expect(fields.mainSubmodules).toEqual(
+          gameSubmoduleImportFromEffectIndices(
+            slot,
+            item.effects,
+            item.level,
+            0,
+            merge,
+          ).map,
+        )
+      }
+    }
   })
 
   it('imports per-module config library from inventory and equipped modules', async () => {

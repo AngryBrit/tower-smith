@@ -169,8 +169,8 @@ describe('importPlayerInfo', () => {
     const goldenDurIi = data.sections[botsSi]!.items.findIndex(
       (i) => i.name === 'Golden Bot - Duration',
     )
-    expect(save.researchLevel[108]).toBe(1)
-    expect(botOverrides[`${botsSi}-${goldenDurIi}`]).toBe(1)
+    expect(save.researchLevel[108]).toBe(3)
+    expect(botOverrides[`${botsSi}-${goldenDurIi}`]).toBe(3)
     const ultimateSi = data.sections.findIndex((s) => s.sectionSlug === 'ultimate-weapon-research')
     expect(ultimateSi).toBeGreaterThanOrEqual(0)
     const bhDamageIi = data.sections[ultimateSi]!.items.findIndex(

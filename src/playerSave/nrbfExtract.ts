@@ -228,13 +228,13 @@ function readModuleItem(ctx: PlayerDataContext, record: ObjectValue | undefined)
   }
 }
 
-export function getModuleEquipped(ctx: PlayerDataContext): DecodedModuleItem[] {
+/** One entry per chassis hub slot (cannon, armor, generator, core); null = unequipped. */
+export function getModuleEquipped(ctx: PlayerDataContext): (DecodedModuleItem | null)[] {
   const raw = resolveValue(ctx, ctx.player.getValue('moduleEquipped'))
   if (!(raw instanceof BinaryArrayRecord)) return []
-  const out: DecodedModuleItem[] = []
+  const out: (DecodedModuleItem | null)[] = []
   for (const el of raw.elementValues) {
-    const row = readModuleItem(ctx, el)
-    if (row) out.push(row)
+    out.push(readModuleItem(ctx, el))
   }
   return out
 }

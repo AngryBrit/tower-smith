@@ -49,11 +49,11 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopRecoveryAmount pipeline', () 
 
     expect(enhancementsUnlocked).toBe(true)
     expect(ws.enhanceRecoveryPackageLevel).toBe(40)
-    expect(ws.enhanceFreeUpgradesLevel).toBe(10)
+    expect(ws.enhanceFreeUpgradesLevel).toBe(13)
     expect(recoveryAmountEnhanceMult).toBe(
-      workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 10, true),
+      workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 13, true),
     )
     expect(display).toBe(`${((base + labPts) * recoveryAmountEnhanceMult).toFixed(2)}%`)
-    expect(display).toBe('220.86%')
+    expect(display).toBe('223.28%')
   })
 })

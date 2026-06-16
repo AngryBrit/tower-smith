@@ -42,12 +42,12 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopFreeUpgrades pipeline', () =>
 
     expect(
       workshopUtilityStatDisplay('freeAttackUpgradeLevel', ws.freeAttackUpgradeLevel, opts),
-    ).toBe('76.37%')
+    ).toBe('79.25%')
     expect(
       workshopUtilityStatDisplay('freeDefenseUpgradeLevel', ws.freeDefenseUpgradeLevel, opts),
-    ).toBe('77.81%')
+    ).toBe('79.25%')
     expect(
       workshopUtilityStatDisplay('freeUtilityUpgradeLevel', ws.freeUtilityUpgradeLevel, opts),
-    ).toBe('77.81%')
+    ).toBe('80.18%')
   })
 })

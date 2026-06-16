@@ -77,7 +77,7 @@ export type DecodedPlayerSave = {
   ultimateWeaponOn: boolean[]
   ultimateWeaponPlusLevel: number[]
   ultimateWeaponPlusUnlocked: boolean[]
-  moduleEquipped: DecodedModuleItem[]
+  moduleEquipped: (DecodedModuleItem | null)[]
   moduleInventory: DecodedModuleItem[]
   assistModuleSlots: DecodedAssistModuleSlot[]
   assistModulesAvailable: boolean
