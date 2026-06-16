@@ -211,6 +211,28 @@ function decodeArmorAncestralCommonStartRow(
   return null
 }
 
+/** Free Attack Ancestral on ancestral-family generator main (sparse offset 6; table index is next row). */
+const GENERATOR_FREE_ATTACK_ANCESTRAL_INDEX = 184
+
+function decodeGeneratorAncestralFamilyRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+  primaryModuleLevel: number,
+): GameModuleEffectDecode | null {
+  if (primaryModuleLevel > 0) return null
+  if (rawIndex === GENERATOR_FREE_ATTACK_ANCESTRAL_INDEX) {
+    return { slot: 'generator', effectId: 'free-attack-upgrade', rarity: 'ancestral' }
+  }
+  if (
+    (rawIndex === 160 || rawIndex === 161) &&
+    (decoded == null ||
+      (decoded.effectId === 'cash-wave' && decoded.rarity === 'common'))
+  ) {
+    return { slot: 'generator', effectId: 'coins-kill-bonus', rarity: 'ancestral' }
+  }
+  return null
+}
+
 function decodeArmorLandMineRadiusOnAncestralChassis(
   rawIndex: number,
   decoded: GameModuleEffectDecode,
@@ -391,6 +413,11 @@ function gameModuleEffectForSubmoduleImport(
     if (earlyCore != null) return earlyCore
   }
 
+  if (slot === 'generator' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const earlyGenerator = decodeGeneratorAncestralFamilyRemap(rawIndex, null, primaryLevel)
+    if (earlyGenerator != null) return earlyGenerator
+  }
+
   const decoded = gameModuleEffectByIndexForSlot(
     raw,
     slot,
@@ -405,6 +432,10 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'core' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const coreRemap = decodeCoreAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
     if (coreRemap != null) return coreRemap
+  }
+  if (slot === 'generator' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const generatorRemap = decodeGeneratorAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
+    if (generatorRemap != null) return generatorRemap
   }
   if (
     slot === 'generator' &&

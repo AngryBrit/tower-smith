@@ -433,6 +433,7 @@ function decodeGeneratorSparsePlusThree(
   moduleLevel: number,
   primaryModuleLevel: number,
   naive: GameModuleEffectDecode | null,
+  chassisMerge?: WorkshopChassisModuleMergeTier | null,
 ): GameModuleEffectDecode | null {
   if (rawIndex + 3 >= GAME_MODULE_EFFECT_COUNT) return null
   const bumped =
@@ -442,6 +443,16 @@ function decodeGeneratorSparsePlusThree(
   if (bumped.rarity !== 'mythic' && bumped.rarity !== 'ancestral') return null
   if (naive != null && bumped.effectId === naive.effectId) {
     if (bumped.rarity === 'ancestral' && naive.rarity === 'epic') return bumped
+    return null
+  }
+  if (
+    naive != null &&
+    naive.rarity === 'ancestral' &&
+    bumped.effectId !== naive.effectId &&
+    chassisMerge != null &&
+    workshopChassisModuleEffectTier(chassisMerge) === 'ancestral' &&
+    naive.effectId === 'enemy-attack-level-skip'
+  ) {
     return null
   }
   const primaryLevel = Math.max(0, Math.trunc(primaryModuleLevel))
@@ -470,6 +481,28 @@ function decodeArmorAncestralCommonStartRow(
     if (rawIndex - base === 6) {
       return { slot: 'armor', effectId, rarity: 'ancestral' }
     }
+  }
+  return null
+}
+
+/** Free Attack Ancestral on ancestral-family generator main (sparse offset 6; table index is next row). */
+const GENERATOR_FREE_ATTACK_ANCESTRAL_INDEX = 184
+
+function decodeGeneratorAncestralFamilyRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+  primaryModuleLevel: number,
+): GameModuleEffectDecode | null {
+  if (primaryModuleLevel > 0) return null
+  if (rawIndex === GENERATOR_FREE_ATTACK_ANCESTRAL_INDEX) {
+    return { slot: 'generator', effectId: 'free-attack-upgrade', rarity: 'ancestral' }
+  }
+  if (
+    (rawIndex === 160 || rawIndex === 161) &&
+    (decoded == null ||
+      (decoded.effectId === 'cash-wave' && decoded.rarity === 'common'))
+  ) {
+    return { slot: 'generator', effectId: 'coins-kill-bonus', rarity: 'ancestral' }
   }
   return null
 }
@@ -720,6 +753,11 @@ function gameModuleEffectForSubmoduleImport(
     if (earlyCore != null) return earlyCore
   }
 
+  if (slot === 'generator' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const earlyGenerator = decodeGeneratorAncestralFamilyRemap(rawIndex, null, primaryLevel)
+    if (earlyGenerator != null) return earlyGenerator
+  }
+
   const decoded = gameModuleEffectByIndexForSlot(
     raw,
     slot,
@@ -735,12 +773,17 @@ function gameModuleEffectForSubmoduleImport(
     const coreRemap = decodeCoreHighTierRemap(rawIndex, decoded, primaryLevel, chassisMerge)
     if (coreRemap != null) return coreRemap
   }
+  if (slot === 'generator' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const generatorRemap = decodeGeneratorAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
+    if (generatorRemap != null) return generatorRemap
+  }
   if (slot === 'generator' && isHighTierGeneratorChassisMerge(chassisMerge)) {
     const sparse = decodeGeneratorSparsePlusThree(
       rawIndex,
       moduleLevel,
       primaryLevel,
       decoded,
+      chassisMerge,
     )
     if (sparse != null) return sparse
   }

@@ -186,6 +186,46 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes ancestral-family generator main sparse indices for coins kill and free attack', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [215, 193, 160, 184, 0, 0, 0, 0],
+      100,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'free-utility-upgrade',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'coins-kill-bonus',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'free-attack-upgrade',
+      rarity: 'ancestral',
+    })
+  })
+
+  it('keeps enemy attack level skip ancestral at high module level on ancestral generator', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [215, 0, 0, 0, 0, 0, 0, 0],
+      134,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+  })
+
   it('imports compressed ancestral generator indices on Ancestral-tier Project Funding', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'generator',
