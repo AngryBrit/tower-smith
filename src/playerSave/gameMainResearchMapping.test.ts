@@ -168,12 +168,14 @@ describe('mainLabsToOverrides', () => {
     expect(overrides['0-16']).toBe(5)
   })
 
-  it('maps Dissonant Echo Attack/Utility from swapped researchLevel ids 240/238', () => {
+  it('maps Dissonant Echo Attack/Defense/Utility from researchLevel ids 239/240/238', () => {
     const researchLevel = Array.from({ length: 250 }, () => 0)
-    researchLevel[240] = 3
+    researchLevel[239] = 3
+    researchLevel[240] = 5
     researchLevel[238] = 7
     const overrides = mainLabsToOverrides(mainResearchData(), researchLevel)
     expect(overrides['0-17']).toBe(3)
+    expect(overrides['0-18']).toBe(5)
     expect(overrides['0-19']).toBe(7)
   })
 })

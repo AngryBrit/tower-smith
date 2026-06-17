@@ -21,8 +21,8 @@ export const MAIN_RESEARCH_LEVEL_ID_BY_LAB_NAME = {
   'Enhancement Attack - Coin Discount': 154,
   'Enhancement Defense - Coin Discount': 135,
   'Enhancement Utility - Coin Discount': 227,
-  'Dissonant Echo - Attack': 240,
-  'Dissonant Echo - Defense': 239,
+  'Dissonant Echo - Attack': 239,
+  'Dissonant Echo - Defense': 240,
   'Dissonant Echo - Utility': 238,
   'Dissonant Echo - Ultimate Weapons': 241,
 } as const satisfies Record<string, number>
