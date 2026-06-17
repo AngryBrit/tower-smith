@@ -165,6 +165,28 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Amplifying Strike ancestral main sparse indices', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'cannon',
+      [6, 39, 49, 24, 0, 0, 0, 0],
+      100,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'attack-speed', rarity: 'ancestral' },
+      { effectId: 'rapid-fire-chance', rarity: 'ancestral' },
+      { effectId: 'rapid-fire-duration', rarity: 'ancestral' },
+      { effectId: 'damage-meter-m', rarity: 'common' },
+    ])
+    expect(imported.map).toMatchObject({
+      'attack-speed': 'ancestral',
+      'rapid-fire-chance': 'ancestral',
+      'rapid-fire-duration': 'ancestral',
+      'damage-meter-m': 'common',
+    })
+  })
+
   it('keeps rapid-fire rare at save index 39 on non-ancestral cannon chassis', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'cannon',
@@ -226,7 +248,7 @@ describe('gameModuleEffectIndex', () => {
   it('decodes ancestral-family generator main sparse indices for coins kill and free attack', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'generator',
-      [215, 193, 160, 184, 0, 0, 0, 0],
+      [215, 193, 172, 184, 0, 0, 0, 0],
       100,
       0,
       'star_2',
@@ -319,6 +341,38 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Project Funding ancestral main sparse indices (recovery, cash bonus)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [196, 212, 160, 162, 0, 0, 0, 0],
+      134,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'recovery-amount',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'cash-bonus',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'cash-wave',
+      rarity: 'rare',
+    })
+    expect(imported.map).toMatchObject({
+      'recovery-amount': 'ancestral',
+      'enemy-attack-level-skip': 'ancestral',
+      'cash-bonus': 'ancestral',
+      'cash-wave': 'rare',
+    })
+  })
+
   it('decodes level-offset effect index 330 as Package Chance mythic at 210', () => {
     expect(gameModuleEffectByIndex(330, 120)).toEqual(gameModuleEffectByIndex(210))
     expect(gameModuleEffectByIndex(330, 119)).toEqual(gameModuleEffectByIndex(211))
@@ -368,6 +422,48 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Om Chip epic main sparse indices (GT bonus + CL quantity + CL chance)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [280, 227, 228, 0, 0, 0, 0, 0],
+      60,
+      0,
+      'epic_plus',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'golden-tower-bonus',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'chain-lightning-quantity',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'chain-lightning-chance',
+      rarity: 'rare',
+    })
+    expect(imported.map).toMatchObject({
+      'golden-tower-bonus': 'epic',
+      'chain-lightning-quantity': 'epic',
+      'chain-lightning-chance': 'rare',
+    })
+  })
+
+  it('decodes Om Chip epic assist sparse indices when a main core is equipped', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [280, 227, 228, 0, 0, 0, 0, 0],
+      60,
+      180,
+      'epic_plus',
+    )
+    expect(imported.ordered.slice(0, 3)).toEqual([
+      { effectId: 'golden-tower-bonus', rarity: 'epic' },
+      { effectId: 'chain-lightning-quantity', rarity: 'epic' },
+      { effectId: 'chain-lightning-chance', rarity: 'rare' },
+    ])
+  })
+
   it('decodes Dimension Core main effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'core',
@@ -400,6 +496,38 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Dimension Core ancestral main sparse indices (chrono + smart missiles)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [230, 222, 264, 234, 0, 0, 0, 0],
+      138,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'chain-lightning-chance',
+      rarity: 'legendary',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'chain-lightning-damage-x',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'chrono-field-speed-reduction',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'smart-missiles-damage',
+      rarity: 'rare',
+    })
+    expect(imported.map).toMatchObject({
+      'chain-lightning-chance': 'legendary',
+      'chain-lightning-damage-x': 'ancestral',
+      'chrono-field-speed-reduction': 'ancestral',
+      'smart-missiles-damage': 'rare',
+    })
+  })
+
   it('decodes Harmony Conductor assist core effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'core',
@@ -429,6 +557,70 @@ describe('gameModuleEffectIndex', () => {
       'golden-tower-bonus': 'ancestral',
       'spotlight-angle': 'ancestral',
       'black-hole-size-m': 'epic',
+    })
+  })
+
+  it('decodes Multiverse Nexus ancestral main sparse indices', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [287, 308, 326, 227, 0, 0, 0, 0],
+      134,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'golden-tower-duration-s',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'black-hole-size-m',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'spotlight-angle',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'chain-lightning-chance',
+      rarity: 'common',
+    })
+    expect(imported.map).toMatchObject({
+      'golden-tower-duration-s': 'ancestral',
+      'black-hole-size-m': 'mythic',
+      'spotlight-angle': 'ancestral',
+      'chain-lightning-chance': 'common',
+    })
+  })
+
+  it('decodes Magnetic Hook epic main sparse indices', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [305, 311, 310, 298, 0, 0, 0, 0],
+      60,
+      0,
+      'epic_plus',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'black-hole-size-m',
+      rarity: 'common',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'black-hole-duration-s',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'black-hole-cooldown-s',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'poison-swamp-duration-s',
+      rarity: 'mythic',
+    })
+    expect(imported.map).toMatchObject({
+      'black-hole-size-m': 'common',
+      'black-hole-duration-s': 'mythic',
+      'black-hole-cooldown-s': 'mythic',
+      'poison-swamp-duration-s': 'mythic',
     })
   })
 
@@ -559,6 +751,87 @@ describe('gameModuleEffectIndex', () => {
     expect(imported.ordered[3]).toMatchObject({ effectId: 'thorns-damage', rarity: 'epic' })
   })
 
+  it('decodes Negative Mass Projector legendary orb speed at index 115', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [81, 115, 90, 0, 0, 0, 0, 0],
+      60,
+      0,
+      'epic_plus',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'health-regen',
+      rarity: 'common',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'orb-speed',
+      rarity: 'legendary',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'defense',
+      rarity: 'legendary',
+    })
+    expect(imported.map).toMatchObject({
+      'health-regen': 'common',
+      'orb-speed': 'legendary',
+      defense: 'legendary',
+    })
+  })
+
+  it('decodes Anti-Cube Portal ancestral main sparse indices', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [120, 128, 118, 84, 0, 0, 0, 0],
+      60,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'orbs',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'shockwave-frequency-s',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'orb-speed',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'health-regen',
+      rarity: 'legendary',
+    })
+    expect(imported.map).toMatchObject({
+      orbs: 'ancestral',
+      'shockwave-frequency-s': 'ancestral',
+      'orb-speed': 'ancestral',
+      'health-regen': 'legendary',
+    })
+  })
+
+  it('decodes Space Displacer ancestral main sparse indices', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [133, 120, 114, 146, 0, 0, 0, 0],
+      100,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'land-mine-chance', rarity: 'ancestral' },
+      { effectId: 'orbs', rarity: 'ancestral' },
+      { effectId: 'orb-speed', rarity: 'legendary' },
+      { effectId: 'death-defy', rarity: 'ancestral' },
+    ])
+    expect(imported.map).toMatchObject({
+      'land-mine-chance': 'ancestral',
+      orbs: 'ancestral',
+      'orb-speed': 'legendary',
+      'death-defy': 'ancestral',
+    })
+  })
+
   it('decodes Orbital Augment armor assist effects (petethered)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'armor',
@@ -636,6 +909,94 @@ describe('gameModuleEffectIndex', () => {
       'health-regen': 'common',
       'land-mine-chance': 'mythic',
     })
+  })
+
+  it('decodes Pulsar Harvester main generator submodule picks below Lv.130', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [192, 160, 211, 188, 0, 0, 0, 0],
+      100,
+      0,
+      'mythic',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'free-utility-upgrade',
+      rarity: 'rare',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'cash-wave',
+      rarity: 'common',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'mythic',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'free-defense-upgrade',
+      rarity: 'legendary',
+    })
+  })
+
+  it('decodes Pulsar Harvester main generator when slot 3 uses Package Chance epic index 208', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [192, 160, 208, 188, 0, 0, 0, 0],
+      100,
+      0,
+      'mythic',
+    )
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'mythic',
+    })
+  })
+
+  it('decodes Galaxy Compressor ancestral main below Lv.130 (208 then 211)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [155, 219, 208, 211, 0, 0, 0, 0],
+      100,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'cash-bonus', rarity: 'common' },
+      { effectId: 'enemy-health-level-skip', rarity: 'ancestral' },
+      { effectId: 'package-chance', rarity: 'ancestral' },
+      { effectId: 'enemy-attack-level-skip', rarity: 'mythic' },
+    ])
+  })
+
+  it('decodes Galaxy Compressor ancestral main with duplicate index 211 below Lv.130', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [155, 219, 211, 211, 0, 0, 0, 0],
+      100,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'cash-bonus', rarity: 'common' },
+      { effectId: 'enemy-health-level-skip', rarity: 'ancestral' },
+      { effectId: 'package-chance', rarity: 'ancestral' },
+      { effectId: 'enemy-attack-level-skip', rarity: 'mythic' },
+    ])
+  })
+
+  it('keeps first Package Chance ancestral at index 211 on Galaxy Compressor above Lv.130', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [155, 219, 211, 211, 0, 0, 0, 0],
+      180,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'cash-bonus', rarity: 'common' },
+      { effectId: 'enemy-health-level-skip', rarity: 'ancestral' },
+      { effectId: 'package-chance', rarity: 'ancestral' },
+      { effectId: 'enemy-attack-level-skip', rarity: 'mythic' },
+    ])
   })
 
   it('decodes Pulsar Harvester assist generator effects (petethered)', () => {

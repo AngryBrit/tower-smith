@@ -434,7 +434,40 @@ function decodeGeneratorSparsePlusThree(
   primaryModuleLevel: number,
   naive: GameModuleEffectDecode | null,
   chassisMerge?: WorkshopChassisModuleMergeTier | null,
+  hasPriorPackageChance = false,
 ): GameModuleEffectDecode | null {
+  const primaryLevel = Math.max(0, Math.trunc(primaryModuleLevel))
+  const level = Math.max(0, Math.trunc(moduleLevel))
+  const chassisTier =
+    chassisMerge != null ? workshopChassisModuleEffectTier(chassisMerge) : null
+  const mainLegendaryPlusGenerator =
+    primaryLevel === 0 &&
+    chassisTier != null &&
+    (chassisTier === 'legendary' ||
+      chassisTier === 'mythic' ||
+      chassisTier === 'ancestral')
+  const ancestralFamilyGenerator =
+    chassisMerge != null && isAncestralFamilyChassisMerge(chassisMerge)
+
+  // Package Chance epic (208) on Mythic+ main generator → Enemy Attack Level Skip mythic at +6 (214).
+  if (
+    naive?.effectId === 'package-chance' &&
+    naive.rarity === 'epic' &&
+    mainLegendaryPlusGenerator &&
+    !ancestralFamilyGenerator &&
+    rawIndex + 6 < GAME_MODULE_EFFECT_COUNT
+  ) {
+    const plusSix =
+      decodeGeneratorEffectAtIndex(rawIndex + 6, moduleLevel) ??
+      decodeGeneratorEffectAtIndex(rawIndex + 6, 0)
+    if (
+      plusSix?.effectId === 'enemy-attack-level-skip' &&
+      plusSix.rarity === 'mythic'
+    ) {
+      return plusSix
+    }
+  }
+
   if (rawIndex + 3 >= GAME_MODULE_EFFECT_COUNT) return null
   const bumped =
     decodeGeneratorEffectAtIndex(rawIndex + 3, moduleLevel) ??
@@ -455,11 +488,31 @@ function decodeGeneratorSparsePlusThree(
   ) {
     return null
   }
-  const primaryLevel = Math.max(0, Math.trunc(primaryModuleLevel))
-  const level = Math.max(0, Math.trunc(moduleLevel))
   if (bumped.effectId !== naive?.effectId) {
+    // Ancestral-family main: index 211 bumps to Attack Skip mythic only after a prior Package Chance pick.
+    if (
+      ancestralFamilyGenerator &&
+      mainLegendaryPlusGenerator &&
+      rawIndex === 211 &&
+      naive?.effectId === 'package-chance' &&
+      naive.rarity === 'ancestral' &&
+      bumped.effectId === 'enemy-attack-level-skip' &&
+      bumped.rarity === 'mythic'
+    ) {
+      return hasPriorPackageChance ? bumped : null
+    }
     if (primaryLevel > level) return bumped
     if (primaryLevel === 0 && level >= 130) return bumped
+    // Package Chance ancestral (211) on main generator → Enemy Attack Level Skip mythic at +3 (214).
+    if (
+      mainLegendaryPlusGenerator &&
+      !ancestralFamilyGenerator &&
+      naive?.effectId === 'package-chance' &&
+      bumped.effectId === 'enemy-attack-level-skip' &&
+      bumped.rarity === 'mythic'
+    ) {
+      return bumped
+    }
   }
   return null
 }
@@ -485,6 +538,55 @@ function decodeArmorAncestralCommonStartRow(
   return null
 }
 
+/** Ancestral-family armor main modules store sparse indices on epic-start / land-mine rows. */
+function decodeArmorAncestralFamilyRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+  primaryModuleLevel: number,
+): GameModuleEffectDecode | null {
+  if (primaryModuleLevel > 0) return null
+  if (
+    rawIndex === 120 &&
+    (decoded == null ||
+      (decoded.effectId === 'shockwave-size' && decoded.rarity === 'epic'))
+  ) {
+    return { slot: 'armor', effectId: 'orbs', rarity: 'ancestral' }
+  }
+  if (
+    rawIndex === 128 &&
+    (decoded == null ||
+      (decoded.effectId === 'land-mine-chance' && decoded.rarity === 'rare'))
+  ) {
+    return { slot: 'armor', effectId: 'shockwave-frequency-s', rarity: 'ancestral' }
+  }
+  if (
+    rawIndex === 118 &&
+    (decoded == null || (decoded.effectId === 'orbs' && decoded.rarity === 'mythic'))
+  ) {
+    return { slot: 'armor', effectId: 'orb-speed', rarity: 'ancestral' }
+  }
+  if (
+    rawIndex === 133 &&
+    (decoded == null ||
+      (decoded.effectId === 'land-mine-damage' && decoded.rarity === 'rare'))
+  ) {
+    return { slot: 'armor', effectId: 'land-mine-chance', rarity: 'ancestral' }
+  }
+  if (
+    rawIndex === 114 &&
+    (decoded == null || (decoded.effectId === 'orb-speed' && decoded.rarity === 'epic'))
+  ) {
+    return { slot: 'armor', effectId: 'orb-speed', rarity: 'legendary' }
+  }
+  if (
+    rawIndex === 146 &&
+    (decoded == null || (decoded.effectId === 'wall-health' && decoded.rarity === 'epic'))
+  ) {
+    return { slot: 'armor', effectId: 'death-defy', rarity: 'ancestral' }
+  }
+  return null
+}
+
 /** Common-start cannon rows use sparse offset 6 for Ancestral on ancestral-family chassis. */
 const CANNON_COMMON_START_ANCESTRAL_ROWS: readonly {
   base: number
@@ -493,15 +595,40 @@ const CANNON_COMMON_START_ANCESTRAL_ROWS: readonly {
 
 function decodeCannonAncestralFamilyEarlyRemap(
   rawIndex: number,
+  submoduleSlotIndex: number,
 ): GameModuleEffectDecode | null {
   for (const { base, effectId } of CANNON_COMMON_START_ANCESTRAL_ROWS) {
     if (rawIndex - base === 6) {
       return { slot: 'cannon', effectId, rarity: 'ancestral' }
     }
   }
-  // Multishot Targets epic-start row: mythic at 38, ancestral sparse at 39 (table is next row).
-  if (rawIndex === 39) {
+  // Multishot Targets epic-start row: mythic at 38, ancestral sparse at 39 (first submodule slot only).
+  if (rawIndex === 39 && submoduleSlotIndex === 0) {
     return { slot: 'cannon', effectId: 'multishot-targets', rarity: 'ancestral' }
+  }
+  return null
+}
+
+/** Ancestral-family cannon main modules store sparse indices on rapid-fire / bounce-shot rows. */
+function decodeCannonAncestralFamilyRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+  primaryModuleLevel: number,
+): GameModuleEffectDecode | null {
+  if (primaryModuleLevel > 0) return null
+  if (
+    rawIndex === 39 &&
+    (decoded == null ||
+      (decoded.effectId === 'rapid-fire-chance' && decoded.rarity === 'rare'))
+  ) {
+    return { slot: 'cannon', effectId: 'rapid-fire-chance', rarity: 'ancestral' }
+  }
+  if (
+    rawIndex === 49 &&
+    (decoded == null ||
+      (decoded.effectId === 'bounce-shot-chance' && decoded.rarity === 'rare'))
+  ) {
+    return { slot: 'cannon', effectId: 'rapid-fire-duration', rarity: 'ancestral' }
   }
   return null
 }
@@ -519,11 +646,18 @@ function decodeGeneratorAncestralFamilyRemap(
     return { slot: 'generator', effectId: 'free-attack-upgrade', rarity: 'ancestral' }
   }
   if (
+    rawIndex === 196 &&
+    (decoded == null ||
+      (decoded.effectId === 'interest-wave' && decoded.rarity === 'epic'))
+  ) {
+    return { slot: 'generator', effectId: 'recovery-amount', rarity: 'ancestral' }
+  }
+  if (
     (rawIndex === 160 || rawIndex === 161) &&
     (decoded == null ||
       (decoded.effectId === 'cash-wave' && decoded.rarity === 'common'))
   ) {
-    return { slot: 'generator', effectId: 'coins-kill-bonus', rarity: 'ancestral' }
+    return { slot: 'generator', effectId: 'cash-bonus', rarity: 'ancestral' }
   }
   if (
     (rawIndex === 172 || rawIndex === 173) &&
@@ -665,6 +799,26 @@ function decodeCoreHighTierRemap(
       return findCoreEffectWithRarity('black-hole-duration-s', 'mythic')
     }
   }
+  if (
+    primaryModuleLevel === 0 &&
+    (chassisEffectTier === 'mythic' || chassisEffectTier === 'ancestral')
+  ) {
+    if (rawIndex === 287) {
+      return { slot: 'core', effectId: 'golden-tower-duration-s', rarity: 'ancestral' }
+    }
+    if (rawIndex === 308) {
+      return findCoreEffectWithRarity('black-hole-size-m', 'mythic')
+    }
+    if (rawIndex === 224 || rawIndex === 227) {
+      return { slot: 'core', effectId: 'chain-lightning-chance', rarity: 'common' }
+    }
+    if (rawIndex === 264) {
+      return { slot: 'core', effectId: 'chrono-field-speed-reduction', rarity: 'ancestral' }
+    }
+    if (rawIndex === 234) {
+      return { slot: 'core', effectId: 'smart-missiles-damage', rarity: 'rare' }
+    }
+  }
   if (decoded == null) return null
 
   const row = findCoreRowSpanForIndex(rawIndex)
@@ -727,7 +881,31 @@ function decodeCoreEpicMainSparseRemap(
   primaryModuleLevel: number,
   chassisMerge?: WorkshopChassisModuleMergeTier | null,
 ): GameModuleEffectDecode | null {
-  if (!isEpicTierCoreChassisMerge(chassisMerge) || primaryModuleLevel > 0) {
+  if (!isEpicTierCoreChassisMerge(chassisMerge)) {
+    return null
+  }
+  if (rawIndex === 227) {
+    return findCoreEffectWithRarity('chain-lightning-quantity', 'epic')
+  }
+  if (rawIndex === 228) {
+    return { slot: 'core', effectId: 'chain-lightning-chance', rarity: 'rare' }
+  }
+  if (rawIndex === 305) {
+    return { slot: 'core', effectId: 'black-hole-size-m', rarity: 'common' }
+  }
+  if (rawIndex === 311) {
+    return findCoreEffectWithRarity('black-hole-duration-s', 'mythic')
+  }
+  if (rawIndex === 298 || rawIndex === 294) {
+    return findCoreEffectWithRarity('poison-swamp-duration-s', 'mythic')
+  }
+  if (rawIndex === 264) {
+    return { slot: 'core', effectId: 'chrono-field-speed-reduction', rarity: 'ancestral' }
+  }
+  if (rawIndex === 234) {
+    return { slot: 'core', effectId: 'smart-missiles-damage', rarity: 'rare' }
+  }
+  if (primaryModuleLevel > 0) {
     return null
   }
   if (rawIndex === 219) {
@@ -802,6 +980,7 @@ function decodeArmorEpicAtLegendaryIndex(
   decoded: GameModuleEffectDecode,
 ): GameModuleEffectDecode | null {
   if (decoded.slot !== 'armor' || decoded.rarity !== 'legendary') return null
+  if (decoded.effectId === 'orb-speed') return null
   const prev = gameModuleEffectByIndex(rawIndex - 1, 0)
   if (prev == null || prev.slot !== 'armor' || prev.effectId !== decoded.effectId) {
     return null
@@ -868,6 +1047,8 @@ function gameModuleEffectForSubmoduleImport(
   moduleLevel: number,
   primaryModuleLevel: number,
   chassisMerge?: WorkshopChassisModuleMergeTier | null,
+  hasPriorPackageChance = false,
+  submoduleSlotIndex = 0,
 ): GameModuleEffectDecode | null {
   const primaryLevel = Number.isFinite(primaryModuleLevel)
     ? Math.max(0, Math.trunc(primaryModuleLevel))
@@ -887,6 +1068,8 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const ancestralRow = decodeArmorAncestralCommonStartRow(rawIndex)
     if (ancestralRow != null) return ancestralRow
+    const armorAncestral = decodeArmorAncestralFamilyRemap(rawIndex, null, primaryLevel)
+    if (armorAncestral != null) return armorAncestral
     if (rawIndex === 150) {
       return { slot: 'armor', effectId: 'wall-health', rarity: 'ancestral' }
     }
@@ -913,8 +1096,13 @@ function gameModuleEffectForSubmoduleImport(
   }
 
   if (slot === 'cannon' && isAncestralFamilyChassisMerge(chassisMerge)) {
-    const cannonAncestral = decodeCannonAncestralFamilyEarlyRemap(rawIndex)
+    const cannonAncestral = decodeCannonAncestralFamilyEarlyRemap(
+      rawIndex,
+      submoduleSlotIndex,
+    )
     if (cannonAncestral != null) return cannonAncestral
+    const cannonSparse = decodeCannonAncestralFamilyRemap(rawIndex, null, primaryLevel)
+    if (cannonSparse != null) return cannonSparse
   }
 
   const decoded = gameModuleEffectByIndexForSlot(
@@ -927,6 +1115,8 @@ function gameModuleEffectForSubmoduleImport(
   if (slot === 'armor' && isAncestralFamilyChassisMerge(chassisMerge)) {
     const landMine = decodeArmorLandMineRadiusOnAncestralChassis(rawIndex, decoded)
     if (landMine != null) return landMine
+    const armorAncestral = decodeArmorAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
+    if (armorAncestral != null) return armorAncestral
   }
   if (slot === 'core' && isHighTierCoreChassisMerge(chassisMerge)) {
     const coreRemap = decodeCoreHighTierRemap(rawIndex, decoded, primaryLevel, chassisMerge)
@@ -945,6 +1135,10 @@ function gameModuleEffectForSubmoduleImport(
     const generatorRemap = decodeGeneratorAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
     if (generatorRemap != null) return generatorRemap
   }
+  if (slot === 'cannon' && isAncestralFamilyChassisMerge(chassisMerge)) {
+    const cannonRemap = decodeCannonAncestralFamilyRemap(rawIndex, decoded, primaryLevel)
+    if (cannonRemap != null) return cannonRemap
+  }
   if (slot === 'generator' && isHighTierGeneratorChassisMerge(chassisMerge)) {
     const sparse = decodeGeneratorSparsePlusThree(
       rawIndex,
@@ -952,6 +1146,7 @@ function gameModuleEffectForSubmoduleImport(
       primaryLevel,
       decoded,
       chassisMerge,
+      hasPriorPackageChance,
     )
     if (sparse != null) return sparse
   }
@@ -1000,6 +1195,7 @@ export function gameSubmoduleImportFromEffectIndices(
     () => null,
   )
   const map: WorkshopSubmoduleSelectionMap = {}
+  let hasPackageChance = false
   for (let si = 0; si < effectIndices.length && si < ordered.length; si++) {
     const raw = effectIndices[si]!
     if (raw === 0) continue
@@ -1009,11 +1205,16 @@ export function gameSubmoduleImportFromEffectIndices(
       moduleLevel,
       primaryModuleLevel,
       chassisMerge,
+      hasPackageChance,
+      si,
     )
     if (decoded == null) continue
     const pick = { effectId: decoded.effectId, rarity: decoded.rarity }
     ordered[si] = pick
     map[decoded.effectId] = decoded.rarity
+    if (decoded.effectId === 'package-chance') {
+      hasPackageChance = true
+    }
   }
   return { map, ordered }
 }
