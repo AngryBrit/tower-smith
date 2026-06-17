@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3115_headline: "What's new in v3.1.15",
+  whats_new_3115_body:
+    'Module submodule import fixes for Galaxy Compressor, Space Displacer, Amplifying Strike, Anti-Cube Portal, Project Funding, OM Chip, Dimension Core, and other high-tier chassis — re-import playerInfo.dat to refresh picks. Wormhole Redirector inventory mapping corrected. Dissonant Echo lab Attack/Defense slots and 5th Anniversary relic stats fixed.',
   whats_new_3114_headline: "What's new in v3.1.14",
   whats_new_3114_body:
     'Module inventory stays fully configurable until you import playerInfo.dat — manual picks no longer lock out other chassis modules. Sharp Fortitude Wall Health submodule rarity imports correctly on legendary and ancestral armor. Owned inventory syncs to Effective Paths; modules hub layout polish. Dissonance module icon added.',

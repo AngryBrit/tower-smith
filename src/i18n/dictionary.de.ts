@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3115_headline: 'Neu in v3.1.15',
+  whats_new_3115_body:
+    'Modul-Submodule-Import für Galaxy Compressor, Space Displacer, Amplifying Strike, Anti-Cube Portal, Project Funding, OM Chip, Dimension Core und weitere High-Tier-Chassis — Spielstand erneut importieren, um Submodule zu aktualisieren. Wormhole-Redirector-Inventar-Zuordnung korrigiert. Dissonant-Echo-Lab Angriff/Verteidigung und 5th-Anniversary-Relikt-Stats behoben.',
   whats_new_3114_headline: 'Neu in v3.1.14',
   whats_new_3114_body:
     'Modul-Inventar bleibt voll konfigurierbar, bis du playerInfo.dat importierst — manuelle Auswahl sperrt keine anderen Chassis-Module mehr. Sharp Fortitude Wall-Health-Submodule importieren auf legendären und ancestral Rüstungen mit korrekter Legendary-Stufe. Eigenes Inventar synchronisiert mit Effective Paths; Feinschliff am Modul-Hub-Layout. Dissonance-Modul-Icon ergänzt.',

@@ -5,6 +5,24 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.15] - 2026-06-17
+
+### Fixed
+
+- **Module submodule import** — Sparse save effect indices decode correctly for Galaxy Compressor, Space Displacer, Amplifying Strike, Anti-Cube Portal, Project Funding, OM Chip, Dimension Core, Multiverse Nexus, Magnetic Hook, Negative Mass Projector, and related high-tier picks. Re-import `playerInfo.dat` if submodule rows still look wrong.
+- **Wormhole Redirector inventory mapping** — Armor module `infoIndex` 18/21 no longer swaps Wormhole Redirector and Negative Mass Projector after save import.
+- **Dissonant Echo lab import** — Attack and Defense lab slots no longer swap on import.
+- **5th Anniversary relic stats** — Relic bonus values match in-game data.
+
+### Changed
+
+- **Lab data dialog** — Scrollbars styled to match app picker dialogs.
+
+### Docs
+
+- README: version **3.1.15**.
+- What's new banner (en/de/es).
+
 ## [3.1.14] - 2026-06-17
 
 ### Added

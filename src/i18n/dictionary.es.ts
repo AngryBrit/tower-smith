@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3115_headline: 'Novedades en v3.1.15',
+  whats_new_3115_body:
+    'Correcciones de importación de submódulos para Galaxy Compressor, Space Displacer, Amplifying Strike, Anti-Cube Portal, Project Funding, OM Chip, Dimension Core y otros chasis de alto nivel — vuelve a importar playerInfo.dat para actualizar los picks. Asignación de inventario de Wormhole Redirector corregida. Ranuras de ataque/defensa del lab Dissonant Echo y stats de reliquias del 5.º aniversario corregidas.',
   whats_new_3114_headline: 'Novedades en v3.1.14',
   whats_new_3114_body:
     'El inventario de módulos sigue totalmente configurable hasta importar playerInfo.dat — las elecciones manuales ya no bloquean otros módulos de chasis. La rareza del submódulo Wall Health de Sharp Fortitude se importa correctamente en armaduras legendarias y ancestral. El inventario propio se sincroniza con Effective Paths; retoques de diseño en el hub de módulos. Icono del módulo Dissonance añadido.',
