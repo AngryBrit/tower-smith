@@ -5,6 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.14] - 2026-06-17
+
+### Added
+
+- **Dissonance module icon** — Chassis module art asset under `public/icons/`.
+
+### Changed
+
+- **Modules inventory** — All chassis modules stay manually configurable until you import `playerInfo.dat`; ownership filtering applies only after a save import.
+- **Effective Paths module inventory** — Owned modules sync to the Modules Inventory sheet (hub-equipped vs library-only rows).
+- **Modules hub layout** — Spacing tweaks for hub slots and assist meta labels.
+
+### Fixed
+
+- **Sharp Fortitude submodule import** — Wall Health picks decode at the correct Legendary rarity on legendary and ancestral armor modules (was forced to Epic).
+
+### Docs
+
+- README: version **3.1.14**.
+- What's new banner (en/de/es).
+
 ## [3.1.13] - 2026-06-16
 
 ### Changed

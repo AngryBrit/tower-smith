@@ -29,7 +29,6 @@ import {
   ASSIST_MODULE_LEVEL_KEY,
   clampWorkshopAssistModuleLevel,
   workshopAssistModuleLevel,
-  WORKSHOP_ASSIST_MODULE_SLOTS,
   type WorkshopAssistModuleSlot,
 } from './workshopSimModules'
 import {

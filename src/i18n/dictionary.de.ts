@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3114_headline: 'Neu in v3.1.14',
+  whats_new_3114_body:
+    'Modul-Inventar bleibt voll konfigurierbar, bis du playerInfo.dat importierst — manuelle Auswahl sperrt keine anderen Chassis-Module mehr. Sharp Fortitude Wall-Health-Submodule importieren auf legendären und ancestral Rüstungen mit korrekter Legendary-Stufe. Eigenes Inventar synchronisiert mit Effective Paths; Feinschliff am Modul-Hub-Layout. Dissonance-Modul-Icon ergänzt.',
   whats_new_3113_headline: 'Neu in v3.1.13',
   whats_new_3113_body:
     'Modul-Import-Fixes: Ausgerüstete Hub-Slots bleiben ausgerichtet, wenn ein früherer Slot leer ist; Submodule für Orbital Augment, Galaxy Compressor, Shrink Ray, Sharp Fortitude, Black Hole Digestor und Dimension Core. Uneingebaute Module im Inventar sind besser sichtbar. Spielstand erneut importieren, um Submodule zu aktualisieren.',

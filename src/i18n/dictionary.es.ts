@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3114_headline: 'Novedades en v3.1.14',
+  whats_new_3114_body:
+    'El inventario de módulos sigue totalmente configurable hasta importar playerInfo.dat — las elecciones manuales ya no bloquean otros módulos de chasis. La rareza del submódulo Wall Health de Sharp Fortitude se importa correctamente en armaduras legendarias y ancestral. El inventario propio se sincroniza con Effective Paths; retoques de diseño en el hub de módulos. Icono del módulo Dissonance añadido.',
   whats_new_3113_headline: 'Novedades en v3.1.13',
   whats_new_3113_body:
     'Correcciones de importación de módulos: las ranuras del hub equipado se mantienen alineadas si una ranura anterior está vacía; submódulos de Orbital Augment, Galaxy Compressor, Shrink Ray, Sharp Fortitude, Black Hole Digestor y Dimension Core. Los módulos no equipados en el inventario se ven mejor. Vuelve a importar playerInfo.dat para actualizar los picks.',

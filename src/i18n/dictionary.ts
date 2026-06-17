@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3114_headline: "What's new in v3.1.14",
+  whats_new_3114_body:
+    'Module inventory stays fully configurable until you import playerInfo.dat — manual picks no longer lock out other chassis modules. Sharp Fortitude Wall Health submodule rarity imports correctly on legendary and ancestral armor. Owned inventory syncs to Effective Paths; modules hub layout polish. Dissonance module icon added.',
   whats_new_3113_headline: "What's new in v3.1.13",
   whats_new_3113_body:
     'Module save import fixes: equipped hub slots stay aligned when an earlier slot is empty; submodule picks for Orbital Augment, Galaxy Compressor, Shrink Ray, Sharp Fortitude, Black Hole Digestor, and Dimension Core. Unequipped modules in the inventory grid are easier to see. Re-import playerInfo.dat to refresh picks.',
