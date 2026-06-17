@@ -746,6 +746,7 @@ export function playerSaveToWorkshop(save: DecodedPlayerSave): WorkshopPersisted
   }
   applyModuleConfigLibraryFromPlayerSave(ws, save)
   ws.simAttackSpeedModuleSubEffect = totalCannonAttackSpeedFromSelections(ws.simSubmoduleSelections)
+  ws.moduleInventoryFromPlayerSave = true
 
   // Drop default empty module presets so sanitize seeds preset 1 from imported sim fields.
   return sanitizeWorkshopPersisted({ ...ws, modulePresetSnapshots: undefined })

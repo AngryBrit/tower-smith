@@ -97,6 +97,7 @@ describe('mapModuleConfigLibrary', () => {
     })
     const ws = defaultWorkshopPersisted()
     applyModuleConfigLibraryFromPlayerSave(ws, save)
+    ws.moduleInventoryFromPlayerSave = true
 
     expect(workshopModuleIsOwned(ws, 'cannon', 'havocBringer')).toBe(true)
     const entry = workshopModuleConfigEntry(ws, 'cannon', 'main', 'havocBringer')

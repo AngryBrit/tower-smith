@@ -382,6 +382,8 @@ export type WorkshopPersistedV1 = {
   simSubmoduleSelections: WorkshopSubmoduleSelections
   /** Saved rarity, level, and sub-modules per inventory module (main + assist). */
   simChassisModuleConfigs: WorkshopModuleConfigLibrary
+  /** When true, inventory tiles are limited to modules from a playerInfo.dat import. */
+  moduleInventoryFromPlayerSave: boolean
   /** Assist chassis slot unlocked (stones). */
   simCannonAssistUnlocked: boolean
   simArmorAssistUnlocked: boolean
@@ -498,6 +500,8 @@ export function resetWorkshopModules(current: WorkshopPersistedV1): WorkshopPers
   return {
     ...current,
     ...defaultWorkshopModulesPersistedFields(),
+    moduleInventoryFromPlayerSave: false,
+    simChassisModuleConfigs: defaultWorkshopModuleConfigLibrary(),
   }
 }
 
@@ -733,6 +737,7 @@ export function defaultWorkshopPersisted(): WorkshopPersistedV1 {
     simPerkDamageQuantity: 0,
     ...defaultWorkshopModulesPersistedFields(),
     simChassisModuleConfigs: defaultWorkshopModuleConfigLibrary(),
+    moduleInventoryFromPlayerSave: false,
     ...defaultUltimateLevels(),
     ...defaultUltimateActive(),
     ...defaultUltimateOwned(),
@@ -1038,6 +1043,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
       return { simSubmoduleSelections, simAttackSpeedModuleSubEffect }
     })(),
     simChassisModuleConfigs: sanitizeWorkshopModuleConfigLibrary(o.simChassisModuleConfigs),
+    moduleInventoryFromPlayerSave: o.moduleInventoryFromPlayerSave === true,
     simBerserkerDamageTaken: Math.max(0, Number(o.simBerserkerDamageTaken) || 0),
     relicOwnedIds: parseRelicOwnedIdsJson(o.relicOwnedIds),
     simRelicsBonusFraction: Math.max(0, Number(o.simRelicsBonusFraction) || 0),
