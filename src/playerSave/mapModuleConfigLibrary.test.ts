@@ -88,6 +88,22 @@ describe('mapModuleConfigLibrary', () => {
     })
   })
 
+  it('imports Wormhole Redirector from infoIndex 18 inventory', () => {
+    const save = minimalSave({
+      moduleInventory: [
+        { infoIndex: 18, level: 12, rarity: 4, effects: [88, 81, 0, 0, 0, 0, 0, 0] },
+      ],
+    })
+    const ws = defaultWorkshopPersisted()
+    applyModuleConfigLibraryFromPlayerSave(ws, save)
+
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'wormholeRedirector')).toMatchObject({
+      level: 12,
+      rarity: 'epic',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'negativeMassProjector').level).toBe(0)
+  })
+
   it('imports Havoc Bringer library entry from infoIndex 7 inventory', () => {
     const save = minimalSave({
       moduleInventory: [

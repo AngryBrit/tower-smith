@@ -28,10 +28,10 @@ export const GAME_MODULE_INFO_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] =
   null, // 15: generic / unknown
   null, // 16: generic / unknown
   null, // 17: generic / unknown
-  "negativeMassProjector", // 18: negativeMassProjector
+  "wormholeRedirector", // 18: wormholeRedirector
   "spaceDisplacer", // 19: spaceDisplacer
   "antiCubePortal", // 20: antiCubePortal
-  "wormholeRedirector", // 21: wormholeRedirector
+  "negativeMassProjector", // 21: negativeMassProjector
   "sharpFortitude", // 22: sharpFortitude
   "orbitalAugment", // 23: orbitalAugment
   null, // 24: generic / unknown

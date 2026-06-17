@@ -35,6 +35,18 @@ patch('spider_forest', { description: 'Increase critical factor by 5%' })
 patch('pulsar_core', { description: 'Increase recovery amount by 2%' })
 patch('4th_tower_birthday', { unlock: 'Play for 4 years' })
 
+// —— 5th Tower Anniversary event relics ——
+patch('big_party', {
+  description: 'Increase attack speed by 1%',
+  unlock: '5th Tower Anniversary',
+  damagePct: 0,
+})
+patch('celebration', {
+  description: 'Increase tower damage by 5%',
+  unlock: '5th Tower Anniversary',
+  damagePct: 5,
+})
+
 // —— Swapped medal thresholds ——
 patch('confetti_ball', {
   unlock: 'Event: Earn 350 medals during the "New Year (II)" event.',
@@ -439,8 +451,8 @@ const newRelics = [
     id: 'big_party',
     name: 'Big Party',
     rarity: 'rare',
-    description: 'Increase coins earned by 2%',
-    unlock: 'Free during the "5th Anniversary" event.',
+    description: 'Increase attack speed by 1%',
+    unlock: '5th Tower Anniversary',
     unlockGroup: 'event',
     damagePct: 0,
   },
@@ -449,10 +461,10 @@ const newRelics = [
     id: 'celebration',
     name: 'Celebration',
     rarity: 'epic',
-    description: 'Increase cash bonus by 5%',
-    unlock: 'Free during the "5th Anniversary" event.',
+    description: 'Increase tower damage by 5%',
+    unlock: '5th Tower Anniversary',
     unlockGroup: 'event',
-    damagePct: 0,
+    damagePct: 5,
   },
 ]
 
