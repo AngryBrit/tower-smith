@@ -513,10 +513,10 @@ export const STRINGS_EN = {
   app_tools_full_reset_aria:
     'Clear all TowerSmith data saved in this browser: lab, workshop, builds, themes, and settings',
   app_tools_full_reset_hint:
-    'Clears everything this app stores locally and reloads the page. Export or copy a share link first if you want to keep your data.',
-  app_tools_full_reset_confirm_title: 'Reset everything in this browser?',
+    'Clears everything this app stores locally and your account cloud backup when signed in, then reloads the page. Export or copy a share link first if you want to keep your data.',
+  app_tools_full_reset_confirm_title: 'Reset all stored data?',
   app_tools_full_reset_confirm_body:
-    'This removes lab levels, saved builds, workshop upgrades, cards, modules, relics, guardian chips, themes, language, and other settings stored for TowerSmith in this browser. The page will reload with factory defaults. Export or copy a share link first if you want to keep your data.',
+    'This removes lab levels, saved builds, workshop upgrades, cards, modules, relics, guardian chips, themes, language, and other TowerSmith settings from this browser. If you are signed in, your account cloud backup is cleared too. The page will reload with factory defaults. Export or copy a share link first if you want to keep your data.',
   app_tools_full_reset_confirm_btn: 'Reset everything',
   auth_loading: 'Checking sign-in…',
   auth_sign_in: 'Sign in',

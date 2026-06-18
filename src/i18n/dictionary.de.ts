@@ -508,10 +508,10 @@ export const STRINGS_DE = {
   app_tools_full_reset_aria:
     'Alle in diesem Browser gespeicherten TowerSmith-Daten löschen: Labor, Werkstatt, Builds, Themes und Einstellungen',
   app_tools_full_reset_hint:
-    'Löscht alle lokal gespeicherten Daten dieser App und lädt die Seite neu. Exportiere oder kopiere zuerst einen Freigabelink, wenn du deine Daten behalten willst.',
-  app_tools_full_reset_confirm_title: 'Alles in diesem Browser zurücksetzen?',
+    'Löscht alle lokal gespeicherten Daten dieser App und bei Anmeldung auch dein Cloud-Backup im Konto, dann wird die Seite neu geladen. Exportiere oder kopiere zuerst einen Freigabelink, wenn du deine Daten behalten willst.',
+  app_tools_full_reset_confirm_title: 'Alle gespeicherten Daten zurücksetzen?',
   app_tools_full_reset_confirm_body:
-    'Entfernt Labor-Stufen, gespeicherte Builds, Werkstatt-Upgrades, Karten, Module, Relikte, Wächter-Chips, Themes, Sprache und andere für TowerSmith in diesem Browser gespeicherte Einstellungen. Die Seite wird mit Werkseinstellungen neu geladen. Exportiere oder kopiere zuerst einen Freigabelink, wenn du deine Daten behalten willst.',
+    'Entfernt Labor-Stufen, gespeicherte Builds, Werkstatt-Upgrades, Karten, Module, Relikte, Wächter-Chips, Themes, Sprache und andere TowerSmith-Einstellungen in diesem Browser. Bei Anmeldung wird auch dein Cloud-Backup im Konto gelöscht. Die Seite wird mit Werkseinstellungen neu geladen. Exportiere oder kopiere zuerst einen Freigabelink, wenn du deine Daten behalten willst.',
   app_tools_full_reset_confirm_btn: 'Alles zurücksetzen',
   auth_loading: 'Anmeldung wird geprüft…',
   auth_sign_in: 'Anmelden',
