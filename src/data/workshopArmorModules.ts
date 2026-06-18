@@ -18,10 +18,10 @@ export type {
 } from './workshopChassisModuleShared'
 
 export const WORKSHOP_ARMOR_MODULE_ORDER = [
-  'antiCubePortal',
-  'negativeMassProjector',
   'wormholeRedirector',
+  'negativeMassProjector',
   'spaceDisplacer',
+  'antiCubePortal',
   'sharpFortitude',
   'orbitalAugment',
 ] as const

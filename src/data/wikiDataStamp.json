@@ -1,10 +1,10 @@
 {
-  "alignedAt": "2026-06-17T09:03:26.946Z",
+  "alignedAt": "2026-06-18T09:27:23.507Z",
   "scripts": {
     "manual": "2026-05-30T13:41:34.494Z",
     "gen-game-research-index": "2026-06-13T22:39:09.300Z",
     "gen-game-module-effect-index": "2026-06-10T09:45:34.437Z",
-    "gen-game-module-index": "2026-06-17T09:03:26.946Z",
+    "gen-game-module-index": "2026-06-18T09:27:23.507Z",
     "gen-workshop-bots-data": "2026-06-13T09:48:44.114Z",
     "import-workshop-god-tsv": "2026-06-08T21:24:57.940Z",
     "patch-relics-catalog": "2026-06-14T18:10:25.065Z",

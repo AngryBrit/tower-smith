@@ -96,7 +96,7 @@ describe('buildModuleSheetUpdates v612', () => {
       sectionLevels: modulesEpDefaultSectionLevels(),
       modules: [
         {
-          moduleId: 'havocBringer',
+          moduleId: 'shrinkRay',
           hubSlot: 'cannon',
           role: 'main',
           mergeTier: 'legendary',
@@ -109,7 +109,7 @@ describe('buildModuleSheetUpdates v612', () => {
     const byRange = Object.fromEntries(
       buildModuleSheetUpdates('Inventory', state, sparse).map((u) => [u.range, u.values[0]![0]]),
     )
-    expect(byRange["'Inventory'!M5"]).toBe('Legendary')
+    expect(byRange["'Inventory'!G5"]).toBe('Legendary')
   })
 
   it('writes main cannon data to row 5 column D and assist to its module column', () => {
@@ -319,6 +319,6 @@ describe('buildModuleSheetUpdates fallback', () => {
         u.values[0]![0],
       ]),
     )
-    expect(byRange["'Inventory'!F2"]).toBe('Ancestral 1*')
+    expect(byRange["'Inventory'!U2"]).toBe('Ancestral 1*')
   })
 })

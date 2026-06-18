@@ -18,10 +18,10 @@ export type {
 } from './workshopChassisModuleShared'
 
 export const WORKSHOP_GENERATOR_MODULE_ORDER = [
-  'singularityHarness',
-  'galaxyCompressor',
-  'pulsarHarvester',
   'blackHoleDigestor',
+  'pulsarHarvester',
+  'galaxyCompressor',
+  'singularityHarness',
   'projectFunding',
   'restorativeBonus',
 ] as const

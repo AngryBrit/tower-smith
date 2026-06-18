@@ -88,18 +88,52 @@ describe('mapModuleConfigLibrary', () => {
     })
   })
 
-  it('imports Wormhole Redirector from infoIndex 18 inventory', () => {
+  it('imports Negative Mass Projector from infoIndex 18 inventory (BlueAngel196.dat)', () => {
     const save = minimalSave({
       moduleInventory: [
-        { infoIndex: 18, level: 12, rarity: 4, effects: [88, 81, 0, 0, 0, 0, 0, 0] },
+        { infoIndex: 18, level: 1, rarity: 11, effects: [81, 116, 90, 0, 0, 0, 0, 0] },
+      ],
+    })
+    const ws = defaultWorkshopPersisted()
+    applyModuleConfigLibraryFromPlayerSave(ws, save)
+
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'negativeMassProjector')).toMatchObject({
+      level: 1,
+      rarity: 'star_1',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'negativeMassProjector').submoduleSlots?.[0]).toMatchObject({
+      effectId: 'health-regen',
+      rarity: 'common',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'negativeMassProjector').submoduleSlots?.[1]).toMatchObject({
+      effectId: 'orb-speed',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'negativeMassProjector').submoduleSlots?.[2]).toMatchObject({
+      effectId: 'defense',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'wormholeRedirector').level).toBe(0)
+  })
+
+  it('imports Wormhole Redirector from infoIndex 17 inventory (BlueAngel196.dat)', () => {
+    const save = minimalSave({
+      moduleInventory: [
+        { infoIndex: 17, level: 1, rarity: 12, effects: [82, 87, 0, 0, 0, 0, 0, 0] },
       ],
     })
     const ws = defaultWorkshopPersisted()
     applyModuleConfigLibraryFromPlayerSave(ws, save)
 
     expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'wormholeRedirector')).toMatchObject({
-      level: 12,
-      rarity: 'epic',
+      level: 1,
+      rarity: 'star_2',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'wormholeRedirector').submoduleSlots?.[0]).toMatchObject({
+      effectId: 'health-regen',
+      rarity: 'rare',
+    })
+    expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'wormholeRedirector').submoduleSlots?.[1]).toMatchObject({
+      effectId: 'defense',
+      rarity: 'common',
     })
     expect(workshopModuleConfigEntry(ws, 'armor', 'main', 'negativeMassProjector').level).toBe(0)
   })

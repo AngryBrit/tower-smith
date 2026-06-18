@@ -24,10 +24,10 @@ export {
 } from './workshopChassisModuleShared'
 
 export const WORKSHOP_CANNON_MODULE_ORDER = [
-  'astralDeliverance',
-  'beingAnnihilator',
-  'deathPenalty',
   'havocBringer',
+  'deathPenalty',
+  'beingAnnihilator',
+  'astralDeliverance',
   'shrinkRay',
   'amplifyingStrike',
 ] as const

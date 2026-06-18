@@ -26,11 +26,14 @@ const MANUAL_OVERRIDES = {
   8: 'deathPenalty',
   9: 'beingAnnihilator',
   10: 'astralDeliverance',
-  18: 'wormholeRedirector',
+  /** BlueAngel196.dat — Wormhole Redirector (rare health-regen / common defense). */
+  17: 'wormholeRedirector',
+  /** BlueAngel196.dat — Negative Mass Projector (common health-regen / legendary orb-speed / defense). */
+  18: 'negativeMassProjector',
   /** petethered.dat — armor assist Space Displacer (land-mine sub-stats). */
   19: 'spaceDisplacer',
   20: 'antiCubePortal',
-  21: 'negativeMassProjector',
+  21: null, // spare armor index — NMP is 18, wormhole is 17
   27: 'blackHoleDigestor',
   28: 'pulsarHarvester',
   29: 'galaxyCompressor',
@@ -53,7 +56,7 @@ const MANUAL_OVERRIDES = {
  * Re-equip in-game to confirm; update MANUAL_OVERRIDES when verified.
  *
  * shrinkRay: continues cannon run 7–10; amplifyingStrike uses high index 45.
- * wormholeRedirector: armor index 18 (armor_epic_1); negativeMass at 21 (armor_epic_4).
+ * wormholeRedirector: armor index 17; negativeMassProjector at 18 (BlueAngel196.dat).
  * harmonyConductor / omChip: core continues multiverse/dimension at 37–38 → 39–40.
  */
 const GUESS_OVERRIDES = {
@@ -76,9 +79,9 @@ const NAMED_BY_SLOT = {
   ],
   armor: [
     'wormholeRedirector',
-    'antiCubePortal',
-    'spaceDisplacer',
     'negativeMassProjector',
+    'spaceDisplacer',
+    'antiCubePortal',
     'sharpFortitude',
     'orbitalAugment',
   ],

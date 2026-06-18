@@ -18,10 +18,10 @@ export type {
 } from './workshopChassisModuleShared'
 
 export const WORKSHOP_CORE_MODULE_ORDER = [
-  'omChip',
-  'harmonyConductor',
-  'dimensionCore',
   'multiverseNexus',
+  'dimensionCore',
+  'harmonyConductor',
+  'omChip',
   'magneticHook',
   'primordialCollapse',
 ] as const
