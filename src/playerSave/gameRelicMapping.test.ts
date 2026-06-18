@@ -4,7 +4,7 @@ import { decodePlayerInfoFile } from './decodePlayerInfo'
 import { relicIndicesToOwnedIds } from './mapPlayerDataToTower'
 import { workshopRelicIdAtGameIndex } from './gameRelicMapping'
 
-const SAMPLE = 'h:/The Tower/playerInfo.dat'
+const SAMPLE = 'h:/The Tower/SaveGames/playerInfo.dat'
 
 describe('gameRelicMapping', () => {
   it('maps game enum indices, not wiki catalog order', () => {

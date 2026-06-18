@@ -31,7 +31,7 @@ function loadResearchDataSync(): ResearchData {
   return { sections }
 }
 
-const JETHRO_SAVE = 'H:/The Tower/Jethro Tan.dat'
+const JETHRO_SAVE = 'H:/The Tower/SaveGames/Jethro Tan.dat'
 
 describe('hydrateLegacyBotPresetFlatFields', () => {
   it('imports medal bots from legacy bots*Presets arrays (Jethro save)', async () => {

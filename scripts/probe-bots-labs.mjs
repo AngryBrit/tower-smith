@@ -10,7 +10,7 @@ import { gunzipSync } from 'node:zlib'
 import { decodePlayerInfoBytes } from '../src/playerSave/decodePlayerInfo.ts'
 import { GAME_MANIFEST_FLAT_TO_RESEARCH_ID } from '../src/playerSave/gameResearchIndex.ts'
 
-const SAMPLE = process.env.PLAYER_SAVE ?? 'h:/The Tower/playerInfo.dat'
+const SAMPLE = process.env.PLAYER_SAVE ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 
 const raw = readFileSync(SAMPLE)

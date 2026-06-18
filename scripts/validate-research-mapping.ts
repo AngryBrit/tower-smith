@@ -17,7 +17,7 @@ import { researchLevelsToOverrides } from '../src/playerSave/mapPlayerDataToTowe
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SAVE =
-  process.argv[2] ?? process.env.PLAYER_SAVE ?? 'h:/The Tower/playerInfo.dat'
+  process.argv[2] ?? process.env.PLAYER_SAVE ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 
 const manifestRaw: unknown = JSON.parse(
   readFileSync(path.join(root, 'public/research/manifest.json'), 'utf8'),

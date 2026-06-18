@@ -11,7 +11,7 @@ import {
 } from '../src/playerSave/nrbf.ts'
 import { gameModuleEffectByIndex } from '../src/playerSave/gameModuleEffectIndex.ts'
 
-const path = process.argv[2] ?? 'h:/The Tower/playerInfo.dat'
+const path = process.argv[2] ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 const raw = readFileSync(path)
 const bytes = gunzipSync(raw)
 const decoder = new NrbfDecoder(

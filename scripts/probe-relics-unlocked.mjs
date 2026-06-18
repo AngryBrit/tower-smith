@@ -6,7 +6,7 @@ import { readFileSync } from 'node:fs'
 import { decodePlayerInfoFile } from '../src/playerSave/decodePlayerInfo.ts'
 import { WORKSHOP_RELIC_ORDER, workshopRelicDef } from '../src/data/workshopRelics.ts'
 
-const path = process.argv[2] ?? 'h:/The Tower/playerInfo.dat'
+const path = process.argv[2] ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(path)))
 const rel = save.relicsUnlocked
 

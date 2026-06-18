@@ -27,7 +27,7 @@ import {
 import { loadResearchFixture } from '../test/researchFixture'
 import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
-const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
+const PLAYER_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
 
 function buildDefenseStatLabDisplayOptsLikeWorkshopPage(
   researchData: ReturnType<typeof loadResearchFixture>,

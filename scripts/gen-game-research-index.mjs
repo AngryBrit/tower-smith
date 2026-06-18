@@ -10,7 +10,7 @@ import { gunzipSync } from 'node:zlib'
 import { touchWikiDataStamp } from './lib/wiki-data-stamp.mjs'
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
-const SAMPLE = process.env.PLAYER_SAVE ?? 'h:/The Tower/playerInfo.dat'
+const SAMPLE = process.env.PLAYER_SAVE ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 const AUTOPLAYER =
   process.env.AUTOPLAYER_PROFILE ??
   'h:/The Tower/Dump/Assembly-CSharp/AutoplayerProfile.cs'

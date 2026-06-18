@@ -11,7 +11,7 @@ import {
   NrbfDecoder,
 } from '../src/playerSave/nrbf.ts'
 
-const raw = readFileSync('h:/The Tower/playerInfo.dat')
+const raw = readFileSync('h:/The Tower/SaveGames/playerInfo.dat')
 const bytes = gunzipSync(raw)
 const decoder = new NrbfDecoder(
   bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength),

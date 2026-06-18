@@ -8,7 +8,7 @@ const path = new URL('../src/playerSave/nrbf.ts', import.meta.url).pathname.repl
 async function main() {
   const { NrbfDecoder, ClassRecord, ArraySinglePrimitiveRecord, MemberReferenceRecord } =
     await import('../src/playerSave/nrbf.ts')
-  const raw = readFileSync('h:/The Tower/playerInfo.dat')
+  const raw = readFileSync('h:/The Tower/SaveGames/playerInfo.dat')
   const bytes = gunzipSync(raw)
   const decoder = new NrbfDecoder(bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength))
   const root = decoder.decode()

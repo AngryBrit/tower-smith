@@ -10,7 +10,7 @@
  *   npx tsx scripts/regenerate-player-save-dump.mjs "path/to/playerInfo.dat"
  *   npx tsx scripts/regenerate-player-save-dump.mjs "path/to/playerInfo.dat" "docs/player-save-field-dump.json"
  *
- * Default input:  h:/The Tower/playerInfo.dat (override on your machine)
+ * Default input:  h:/The Tower/SaveGames/playerInfo.dat (override on your machine)
  * Default output: docs/player-save-field-dump.json
  */
 
@@ -21,7 +21,7 @@ import { dirname, join, resolve } from 'node:path'
 const repoRoot = join(dirname(fileURLToPath(import.meta.url)), '..')
 const dumper = join(repoRoot, 'scripts/dump-player-save-fields.mjs')
 
-const defaultInput = 'h:/The Tower/playerInfo.dat'
+const defaultInput = 'h:/The Tower/SaveGames/playerInfo.dat'
 const defaultOutput = join(repoRoot, 'docs/player-save-field-dump.json')
 
 const inputPath = process.argv[2] ?? defaultInput

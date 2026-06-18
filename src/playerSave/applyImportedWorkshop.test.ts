@@ -30,8 +30,8 @@ import { applyImportedLabAndBuild, defaultTowerWorkspace } from '../towerWorkspa
 import { flattenTowerBuild, splitTowerBuild } from '../towerBuildStorage'
 
 const srcDir = dirname(fileURLToPath(import.meta.url))
-const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
-const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
+const SAMPLE_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
+const FUDGYRELLA_SAVE = 'h:/The Tower/SaveGames/Fudgyrella.dat'
 
 function loadResearchDataSync(): ResearchData {
   const manifestRaw: unknown = JSON.parse(

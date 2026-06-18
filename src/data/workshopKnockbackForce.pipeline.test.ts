@@ -12,7 +12,7 @@ import {
 import { loadResearchFixture } from '../test/researchFixture'
 import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
-const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
+const PLAYER_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
 const IN_GAME = 7.78
 
 describe.skipIf(!existsSync(PLAYER_SAVE))('workshopKnockbackForce pipeline', () => {

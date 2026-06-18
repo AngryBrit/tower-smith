@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs'
 import { gunzipSync } from 'node:zlib'
 import { decodePlayerInfoBytes } from '../src/playerSave/decodePlayerInfo.ts'
 
-const save = decodePlayerInfoBytes(gunzipSync(readFileSync('h:/The Tower/playerInfo.dat')))
+const save = decodePlayerInfoBytes(gunzipSync(readFileSync('h:/The Tower/SaveGames/playerInfo.dat')))
 const lines = save.researchLevel.map((lv, i) => `${i}\t${lv}`).join('\n')
 writeFileSync('scripts/out-research-levels.tsv', lines)
 const nz = save.researchLevel

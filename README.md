@@ -295,7 +295,7 @@ The `docs/` folder is **gitignored**. Scripts write reference dumps there during
 | `docs/research-level-unmapped.txt` | `npm run research-unmapped` | Slots in `researchLevel[]` not yet mapped to a lab |
 | `docs/game-workshop-index-map.csv` | `node scripts/export-game-research-id-map.mjs` | Workshop array index ↔ stat name |
 
-Point scripts at your local save path (e.g. `h:/The Tower/playerInfo.dat`) when regenerating dumps. After mapping changes, run Vitest under `src/playerSave/` and update the relevant `game*Mapping.ts` file — never guess slot IDs without save evidence.
+Point scripts at your local save path (e.g. `h:/The Tower/SaveGames/playerInfo.dat`) when regenerating dumps. After mapping changes, run Vitest under `src/playerSave/` and update the relevant `game*Mapping.ts` file — never guess slot IDs without save evidence.
 
 ---
 

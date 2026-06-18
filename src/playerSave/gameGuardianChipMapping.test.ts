@@ -12,8 +12,8 @@ import {
   playerSaveToGuardianChips,
 } from './gameGuardianChipMapping'
 
-const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
-const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
+const SAMPLE_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
+const FUDGYRELLA_SAVE = 'h:/The Tower/SaveGames/Fudgyrella.dat'
 
 function minimalSave(partial: Partial<DecodedPlayerSave> = {}): DecodedPlayerSave {
   return {

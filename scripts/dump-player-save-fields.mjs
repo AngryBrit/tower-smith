@@ -5,7 +5,7 @@
  *   node scripts/dump-player-save-fields.mjs [input.dat] [output.json]
  *
  * Defaults:
- *   input:  h:/The Tower/playerInfo.dat
+ *   input:  h:/The Tower/SaveGames/playerInfo.dat
  *   output: docs/player-save-field-dump.json
  */
 
@@ -23,7 +23,7 @@ import {
   NrbfDecoder,
 } from '../src/playerSave/nrbf.ts'
 
-const DEFAULT_INPUT = 'h:/The Tower/playerInfo.dat'
+const DEFAULT_INPUT = 'h:/The Tower/SaveGames/playerInfo.dat'
 const DEFAULT_OUTPUT = 'docs/player-save-field-dump.json'
 const MAX_DEPTH = 8
 const MAX_ARRAY_PREVIEW = 32

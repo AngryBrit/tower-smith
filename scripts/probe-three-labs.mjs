@@ -16,7 +16,7 @@ for (let i = 0; i < lines.length; i++) {
 }
 
 const { decodePlayerInfoBytes } = await import('../src/playerSave/decodePlayerInfo.ts')
-const raw = readFileSync('h:/The Tower/playerInfo.dat')
+const raw = readFileSync('h:/The Tower/SaveGames/playerInfo.dat')
 const lv = decodePlayerInfoBytes(gunzipSync(raw)).researchLevel
 
 for (let id = 0; id < 250; id++) {

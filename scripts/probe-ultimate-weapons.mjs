@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { gunzipSync } from 'node:zlib'
 
-const SAVE = process.argv[2] ?? 'h:/The Tower/playerInfo.dat'
+const SAVE = process.argv[2] ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 const ORDER = [
   'goldenTower',
   'blackHole',

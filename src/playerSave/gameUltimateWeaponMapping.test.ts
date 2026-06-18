@@ -8,7 +8,7 @@ import {
 import { decodePlayerInfoFile } from './decodePlayerInfo'
 import { mapUltimateWeaponsFromSave } from './gameUltimateWeaponMapping'
 
-const SAMPLE = 'h:/The Tower/playerInfo.dat'
+const SAMPLE = 'h:/The Tower/SaveGames/playerInfo.dat'
 
 const EXPECTED_OWNED: readonly WorkshopUltimateWeaponId[] = [
   'goldenTower',

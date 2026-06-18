@@ -3,7 +3,7 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { gunzipSync } from 'node:zlib'
 
-const SAMPLE = 'h:/The Tower/playerInfo.dat'
+const SAMPLE = 'h:/The Tower/SaveGames/playerInfo.dat'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const manifest = JSON.parse(readFileSync(path.join(ROOT, 'public/research/manifest.json'), 'utf8'))

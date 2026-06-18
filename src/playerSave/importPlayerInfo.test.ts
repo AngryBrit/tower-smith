@@ -30,9 +30,9 @@ function loadResearchDataSync(): ResearchData {
   return { sections }
 }
 
-const SAMPLE = 'h:/The Tower/playerInfo.dat'
-const CLEAN_SAVE = 'h:/The Tower/CLEAN.dat'
-const RICHARD_SAVE = 'h:/The Tower/Richard.dat'
+const SAMPLE = 'h:/The Tower/SaveGames/playerInfo.dat'
+const CLEAN_SAVE = 'h:/The Tower/SaveGames/CLEAN.dat'
+const RICHARD_SAVE = 'h:/The Tower/SaveGames/Richard.dat'
 
 function minimalResearchData(): ResearchData {
   return {

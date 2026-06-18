@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { gunzipSync } from 'node:zlib'
 
 const { decodePlayerInfoBytes } = await import('../src/playerSave/decodePlayerInfo.ts')
-const raw = readFileSync('h:/The Tower/playerInfo.dat')
+const raw = readFileSync('h:/The Tower/SaveGames/playerInfo.dat')
 const bytes = raw[0] === 0x1f && raw[1] === 0x8b ? gunzipSync(raw) : raw
 const save = decodePlayerInfoBytes(bytes)
 

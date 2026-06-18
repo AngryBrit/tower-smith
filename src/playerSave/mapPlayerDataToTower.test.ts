@@ -12,10 +12,10 @@ import { gameModuleRarityToMergeTier } from './gameModuleRarity'
 import { playerSaveToWorkshop } from './mapPlayerDataToTower'
 import { workshopModuleConfigEntry } from '../data/workshopModuleConfigLibrary'
 
-const SAMPLE_SAVE = 'h:/The Tower/playerInfo.dat'
-const FUDGYRELLA_SAVE = 'h:/The Tower/Fudgyrella.dat'
-const PETETHERED_SAVE = 'h:/The Tower/petethered.dat'
-const JAMES_WRIGHT_SAVE = 'h:/The Tower/James Wright.dat'
+const SAMPLE_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
+const FUDGYRELLA_SAVE = 'h:/The Tower/SaveGames/Fudgyrella.dat'
+const PETETHERED_SAVE = 'h:/The Tower/SaveGames/petethered.dat'
+const JAMES_WRIGHT_SAVE = 'h:/The Tower/SaveGames/James Wright.dat'
 
 function minimalSave(
   partial: Partial<DecodedPlayerSave> = {},

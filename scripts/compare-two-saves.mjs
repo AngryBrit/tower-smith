@@ -5,8 +5,8 @@ import { gunzipSync } from 'node:zlib'
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), '..')
 const SAVES = [
-  ['You (playerInfo)', 'h:/The Tower/playerInfo.dat'],
-  ['Fudgyrella', 'h:/The Tower/Fudgyrella.dat'],
+  ['You (playerInfo)', 'h:/The Tower/SaveGames/playerInfo.dat'],
+  ['Fudgyrella', 'h:/The Tower/SaveGames/Fudgyrella.dat'],
 ]
 
 const { decodePlayerInfoBytes } = await import('../src/playerSave/decodePlayerInfo.ts')

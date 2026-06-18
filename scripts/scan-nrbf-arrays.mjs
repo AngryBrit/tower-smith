@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs'
 import { gunzipSync } from 'node:zlib'
 
-const path = process.argv[2] ?? 'h:/The Tower/playerInfo.dat'
+const path = process.argv[2] ?? 'h:/The Tower/SaveGames/playerInfo.dat'
 const bytes = gunzipSync(readFileSync(path))
 const dv = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
 let off = 0

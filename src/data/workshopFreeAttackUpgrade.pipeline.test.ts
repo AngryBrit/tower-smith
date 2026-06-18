@@ -10,7 +10,7 @@ import { mapPlayerSaveToTower } from '../playerSave/mapPlayerDataToTower'
 import { loadResearchFixture } from '../test/researchFixture'
 import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmoduleContext'
 
-const PLAYER_SAVE = 'h:/The Tower/playerInfo.dat'
+const PLAYER_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
 
 describe.skipIf(!existsSync(PLAYER_SAVE))('workshopFreeAttackUpgrade pipeline', () => {
   it('calibrates free attack upgrade display against in-game', async () => {

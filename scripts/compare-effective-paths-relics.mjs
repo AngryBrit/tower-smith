@@ -157,7 +157,7 @@ if (!existsSync(sheetPath)) {
   console.error('  node scripts/compare-effective-paths-relics.mjs "C:\\Users\\you\\Downloads\\Relics.tsv"')
   console.error('')
   console.error('Save data uses docs/player-save-field-dump.json — refresh with:')
-  console.error('  npx tsx scripts/regenerate-player-save-dump.mjs "h:/The Tower/playerInfo.dat"')
+  console.error('  npx tsx scripts/regenerate-player-save-dump.mjs "h:/The Tower/SaveGames/playerInfo.dat"')
   process.exit(1)
 }
 
