@@ -266,7 +266,9 @@ export default function App() {
               mainPanel === 'cards' ||
               mainPanel === 'relics' ||
               mainPanel === 'themes' ||
-              mainPanel === 'guardians'
+              mainPanel === 'guardians' ||
+              mainPanel === 'gallery' ||
+              mainPanel === 'vault'
             }
           />
           <div className="app-shell">
