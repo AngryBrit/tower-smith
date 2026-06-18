@@ -18,7 +18,6 @@ import {
   buildWorkshopSubmoduleBonuses,
   type WorkshopSubmoduleBonusContext,
 } from '../data/workshopSubmoduleBonuses'
-import { workshopChassisModuleHeroStatMultiplier } from '../data/workshopChassisModuleHeroStatWorkshop'
 import { formatPowerStoneAmount } from '../labCosts'
 import {
   workshopUltimatePlusAbilityForWeapon,
@@ -134,10 +133,6 @@ export function WorkshopUltimateWeaponCard({
         : {},
     [workshop, submoduleBonusContext],
   )
-  const coreUltimateDamageMultiplier = useMemo(
-    () => (workshop != null ? workshopChassisModuleHeroStatMultiplier(workshop, 'core') : 1),
-    [workshop],
-  )
   const unlockStones =
     workshop != null ? workshopUltimateUnlockCostForWeapon(workshop, weaponId) : null
 
@@ -243,7 +238,6 @@ export function WorkshopUltimateWeaponCard({
                           key,
                           level,
                           ultimateSubmoduleBonuses[key] ?? 0,
-                          coreUltimateDamageMultiplier,
                         )}
                       </span>
                     </div>
