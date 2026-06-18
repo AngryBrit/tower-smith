@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3117_headline: 'Novedades en v3.1.17',
+  whats_new_3117_body:
+    'Corregidos los recuentos de copias de módulos core epic — las copias epic de Dimension Core y Om Chip ya no faltan en el inventario tras importar el guardado. Vuelve a importar playerInfo.dat para actualizar los recuentos.',
   whats_new_3116_headline: 'Novedades en v3.1.16',
   whats_new_3116_body:
     'Recuentos de copias de módulos tras importar el guardado — insignias ×N en el inventario y desglose en el selector. La cuenta ignora material de fusión (Orbital Augment, Project Funding, etc.). Corrección de propiedad para módulos de alto nivel con substats mixtos. Stats de armas definitivas, Bits de guardian, reliquias Cheers/Valentine y copia de seguridad en la nube al restablecer. Vuelve a importar playerInfo.dat.',

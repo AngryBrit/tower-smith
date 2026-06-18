@@ -1093,7 +1093,7 @@ function decodeArmorEpicAtSecondLegendaryIndex(
  * (e.g. 284 → GT Bonus Ancestral, 285 → GT Duration Mythic on Mythic+ main) and paired rows;
  * main modules also forward block-2 tiers to follow-on stats.
  */
-function gameModuleEffectForSubmoduleImport(
+export function gameModuleEffectForSubmoduleImport(
   raw: number,
   slot: WorkshopAssistModuleSlot,
   moduleLevel: number,

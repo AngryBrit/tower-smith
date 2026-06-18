@@ -187,6 +187,59 @@ describe('workshopModuleCopyCounts', () => {
     expect(sorted.map((c) => c.rarity)).toEqual(['star_5', 'legendary', 'epic'])
   })
 
+  it('counts epic core copies with sparse submodule indices', () => {
+    const save = minimalSave({
+      moduleInventory: [
+        {
+          infoIndex: 38,
+          level: 138,
+          rarity: 9,
+          effects: [231, 225, 324, 315, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 38,
+          level: 60,
+          rarity: 5,
+          effects: [229, 219, 248, 0, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 38,
+          level: 60,
+          rarity: 4,
+          effects: [229, 219, 248, 0, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 40,
+          level: 120,
+          rarity: 12,
+          effects: [281, 223, 228, 0, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 40,
+          level: 1,
+          rarity: 4,
+          effects: [280, 227, 228, 0, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 40,
+          level: 1,
+          rarity: 4,
+          effects: [280, 227, 228, 0, 0, 0, 0, 0],
+        },
+      ],
+    })
+
+    const counts = buildModuleCopyCountsFromPlayerSave(save)
+    expect(counts.core.dimensionCore?.count).toBe(3)
+    expect(counts.core.dimensionCore!.copies.map((c) => c.rarity)).toEqual(
+      expect.arrayContaining(['mythic_plus', 'epic_plus', 'epic']),
+    )
+    expect(counts.core.omChip?.count).toBe(3)
+    expect(counts.core.omChip!.copies.map((c) => c.rarity)).toEqual(
+      expect.arrayContaining(['star_2', 'epic', 'epic']),
+    )
+  })
+
   it('exposes summary from persisted workshop when imported', () => {
     const ws = defaultWorkshopPersisted()
     ws.moduleInventoryFromPlayerSave = true

@@ -97,6 +97,9 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3117_headline: "What's new in v3.1.17",
+  whats_new_3117_body:
+    'Epic-tier core module copy counts fixed — Dimension Core and Om Chip epic copies no longer missing from the Modules inventory after save import. Re-import playerInfo.dat to refresh counts.',
   whats_new_3116_headline: "What's new in v3.1.16",
   whats_new_3116_body:
     'Module copy counts after save import — ×N badges in the Modules inventory and an owned-copies breakdown in the module picker. Copy counting ignores merge fodder so Orbital Augment, Project Funding, and similar no longer inflate. Ownership import fixes for high-level mixed-substat modules. Ultimate weapon stats, guardian chip Bits, Cheers/Valentine relics, and full-reset cloud backup fixes. Re-import playerInfo.dat to refresh.',

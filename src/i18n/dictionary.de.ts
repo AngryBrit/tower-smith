@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3117_headline: 'Neu in v3.1.17',
+  whats_new_3117_body:
+    'Epic-Core-Modul-Kopienzähler behoben — Dimension Core und Om Chip in Epic-Stufe fehlen nach Spielstand-Import nicht mehr im Modul-Inventar. Spielstand erneut importieren, um die Zähler zu aktualisieren.',
   whats_new_3116_headline: 'Neu in v3.1.16',
   whats_new_3116_body:
     'Modul-Kopienzähler nach Spielstand-Import — ×N-Badges im Modul-Inventar und Aufschlüsselung im Modul-Picker. Zählung ignoriert Merge-Futter (Orbital Augment, Project Funding u. a.). Besitz-Import für High-Level-Module mit gemischten Substats. Fixes für Ultimate-Waffen-Stats, Guardian-Chip-Bits, Cheers/Valentine-Relikte und Cloud-Backup beim Voll-Reset. Spielstand erneut importieren.',

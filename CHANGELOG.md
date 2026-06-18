@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.17] - 2026-06-18
+
+### Fixed
+
+- **Epic core module copy counts** — Dimension Core, Om Chip, and other epic-tier core copies no longer drop out of inventory counts when submodule indices use sparse epic encoding. Re-import `playerInfo.dat` to refresh.
+
+### Docs
+
+- README: version **3.1.17**.
+- What's new banner (en/de/es).
+
 ## [3.1.16] - 2026-06-18
 
 ### Added

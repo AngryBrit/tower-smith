@@ -78,4 +78,32 @@ describe('resolveModuleItem', () => {
       }),
     ).toBeNull()
   })
+
+  it('resolves Dimension Core epic main sparse indices for copy counting', () => {
+    const item = {
+      infoIndex: 38,
+      level: 60,
+      rarity: 4,
+      effects: [229, 219, 248, 0, 0, 0, 0, 0],
+    }
+    expect(moduleItemEffectSlot(item)).toBe('core')
+    expect(resolveModuleItemToWorkshop(item)).toEqual({
+      slot: 'core',
+      moduleId: 'dimensionCore',
+    })
+  })
+
+  it('resolves Om Chip epic main sparse indices for copy counting', () => {
+    const item = {
+      infoIndex: 40,
+      level: 60,
+      rarity: 4,
+      effects: [280, 227, 228, 0, 0, 0, 0, 0],
+    }
+    expect(moduleItemEffectSlot(item)).toBe('core')
+    expect(resolveModuleItemToWorkshop(item)).toEqual({
+      slot: 'core',
+      moduleId: 'omChip',
+    })
+  })
 })
