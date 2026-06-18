@@ -92,7 +92,8 @@ describe('buildModuleSheetUpdates', () => {
     expect(byRange["'Inventory'!D3"]).toBe(0)
     expect(byRange["'Inventory'!D6"]).toBe(0)
     expect(byRange["'Inventory'!D21"]).toBe(0)
-    expect(byRange["'Inventory'!F2"]).toBe('Rare')
+    expect(byRange["'Inventory'!F2"]).toBe('None')
+    expect(byRange["'Inventory'!U2"]).toBe('Rare')
     expect(byRange["'Inventory'!G2"]).toBeUndefined()
     expect(byRange["'Inventory'!K2"]).toBe('None')
     expect(byRange["'Inventory'!L2"]).toBeUndefined()
@@ -107,17 +108,17 @@ describe('buildModuleSheetUpdates', () => {
 
     expect(byRange["'Inventory'!D2"]).toBe(140)
     expect(byRange["'Inventory'!D3"]).toBe(100)
-    expect(byRange["'Inventory'!F2"]).toBe('Ancestral 1*')
-    expect(byRange["'Inventory'!G2"]).toBeUndefined()
-    expect(byRange["'Inventory'!H2"]).toBeUndefined()
+    expect(byRange["'Inventory'!U2"]).toBe('Ancestral 1*')
+    expect(byRange["'Inventory'!V2"]).toBeUndefined()
+    expect(byRange["'Inventory'!W2"]).toBeUndefined()
 
-    expect(byRange["'Inventory'!F3"]).toBe('Critical Chance')
-    expect(byRange["'Inventory'!G3"]).toBe('Epic')
-    expect(byRange["'Inventory'!F4"]).toBe('Super Crit Multi')
-    expect(byRange["'Inventory'!F5"]).toBe('Critical Factor')
-    expect(byRange["'Inventory'!G5"]).toBe('Epic')
+    expect(byRange["'Inventory'!U3"]).toBe('Critical Chance')
+    expect(byRange["'Inventory'!V3"]).toBe('Epic')
+    expect(byRange["'Inventory'!U4"]).toBe('Super Crit Multi')
+    expect(byRange["'Inventory'!U5"]).toBe('Critical Factor')
+    expect(byRange["'Inventory'!V5"]).toBe('Epic')
 
-    expect(byRange["'Inventory'!F6"]).toBe('Ancestral')
+    expect(byRange["'Inventory'!U6"]).toBe('Ancestral')
 
     expect(byRange["'Inventory'!F10"]).toBe('Ancestral 1*')
     expect(byRange["'Inventory'!G10"]).toBeUndefined()
@@ -184,10 +185,10 @@ describe('buildModuleSheetUpdates', () => {
       buildModuleSheetUpdates('Inventory', state, LEGACY_LAYOUT).map((u) => [u.range, u.values[0]![0]]),
     )
 
-    expect(byRange["'Inventory'!F2"]).toBe('Ancestral 1*')
-    expect(byRange["'Inventory'!U2"]).toBe('Legendary')
-    expect(byRange["'Inventory'!U3"]).toBe('Attack Speed')
-    expect(byRange["'Inventory'!V3"]).toBe('Rare')
+    expect(byRange["'Inventory'!U2"]).toBe('Ancestral 1*')
+    expect(byRange["'Inventory'!F2"]).toBe('Legendary')
+    expect(byRange["'Inventory'!F3"]).toBe('Attack Speed')
+    expect(byRange["'Inventory'!G3"]).toBe('Rare')
   })
 
   it('counts equipped inventory columns', () => {

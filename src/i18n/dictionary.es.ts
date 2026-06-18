@@ -95,6 +95,9 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3116_headline: 'Novedades en v3.1.16',
+  whats_new_3116_body:
+    'Recuentos de copias de módulos tras importar el guardado — insignias ×N en el inventario y desglose en el selector. La cuenta ignora material de fusión (Orbital Augment, Project Funding, etc.). Corrección de propiedad para módulos de alto nivel con substats mixtos. Stats de armas definitivas, Bits de guardian, reliquias Cheers/Valentine y copia de seguridad en la nube al restablecer. Vuelve a importar playerInfo.dat.',
   whats_new_3115_headline: 'Novedades en v3.1.15',
   whats_new_3115_body:
     'Correcciones de importación de submódulos para Galaxy Compressor, Space Displacer, Amplifying Strike, Anti-Cube Portal, Project Funding, OM Chip, Dimension Core y otros chasis de alto nivel — vuelve a importar playerInfo.dat para actualizar los picks. Asignación de inventario de Wormhole Redirector corregida. Ranuras de ataque/defensa del lab Dissonant Echo y stats de reliquias del 5.º aniversario corregidas.',

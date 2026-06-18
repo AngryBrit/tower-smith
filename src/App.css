@@ -6500,19 +6500,27 @@ button.workshop__uw-plus-cost--display:hover {
 
 .modules-picker__copies-list {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.35rem 0.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 0.65rem;
   margin: 0.45rem 0 0;
   padding: 0;
   list-style: none;
 }
 
 .modules-picker__copies-item {
-  font-size: 0.82rem;
-  font-weight: 600;
-  color: rgba(226, 232, 240, 0.92);
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
   min-width: 0;
+  white-space: nowrap;
+}
+
+.modules-picker__copies-level {
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--sr-text);
+  font-variant-numeric: tabular-nums;
 }
 
 .modules-inventory__border {

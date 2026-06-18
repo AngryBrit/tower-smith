@@ -67,6 +67,10 @@ function minimalSave(
     lastGuildID: '',
     lastGuildSeason: 0,
     guildChestClaimedWeek: 0,
+    hasSeenGuildChatDisclaimer: false,
+    userName: '',
+    fakeUserName: '',
+    playfabID: '',
     ...partial,
   }
 }
@@ -94,6 +98,33 @@ describe('workshopModuleCopyCounts', () => {
       rarity: 'star_5',
       level: 120,
     })
+  })
+
+  it('ignores cross-slot inventory fodder sharing an infoIndex with a named module', () => {
+    const save = minimalSave({
+      moduleInventory: [
+        {
+          infoIndex: 34,
+          level: 1,
+          rarity: 5,
+          effects: [300, 217, 0, 0, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 34,
+          level: 1,
+          rarity: 3,
+          effects: [306, 246, 0, 0, 0, 0, 0, 0],
+        },
+        {
+          infoIndex: 43,
+          level: 101,
+          rarity: 8,
+          effects: [191, 185, 167, 161, 0, 0, 0, 0],
+        },
+      ],
+    })
+
+    expect(buildModuleCopyCountsFromPlayerSave(save).generator.projectFunding?.count).toBe(1)
   })
 
   it('ignores inventory fodder whose substats belong to a different chassis slot', () => {

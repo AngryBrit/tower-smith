@@ -508,14 +508,20 @@ export function ChassisModulePickerDialog({
               {moduleCopySummary.copies.map((copy, index) => (
                 <li
                   key={`${copy.rarity}-${copy.level}-${index}`}
-                  className={[
-                    'modules-picker__copies-item',
-                    WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[copy.rarity],
-                  ].join(' ')}
+                  className="modules-picker__copies-item"
                 >
-                  {t('ws_modules_inventory_copy_line')
-                    .replace('{{tier}}', t(MERGE_TIER_LABEL[copy.rarity]))
-                    .replace('{{level}}', String(copy.level))}
+                  <span
+                    className={[
+                      'modules-picker__effect-tier',
+                      WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[copy.rarity],
+                    ].join(' ')}
+                  >
+                    {t(MERGE_TIER_LABEL[copy.rarity])}
+                  </span>
+                  <span className="modules-picker__copies-level">
+                    {t('ws_modules_level_prefix')}
+                    {copy.level}
+                  </span>
                 </li>
               ))}
             </ul>

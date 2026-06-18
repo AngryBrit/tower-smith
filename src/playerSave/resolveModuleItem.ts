@@ -1,11 +1,27 @@
 /**
  * Resolve a decoded `ModuleItem` to workshop chassis slot + module id.
- * Uses submodule effect slot when present — infoIndex alone can mislabel inventory fodder.
+ *
+ * **Copy counting** uses {@link resolveModuleItemToWorkshop} (strict).
+ * **Inventory ownership** uses {@link resolveModuleItemOwnership} (strict, then loose).
+ *
+ * Strict rules:
+ * - Unambiguous submodule slot → only that hub slot is considered.
+ * - Mixed slots on one row (e.g. core + generator fodder) → rejected.
+ * - No substats → fall back to infoIndex across hub slots.
+ *
+ * Loose ownership (when strict fails): leveled modules (Lv.2+) or ancestral+ merge tier
+ * with at least one substat on the module's hub slot — covers real copies whose save row
+ * mixes in a stray off-slot substat index.
  */
 
 import type { DecodedModuleItem } from './decodePlayerInfo'
 import { gameModuleEffectByIndex } from './gameModuleEffectIndex'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
+import { gameModuleRarityToMergeTier } from './gameModuleRarity'
+import {
+  WORKSHOP_CHASSIS_MODULE_MERGE_TIERS,
+  type WorkshopChassisModuleMergeTier,
+} from '../data/workshopChassisModuleShared'
 import type { WorkshopAssistModuleSlot } from '../data/workshopSimModules'
 
 const MODULE_SLOTS: readonly WorkshopAssistModuleSlot[] = [
@@ -15,26 +31,68 @@ const MODULE_SLOTS: readonly WorkshopAssistModuleSlot[] = [
   'core',
 ]
 
-/** Chassis hub slot implied by non-zero submodule effect indices, when unambiguous. */
-export function moduleItemEffectSlot(
+type ModuleItemEffectSlotResolution =
+  | { kind: 'empty' }
+  | { kind: 'slot'; slot: WorkshopAssistModuleSlot }
+  | { kind: 'mixed' }
+
+function mergeTierRank(tier: WorkshopChassisModuleMergeTier): number {
+  return WORKSHOP_CHASSIS_MODULE_MERGE_TIERS.indexOf(tier)
+}
+
+function resolveModuleItemEffectSlots(
   item: DecodedModuleItem,
-): WorkshopAssistModuleSlot | null {
+): ModuleItemEffectSlotResolution {
   let slot: WorkshopAssistModuleSlot | null = null
+  let seen = false
   for (const idx of item.effects) {
     if (idx === 0) continue
     const decoded = gameModuleEffectByIndex(idx, item.level)
     if (!decoded) continue
-    if (slot != null && slot !== decoded.slot) return null
+    seen = true
+    if (slot != null && slot !== decoded.slot) return { kind: 'mixed' }
     slot = decoded.slot
   }
-  return slot
+  if (!seen) return { kind: 'empty' }
+  return { kind: 'slot', slot: slot! }
 }
 
+function moduleItemHasEffectOnSlot(
+  item: DecodedModuleItem,
+  slot: WorkshopAssistModuleSlot,
+): boolean {
+  for (const idx of item.effects) {
+    if (idx === 0) continue
+    const decoded = gameModuleEffectByIndex(idx, item.level)
+    if (decoded?.slot === slot) return true
+  }
+  return false
+}
+
+function qualifiesForLooseModuleOwnership(item: DecodedModuleItem): boolean {
+  if (item.level > 1) return true
+  const merge = gameModuleRarityToMergeTier(item.rarity)
+  if (!merge) return false
+  return mergeTierRank(merge) >= mergeTierRank('ancestral')
+}
+
+/** Chassis hub slot implied by non-zero submodule effect indices, when unambiguous. */
+export function moduleItemEffectSlot(
+  item: DecodedModuleItem,
+): WorkshopAssistModuleSlot | null {
+  const resolved = resolveModuleItemEffectSlots(item)
+  return resolved.kind === 'slot' ? resolved.slot : null
+}
+
+/** Strict resolution for physical copy counts. */
 export function resolveModuleItemToWorkshop(
   item: DecodedModuleItem,
   options?: { hubSlot?: WorkshopAssistModuleSlot },
 ): { slot: WorkshopAssistModuleSlot; moduleId: string } | null {
-  const effectSlot = moduleItemEffectSlot(item)
+  const effects = resolveModuleItemEffectSlots(item)
+  if (effects.kind === 'mixed') return null
+
+  const effectSlot = effects.kind === 'slot' ? effects.slot : null
 
   if (options?.hubSlot != null) {
     const moduleId = gameWorkshopChassisModuleId(item.infoIndex, options.hubSlot)
@@ -51,4 +109,45 @@ export function resolveModuleItemToWorkshop(
     if (moduleId != null) return { slot, moduleId }
   }
   return null
+}
+
+function resolveModuleItemOwnershipLoose(
+  item: DecodedModuleItem,
+  options?: { hubSlot?: WorkshopAssistModuleSlot },
+): { slot: WorkshopAssistModuleSlot; moduleId: string } | null {
+  if (options?.hubSlot != null) {
+    const moduleId = gameWorkshopChassisModuleId(item.infoIndex, options.hubSlot)
+    if (moduleId != null) return { slot: options.hubSlot, moduleId }
+    return null
+  }
+
+  if (!qualifiesForLooseModuleOwnership(item)) return null
+
+  for (const slot of MODULE_SLOTS) {
+    const moduleId = gameWorkshopChassisModuleId(item.infoIndex, slot)
+    if (moduleId == null) continue
+    if (moduleItemHasEffectOnSlot(item, slot)) {
+      return { slot, moduleId }
+    }
+  }
+
+  if (item.level > 1 && !item.effects.some((effect) => effect !== 0)) {
+    for (const slot of MODULE_SLOTS) {
+      const moduleId = gameWorkshopChassisModuleId(item.infoIndex, slot)
+      if (moduleId != null) return { slot, moduleId }
+    }
+  }
+
+  return null
+}
+
+/** Strict resolution plus loose fallback for inventory ownership. */
+export function resolveModuleItemOwnership(
+  item: DecodedModuleItem,
+  options?: { hubSlot?: WorkshopAssistModuleSlot },
+): { slot: WorkshopAssistModuleSlot; moduleId: string } | null {
+  return (
+    resolveModuleItemToWorkshop(item, options) ??
+    resolveModuleItemOwnershipLoose(item, options)
+  )
 }

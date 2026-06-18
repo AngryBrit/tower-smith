@@ -95,6 +95,9 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3116_headline: 'Neu in v3.1.16',
+  whats_new_3116_body:
+    'Modul-Kopienzähler nach Spielstand-Import — ×N-Badges im Modul-Inventar und Aufschlüsselung im Modul-Picker. Zählung ignoriert Merge-Futter (Orbital Augment, Project Funding u. a.). Besitz-Import für High-Level-Module mit gemischten Substats. Fixes für Ultimate-Waffen-Stats, Guardian-Chip-Bits, Cheers/Valentine-Relikte und Cloud-Backup beim Voll-Reset. Spielstand erneut importieren.',
   whats_new_3115_headline: 'Neu in v3.1.15',
   whats_new_3115_body:
     'Modul-Submodule-Import für Galaxy Compressor, Space Displacer, Amplifying Strike, Anti-Cube Portal, Project Funding, OM Chip, Dimension Core und weitere High-Tier-Chassis — Spielstand erneut importieren, um Submodule zu aktualisieren. Wormhole-Redirector-Inventar-Zuordnung korrigiert. Dissonant-Echo-Lab Angriff/Verteidigung und 5th-Anniversary-Relikt-Stats behoben.',

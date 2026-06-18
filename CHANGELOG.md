@@ -5,6 +5,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.16] - 2026-06-18
+
+### Added
+
+- **Module copy counts** — After `playerInfo.dat` import, the Modules inventory shows ×N for duplicate chassis modules; the module picker lists owned copies by merge tier and level.
+
+### Fixed
+
+- **Module copy count accuracy** — Strict substat-slot resolution ignores merge-fodder rows that share an epic `infoIndex` (Orbital Augment, Project Funding, and similar). Re-import to refresh counts.
+- **Module ownership import** — High-level modules with mixed substats (Dimension Core, Multiverse Nexus, and similar) stay marked owned without inflating copy counts.
+- **Ancestral submodule import** — Additional ancestral-family decode fixes.
+- **Armor module inventory mapping** — `infoIndex` order aligns with in-game inventory.
+- **Ultimate weapon workshop stats** — Display matches in-game values.
+- **Guardian chip Bits** — Shows cumulative investment from saves.
+- **Cheers and Valentine relics** — Correct mappings on save import.
+- **Full reset** — Clears cloud workspace backup when signed in; copy clarifies cloud backup is removed.
+
+### Changed
+
+- **Owned copies picker UI** — Rarity-tier badges in a two-column grid (matches submodule effect-tier chips).
+
+### Docs
+
+- README: version **3.1.16**.
+- What's new banner (en/de/es).
+
 ## [3.1.15] - 2026-06-17
 
 ### Fixed

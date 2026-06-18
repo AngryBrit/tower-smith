@@ -24,7 +24,7 @@ import type { DecodedModuleItem, DecodedPlayerSave } from './decodePlayerInfo'
 import { gameSubmoduleImportFromEffectIndices } from './gameModuleEffectIndex'
 import { gameWorkshopChassisModuleId } from './gameModuleIndex'
 import { gameModuleRarityToMergeTier } from './gameModuleRarity'
-import { resolveModuleItemToWorkshop } from './resolveModuleItem'
+import { resolveModuleItemOwnership } from './resolveModuleItem'
 
 const MODULE_SLOTS: readonly WorkshopAssistModuleSlot[] = [
   'cannon',
@@ -54,7 +54,7 @@ export function workshopSlotForModuleInfoIndex(
   slot: WorkshopAssistModuleSlot
   moduleId: string
 } | null {
-  if (item) return resolveModuleItemToWorkshop(item)
+  if (item) return resolveModuleItemOwnership(item)
   for (const slot of MODULE_SLOTS) {
     const moduleId = gameWorkshopChassisModuleId(infoIndex, slot)
     if (moduleId) return { slot, moduleId }
@@ -111,7 +111,7 @@ export function buildModuleConfigLibraryFromPlayerSave(
   const library = defaultWorkshopModuleConfigLibrary()
 
   for (const item of save.moduleInventory) {
-    const resolved = resolveModuleItemToWorkshop(item)
+    const resolved = resolveModuleItemOwnership(item)
     if (!resolved) continue
     const entry = moduleConfigEntryFromDecodedItem(resolved.slot, item, 'main', 0)
     if (entry) putLibraryEntry(library, resolved.slot, 'main', resolved.moduleId, entry)
