@@ -10,6 +10,7 @@ import {
 import { applyAccountWorkspaceBackup } from './applyBackup'
 import {
   buildAccountWorkspaceBackupFromContext,
+  buildEmptyAccountWorkspaceBackup,
   hasMeaningfulWorkspaceData,
 } from './buildBackup'
 import { writeLocalAccountWorkspaceUpdatedAt } from './localUpdatedAt'
@@ -23,6 +24,7 @@ import {
   isAccountWorkspaceAuthError,
 } from './syncErrorMessage'
 import { migrateIdsMasterRefFromWorkspaceBackup } from '../effectivePaths/syncEffectivePathsIdsMasterRef'
+import { clearFullAppResetPending, isFullAppResetPending } from '../fullResetStorage'
 import { useLabHydration } from '../lab/labHydrationContext'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 
@@ -89,13 +91,23 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
   useEffect(() => {
     if (auth.loading) return
 
-    if (!hydrated || !auth.user || !auth.session || !accountWorkspaceSyncAvailable()) {
+    if (!hydrated || !auth.user || !auth.session) {
       if (!auth.user) loginSyncCompletedRef.current = null
       return
     }
 
     const userId = auth.user.id
-    if (loginSyncCompletedRef.current === userId) return
+    const fullResetPending = isFullAppResetPending()
+
+    if (!accountWorkspaceSyncAvailable()) {
+      if (fullResetPending) clearFullAppResetPending()
+      return
+    }
+
+    if (loginSyncCompletedRef.current === userId) {
+      if (fullResetPending) clearFullAppResetPending()
+      return
+    }
     if (loginSyncInFlightRef.current === userId) return
     loginSyncInFlightRef.current = userId
 
@@ -103,6 +115,30 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
 
     void (async () => {
       try {
+        if (fullResetPending) {
+          loginSyncCompletedRef.current = userId
+          skipPushRef.current = true
+          try {
+            const updatedAt = new Date().toISOString()
+            const emptyBackup = buildEmptyAccountWorkspaceBackup(updatedAt)
+            const saved = await saveBackupWithAuth(emptyBackup)
+            if (!cancelled) {
+              if (saved.ok) {
+                writeLocalAccountWorkspaceUpdatedAt(updatedAt)
+              } else {
+                publishImportNotice(
+                  accountWorkspaceErrorMessage(t, saved.error),
+                  'error',
+                )
+              }
+            }
+          } finally {
+            skipPushRef.current = false
+            clearFullAppResetPending()
+          }
+          return
+        }
+
         let token = await resolveAccessToken()
         if (!token || cancelled) return
 

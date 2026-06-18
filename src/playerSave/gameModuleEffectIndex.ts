@@ -573,8 +573,10 @@ function decodeArmorAncestralFamilyRemap(
     return { slot: 'armor', effectId: 'land-mine-chance', rarity: 'ancestral' }
   }
   if (
-    rawIndex === 114 &&
-    (decoded == null || (decoded.effectId === 'orb-speed' && decoded.rarity === 'epic'))
+    (rawIndex === 114 || rawIndex === 116) &&
+    (decoded == null ||
+      (decoded.effectId === 'orb-speed' &&
+        (decoded.rarity === 'epic' || decoded.rarity === 'legendary')))
   ) {
     return { slot: 'armor', effectId: 'orb-speed', rarity: 'legendary' }
   }
@@ -650,7 +652,15 @@ function decodeGeneratorAncestralFamilyRemap(
     (decoded == null ||
       (decoded.effectId === 'interest-wave' && decoded.rarity === 'epic'))
   ) {
-    return { slot: 'generator', effectId: 'recovery-amount', rarity: 'ancestral' }
+    return { slot: 'generator', effectId: 'interest-wave', rarity: 'ancestral' }
+  }
+  // Ancestral Interest/Wave stored on the next row's epic band (recovery-amount epic index).
+  if (
+    rawIndex === 200 &&
+    (decoded == null ||
+      (decoded.effectId === 'recovery-amount' && decoded.rarity === 'epic'))
+  ) {
+    return { slot: 'generator', effectId: 'interest-wave', rarity: 'ancestral' }
   }
   if (
     (rawIndex === 160 || rawIndex === 161) &&
@@ -757,6 +767,49 @@ function findCoreEffectWithRarity(
 /** Game table includes Golden Tower Bonus Ancestral at 284; import table starts ILM CD there. */
 const CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX = 284
 
+/** Om Chip main: sparse CL quantity/chance indices overlap the ancestral band. */
+function decodeCoreOmChipChainLightningSparseRemap(
+  rawIndex: number,
+): GameModuleEffectDecode | null {
+  if (rawIndex === 227 || rawIndex === 223) {
+    return findCoreEffectWithRarity('chain-lightning-quantity', 'epic')
+  }
+  if (rawIndex === 228) {
+    return { slot: 'core', effectId: 'chain-lightning-chance', rarity: 'rare' }
+  }
+  return null
+}
+
+/** Magnetic Hook main module sparse indices (epic+ and ancestral-family chassis). */
+function decodeCoreMagneticHookSparseRemap(
+  rawIndex: number,
+  decoded: GameModuleEffectDecode | null,
+): GameModuleEffectDecode | null {
+  if (
+    rawIndex === 305 &&
+    (decoded == null ||
+      (decoded.effectId === 'poison-swamp-cooldown-s' &&
+        (decoded.rarity === 'legendary' || decoded.rarity === 'mythic')))
+  ) {
+    return { slot: 'core', effectId: 'black-hole-size-m', rarity: 'common' }
+  }
+  if (
+    (rawIndex === 311 || rawIndex === 312) &&
+    (decoded == null ||
+      (decoded.effectId === 'black-hole-duration-s' && decoded.rarity === 'legendary'))
+  ) {
+    return findCoreEffectWithRarity('black-hole-duration-s', 'mythic')
+  }
+  if (
+    (rawIndex === 298 || rawIndex === 294) &&
+    (decoded == null ||
+      (decoded.effectId === 'poison-swamp-damage-x' && decoded.rarity === 'legendary'))
+  ) {
+    return findCoreEffectWithRarity('poison-swamp-duration-s', 'mythic')
+  }
+  return null
+}
+
 function decodeCoreHighTierRemap(
   rawIndex: number,
   decoded: GameModuleEffectDecode | null,
@@ -765,6 +818,14 @@ function decodeCoreHighTierRemap(
 ): GameModuleEffectDecode | null {
   const chassisEffectTier =
     chassisMerge != null ? workshopChassisModuleEffectTier(chassisMerge) : null
+
+  if (
+    chassisEffectTier != null &&
+    (chassisEffectTier === 'mythic' || chassisEffectTier === 'ancestral')
+  ) {
+    const magneticHook = decodeCoreMagneticHookSparseRemap(rawIndex, decoded)
+    if (magneticHook != null) return magneticHook
+  }
 
   if (
     rawIndex === CORE_GOLDEN_TOWER_BONUS_ANCESTRAL_INDEX &&
@@ -806,7 +867,7 @@ function decodeCoreHighTierRemap(
     if (rawIndex === 287) {
       return { slot: 'core', effectId: 'golden-tower-duration-s', rarity: 'ancestral' }
     }
-    if (rawIndex === 308) {
+    if (rawIndex === 308 || rawIndex === 309) {
       return findCoreEffectWithRarity('black-hole-size-m', 'mythic')
     }
     if (rawIndex === 224 || rawIndex === 227) {
@@ -818,6 +879,8 @@ function decodeCoreHighTierRemap(
     if (rawIndex === 234) {
       return { slot: 'core', effectId: 'smart-missiles-damage', rarity: 'rare' }
     }
+    const omChipCl = decodeCoreOmChipChainLightningSparseRemap(rawIndex)
+    if (omChipCl != null) return omChipCl
   }
   if (decoded == null) return null
 
@@ -884,21 +947,10 @@ function decodeCoreEpicMainSparseRemap(
   if (!isEpicTierCoreChassisMerge(chassisMerge)) {
     return null
   }
-  if (rawIndex === 227) {
-    return findCoreEffectWithRarity('chain-lightning-quantity', 'epic')
-  }
-  if (rawIndex === 228) {
-    return { slot: 'core', effectId: 'chain-lightning-chance', rarity: 'rare' }
-  }
-  if (rawIndex === 305) {
-    return { slot: 'core', effectId: 'black-hole-size-m', rarity: 'common' }
-  }
-  if (rawIndex === 311) {
-    return findCoreEffectWithRarity('black-hole-duration-s', 'mythic')
-  }
-  if (rawIndex === 298 || rawIndex === 294) {
-    return findCoreEffectWithRarity('poison-swamp-duration-s', 'mythic')
-  }
+  const magneticHook = decodeCoreMagneticHookSparseRemap(rawIndex, decoded)
+  if (magneticHook != null) return magneticHook
+  const omChipCl = decodeCoreOmChipChainLightningSparseRemap(rawIndex)
+  if (omChipCl != null) return omChipCl
   if (rawIndex === 264) {
     return { slot: 'core', effectId: 'chrono-field-speed-reduction', rarity: 'ancestral' }
   }

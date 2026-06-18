@@ -1,7 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   clearAllTowerExportStorage,
+  clearFullAppResetPending,
+  isFullAppResetPending,
   listTowerExportStorageKeys,
+  markFullAppResetPending,
   performFullAppReset,
   TOWER_EXPORT_STORAGE_KEY_PREFIX,
 } from './fullResetStorage'
@@ -12,7 +15,7 @@ import {
   THEME_OWNED_STORAGE_KEY,
 } from './themeOwnedStorage'
 
-function createLocalStorageMock() {
+function createStorageMock() {
   const store = new Map<string, string>()
   return {
     get length() {
@@ -37,7 +40,8 @@ function createLocalStorageMock() {
 }
 
 function stubBrowserGlobals() {
-  vi.stubGlobal('localStorage', createLocalStorageMock())
+  vi.stubGlobal('localStorage', createStorageMock())
+  vi.stubGlobal('sessionStorage', createStorageMock())
   vi.stubGlobal('window', {
     dispatchEvent: vi.fn(),
     addEventListener: vi.fn(),
@@ -77,10 +81,22 @@ describe('fullResetStorage', () => {
 
     performFullAppReset()
 
+    expect(isFullAppResetPending()).toBe(true)
     expect(window.location.reload).toHaveBeenCalledOnce()
     expect(localStorage.getItem(THEME_OWNED_STORAGE_KEY)).toBe('[]')
     expect(localStorage.getItem(CATALOG_DEFAULTS_MIGRATION_KEY)).toBe('1')
     migrateThemeOwnedCatalogDefaults()
     expect(readThemeOwnedIds().size).toBe(0)
+  })
+
+  it('full reset pending flag survives localStorage wipe and can be cleared', () => {
+    markFullAppResetPending()
+    expect(isFullAppResetPending()).toBe(true)
+
+    clearAllTowerExportStorage()
+    expect(isFullAppResetPending()).toBe(true)
+
+    clearFullAppResetPending()
+    expect(isFullAppResetPending()).toBe(false)
   })
 })

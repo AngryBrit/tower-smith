@@ -161,6 +161,31 @@ describe('mapModuleConfigLibrary', () => {
     })
   })
 
+  it('imports Magnetic Hook from infoIndex 44 inventory (BlueAngel196.dat)', () => {
+    const save = minimalSave({
+      moduleInventory: [
+        { infoIndex: 44, level: 1, rarity: 12, effects: [305, 312, 315, 298, 0, 0, 0, 0] },
+      ],
+    })
+    const ws = defaultWorkshopPersisted()
+    applyModuleConfigLibraryFromPlayerSave(ws, save)
+
+    expect(workshopModuleConfigEntry(ws, 'core', 'main', 'magneticHook')).toMatchObject({
+      level: 1,
+      rarity: 'star_2',
+    })
+    expect(workshopModuleConfigEntry(ws, 'core', 'main', 'magneticHook').submoduleSlots).toEqual([
+      { effectId: 'black-hole-size-m', rarity: 'common' },
+      { effectId: 'black-hole-duration-s', rarity: 'mythic' },
+      { effectId: 'black-hole-cooldown-s', rarity: 'mythic' },
+      { effectId: 'poison-swamp-duration-s', rarity: 'mythic' },
+      null,
+      null,
+      null,
+      null,
+    ])
+  })
+
   it('builds library entries from inventory and equipped modules', () => {
     const save = minimalSave({
       moduleInventory: [

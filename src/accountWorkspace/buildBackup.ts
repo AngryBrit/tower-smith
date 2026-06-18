@@ -1,10 +1,11 @@
-import { readGuardianChipState } from '../guardianChipStorage'
+import { readGuardianChipState, sanitizeGuardianChipState } from '../guardianChipStorage'
 import { parseLabPresetsFile, type LabPreset } from '../labPresetsStorage'
 import {
   buildLabPresetsPayloadWithWorkspace,
   TOWER_LAB_PRESETS_STORAGE_KEY,
 } from '../towerWorkspacePresets'
 import {
+  defaultTowerWorkspace,
   syncWorkspaceThemesFromStorage,
   type TowerWorkspaceV1,
 } from '../towerWorkspaceStorage'
@@ -33,6 +34,21 @@ export function hasMeaningfulWorkspaceData(
   if (hasNonEmptyPresetLabelsInBuild(workspace.build)) return true
   if (hasNonEmptyPresetLabelsInBuild(scratchWorkspace.build)) return true
   return false
+}
+
+/** Factory-default payload pushed to the cloud after a full app reset. */
+export function buildEmptyAccountWorkspaceBackup(
+  updatedAt: string = new Date().toISOString(),
+): AccountWorkspaceBackupV1 {
+  const workspace = defaultTowerWorkspace()
+  const scratchWorkspace = defaultTowerWorkspace()
+  const labPresets = buildLabPresetsPayloadWithWorkspace(
+    null,
+    [],
+    syncWorkspaceThemesFromStorage(workspace),
+    syncWorkspaceThemesFromStorage(scratchWorkspace),
+  )
+  return buildAccountWorkspaceBackup(labPresets, sanitizeGuardianChipState(null), updatedAt)
 }
 
 export function buildAccountWorkspaceBackupFromContext(

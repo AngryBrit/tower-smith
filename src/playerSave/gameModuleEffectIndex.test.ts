@@ -341,7 +341,7 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
-  it('decodes Project Funding ancestral main sparse indices (recovery, cash bonus)', () => {
+  it('decodes Project Funding ancestral main sparse indices (interest, cash bonus)', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'generator',
       [196, 212, 160, 162, 0, 0, 0, 0],
@@ -350,7 +350,7 @@ describe('gameModuleEffectIndex', () => {
       'star_2',
     )
     expect(imported.ordered[0]).toMatchObject({
-      effectId: 'recovery-amount',
+      effectId: 'interest-wave',
       rarity: 'ancestral',
     })
     expect(imported.ordered[1]).toMatchObject({
@@ -366,7 +366,39 @@ describe('gameModuleEffectIndex', () => {
       rarity: 'rare',
     })
     expect(imported.map).toMatchObject({
-      'recovery-amount': 'ancestral',
+      'interest-wave': 'ancestral',
+      'enemy-attack-level-skip': 'ancestral',
+      'cash-bonus': 'ancestral',
+      'cash-wave': 'rare',
+    })
+  })
+
+  it('decodes BlueAngel196 Project Funding 1★ sparse indices (interest at recovery epic row)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'generator',
+      [200, 212, 160, 162, 0, 0, 0, 0],
+      134,
+      0,
+      'star_1',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'interest-wave',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'enemy-attack-level-skip',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'cash-bonus',
+      rarity: 'ancestral',
+    })
+    expect(imported.ordered[3]).toMatchObject({
+      effectId: 'cash-wave',
+      rarity: 'rare',
+    })
+    expect(imported.map).toMatchObject({
+      'interest-wave': 'ancestral',
       'enemy-attack-level-skip': 'ancestral',
       'cash-bonus': 'ancestral',
       'cash-wave': 'rare',
@@ -462,6 +494,33 @@ describe('gameModuleEffectIndex', () => {
       { effectId: 'chain-lightning-quantity', rarity: 'epic' },
       { effectId: 'chain-lightning-chance', rarity: 'rare' },
     ])
+  })
+
+  it('decodes Om Chip ancestral main sparse indices (BlueAngel196)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [281, 223, 228, 0, 0, 0, 0, 0],
+      60,
+      0,
+      'ancestral',
+    )
+    expect(imported.ordered[0]).toMatchObject({
+      effectId: 'golden-tower-bonus',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[1]).toMatchObject({
+      effectId: 'chain-lightning-quantity',
+      rarity: 'epic',
+    })
+    expect(imported.ordered[2]).toMatchObject({
+      effectId: 'chain-lightning-chance',
+      rarity: 'rare',
+    })
+    expect(imported.map).toMatchObject({
+      'golden-tower-bonus': 'epic',
+      'chain-lightning-quantity': 'epic',
+      'chain-lightning-chance': 'rare',
+    })
   })
 
   it('decodes Dimension Core main effects (petethered)', () => {
@@ -592,6 +651,22 @@ describe('gameModuleEffectIndex', () => {
     })
   })
 
+  it('decodes Multiverse Nexus star_2 main sparse indices (BlueAngel196.dat)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [287, 309, 326, 227, 0, 0, 0, 0],
+      1,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'golden-tower-duration-s', rarity: 'ancestral' },
+      { effectId: 'black-hole-size-m', rarity: 'mythic' },
+      { effectId: 'spotlight-angle', rarity: 'ancestral' },
+      { effectId: 'chain-lightning-chance', rarity: 'common' },
+    ])
+  })
+
   it('decodes Magnetic Hook epic main sparse indices', () => {
     const imported = gameSubmoduleImportFromEffectIndices(
       'core',
@@ -622,6 +697,44 @@ describe('gameModuleEffectIndex', () => {
       'black-hole-cooldown-s': 'mythic',
       'poison-swamp-duration-s': 'mythic',
     })
+  })
+
+  it('decodes Magnetic Hook star_2 main sparse indices (BlueAngel196.dat)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [305, 312, 315, 298, 0, 0, 0, 0],
+      1,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'black-hole-size-m', rarity: 'common' },
+      { effectId: 'black-hole-duration-s', rarity: 'mythic' },
+      { effectId: 'black-hole-cooldown-s', rarity: 'mythic' },
+      { effectId: 'poison-swamp-duration-s', rarity: 'mythic' },
+    ])
+    expect(imported.map).toMatchObject({
+      'black-hole-size-m': 'common',
+      'black-hole-duration-s': 'mythic',
+      'black-hole-cooldown-s': 'mythic',
+      'poison-swamp-duration-s': 'mythic',
+    })
+  })
+
+  it('decodes Magnetic Hook star_2 assist sparse indices when a main core is equipped', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'core',
+      [305, 312, 315, 298, 0, 0, 0, 0],
+      1,
+      138,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'black-hole-size-m', rarity: 'common' },
+      { effectId: 'black-hole-duration-s', rarity: 'mythic' },
+      { effectId: 'black-hole-cooldown-s', rarity: 'mythic' },
+      { effectId: 'poison-swamp-duration-s', rarity: 'mythic' },
+    ])
   })
 
   it('decodes Black Hole Digestor main generator sparse indices (petethered)', () => {
@@ -815,6 +928,28 @@ describe('gameModuleEffectIndex', () => {
       'armor',
       [133, 120, 114, 146, 0, 0, 0, 0],
       100,
+      0,
+      'star_2',
+    )
+    expect(imported.ordered.slice(0, 4)).toEqual([
+      { effectId: 'land-mine-chance', rarity: 'ancestral' },
+      { effectId: 'orbs', rarity: 'ancestral' },
+      { effectId: 'orb-speed', rarity: 'legendary' },
+      { effectId: 'death-defy', rarity: 'ancestral' },
+    ])
+    expect(imported.map).toMatchObject({
+      'land-mine-chance': 'ancestral',
+      orbs: 'ancestral',
+      'orb-speed': 'legendary',
+      'death-defy': 'ancestral',
+    })
+  })
+
+  it('decodes Space Displacer star_2 orb-speed at slot 3 when sparse index 116 precedes 146 (BlueAngel196.dat)', () => {
+    const imported = gameSubmoduleImportFromEffectIndices(
+      'armor',
+      [133, 120, 116, 146, 0, 0, 0, 0],
+      1,
       0,
       'star_2',
     )
