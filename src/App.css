@@ -2877,6 +2877,13 @@ html[data-color-scheme='high-contrast'] {
   white-space: nowrap;
 }
 
+.select-research__compare-table td.select-research__compare-table-cell--wrap {
+  max-width: 14rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  font-variant-numeric: normal;
+}
+
 .select-research__compare-footnote {
   margin: 0.5rem 0 0;
   font-size: 0.62rem;

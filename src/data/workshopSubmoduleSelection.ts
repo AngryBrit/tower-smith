@@ -5,10 +5,12 @@
 
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 import type { WorkshopAssistModuleSlot } from './workshopSimModules'
+import { WORKSHOP_ASSIST_MODULE_SLOTS } from './workshopSimModules'
 import {
   parseSubmoduleCellNumber,
   WORKSHOP_SUBMODULE_SECTIONS,
   WORKSHOP_SUBMODULE_SLOT_COUNT,
+  submoduleEffectDisplayName,
   submoduleEffectId,
   workshopSubmoduleSlotUnlocked,
 } from './workshopSubmoduleCatalog'
@@ -408,6 +410,76 @@ export function serializeSubmoduleSelections(
   selections: WorkshopSubmoduleSelections,
 ): string {
   return JSON.stringify(selections)
+}
+
+export const SUBMODULE_SELECTIONS_COMPARE_PREVIEW = 4
+
+const SUBMODULE_SLOT_LABEL: Record<WorkshopAssistModuleSlot, string> = {
+  cannon: 'Cannon',
+  armor: 'Armor',
+  generator: 'Generator',
+  core: 'Core',
+}
+
+function submoduleCatalogLabelForSlot(
+  slot: WorkshopAssistModuleSlot,
+  effectId: string,
+): string | null {
+  const section = WORKSHOP_SUBMODULE_SECTIONS[slot]
+  for (const row of section.rows) {
+    if (submoduleEffectId(row.label) === effectId) return row.label
+  }
+  return null
+}
+
+function formatSubmodulePickLine(
+  slot: WorkshopAssistModuleSlot,
+  role: WorkshopSubmoduleModuleRole,
+  pick: WorkshopSubmoduleEffectPick,
+): string {
+  const catalogLabel = submoduleCatalogLabelForSlot(slot, pick.effectId)
+  const effectName = catalogLabel
+    ? submoduleEffectDisplayName(catalogLabel)
+    : pick.effectId.replace(/-/g, ' ')
+  const rarity =
+    pick.rarity.charAt(0).toUpperCase() + pick.rarity.slice(1)
+  const roleLabel = role === 'main' ? 'main' : 'assist'
+  return `${SUBMODULE_SLOT_LABEL[slot]} ${roleLabel} · ${effectName} (${rarity})`
+}
+
+/** Stable compare key for equipped submodule effects. */
+export function submoduleSelectionsCompareKey(
+  selections: WorkshopSubmoduleSelections,
+): string {
+  return serializeSubmoduleSelections(sanitizeSubmoduleSelections(selections))
+}
+
+/** Compact compare-cell text with a full per-effect list in `title`. */
+export function formatSubmoduleSelectionsCompareCell(
+  selections: WorkshopSubmoduleSelections,
+): { display: string; title: string } {
+  const sanitized = sanitizeSubmoduleSelections(selections)
+  const ws = { simSubmoduleSelections: sanitized }
+  const lines: string[] = []
+  for (const slot of WORKSHOP_ASSIST_MODULE_SLOTS) {
+    for (const role of ['main', 'assist'] as const) {
+      const ordered = workshopSubmoduleOrderedSlots(ws, slot, role)
+      for (const pick of ordered) {
+        if (!pick) continue
+        lines.push(formatSubmodulePickLine(slot, role, pick))
+      }
+    }
+  }
+  if (lines.length === 0) return { display: 'None', title: '' }
+  const title = lines.join('\n')
+  if (lines.length <= SUBMODULE_SELECTIONS_COMPARE_PREVIEW) {
+    return { display: lines.join('; '), title }
+  }
+  const preview = lines.slice(0, SUBMODULE_SELECTIONS_COMPARE_PREVIEW).join('; ')
+  return {
+    display: `${lines.length} submodule effects (${preview}, …)`,
+    title,
+  }
 }
 
 export function parseSubmoduleSelectionsJson(raw: unknown): WorkshopSubmoduleSelections {

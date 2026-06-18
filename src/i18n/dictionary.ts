@@ -1797,6 +1797,8 @@ export const STRINGS_EN = {
   sr_ws_field_main_tab: 'Main tab',
   sr_ws_field_category: 'Category',
   sr_ws_field_multiplier: 'Buy multiplier',
+  sr_ws_field_relic_owned: 'Owned relics',
+  sr_ws_field_submodule_selections: 'Submodule effects',
   sr_compare_run: 'Compare',
   sr_compare_busy: 'Comparing…',
   sr_compare_clear: 'Clear',

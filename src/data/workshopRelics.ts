@@ -132,3 +132,40 @@ export function parseRelicOwnedIdsCell(valCell: string): string[] {
   }
   return []
 }
+
+export const RELIC_OWNED_COMPARE_PREVIEW = 4
+
+export function relicDisplayName(id: string): string {
+  return workshopRelicDef(id)?.name ?? id
+}
+
+function relicOwnedIdsInCatalogOrder(ids: readonly string[]): string[] {
+  const order = new Map(WORKSHOP_RELIC_ORDER.map((id, index) => [id, index]))
+  return [...ids].sort(
+    (a, b) => (order.get(a) ?? Number.MAX_SAFE_INTEGER) - (order.get(b) ?? Number.MAX_SAFE_INTEGER),
+  )
+}
+
+/** Stable compare key for owned relic sets (order-independent). */
+export function relicOwnedIdsCompareKey(ids: readonly string[]): string {
+  return [...ids].sort().join('|')
+}
+
+/** Compact compare-cell text with full human-readable list in `title`. */
+export function formatRelicOwnedIdsCompareCell(ids: readonly string[]): {
+  display: string
+  title: string
+} {
+  const sorted = relicOwnedIdsInCatalogOrder(ids)
+  const names = sorted.map(relicDisplayName)
+  const title = names.join(', ')
+  if (names.length === 0) return { display: '0', title: '' }
+  if (names.length <= RELIC_OWNED_COMPARE_PREVIEW) {
+    return { display: title, title }
+  }
+  const preview = names.slice(0, RELIC_OWNED_COMPARE_PREVIEW).join(', ')
+  return {
+    display: `${names.length} relics (${preview}, …)`,
+    title,
+  }
+}

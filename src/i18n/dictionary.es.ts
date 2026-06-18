@@ -1824,6 +1824,8 @@ export const STRINGS_ES = {
   sr_ws_field_main_tab: 'Pestaña principal',
   sr_ws_field_category: 'Categoría',
   sr_ws_field_multiplier: 'Multiplicador de compra',
+  sr_ws_field_relic_owned: 'Reliquias poseídas',
+  sr_ws_field_submodule_selections: 'Efectos de submódulos',
   sr_compare_run: 'Comparar',
   sr_compare_busy: 'Comparando…',
   sr_compare_clear: 'Borrar',

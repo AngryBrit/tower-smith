@@ -190,6 +190,10 @@ function workshopFieldLabel(field: WorkshopCompareRow['field'], t: TFn): string 
       return t('sr_ws_field_category')
     case 'multiplier':
       return t('sr_ws_field_multiplier')
+    case 'relicOwnedIds':
+      return t('sr_ws_field_relic_owned')
+    case 'simSubmoduleSelections':
+      return t('sr_ws_field_submodule_selections')
     default:
       return field
   }
@@ -610,8 +614,26 @@ export function LabCompareDialog({
                       .map((row) => (
                         <tr key={row.field}>
                           <td>{workshopFieldLabel(row.field, t)}</td>
-                          <td>{row.valueA}</td>
-                          <td>{row.valueB}</td>
+                          <td
+                            className={
+                              row.valueATitle
+                                ? 'select-research__compare-table-cell--wrap'
+                                : undefined
+                            }
+                            title={row.valueATitle}
+                          >
+                            {row.valueA}
+                          </td>
+                          <td
+                            className={
+                              row.valueBTitle
+                                ? 'select-research__compare-table-cell--wrap'
+                                : undefined
+                            }
+                            title={row.valueBTitle}
+                          >
+                            {row.valueB}
+                          </td>
                         </tr>
                       ))}
                   </tbody>

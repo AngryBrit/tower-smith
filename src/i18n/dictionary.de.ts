@@ -1757,6 +1757,8 @@ export const STRINGS_DE = {
   sr_ws_field_main_tab: 'Haupt-Tab',
   sr_ws_field_category: 'Kategorie',
   sr_ws_field_multiplier: 'Kauf-Multiplikator',
+  sr_ws_field_relic_owned: 'Besessene Relikte',
+  sr_ws_field_submodule_selections: 'Submodul-Effekte',
   sr_compare_run: 'Vergleichen',
   sr_compare_busy: 'Vergleiche…',
   sr_compare_clear: 'Leeren',

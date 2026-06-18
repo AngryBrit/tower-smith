@@ -6,6 +6,7 @@ import {
   cannonSubmoduleAttackSpeedFromSelections,
   defaultWorkshopSubmoduleSelections,
   defaultWorkshopSubmoduleSlotSelections,
+  formatSubmoduleSelectionsCompareCell,
   parseSubmoduleSelectionsJson,
   sanitizeSubmoduleSelectionMap,
   sanitizeSubmoduleSelections,
@@ -153,5 +154,33 @@ describe('workshopSubmoduleSelection', () => {
     expect(parsed.cannon.main).toEqual({ 'attack-speed': 'epic' })
     expect(parsed.cannon.assist).toEqual({ 'crit-chance': 'rare' })
     expect(parsed.armor).toEqual(defaultWorkshopSubmoduleSlotSelections())
+  })
+
+  it('formats submodule selections for compare cells with readable labels', () => {
+    const selections = defaultWorkshopSubmoduleSelections()
+    selections.cannon.main = {
+      'crit-chance': 'legendary',
+      'attack-speed': 'legendary',
+      'multishot-chance': 'legendary',
+      'crit-factor': 'legendary',
+      'rapid-fire-duration': 'legendary',
+    }
+    selections.cannon.mainSlots = [
+      { effectId: 'crit-chance', rarity: 'legendary' },
+      { effectId: 'attack-speed', rarity: 'legendary' },
+      { effectId: 'multishot-chance', rarity: 'legendary' },
+      { effectId: 'crit-factor', rarity: 'legendary' },
+      { effectId: 'rapid-fire-duration', rarity: 'legendary' },
+      null,
+      null,
+      null,
+    ]
+
+    const cell = formatSubmoduleSelectionsCompareCell(selections)
+    expect(cell.display).toMatch(/^5 submodule effects \(.+, …\)$/)
+    expect(cell.display).toContain('Critical Chance')
+    expect(cell.display).not.toContain('crit-chance')
+    expect(cell.title).toContain('Cannon main · Critical Chance (Legendary)')
+    expect(cell.title).toContain('Cannon main · Attack Speed (Legendary)')
   })
 })
