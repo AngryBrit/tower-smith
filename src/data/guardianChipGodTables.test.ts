@@ -23,6 +23,7 @@ import {
   guardianChipScoutMarginalCost,
   guardianChipScoutTrackLevel,
   guardianChipSummonMarginalCost,
+  guardianChipSummonTotalCostAtLevel,
   guardianChipSummonTrackLevel,
 } from './guardianChipGodTables'
 
@@ -282,6 +283,15 @@ describe('guardianChipGodTables — Summon chip', () => {
     expect(guardianChipSummonMarginalCost('duration', 1)).toBe(15)
     expect(guardianChipSummonMarginalCost('duration', 2)).toBe(10)
     expect(guardianChipSummonMarginalCost('cashBonus', 5)).toBe(100)
+  })
+
+  it('inventory bits match in-game cumulative cost for current tier', () => {
+    expect(guardianChipSummonTotalCostAtLevel('cooldown', 42)).toBe(81)
+    expect(guardianChipSummonTotalCostAtLevel('duration', 24)).toBe(235)
+    expect(guardianChipSummonTotalCostAtLevel('cashBonus', 4)).toBe(300)
+    expect(formatGuardianChipSummonValue('cooldown', 41)).toBe('100s')
+    expect(formatGuardianChipSummonValue('duration', 23)).toBe('27s')
+    expect(formatGuardianChipSummonValue('cashBonus', 3)).toBe('x3.0')
   })
 })
 

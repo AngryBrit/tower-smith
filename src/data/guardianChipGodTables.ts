@@ -191,6 +191,13 @@ export function guardianChipAllyValueAtLevel(
   return guardianChipAllyTrackLevel(track, level)?.value
 }
 
+export function guardianChipAllyTotalCostAtLevel(
+  track: GuardianChipAllyTrackId,
+  level: number,
+): number | undefined {
+  return guardianChipAllyTrackLevel(track, level)?.totalCost
+}
+
 export function guardianChipAllyMarginalCost(
   track: GuardianChipAllyTrackId,
   fromLevel: number,
@@ -250,6 +257,13 @@ export function guardianChipBountyValueAtLevel(
   level: number,
 ): number | undefined {
   return guardianChipBountyTrackLevel(track, level)?.value
+}
+
+export function guardianChipBountyTotalCostAtLevel(
+  track: GuardianChipBountyTrackId,
+  level: number,
+): number | undefined {
+  return guardianChipBountyTrackLevel(track, level)?.totalCost
 }
 
 export function guardianChipBountyMarginalCost(
@@ -313,6 +327,13 @@ export function guardianChipFetchValueAtLevel(
   return guardianChipFetchTrackLevel(track, level)?.value
 }
 
+export function guardianChipFetchTotalCostAtLevel(
+  track: GuardianChipFetchTrackId,
+  level: number,
+): number | undefined {
+  return guardianChipFetchTrackLevel(track, level)?.totalCost
+}
+
 export function guardianChipFetchMarginalCost(
   track: GuardianChipFetchTrackId,
   fromLevel: number,
@@ -373,6 +394,13 @@ export function guardianChipSummonValueAtLevel(
   return guardianChipSummonTrackLevel(track, level)?.value
 }
 
+export function guardianChipSummonTotalCostAtLevel(
+  track: GuardianChipSummonTrackId,
+  level: number,
+): number | undefined {
+  return guardianChipSummonTrackLevel(track, level)?.totalCost
+}
+
 export function guardianChipSummonMarginalCost(
   track: GuardianChipSummonTrackId,
   fromLevel: number,
@@ -431,6 +459,13 @@ export function guardianChipScoutValueAtLevel(
   level: number,
 ): number | undefined {
   return guardianChipScoutTrackLevel(track, level)?.value
+}
+
+export function guardianChipScoutTotalCostAtLevel(
+  track: GuardianChipScoutTrackId,
+  level: number,
+): number | undefined {
+  return guardianChipScoutTrackLevel(track, level)?.totalCost
 }
 
 export function guardianChipScoutMarginalCost(

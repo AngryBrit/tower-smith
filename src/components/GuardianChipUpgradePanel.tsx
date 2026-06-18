@@ -11,7 +11,7 @@ export type GuardianChipUpgradeTrackConfig<TTrack extends string> = {
   upgrades: Record<TTrack, number>
   maxLevel: (track: TTrack) => number
   formatValue: (track: TTrack, level: number) => string
-  marginalCost: (track: TTrack, fromLevel: number) => number | undefined
+  totalCostAtLevel: (track: TTrack, level: number) => number | undefined
   clampLevel: (track: TTrack, level: number) => number
   onBump: (track: TTrack, direction: -1 | 1) => void
   onSetLevel: (track: TTrack, level: number) => void
@@ -73,7 +73,10 @@ export function GuardianChipUpgradePanel<TTrack extends string>({
                   const max = tracks.maxLevel(track)
                   const maxed = level >= max
                   const label = t(tracks.trackLabels[track])
-                  const nextCost = tracks.marginalCost(track, level)
+                  const bitsInvested = tracks.totalCostAtLevel(
+                    track,
+                    Math.min(level + 1, max),
+                  )
 
                   return (
                     <div
@@ -108,7 +111,7 @@ export function GuardianChipUpgradePanel<TTrack extends string>({
                           title={
                             maxed
                               ? t('ws_max')
-                              : t('guardians_chip_upgrade_cost_title')
+                              : t('guardians_chip_bits_invested_title')
                           }
                         >
                           {maxed ? (
@@ -118,7 +121,7 @@ export function GuardianChipUpgradePanel<TTrack extends string>({
                             </>
                           ) : (
                             <>
-                              <span>{String(nextCost ?? 0)}</span>
+                              <span>{String(bitsInvested ?? 0)}</span>
                               <BitsGlyph className="workshop__uw-bits" />
                             </>
                           )}

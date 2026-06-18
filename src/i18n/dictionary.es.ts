@@ -233,6 +233,7 @@ export const STRINGS_ES = {
   guardians_scout_track_duration: 'Duración',
   guardians_chip_upgrade_cost: '{{cost}}',
   guardians_chip_upgrade_cost_title: 'Coste de mejora en Bits',
+  guardians_chip_bits_invested_title: 'Bits totales invertidos en esta vía',
   guardians_chip_max: 'Máx',
   guardians_chip_level_down_aria: 'Reducir {{track}}',
   guardians_chip_level_up_aria: 'Aumentar {{track}}',
