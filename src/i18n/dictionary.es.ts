@@ -1037,6 +1037,10 @@ export const STRINGS_ES = {
   ws_modules_inventory_detail_aria: 'Configuración del módulo seleccionado',
   ws_modules_module_select_aria: 'Seleccionar {{module}}',
   ws_modules_module_unowned_aria: '{{module}} (no poseído)',
+  ws_modules_module_owned_copies_aria: '{{module}} ({{count}} copias)',
+  ws_modules_inventory_copy_badge: '×{{count}}',
+  ws_modules_inventory_copies_title: 'Copias en posesión ({{count}})',
+  ws_modules_inventory_copy_line: '{{tier}} Nv. {{level}}',
   ws_modules_catalog_select_hint:
     'Haz clic en un módulo o en un valor de rareza para equiparlo en este chasis.',
   ws_modules_level_prefix: 'Nv.',

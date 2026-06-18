@@ -127,6 +127,11 @@ import {
   type WorkshopModuleConfigLibrary,
 } from './data/workshopModuleConfigLibrary'
 import {
+  defaultWorkshopModuleCopyCountsLibrary,
+  sanitizeWorkshopModuleCopyCounts,
+  type WorkshopModuleCopyCountsLibrary,
+} from './data/workshopModuleCopyCounts'
+import {
   clampWorkshopCardEquipSlots,
   defaultCardPresetLoadouts,
   sanitizeCardPresetLoadouts,
@@ -384,6 +389,8 @@ export type WorkshopPersistedV1 = {
   simChassisModuleConfigs: WorkshopModuleConfigLibrary
   /** When true, inventory tiles are limited to modules from a playerInfo.dat import. */
   moduleInventoryFromPlayerSave: boolean
+  /** Physical copy counts per module (inventory + equipped) when imported from playerInfo.dat. */
+  simChassisModuleCopyCounts: WorkshopModuleCopyCountsLibrary
   /** Assist chassis slot unlocked (stones). */
   simCannonAssistUnlocked: boolean
   simArmorAssistUnlocked: boolean
@@ -502,6 +509,7 @@ export function resetWorkshopModules(current: WorkshopPersistedV1): WorkshopPers
     ...defaultWorkshopModulesPersistedFields(),
     moduleInventoryFromPlayerSave: false,
     simChassisModuleConfigs: defaultWorkshopModuleConfigLibrary(),
+    simChassisModuleCopyCounts: defaultWorkshopModuleCopyCountsLibrary(),
   }
 }
 
@@ -737,6 +745,7 @@ export function defaultWorkshopPersisted(): WorkshopPersistedV1 {
     simPerkDamageQuantity: 0,
     ...defaultWorkshopModulesPersistedFields(),
     simChassisModuleConfigs: defaultWorkshopModuleConfigLibrary(),
+    simChassisModuleCopyCounts: defaultWorkshopModuleCopyCountsLibrary(),
     moduleInventoryFromPlayerSave: false,
     ...defaultUltimateLevels(),
     ...defaultUltimateActive(),
@@ -1044,6 +1053,7 @@ export function sanitizeWorkshopPersisted(raw: unknown): WorkshopPersistedV1 {
     })(),
     simChassisModuleConfigs: sanitizeWorkshopModuleConfigLibrary(o.simChassisModuleConfigs),
     moduleInventoryFromPlayerSave: o.moduleInventoryFromPlayerSave === true,
+    simChassisModuleCopyCounts: sanitizeWorkshopModuleCopyCounts(o.simChassisModuleCopyCounts),
     simBerserkerDamageTaken: Math.max(0, Number(o.simBerserkerDamageTaken) || 0),
     relicOwnedIds: parseRelicOwnedIdsJson(o.relicOwnedIds),
     simRelicsBonusFraction: Math.max(0, Number(o.simRelicsBonusFraction) || 0),

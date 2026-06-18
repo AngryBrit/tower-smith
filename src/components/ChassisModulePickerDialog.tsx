@@ -55,6 +55,7 @@ import {
 } from '../data/workshopSubmoduleEffects'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
+import type { WorkshopModuleCopySummary } from '../data/workshopModuleCopyCounts'
 
 const SLOT_LABEL: Record<WorkshopAssistModuleSlot, StringId> = {
   cannon: 'ws_sim_module_cannon',
@@ -122,6 +123,8 @@ type ChassisModulePickerDialogProps = {
   submoduleOrderedSlots?: WorkshopSubmoduleOrderedSlots
   /** When `pickerRole` is assist, scales equipped sub-effect values by sub-stone + lab %. */
   assistSubmoduleBonusContext?: WorkshopSubmoduleBonusContext
+  /** Physical copies from player save (inventory + equipped). */
+  moduleCopySummary?: WorkshopModuleCopySummary | null
   onEquip: () => void
   onUnequip: () => void
   onSelectEffect: (
@@ -299,6 +302,7 @@ export function ChassisModulePickerDialog({
   submoduleSelections,
   submoduleOrderedSlots,
   assistSubmoduleBonusContext,
+  moduleCopySummary = null,
   onEquip,
   onUnequip,
   onSelectEffect,
@@ -488,6 +492,35 @@ export function ChassisModulePickerDialog({
             ) : null}
           </div>
         </div>
+
+        {moduleCopySummary != null && moduleCopySummary.count > 1 ? (
+          <section
+            className="modules-picker__copies"
+            aria-labelledby={`${titleId}-copies`}
+          >
+            <h3 id={`${titleId}-copies`} className="modules-picker__section-title">
+              {t('ws_modules_inventory_copies_title').replace(
+                '{{count}}',
+                String(moduleCopySummary.count),
+              )}
+            </h3>
+            <ul className="modules-picker__copies-list">
+              {moduleCopySummary.copies.map((copy, index) => (
+                <li
+                  key={`${copy.rarity}-${copy.level}-${index}`}
+                  className={[
+                    'modules-picker__copies-item',
+                    WORKSHOP_CHASSIS_MODULE_RARITY_CLASS[copy.rarity],
+                  ].join(' ')}
+                >
+                  {t('ws_modules_inventory_copy_line')
+                    .replace('{{tier}}', t(MERGE_TIER_LABEL[copy.rarity]))
+                    .replace('{{level}}', String(copy.level))}
+                </li>
+              ))}
+            </ul>
+          </section>
+        ) : null}
 
         <label className="modules-picker__field">
           <span className="modules-picker__field-label">{t('ws_modules_picker_rarity')}</span>

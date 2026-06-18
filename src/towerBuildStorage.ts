@@ -144,6 +144,7 @@ const MODULES_KEYS = [
   'simSubmoduleSelections',
   'simChassisModuleConfigs',
   'moduleInventoryFromPlayerSave',
+  'simChassisModuleCopyCounts',
   'simAttackSpeedModuleSubEffect',
   'simCannonAssistUnlocked',
   'simArmorAssistUnlocked',

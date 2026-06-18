@@ -37,6 +37,7 @@ import {
   workshopPersistedWithModuleConfigEffectToggle,
   workshopPersistedWithModuleConfigEntry,
 } from '../data/workshopModuleConfigLibrary'
+import { workshopModuleCopySummary } from '../data/workshopModuleCopyCounts'
 import {
   workshopSubmoduleSelections,
 } from '../data/workshopSubmoduleSelection'
@@ -863,6 +864,11 @@ export function WorkshopModulesPanel({
                         labOverrides: labLevelOverrides,
                       }
                     : undefined
+                }
+                moduleCopySummary={
+                  viewModuleId != null
+                    ? workshopModuleCopySummary(workshopPersisted, pickerSlot, viewModuleId)
+                    : null
                 }
                 onEquip={() => {
                   if (viewModuleId == null) return

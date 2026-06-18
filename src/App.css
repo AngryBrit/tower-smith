@@ -6475,6 +6475,46 @@ button.workshop__uw-plus-cost--display:hover {
   font-variant-numeric: tabular-nums;
 }
 
+.modules-inventory__copy-badge {
+  position: absolute;
+  top: 0.02rem;
+  left: 0.02rem;
+  z-index: 4;
+  min-width: 1.1rem;
+  padding: 0.06rem 0.28rem;
+  border-radius: 0.22rem;
+  background: rgba(2, 6, 23, 0.92);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+  color: #f8fafc;
+  font-size: 0.5rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  pointer-events: none;
+}
+
+.modules-picker__copies {
+  margin-top: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.modules-picker__copies-list {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.35rem 0.5rem;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.modules-picker__copies-item {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(226, 232, 240, 0.92);
+  text-align: center;
+  min-width: 0;
+}
+
 .modules-inventory__border {
   position: absolute;
   inset: 0;

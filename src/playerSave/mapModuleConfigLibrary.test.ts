@@ -225,6 +225,7 @@ describe('mapModuleConfigLibrary', () => {
     applyModuleConfigLibraryFromPlayerSave(ws, save)
 
     expect(workshopModuleConfigEntry(ws, 'cannon', 'main', 'astralDeliverance').level).toBe(20)
+    expect(ws.simChassisModuleCopyCounts.cannon.astralDeliverance?.count).toBe(2)
   })
 
   it('maps submodule effects from decoded item', () => {

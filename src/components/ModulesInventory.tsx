@@ -19,6 +19,7 @@ import {
   workshopModuleConfigEntry,
   workshopModuleIsOwned,
 } from '../data/workshopModuleConfigLibrary'
+import { workshopModuleCopySummary } from '../data/workshopModuleCopyCounts'
 import {
   WORKSHOP_ASSIST_MODULE_SLOTS,
   type WorkshopAssistModuleSlot,
@@ -43,16 +44,28 @@ type ModulesInventoryProps = {
   onSelectModule: (slot: WorkshopAssistModuleSlot, moduleId: string) => void
 }
 
+function ModuleInventoryCopyBadge({ count }: { count: number }) {
+  const { t } = useI18n()
+  if (count <= 1) return null
+  return (
+    <span className="modules-inventory__copy-badge" aria-hidden>
+      {t('ws_modules_inventory_copy_badge').replace('{{count}}', String(count))}
+    </span>
+  )
+}
+
 function ModuleInventoryTileIcon({
   slot,
   moduleId,
   rarity,
   moduleLevel,
+  copyCount,
 }: {
   slot: WorkshopAssistModuleSlot
   moduleId: string
   rarity: WorkshopChassisModuleMergeTier
   moduleLevel: number | null
+  copyCount: number | null
 }) {
   const shape = MODULE_HUB_SLOT_ART[slot].shape
   const dedicatedUrl = workshopChassisModuleDedicatedImageUrl(slot, moduleId)
@@ -91,6 +104,9 @@ function ModuleInventoryTileIcon({
           draggable={false}
           onError={() => setIconFailed(true)}
         />
+      ) : null}
+      {copyCount != null && copyCount > 1 ? (
+        <ModuleInventoryCopyBadge count={copyCount} />
       ) : null}
       {moduleLevel != null ? <ModuleLevelOverlay value={moduleLevel} /> : null}
     </span>
@@ -196,6 +212,12 @@ export function ModulesInventory({
                       ? assist.rarity
                       : mainConfig.rarity
                   const isOwned = workshopModuleIsOwned(workshopPersisted, slot, moduleId)
+                  const copySummary = workshopModuleCopySummary(
+                    workshopPersisted,
+                    slot,
+                    moduleId,
+                  )
+                  const copyCount = copySummary?.count ?? null
                   const moduleLevel = !isOwned
                     ? null
                     : equippedAssist && !equippedMain
@@ -228,9 +250,13 @@ export function ModulesInventory({
                         aria-pressed={isSelected}
                         aria-disabled={!isOwned}
                         aria-label={
-                          isOwned
-                            ? t('ws_modules_module_select_aria').replace('{{module}}', def.name)
-                            : t('ws_modules_module_unowned_aria').replace('{{module}}', def.name)
+                          !isOwned
+                            ? t('ws_modules_module_unowned_aria').replace('{{module}}', def.name)
+                            : copyCount != null && copyCount > 1
+                              ? t('ws_modules_module_owned_copies_aria')
+                                  .replace('{{module}}', def.name)
+                                  .replace('{{count}}', String(copyCount))
+                              : t('ws_modules_module_select_aria').replace('{{module}}', def.name)
                         }
                       >
                         <ModuleInventoryTileIcon
@@ -238,6 +264,7 @@ export function ModulesInventory({
                           moduleId={moduleId}
                           rarity={tileRarity}
                           moduleLevel={moduleLevel}
+                          copyCount={copyCount}
                         />
                         <span
                           className={[
