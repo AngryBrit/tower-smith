@@ -45,7 +45,7 @@ function loadNameToId() {
     [normalizeName('Game Joystick'), 'holy_joystick'],
     [normalizeName('Holy Joystick'), 'holy_joystick'],
     [normalizeName('Controller'), 'controller'],
-    [normalizeName('Cheers'), 'champagne'],
+    [normalizeName('Cheers'), 'cheers'],
     [normalizeName('Champagne'), 'champagne'],
     [normalizeName('Gnosis'), 'gnosis'],
     [normalizeName('Omniscience'), 'gnosis'],

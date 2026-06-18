@@ -15,6 +15,16 @@ describe('gameRelicMapping', () => {
     expect(workshopRelicIdAtGameIndex(275)).toBe('celebration')
   })
 
+  it('maps Cheers and Champagne to distinct workshop relics', () => {
+    expect(workshopRelicIdAtGameIndex(49)).toBe('cheers')
+    expect(workshopRelicIdAtGameIndex(221)).toBe('champagne')
+  })
+
+  it('maps Valentine 550/700 medal tiers to Love Letter and Lovely Gift', () => {
+    expect(workshopRelicIdAtGameIndex(205)).toBe('love_letter')
+    expect(workshopRelicIdAtGameIndex(206)).toBe('lovely_gift')
+  })
+
   it('imports 1st Tower Birthday from sample save, not 3rd–6th', async () => {
     if (!existsSync(SAMPLE)) return
     const save = await decodePlayerInfoFile(new Uint8Array(readFileSync(SAMPLE)))

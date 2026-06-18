@@ -19,7 +19,7 @@ const EFFECTIVE_PATHS_RELIC_NAME_ALIASES: Readonly<Record<string, string>> = {
   [normalizeEffectivePathsRelicName('Game Joystick')]: 'holy_joystick',
   [normalizeEffectivePathsRelicName('Holy Joystick')]: 'holy_joystick',
   [normalizeEffectivePathsRelicName('Controller')]: 'controller',
-  [normalizeEffectivePathsRelicName('Cheers')]: 'champagne',
+  [normalizeEffectivePathsRelicName('Cheers')]: 'cheers',
   [normalizeEffectivePathsRelicName('Champagne')]: 'champagne',
   [normalizeEffectivePathsRelicName('Gnosis')]: 'gnosis',
   [normalizeEffectivePathsRelicName('Omniscience')]: 'gnosis',

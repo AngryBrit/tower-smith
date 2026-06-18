@@ -54,7 +54,7 @@ const ENUM_OVERRIDES = {
   HolyJoystick: 'holy_joystick',
   Controller: 'game_joystick',
   Fireworks: 'firework',
-  Cheers: 'champagne',
+  Cheers: 'cheers',
   Pumpkin: 'jack_o_lantern',
   PixelCubeHeart: 'pixel_heart',
   CreepyEye: 'dark_sight',
@@ -253,6 +253,13 @@ const ENUM_OVERRIDES = {
   CutePetCat: 'pet_cat',
 }
 
+/** Save index → workshop id when enum names disagree with medal-tier relic identity. */
+const INDEX_OVERRIDES = {
+  // Valentine: enum LovelyGift/LoveLetter names are reversed vs 550/700 medal tiers.
+  205: 'love_letter',
+  206: 'lovely_gift',
+}
+
 function norm(s) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, '')
 }
@@ -310,6 +317,14 @@ for (const { index, enumName } of entries) {
   if (!catalogIds.has(id)) {
     unmatched.push({ index, enumName, guess: id })
     continue
+  }
+  map[index] = id
+}
+
+for (const [indexStr, id] of Object.entries(INDEX_OVERRIDES)) {
+  const index = Number(indexStr)
+  if (!catalogIds.has(id)) {
+    throw new Error(`INDEX_OVERRIDES[${index}] unknown catalog id: ${id}`)
   }
   map[index] = id
 }

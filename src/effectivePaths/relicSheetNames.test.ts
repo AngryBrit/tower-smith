@@ -39,4 +39,9 @@ describe('workshopRelicIdFromSheetName', () => {
     expect(workshopRelicIdFromSheetName('BigParty')).toBe('big_party')
     expect(workshopRelicIdFromSheetName('Celebration')).toBe('celebration')
   })
+
+  it('maps Cheers and Champagne to distinct relic ids', () => {
+    expect(workshopRelicIdFromSheetName('Cheers')).toBe('cheers')
+    expect(workshopRelicIdFromSheetName('Champagne')).toBe('champagne')
+  })
 })

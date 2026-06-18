@@ -57,7 +57,7 @@ export const GAME_RELIC_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] = [
   "holy_joystick", // HolyJoystick
   "controller", // Controller
   "firework", // Fireworks
-  "champagne", // Cheers
+  "cheers", // Cheers
   "palm_tree", // PalmTree
   "pixel_cube_heart", // PixelCubeHeart
   "dark_sight", // CreepyEye
@@ -213,8 +213,8 @@ export const GAME_RELIC_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] = [
   "amazing_prizes", // AmazingPrizes
   "carousel_of_joy", // CarouselOfJoy
   "bouquet", // Bouquet
-  "lovely_gift", // LovelyGift
-  "love_letter", // LoveLetter
+  "love_letter", // LovelyGift
+  "lovely_gift", // LoveLetter
   "pierced_heart", // PiercedHeart
   "good_hunting", // GoodHunting
   "spider_vision", // SpiderVision
