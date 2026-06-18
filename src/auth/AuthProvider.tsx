@@ -6,8 +6,13 @@ import {
   type ReactNode,
 } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { fetchUserProfile } from '../profile/profileApi'
+import { fetchUserProfile, clearUserProfileForFullReset } from '../profile/profileApi'
 import { syncEffectivePathsIdsMasterRefOnLogin } from '../effectivePaths/syncEffectivePathsIdsMasterRef'
+import { accountWorkspaceSyncAvailable } from '../accountWorkspace/api'
+import {
+  clearFullAppResetPending,
+  isFullAppResetPending,
+} from '../fullResetStorage'
 import { getSupabaseBrowserClient, supabaseBrowserConfigured } from '../supabase/client'
 import { resolveGuildNameById } from '../towerGallery/api'
 import { deferInEffect } from '../deferInEffect'
@@ -41,6 +46,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     setProfileLoading(true)
     try {
+      if (isFullAppResetPending()) {
+        await clearUserProfileForFullReset(userId)
+        if (!accountWorkspaceSyncAvailable()) {
+          clearFullAppResetPending()
+        }
+      }
+
       const profile = await fetchUserProfile(userId)
       setProfileDisplayName(profile?.displayName ?? null)
       setProfileGuildId(profile?.guildId ?? null)

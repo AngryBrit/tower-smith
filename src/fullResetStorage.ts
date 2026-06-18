@@ -1,3 +1,4 @@
+import { clearAllEffectivePathsStorage } from './effectivePaths/clearEffectivePathsStorage'
 import { seedThemeOwnedAfterFullReset } from './themeOwnedStorage'
 
 /** Prefix for all TowerSmith browser persistence keys. */
@@ -65,6 +66,7 @@ export function clearAllTowerExportStorage(): void {
 export function performFullAppReset(): void {
   markFullAppResetPending()
   clearAllTowerExportStorage()
+  clearAllEffectivePathsStorage()
   seedThemeOwnedAfterFullReset()
   window.location.reload()
 }

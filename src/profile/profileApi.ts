@@ -286,3 +286,30 @@ export async function removeUserAvatar(
   if (profileError) return { ok: false, error: 'network' }
   return { ok: true }
 }
+
+/** Wipe profile fields stored for the signed-in account (full app reset). */
+export async function clearUserProfileForFullReset(
+  userId: string,
+): Promise<{ ok: true } | { ok: false; error: ProfileError }> {
+  const sb = getSupabaseBrowserClient()
+  if (!sb) return { ok: false, error: 'not_configured' }
+
+  const avatarResult = await removeUserAvatar(userId)
+  if (!avatarResult.ok && avatarResult.error !== 'not_configured') {
+    return avatarResult
+  }
+
+  const { error } = await sb
+    .from('profiles')
+    .update({
+      display_name: null,
+      guild_id: null,
+      effective_paths_ids_master_ref: null,
+      avatar_url: null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq('id', userId)
+
+  if (error) return { ok: false, error: 'network' }
+  return { ok: true }
+}

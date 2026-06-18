@@ -512,12 +512,12 @@ export const STRINGS_ES = {
   app_tools_title: 'Herramientas',
   app_tools_full_reset: 'Restablecer todos los datos guardados',
   app_tools_full_reset_aria:
-    'Borrar todos los datos de TowerSmith guardados en este navegador: lab, taller, builds, temas y ajustes',
+    'Borrar todos los datos de TowerSmith guardados en este navegador: lab, taller, builds, temas, perfil y ajustes',
   app_tools_full_reset_hint:
-    'Borra todo lo que esta app guarda localmente y, si has iniciado sesión, tu copia en la nube de la cuenta; luego recarga la página. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
+    'Borra todo lo que esta app guarda localmente y, si has iniciado sesión, tu perfil y copia en la nube de la cuenta; luego recarga la página. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
   app_tools_full_reset_confirm_title: '¿Restablecer todos los datos guardados?',
   app_tools_full_reset_confirm_body:
-    'Elimina niveles del laboratorio, builds guardados, mejoras del taller, cartas, módulos, reliquias, chips de guardián, temas, idioma y demás ajustes de TowerSmith en este navegador. Si has iniciado sesión, también se borra tu copia en la nube de la cuenta. La página se recargará con valores de fábrica. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
+    'Elimina niveles del laboratorio, builds guardados, mejoras del taller, cartas, módulos, reliquias, chips de guardián, temas, idioma, nombre visible, gremio, hoja de Effective Paths y demás ajustes de TowerSmith en este navegador. Si has iniciado sesión, también se borran tu perfil y copia en la nube de la cuenta. La página se recargará con valores de fábrica. Exporta o copia un enlace para compartir antes si quieres conservar tus datos.',
   app_tools_full_reset_confirm_btn: 'Restablecer todo',
   auth_loading: 'Comprobando sesión…',
   auth_sign_in: 'Iniciar sesión',

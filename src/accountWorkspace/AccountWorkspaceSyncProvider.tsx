@@ -23,6 +23,7 @@ import {
   accountWorkspaceErrorMessage,
   isAccountWorkspaceAuthError,
 } from './syncErrorMessage'
+import { clearUserProfileForFullReset } from '../profile/profileApi'
 import { migrateIdsMasterRefFromWorkspaceBackup } from '../effectivePaths/syncEffectivePathsIdsMasterRef'
 import { clearFullAppResetPending, isFullAppResetPending } from '../fullResetStorage'
 import { useLabHydration } from '../lab/labHydrationContext'
@@ -100,12 +101,10 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
     const fullResetPending = isFullAppResetPending()
 
     if (!accountWorkspaceSyncAvailable()) {
-      if (fullResetPending) clearFullAppResetPending()
       return
     }
 
     if (loginSyncCompletedRef.current === userId) {
-      if (fullResetPending) clearFullAppResetPending()
       return
     }
     if (loginSyncInFlightRef.current === userId) return
@@ -119,6 +118,7 @@ export function AccountWorkspaceSyncProvider({ children }: { children: React.Rea
           loginSyncCompletedRef.current = userId
           skipPushRef.current = true
           try {
+            await clearUserProfileForFullReset(userId)
             const updatedAt = new Date().toISOString()
             const emptyBackup = buildEmptyAccountWorkspaceBackup(updatedAt)
             const saved = await saveBackupWithAuth(emptyBackup)

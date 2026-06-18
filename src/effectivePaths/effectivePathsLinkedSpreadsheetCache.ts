@@ -1,5 +1,7 @@
 const CACHE_KEY_PREFIX = 'tower-effective-paths-linked-sheets-v1:'
 
+export const EFFECTIVE_PATHS_LINKED_SHEETS_CACHE_KEY_PREFIX = CACHE_KEY_PREFIX
+
 type LinkedSpreadsheetCacheEntry = {
   linkedSpreadsheetIds: string[]
 }
@@ -51,5 +53,21 @@ export function writeCachedLinkedSpreadsheetIds(
     localStorage.setItem(cacheKey(masterSpreadsheetId), JSON.stringify(payload))
   } catch {
     /* ignore quota / private mode */
+  }
+}
+
+/** Remove cached linked workbook IDs for every IDS Master on this device. */
+export function clearAllEffectivePathsLinkedSpreadsheetCache(): void {
+  try {
+    const keys: string[] = []
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i)
+      if (key?.startsWith(CACHE_KEY_PREFIX)) keys.push(key)
+    }
+    for (const key of keys) {
+      localStorage.removeItem(key)
+    }
+  } catch {
+    /* private mode */
   }
 }
