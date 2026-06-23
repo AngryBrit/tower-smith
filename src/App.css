@@ -8142,14 +8142,22 @@ button.workshop__uw-plus-cost--display:hover {
 
 .equipped-checkmark {
   position: absolute;
-  right: -0.18rem;
-  bottom: -0.24rem;
   width: 1.15rem;
   height: 1.15rem;
   object-fit: contain;
   pointer-events: none;
   z-index: 3;
   filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.55));
+}
+
+.cards-tile > .equipped-checkmark {
+  right: -0.48rem;
+  bottom: -0.56rem;
+}
+
+.guardians-page__chip-tile > .equipped-checkmark {
+  right: -0.18rem;
+  bottom: -0.24rem;
 }
 
 .cards-tile[role='button'] {
