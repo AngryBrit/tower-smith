@@ -5,6 +5,7 @@ import { describe, expect, it } from 'vitest'
 import { parseResearchManifest, parseResearchSection } from '../types/research'
 import {
   cardMasterySectionIndex,
+  clearWorkshopCardMasteryOverrides,
   parseCardMasteryTierMultiplier,
   workshopCardMasteryLevel,
   workshopCardMasteryMultiplier,
@@ -53,5 +54,15 @@ describe('workshopCardMastery', () => {
     const overrides = { [`${si}-0`]: 9 }
     expect(workshopCardMasteryMultiplier('damage', data, overrides)).toBe(5)
     expect(formatWorkshopGameCardStarEffectWithMastery('damage', 7, 5)).toBe('×20')
+  })
+
+  it('clears card mastery lab overrides', () => {
+    const si = cardMasterySectionIndex(data)
+    const overrides = { [`${si}-0`]: 3, [`${si}-5`]: 1, '4-2': 7 }
+    const cleared = clearWorkshopCardMasteryOverrides(data, overrides)
+    expect(cleared[`${si}-0`]).toBe(0)
+    expect(cleared[`${si}-5`]).toBe(0)
+    expect(cleared['4-2']).toBe(7)
+    expect(workshopCardMasteryUnlocked('damage', data, cleared)).toBe(false)
   })
 })

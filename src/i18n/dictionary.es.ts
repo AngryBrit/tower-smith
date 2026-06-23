@@ -932,6 +932,23 @@ export const STRINGS_ES = {
   ws_cards_slots: 'Ranuras',
   ws_cards_slots_aria: 'Cantidad de ranuras de cartas equipadas (máx. wiki 28)',
   ws_cards_milestone: 'Hito',
+  ws_cards_rarity_common: 'Común',
+  ws_cards_rarity_rare: 'Raro',
+  ws_cards_rarity_epic: 'Épico',
+  ws_cards_detail_close_aria: 'Cerrar detalles de la carta',
+  ws_cards_detail_max_level: 'Nivel máximo',
+  ws_cards_detail_level: 'Nv. {{level}}',
+  ws_cards_detail_mastery_aria: 'Maestría de carta',
+  ws_cards_detail_mastery_available: 'Maestría disponible',
+  ws_cards_detail_mastery_unlocked: 'Maestría desbloqueada',
+  ws_cards_detail_mastery_desc:
+    'Aumenta el multiplicador de la carta y desbloquea la investigación de maestría {{mastery}}',
+  ws_cards_detail_mastery_ability_prefix: 'Habilidad de maestría:',
+  ws_cards_detail_mastery_ability_desc: 'Aumenta el bonus de {{stat}}',
+  ws_cards_detail_mastery_research: 'Investigación de maestría',
+  ws_cards_detail_mastery_research_desc: 'Aumenta el bonus de maestría de carta de {{stat}}',
+  ws_cards_detail_unlock_mastery: 'Desbloquear {{mastery}}',
+  ws_cards_detail_unlock_mastery_generic: 'Desbloquear maestría de carta',
   ws_card_damage: 'Daño',
   ws_card_attack_speed: 'Vel. de ataque',
   ws_card_health: 'Salud',
@@ -1886,9 +1903,10 @@ export const STRINGS_ES = {
   sr_reset_all: 'Restablecer todo',
 
   sr_reset_cards: 'Restablecer cartas',
-  sr_reset_cards_aria: 'Restablecer estrellas, presets y ranuras de cartas',
+  sr_reset_cards_aria: 'Restablecer estrellas, presets, ranuras y maestría de cartas',
   sr_reset_cards_confirm_title: '¿Restablecer solo las cartas?',
-  sr_reset_cards_confirm_body: 'Borra estrellas, todos los presets de cartas y ranuras equipadas.',
+  sr_reset_cards_confirm_body:
+    'Borra estrellas, todos los presets, ranuras equipadas y desbloqueos de maestría de cartas.',
 
   sr_reset_relics: 'Restablecer reliquias',
   sr_reset_relics_aria:

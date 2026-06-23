@@ -259,7 +259,8 @@ export function workshopGameCardStarValue(id: WorkshopGameCardId, stars: number)
   return row[s - 1]!
 }
 
-function formatNum(n: number): string {
+function formatNum(n: number, fixedDecimals?: number): string {
+  if (fixedDecimals != null) return n.toFixed(fixedDecimals)
   if (Number.isInteger(n)) return String(n)
   const t = n.toFixed(2)
   return t.replace(/\.?0+$/, '')
@@ -268,23 +269,25 @@ function formatNum(n: number): string {
 function formatWorkshopGameCardEffectValue(
   id: WorkshopGameCardId,
   value: number,
+  fixedDecimals?: number,
 ): string {
   const kind = WORKSHOP_GAME_CARD_WIKI[id].kind
+  const num = formatNum(value, fixedDecimals)
   switch (kind) {
     case 'mult':
-      return `×${formatNum(value)}`
+      return `×${num}`
     case 'percent':
-      return `${formatNum(value)}%`
+      return `${num}%`
     case 'addPercent':
-      return `+${formatNum(value)}%`
+      return `+${num}%`
     case 'sec':
-      return `${formatNum(value)}s`
+      return `${num}s`
     case 'min':
-      return `${formatNum(value)}m`
+      return `${num}m`
     case 'flat':
-      return formatNum(value)
+      return num
     default:
-      return formatNum(value)
+      return num
   }
 }
 
@@ -292,10 +295,11 @@ function formatWorkshopGameCardEffectValue(
 export function formatWorkshopGameCardStarEffect(
   id: WorkshopGameCardId,
   stars: number,
+  fixedDecimals?: number,
 ): string {
   const v = workshopGameCardStarValue(id, stars)
   if (v == null) return ''
-  return formatWorkshopGameCardEffectValue(id, v)
+  return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
 }
 
 /** Star effect scaled by Card Mastery tier (× labels from research). */
@@ -303,13 +307,41 @@ export function formatWorkshopGameCardStarEffectWithMastery(
   id: WorkshopGameCardId,
   stars: number,
   masteryMultiplier: number,
+  fixedDecimals?: number,
 ): string {
   const v = workshopGameCardStarValue(id, stars)
   if (v == null) return ''
   const mult =
     masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
-  if (mult === 1) return formatWorkshopGameCardEffectValue(id, v)
-  return formatWorkshopGameCardEffectValue(id, v * mult)
+  if (mult === 1) return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
+  return formatWorkshopGameCardEffectValue(id, v * mult, fixedDecimals)
+}
+
+/** Wiki description with # replaced by the star effect (sentence case). */
+export function workshopGameCardDescriptionLine(
+  id: WorkshopGameCardId,
+  stars: number,
+  masteryMultiplier = 1,
+  fixedDecimals?: number,
+): string {
+  const template = WORKSHOP_GAME_CARD_WIKI[id].description
+  const effect = formatWorkshopGameCardStarEffectWithMastery(
+    id,
+    stars,
+    masteryMultiplier,
+    fixedDecimals,
+  )
+  let sentence: string
+  if (template.includes('×#')) {
+    sentence = template.replace('×#', effect)
+  } else if (template.includes('+#%')) {
+    sentence = template.replace('+#%', effect)
+  } else if (template.includes('#%')) {
+    sentence = template.replace('#%', effect)
+  } else {
+    sentence = template.replace('#', effect)
+  }
+  return sentence.charAt(0).toUpperCase() + sentence.slice(1)
 }
 
 /** Berserker rate as fraction of damage taken (wiki % → sim). */

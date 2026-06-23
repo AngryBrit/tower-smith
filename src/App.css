@@ -8442,6 +8442,208 @@ button.workshop__uw-plus-cost--display:hover {
   color: var(--sr-muted);
 }
 
+.cards-detail__backdrop {
+  z-index: 1200;
+}
+
+.cards-detail.modules-picker__dialog--detail {
+  max-width: min(20rem, calc(100vw - 2rem));
+}
+
+.cards-detail .modules-picker__hero-rarity {
+  width: 100%;
+  margin: 0 0 0.65rem;
+  padding-inline: 1.75rem;
+  text-align: center;
+}
+
+.cards-detail__hero {
+  display: grid;
+  grid-template-columns: var(--cards-detail-preview-width) minmax(0, 1fr);
+  gap: 0.65rem;
+  margin-bottom: 0.35rem;
+}
+
+.cards-detail {
+  --cards-detail-preview-width: 138px;
+  --cards-detail-preview-height: 174px;
+}
+
+.cards-detail__preview-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  width: var(--cards-detail-preview-width);
+  flex-shrink: 0;
+}
+
+.cards-detail__preview {
+  width: var(--cards-detail-preview-width);
+  height: var(--cards-detail-preview-height);
+  flex-shrink: 0;
+}
+
+.cards-detail__preview > .cards-tile {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: unset;
+  pointer-events: none;
+}
+
+.cards-detail__max-label {
+  margin: 0;
+  font-size: 0.62rem;
+  font-weight: 700;
+  color: var(--sr-muted);
+}
+
+.cards-detail__stats {
+  min-width: 0;
+}
+
+.cards-detail__summary {
+  margin-top: 0;
+}
+
+.cards-detail__levels {
+  list-style: none;
+  margin: 0.45rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.16rem;
+}
+
+.cards-detail__level {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  color: var(--sr-text);
+  opacity: 0.88;
+}
+
+.cards-detail__level--active {
+  opacity: 1;
+  color: var(--sr-accent);
+  font-weight: 700;
+}
+
+.cards-detail__mastery {
+  margin-top: 0.15rem;
+  padding-top: 0.65rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.cards-detail__mastery-title {
+  text-transform: none;
+  color: var(--sr-cards-preset-active-text);
+}
+
+.cards-detail__mastery-desc,
+.cards-detail__mastery-research-desc {
+  margin: 0 0 0.5rem;
+  font-size: 0.68rem;
+  line-height: 1.4;
+  color: var(--sr-muted);
+  text-align: center;
+}
+
+.cards-detail__mastery-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+  padding: 0.45rem 0.55rem;
+  border-radius: 0.35rem;
+  background: var(--sr-picker-panel-bg);
+  border: 1px solid var(--sr-picker-panel-border);
+  font-size: 0.72rem;
+}
+
+.cards-detail__mastery-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  min-width: 0;
+}
+
+.cards-detail__mastery-ability-desc {
+  font-size: 0.62rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--sr-muted);
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.cards-detail__mastery-label {
+  margin: 0;
+  font-size: 0.62rem;
+  line-height: 1.3;
+}
+
+.cards-detail__mastery-label-heading,
+.cards-detail__mastery-subtitle {
+  margin: 0;
+  font-size: 0.58rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sr-cards-preset-active-text);
+}
+
+.cards-detail__mastery-label-name {
+  font-weight: 700;
+  text-transform: none;
+  letter-spacing: normal;
+  color: var(--sr-cards-preset-active-text);
+}
+
+.cards-detail__mastery-value {
+  font-weight: 700;
+  color: var(--sr-accent);
+}
+
+.cards-detail__mastery-subtitle {
+  margin-bottom: 0.2rem;
+  text-align: center;
+}
+
+.cards-detail__mastery-research-desc {
+  margin-bottom: 0.65rem;
+}
+
+.cards-detail__unlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  margin-top: 0.15rem;
+}
+
+.cards-detail__unlock-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.cards-detail__unlock-cost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: var(--sr-accent);
+}
+
+.cards-detail__unlock-stone .workshop-power-stone-svg {
+  width: 1rem;
+  height: 1rem;
+}
+
 @container (max-width: 36rem) {
   .cards-presets {
     gap: 0.25rem;

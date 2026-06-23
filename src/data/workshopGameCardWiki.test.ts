@@ -21,6 +21,13 @@ describe('workshopGameCardWiki', () => {
     expect(workshopBerserkerCardRateFromStars(1)).toBe(0.008)
   })
 
+  it('formats card detail values with two fixed decimals', () => {
+    expect(formatWorkshopGameCardStarEffect('damage', 1, 2)).toBe('×1.50')
+    expect(formatWorkshopGameCardStarEffect('damage', 2, 2)).toBe('×2.00')
+    expect(formatWorkshopGameCardStarEffect('damage', 4, 2)).toBe('×2.80')
+    expect(formatWorkshopGameCardStarEffect('berserker', 1, 2)).toBe('+0.80%')
+  })
+
   it('returns null for zero stars', () => {
     expect(workshopGameCardStarValue('nuke', 0)).toBeNull()
     expect(formatWorkshopGameCardStarEffect('nuke', 0)).toBe('')

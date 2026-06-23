@@ -26,11 +26,18 @@ import {
 } from '../data/workshopGameCardWiki'
 import {
   workshopCardMasteryMultiplier,
+  workshopCardMasteryResearchRef,
+  workshopCardMasteryUnlocked,
   workshopCardMasteryUnlockedSet,
 } from '../data/workshopCardMastery'
 import type { WorkshopPersistedV1 } from '../labPresetsStorage'
+import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
+import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
+import { levelOverrideKey } from '../types/research'
 import { useI18n } from '../i18n'
+import { CardDetailDialog } from './CardDetailDialog'
 import { HoldStepButton } from './HoldStepButton'
+import { useLongPress } from '../hooks/useLongPress'
 import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
 import type { StringId } from '../i18n/dictionary'
 import type { ResearchData } from '../types/research'
@@ -310,6 +317,7 @@ function CardsStarTile({
   statsLocked = false,
   statOverlay = true,
   onToggleEquip,
+  onLongPress,
   onBump,
   onCommit,
 }: {
@@ -327,10 +335,17 @@ function CardsStarTile({
   statsLocked?: boolean
   statOverlay?: boolean
   onToggleEquip?: () => void
+  onLongPress?: () => void
   onBump: (dir: -1 | 1) => void
   onCommit: (parsed: number) => void
 }) {
   const { t } = useI18n()
+  const longPress = useLongPress({
+    enabled: Boolean(onToggleEquip),
+    longPressEnabled: Boolean(onLongPress),
+    onLongPress: () => onLongPress?.(),
+    onShortPress: () => onToggleEquip?.(),
+  })
   const atMax = stars >= maxStars
   const starsGold = stars >= 5
   const rarity = workshopGameCardRarity(cardId)
@@ -357,7 +372,12 @@ function CardsStarTile({
     <li
       className={tileClass}
       title={title}
-      onClick={onToggleEquip}
+      onClick={onToggleEquip ? longPress.onClick : undefined}
+      onPointerDown={onToggleEquip ? longPress.onPointerDown : undefined}
+      onPointerUp={onToggleEquip ? longPress.onPointerUp : undefined}
+      onPointerLeave={onToggleEquip ? longPress.onPointerLeave : undefined}
+      onPointerCancel={onToggleEquip ? longPress.onPointerCancel : undefined}
+      onContextMenu={onLongPress ? longPress.onContextMenu : undefined}
       onKeyDown={(e) => {
         if (onToggleEquip && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault()
@@ -392,11 +412,12 @@ function CardsStarTile({
         </div>
         <CardStars stars={stars} maxStars={maxStars} />
         {statsLocked ? null : (
-          <div
-            className="cards-tile__controls"
-            onClick={(e) => e.stopPropagation()}
-            onKeyDown={(e) => e.stopPropagation()}
-          >
+        <div
+          className="cards-tile__controls"
+          onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
+        >
             <CardsTileStepper
               value={stars}
               min={0}
@@ -428,6 +449,31 @@ export function WorkshopCardsPanel({
   labLevelOverrides,
 }: WorkshopCardsPanelProps) {
   const { t } = useI18n()
+  const { setLabLevelOverrides } = useTowerWorkspaceContext()
+  const { pushUndoSnapshot } = useWorkspaceUndo()
+  const cardsLayoutRef = useRef<HTMLDivElement>(null)
+  const [detailCardId, setDetailCardId] = useState<WorkshopGameCardId | null>(null)
+  const [detailTileSize, setDetailTileSize] = useState<{
+    width: number
+    height: number
+  } | null>(null)
+
+  const openCardDetail = useCallback((id: WorkshopGameCardId) => {
+    const layout = cardsLayoutRef.current
+    const tile = layout?.querySelector<HTMLElement>(
+      '.cards-active-row .cards-tile, .cards-inventory-grid .cards-tile',
+    )
+    if (tile) {
+      const { width, height } = tile.getBoundingClientRect()
+      setDetailTileSize({
+        width: Math.round(width),
+        height: Math.round(height),
+      })
+    } else {
+      setDetailTileSize(null)
+    }
+    setDetailCardId(id)
+  }, [])
   const presetIndex = clampWorkshopCardActivePresetIndex(
     workshopPersisted.cardActivePresetIndex,
   )
@@ -541,6 +587,20 @@ export function WorkshopCardsPanel({
     ],
   )
 
+  const unlockCardMastery = useCallback(
+    (cardId: WorkshopGameCardId) => {
+      const ref = workshopCardMasteryResearchRef(cardId, researchData)
+      if (!ref) return
+      if (workshopCardMasteryUnlocked(cardId, researchData, labLevelOverrides)) return
+      pushUndoSnapshot()
+      setLabLevelOverrides((prev) => ({
+        ...prev,
+        [levelOverrideKey(ref.sectionIndex, ref.itemIndex)]: 1,
+      }))
+    },
+    [labLevelOverrides, pushUndoSnapshot, researchData, setLabLevelOverrides],
+  )
+
   const renderCardTile = (
     id: WorkshopGameCardId,
     opts: { inventory?: boolean; active?: boolean },
@@ -568,6 +628,7 @@ export function WorkshopCardsPanel({
         onToggleEquip={
           opts.inventory || opts.active ? () => toggleEquip(id) : undefined
         }
+        onLongPress={opts.inventory ? () => openCardDetail(id) : undefined}
         onBump={(dir) => bumpCardStar(id, dir)}
         onCommit={(n) => setCardStar(id, n)}
       />
@@ -575,7 +636,7 @@ export function WorkshopCardsPanel({
   }
 
   return (
-    <div className="cards-layout">
+    <div className="cards-layout" ref={cardsLayoutRef}>
       <WorkshopPresetToolbar
         ariaLabel="ws_cards_presets_aria"
         fallbackKeys={CARD_PRESET_KEYS}
@@ -628,6 +689,21 @@ export function WorkshopCardsPanel({
           {WORKSHOP_GAME_CARD_ORDER.map((id) => renderCardTile(id, { inventory: true }))}
         </ul>
       </section>
+
+      {detailCardId ? (
+        <CardDetailDialog
+          cardId={detailCardId}
+          stars={workshopPersisted.cardStars[detailCardId]}
+          researchData={researchData}
+          labLevelOverrides={labLevelOverrides}
+          previewTileSize={detailTileSize}
+          onClose={() => {
+            setDetailCardId(null)
+            setDetailTileSize(null)
+          }}
+          onUnlockMastery={() => unlockCardMastery(detailCardId)}
+        />
+      ) : null}
     </div>
   )
 }

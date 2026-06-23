@@ -3,7 +3,7 @@
  */
 
 import cardMasteryTierLabels from './card-mastery-tier-labels.json'
-import { getEffectiveLevel, type ResearchData } from '../types/research'
+import { getEffectiveLevel, levelOverrideKey, type ResearchData, type ResearchItem } from '../types/research'
 import {
   WORKSHOP_GAME_CARD_ORDER,
   type WorkshopGameCardId,
@@ -53,6 +53,46 @@ export function workshopCardMasteryUnlockedSet(
   return unlocked
 }
 
+export function workshopCardMasteryResearchRef(
+  cardId: WorkshopGameCardId,
+  data: ResearchData | null,
+): { sectionIndex: number; itemIndex: number; item: ResearchItem } | null {
+  if (!data) return null
+  const sectionIndex = cardMasterySectionIndex(data)
+  if (sectionIndex < 0) return null
+  const itemIndex = WORKSHOP_GAME_CARD_ORDER.indexOf(cardId)
+  if (itemIndex < 0) return null
+  const item = data.sections[sectionIndex]?.items[itemIndex]
+  if (!item) return null
+  return { sectionIndex, itemIndex, item }
+}
+
+export function workshopCardMasteryTierLabel(
+  cardId: WorkshopGameCardId,
+  data: ResearchData | null,
+  level: number,
+): string | null {
+  if (!data || level <= 0) return null
+  const itemName = workshopCardMasteryItemName(cardId, data)
+  if (!itemName) return null
+  const tiers = CARD_MASTERY_TIER_LABELS[itemName]
+  if (!tiers?.length) return null
+  const idx = Math.min(level, tiers.length) - 1
+  return tiers[idx] ?? null
+}
+
+/** First-tier mastery multiplier label (e.g. x1.4) for unlock preview. */
+export function workshopCardMasteryUnlockPreviewLabel(
+  cardId: WorkshopGameCardId,
+  data: ResearchData | null,
+): string | null {
+  if (!data) return null
+  const itemName = workshopCardMasteryItemName(cardId, data)
+  if (!itemName) return null
+  const tiers = CARD_MASTERY_TIER_LABELS[itemName]
+  return tiers?.[0] ?? null
+}
+
 function workshopCardMasteryItemName(
   cardId: WorkshopGameCardId,
   data: ResearchData,
@@ -62,6 +102,24 @@ function workshopCardMasteryItemName(
   const itemIndex = WORKSHOP_GAME_CARD_ORDER.indexOf(cardId)
   if (itemIndex < 0) return null
   return data.sections[sectionIndex]?.items[itemIndex]?.name ?? null
+}
+
+/** Clear every Card Mastery lab override (used by Reset Cards). */
+export function clearWorkshopCardMasteryOverrides(
+  data: ResearchData | null,
+  overrides: Readonly<Record<string, number>>,
+): Record<string, number> {
+  if (!data) return { ...overrides }
+  const sectionIndex = cardMasterySectionIndex(data)
+  if (sectionIndex < 0) return { ...overrides }
+  const items = data.sections[sectionIndex]?.items
+  if (!items?.length) return { ...overrides }
+  const out = { ...overrides }
+  for (let itemIndex = 0; itemIndex < items.length; itemIndex++) {
+    const key = levelOverrideKey(sectionIndex, itemIndex)
+    if ((out[key] ?? 0) !== 0) out[key] = 0
+  }
+  return out
 }
 
 export function parseCardMasteryTierMultiplier(label: string): number {

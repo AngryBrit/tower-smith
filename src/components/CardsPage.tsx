@@ -8,6 +8,7 @@ import {
 import { createPortal } from 'react-dom'
 import { WorkshopCardsPanel } from './WorkshopCardsPanel'
 import { maxWorkshopCardStars } from '../labPresetsStorage'
+import { clearWorkshopCardMasteryOverrides } from '../data/workshopCardMastery'
 import { useTowerWorkspaceContext } from '../towerWorkspaceContext'
 import { resetTowerBuildCards, splitTowerBuild, flattenTowerBuild } from '../towerBuildStorage'
 import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
@@ -62,7 +63,7 @@ export function CardsPage({
 }: CardsPageProps) {
   const { t } = useI18n()
   const { pushUndoSnapshot } = useWorkspaceUndo()
-  const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides } =
+  const { workshopFlat, setTowerBuild, setScratchTowerBuild, labLevelOverrides, setLabLevelOverrides } =
     useTowerWorkspaceContext()
   const [resetCardsConfirmOpen, setResetCardsConfirmOpen] = useState(false)
   const workshopPersistedRef = useRef(workshopFlat)
@@ -87,7 +88,8 @@ export function CardsPage({
     pushUndoSnapshot()
     setTowerBuild((prev) => resetTowerBuildCards(prev))
     setScratchTowerBuild((prev) => resetTowerBuildCards(prev))
-  }, [pushUndoSnapshot, setScratchTowerBuild, setTowerBuild])
+    setLabLevelOverrides((prev) => clearWorkshopCardMasteryOverrides(researchData, prev))
+  }, [pushUndoSnapshot, researchData, setLabLevelOverrides, setScratchTowerBuild, setTowerBuild])
 
   const maxAllCards = useCallback(() => {
     pushUndoSnapshot()
