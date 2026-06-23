@@ -34,6 +34,7 @@ import { HoldStepButton } from './HoldStepButton'
 import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
 import type { StringId } from '../i18n/dictionary'
 import type { ResearchData } from '../types/research'
+import { EQUIPPED_CHECKMARK_SRC } from '../equippedCheckmark'
 
 type WorkshopCardsPanelProps = {
   workshopPersisted: WorkshopPersistedV1
@@ -59,7 +60,6 @@ type CardArtVariant =
   | 'perk'
   | 'taken'
 
-const CARD_EQUIPPED_CHECKMARK_SRC = '/icons/Checkmark_glow.webp'
 const ACTIVE_ROW_DRAG_THRESHOLD_PX = 6
 
 type ActiveRowDragState = {
@@ -411,8 +411,8 @@ function CardsStarTile({
       </div>
       {showEquippedCheckmark ? (
         <img
-          className="cards-tile__equipped-mark"
-          src={CARD_EQUIPPED_CHECKMARK_SRC}
+          className="equipped-checkmark"
+          src={EQUIPPED_CHECKMARK_SRC}
           alt=""
           aria-hidden
         />

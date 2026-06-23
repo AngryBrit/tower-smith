@@ -74,6 +74,7 @@ import {
   unlockGuardianChipSlot,
   useGuardianChipState,
 } from '../guardianChipStorage'
+import { EQUIPPED_CHECKMARK_SRC } from '../equippedCheckmark'
 import { BitsGlyph } from './BitsGlyph'
 import { GuardianChipUpgradePanel } from './GuardianChipUpgradePanel'
 import { useWorkspaceUndo } from '../lab/workspaceUndoContext'
@@ -455,9 +456,12 @@ export function GuardiansPage({
                   <GuardianChipIcon chipId={chip.id} className="guardians-page__chip-icon" />
                   <span className="guardians-page__chip-label">{t(chip.nameId)}</span>
                   {equipped ? (
-                    <span className="guardians-page__chip-check" aria-hidden="true">
-                      ✓
-                    </span>
+                    <img
+                      className="equipped-checkmark"
+                      src={EQUIPPED_CHECKMARK_SRC}
+                      alt=""
+                      aria-hidden
+                    />
                   ) : null}
                 </button>
               </li>

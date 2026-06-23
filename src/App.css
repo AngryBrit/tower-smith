@@ -8136,14 +8136,14 @@ button.workshop__uw-plus-cost--display:hover {
   border-radius: calc(0.35rem - var(--cards-tile-border-width));
 }
 
-.cards-tile:has(.cards-tile__equipped-mark) {
+.cards-tile:has(.equipped-checkmark) {
   overflow: visible;
 }
 
-.cards-tile__equipped-mark {
+.equipped-checkmark {
   position: absolute;
-  right: -0.48rem;
-  bottom: -0.56rem;
+  right: -0.18rem;
+  bottom: -0.24rem;
   width: 1.15rem;
   height: 1.15rem;
   object-fit: contain;
@@ -10801,16 +10801,6 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   position: relative;
   z-index: 1;
   color: rgba(226, 232, 240, 0.75);
-}
-
-.guardians-page__chip-check {
-  position: absolute;
-  right: 0.28rem;
-  bottom: 0.2rem;
-  font-size: 0.72rem;
-  font-weight: 800;
-  color: #4ade80;
-  line-height: 1;
 }
 
 .guardians-page__empty {
