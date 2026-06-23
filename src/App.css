@@ -8126,10 +8126,24 @@ button.workshop__uw-plus-cost--display:hover {
     inset 0 0 0 1px rgba(74, 222, 128, 0.2);
 }
 
+.cards-tile__body {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  border-radius: calc(0.35rem - var(--cards-tile-border-width));
+}
+
+.cards-tile:has(.cards-tile__equipped-mark) {
+  overflow: visible;
+}
+
 .cards-tile__equipped-mark {
   position: absolute;
-  right: 0.18rem;
-  bottom: 0.18rem;
+  right: -0.48rem;
+  bottom: -0.56rem;
   width: 1.15rem;
   height: 1.15rem;
   object-fit: contain;

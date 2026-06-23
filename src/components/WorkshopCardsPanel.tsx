@@ -367,46 +367,48 @@ function CardsStarTile({
       role={onToggleEquip ? 'button' : undefined}
       tabIndex={onToggleEquip ? 0 : undefined}
     >
-      <div className="cards-tile__head">
-        <span className="cards-tile__name">{t(titleId)}</span>
-      </div>
-      <div
-        className={imageSrc ? 'cards-tile__art cards-tile__art--img' : 'cards-tile__art'}
-        aria-hidden
-      >
-        {imageSrc ? (
-          <img
-            className="cards-tile__img"
-            src={imageSrc}
-            alt=""
-            draggable={false}
-            onDragStart={(e) => e.preventDefault()}
-          />
-        ) : (
-          <span className="cards-tile__glyph">{glyph}</span>
-        )}
-        {valueHint && statOverlay ? (
-          <p className="cards-tile__stat cards-tile__stat--overlay">{valueHint}</p>
-        ) : null}
-      </div>
-      <CardStars stars={stars} maxStars={maxStars} />
-      {statsLocked ? null : (
-        <div
-          className="cards-tile__controls"
-          onClick={(e) => e.stopPropagation()}
-          onKeyDown={(e) => e.stopPropagation()}
-        >
-          <CardsTileStepper
-            value={stars}
-            min={0}
-            max={maxStars}
-            inputAria="ws_sim_stars_input_aria"
-            onBump={onBump}
-            onCommit={onCommit}
-          />
+      <div className="cards-tile__body">
+        <div className="cards-tile__head">
+          <span className="cards-tile__name">{t(titleId)}</span>
         </div>
-      )}
-      {valueHint && !statOverlay ? <p className="cards-tile__stat">{valueHint}</p> : null}
+        <div
+          className={imageSrc ? 'cards-tile__art cards-tile__art--img' : 'cards-tile__art'}
+          aria-hidden
+        >
+          {imageSrc ? (
+            <img
+              className="cards-tile__img"
+              src={imageSrc}
+              alt=""
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
+            />
+          ) : (
+            <span className="cards-tile__glyph">{glyph}</span>
+          )}
+          {valueHint && statOverlay ? (
+            <p className="cards-tile__stat cards-tile__stat--overlay">{valueHint}</p>
+          ) : null}
+        </div>
+        <CardStars stars={stars} maxStars={maxStars} />
+        {statsLocked ? null : (
+          <div
+            className="cards-tile__controls"
+            onClick={(e) => e.stopPropagation()}
+            onKeyDown={(e) => e.stopPropagation()}
+          >
+            <CardsTileStepper
+              value={stars}
+              min={0}
+              max={maxStars}
+              inputAria="ws_sim_stars_input_aria"
+              onBump={onBump}
+              onCommit={onCommit}
+            />
+          </div>
+        )}
+        {valueHint && !statOverlay ? <p className="cards-tile__stat">{valueHint}</p> : null}
+      </div>
       {showEquippedCheckmark ? (
         <img
           className="cards-tile__equipped-mark"
