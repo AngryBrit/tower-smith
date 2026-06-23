@@ -1,5 +1,5 @@
 {
-  "alignedAt": "2026-06-18T09:27:23.507Z",
+  "alignedAt": "2026-06-23T19:47:42.615Z",
   "scripts": {
     "manual": "2026-05-30T13:41:34.494Z",
     "gen-game-research-index": "2026-06-13T22:39:09.300Z",
@@ -8,7 +8,7 @@
     "gen-workshop-bots-data": "2026-06-13T09:48:44.114Z",
     "import-workshop-god-tsv": "2026-06-08T21:24:57.940Z",
     "patch-relics-catalog": "2026-06-14T18:10:25.065Z",
-    "gen-relic-images": "2026-06-14T18:03:57.141Z",
+    "gen-relic-images": "2026-06-23T19:47:42.615Z",
     "import-lab-god-tsv": "2026-06-09T15:21:16.773Z"
   }
 }

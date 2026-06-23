@@ -95,6 +95,13 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_3118_headline: 'Neu in v3.1.18',
+  whats_new_3118_body_event:
+    'Meteorschauer-Event — Meteorit-Turm-Skin und Meteorschauer-Hintergrund.',
+  whats_new_3118_body_relics:
+    'Vier Event-Relikte: Mining Drone, Meteor Impact, Precious Minerals, Asteroid Belt.',
+  whats_new_3118_body_import:
+    'Spielstand-Import ordnet die neuen Theme- und Relikt-Slots zu.',
   whats_new_3117_headline: 'Neu in v3.1.17',
   whats_new_3117_body:
     'Epic-Core-Modul-Kopienzähler behoben — Dimension Core und Om Chip in Epic-Stufe fehlen nach Spielstand-Import nicht mehr im Modul-Inventar. Spielstand erneut importieren, um die Zähler zu aktualisieren.',
@@ -322,6 +329,7 @@ export const STRINGS_DE = {
   theme_skin_glitch: 'Glitch',
   theme_skin_brain: 'Gehirn',
   theme_skin_cake: 'Kuchen',
+  theme_skin_meteorite: 'Meteorit',
   theme_skin_star: 'Stern',
   theme_skin_eye_of_the_lord: 'Auge des Herrn',
   theme_skin_bee: 'Biene',
@@ -375,6 +383,7 @@ export const STRINGS_DE = {
   theme_event_glitch: 'Glitch',
   theme_event_neuron: 'Neuron',
   theme_event_5th_anniversary: '5. Jubiläum',
+  theme_event_meteor_shower: 'Meteorschauer',
   theme_event_interstellar: 'Interstellar',
   theme_event_volcano: 'Vulkan',
   theme_event_honey: 'Honig',
@@ -437,6 +446,7 @@ export const STRINGS_DE = {
   theme_bg_glitch: 'Glitch',
   theme_bg_neuron: 'Neuron',
   theme_bg_5th_anniversary: '5. Jubiläum',
+  theme_bg_meteor_shower: 'Meteorschauer',
   theme_bg_throne_room: 'Thronsaal',
   theme_bg_mech_world: 'Mech-Welt',
   theme_bg_party: 'Party',

@@ -5,6 +5,17 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.18] - 2026-06-23
+
+### Added
+
+- **Meteor Shower event** — **Meteorite** tower skin and **Meteor Shower** background (save slots 76 / 54). Event relics **Mining Drone**, **Meteor Impact**, **Precious Minerals**, and **Asteroid Belt** with in-game stats and preview art.
+
+### Docs
+
+- README: version **3.1.18**.
+- What's new banner (en/de/es).
+
 ## [3.1.17] - 2026-06-18
 
 ### Fixed

@@ -28,6 +28,7 @@
         "npm:eslint-plugin-react-refresh@~0.5.2",
         "npm:eslint@^10.3.0",
         "npm:globals@^17.6.0",
+        "npm:jose@^6.2.3",
         "npm:jsdom@^26.1.0",
         "npm:netlify-cli@23",
         "npm:qrcode@^1.5.4",

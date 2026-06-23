@@ -1,6 +1,7 @@
 import type { StringId } from '../i18n/dictionary'
 import {
-  BACKGROUND_EVENT_ROWS,
+  BACKGROUND_EVENT_ROWS_MAIN,
+  BACKGROUND_EVENT_ROWS_SAVE_TAIL,
   BACKGROUND_GUILD_ROWS,
 } from './backgroundEventGuildSkins'
 import { BANNER_GUILD_ROWS } from './bannerGuildSkins'
@@ -339,7 +340,7 @@ export const GAME_THEMES: readonly GameThemeEntry[] = [
     }),
   ),
 
-  ...BACKGROUND_EVENT_ROWS.map(
+  ...BACKGROUND_EVENT_ROWS_MAIN.map(
     (row): GameThemeEntry => ({
       id: row.id,
       category: 'background',
@@ -360,6 +361,19 @@ export const GAME_THEMES: readonly GameThemeEntry[] = [
       icon: row.icon as ThemeIconKey,
       backgroundGroup: 'guild',
       guildSeason: row.guildSeason,
+      image: row.image,
+      ownedDefault: row.ownedDefault,
+    }),
+  ),
+
+  ...BACKGROUND_EVENT_ROWS_SAVE_TAIL.map(
+    (row): GameThemeEntry => ({
+      id: row.id,
+      category: 'background',
+      nameId: row.nameId,
+      icon: row.icon as ThemeIconKey,
+      backgroundGroup: 'event',
+      eventNameId: row.eventNameId,
       image: row.image,
       ownedDefault: row.ownedDefault,
     }),

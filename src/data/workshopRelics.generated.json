@@ -2738,5 +2738,45 @@
     "unlock": "5th Tower Anniversary",
     "unlockGroup": "event",
     "damagePct": 5
+  },
+  {
+    "order": 275,
+    "id": "mining_drone",
+    "name": "Mining Drone",
+    "rarity": "rare",
+    "description": "Increase free attack upgrade by 1%",
+    "unlock": "Event: Earn 350 medals during the \"Meteor Shower\" event.",
+    "unlockGroup": "event",
+    "damagePct": 0
+  },
+  {
+    "order": 276,
+    "id": "meteor_impact",
+    "name": "Meteor Impact",
+    "rarity": "epic",
+    "description": "Increase damage/meter by 5%",
+    "unlock": "Event: Earn 700 medals during the \"Meteor Shower\" event.",
+    "unlockGroup": "event",
+    "damagePct": 5
+  },
+  {
+    "order": 277,
+    "id": "precious_minerals",
+    "name": "Precious Minerals",
+    "rarity": "rare",
+    "description": "Increase crit factor by 2%",
+    "unlock": "Event Premium: Earn 550 medals during the \"Meteor Shower\" event.",
+    "unlockGroup": "event",
+    "damagePct": 0
+  },
+  {
+    "order": 278,
+    "id": "asteroid_belt",
+    "name": "Asteroid Belt",
+    "rarity": "epic",
+    "description": "Increase health regen by 5%",
+    "unlock": "Event Premium: Earn 1100 medals during the \"Meteor Shower\" event.",
+    "unlockGroup": "event",
+    "damagePct": 0
   }
 ]

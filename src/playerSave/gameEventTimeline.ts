@@ -34,7 +34,7 @@ export const BACKGROUND_SAVE_GAP_AFTER_PI_SLOT = 35
 export const BACKGROUND_KOI_POND_SAVE_INDEX =
   BACKGROUND_SAVE_INDEX_BY_THEME_ID['bg-koi-pond']!
 
-/** Last catalog background in save slot order (5th Anniversary @ 53). */
+/** Last catalog background in save slot order (Meteor Shower @ 54). */
 export const BACKGROUND_LAST_EVENT_SAVE_INDEX = BACKGROUND_SAVE_MAX_INDEX
 
 export function backgroundSaveIndexForThemeId(id: string): number | undefined {

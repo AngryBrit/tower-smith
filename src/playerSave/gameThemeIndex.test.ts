@@ -98,6 +98,7 @@ describe('gameThemeIndex backgrounds', () => {
     expect(gameThemeIdAtIndex('background', 51)).toBe('bg-neuron')
     expect(gameThemeIdAtIndex('background', 52)).toBe('bg-guild-magician')
     expect(gameThemeIdAtIndex('background', 53)).toBe('bg-5th-anniversary')
+    expect(gameThemeIdAtIndex('background', 54)).toBe('bg-meteor-shower')
   })
 
   it('imports mech world from save flag at index 36', () => {

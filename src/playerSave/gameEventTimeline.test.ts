@@ -26,6 +26,15 @@ describe('gameEventTimeline', () => {
     expect(gameThemeIdAtIndex('background', 50)).toBe('bg-guild-claw-machine')
     expect(gameThemeIdAtIndex('background', 51)).toBe('bg-neuron')
     expect(gameThemeIdAtIndex('background', 53)).toBe('bg-5th-anniversary')
+    const meteor = GAME_EVENT_SAVE_TIMELINE.find(
+      (row) => row.eventNameId === 'theme_event_meteor_shower',
+    )
+    expect(meteor?.towerId).toBe('tower-event-meteorite')
+    expect(meteor?.backgroundId).toBe('bg-meteor-shower')
+    expect(meteor?.towerSaveIndex).toBe(76)
+    expect(meteor?.backgroundSaveIndex).toBe(54)
+    expect(gameThemeIdAtIndex('background', 54)).toBe('bg-meteor-shower')
+    expect(gameThemeIdAtIndex('tower', 76)).toBe('tower-event-meteorite')
     const anniversary = GAME_EVENT_SAVE_TIMELINE.find(
       (row) => row.eventNameId === 'theme_event_5th_anniversary',
     )

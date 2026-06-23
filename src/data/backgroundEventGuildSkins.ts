@@ -21,10 +21,33 @@ type BackgroundGuildRow = {
 }
 
 /**
+ * Event backgrounds after guild Magician in save slot order (53–54).
+ * Composed after `BACKGROUND_GUILD_ROWS` in `gameThemes.ts`.
+ */
+export const BACKGROUND_EVENT_ROWS_SAVE_TAIL: readonly BackgroundEventRow[] = [
+  {
+    id: 'bg-5th-anniversary',
+    nameId: 'theme_bg_5th_anniversary',
+    eventNameId: 'theme_event_5th_anniversary',
+    icon: 'menu-party',
+    image: '/themes/background/5ThAnniversaryBackgroundIcon.webp',
+  },
+  {
+    id: 'bg-meteor-shower',
+    nameId: 'theme_bg_meteor_shower',
+    eventNameId: 'theme_event_meteor_shower',
+    icon: 'interstellar',
+    image: '/themes/background/MeteorShowerBackgroundIcon.webp',
+    ownedDefault: true,
+  },
+]
+
+/**
  * Row order = UI / spreadsheet order. Save slot order differs (e.g. Haunted @ 14, Koi Pond @ 36).
  * Save slot order is `BACKGROUND_SAVE_INDEX_BY_THEME_ID` in `backgroundSaveSlotMap.ts`.
+ * Tail events (5th Anniversary @ 53, Meteor Shower @ 54) follow guild Magician @ 52 in saves.
  */
-export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
+const BACKGROUND_EVENT_ROWS_CORE: readonly BackgroundEventRow[] = [
   {
     id: 'bg-interstellar',
     nameId: 'theme_bg_interstellar',
@@ -351,13 +374,15 @@ export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
     image: '/themes/background/NeuronsBackgroundIcon.webp',
     ownedDefault: true,
   },
-  {
-    id: 'bg-5th-anniversary',
-    nameId: 'theme_bg_5th_anniversary',
-    eventNameId: 'theme_event_5th_anniversary',
-    icon: 'menu-party',
-    image: '/themes/background/5ThAnniversaryBackgroundIcon.webp',
-  },
+]
+
+/** Event rows before save-tail pair (through Neuron @ 51). */
+export const BACKGROUND_EVENT_ROWS_MAIN: readonly BackgroundEventRow[] =
+  BACKGROUND_EVENT_ROWS_CORE
+
+export const BACKGROUND_EVENT_ROWS: readonly BackgroundEventRow[] = [
+  ...BACKGROUND_EVENT_ROWS_CORE,
+  ...BACKGROUND_EVENT_ROWS_SAVE_TAIL,
 ]
 
 export const BACKGROUND_GUILD_ROWS: readonly BackgroundGuildRow[] = [

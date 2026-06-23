@@ -196,13 +196,6 @@ export const TOWER_EVENT_SKIN_ROWS: readonly TowerEventRow[] = [
     image: '/themes/tower/Brain.webp',
   },
   {
-    id: 'tower-event-cake',
-    nameId: 'theme_skin_cake',
-    eventNameId: 'theme_event_5th_anniversary',
-    icon: 'menu-party',
-    image: '/themes/tower/Cake.webp',
-  },
-  {
     id: 'tower-event-star',
     nameId: 'theme_skin_star',
     eventNameId: 'theme_event_interstellar',
@@ -327,6 +320,20 @@ export const TOWER_EVENT_SKIN_ROWS: readonly TowerEventRow[] = [
     eventNameId: 'theme_event_pi',
     icon: 'matrix',
     image: '/themes/tower/pi.webp',
+  },
+  {
+    id: 'tower-event-cake',
+    nameId: 'theme_skin_cake',
+    eventNameId: 'theme_event_5th_anniversary',
+    icon: 'menu-party',
+    image: '/themes/tower/Cake.webp',
+  },
+  {
+    id: 'tower-event-meteorite',
+    nameId: 'theme_skin_meteorite',
+    eventNameId: 'theme_event_meteor_shower',
+    icon: 'interstellar',
+    image: '/themes/tower/MeteoriteIcon.webp',
   },
 ]
 

@@ -97,6 +97,12 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_3118_headline: "What's new in v3.1.18",
+  whats_new_3118_body_event:
+    'Meteor Shower event — Meteorite tower skin and Meteor Shower background.',
+  whats_new_3118_body_relics:
+    'Four event relics: Mining Drone, Meteor Impact, Precious Minerals, Asteroid Belt.',
+  whats_new_3118_body_import: 'Save import maps the new theme and relic slots.',
   whats_new_3117_headline: "What's new in v3.1.17",
   whats_new_3117_body:
     'Epic-tier core module copy counts fixed — Dimension Core and Om Chip epic copies no longer missing from the Modules inventory after save import. Re-import playerInfo.dat to refresh counts.',
@@ -324,6 +330,7 @@ export const STRINGS_EN = {
   theme_skin_glitch: 'Glitch',
   theme_skin_brain: 'Brain',
   theme_skin_cake: 'Cake',
+  theme_skin_meteorite: 'Meteorite',
   theme_skin_star: 'Star',
   theme_skin_eye_of_the_lord: 'Eye of the Lord',
   theme_skin_bee: 'Bee',
@@ -377,6 +384,7 @@ export const STRINGS_EN = {
   theme_event_glitch: 'Glitch',
   theme_event_neuron: 'Neuron',
   theme_event_5th_anniversary: '5th Anniversary',
+  theme_event_meteor_shower: 'Meteor Shower',
   theme_event_interstellar: 'Interstellar',
   theme_event_volcano: 'Volcano',
   theme_event_honey: 'Honey',
@@ -439,6 +447,7 @@ export const STRINGS_EN = {
   theme_bg_glitch: 'Glitch',
   theme_bg_neuron: 'Neuron',
   theme_bg_5th_anniversary: '5th Anniversary',
+  theme_bg_meteor_shower: 'Meteor Shower',
   theme_bg_throne_room: 'Throne Room',
   theme_bg_mech_world: 'Mech World',
   theme_bg_party: 'Party',

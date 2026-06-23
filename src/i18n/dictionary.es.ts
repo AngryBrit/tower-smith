@@ -95,6 +95,13 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_3118_headline: 'Novedades en v3.1.18',
+  whats_new_3118_body_event:
+    'Evento Lluvia de meteoritos — skin de torre Meteorito y fondo Lluvia de meteoritos.',
+  whats_new_3118_body_relics:
+    'Cuatro reliquias de evento: Mining Drone, Meteor Impact, Precious Minerals, Asteroid Belt.',
+  whats_new_3118_body_import:
+    'La importación del guardado asigna los nuevos slots de temas y reliquias.',
   whats_new_3117_headline: 'Novedades en v3.1.17',
   whats_new_3117_body:
     'Corregidos los recuentos de copias de módulos core epic — las copias epic de Dimension Core y Om Chip ya no faltan en el inventario tras importar el guardado. Vuelve a importar playerInfo.dat para actualizar los recuentos.',
@@ -322,6 +329,7 @@ export const STRINGS_ES = {
   theme_skin_glitch: 'Glitch',
   theme_skin_brain: 'Cerebro',
   theme_skin_cake: 'Pastel',
+  theme_skin_meteorite: 'Meteorito',
   theme_skin_star: 'Estrella',
   theme_skin_eye_of_the_lord: 'Ojo del señor',
   theme_skin_bee: 'Abeja',
@@ -375,6 +383,7 @@ export const STRINGS_ES = {
   theme_event_glitch: 'Glitch',
   theme_event_neuron: 'Neurona',
   theme_event_5th_anniversary: '5.º aniversario',
+  theme_event_meteor_shower: 'Lluvia de meteoritos',
   theme_event_interstellar: 'Interestelar',
   theme_event_volcano: 'Volcán',
   theme_event_honey: 'Miel',
@@ -437,6 +446,7 @@ export const STRINGS_ES = {
   theme_bg_glitch: 'Glitch',
   theme_bg_neuron: 'Neurona',
   theme_bg_5th_anniversary: '5.º aniversario',
+  theme_bg_meteor_shower: 'Lluvia de meteoritos',
   theme_bg_throne_room: 'Sala del trono',
   theme_bg_mech_world: 'Mundo meca',
   theme_bg_party: 'Fiesta',

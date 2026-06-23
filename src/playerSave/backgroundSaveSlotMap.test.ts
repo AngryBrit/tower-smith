@@ -21,6 +21,7 @@ const POST_CLOCK_TOWER_SAVE_ORDER = [
   'bg-neuron',
   'bg-guild-magician',
   'bg-5th-anniversary',
+  'bg-meteor-shower',
 ] as const
 
 describe('backgroundSaveSlotMap', () => {
@@ -30,7 +31,7 @@ describe('backgroundSaveSlotMap', () => {
     expect(gameThemeIdAtIndex('background', 36)).toBe('bg-guild-mech-world')
   })
 
-  it('maps owned post–Clock Tower chain at save indices 36–53', () => {
+  it('maps owned post–Clock Tower chain at save indices 36–54', () => {
     POST_CLOCK_TOWER_SAVE_ORDER.forEach((id, offset) => {
       expect(gameThemeIdAtIndex('background', 36 + offset)).toBe(id)
     })

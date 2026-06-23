@@ -13,6 +13,10 @@ describe('gameRelicMapping', () => {
     expect(workshopRelicIdAtGameIndex(28)).toBe('bacteriophage')
     expect(workshopRelicIdAtGameIndex(274)).toBe('big_party')
     expect(workshopRelicIdAtGameIndex(275)).toBe('celebration')
+    expect(workshopRelicIdAtGameIndex(276)).toBe('mining_drone')
+    expect(workshopRelicIdAtGameIndex(277)).toBe('meteor_impact')
+    expect(workshopRelicIdAtGameIndex(278)).toBe('precious_minerals')
+    expect(workshopRelicIdAtGameIndex(279)).toBe('asteroid_belt')
   })
 
   it('maps Cheers and Champagne to distinct workshop relics', () => {

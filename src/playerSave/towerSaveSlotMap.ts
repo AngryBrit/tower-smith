@@ -71,6 +71,7 @@ export const TOWER_SAVE_INDEX_BY_THEME_ID: Readonly<Record<string, number>> = {
   'tower-event-brain': 73,
   'tower-guild-rabbit-in-hat': 74, // Guild S9 / Magician — selectedTower when equipped
   'tower-event-cake': 75, // 5th Anniversary event
+  'tower-event-meteorite': 76, // Meteor Shower event
 }
 
 /** Highest `towerUnlocked` index mapped to a catalog tower skin. */

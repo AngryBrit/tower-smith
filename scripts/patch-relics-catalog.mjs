@@ -47,6 +47,28 @@ patch('celebration', {
   damagePct: 5,
 })
 
+// —— Meteor Shower event relics ——
+patch('mining_drone', {
+  description: 'Increase free attack upgrade by 1%',
+  unlock: 'Event: Earn 350 medals during the "Meteor Shower" event.',
+  damagePct: 0,
+})
+patch('meteor_impact', {
+  description: 'Increase damage/meter by 5%',
+  unlock: 'Event: Earn 700 medals during the "Meteor Shower" event.',
+  damagePct: 5,
+})
+patch('precious_minerals', {
+  description: 'Increase crit factor by 2%',
+  unlock: 'Event Premium: Earn 550 medals during the "Meteor Shower" event.',
+  damagePct: 0,
+})
+patch('asteroid_belt', {
+  description: 'Increase health regen by 5%',
+  unlock: 'Event Premium: Earn 1100 medals during the "Meteor Shower" event.',
+  damagePct: 0,
+})
+
 // —— Swapped medal thresholds ——
 patch('confetti_ball', {
   unlock: 'Event: Earn 350 medals during the "New Year (II)" event.',

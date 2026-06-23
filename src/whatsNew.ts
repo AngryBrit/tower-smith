@@ -2,11 +2,22 @@ import type { StringId } from './i18n/dictionary'
 
 export type WhatsNewCopy = {
   headline: StringId
-  body: StringId
+  /** Single paragraph — use when the release note is one short sentence. */
+  body?: StringId
+  /** Bulleted highlights — preferred when several distinct changes ship together. */
+  bodyItems?: StringId[]
 }
 
 /** Per-release in-app highlight — add an entry when shipping user-visible changes. */
 export const WHATS_NEW_BY_VERSION: Partial<Record<string, WhatsNewCopy>> = {
+  '3.1.18': {
+    headline: 'whats_new_3118_headline',
+    bodyItems: [
+      'whats_new_3118_body_event',
+      'whats_new_3118_body_relics',
+      'whats_new_3118_body_import',
+    ],
+  },
   '3.1.17': {
     headline: 'whats_new_3117_headline',
     body: 'whats_new_3117_body',

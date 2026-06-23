@@ -99,7 +99,15 @@ export function AppHintsBanner({ onImportSave, onBrowseBuilds }: AppHintsBannerP
           ×
         </button>
       </div>
-      <p className="app-hints-banner__body">{t(whatsNew.body)}</p>
+      {whatsNew.bodyItems ? (
+        <ul className="app-hints-banner__body-list">
+          {whatsNew.bodyItems.map((itemId) => (
+            <li key={itemId}>{t(itemId)}</li>
+          ))}
+        </ul>
+      ) : whatsNew.body ? (
+        <p className="app-hints-banner__body">{t(whatsNew.body)}</p>
+      ) : null}
       <div className="app-hints-banner__actions">
         <a
           href={CHANGELOG_URL}

@@ -2,7 +2,7 @@
   "name": "tower_export",
   "description": "TowerSmith — static web app for The Tower: workshop, bots, modules, relics, cards, labs, playerInfo.dat import, and shareable builds.",
   "private": true,
-  "version": "3.1.17",
+  "version": "3.1.18",
   "type": "module",
   "scripts": {
     "prebuild": "node scripts/copy-god-tables-to-public.mjs",

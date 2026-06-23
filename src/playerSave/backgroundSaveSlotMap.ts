@@ -55,6 +55,7 @@ export const BACKGROUND_SAVE_INDEX_BY_THEME_ID: Readonly<Record<string, number>>
   'bg-neuron': 51,
   'bg-guild-magician': 52, // Guild S9 / Magician
   'bg-5th-anniversary': 53, // 5th Anniversary event
+  'bg-meteor-shower': 54, // Meteor Shower event
 }
 
 /** Highest `backgroundUnlocked` index used by a catalog background. */

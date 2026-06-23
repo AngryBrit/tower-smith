@@ -272,5 +272,9 @@
   "new_island": "epic/NewIsland.webp",
   "geological_activity": "epic/GeologicalActivity.webp",
   "big_party": "rare/BigParty.webp",
-  "celebration": "epic/Celebration.webp"
+  "celebration": "epic/Celebration.webp",
+  "mining_drone": "rare/MiningDrone.webp",
+  "meteor_impact": "epic/Meteor Impact.webp",
+  "precious_minerals": "rare/PreciousMinerals.webp",
+  "asteroid_belt": "epic/AsteroidBelt.webp"
 }
