@@ -8538,7 +8538,7 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .cards-detail__mastery-title {
-  text-transform: none;
+  text-transform: uppercase;
   color: var(--sr-cards-preset-active-text);
 }
 

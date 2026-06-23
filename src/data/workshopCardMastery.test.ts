@@ -6,7 +6,14 @@ import { parseResearchManifest, parseResearchSection } from '../types/research'
 import {
   cardMasterySectionIndex,
   clearWorkshopCardMasteryOverrides,
+  formatCardMasteryTierLabelDetail,
   parseCardMasteryTierMultiplier,
+  workshopCardMasteryDetailAbilityDescId,
+  workshopCardMasteryDetailAbilityLabel,
+  workshopCardMasteryDetailMasteryDescId,
+  workshopCardMasteryDetailMasteryDescStyle,
+  workshopCardMasteryDetailResearchDescId,
+  workshopCardMasteryDetailTitleId,
   workshopCardMasteryLevel,
   workshopCardMasteryMultiplier,
   workshopCardMasteryUnlocked,
@@ -64,5 +71,35 @@ describe('workshopCardMastery', () => {
     expect(cleared[`${si}-5`]).toBe(0)
     expect(cleared['4-2']).toBe(7)
     expect(workshopCardMasteryUnlocked('damage', data, cleared)).toBe(false)
+  })
+
+  it('formats mastery tier labels with two fixed decimals for detail UI', () => {
+    expect(formatCardMasteryTierLabelDetail('x1.2')).toBe('x1.20')
+    expect(formatCardMasteryTierLabelDetail('x1.03')).toBe('x1.03')
+    expect(formatCardMasteryTierLabelDetail('0.4%')).toBe('0.40%')
+    expect(formatCardMasteryTierLabelDetail('+1%')).toBe('+1.00%')
+  })
+
+  it('uses in-game mastery stat labels in card detail copy', () => {
+    expect(workshopCardMasteryDetailTitleId('range')).toBe('ws_stat_damagePerMeter')
+    expect(workshopCardMasteryDetailTitleId('damage')).toBe('ws_card_damage')
+    expect(workshopCardMasteryDetailAbilityLabel('range', 'Damage / Meter')).toBe('Damage / Meter')
+    expect(workshopCardMasteryDetailAbilityLabel('damage', 'Damage')).toBe('Damage+')
+    expect(workshopCardMasteryDetailMasteryDescId('cash')).toBe('ws_cards_detail_mastery_desc_cash')
+    expect(workshopCardMasteryDetailAbilityDescId('cash')).toBe(
+      'ws_cards_detail_mastery_ability_desc_cash',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('cash')).toBe(
+      'ws_cards_detail_mastery_research_desc_cash',
+    )
+    expect(workshopCardMasteryDetailMasteryDescId('damage')).toBeNull()
+    expect(workshopCardMasteryDetailMasteryDescStyle('coins')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailMasteryDescStyle('damage')).toBe('additional_multiplier')
+    expect(workshopCardMasteryDetailAbilityDescId('coins')).toBe(
+      'ws_cards_detail_mastery_ability_desc_coins',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('coins')).toBe(
+      'ws_cards_detail_mastery_research_desc_coins',
+    )
   })
 })

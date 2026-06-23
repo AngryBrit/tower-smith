@@ -2,7 +2,6 @@ import { useEffect, useId, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import {
   formatWorkshopGameCardStarEffect,
-  formatWorkshopGameCardStarEffectWithMastery,
   workshopGameCardArtVariant,
   workshopGameCardGlow,
   workshopGameCardGlyph,
@@ -14,6 +13,13 @@ import {
   type WorkshopGameCardId,
 } from '../data/workshopGameCards'
 import {
+  formatCardMasteryTierLabelDetail,
+  workshopCardMasteryDetailAbilityLabel,
+  workshopCardMasteryDetailAbilityDescId,
+  workshopCardMasteryDetailMasteryDescId,
+  workshopCardMasteryDetailMasteryDescStyle,
+  workshopCardMasteryDetailResearchDescId,
+  workshopCardMasteryDetailTitleId,
   workshopCardMasteryLevel,
   workshopCardMasteryMultiplier,
   workshopCardMasteryResearchRef,
@@ -83,14 +89,34 @@ export function CardDetailDialog({
     masteryMultiplier,
     2,
   )
-  const valueHint = formatWorkshopGameCardStarEffectWithMastery(cardId, stars, masteryMultiplier)
-  const masteryAbilityLabel = `${t(cardTitleId)}+`
-  const masteryStatLabel = t(cardTitleId)
+  const masteryTitleId = workshopCardMasteryDetailTitleId(cardId)
+  const masteryStatLabel = t(masteryTitleId)
   const masteryStatLabelLower = masteryStatLabel.toLocaleLowerCase()
-  const masteryAbilityValue =
+  const masteryAbilityLabel = workshopCardMasteryDetailAbilityLabel(cardId, masteryStatLabel)
+  const masteryDescId = workshopCardMasteryDetailMasteryDescId(cardId)
+  const masteryDescLine = masteryDescId
+    ? t(masteryDescId)
+    : workshopCardMasteryDetailMasteryDescStyle(cardId) === 'stat_multiplier'
+      ? t('ws_cards_detail_mastery_desc_stat_multiplier').replace(
+          '{{mastery}}',
+          masteryAbilityLabel,
+        )
+      : t('ws_cards_detail_mastery_desc')
+          .replace('{{stat}}', masteryStatLabel)
+          .replace('{{mastery}}', masteryStatLabel)
+  const masteryAbilityDescId = workshopCardMasteryDetailAbilityDescId(cardId)
+  const masteryAbilityDescLine = masteryAbilityDescId
+    ? t(masteryAbilityDescId)
+    : t('ws_cards_detail_mastery_ability_desc').replace('{{stat}}', masteryStatLabel)
+  const masteryResearchDescId = workshopCardMasteryDetailResearchDescId(cardId)
+  const masteryResearchDescLine = masteryResearchDescId
+    ? t(masteryResearchDescId)
+    : t('ws_cards_detail_mastery_research_desc').replace('{{stat}}', masteryStatLabelLower)
+  const masteryAbilityValue = formatCardMasteryTierLabelDetail(
     workshopCardMasteryTierLabel(cardId, researchData, Math.max(masteryLevel, 1)) ??
-    workshopCardMasteryUnlockPreviewLabel(cardId, researchData) ??
-    '—'
+      workshopCardMasteryUnlockPreviewLabel(cardId, researchData) ??
+      '—',
+  )
   const masteryResearchName =
     masteryRef && researchData
       ? (researchData.sections[masteryRef.sectionIndex]?.items[masteryRef.itemIndex]?.name ?? '')
@@ -177,9 +203,6 @@ export function CardDetailDialog({
                   ) : (
                     <span className="cards-tile__glyph">{glyph}</span>
                   )}
-                  {valueHint ? (
-                    <p className="cards-tile__stat cards-tile__stat--overlay">{valueHint}</p>
-                  ) : null}
                 </div>
                 <div className="cards-tile__stars" aria-hidden>
                   {Array.from({ length: maxStars }, (_, i) => (
@@ -234,9 +257,7 @@ export function CardDetailDialog({
               ? t('ws_cards_detail_mastery_unlocked')
               : t('ws_cards_detail_mastery_available')}
           </h3>
-          <p className="cards-detail__mastery-desc">
-            {t('ws_cards_detail_mastery_desc').replace('{{mastery}}', masteryAbilityLabel)}
-          </p>
+          <p className="cards-detail__mastery-desc">{masteryDescLine}</p>
           <div className="cards-detail__mastery-row">
             <div className="cards-detail__mastery-main">
               <span className="cards-detail__mastery-label">
@@ -245,16 +266,12 @@ export function CardDetailDialog({
                 </span>{' '}
                 <span className="cards-detail__mastery-label-name">{masteryAbilityLabel}</span>
               </span>
-              <span className="cards-detail__mastery-ability-desc">
-                {t('ws_cards_detail_mastery_ability_desc').replace('{{stat}}', masteryStatLabel)}
-              </span>
+              <span className="cards-detail__mastery-ability-desc">{masteryAbilityDescLine}</span>
             </div>
             <span className="cards-detail__mastery-value">{masteryAbilityValue}</span>
           </div>
           <h4 className="cards-detail__mastery-subtitle">{t('ws_cards_detail_mastery_research')}</h4>
-          <p className="cards-detail__mastery-research-desc">
-            {t('ws_cards_detail_mastery_research_desc').replace('{{stat}}', masteryStatLabelLower)}
-          </p>
+          <p className="cards-detail__mastery-research-desc">{masteryResearchDescLine}</p>
           {canUnlock ? (
             <button
               type="button"

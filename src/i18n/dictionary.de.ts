@@ -935,11 +935,21 @@ export const STRINGS_DE = {
   ws_cards_detail_mastery_available: 'Meisterschaft verfügbar',
   ws_cards_detail_mastery_unlocked: 'Meisterschaft freigeschaltet',
   ws_cards_detail_mastery_desc:
+    'Fügt einen zusätzlichen Multiplikator hinzu, um {{stat}} zu erhöhen, und schaltet {{mastery}}-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_stat_multiplier:
     'Erhöht den Kartenstat-Multiplikator und schaltet {{mastery}}-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_cash:
+    'Gibt Elites eine Chance, Würfel-Neuwürfe fallen zu lassen',
+  ws_cards_detail_mastery_ability_desc_cash:
+    'Chance, dass Elites Würfel-Neuwürfe fallen lassen',
+  ws_cards_detail_mastery_research_desc_cash:
+    'Erhöht die Chance, dass Elites Würfel-Neuwürfe fallen lassen',
   ws_cards_detail_mastery_ability_prefix: 'Meisterschaftsfähigkeit:',
-  ws_cards_detail_mastery_ability_desc: 'Erhöht Bonus-{{stat}}',
+  ws_cards_detail_mastery_ability_desc: 'Multiplikator auf {{stat}}',
+  ws_cards_detail_mastery_ability_desc_coins: 'Erhöht Bonus-Münzen',
   ws_cards_detail_mastery_research: 'Meisterschaftsforschung',
-  ws_cards_detail_mastery_research_desc: 'Erhöht den Kartenmeisterschafts-Bonus für {{stat}}',
+  ws_cards_detail_mastery_research_desc: 'Erhöht den Kartenmeisterschafts-Multiplikator auf {{stat}}',
+  ws_cards_detail_mastery_research_desc_coins: 'Erhöht den Kartenmeisterschafts-Bonus für Münzen',
   ws_cards_detail_unlock_mastery: '{{mastery}} freischalten',
   ws_cards_detail_unlock_mastery_generic: 'Kartenmeisterschaft freischalten',
   ws_card_damage: 'Schaden',

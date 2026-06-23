@@ -6,10 +6,74 @@ import cardMasteryTierLabels from './card-mastery-tier-labels.json'
 import { getEffectiveLevel, levelOverrideKey, type ResearchData, type ResearchItem } from '../types/research'
 import {
   WORKSHOP_GAME_CARD_ORDER,
+  workshopGameCardTitleId,
   type WorkshopGameCardId,
 } from './workshopGameCards'
+import type { StringId } from '../i18n/dictionary'
 
 const CARD_MASTERY_TIER_LABELS = cardMasteryTierLabels as Record<string, readonly string[]>
+
+type CardMasteryDetailMasteryDescStyle = 'additional_multiplier' | 'stat_multiplier'
+
+/** In-game card detail mastery copy when it differs from the inventory card title. */
+type CardMasteryDetailDisplay = {
+  titleId?: StringId
+  abilitySuffixPlus?: boolean
+  masteryDescId?: StringId
+  masteryDescStyle?: CardMasteryDetailMasteryDescStyle
+  abilityDescId?: StringId
+  researchDescId?: StringId
+}
+
+const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMasteryDetailDisplay>> = {
+  range: { titleId: 'ws_stat_damagePerMeter', abilitySuffixPlus: false },
+  cash: {
+    masteryDescId: 'ws_cards_detail_mastery_desc_cash',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_cash',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_cash',
+  },
+  coins: {
+    masteryDescStyle: 'stat_multiplier',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_coins',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_coins',
+  },
+}
+
+export function workshopCardMasteryDetailTitleId(cardId: WorkshopGameCardId): StringId {
+  return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.titleId ?? workshopGameCardTitleId(cardId)
+}
+
+export function workshopCardMasteryDetailMasteryDescId(
+  cardId: WorkshopGameCardId,
+): StringId | null {
+  return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.masteryDescId ?? null
+}
+
+export function workshopCardMasteryDetailAbilityDescId(
+  cardId: WorkshopGameCardId,
+): StringId | null {
+  return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.abilityDescId ?? null
+}
+
+export function workshopCardMasteryDetailResearchDescId(
+  cardId: WorkshopGameCardId,
+): StringId | null {
+  return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.researchDescId ?? null
+}
+
+export function workshopCardMasteryDetailMasteryDescStyle(
+  cardId: WorkshopGameCardId,
+): CardMasteryDetailMasteryDescStyle {
+  return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.masteryDescStyle ?? 'additional_multiplier'
+}
+
+export function workshopCardMasteryDetailAbilityLabel(
+  cardId: WorkshopGameCardId,
+  statLabel: string,
+): string {
+  const suffixPlus = CARD_MASTERY_DETAIL_DISPLAY[cardId]?.abilitySuffixPlus ?? true
+  return suffixPlus ? `${statLabel}+` : statLabel
+}
 
 export function cardMasterySectionIndex(data: ResearchData): number {
   return data.sections.findIndex((s) => s.sectionSlug === 'card-mastery')
@@ -127,6 +191,22 @@ export function parseCardMasteryTierMultiplier(label: string): number {
   if (!m) return 1
   const n = Number(m[1])
   return Number.isFinite(n) && n > 0 ? n : 1
+}
+
+/** Detail-dialog display for tier labels (e.g. x1.2 → x1.20, 0.4% → 0.40%). */
+export function formatCardMasteryTierLabelDetail(label: string, fixedDecimals = 2): string {
+  const trimmed = label.trim()
+  const xMatch = /^x([\d.]+)$/i.exec(trimmed)
+  if (xMatch) {
+    const n = Number(xMatch[1])
+    if (Number.isFinite(n)) return `x${n.toFixed(fixedDecimals)}`
+  }
+  const pctMatch = /^(\+?)([\d.]+)%$/.exec(trimmed)
+  if (pctMatch) {
+    const n = Number(pctMatch[2])
+    if (Number.isFinite(n)) return `${pctMatch[1]}${n.toFixed(fixedDecimals)}%`
+  }
+  return label
 }
 
 /** Wiki tier multiplier for the simulated Card Mastery level (1 when level ≤ 0). */

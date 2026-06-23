@@ -932,11 +932,19 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_available: 'Mastery Available',
   ws_cards_detail_mastery_unlocked: 'Mastery Unlocked',
   ws_cards_detail_mastery_desc:
+    'Adds an additional multiplier to increase {{stat}}, and unlocks {{mastery}} Mastery research',
+  ws_cards_detail_mastery_desc_stat_multiplier:
     "Increases the card's stat multiplier, and unlocks {{mastery}} Mastery research",
+  ws_cards_detail_mastery_desc_cash: 'Adds a chance for elites to drop Reroll Dice',
+  ws_cards_detail_mastery_ability_desc_cash: 'Chance for elites to drop Reroll Dice',
+  ws_cards_detail_mastery_research_desc_cash:
+    'Increases chance for elites to drop Reroll Dice',
   ws_cards_detail_mastery_ability_prefix: 'Mastery ability:',
-  ws_cards_detail_mastery_ability_desc: 'Increases bonus {{stat}}',
+  ws_cards_detail_mastery_ability_desc: 'Multiplier on {{stat}}',
+  ws_cards_detail_mastery_ability_desc_coins: 'Increases bonus Coins',
   ws_cards_detail_mastery_research: 'Mastery research',
-  ws_cards_detail_mastery_research_desc: 'Increases card mastery bonus {{stat}}',
+  ws_cards_detail_mastery_research_desc: 'Increases card mastery multiplier on {{stat}}',
+  ws_cards_detail_mastery_research_desc_coins: 'Increases card mastery bonus coins',
   ws_cards_detail_unlock_mastery: 'Unlock {{mastery}}',
   ws_cards_detail_unlock_mastery_generic: 'Unlock card mastery',
   ws_card_damage: 'Damage',

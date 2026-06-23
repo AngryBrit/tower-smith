@@ -942,11 +942,21 @@ export const STRINGS_ES = {
   ws_cards_detail_mastery_available: 'Maestría disponible',
   ws_cards_detail_mastery_unlocked: 'Maestría desbloqueada',
   ws_cards_detail_mastery_desc:
-    'Aumenta el multiplicador de la carta y desbloquea la investigación de maestría {{mastery}}',
+    'Añade un multiplicador adicional para aumentar {{stat}} y desbloquea la investigación de maestría {{mastery}}',
+  ws_cards_detail_mastery_desc_stat_multiplier:
+    'Aumenta el multiplicador de estadísticas de la carta y desbloquea la investigación de maestría {{mastery}}',
+  ws_cards_detail_mastery_desc_cash:
+    'Añade una probabilidad de que los élites suelten dados de nueva tirada',
+  ws_cards_detail_mastery_ability_desc_cash:
+    'Probabilidad de que los élites suelten dados de nueva tirada',
+  ws_cards_detail_mastery_research_desc_cash:
+    'Aumenta la probabilidad de que los élites suelten dados de nueva tirada',
   ws_cards_detail_mastery_ability_prefix: 'Habilidad de maestría:',
-  ws_cards_detail_mastery_ability_desc: 'Aumenta el bonus de {{stat}}',
+  ws_cards_detail_mastery_ability_desc: 'Multiplicador en {{stat}}',
+  ws_cards_detail_mastery_ability_desc_coins: 'Aumenta el bonus de monedas',
   ws_cards_detail_mastery_research: 'Investigación de maestría',
-  ws_cards_detail_mastery_research_desc: 'Aumenta el bonus de maestría de carta de {{stat}}',
+  ws_cards_detail_mastery_research_desc: 'Aumenta el multiplicador de maestría de carta en {{stat}}',
+  ws_cards_detail_mastery_research_desc_coins: 'Aumenta el bonus de maestría de carta de monedas',
   ws_cards_detail_unlock_mastery: 'Desbloquear {{mastery}}',
   ws_cards_detail_unlock_mastery_generic: 'Desbloquear maestría de carta',
   ws_card_damage: 'Daño',
