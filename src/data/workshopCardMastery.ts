@@ -19,6 +19,8 @@ type CardMasteryDetailTierLabelStyle =
   | 'default'
   | 'incremental_percent'
   | 'plain_percent'
+  | 'plus_percent'
+  | 'thirds_percent'
   | 'plain_sec'
   | 'compact_mult'
 
@@ -195,6 +197,43 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     masteryDescId: 'ws_cards_detail_mastery_desc_second_wind',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_second_wind',
     researchDescId: 'ws_cards_detail_mastery_research_desc_second_wind',
+  },
+  demonMode: {
+    titleId: 'ws_card_demon_revenge',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_demon_mode',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_demon_mode',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_demon_mode',
+  },
+  energyShield: {
+    titleId: 'ws_card_repel',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_energy_shield',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_energy_shield',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_energy_shield',
+  },
+  waveAccelerator: {
+    titleId: 'ws_card_spawn_accelerator',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_wave_accelerator',
+    masteryTierLabelStyle: 'plus_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_wave_accelerator',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_wave_accelerator',
+  },
+  berserker: {
+    titleId: 'ws_card_viking_funeral',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_berserker',
+    masteryTierLabelStyle: 'plain_sec',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_berserker',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_berserker',
+  },
+  ultimateCrit: {
+    masteryDescStyle: 'stat_multiplier',
+    masteryTierLabelStyle: 'thirds_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_ultimate_crit',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_ultimate_crit',
   },
 }
 
@@ -401,6 +440,31 @@ function formatPlainPercentLabel(label: string, fixedDecimals = 2): string | nul
   return `${num}%`
 }
 
+function formatPlusPercentLabel(label: string, fixedDecimals = 2): string | null {
+  const m = /^\+?([\d.]+)%$/.exec(label.trim())
+  if (!m) return null
+  const n = Number(m[1])
+  if (!Number.isFinite(n)) return null
+  const num = Number.isInteger(n)
+    ? String(n)
+    : n.toFixed(fixedDecimals).replace(/\.?0+$/, '')
+  return `+${num}%`
+}
+
+/**
+ * Mastery tier value as exact thirds with two decimals (in-game Ultimate Crit copy):
+ * stored labels round to one decimal (+0.3%, +0.7%, +1.0%…) but the game shows the
+ * precise increment (+0.33%, +0.67%, +1.00%…).
+ */
+function formatThirdsPercentLabel(label: string, fixedDecimals = 2): string | null {
+  const m = /^\+?([\d.]+)%$/.exec(label.trim())
+  if (!m) return null
+  const n = Number(m[1])
+  if (!Number.isFinite(n)) return null
+  const exact = Math.round(n * 3) / 3
+  return `+${exact.toFixed(fixedDecimals)}%`
+}
+
 function formatPlainSecLabel(label: string): string | null {
   const m = /^-?(\d+(?:\.\d+)?)s$/i.exec(label.trim())
   if (!m) return null
@@ -429,6 +493,14 @@ export function formatCardMasteryTierLabelDetailForCard(
   }
   if (style === 'plain_percent') {
     const pct = formatPlainPercentLabel(label, fixedDecimals)
+    if (pct) return pct
+  }
+  if (style === 'plus_percent') {
+    const pct = formatPlusPercentLabel(label, fixedDecimals)
+    if (pct) return pct
+  }
+  if (style === 'thirds_percent') {
+    const pct = formatThirdsPercentLabel(label, fixedDecimals)
     if (pct) return pct
   }
   if (style === 'plain_sec') {

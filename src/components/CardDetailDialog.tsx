@@ -28,6 +28,8 @@ import {
   workshopCardMasteryUnlocked,
 } from '../data/workshopCardMastery'
 import { type ResearchData } from '../types/research'
+import type { WorkshopPersistedV1 } from '../labPresetsStorage'
+import { workshopDisplayedCriticalFactorValue } from '../data/workshopCriticalFactor'
 import { workshopCardDetailLabEnhancements, cardsResearchLabLevel } from '../data/workshopCardDetailLabEnhancements'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
@@ -38,6 +40,8 @@ type CardDetailDialogProps = {
   stars: number
   researchData: ResearchData | null
   labLevelOverrides: Record<string, number>
+  workshopPersisted: WorkshopPersistedV1
+  gameResearchLevel?: readonly number[] | null
   previewTileSize?: { width: number; height: number } | null
   onClose: () => void
   onUnlockMastery: () => void
@@ -48,6 +52,8 @@ export function CardDetailDialog({
   stars,
   researchData,
   labLevelOverrides,
+  workshopPersisted,
+  gameResearchLevel,
   previewTileSize,
   onClose,
   onUnlockMastery,
@@ -96,7 +102,16 @@ export function CardDetailDialog({
             'Super Tower Bonus',
           ),
         }
-      : undefined,
+      : cardId === 'ultimateCrit'
+        ? {
+            ultimateCritTowerFactor: workshopDisplayedCriticalFactorValue(
+              workshopPersisted,
+              researchData,
+              labLevelOverrides,
+              gameResearchLevel,
+            ),
+          }
+        : undefined,
   )
   const masteryTitleId = workshopCardMasteryDetailTitleId(cardId)
   const masteryStatLabel = t(masteryTitleId)

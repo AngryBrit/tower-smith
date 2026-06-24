@@ -966,6 +966,14 @@ export const STRINGS_DE = {
     'Lässt den 35%-Karten-Multiplikator den Schaden aller Ultimate-Waffen erhöhen und verkürzt die Super-Tower-Abklingzeit; schaltet Ultimate-Tower-Forschung frei',
   ws_cards_detail_mastery_desc_second_wind:
     'Schaltet einen anhaltenden Lebensregenerations-Buff bei Aktivierung frei, der 400 Wellen hält, und schaltet Angel-Wings-Forschung frei',
+  ws_cards_detail_mastery_desc_demon_mode:
+    'Schaltet einen anhaltenden Schadens-Buff bei Aktivierung frei, der 300 Wellen hält, und schaltet Demon-Revenge-Forschung frei',
+  ws_cards_detail_mastery_desc_energy_shield:
+    'Energy Shield aktiviert eine Druckwelle, die alle Gegner um einen Prozentsatz der maximalen Turmreichweite zurückstößt und alle Gegnergeschosse zerstört; die Ladezeiten der Strahlen werden zurückgesetzt. Schaltet außerdem Repel-Forschung frei',
+  ws_cards_detail_mastery_desc_wave_accelerator:
+    'Erhöht die Rate, mit der sich die Spawn-Raten beschleunigen, sodass in früheren Wellen mehr Gegner erscheinen, und schaltet Wellenbeschleuniger-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_berserker:
+    'Erhöht die Schadensobergrenze auf x500 für eine gewisse Dauer, wenn Death Defy aktiviert wird, und schaltet Viking-Funeral-Forschung frei',
   ws_cards_detail_mastery_desc_slow_aura:
     'Fügt einen zusätzlichen Multiplikator hinzu, um die Angriffsgeschwindigkeit der Gegner zu verlangsamen, und schaltet Slow-Aura-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Zeitverzögerung zwischen Gegnerangriffen',
@@ -1002,6 +1010,15 @@ export const STRINGS_DE = {
   ws_cards_detail_mastery_ability_desc_super_tower: 'Verkürzt die Super-Tower-Abklingzeit',
   ws_cards_detail_mastery_ability_desc_second_wind:
     'Erhöht den anhaltenden Lebensregenerations-Multiplikator',
+  ws_cards_detail_mastery_ability_desc_demon_mode:
+    'Erhöht den anhaltenden Schadens-Multiplikator',
+  ws_cards_detail_mastery_ability_desc_energy_shield:
+    'Erhöht den Rückstoß als Prozentsatz der Turmreichweite',
+  ws_cards_detail_mastery_ability_desc_wave_accelerator:
+    'Erhöht die Rate, mit der sich die Spawn-Raten beschleunigen',
+  ws_cards_detail_mastery_ability_desc_berserker:
+    'Berserker-Schadensobergrenze von x500 für eine gewisse Dauer',
+  ws_cards_detail_mastery_ability_desc_ultimate_crit: 'Erhöht die Ultimate-Krit-Chance',
   ws_cards_detail_mastery_research_desc_cash:
     'Erhöht die Chance, dass Elites Würfel-Neuwürfe fallen lassen',
   ws_cards_detail_mastery_research_desc_enemy_balance:
@@ -1032,6 +1049,16 @@ export const STRINGS_DE = {
     'Erhöht den Meisterschafts-Bonus auf die Super-Tower-Abklingzeit',
   ws_cards_detail_mastery_research_desc_second_wind:
     'Erhöht den Meisterschafts-Bonus auf den anhaltenden Lebensregenerations-Multiplikator',
+  ws_cards_detail_mastery_research_desc_demon_mode:
+    'Erhöht den Meisterschafts-Bonus auf den anhaltenden Schadens-Multiplikator',
+  ws_cards_detail_mastery_research_desc_energy_shield:
+    'Erhöht den Rückstoß als Prozentsatz der Turmreichweite',
+  ws_cards_detail_mastery_research_desc_wave_accelerator:
+    'Erhöht die Spawn-Raten-Beschleunigung des Wellenbeschleunigers',
+  ws_cards_detail_mastery_research_desc_berserker:
+    'Erhöht die Dauer von Viking Funeral',
+  ws_cards_detail_mastery_research_desc_ultimate_crit:
+    'Erhöht den Kartenmeisterschaftsbonus für Ultimate-Krit',
   ws_cards_detail_mastery_ability_prefix: 'Meisterschaftsfähigkeit:',
   ws_cards_detail_mastery_ability_desc: 'Multiplikator auf {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Erhöht Bonus-Schaden',
@@ -1073,6 +1100,12 @@ export const STRINGS_DE = {
   ws_cards_detail_lab_second_wind_recharge_title: 'Second Wind aufladen',
   ws_cards_detail_lab_second_wind_recharge_desc:
     'Second Wind lädt sich nach einer Anzahl von Wellen wieder auf',
+  ws_cards_detail_lab_demon_mode_recharge_title: 'Demon Mode aufladen',
+  ws_cards_detail_lab_demon_mode_recharge_desc:
+    'Demon Mode lädt sich nach einer Anzahl von Wellen wieder auf',
+  ws_cards_detail_lab_energy_shield_extra_hit_title: 'Zusätzliche Ladung',
+  ws_cards_detail_lab_energy_shield_extra_hit_desc:
+    'Energy Shield erhält eine zusätzliche Ladung',
   ws_card_damage: 'Schaden',
   ws_card_attack_speed: 'Angriffstempo',
   ws_card_health: 'Leben',
@@ -1111,6 +1144,10 @@ export const STRINGS_DE = {
   ws_card_electrified_net: 'Electrified Net',
   ws_card_ultimate_tower: 'Ultimate Tower',
   ws_card_angel_wings: 'Angel Wings',
+  ws_card_demon_revenge: 'Demon Revenge',
+  ws_card_repel: 'Repel',
+  ws_card_spawn_accelerator: 'Spawn Accelerator',
+  ws_card_viking_funeral: 'Viking Funeral',
   ws_card_energy_net: 'Energienetz',
   ws_card_super_tower: 'Super Tower',
   ws_card_second_wind: 'Second Wind',

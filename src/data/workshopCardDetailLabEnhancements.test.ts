@@ -100,4 +100,36 @@ describe('workshopCardDetailLabEnhancements', () => {
     expect(rows[0]?.value).toBe('0%')
     expect(rows[1]?.value).toBe('0')
   })
+
+  it('returns Demon Mode recharge lab row with simulator level', () => {
+    const cardsSi = data.sections.findIndex((s) => s.sectionSlug === 'cards-research')
+    expect(cardsSi).toBeGreaterThanOrEqual(0)
+    const overrides = { [`${cardsSi}-7`]: 1 }
+    const rows = workshopCardDetailLabEnhancements('demonMode', data, overrides)
+    expect(rows).toHaveLength(1)
+    expect(rows[0]?.titleId).toBe('ws_cards_detail_lab_demon_mode_recharge_title')
+    expect(rows[0]?.descId).toBe('ws_cards_detail_lab_demon_mode_recharge_desc')
+    expect(rows[0]?.value).toBe('1500')
+  })
+
+  it('returns 0 Demon Mode recharge waves when lab level is zero', () => {
+    const rows = workshopCardDetailLabEnhancements('demonMode', data, {})
+    expect(rows[0]?.value).toBe('0')
+  })
+
+  it('returns Energy Shield extra-hit lab row with simulator level', () => {
+    const cardsSi = data.sections.findIndex((s) => s.sectionSlug === 'cards-research')
+    expect(cardsSi).toBeGreaterThanOrEqual(0)
+    const overrides = { [`${cardsSi}-4`]: 2 }
+    const rows = workshopCardDetailLabEnhancements('energyShield', data, overrides)
+    expect(rows).toHaveLength(1)
+    expect(rows[0]?.titleId).toBe('ws_cards_detail_lab_energy_shield_extra_hit_title')
+    expect(rows[0]?.descId).toBe('ws_cards_detail_lab_energy_shield_extra_hit_desc')
+    expect(rows[0]?.value).toBe('3 hits')
+  })
+
+  it('returns 1 hit Energy Shield when extra-hit lab is zero', () => {
+    const rows = workshopCardDetailLabEnhancements('energyShield', data, {})
+    expect(rows[0]?.value).toBe('1 hit')
+  })
 })

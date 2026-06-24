@@ -113,6 +113,18 @@ describe('workshopCardMastery', () => {
     expect(formatCardMasteryTierLabelDetailForCard('superTower', '-30s')).toBe('30s')
     expect(formatCardMasteryTierLabelDetailForCard('secondWind', 'x1.9')).toBe('x1.90')
     expect(formatCardMasteryTierLabelDetailForCard('secondWind', 'x10')).toBe('x10.00')
+    expect(formatCardMasteryTierLabelDetailForCard('demonMode', 'x1.5')).toBe('x1.50')
+    expect(formatCardMasteryTierLabelDetailForCard('demonMode', 'x6')).toBe('x6.00')
+    expect(formatCardMasteryTierLabelDetailForCard('energyShield', '5%')).toBe('5%')
+    expect(formatCardMasteryTierLabelDetailForCard('energyShield', '50%')).toBe('50%')
+    expect(formatCardMasteryTierLabelDetailForCard('waveAccelerator', '110%')).toBe('+110%')
+    expect(formatCardMasteryTierLabelDetailForCard('waveAccelerator', '200%')).toBe('+200%')
+    expect(formatCardMasteryTierLabelDetailForCard('berserker', '30s')).toBe('30s')
+    expect(formatCardMasteryTierLabelDetailForCard('berserker', '300s')).toBe('300s')
+    expect(formatCardMasteryTierLabelDetailForCard('ultimateCrit', '+0.3%')).toBe('+0.33%')
+    expect(formatCardMasteryTierLabelDetailForCard('ultimateCrit', '+0.7%')).toBe('+0.67%')
+    expect(formatCardMasteryTierLabelDetailForCard('ultimateCrit', '+1.0%')).toBe('+1.00%')
+    expect(formatCardMasteryTierLabelDetailForCard('ultimateCrit', '+3.3%')).toBe('+3.33%')
   })
 
   it('formats card detail star levels with plain_percent when configured', () => {
@@ -360,6 +372,71 @@ describe('workshopCardMastery', () => {
       'ws_cards_detail_mastery_research_desc_second_wind',
     )
     expect(workshopCardMasteryDetailTierLabelStyle('secondWind')).toBe('default')
+    expect(workshopCardMasteryDetailMasteryDescId('demonMode')).toBe(
+      'ws_cards_detail_mastery_desc_demon_mode',
+    )
+    expect(workshopCardMasteryDetailTitleId('demonMode')).toBe('ws_card_demon_revenge')
+    expect(workshopCardMasteryDetailAbilityLabel('demonMode', 'Demon Revenge')).toBe(
+      'Demon Revenge',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('demonMode')).toBe(
+      'ws_cards_detail_mastery_ability_desc_demon_mode',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('demonMode')).toBe(
+      'ws_cards_detail_mastery_research_desc_demon_mode',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('demonMode')).toBe('default')
+    expect(workshopCardMasteryDetailMasteryDescId('energyShield')).toBe(
+      'ws_cards_detail_mastery_desc_energy_shield',
+    )
+    expect(workshopCardMasteryDetailTitleId('energyShield')).toBe('ws_card_repel')
+    expect(workshopCardMasteryDetailAbilityLabel('energyShield', 'Repel')).toBe('Repel')
+    expect(workshopCardMasteryDetailAbilityDescId('energyShield')).toBe(
+      'ws_cards_detail_mastery_ability_desc_energy_shield',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('energyShield')).toBe(
+      'ws_cards_detail_mastery_research_desc_energy_shield',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('energyShield')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('waveAccelerator')).toBe(
+      'ws_cards_detail_mastery_desc_wave_accelerator',
+    )
+    expect(workshopCardMasteryDetailTitleId('waveAccelerator')).toBe('ws_card_spawn_accelerator')
+    expect(workshopCardMasteryDetailAbilityLabel('waveAccelerator', 'Spawn Accelerator')).toBe(
+      'Spawn Accelerator',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('waveAccelerator')).toBe(
+      'ws_cards_detail_mastery_ability_desc_wave_accelerator',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('waveAccelerator')).toBe(
+      'ws_cards_detail_mastery_research_desc_wave_accelerator',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('waveAccelerator')).toBe('plus_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('berserker')).toBe(
+      'ws_cards_detail_mastery_desc_berserker',
+    )
+    expect(workshopCardMasteryDetailTitleId('berserker')).toBe('ws_card_viking_funeral')
+    expect(workshopCardMasteryDetailAbilityLabel('berserker', 'Viking Funeral')).toBe(
+      'Viking Funeral',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('berserker')).toBe(
+      'ws_cards_detail_mastery_ability_desc_berserker',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('berserker')).toBe(
+      'ws_cards_detail_mastery_research_desc_berserker',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('berserker')).toBe('plain_sec')
+    expect(workshopCardMasteryDetailMasteryDescStyle('ultimateCrit')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailAbilityLabel('ultimateCrit', 'Ultimate Crit')).toBe(
+      'Ultimate Crit+',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('ultimateCrit')).toBe(
+      'ws_cards_detail_mastery_ability_desc_ultimate_crit',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('ultimateCrit')).toBe(
+      'ws_cards_detail_mastery_research_desc_ultimate_crit',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('ultimateCrit')).toBe('thirds_percent')
     expect(workshopCardMasteryDetailMasteryDescId('damage')).toBeNull()
     expect(workshopCardMasteryDetailMasteryDescStyle('damage')).toBe('stat_multiplier')
     expect(workshopCardMasteryDetailAbilityDescId('damage')).toBe(

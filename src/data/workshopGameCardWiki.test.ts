@@ -44,6 +44,8 @@ describe('workshopGameCardWiki', () => {
     expect(formatWorkshopGameCardStarEffectForDetail('slowAura', 7)).toBe('31%')
     expect(formatWorkshopGameCardStarEffectForDetail('criticalChance', 7)).toBe('11%')
     expect(formatWorkshopGameCardStarEffectForDetail('berserker', 1)).toBe('+0.8%')
+    expect(formatWorkshopGameCardStarEffectForDetail('berserker', 3)).toBe('+1.0%')
+    expect(formatWorkshopGameCardStarEffectForDetail('berserker', 7)).toBe('+1.4%')
   })
 
   it('uses in-game Fortress summary copy in card detail', () => {
@@ -226,6 +228,48 @@ describe('workshopGameCardWiki', () => {
   it('formats Second Wind star levels with integer sec in card detail', () => {
     expect(formatWorkshopGameCardStarEffectForDetail('secondWind', 1)).toBe('10 sec')
     expect(formatWorkshopGameCardStarEffectForDetail('secondWind', 7)).toBe('40 sec')
+  })
+
+  it('uses in-game Demon Mode summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('demonMode', 7)).toBe(
+      'Once per round: Activate Demon Mode, Grants 300x Projectile Damage & Invincibility for 300 sec',
+    )
+  })
+
+  it('formats Demon Mode star levels with integer sec in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('demonMode', 1)).toBe('180 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('demonMode', 7)).toBe('300 sec')
+  })
+
+  it('uses in-game Energy Shield summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('energyShield', 7)).toBe(
+      'Gain an Energy Shield that blocks 1 attack, replenishes after 8 min',
+    )
+  })
+
+  it('formats Energy Shield star levels with integer min in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('energyShield', 1)).toBe('20 min')
+    expect(formatWorkshopGameCardStarEffectForDetail('energyShield', 7)).toBe('8 min')
+  })
+
+  it('uses in-game Berserker summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('berserker', 7)).toBe(
+      'Increase damage by 1.4% of total damage absorbed this round (max of x8 tower damage)',
+    )
+  })
+
+  it('formats Ultimate Crit level values as plain two-decimal percents', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('ultimateCrit', 1)).toBe('1.00%')
+    expect(formatWorkshopGameCardStarEffectForDetail('ultimateCrit', 2)).toBe('1.33%')
+    expect(formatWorkshopGameCardStarEffectForDetail('ultimateCrit', 7)).toBe('3.00%')
+  })
+
+  it('uses in-game Ultimate Crit summary copy with the tower crit factor', () => {
+    expect(
+      workshopGameCardDescriptionLineForDetail('ultimateCrit', 7, 1, {
+        ultimateCritTowerFactor: 109.83,
+      }),
+    ).toBe('Ultimate Weapons gain 3% chance to Crit for 109.83x Damage (Tower Crit Factor)')
   })
 
   it('returns null for zero stars', () => {

@@ -962,6 +962,14 @@ export const STRINGS_EN = {
     'Causes 35% cards multiplier effect to increase all Ultimate Weapon damage and decreases Super Tower cooldown, also unlocks Ultimate Tower research',
   ws_cards_detail_mastery_desc_second_wind:
     'Unlocks a lingering health regen buff when activated which lasts for 400 waves, and unlocks Angel Wings research',
+  ws_cards_detail_mastery_desc_demon_mode:
+    'Unlocks a lingering damage buff when activated which lasts for 300 waves, and unlocks Demon Revenge research',
+  ws_cards_detail_mastery_desc_energy_shield:
+    'Energy Shield activates a blast that repels all enemies back by a percent of tower max range and destroy all enemy projectiles, The charge times of Rays and reset, Also unlocks Repel research',
+  ws_cards_detail_mastery_desc_wave_accelerator:
+    'Increases the rate at which spawn rates accelerate causing more enemies to spawn in earlier waves, and unlocks Wave Accelerator Mastery research',
+  ws_cards_detail_mastery_desc_berserker:
+    'Increases the damage cap to x500 for a duration when Death Defy is activated, and unlocks Viking Funeral research',
   ws_cards_detail_mastery_desc_slow_aura:
     'Adds an additional multiplier to slow enemies attack speed, and unlocks Slow Aura Mastery research',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Time delay between enemy attacks',
@@ -996,6 +1004,15 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_ability_desc_super_tower: 'Reduces Super Tower cooldown time',
   ws_cards_detail_mastery_ability_desc_second_wind:
     'Increases lingering health regen multiplier',
+  ws_cards_detail_mastery_ability_desc_demon_mode:
+    'Increases lingering damage multiplier',
+  ws_cards_detail_mastery_ability_desc_energy_shield:
+    'Increases the pushback as a percent of Tower Range',
+  ws_cards_detail_mastery_ability_desc_wave_accelerator:
+    'Increases the rate at which spawn rates accelerate',
+  ws_cards_detail_mastery_ability_desc_berserker:
+    'Berserker damage cap of x500 for a duration of time',
+  ws_cards_detail_mastery_ability_desc_ultimate_crit: 'Increases Ultimate Crit chance',
   ws_cards_detail_mastery_research_desc_cash:
     'Increases chance for elites to drop Reroll Dice',
   ws_cards_detail_mastery_research_desc_enemy_balance:
@@ -1026,6 +1043,16 @@ export const STRINGS_EN = {
     'Increases mastery bonus to Super Tower cooldown time',
   ws_cards_detail_mastery_research_desc_second_wind:
     'Increases mastery lingering health regen multiplier',
+  ws_cards_detail_mastery_research_desc_demon_mode:
+    'Increases mastery lingering damage multiplier',
+  ws_cards_detail_mastery_research_desc_energy_shield:
+    'Increases pushback as a percent of tower range',
+  ws_cards_detail_mastery_research_desc_wave_accelerator:
+    'Increases the Wave Accelerator spawn rate acceleration',
+  ws_cards_detail_mastery_research_desc_berserker:
+    'Increases Viking Funeral duration',
+  ws_cards_detail_mastery_research_desc_ultimate_crit:
+    'Increases card mastery bonus added to Ultimate Crit',
   ws_cards_detail_mastery_ability_prefix: 'Mastery ability:',
   ws_cards_detail_mastery_ability_desc: 'Multiplier on {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Increases bonus Damage',
@@ -1066,6 +1093,12 @@ export const STRINGS_EN = {
   ws_cards_detail_lab_second_wind_recharge_title: 'Recharge Second Wind',
   ws_cards_detail_lab_second_wind_recharge_desc:
     'Second Wind will recharge after a number of waves',
+  ws_cards_detail_lab_demon_mode_recharge_title: 'Recharge Demon Mode',
+  ws_cards_detail_lab_demon_mode_recharge_desc:
+    'Demon Mode will recharge after a number of waves',
+  ws_cards_detail_lab_energy_shield_extra_hit_title: 'Extra Charge',
+  ws_cards_detail_lab_energy_shield_extra_hit_desc:
+    'Energy Shield gains an extra charge',
   ws_card_damage: 'Damage',
   ws_card_attack_speed: 'Attack Speed',
   ws_card_health: 'Health',
@@ -1104,6 +1137,10 @@ export const STRINGS_EN = {
   ws_card_electrified_net: 'Electrified Net',
   ws_card_ultimate_tower: 'Ultimate Tower',
   ws_card_angel_wings: 'Angel Wings',
+  ws_card_demon_revenge: 'Demon Revenge',
+  ws_card_repel: 'Repel',
+  ws_card_spawn_accelerator: 'Spawn Accelerator',
+  ws_card_viking_funeral: 'Viking Funeral',
   ws_card_energy_net: 'Energy Net',
   ws_card_super_tower: 'Super Tower',
   ws_card_second_wind: 'Second Wind',

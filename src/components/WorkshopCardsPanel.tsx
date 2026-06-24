@@ -449,7 +449,7 @@ export function WorkshopCardsPanel({
   labLevelOverrides,
 }: WorkshopCardsPanelProps) {
   const { t } = useI18n()
-  const { setLabLevelOverrides } = useTowerWorkspaceContext()
+  const { setLabLevelOverrides, gameResearchLevel } = useTowerWorkspaceContext()
   const { pushUndoSnapshot } = useWorkspaceUndo()
   const cardsLayoutRef = useRef<HTMLDivElement>(null)
   const [detailCardId, setDetailCardId] = useState<WorkshopGameCardId | null>(null)
@@ -696,6 +696,8 @@ export function WorkshopCardsPanel({
           stars={workshopPersisted.cardStars[detailCardId]}
           researchData={researchData}
           labLevelOverrides={labLevelOverrides}
+          workshopPersisted={workshopPersisted}
+          gameResearchLevel={gameResearchLevel}
           previewTileSize={detailTileSize}
           onClose={() => {
             setDetailCardId(null)

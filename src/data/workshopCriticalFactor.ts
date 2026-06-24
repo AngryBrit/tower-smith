@@ -1,20 +1,28 @@
 /**
  * Workshop **Critical Factor** from `tables/workshop/attack/critical-factor.json`.
- * Displayed value: **(Workshop + Submodule) × Lab × Enhancement** (enhance caps at **×1.25**, first **25** levels).
+ * Displayed value: **(Workshop + Submodule) × Lab × Enhancement** (full Critical Factor +
+ * enhancement, 0…400 levels, e.g. ×1.43 at level 43 — same multiplier as the enhancement card).
  */
 
 import {
   workshopToolkitMarginalCoins,
   workshopToolkitStatValue,
 } from '../workshopCosts'
-import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
+import {
+  WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
+  workshopEnhanceTier400Multiplier,
+} from './workshopEnhanceTier400Ladder'
+import { buildWorkshopAttackLabDisplayOpts } from './workshopLabDisplayOpts'
+import { workshopEnhancementsLabUnlocked } from './workshopEnhanceResearch'
+import { enrichAttackLabDisplayOptsWithSubmodules } from './workshopSubmoduleWorkshopDisplay'
+import { enrichAttackLabDisplayOpts } from './workshopRelicWorkshopDisplay'
+import { mergeLabOverridesForDisplayedDamage } from './workshopLabOverridesForDamage'
+import type { ResearchData } from '../types/research'
+import type { WorkshopPersistedV1 } from '../labPresetsStorage'
 
 export const WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL = 150 as const
 
-/** Enhancement levels counted on the workshop Critical Factor card (caps at **×1.25**). */
-export const WORKSHOP_DISPLAYED_CRIT_FACTOR_ENHANCE_LEVEL_CAP = 25 as const
-
-/** Enhancement × multiplier for displayed critical factor (0 when locked). */
+/** Enhancement × multiplier for displayed critical factor (1 when locked). */
 export function workshopDisplayedCritFactorEnhancementMultiplier(
   enhanceCritFactorLevel: number,
   enhancementsLabUnlocked: boolean,
@@ -22,7 +30,7 @@ export function workshopDisplayedCritFactorEnhancementMultiplier(
   if (!enhancementsLabUnlocked || enhanceCritFactorLevel <= 0) return 1
   const L = Math.min(
     Math.max(0, Math.trunc(enhanceCritFactorLevel)),
-    WORKSHOP_DISPLAYED_CRIT_FACTOR_ENHANCE_LEVEL_CAP,
+    WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   )
   return workshopEnhanceTier400Multiplier(L, 'Critical Factor +')
 }
@@ -54,4 +62,47 @@ export function workshopCriticalFactorStatDisplay(
 
 export function workshopCriticalFactorNextMarginalCoins(completedLevels: number): number | undefined {
   return workshopToolkitMarginalCoins('Critical Factor', completedLevels)
+}
+
+/**
+ * Displayed **Tower Critical Factor** multiplier from the player's build, matching the
+ * in-game / workshop-card value: workshop card level (+ submodule add) × Critical Factor
+ * lab × relics × enhancement (caps at ×1.25, first 25 levels). Truncated to 2 decimals.
+ * Mirrors the pipeline used by the Workshop page's Critical Factor card.
+ */
+export function workshopDisplayedCriticalFactorValue(
+  workshopPersisted: WorkshopPersistedV1,
+  researchData: ResearchData | null | undefined,
+  labLevelOverrides: Record<string, number>,
+  gameResearchLevel?: readonly number[] | null,
+): number {
+  const mergedOverrides =
+    researchData != null
+      ? mergeLabOverridesForDisplayedDamage(researchData, labLevelOverrides, gameResearchLevel)
+      : labLevelOverrides
+  const lab = buildWorkshopAttackLabDisplayOpts(researchData, labLevelOverrides)
+  const withSubmodules = enrichAttackLabDisplayOptsWithSubmodules(
+    lab,
+    workshopPersisted.simSubmoduleSelections,
+    { ws: workshopPersisted, research: researchData ?? null, labOverrides: mergedOverrides },
+  )
+  const enriched = enrichAttackLabDisplayOpts(
+    withSubmodules,
+    new Set(workshopPersisted.relicOwnedIds),
+  )
+  const labMultiplier = enriched?.criticalFactorLabMultiplier
+  const submoduleAdd = enriched?.submodule?.critFactorAdd ?? 0
+  const enhancementMultiplier = workshopDisplayedCritFactorEnhancementMultiplier(
+    workshopPersisted.enhanceCritFactorLevel,
+    workshopEnhancementsLabUnlocked(researchData, labLevelOverrides),
+  )
+  const base = workshopCriticalFactorStatValue(workshopPersisted.critFactorLevel) + submoduleAdd
+  let v =
+    labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9
+      ? base * labMultiplier
+      : base
+  if (enhancementMultiplier > 1 + 1e-9) {
+    v *= enhancementMultiplier
+  }
+  return Math.floor(v * 100 + 1e-9) / 100
 }

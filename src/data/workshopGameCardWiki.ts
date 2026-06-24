@@ -255,6 +255,7 @@ export function workshopGameCardWiki(id: WorkshopGameCardId): WorkshopGameCardWi
 export const WORKSHOP_GAME_CARD_DETAIL_PLAIN_PERCENT: ReadonlySet<WorkshopGameCardId> = new Set([
   'criticalChance',
   'extraDefense',
+  'ultimateCrit',
 ])
 
 export function workshopGameCardUsesDetailPlainPercent(id: WorkshopGameCardId): boolean {
@@ -314,13 +315,26 @@ const WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_SEC: ReadonlySet<WorkshopGameCardId>
 
 const WORKSHOP_GAME_CARD_DETAIL_INTEGER_SEC: ReadonlySet<WorkshopGameCardId> = new Set([
   'secondWind',
+  'demonMode',
 ])
+
+const WORKSHOP_GAME_CARD_DETAIL_INTEGER_MIN: ReadonlySet<WorkshopGameCardId> = new Set([
+  'energyShield',
+])
+
+const WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_ADD_PERCENT: ReadonlySet<WorkshopGameCardId> =
+  new Set(['berserker'])
+
+const WORKSHOP_GAME_CARD_DETAIL_TWO_DECIMAL_PERCENT: ReadonlySet<WorkshopGameCardId> =
+  new Set(['ultimateCrit'])
 
 export function workshopGameCardDetailFixedDecimals(
   id: WorkshopGameCardId,
 ): number | undefined {
   if (WORKSHOP_GAME_CARD_DETAIL_INTEGER_FLAT.has(id)) return undefined
   if (WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_SEC.has(id)) return 1
+  if (WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_ADD_PERCENT.has(id)) return 1
+  if (WORKSHOP_GAME_CARD_DETAIL_TWO_DECIMAL_PERCENT.has(id)) return 2
   const kind = WORKSHOP_GAME_CARD_WIKI[id].kind
   return kind === 'percent' || kind === 'addPercent' ? undefined : 2
 }
@@ -362,6 +376,9 @@ function formatWorkshopGameCardDetailEffect(
   if (WORKSHOP_GAME_CARD_DETAIL_INTEGER_SEC.has(id)) {
     return formatCardDetailIntegerSecDuration(scaled)
   }
+  if (WORKSHOP_GAME_CARD_DETAIL_INTEGER_MIN.has(id)) {
+    return formatCardDetailIntegerMinDuration(scaled)
+  }
   if (workshopGameCardUsesDetailPlainPercent(id)) {
     return `${formatNum(scaled, fixedDecimals)}%`
   }
@@ -389,6 +406,10 @@ function formatCardDetailSecDuration(value: number): string {
 
 function formatCardDetailIntegerSecDuration(value: number): string {
   return `${Math.round(value)} sec`
+}
+
+function formatCardDetailIntegerMinDuration(value: number): string {
+  return `${Math.round(value)} min`
 }
 
 function workshopLandMineStunDescriptionLine(
@@ -457,8 +478,63 @@ function workshopSecondWindDescriptionLine(
   return `Once per Round: Revive Tower with 50% Health, respawn Wall, & grant Invincibility for ${invincibility}`
 }
 
+function workshopDemonModeDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('demonMode', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const n = Math.round(v * mult)
+  const duration = formatCardDetailIntegerSecDuration(n)
+  return `Once per round: Activate Demon Mode, Grants ${n}x Projectile Damage & Invincibility for ${duration}`
+}
+
+function workshopEnergyShieldDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('energyShield', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const replenish = formatCardDetailIntegerMinDuration(v * mult)
+  return `Gain an Energy Shield that blocks 1 attack, replenishes after ${replenish}`
+}
+
+function workshopBerserkerDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('berserker', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const num = formatNum(v * mult)
+  return `Increase damage by ${num}% of total damage absorbed this round (max of x8 tower damage)`
+}
+
+function workshopUltimateCritDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+  towerCritFactor?: number,
+): string {
+  const v = workshopGameCardStarValue('ultimateCrit', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const pct = formatNum(v * mult)
+  if (towerCritFactor != null && Number.isFinite(towerCritFactor) && towerCritFactor > 0) {
+    const factor = (Math.floor(towerCritFactor * 100 + 1e-9) / 100).toFixed(2)
+    return `Ultimate Weapons gain ${pct}% chance to Crit for ${factor}x Damage (Tower Crit Factor)`
+  }
+  return `Ultimate Weapons gain ${pct}% chance to Crit at Tower Crit Factor Damage`
+}
+
 export type WorkshopGameCardDetailDescriptionOptions = {
   superTowerBonusLabLevel?: number
+  ultimateCritTowerFactor?: number
 }
 
 /** Card detail dialog star effect (×/s/m keep two decimals; % omit trailing zeros). */
@@ -566,6 +642,22 @@ export function workshopGameCardDescriptionLine(
   }
   if (id === 'secondWind') {
     return workshopSecondWindDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'demonMode') {
+    return workshopDemonModeDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'energyShield') {
+    return workshopEnergyShieldDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'berserker') {
+    return workshopBerserkerDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'ultimateCrit') {
+    return workshopUltimateCritDescriptionLine(
+      stars,
+      masteryMultiplier,
+      options?.ultimateCritTowerFactor,
+    )
   }
   const template = WORKSHOP_GAME_CARD_WIKI[id].description
   const effect = formatWorkshopGameCardDetailEffect(

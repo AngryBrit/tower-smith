@@ -973,6 +973,14 @@ export const STRINGS_ES = {
     'Hace que el multiplicador de cartas del 35% aumente el daño de todas las armas definitivas y reduce el tiempo de reutilización de Super torre; también desbloquea la investigación Ultimate Tower',
   ws_cards_detail_mastery_desc_second_wind:
     'Desbloquea un beneficio persistente de regeneración de salud al activarse que dura 400 oleadas, y desbloquea la investigación Angel Wings',
+  ws_cards_detail_mastery_desc_demon_mode:
+    'Desbloquea un beneficio persistente de daño al activarse que dura 300 oleadas, y desbloquea la investigación Demon Revenge',
+  ws_cards_detail_mastery_desc_energy_shield:
+    'Escudo de energía activa una onda que repele a todos los enemigos un porcentaje del alcance máximo de la torre y destruye todos los proyectiles enemigos; los tiempos de carga de los rayos se reinician. También desbloquea la investigación Repel',
+  ws_cards_detail_mastery_desc_wave_accelerator:
+    'Aumenta la velocidad a la que se aceleran las tasas de aparición, haciendo que aparezcan más enemigos en oleadas tempranas, y desbloquea la investigación de maestría del Acelerador de oleadas',
+  ws_cards_detail_mastery_desc_berserker:
+    'Aumenta el límite de daño a x500 durante un tiempo cuando se activa Death Defy, y desbloquea la investigación Viking Funeral',
   ws_cards_detail_mastery_desc_slow_aura:
     'Añade un multiplicador adicional para ralentizar la velocidad de ataque de los enemigos y desbloquea la investigación de maestría de Aura lenta',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Retraso entre los ataques enemigos',
@@ -1011,6 +1019,16 @@ export const STRINGS_ES = {
     'Reduce el tiempo de reutilización de Super torre',
   ws_cards_detail_mastery_ability_desc_second_wind:
     'Aumenta el multiplicador de regeneración de salud persistente',
+  ws_cards_detail_mastery_ability_desc_demon_mode:
+    'Aumenta el multiplicador de daño persistente',
+  ws_cards_detail_mastery_ability_desc_energy_shield:
+    'Aumenta el empuje como porcentaje del alcance de la torre',
+  ws_cards_detail_mastery_ability_desc_wave_accelerator:
+    'Aumenta la velocidad a la que se aceleran las tasas de aparición',
+  ws_cards_detail_mastery_ability_desc_berserker:
+    'Límite de daño de Berserker de x500 durante un tiempo',
+  ws_cards_detail_mastery_ability_desc_ultimate_crit:
+    'Aumenta la probabilidad de Crítico definitivo',
   ws_cards_detail_mastery_research_desc_cash:
     'Aumenta la probabilidad de que los élites suelten dados de nueva tirada',
   ws_cards_detail_mastery_research_desc_enemy_balance:
@@ -1041,6 +1059,16 @@ export const STRINGS_ES = {
     'Aumenta el bonus de maestría al tiempo de reutilización de Super torre',
   ws_cards_detail_mastery_research_desc_second_wind:
     'Aumenta el multiplicador de regeneración de salud persistente de la maestría',
+  ws_cards_detail_mastery_research_desc_demon_mode:
+    'Aumenta el multiplicador de daño persistente de la maestría',
+  ws_cards_detail_mastery_research_desc_energy_shield:
+    'Aumenta el empuje como porcentaje del alcance de la torre',
+  ws_cards_detail_mastery_research_desc_wave_accelerator:
+    'Aumenta la aceleración de la tasa de aparición del Acelerador de oleadas',
+  ws_cards_detail_mastery_research_desc_berserker:
+    'Aumenta la duración de Viking Funeral',
+  ws_cards_detail_mastery_research_desc_ultimate_crit:
+    'Aumenta la bonificación de maestría de carta añadida a Crítico definitivo',
   ws_cards_detail_mastery_ability_prefix: 'Habilidad de maestría:',
   ws_cards_detail_mastery_ability_desc: 'Multiplicador en {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Aumenta el bonus de daño',
@@ -1083,6 +1111,12 @@ export const STRINGS_ES = {
   ws_cards_detail_lab_second_wind_recharge_title: 'Recarga de Segundo aliento',
   ws_cards_detail_lab_second_wind_recharge_desc:
     'Segundo aliento se recargará después de un número de oleadas',
+  ws_cards_detail_lab_demon_mode_recharge_title: 'Recarga de Modo demonio',
+  ws_cards_detail_lab_demon_mode_recharge_desc:
+    'Modo demonio se recargará después de un número de oleadas',
+  ws_cards_detail_lab_energy_shield_extra_hit_title: 'Carga adicional',
+  ws_cards_detail_lab_energy_shield_extra_hit_desc:
+    'Escudo de energía gana una carga adicional',
   ws_card_damage: 'Daño',
   ws_card_attack_speed: 'Vel. de ataque',
   ws_card_health: 'Salud',
@@ -1121,6 +1155,10 @@ export const STRINGS_ES = {
   ws_card_electrified_net: 'Red electrificada',
   ws_card_ultimate_tower: 'Torre definitiva',
   ws_card_angel_wings: 'Alas de ángel',
+  ws_card_demon_revenge: 'Venganza demoníaca',
+  ws_card_repel: 'Repeler',
+  ws_card_spawn_accelerator: 'Acelerador de aparición',
+  ws_card_viking_funeral: 'Funeral vikingo',
   ws_card_energy_net: 'Red de energía',
   ws_card_super_tower: 'Super torre',
   ws_card_second_wind: 'Segundo aliento',

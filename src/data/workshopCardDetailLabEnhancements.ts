@@ -4,6 +4,7 @@
 
 import {
   getEffectiveLevel,
+  rechargeDemonModeCardDetailWavesDisplay,
   rechargeSecondWindCardDetailWavesDisplay,
   secondWindBlastPercentDisplay,
   superTowerBonusMultiplierDisplay,
@@ -129,6 +130,51 @@ function secondWindLabEnhancements(
   ]
 }
 
+function demonModeLabEnhancements(
+  data: ResearchData | null,
+  overrides: Record<string, number>,
+): readonly CardDetailLabEnhancementRow[] {
+  const rechargeLevel = cardsResearchLabLevel(data, overrides, 'Recharge Demon Mode')
+  const sectionIndex = data?.sections.findIndex((s) => s.sectionSlug === 'cards-research') ?? -1
+  const rechargeItem =
+    sectionIndex >= 0
+      ? data?.sections[sectionIndex]?.items.find((i) => i.name === 'Recharge Demon Mode')
+      : undefined
+  const rechargeMax = rechargeItem?.maxLevel ?? 7
+  return [
+    {
+      titleId: 'ws_cards_detail_lab_demon_mode_recharge_title',
+      descId: 'ws_cards_detail_lab_demon_mode_recharge_desc',
+      value: rechargeDemonModeCardDetailWavesDisplay(rechargeLevel, rechargeMax),
+    },
+  ]
+}
+
+function energyShieldLabEnhancements(
+  data: ResearchData | null,
+  overrides: Record<string, number>,
+): readonly CardDetailLabEnhancementRow[] {
+  const extraHitLevel = cardsResearchLabLevel(data, overrides, 'Energy Shield Extra Hit')
+  const sectionIndex = data?.sections.findIndex((s) => s.sectionSlug === 'cards-research') ?? -1
+  const extraHitItem =
+    sectionIndex >= 0
+      ? data?.sections[sectionIndex]?.items.find((i) => i.name === 'Energy Shield Extra Hit')
+      : undefined
+  const extraHitMax = extraHitItem?.maxLevel ?? 2
+  const capped =
+    extraHitMax > 0
+      ? Math.min(Math.max(0, extraHitLevel), extraHitMax)
+      : Math.max(0, extraHitLevel)
+  const totalHits = 1 + capped
+  return [
+    {
+      titleId: 'ws_cards_detail_lab_energy_shield_extra_hit_title',
+      descId: 'ws_cards_detail_lab_energy_shield_extra_hit_desc',
+      value: `${totalHits} ${totalHits === 1 ? 'hit' : 'hits'}`,
+    },
+  ]
+}
+
 export function workshopCardDetailLabEnhancements(
   cardId: WorkshopGameCardId,
   data: ResearchData | null,
@@ -143,6 +189,10 @@ export function workshopCardDetailLabEnhancements(
       return superTowerLabEnhancements(data, overrides)
     case 'secondWind':
       return secondWindLabEnhancements(data, overrides)
+    case 'demonMode':
+      return demonModeLabEnhancements(data, overrides)
+    case 'energyShield':
+      return energyShieldLabEnhancements(data, overrides)
     default:
       return []
   }
