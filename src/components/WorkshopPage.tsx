@@ -800,6 +800,7 @@ function WorkshopCriticalFactorCard({
     attackLabOpts?.criticalFactorLabMultiplier,
     attackLabOpts?.submodule?.critFactorAdd ?? 0,
     enhancementMultiplier,
+    attackLabOpts?.criticalFactorRelicMultiplier ?? 1,
   )
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 

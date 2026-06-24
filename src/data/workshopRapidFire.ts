@@ -37,13 +37,13 @@ export function workshopRapidFireDurationSeconds(completedLevels: number): numbe
   return Math.round(raw * 100) / 100
 }
 
-/** Display like wiki (`0.65s` … `5.55s`). */
+/** Display like wiki (`0.65 sec` … `5.55 sec`). */
 export function workshopRapidFireDurationStatDisplay(
   completedLevels: number,
   submoduleSecondsAdd = 0,
 ): string {
   const sec = workshopRapidFireDurationSeconds(completedLevels) + submoduleSecondsAdd
-  return `${sec.toFixed(2)}s`
+  return `${sec.toFixed(2)} sec`
 }
 
 export function workshopRapidFireDurationNextMarginalCoins(completedLevels: number): number | undefined {

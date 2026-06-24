@@ -138,10 +138,12 @@ export function enrichAttackLabDisplayOpts(
       base.criticalChanceCardPercentPoints,
       critChance,
     ),
-    criticalFactorLabMultiplier: mergeRelicMultiplier(
-      base.criticalFactorLabMultiplier,
-      critFactor,
-    ),
+    // Keep lab pure; relics boost only the workshop-derived crit factor (not the flat
+    // sub-module add), so they are carried separately and applied before the sub-module add.
+    criticalFactorLabMultiplier: base.criticalFactorLabMultiplier,
+    criticalFactorRelicMultiplier:
+      mergeRelicMultiplier(base.criticalFactorRelicMultiplier, critFactor) ??
+      base.criticalFactorRelicMultiplier,
     // DPM relics apply to displayed damage **(1 + Relics)** only — not the ×/m workshop card.
     damagePerMeterLabMultiplier: base.damagePerMeterLabMultiplier,
     superCritChanceLabPercentPoints: mergeRelicPercentPoints(

@@ -87,6 +87,11 @@ export function buildWorkshopBotLabDisplayOpts(
 
 export type WorkshopAttackLabDisplayOpts = {
   criticalFactorLabMultiplier?: number
+  /**
+   * Owned **Critical Factor** relic factor `(1 + Σ%)`, kept separate from the lab
+   * multiplier: relics boost only the workshop-derived stat, not the flat sub-module add.
+   */
+  criticalFactorRelicMultiplier?: number
   attackRangeLabMultiplier?: number
   damagePerMeterLabMultiplier?: number
   superCritChanceLabPercentPoints?: number
