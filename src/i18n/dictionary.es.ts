@@ -947,6 +947,10 @@ export const STRINGS_ES = {
     'Aumenta el multiplicador de estadísticas de la carta y desbloquea la investigación de maestría {{mastery}}',
   ws_cards_detail_mastery_desc_cash:
     'Añade una probabilidad de que los élites suelten dados de nueva tirada',
+  ws_cards_detail_mastery_desc_enemy_balance:
+    'Añade una probabilidad de doble aparición de élites y desbloquea la investigación de maestría de Balance enemigos',
+  ws_cards_detail_mastery_desc_fortress:
+    'Reduce el tiempo de reconstrucción del muro y desbloquea la investigación de maestría de Fortaleza',
   ws_cards_detail_mastery_desc_slow_aura:
     'Añade un multiplicador adicional para ralentizar la velocidad de ataque de los enemigos y desbloquea la investigación de maestría de Aura lenta',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Retraso entre los ataques enemigos',
@@ -960,13 +964,34 @@ export const STRINGS_ES = {
     'Aumenta el bonus de maestría de carta aplicado a prob. crítica, prob. de super crítico y factor de super crítico',
   ws_cards_detail_mastery_ability_desc_cash:
     'Probabilidad de que los élites suelten dados de nueva tirada',
+  ws_cards_detail_mastery_ability_desc_enemy_balance:
+    'Probabilidad de que ocurra una doble aparición de élite',
+  ws_cards_detail_mastery_ability_desc_fortress: 'Reduce el tiempo de reconstrucción del muro',
   ws_cards_detail_mastery_research_desc_cash:
     'Aumenta la probabilidad de que los élites suelten dados de nueva tirada',
+  ws_cards_detail_mastery_research_desc_enemy_balance:
+    'Aumenta la probabilidad de que ocurra una doble aparición de élite',
+  ws_cards_detail_mastery_research_desc_fortress:
+    'Aumenta la reducción de maestría de carta al tiempo de reconstrucción del muro',
   ws_cards_detail_mastery_ability_prefix: 'Habilidad de maestría:',
   ws_cards_detail_mastery_ability_desc: 'Multiplicador en {{stat}}',
+  ws_cards_detail_mastery_ability_desc_damage: 'Aumenta el bonus de daño',
+  ws_cards_detail_mastery_ability_desc_attack_speed: 'Aumenta el bonus de vel. de ataque',
+  ws_cards_detail_mastery_ability_desc_health: 'Aumenta el bonus de salud',
+  ws_cards_detail_mastery_ability_desc_health_regen: 'Aumenta el bonus de regen. de salud',
+  ws_cards_detail_mastery_ability_desc_extra_defense: 'Aumenta el bonus de % de defensa',
   ws_cards_detail_mastery_ability_desc_coins: 'Aumenta el bonus de monedas',
   ws_cards_detail_mastery_research: 'Investigación de maestría',
   ws_cards_detail_mastery_research_desc: 'Aumenta el multiplicador de maestría de carta en {{stat}}',
+  ws_cards_detail_mastery_research_desc_damage: 'Aumenta el bonus de daño de la maestría de carta',
+  ws_cards_detail_mastery_research_desc_attack_speed:
+    'Aumenta el bonus de vel. de ataque de la maestría de carta',
+  ws_cards_detail_mastery_research_desc_health:
+    'Aumenta el bonus de salud de la maestría de carta',
+  ws_cards_detail_mastery_research_desc_health_regen:
+    'Aumenta el bonus de regen. de salud de la maestría de carta',
+  ws_cards_detail_mastery_research_desc_extra_defense:
+    'Aumenta el bonus de % de defensa de la maestría de carta',
   ws_cards_detail_mastery_research_desc_coins: 'Aumenta el bonus de maestría de carta de monedas',
   ws_cards_detail_unlock_mastery: 'Desbloquear {{mastery}}',
   ws_cards_detail_unlock_mastery_generic: 'Desbloquear maestría de carta',

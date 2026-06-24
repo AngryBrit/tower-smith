@@ -8,6 +8,7 @@ import {
   clearWorkshopCardMasteryOverrides,
   formatCardMasteryTierLabelDetail,
   formatCardMasteryTierLabelDetailForCard,
+  formatWorkshopGameCardStarLevelEffectForDetail,
   parseCardMasteryTierMultiplier,
   workshopCardMasteryDetailAbilityDescId,
   workshopCardMasteryDetailAbilityLabel,
@@ -17,6 +18,7 @@ import {
   workshopCardMasteryDetailTitleId,
   workshopCardMasteryLevel,
   workshopCardMasteryMultiplier,
+  workshopCardMasteryTierLabel,
   workshopCardMasteryUnlocked,
 } from './workshopCardMastery'
 import { formatWorkshopGameCardStarEffectWithMastery } from './workshopGameCardWiki'
@@ -90,6 +92,29 @@ describe('workshopCardMastery', () => {
   it('shows Critical Chance mastery tiers as plain % in card detail', () => {
     expect(formatCardMasteryTierLabelDetailForCard('criticalChance', '+1%')).toBe('1%')
     expect(formatCardMasteryTierLabelDetailForCard('criticalChance', '+10%')).toBe('10%')
+    expect(formatCardMasteryTierLabelDetailForCard('extraDefense', '+0.7%')).toBe('0.7%')
+    expect(formatCardMasteryTierLabelDetailForCard('extraDefense', '+1.4%')).toBe('1.4%')
+    expect(formatCardMasteryTierLabelDetailForCard('fortress', '-10s')).toBe('10s')
+    expect(formatCardMasteryTierLabelDetailForCard('fortress', '-100s')).toBe('100s')
+  })
+
+  it('formats card detail star levels with plain_percent when configured', () => {
+    expect(formatWorkshopGameCardStarLevelEffectForDetail('criticalChance', 1)).toBe('5%')
+    expect(formatWorkshopGameCardStarLevelEffectForDetail('criticalChance', 7)).toBe('11%')
+    expect(formatWorkshopGameCardStarLevelEffectForDetail('extraDefense', 7)).toBe('11%')
+    expect(formatWorkshopGameCardStarLevelEffectForDetail('damage', 7)).toBe('×4.00')
+    expect(formatWorkshopGameCardStarLevelEffectForDetail('slowAura', 7)).toBe('31%')
+  })
+
+  it('maps card mastery lab level to tier labels (same index as research benefit)', () => {
+    const si = cardMasterySectionIndex(data)
+    expect(workshopCardMasteryTierLabel('extraDefense', data, 0)).toBe('+0.7%')
+    expect(workshopCardMasteryTierLabel('extraDefense', data, 1)).toBe('+1.4%')
+    const overrides = { [`${si}-10`]: 1 }
+    expect(workshopCardMasteryLevel('extraDefense', data, overrides)).toBe(1)
+    expect(workshopCardMasteryTierLabel('extraDefense', data, 1)).toBe('+1.4%')
+    expect(workshopCardMasteryTierLabel('damage', data, 0)).toBe('x1.4')
+    expect(workshopCardMasteryTierLabel('damage', data, 1)).toBe('x1.8')
   })
 
   it('uses in-game mastery stat labels in card detail copy', () => {
@@ -122,9 +147,61 @@ describe('workshopCardMastery', () => {
     expect(workshopCardMasteryDetailResearchDescId('cash')).toBe(
       'ws_cards_detail_mastery_research_desc_cash',
     )
+    expect(workshopCardMasteryDetailMasteryDescId('enemyBalance')).toBe(
+      'ws_cards_detail_mastery_desc_enemy_balance',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('enemyBalance')).toBe(
+      'ws_cards_detail_mastery_ability_desc_enemy_balance',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('enemyBalance')).toBe(
+      'ws_cards_detail_mastery_research_desc_enemy_balance',
+    )
+    expect(workshopCardMasteryDetailMasteryDescStyle('extraDefense')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailAbilityDescId('extraDefense')).toBe(
+      'ws_cards_detail_mastery_ability_desc_extra_defense',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('extraDefense')).toBe(
+      'ws_cards_detail_mastery_research_desc_extra_defense',
+    )
+    expect(workshopCardMasteryDetailMasteryDescId('fortress')).toBe(
+      'ws_cards_detail_mastery_desc_fortress',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('fortress')).toBe(
+      'ws_cards_detail_mastery_ability_desc_fortress',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('fortress')).toBe(
+      'ws_cards_detail_mastery_research_desc_fortress',
+    )
     expect(workshopCardMasteryDetailMasteryDescId('damage')).toBeNull()
+    expect(workshopCardMasteryDetailMasteryDescStyle('damage')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailAbilityDescId('damage')).toBe(
+      'ws_cards_detail_mastery_ability_desc_damage',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('damage')).toBe(
+      'ws_cards_detail_mastery_research_desc_damage',
+    )
+    expect(workshopCardMasteryDetailMasteryDescStyle('attackSpeed')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailAbilityDescId('attackSpeed')).toBe(
+      'ws_cards_detail_mastery_ability_desc_attack_speed',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('attackSpeed')).toBe(
+      'ws_cards_detail_mastery_research_desc_attack_speed',
+    )
+    expect(workshopCardMasteryDetailMasteryDescStyle('health')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailAbilityDescId('health')).toBe(
+      'ws_cards_detail_mastery_ability_desc_health',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('health')).toBe(
+      'ws_cards_detail_mastery_research_desc_health',
+    )
+    expect(workshopCardMasteryDetailMasteryDescStyle('healthRegen')).toBe('stat_multiplier')
+    expect(workshopCardMasteryDetailAbilityDescId('healthRegen')).toBe(
+      'ws_cards_detail_mastery_ability_desc_health_regen',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('healthRegen')).toBe(
+      'ws_cards_detail_mastery_research_desc_health_regen',
+    )
     expect(workshopCardMasteryDetailMasteryDescStyle('coins')).toBe('stat_multiplier')
-    expect(workshopCardMasteryDetailMasteryDescStyle('damage')).toBe('additional_multiplier')
     expect(workshopCardMasteryDetailAbilityDescId('coins')).toBe(
       'ws_cards_detail_mastery_ability_desc_coins',
     )

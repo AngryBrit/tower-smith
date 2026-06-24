@@ -936,6 +936,10 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_desc_stat_multiplier:
     "Increases the card's stat multiplier, and unlocks {{mastery}} Mastery research",
   ws_cards_detail_mastery_desc_cash: 'Adds a chance for elites to drop Reroll Dice',
+  ws_cards_detail_mastery_desc_enemy_balance:
+    'Adds a chance to double spawn elites, and unlocks Enemy Balance Mastery research',
+  ws_cards_detail_mastery_desc_fortress:
+    'Reduces Wall Rebuild time, and unlocks Fortress Mastery research',
   ws_cards_detail_mastery_desc_slow_aura:
     'Adds an additional multiplier to slow enemies attack speed, and unlocks Slow Aura Mastery research',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Time delay between enemy attacks',
@@ -948,13 +952,33 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_research_desc_critical_chance:
     'Increases card mastery bonus applied to crit chance, super crit chance and super crit factor',
   ws_cards_detail_mastery_ability_desc_cash: 'Chance for elites to drop Reroll Dice',
+  ws_cards_detail_mastery_ability_desc_enemy_balance:
+    'Chance for a double elite spawn to occur',
+  ws_cards_detail_mastery_ability_desc_fortress: 'Reduces Wall Rebuild time',
   ws_cards_detail_mastery_research_desc_cash:
     'Increases chance for elites to drop Reroll Dice',
+  ws_cards_detail_mastery_research_desc_enemy_balance:
+    'Increases chance for double elite spawn to occur',
+  ws_cards_detail_mastery_research_desc_fortress:
+    'Increases card mastery reduction to Wall Rebuild time',
   ws_cards_detail_mastery_ability_prefix: 'Mastery ability:',
   ws_cards_detail_mastery_ability_desc: 'Multiplier on {{stat}}',
+  ws_cards_detail_mastery_ability_desc_damage: 'Increases bonus Damage',
+  ws_cards_detail_mastery_ability_desc_attack_speed: 'Increases bonus Attack Speed',
+  ws_cards_detail_mastery_ability_desc_health: 'Increases bonus Health',
+  ws_cards_detail_mastery_ability_desc_health_regen: 'Increases bonus Health Regen',
+  ws_cards_detail_mastery_ability_desc_extra_defense: 'Increases bonus Defense Percent',
   ws_cards_detail_mastery_ability_desc_coins: 'Increases bonus Coins',
   ws_cards_detail_mastery_research: 'Mastery research',
   ws_cards_detail_mastery_research_desc: 'Increases card mastery multiplier on {{stat}}',
+  ws_cards_detail_mastery_research_desc_damage: 'Increases card mastery bonus damage',
+  ws_cards_detail_mastery_research_desc_attack_speed:
+    'Increases card mastery bonus attack speed',
+  ws_cards_detail_mastery_research_desc_health: 'Increases card mastery bonus health',
+  ws_cards_detail_mastery_research_desc_health_regen:
+    'Increases card mastery bonus health regen',
+  ws_cards_detail_mastery_research_desc_extra_defense:
+    'Increases card mastery bonus defense percent',
   ws_cards_detail_mastery_research_desc_coins: 'Increases card mastery bonus coins',
   ws_cards_detail_unlock_mastery: 'Unlock {{mastery}}',
   ws_cards_detail_unlock_mastery_generic: 'Unlock card mastery',

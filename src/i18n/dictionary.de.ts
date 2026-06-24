@@ -940,6 +940,10 @@ export const STRINGS_DE = {
     'Erhöht den Kartenstat-Multiplikator und schaltet {{mastery}}-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_desc_cash:
     'Gibt Elites eine Chance, Würfel-Neuwürfe fallen zu lassen',
+  ws_cards_detail_mastery_desc_enemy_balance:
+    'Fügt eine Chance hinzu, Elite-Doppelspawns auszulösen, und schaltet Gegnerbalance-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_fortress:
+    'Verkürzt die Mauer-Wiederaufbauzeit und schaltet Festungs-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_desc_slow_aura:
     'Fügt einen zusätzlichen Multiplikator hinzu, um die Angriffsgeschwindigkeit der Gegner zu verlangsamen, und schaltet Slow-Aura-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Zeitverzögerung zwischen Gegnerangriffen',
@@ -953,13 +957,34 @@ export const STRINGS_DE = {
     'Erhöht den Kartenmeisterschafts-Bonus auf Krit-Chance, Super-Krit-Chance und Super-Krit-Faktor',
   ws_cards_detail_mastery_ability_desc_cash:
     'Chance, dass Elites Würfel-Neuwürfe fallen lassen',
+  ws_cards_detail_mastery_ability_desc_enemy_balance:
+    'Chance auf einen doppelten Elite-Spawn',
+  ws_cards_detail_mastery_ability_desc_fortress: 'Verkürzt die Mauer-Wiederaufbauzeit',
   ws_cards_detail_mastery_research_desc_cash:
     'Erhöht die Chance, dass Elites Würfel-Neuwürfe fallen lassen',
+  ws_cards_detail_mastery_research_desc_enemy_balance:
+    'Erhöht die Chance auf einen doppelten Elite-Spawn',
+  ws_cards_detail_mastery_research_desc_fortress:
+    'Erhöht die Kartenmeisterschafts-Verkürzung der Mauer-Wiederaufbauzeit',
   ws_cards_detail_mastery_ability_prefix: 'Meisterschaftsfähigkeit:',
   ws_cards_detail_mastery_ability_desc: 'Multiplikator auf {{stat}}',
+  ws_cards_detail_mastery_ability_desc_damage: 'Erhöht Bonus-Schaden',
+  ws_cards_detail_mastery_ability_desc_attack_speed: 'Erhöht Bonus-Angriffstempo',
+  ws_cards_detail_mastery_ability_desc_health: 'Erhöht Bonus-Gesundheit',
+  ws_cards_detail_mastery_ability_desc_health_regen: 'Erhöht Bonus-Lebensregeneration',
+  ws_cards_detail_mastery_ability_desc_extra_defense: 'Erhöht Bonus-Verteidigungsprozent',
   ws_cards_detail_mastery_ability_desc_coins: 'Erhöht Bonus-Münzen',
   ws_cards_detail_mastery_research: 'Meisterschaftsforschung',
   ws_cards_detail_mastery_research_desc: 'Erhöht den Kartenmeisterschafts-Multiplikator auf {{stat}}',
+  ws_cards_detail_mastery_research_desc_damage: 'Erhöht den Kartenmeisterschafts-Bonus-Schaden',
+  ws_cards_detail_mastery_research_desc_attack_speed:
+    'Erhöht den Kartenmeisterschafts-Bonus fürs Angriffstempo',
+  ws_cards_detail_mastery_research_desc_health:
+    'Erhöht den Kartenmeisterschafts-Bonus für Gesundheit',
+  ws_cards_detail_mastery_research_desc_health_regen:
+    'Erhöht den Kartenmeisterschafts-Bonus für Lebensregeneration',
+  ws_cards_detail_mastery_research_desc_extra_defense:
+    'Erhöht den Kartenmeisterschafts-Bonus für Verteidigungsprozent',
   ws_cards_detail_mastery_research_desc_coins: 'Erhöht den Kartenmeisterschafts-Bonus für Münzen',
   ws_cards_detail_unlock_mastery: '{{mastery}} freischalten',
   ws_cards_detail_unlock_mastery_generic: 'Kartenmeisterschaft freischalten',

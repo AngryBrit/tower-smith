@@ -1,7 +1,6 @@
 import { useEffect, useId, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import {
-  formatWorkshopGameCardStarEffectForDetail,
   workshopGameCardArtVariant,
   workshopGameCardGlow,
   workshopGameCardGlyph,
@@ -13,8 +12,8 @@ import {
   type WorkshopGameCardId,
 } from '../data/workshopGameCards'
 import {
-  formatCardMasteryTierLabelDetail,
   formatCardMasteryTierLabelDetailForCard,
+  formatWorkshopGameCardStarLevelEffectForDetail,
   workshopCardMasteryDetailAbilityLabel,
   workshopCardMasteryDetailAbilityDescId,
   workshopCardMasteryDetailMasteryDescId,
@@ -114,7 +113,7 @@ export function CardDetailDialog({
     : t('ws_cards_detail_mastery_research_desc').replace('{{stat}}', masteryStatLabelLower)
   const masteryAbilityValue = formatCardMasteryTierLabelDetailForCard(
     cardId,
-    workshopCardMasteryTierLabel(cardId, researchData, Math.max(masteryLevel, 1)) ??
+    workshopCardMasteryTierLabel(cardId, researchData, masteryLevel) ??
       workshopCardMasteryUnlockPreviewLabel(cardId, researchData) ??
       '—',
   )
@@ -240,7 +239,7 @@ export function CardDetailDialog({
                       {t('ws_cards_detail_level').replace('{{level}}', String(level))}
                     </span>
                     <span className="cards-detail__level-value">
-                      {formatWorkshopGameCardStarEffectForDetail(cardId, level)}
+                      {formatWorkshopGameCardStarLevelEffectForDetail(cardId, level)}
                     </span>
                   </li>
                 )

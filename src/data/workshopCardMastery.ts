@@ -9,12 +9,17 @@ import {
   workshopGameCardTitleId,
   type WorkshopGameCardId,
 } from './workshopGameCards'
+import { formatWorkshopGameCardStarEffectForDetail } from './workshopGameCardWiki'
 import type { StringId } from '../i18n/dictionary'
 
 const CARD_MASTERY_TIER_LABELS = cardMasteryTierLabels as Record<string, readonly string[]>
 
 type CardMasteryDetailMasteryDescStyle = 'additional_multiplier' | 'stat_multiplier'
-type CardMasteryDetailTierLabelStyle = 'default' | 'incremental_percent' | 'plain_percent'
+type CardMasteryDetailTierLabelStyle =
+  | 'default'
+  | 'incremental_percent'
+  | 'plain_percent'
+  | 'plain_sec'
 
 /** In-game card detail mastery copy when it differs from the inventory card title. */
 type CardMasteryDetailDisplay = {
@@ -29,6 +34,26 @@ type CardMasteryDetailDisplay = {
 
 const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMasteryDetailDisplay>> = {
   range: { titleId: 'ws_stat_damagePerMeter', abilitySuffixPlus: false },
+  damage: {
+    masteryDescStyle: 'stat_multiplier',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_damage',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_damage',
+  },
+  attackSpeed: {
+    masteryDescStyle: 'stat_multiplier',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_attack_speed',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_attack_speed',
+  },
+  health: {
+    masteryDescStyle: 'stat_multiplier',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_health',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_health',
+  },
+  healthRegen: {
+    masteryDescStyle: 'stat_multiplier',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_health_regen',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_health_regen',
+  },
   cash: {
     masteryDescId: 'ws_cards_detail_mastery_desc_cash',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_cash',
@@ -50,6 +75,24 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     masteryTierLabelStyle: 'plain_percent',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_critical_chance',
     researchDescId: 'ws_cards_detail_mastery_research_desc_critical_chance',
+  },
+  enemyBalance: {
+    masteryDescId: 'ws_cards_detail_mastery_desc_enemy_balance',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_enemy_balance',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_enemy_balance',
+  },
+  extraDefense: {
+    masteryDescStyle: 'stat_multiplier',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_extra_defense',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_extra_defense',
+  },
+  fortress: {
+    masteryDescId: 'ws_cards_detail_mastery_desc_fortress',
+    masteryTierLabelStyle: 'plain_sec',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_fortress',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_fortress',
   },
 }
 
@@ -156,12 +199,12 @@ export function workshopCardMasteryTierLabel(
   data: ResearchData | null,
   level: number,
 ): string | null {
-  if (!data || level <= 0) return null
+  if (!data || level < 0) return null
   const itemName = workshopCardMasteryItemName(cardId, data)
   if (!itemName) return null
   const tiers = CARD_MASTERY_TIER_LABELS[itemName]
   if (!tiers?.length) return null
-  const idx = Math.min(level, tiers.length) - 1
+  const idx = Math.min(level, tiers.length - 1)
   return tiers[idx] ?? null
 }
 
@@ -256,6 +299,12 @@ function formatPlainPercentLabel(label: string, fixedDecimals = 2): string | nul
   return `${num}%`
 }
 
+function formatPlainSecLabel(label: string): string | null {
+  const m = /^-?(\d+(?:\.\d+)?)s$/i.exec(label.trim())
+  if (!m) return null
+  return `${m[1]}s`
+}
+
 /** Card detail mastery tier value (e.g. Slow Aura x1.05 → +5%). */
 export function formatCardMasteryTierLabelDetailForCard(
   cardId: WorkshopGameCardId,
@@ -271,7 +320,19 @@ export function formatCardMasteryTierLabelDetailForCard(
     const pct = formatPlainPercentLabel(label, fixedDecimals)
     if (pct) return pct
   }
+  if (style === 'plain_sec') {
+    const sec = formatPlainSecLabel(label)
+    if (sec) return sec
+  }
   return formatCardMasteryTierLabelDetail(label, fixedDecimals)
+}
+
+/** Card detail Lv.1–7 value; applies plain_percent when configured for the card. */
+export function formatWorkshopGameCardStarLevelEffectForDetail(
+  cardId: WorkshopGameCardId,
+  stars: number,
+): string {
+  return formatWorkshopGameCardStarEffectForDetail(cardId, stars)
 }
 
 /** Wiki tier multiplier for the simulated Card Mastery level (1 when level ≤ 0). */

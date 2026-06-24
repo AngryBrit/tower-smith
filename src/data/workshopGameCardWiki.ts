@@ -43,74 +43,74 @@ export const WORKSHOP_GAME_CARD_WIKI: Record<
 > = {
   damage: {
     rarity: 'common',
-    description: 'Increase tower damage by ×#',
+    description: 'Increases Tower Damage by ×#',
     kind: 'mult',
     stars: [1.5, 2, 2.4, 2.8, 3.2, 3.6, 4],
   },
   attackSpeed: {
     rarity: 'common',
-    description: 'Increase tower attack speed by ×#',
+    description: 'Increases Attack Speed by ×#',
     kind: 'mult',
     stars: [1.25, 1.4, 1.55, 1.7, 1.85, 2, 2.15],
   },
   health: {
     rarity: 'common',
-    description: 'Increase tower health by ×#',
+    description: 'Increases Tower Health by ×#',
     kind: 'mult',
     stars: [1.5, 2, 2.4, 2.8, 3.2, 3.6, 4],
   },
   healthRegen: {
     rarity: 'common',
-    description: 'Increase tower health regen by ×# / sec',
+    description: 'Increases Health Regen by ×# / sec',
     kind: 'mult',
     stars: [1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6],
   },
   range: {
     rarity: 'common',
-    description: 'Increase tower range by ×#',
+    description: 'Increases Tower Range by ×#',
     kind: 'mult',
     stars: [1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45],
   },
   cash: {
     rarity: 'common',
-    description: 'Increase all cash earned by ×#',
+    description: 'Increase all Cash earned by ×#',
     kind: 'mult',
     stars: [1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4],
   },
   coins: {
     rarity: 'common',
-    description: 'Increase all coins earned by ×#',
+    description: 'Increase all Coins earned by ×#',
     kind: 'mult',
     stars: [1.15, 1.2, 1.25, 1.3, 1.35, 1.4, 1.45],
   },
   slowAura: {
     rarity: 'common',
-    description: 'Reduce Enemy Speed in Range by #%',
+    description: 'Reduces Enemy Speed in Range by #%',
     kind: 'percent',
     stars: [13, 16, 19, 22, 25, 28, 31],
   },
   criticalChance: {
     rarity: 'common',
-    description: 'Increase critical chance by +#%',
+    description: 'Increases critical chance by #%',
     kind: 'addPercent',
     stars: [5, 6, 7, 8, 9, 10, 11],
   },
   enemyBalance: {
     rarity: 'common',
     description:
-      'Increase enemies spawned each wave; cash earned per kill increased by ×#',
+      'Increases Enemy Spawns by ×# & Cash on Kill increased by ×#',
     kind: 'mult',
     stars: [1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9],
   },
   extraDefense: {
     rarity: 'common',
-    description: 'Increase defense percent by +#%',
+    description: 'Increases Defense Percent by #%',
     kind: 'addPercent',
     stars: [5, 6, 7, 8, 9, 10, 11],
   },
   fortress: {
     rarity: 'common',
-    description: 'Increase defense absolute by ×#',
+    description: 'Increases Defense Absolute by ×#',
     kind: 'mult',
     stars: [1.3, 1.45, 1.6, 1.75, 1.9, 2.05, 2.2],
   },
@@ -251,6 +251,16 @@ export function workshopGameCardWiki(id: WorkshopGameCardId): WorkshopGameCardWi
   return WORKSHOP_GAME_CARD_WIKI[id]
 }
 
+/** Card detail % values omit a leading + (in-game copy). */
+export const WORKSHOP_GAME_CARD_DETAIL_PLAIN_PERCENT: ReadonlySet<WorkshopGameCardId> = new Set([
+  'criticalChance',
+  'extraDefense',
+])
+
+export function workshopGameCardUsesDetailPlainPercent(id: WorkshopGameCardId): boolean {
+  return WORKSHOP_GAME_CARD_DETAIL_PLAIN_PERCENT.has(id)
+}
+
 export function workshopGameCardStarValue(id: WorkshopGameCardId, stars: number): number | null {
   const s = Math.trunc(stars)
   if (s <= 0) return null
@@ -310,12 +320,36 @@ export function formatWorkshopGameCardStarEffect(
   return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
 }
 
+/** Card detail star/% effect (plain % omits + for configured cards). */
+function formatWorkshopGameCardDetailEffect(
+  id: WorkshopGameCardId,
+  stars: number,
+  masteryMultiplier = 1,
+  fixedDecimals?: number,
+): string {
+  const v = workshopGameCardStarValue(id, stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const scaled = v * mult
+  if (workshopGameCardUsesDetailPlainPercent(id)) {
+    return `${formatNum(scaled, fixedDecimals)}%`
+  }
+  if (mult === 1) return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
+  return formatWorkshopGameCardEffectValue(id, scaled, fixedDecimals)
+}
+
 /** Card detail dialog star effect (×/s/m keep two decimals; % omit trailing zeros). */
 export function formatWorkshopGameCardStarEffectForDetail(
   id: WorkshopGameCardId,
   stars: number,
 ): string {
-  return formatWorkshopGameCardStarEffect(id, stars, workshopGameCardDetailFixedDecimals(id))
+  return formatWorkshopGameCardDetailEffect(
+    id,
+    stars,
+    1,
+    workshopGameCardDetailFixedDecimals(id),
+  )
 }
 
 /** Star effect scaled by Card Mastery tier (× labels from research). */
@@ -333,6 +367,45 @@ export function formatWorkshopGameCardStarEffectWithMastery(
   return formatWorkshopGameCardEffectValue(id, v * mult, fixedDecimals)
 }
 
+/** Spawn multiplier lags cash-on-kill by one star tier (in-game Enemy Balance card). */
+export function workshopEnemyBalanceSpawnStarValue(stars: number): number | null {
+  const s = Math.trunc(stars)
+  if (s <= 0) return null
+  const row = WORKSHOP_GAME_CARD_WIKI.enemyBalance.stars
+  const idx = s <= 1 ? 0 : Math.min(s - 2, row.length - 1)
+  return row[idx]!
+}
+
+function workshopEnemyBalanceDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const spawnV = workshopEnemyBalanceSpawnStarValue(stars)
+  const cashV = workshopGameCardStarValue('enemyBalance', stars)
+  if (spawnV == null || cashV == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const spawnEffect = formatWorkshopGameCardEffectValue('enemyBalance', spawnV * mult)
+  const cashEffect = formatWorkshopGameCardEffectValue(
+    'enemyBalance',
+    cashV * mult,
+    workshopGameCardDetailFixedDecimals('enemyBalance'),
+  )
+  return `Increases Enemy Spawns by ${spawnEffect} & Cash on Kill increased by ${cashEffect}`
+}
+
+function workshopExtraDefenseDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('extraDefense', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const num = formatNum(v * mult)
+  return `Increases Defense Percent by ${num}%`
+}
+
 /** Wiki description with # replaced by the star effect (sentence case). */
 export function workshopGameCardDescriptionLine(
   id: WorkshopGameCardId,
@@ -340,8 +413,14 @@ export function workshopGameCardDescriptionLine(
   masteryMultiplier = 1,
   fixedDecimals?: number,
 ): string {
+  if (id === 'enemyBalance') {
+    return workshopEnemyBalanceDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'extraDefense') {
+    return workshopExtraDefenseDescriptionLine(stars, masteryMultiplier)
+  }
   const template = WORKSHOP_GAME_CARD_WIKI[id].description
-  const effect = formatWorkshopGameCardStarEffectWithMastery(
+  const effect = formatWorkshopGameCardDetailEffect(
     id,
     stars,
     masteryMultiplier,
