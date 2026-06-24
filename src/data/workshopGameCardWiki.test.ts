@@ -181,6 +181,53 @@ describe('workshopGameCardWiki', () => {
     )
   })
 
+  it('uses in-game Death Ray summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('deathRay', 7)).toBe(
+      'Fires a Death Ray that instantly kills Common Enemies on contact with a duration of 4.9 sec',
+    )
+  })
+
+  it('formats Death Ray star levels with one decimal sec in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('deathRay', 1)).toBe('2.3 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('deathRay', 7)).toBe('4.9 sec')
+  })
+
+  it('uses in-game Energy Net summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('energyNet', 7)).toBe(
+      'Fires an Energy Net at the Boss, Immobilizing it for 4.3 sec',
+    )
+  })
+
+  it('formats Energy Net star levels with one decimal sec in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('energyNet', 1)).toBe('2.5 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('energyNet', 6)).toBe('4.0 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('energyNet', 7)).toBe('4.3 sec')
+  })
+
+  it('uses in-game Super Tower summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('superTower', 7)).toBe(
+      'Periodically activates Super Tower for 15s, Increases Projectile damage by x5.00 (30 sec cooldown)',
+    )
+    expect(
+      workshopGameCardDescriptionLineForDetail('superTower', 7, 1, {
+        superTowerBonusLabLevel: 2,
+      }),
+    ).toBe(
+      'Periodically activates Super Tower for 15s, Increases Projectile damage by x5.30 (30 sec cooldown)',
+    )
+  })
+
+  it('uses in-game Second Wind summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('secondWind', 7)).toBe(
+      'Once per Round: Revive Tower with 50% Health, respawn Wall, & grant Invincibility for 40 sec',
+    )
+  })
+
+  it('formats Second Wind star levels with integer sec in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('secondWind', 1)).toBe('10 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('secondWind', 7)).toBe('40 sec')
+  })
+
   it('returns null for zero stars', () => {
     expect(workshopGameCardStarValue('nuke', 0)).toBeNull()
     expect(formatWorkshopGameCardStarEffect('nuke', 0)).toBe('')

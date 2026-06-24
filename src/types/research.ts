@@ -1043,7 +1043,7 @@ export function secondWindBlastPercentDisplay(
 }
 
 /** Wiki **Value**: waves until Second Wind can recharge again (Lv.0→**—**). */
-const RECHARGE_SECOND_WIND_WAVE_VALUES = [
+export const RECHARGE_SECOND_WIND_WAVE_VALUES = [
   2000, 1500, 1250, 1000, 750, 550, 400,
 ] as const
 
@@ -1063,6 +1063,22 @@ export function rechargeSecondWindValueDisplay(
     Math.min(capped, RECHARGE_SECOND_WIND_WAVE_VALUES.length) - 1
   const n = RECHARGE_SECOND_WIND_WAVE_VALUES[idx]
   return n !== undefined ? `${n} waves` : '—'
+}
+
+/** Card detail dialog — plain wave count (no `waves` suffix). */
+export function rechargeSecondWindCardDetailWavesDisplay(
+  effectiveLevel: number,
+  maxLevelCap: number,
+): string {
+  const capped =
+    maxLevelCap > 0
+      ? Math.min(Math.max(0, effectiveLevel), maxLevelCap)
+      : Math.max(0, effectiveLevel)
+  if (capped <= 0) return '0'
+  const idx =
+    Math.min(capped, RECHARGE_SECOND_WIND_WAVE_VALUES.length) - 1
+  const n = RECHARGE_SECOND_WIND_WAVE_VALUES[idx]
+  return n !== undefined ? String(n) : '0'
 }
 
 /** Wiki **Value**: waves until Demon Mode can recharge again (Lv.0→**—**). */

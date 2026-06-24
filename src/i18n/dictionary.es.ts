@@ -965,6 +965,14 @@ export const STRINGS_ES = {
     'Desbloquea Flashbang, que hace que los enemigos aturdidos por una mina terrestre tengan probabilidad de fallar sus ataques, y desbloquea la investigación de maestría de Flashbang',
   ws_cards_detail_mastery_desc_recovery_package_chance:
     'Desbloquea Care Package, que da a los paquetes probabilidad de entregar también un módulo común, y desbloquea la investigación de maestría de Prob. paquete recuperación',
+  ws_cards_detail_mastery_desc_death_ray:
+    'Permite que Rayo mortal atraviese parcialmente los escudos de los protectores y desbloquea la investigación de maestría de Rayo mejorado',
+  ws_cards_detail_mastery_desc_energy_net:
+    'Añade un multiplicador de daño a los enemigos mientras están atrapados en la red, persiste 10 segundos después y desbloquea la investigación de maestría Electrified',
+  ws_cards_detail_mastery_desc_super_tower:
+    'Hace que el multiplicador de cartas del 35% aumente el daño de todas las armas definitivas y reduce el tiempo de reutilización de Super torre; también desbloquea la investigación Ultimate Tower',
+  ws_cards_detail_mastery_desc_second_wind:
+    'Desbloquea un beneficio persistente de regeneración de salud al activarse que dura 400 oleadas, y desbloquea la investigación Angel Wings',
   ws_cards_detail_mastery_desc_slow_aura:
     'Añade un multiplicador adicional para ralentizar la velocidad de ataque de los enemigos y desbloquea la investigación de maestría de Aura lenta',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Retraso entre los ataques enemigos',
@@ -997,6 +1005,12 @@ export const STRINGS_ES = {
     'Probabilidad de que los enemigos aturdidos por minas terrestres fallen sus ataques',
   ws_cards_detail_mastery_ability_desc_recovery_package_chance:
     'Probabilidad de que los paquetes entreguen un módulo común',
+  ws_cards_detail_mastery_ability_desc_energy_net:
+    'Multiplicador de daño de la red de energía',
+  ws_cards_detail_mastery_ability_desc_super_tower:
+    'Reduce el tiempo de reutilización de Super torre',
+  ws_cards_detail_mastery_ability_desc_second_wind:
+    'Aumenta el multiplicador de regeneración de salud persistente',
   ws_cards_detail_mastery_research_desc_cash:
     'Aumenta la probabilidad de que los élites suelten dados de nueva tirada',
   ws_cards_detail_mastery_research_desc_enemy_balance:
@@ -1019,6 +1033,14 @@ export const STRINGS_ES = {
     'Aumenta la probabilidad de que los enemigos con flashbang fallen sus ataques',
   ws_cards_detail_mastery_research_desc_recovery_package_chance:
     'Aumenta la probabilidad de que los paquetes entreguen un módulo común',
+  ws_cards_detail_mastery_research_desc_death_ray:
+    'Aumenta la perforación de escudos de protectores del rayo mortal',
+  ws_cards_detail_mastery_research_desc_energy_net:
+    'Aumenta el multiplicador de daño de red de la maestría',
+  ws_cards_detail_mastery_research_desc_super_tower:
+    'Aumenta el bonus de maestría al tiempo de reutilización de Super torre',
+  ws_cards_detail_mastery_research_desc_second_wind:
+    'Aumenta el multiplicador de regeneración de salud persistente de la maestría',
   ws_cards_detail_mastery_ability_prefix: 'Habilidad de maestría:',
   ws_cards_detail_mastery_ability_desc: 'Multiplicador en {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Aumenta el bonus de daño',
@@ -1049,6 +1071,18 @@ export const STRINGS_ES = {
   ws_cards_detail_lab_extra_orb_additional_title: 'Orbes adicionales',
   ws_cards_detail_lab_extra_orb_additional_desc:
     'Añade orbes extra para la carta de Orbes extra',
+  ws_cards_detail_lab_death_ray_double_title: 'Doble rayo mortal',
+  ws_cards_detail_lab_death_ray_double_desc:
+    'El Rayo mortal tiene probabilidad de disparar un segundo rayo',
+  ws_cards_detail_lab_super_tower_bonus_title: 'Bonus de Super torre',
+  ws_cards_detail_lab_super_tower_bonus_desc:
+    'Aumenta el daño de proyectiles durante Super torre',
+  ws_cards_detail_lab_second_wind_blast_title: 'Explosión de Segundo aliento',
+  ws_cards_detail_lab_second_wind_blast_desc:
+    'Segundo aliento mata un porcentaje de todos los enemigos en pantalla al activarse',
+  ws_cards_detail_lab_second_wind_recharge_title: 'Recarga de Segundo aliento',
+  ws_cards_detail_lab_second_wind_recharge_desc:
+    'Segundo aliento se recargará después de un número de oleadas',
   ws_card_damage: 'Daño',
   ws_card_attack_speed: 'Vel. de ataque',
   ws_card_health: 'Salud',
@@ -1083,6 +1117,10 @@ export const STRINGS_ES = {
   ws_card_recovery_package_chance: 'Prob. paquete recuperación',
   ws_card_care_package: 'Care Package',
   ws_card_death_ray: 'Rayo mortal',
+  ws_card_enhanced_ray: 'Rayo mejorado',
+  ws_card_electrified_net: 'Red electrificada',
+  ws_card_ultimate_tower: 'Torre definitiva',
+  ws_card_angel_wings: 'Alas de ángel',
   ws_card_energy_net: 'Red de energía',
   ws_card_super_tower: 'Super torre',
   ws_card_second_wind: 'Segundo aliento',

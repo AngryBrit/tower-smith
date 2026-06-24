@@ -172,7 +172,7 @@ export const WORKSHOP_GAME_CARD_WIKI: Record<
   deathRay: {
     rarity: 'epic',
     description:
-      'A powerful ray that destroys enemies on contact (except bosses), duration # sec',
+      'Fires a Death Ray that instantly kills Common Enemies on contact with a duration of #',
     kind: 'sec',
     stars: [2.3, 2.7, 3.1, 3.5, 3.9, 4.4, 4.9],
   },
@@ -308,6 +308,12 @@ const WORKSHOP_GAME_CARD_DETAIL_INTEGER_FLAT: ReadonlySet<WorkshopGameCardId> = 
 
 const WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_SEC: ReadonlySet<WorkshopGameCardId> = new Set([
   'landMineStun',
+  'deathRay',
+  'energyNet',
+])
+
+const WORKSHOP_GAME_CARD_DETAIL_INTEGER_SEC: ReadonlySet<WorkshopGameCardId> = new Set([
+  'secondWind',
 ])
 
 export function workshopGameCardDetailFixedDecimals(
@@ -350,8 +356,11 @@ function formatWorkshopGameCardDetailEffect(
   if (id === 'extraOrb') {
     return formatExtraOrbSpeedForDetail(scaled)
   }
-  if (id === 'landMineStun') {
-    return formatLandMineStunSecForSummary(scaled)
+  if (id === 'landMineStun' || id === 'deathRay' || id === 'energyNet') {
+    return formatCardDetailSecDuration(scaled)
+  }
+  if (WORKSHOP_GAME_CARD_DETAIL_INTEGER_SEC.has(id)) {
+    return formatCardDetailIntegerSecDuration(scaled)
   }
   if (workshopGameCardUsesDetailPlainPercent(id)) {
     return `${formatNum(scaled, fixedDecimals)}%`
@@ -374,8 +383,12 @@ function workshopExtraOrbDescriptionLine(
   return `Spawns a rotating Orb at ${speed} speed which instantly kills Common Enemies on contact`
 }
 
-function formatLandMineStunSecForSummary(value: number): string {
+function formatCardDetailSecDuration(value: number): string {
   return `${value.toFixed(1)} sec`
+}
+
+function formatCardDetailIntegerSecDuration(value: number): string {
+  return `${Math.round(value)} sec`
 }
 
 function workshopLandMineStunDescriptionLine(
@@ -386,8 +399,66 @@ function workshopLandMineStunDescriptionLine(
   if (v == null) return ''
   const mult =
     masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
-  const stun = formatLandMineStunSecForSummary(v * mult)
+  const stun = formatCardDetailSecDuration(v * mult)
   return `Land Mines have a 40% chance to Stun for ${stun} (except Bosses)`
+}
+
+function workshopDeathRayDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('deathRay', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const duration = formatCardDetailSecDuration(v * mult)
+  return `Fires a Death Ray that instantly kills Common Enemies on contact with a duration of ${duration}`
+}
+
+function workshopEnergyNetDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('energyNet', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const duration = formatCardDetailSecDuration(v * mult)
+  return `Fires an Energy Net at the Boss, Immobilizing it for ${duration}`
+}
+
+function superTowerBonusLabMultiplier(labLevel: number): number {
+  const level = Math.max(0, labLevel)
+  return 1 + 0.03 * level
+}
+
+function workshopSuperTowerDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+  superTowerBonusLabLevel = 0,
+): string {
+  const v = workshopGameCardStarValue('superTower', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const damage = v * mult * superTowerBonusLabMultiplier(superTowerBonusLabLevel)
+  return `Periodically activates Super Tower for 15s, Increases Projectile damage by x${damage.toFixed(2)} (30 sec cooldown)`
+}
+
+function workshopSecondWindDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('secondWind', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const invincibility = formatCardDetailIntegerSecDuration(v * mult)
+  return `Once per Round: Revive Tower with 50% Health, respawn Wall, & grant Invincibility for ${invincibility}`
+}
+
+export type WorkshopGameCardDetailDescriptionOptions = {
+  superTowerBonusLabLevel?: number
 }
 
 /** Card detail dialog star effect (×/s/m keep two decimals; % omit trailing zeros). */
@@ -466,6 +537,7 @@ export function workshopGameCardDescriptionLine(
   stars: number,
   masteryMultiplier = 1,
   fixedDecimals?: number,
+  options?: WorkshopGameCardDetailDescriptionOptions,
 ): string {
   if (id === 'enemyBalance') {
     return workshopEnemyBalanceDescriptionLine(stars, masteryMultiplier)
@@ -478,6 +550,22 @@ export function workshopGameCardDescriptionLine(
   }
   if (id === 'landMineStun') {
     return workshopLandMineStunDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'deathRay') {
+    return workshopDeathRayDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'energyNet') {
+    return workshopEnergyNetDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'superTower') {
+    return workshopSuperTowerDescriptionLine(
+      stars,
+      masteryMultiplier,
+      options?.superTowerBonusLabLevel ?? 0,
+    )
+  }
+  if (id === 'secondWind') {
+    return workshopSecondWindDescriptionLine(stars, masteryMultiplier)
   }
   const template = WORKSHOP_GAME_CARD_WIKI[id].description
   const effect = formatWorkshopGameCardDetailEffect(
@@ -504,12 +592,14 @@ export function workshopGameCardDescriptionLineForDetail(
   id: WorkshopGameCardId,
   stars: number,
   masteryMultiplier = 1,
+  options?: WorkshopGameCardDetailDescriptionOptions,
 ): string {
   return workshopGameCardDescriptionLine(
     id,
     stars,
     masteryMultiplier,
     workshopGameCardDetailFixedDecimals(id),
+    options,
   )
 }
 

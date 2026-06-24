@@ -167,6 +167,35 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_recovery_package_chance',
     researchDescId: 'ws_cards_detail_mastery_research_desc_recovery_package_chance',
   },
+  deathRay: {
+    titleId: 'ws_card_enhanced_ray',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_death_ray',
+    masteryTierLabelStyle: 'plain_percent',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_death_ray',
+  },
+  energyNet: {
+    titleId: 'ws_card_electrified_net',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_energy_net',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_energy_net',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_energy_net',
+  },
+  superTower: {
+    titleId: 'ws_card_ultimate_tower',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_super_tower',
+    masteryTierLabelStyle: 'plain_sec',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_super_tower',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_super_tower',
+  },
+  secondWind: {
+    titleId: 'ws_card_angel_wings',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_second_wind',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_second_wind',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_second_wind',
+  },
 }
 
 export function workshopCardMasteryDetailTitleId(cardId: WorkshopGameCardId): StringId {

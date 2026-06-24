@@ -954,6 +954,14 @@ export const STRINGS_EN = {
     'Unlocks Flashbang, which causes enemies stunned by a Land Mine to have a chance to miss their attacks and unlocks Flashbang Mastery research',
   ws_cards_detail_mastery_desc_recovery_package_chance:
     'Unlocks Care Package which gives packages a chance to also deliver a common module, and unlocks Recovery Package Mastery research',
+  ws_cards_detail_mastery_desc_death_ray:
+    "Allows Death Ray to partially pierce protector's shields and unlocks Enhanced Ray Mastery research",
+  ws_cards_detail_mastery_desc_energy_net:
+    'Adds a damage multiplier to enemies while they are trapped by the net, lingers for 10 seconds after and unlocks Electrified Mastery research',
+  ws_cards_detail_mastery_desc_super_tower:
+    'Causes 35% cards multiplier effect to increase all Ultimate Weapon damage and decreases Super Tower cooldown, also unlocks Ultimate Tower research',
+  ws_cards_detail_mastery_desc_second_wind:
+    'Unlocks a lingering health regen buff when activated which lasts for 400 waves, and unlocks Angel Wings research',
   ws_cards_detail_mastery_desc_slow_aura:
     'Adds an additional multiplier to slow enemies attack speed, and unlocks Slow Aura Mastery research',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Time delay between enemy attacks',
@@ -984,6 +992,10 @@ export const STRINGS_EN = {
     'Chance for enemies stunned by Land Mines to miss their attacks',
   ws_cards_detail_mastery_ability_desc_recovery_package_chance:
     'Chance for packages to deliver a common module',
+  ws_cards_detail_mastery_ability_desc_energy_net: 'Energy net damage multiplier',
+  ws_cards_detail_mastery_ability_desc_super_tower: 'Reduces Super Tower cooldown time',
+  ws_cards_detail_mastery_ability_desc_second_wind:
+    'Increases lingering health regen multiplier',
   ws_cards_detail_mastery_research_desc_cash:
     'Increases chance for elites to drop Reroll Dice',
   ws_cards_detail_mastery_research_desc_enemy_balance:
@@ -1006,6 +1018,14 @@ export const STRINGS_EN = {
     'Increases chance for flashbanged enemies to miss their attacks',
   ws_cards_detail_mastery_research_desc_recovery_package_chance:
     'Increases the chance for packages to deliver a common module',
+  ws_cards_detail_mastery_research_desc_death_ray:
+    "Increases death ray's protector shield piercing",
+  ws_cards_detail_mastery_research_desc_energy_net:
+    'Increases mastery net damage multiplier',
+  ws_cards_detail_mastery_research_desc_super_tower:
+    'Increases mastery bonus to Super Tower cooldown time',
+  ws_cards_detail_mastery_research_desc_second_wind:
+    'Increases mastery lingering health regen multiplier',
   ws_cards_detail_mastery_ability_prefix: 'Mastery ability:',
   ws_cards_detail_mastery_ability_desc: 'Multiplier on {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Increases bonus Damage',
@@ -1034,6 +1054,18 @@ export const STRINGS_EN = {
     'Allows adjusting the distance of extra orbs from the tower',
   ws_cards_detail_lab_extra_orb_additional_title: 'Additional Orbs',
   ws_cards_detail_lab_extra_orb_additional_desc: 'Adds extra orbs for Extra Orbs card',
+  ws_cards_detail_lab_death_ray_double_title: 'Double Death Ray',
+  ws_cards_detail_lab_death_ray_double_desc:
+    'Death Ray has a chance of firing a second ray',
+  ws_cards_detail_lab_super_tower_bonus_title: 'Super Tower Bonus',
+  ws_cards_detail_lab_super_tower_bonus_desc:
+    'Increases projectile damage during Super Tower',
+  ws_cards_detail_lab_second_wind_blast_title: 'Second Wind Blast',
+  ws_cards_detail_lab_second_wind_blast_desc:
+    'Second Wind kills a percentage of all enemies on screen when activate',
+  ws_cards_detail_lab_second_wind_recharge_title: 'Recharge Second Wind',
+  ws_cards_detail_lab_second_wind_recharge_desc:
+    'Second Wind will recharge after a number of waves',
   ws_card_damage: 'Damage',
   ws_card_attack_speed: 'Attack Speed',
   ws_card_health: 'Health',
@@ -1068,6 +1100,10 @@ export const STRINGS_EN = {
   ws_card_recovery_package_chance: 'Recovery Package Chance',
   ws_card_care_package: 'Care Package',
   ws_card_death_ray: 'Death Ray',
+  ws_card_enhanced_ray: 'Enhanced Ray',
+  ws_card_electrified_net: 'Electrified Net',
+  ws_card_ultimate_tower: 'Ultimate Tower',
+  ws_card_angel_wings: 'Angel Wings',
   ws_card_energy_net: 'Energy Net',
   ws_card_super_tower: 'Super Tower',
   ws_card_second_wind: 'Second Wind',

@@ -8289,7 +8289,6 @@ button.workshop__uw-plus-cost--display:hover {
   padding: 0.22rem 0.2rem 0.2rem;
   background: var(--sr-cards-tile-head-bg);
   border-top: var(--cards-tile-border-width) solid var(--sr-cards-tile-divider);
-  border-bottom: var(--cards-tile-border-width) solid var(--sr-cards-tile-divider);
 }
 
 .cards-tile__controls,
@@ -8669,25 +8668,28 @@ button.workshop__uw-plus-cost--display:hover {
 }
 
 .cards-detail__lab-enhancement-main {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  min-width: 0;
+  display: contents;
 }
 
 .cards-detail__lab-enhancement-title {
+  grid-column: 1;
+  grid-row: 1;
   font-size: 0.82rem;
   font-weight: 600;
   color: var(--sr-picker-stat, #e8f4ff);
 }
 
 .cards-detail__lab-enhancement-desc {
+  grid-column: 1 / -1;
+  grid-row: 2;
   font-size: 0.72rem;
   line-height: 1.35;
   color: var(--sr-picker-muted, rgba(232, 244, 255, 0.72));
 }
 
 .cards-detail__lab-enhancement-value {
+  grid-column: 2;
+  grid-row: 1;
   font-size: 0.9rem;
   font-weight: 600;
   color: var(--sr-picker-stat, #e8f4ff);

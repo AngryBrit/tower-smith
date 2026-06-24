@@ -28,7 +28,7 @@ import {
   workshopCardMasteryUnlocked,
 } from '../data/workshopCardMastery'
 import { type ResearchData } from '../types/research'
-import { workshopCardDetailLabEnhancements } from '../data/workshopCardDetailLabEnhancements'
+import { workshopCardDetailLabEnhancements, cardsResearchLabLevel } from '../data/workshopCardDetailLabEnhancements'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
@@ -88,6 +88,15 @@ export function CardDetailDialog({
     cardId,
     Math.max(stars, 1),
     masteryMultiplier,
+    cardId === 'superTower'
+      ? {
+          superTowerBonusLabLevel: cardsResearchLabLevel(
+            researchData,
+            labLevelOverrides,
+            'Super Tower Bonus',
+          ),
+        }
+      : undefined,
   )
   const masteryTitleId = workshopCardMasteryDetailTitleId(cardId)
   const masteryStatLabel = t(masteryTitleId)

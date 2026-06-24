@@ -958,6 +958,14 @@ export const STRINGS_DE = {
     'Schaltet Flashbang frei, wodurch von Landminen betäubte Gegner eine Chance haben, ihre Angriffe zu verfehlen, und schaltet Flashbang-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_desc_recovery_package_chance:
     'Schaltet Care Package frei, wodurch Pakete eine Chance haben, zusätzlich ein gewöhnliches Modul zu liefern, und schaltet Heilpaket-Chance-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_death_ray:
+    'Ermöglicht Death Ray, Schilde von Protectors teilweise zu durchdringen, und schaltet Enhanced-Ray-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_energy_net:
+    'Fügt einen Schadensmultiplikator auf Gegner hinzu, solange sie im Netz gefangen sind; wirkt 10 Sekunden nach dem Netz weiter und schaltet Electrified-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_super_tower:
+    'Lässt den 35%-Karten-Multiplikator den Schaden aller Ultimate-Waffen erhöhen und verkürzt die Super-Tower-Abklingzeit; schaltet Ultimate-Tower-Forschung frei',
+  ws_cards_detail_mastery_desc_second_wind:
+    'Schaltet einen anhaltenden Lebensregenerations-Buff bei Aktivierung frei, der 400 Wellen hält, und schaltet Angel-Wings-Forschung frei',
   ws_cards_detail_mastery_desc_slow_aura:
     'Fügt einen zusätzlichen Multiplikator hinzu, um die Angriffsgeschwindigkeit der Gegner zu verlangsamen, und schaltet Slow-Aura-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Zeitverzögerung zwischen Gegnerangriffen',
@@ -990,6 +998,10 @@ export const STRINGS_DE = {
     'Chance, dass von Landminen betäubte Gegner ihre Angriffe verfehlen',
   ws_cards_detail_mastery_ability_desc_recovery_package_chance:
     'Chance, dass Pakete ein gewöhnliches Modul liefern',
+  ws_cards_detail_mastery_ability_desc_energy_net: 'Energienetz-Schadensmultiplikator',
+  ws_cards_detail_mastery_ability_desc_super_tower: 'Verkürzt die Super-Tower-Abklingzeit',
+  ws_cards_detail_mastery_ability_desc_second_wind:
+    'Erhöht den anhaltenden Lebensregenerations-Multiplikator',
   ws_cards_detail_mastery_research_desc_cash:
     'Erhöht die Chance, dass Elites Würfel-Neuwürfe fallen lassen',
   ws_cards_detail_mastery_research_desc_enemy_balance:
@@ -1012,6 +1024,14 @@ export const STRINGS_DE = {
     'Erhöht die Chance, dass flashbang-betroffene Gegner ihre Angriffe verfehlen',
   ws_cards_detail_mastery_research_desc_recovery_package_chance:
     'Erhöht die Chance, dass Pakete ein gewöhnliches Modul liefern',
+  ws_cards_detail_mastery_research_desc_death_ray:
+    'Erhöht die Protector-Schild-Durchdringung von Death Ray',
+  ws_cards_detail_mastery_research_desc_energy_net:
+    'Erhöht den Meisterschafts-Netz-Schadensmultiplikator',
+  ws_cards_detail_mastery_research_desc_super_tower:
+    'Erhöht den Meisterschafts-Bonus auf die Super-Tower-Abklingzeit',
+  ws_cards_detail_mastery_research_desc_second_wind:
+    'Erhöht den Meisterschafts-Bonus auf den anhaltenden Lebensregenerations-Multiplikator',
   ws_cards_detail_mastery_ability_prefix: 'Meisterschaftsfähigkeit:',
   ws_cards_detail_mastery_ability_desc: 'Multiplikator auf {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Erhöht Bonus-Schaden',
@@ -1041,6 +1061,18 @@ export const STRINGS_DE = {
     'Ermöglicht die Anpassung der Distanz von Extra-Orbs zum Turm',
   ws_cards_detail_lab_extra_orb_additional_title: 'Zusätzliche Orbs',
   ws_cards_detail_lab_extra_orb_additional_desc: 'Fügt Extra-Orbs für die Extra-Orbs-Karte hinzu',
+  ws_cards_detail_lab_death_ray_double_title: 'Doppelter Death Ray',
+  ws_cards_detail_lab_death_ray_double_desc:
+    'Death Ray hat eine Chance, einen zweiten Strahl abzufeuern',
+  ws_cards_detail_lab_super_tower_bonus_title: 'Super-Tower-Bonus',
+  ws_cards_detail_lab_super_tower_bonus_desc:
+    'Erhöht den Projektilschaden während Super Tower',
+  ws_cards_detail_lab_second_wind_blast_title: 'Second-Wind-Explosion',
+  ws_cards_detail_lab_second_wind_blast_desc:
+    'Second Wind tötet einen Prozentsatz aller Gegner auf dem Bildschirm bei Aktivierung',
+  ws_cards_detail_lab_second_wind_recharge_title: 'Second Wind aufladen',
+  ws_cards_detail_lab_second_wind_recharge_desc:
+    'Second Wind lädt sich nach einer Anzahl von Wellen wieder auf',
   ws_card_damage: 'Schaden',
   ws_card_attack_speed: 'Angriffstempo',
   ws_card_health: 'Leben',
@@ -1075,6 +1107,10 @@ export const STRINGS_DE = {
   ws_card_recovery_package_chance: 'Heilpaket-Chance',
   ws_card_care_package: 'Care Package',
   ws_card_death_ray: 'Death Ray',
+  ws_card_enhanced_ray: 'Enhanced Ray',
+  ws_card_electrified_net: 'Electrified Net',
+  ws_card_ultimate_tower: 'Ultimate Tower',
+  ws_card_angel_wings: 'Angel Wings',
   ws_card_energy_net: 'Energienetz',
   ws_card_super_tower: 'Super Tower',
   ws_card_second_wind: 'Second Wind',

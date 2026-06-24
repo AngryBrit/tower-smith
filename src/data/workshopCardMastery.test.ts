@@ -106,6 +106,13 @@ describe('workshopCardMastery', () => {
     expect(formatCardMasteryTierLabelDetailForCard('landMineStun', '2.5%')).toBe('2.5%')
     expect(formatCardMasteryTierLabelDetailForCard('landMineStun', '5%')).toBe('5%')
     expect(formatCardMasteryTierLabelDetailForCard('recoveryPackageChance', '0.4%')).toBe('0.4%')
+    expect(formatCardMasteryTierLabelDetailForCard('deathRay', '5%')).toBe('5%')
+    expect(formatCardMasteryTierLabelDetailForCard('energyNet', 'x2')).toBe('x2.00')
+    expect(formatCardMasteryTierLabelDetailForCard('energyNet', 'x20')).toBe('x20.00')
+    expect(formatCardMasteryTierLabelDetailForCard('superTower', '-3s')).toBe('3s')
+    expect(formatCardMasteryTierLabelDetailForCard('superTower', '-30s')).toBe('30s')
+    expect(formatCardMasteryTierLabelDetailForCard('secondWind', 'x1.9')).toBe('x1.90')
+    expect(formatCardMasteryTierLabelDetailForCard('secondWind', 'x10')).toBe('x10.00')
   })
 
   it('formats card detail star levels with plain_percent when configured', () => {
@@ -304,6 +311,55 @@ describe('workshopCardMastery', () => {
       'ws_cards_detail_mastery_research_desc_recovery_package_chance',
     )
     expect(workshopCardMasteryDetailTierLabelStyle('recoveryPackageChance')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('deathRay')).toBe(
+      'ws_cards_detail_mastery_desc_death_ray',
+    )
+    expect(workshopCardMasteryDetailTitleId('deathRay')).toBe('ws_card_enhanced_ray')
+    expect(workshopCardMasteryDetailAbilityLabel('deathRay', 'Enhanced Ray')).toBe('Enhanced Ray')
+    expect(workshopCardMasteryDetailResearchDescId('deathRay')).toBe(
+      'ws_cards_detail_mastery_research_desc_death_ray',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('deathRay')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('energyNet')).toBe(
+      'ws_cards_detail_mastery_desc_energy_net',
+    )
+    expect(workshopCardMasteryDetailTitleId('energyNet')).toBe('ws_card_electrified_net')
+    expect(workshopCardMasteryDetailAbilityLabel('energyNet', 'Electrified Net')).toBe(
+      'Electrified Net',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('energyNet')).toBe(
+      'ws_cards_detail_mastery_ability_desc_energy_net',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('energyNet')).toBe(
+      'ws_cards_detail_mastery_research_desc_energy_net',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('energyNet')).toBe('default')
+    expect(workshopCardMasteryDetailMasteryDescId('superTower')).toBe(
+      'ws_cards_detail_mastery_desc_super_tower',
+    )
+    expect(workshopCardMasteryDetailTitleId('superTower')).toBe('ws_card_ultimate_tower')
+    expect(workshopCardMasteryDetailAbilityLabel('superTower', 'Ultimate Tower')).toBe(
+      'Ultimate Tower',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('superTower')).toBe(
+      'ws_cards_detail_mastery_ability_desc_super_tower',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('superTower')).toBe(
+      'ws_cards_detail_mastery_research_desc_super_tower',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('superTower')).toBe('plain_sec')
+    expect(workshopCardMasteryDetailMasteryDescId('secondWind')).toBe(
+      'ws_cards_detail_mastery_desc_second_wind',
+    )
+    expect(workshopCardMasteryDetailTitleId('secondWind')).toBe('ws_card_angel_wings')
+    expect(workshopCardMasteryDetailAbilityLabel('secondWind', 'Angel Wings')).toBe('Angel Wings')
+    expect(workshopCardMasteryDetailAbilityDescId('secondWind')).toBe(
+      'ws_cards_detail_mastery_ability_desc_second_wind',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('secondWind')).toBe(
+      'ws_cards_detail_mastery_research_desc_second_wind',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('secondWind')).toBe('default')
     expect(workshopCardMasteryDetailMasteryDescId('damage')).toBeNull()
     expect(workshopCardMasteryDetailMasteryDescStyle('damage')).toBe('stat_multiplier')
     expect(workshopCardMasteryDetailAbilityDescId('damage')).toBe(
