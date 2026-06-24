@@ -178,7 +178,7 @@ describe('compact Inventory layout', () => {
     const layout = resolveModuleEpInventoryLayout(COMPACT_GRID)
     expect(layout.variant).toBe('compact')
     expect(layout.sections.cannon.highestPrimaryLevelCell).toEqual({ row: 2, col: 3 })
-    expect(layout.sections.cannon.highestAssistLevelCell).toEqual({ row: 3, col: 3 })
+    expect(layout.sections.cannon.highestAssistLevelCell).toEqual({ row: 8, col: 3 })
     expect(layout.sections.armor.highestAssistLevelCell).toEqual({ row: 21, col: 3 })
     expect(layout.sections.cannon.dataRow).toBe(2)
     expect(layout.sections.armor.dataRow).toBe(6)
@@ -246,7 +246,7 @@ describe('compact Inventory layout', () => {
       buildModuleSheetUpdates('Inventory', state, layout).map((u) => [u.range, u.values[0]![0]]),
     )
     expect(byRange["'Inventory'!D2"]).toBe(240)
-    expect(byRange["'Inventory'!D3"]).toBe(100)
+    expect(byRange["'Inventory'!D8"]).toBe(100)
     expect(byRange["'Inventory'!D21"]).toBe(0)
     expect(byRange["'Inventory'!F2"]).toBe('Ancestral 2*')
     expect(byRange["'Inventory'!AE2"]).toBe('Legendary+')

@@ -89,7 +89,7 @@ describe('buildModuleSheetUpdates', () => {
     )
 
     expect(byRange["'Inventory'!D2"]).toBe(0)
-    expect(byRange["'Inventory'!D3"]).toBe(0)
+    expect(byRange["'Inventory'!D8"]).toBe(0)
     expect(byRange["'Inventory'!D6"]).toBe(0)
     expect(byRange["'Inventory'!D21"]).toBe(0)
     expect(byRange["'Inventory'!F2"]).toBe('None')
@@ -107,7 +107,7 @@ describe('buildModuleSheetUpdates', () => {
     const byRange = Object.fromEntries(updates.map((u) => [u.range, u.values[0]![0]]))
 
     expect(byRange["'Inventory'!D2"]).toBe(140)
-    expect(byRange["'Inventory'!D3"]).toBe(100)
+    expect(byRange["'Inventory'!D8"]).toBe(100)
     expect(byRange["'Inventory'!U2"]).toBe('Ancestral 1*')
     expect(byRange["'Inventory'!V2"]).toBeUndefined()
     expect(byRange["'Inventory'!W2"]).toBeUndefined()

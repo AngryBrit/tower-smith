@@ -20,10 +20,10 @@ export const MODULE_EP_INVENTORY_SUBSTAT_BANDS: Record<
   core: { substatStartRow: 46, substatEndRow: 53, spareRow: 42 },
 }
 
-/** Sidebar Assist Level row (column D) on Inventory — cannon uses spare row; others use substat band + 1. */
+/** Sidebar Assist Level row (column D) on compact Inventory — v6.1.2 absolute row (substat band + 1). */
 export function moduleEpInventoryAssistLevelRow(slot: WorkshopAssistModuleSlot): number {
   const band = MODULE_EP_INVENTORY_SUBSTAT_BANDS[slot]
-  return slot === 'cannon' ? band.spareRow : band.substatStartRow + 1
+  return band.substatStartRow + 1
 }
 
 export type ModuleEpInventoryModuleColumn = {

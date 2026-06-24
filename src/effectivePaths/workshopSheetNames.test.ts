@@ -40,6 +40,15 @@ describe('workshopUpgradeIdFromSheetName', () => {
   it('maps Effective Paths enhancement and unlock-gate spellings', () => {
     expect(workshopEnhanceIdFromSheetName('Rend Armor Mult +')).toBe('enhanceRendArmorLevel')
     expect(workshopEnhanceIdFromSheetName('Damage / Meter +')).toBe('enhanceDamagePerMeterLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock Rend+ (50 B¢)')).toBe('enhanceRendArmorLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock CF + (500 B)')).toBe('enhanceCritFactorLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock DPM + (5 T)')).toBe('enhanceDamagePerMeterLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock Regen + (50 B)')).toBe('enhanceHealthRegenLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock DABS + (500 B)')).toBe(
+      'enhanceDefenseAbsoluteLevel',
+    )
+    expect(workshopEnhanceIdFromSheetName('Unlock LMD + (5 T)')).toBe('enhanceLandMineDamageLevel')
+    expect(workshopEnhanceIdFromSheetName('Unlock WH + (50 T)')).toBe('enhanceWallHealthLevel')
     expect(workshopEnhanceIdFromSheetName('Unlock SCM + (35.52 T)')).toBe('enhanceSuperCritMultLevel')
     expect(workshopEnhanceIdFromSheetName('Unlock ASPD + (485.52 T)')).toBe('enhanceAttackSpeedLevel')
     expect(workshopEnhanceIdFromSheetName('Unlock Orb Size + (426.78 T)')).toBe('enhanceOrbSizeLevel')
