@@ -940,6 +940,11 @@ export const STRINGS_DE = {
     'Erhöht den Kartenstat-Multiplikator und schaltet {{mastery}}-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_desc_cash:
     'Gibt Elites eine Chance, Würfel-Neuwürfe fallen zu lassen',
+  ws_cards_detail_mastery_desc_slow_aura:
+    'Fügt einen zusätzlichen Multiplikator hinzu, um die Angriffsgeschwindigkeit der Gegner zu verlangsamen, und schaltet Slow-Aura-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_ability_desc_slow_aura: 'Zeitverzögerung zwischen Gegnerangriffen',
+  ws_cards_detail_mastery_research_desc_slow_aura:
+    'Erhöht die Kartenmeisterschafts-Verlangsamung der Gegner-Angriffsgeschwindigkeit',
   ws_cards_detail_mastery_ability_desc_cash:
     'Chance, dass Elites Würfel-Neuwürfe fallen lassen',
   ws_cards_detail_mastery_research_desc_cash:
@@ -1440,7 +1445,7 @@ export const STRINGS_DE = {
   sr_import_export_launcher: 'Labs importieren, exportieren & teilen…',
   sr_budget_title: 'Labor-Münzen',
   sr_budget_aria: 'Ausgegeben {{spent}}, bis Maximum {{toMax}}, nächste sichtbare Upgrades {{next}}.',
-  sr_budget_footnote: 'Kartenmeisterschaft-Zeilen ausgelassen (Steine). Fehlende Toolkit-Münzdaten zählen pro Schritt als 0.',
+  sr_budget_footnote: 'Fehlende Toolkit-Münzdaten zählen pro Schritt als 0.',
   sr_budget_spent_dt: 'Ausgegeben (alle Münz-Labs)',
   sr_budget_to_max_dt: 'Bis Maximum (endliche Obergrenzen)',
   sr_budget_next_dt: 'Nächstes Upgrade (sichtbar)',
@@ -1805,7 +1810,7 @@ export const STRINGS_DE = {
   sr_compare_spent_a: 'Ausgegebene Münzen (A)',
   sr_compare_spent_b: 'Ausgegebene Münzen (B)',
   sr_compare_coin_delta: 'Münz-Delta (B − A)',
-  sr_compare_footnote: 'Kartenmeisterschaft-Zeilen werden in Münz-Summen ignoriert (wie im Budget-Panel). Fehlende Toolkit-Daten zählen pro Upgrade-Schritt als 0.',
+  sr_compare_footnote: 'Fehlende Toolkit-Daten zählen pro Upgrade-Schritt als 0.',
   sr_compare_table_section: 'Bereich',
   sr_compare_table_lab: 'Lab',
   sr_compare_table_lv_a: 'St. A',

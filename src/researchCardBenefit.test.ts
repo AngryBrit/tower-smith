@@ -355,12 +355,12 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(pkg?.stoneUnlockCost).toBe(1000)
     })
 
-    it('marginal next cost for fixture Damage Mastery is wiki stones, not coin abbrev', () => {
+    it('marginal next cost for fixture Damage Mastery uses card-mastery GOD coins', () => {
       const lab = mastery.items.find((i) => i.name === 'Damage Mastery')
       expect(lab).toBeDefined()
       const max = 9
-      expect(marginalCostForNextUpgrade(lab!, 0, max, 0)).toBe('750')
-      expect(marginalCostForNextUpgrade(lab!, 0, max, 50)).toBe('750')
+      expect(marginalCostForNextUpgrade(lab!, 0, max, 0)).toBe('1.10q')
+      expect(marginalCostForNextUpgrade(lab!, 0, max, 50)).toBe('550.00T')
     })
 
     it('Damage Mastery GOD table marginal time/cost (screenshot)', () => {
@@ -844,7 +844,7 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
       expect(benefitLineWithNextUpgrade(lab!, max, max)).toBe('x5')
     })
 
-    it('marginal next cost uses wiki stone unlock; Labs Coin Discount does not apply', () => {
+    it('marginal next cost uses card-mastery GOD coins; Labs Coin Discount applies', () => {
       const item: ResearchItem = {
         name: 'Damage Mastery',
         level: 'Lv.0',
@@ -857,8 +857,8 @@ describe('benefitLineWithNextUpgrade (research-card__benefit)', () => {
         costPlusOne: '1.3 q',
         stoneUnlockCost: 750,
       }
-      expect(marginalCostForNextUpgrade(item, 0, 9, 0)).toBe('750')
-      expect(marginalCostForNextUpgrade(item, 0, 9, 99)).toBe('750')
+      expect(marginalCostForNextUpgrade(item, 0, 9, 0)).toBe('1.10q')
+      expect(marginalCostForNextUpgrade(item, 0, 9, 99)).toBe('11.00T')
     })
 
     it('Free Upgrades Mastery and Wave Skip Mastery tier strings', () => {

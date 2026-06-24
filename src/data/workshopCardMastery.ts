@@ -37,6 +37,11 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_coins',
     researchDescId: 'ws_cards_detail_mastery_research_desc_coins',
   },
+  slowAura: {
+    masteryDescId: 'ws_cards_detail_mastery_desc_slow_aura',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_slow_aura',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_slow_aura',
+  },
 }
 
 export function workshopCardMasteryDetailTitleId(cardId: WorkshopGameCardId): StringId {

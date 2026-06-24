@@ -36,8 +36,8 @@ export function formatSignedCoinDelta(n: number): string {
 }
 
 /**
- * Diff effective simulated levels and coin “spent” totals (same rules as the budget panel:
- * Card Mastery omitted; each side uses its own implied Labs Coin Discount %).
+ * Diff effective simulated levels and coin “spent” totals (same rules as the budget panel;
+ * each side uses its own implied Labs Coin Discount %).
  */
 export function compareLabLevelOverrides(
   data: ResearchData,

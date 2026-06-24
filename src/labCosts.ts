@@ -1,10 +1,9 @@
 /**
- * Marginal lab costs and upgrade durations come from `tables/labs/` JSON (e.g. `main/`, `attack/`) when a lab has a GOD table
- * there (see {@link getLabGodTables}), otherwise from bundled `src/data/tower-labs.json` (`COST`,
- * `DURATION`). **Card Mastery** rows still resolve through `tower-labs.json` for durations and toolkit
- * coin lookups; the **cost line** on those cards uses `stoneUnlockCost` from
- * `public/research/sections/card-mastery.json` instead of abbreviated coin ladder amounts. Labs missing
- * from both maps show **—** in the app (no snapshot fallback).
+ * Marginal lab costs and upgrade durations come from `tables/labs/` JSON (e.g. `main/`, `attack/`,
+ * `card-mastery/`) when a lab has a GOD table there (see {@link getLabGodTables}), otherwise from
+ * bundled `src/data/tower-labs.json` (`COST`, `DURATION`). Labs missing from both maps show **—** in
+ * the app (no snapshot fallback). Card Mastery **unlock** stones (`stoneUnlockCost`) are shown only in
+ * the cards detail dialog, not on lab research rows.
  *
  * Display: {@link formatCoinAbbrev} / {@link formatLabCoinDisplay} — **T** below 1 q (1e15), **q** from 1e15 up.
  */

@@ -3,7 +3,6 @@ import type { ResearchData } from './types/research'
 import {
   getEffectiveLevel,
   getLevelBounds,
-  isCardMasteryResearchItem,
   levelOverrideKey,
   rawDiscountedMarginalCoinAtCurrentLevel,
 } from './types/research'
@@ -18,9 +17,8 @@ export type SimulatorCoinAggregates = {
 }
 
 /**
- * Coin-only budgeting totals from `tower-labs.json` marginal costs and the current simulator state.
- * Card Mastery rows (stones) are excluded. Labs without toolkit coin data contribute `0` for
- * missing steps (same gaps as the per-card “—” cost line).
+ * Coin-only budgeting totals from GOD / toolkit marginal costs and the current simulator state.
+ * Labs without coin data contribute `0` for missing steps (same gaps as the per-card “—” cost line).
  */
 export function computeSimulatorCoinAggregates(
   data: ResearchData,
@@ -41,7 +39,6 @@ export function computeSimulatorCoinAggregates(
     const section = data.sections[si]
     for (let ii = 0; ii < section.items.length; ii += 1) {
       const item = section.items[ii]
-      if (isCardMasteryResearchItem(item)) continue
 
       const bounds = getLevelBounds(item)
       const eff = getEffectiveLevel(si, ii, item, levelOverrides)
@@ -122,7 +119,6 @@ export function maxVisibleLabLevels(
     const section = data.sections[si]
     for (let ii = 0; ii < section.items.length; ii += 1) {
       const item = section.items[ii]
-      if (isCardMasteryResearchItem(item)) continue
 
       const bounds = getLevelBounds(item)
       const max = bounds.max

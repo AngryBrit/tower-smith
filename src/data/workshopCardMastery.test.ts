@@ -86,6 +86,15 @@ describe('workshopCardMastery', () => {
     expect(workshopCardMasteryDetailAbilityLabel('range', 'Damage / Meter')).toBe('Damage / Meter')
     expect(workshopCardMasteryDetailAbilityLabel('damage', 'Damage')).toBe('Damage+')
     expect(workshopCardMasteryDetailMasteryDescId('cash')).toBe('ws_cards_detail_mastery_desc_cash')
+    expect(workshopCardMasteryDetailMasteryDescId('slowAura')).toBe(
+      'ws_cards_detail_mastery_desc_slow_aura',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('slowAura')).toBe(
+      'ws_cards_detail_mastery_ability_desc_slow_aura',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('slowAura')).toBe(
+      'ws_cards_detail_mastery_research_desc_slow_aura',
+    )
     expect(workshopCardMasteryDetailAbilityDescId('cash')).toBe(
       'ws_cards_detail_mastery_ability_desc_cash',
     )

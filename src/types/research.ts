@@ -39,14 +39,13 @@ function applyLabsCoinDiscountToCoins(
 
 /**
  * Marginal cost for the **next** upgrade at the simulated `effectiveLevel`.
- * Source: bundled `tower-labs.json` (per-lab per-level `COST`). Missing lab or level → **—**.
+ * Source: `tables/labs/` GOD JSON when present, otherwise bundled `tower-labs.json` per-level `COST`.
+ * Missing lab or level → **—**.
  *
- * **Card Mastery** labs (`* Mastery`): the cost line shows **wiki stone unlock** (`stoneUnlockCost`
- * on the row), not coin-style lab ladder totals. **Labs Coin Discount** does not apply.
- *
- * Other labs: `labsCoinDiscountPercent` is total Labs Coin Discount % from the simulated Labs Coin
- * Discount lab level (list price × (1 − pct/100)). The **Labs Coin Discount** row itself is never
- * discounted (wiki: discount applies to all other labs only).
+ * `labsCoinDiscountPercent` is total Labs Coin Discount % from the simulated Labs Coin Discount lab
+ * level (list price × (1 − pct/100)). The **Labs Coin Discount** row itself is never discounted
+ * (wiki: discount applies to all other labs only). Card Mastery labs use per-card GOD tables
+ * (`tables/labs/card-mastery/`); `stoneUnlockCost` on the row is for the cards unlock dialog only.
  */
 export function marginalCostForNextUpgrade(
   item: ResearchItem,
@@ -55,15 +54,6 @@ export function marginalCostForNextUpgrade(
   labsCoinDiscountPercent = 0,
 ): string {
   if (maxLevelCap > 0 && effectiveLevel >= maxLevelCap) return 'Max'
-
-  const isCardMastery = item.name.endsWith(' Mastery')
-  if (isCardMastery) {
-    const s = item.stoneUnlockCost
-    if (typeof s === 'number' && Number.isFinite(s) && s >= 0) {
-      return String(Math.round(s))
-    }
-    return '—'
-  }
 
   const fromToolkit = toolkitMarginalCoinCost(item.name, effectiveLevel)
   if (fromToolkit != null) {
@@ -78,8 +68,8 @@ export function marginalCostForNextUpgrade(
 
 /**
  * Discounted coin cost for the upgrade **from** `fromLevel` **to** `fromLevel + 1`
- * (same rules as {@link marginalCostForNextUpgrade}, but numeric). Returns `undefined` for
- * card mastery, maxed labs, or labs/levels missing from `tower-labs.json`.
+ * (same rules as {@link marginalCostForNextUpgrade}, but numeric). Returns `undefined` for maxed
+ * labs or labs/levels missing from GOD / toolkit data.
  */
 export function rawDiscountedMarginalCoinAtCurrentLevel(
   item: ResearchItem,
@@ -88,7 +78,6 @@ export function rawDiscountedMarginalCoinAtCurrentLevel(
   labsCoinDiscountPercent: number,
 ): number | undefined {
   if (maxLevelCap > 0 && fromLevel >= maxLevelCap) return undefined
-  if (isCardMasteryResearchItem(item)) return undefined
 
   const fromToolkit = toolkitMarginalCoinCost(item.name, fromLevel)
   if (fromToolkit != null) {

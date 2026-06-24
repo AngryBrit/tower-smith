@@ -936,6 +936,11 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_desc_stat_multiplier:
     "Increases the card's stat multiplier, and unlocks {{mastery}} Mastery research",
   ws_cards_detail_mastery_desc_cash: 'Adds a chance for elites to drop Reroll Dice',
+  ws_cards_detail_mastery_desc_slow_aura:
+    'Adds an additional multiplier to slow enemies attack speed, and unlocks Slow Aura Mastery research',
+  ws_cards_detail_mastery_ability_desc_slow_aura: 'Time delay between enemy attacks',
+  ws_cards_detail_mastery_research_desc_slow_aura:
+    'Increases card mastery enemy attack speed reduction',
   ws_cards_detail_mastery_ability_desc_cash: 'Chance for elites to drop Reroll Dice',
   ws_cards_detail_mastery_research_desc_cash:
     'Increases chance for elites to drop Reroll Dice',
@@ -1482,7 +1487,7 @@ export const STRINGS_EN = {
   sr_budget_aria:
     'Spent {{spent}}, to max {{toMax}}, next visible upgrades {{next}}.',
   sr_budget_footnote:
-    'Card Mastery rows omitted (stones). Missing toolkit coin data counts as 0 per step.',
+    'Missing toolkit coin data counts as 0 per step.',
   sr_budget_spent_dt: 'Spent (all coin labs)',
   sr_budget_to_max_dt: 'To max (finite caps)',
   sr_budget_next_dt: 'Next upgrade (visible)',
@@ -1843,7 +1848,7 @@ export const STRINGS_EN = {
   sr_compare_spent_b: 'Spent coins (B)',
   sr_compare_coin_delta: 'Coin delta (B − A)',
   sr_compare_footnote:
-    'Card Mastery rows are ignored in coin totals (same as the budget panel). Missing toolkit data counts as 0 per upgrade step.',
+    'Missing toolkit data counts as 0 per upgrade step.',
   sr_compare_table_section: 'Section',
   sr_compare_table_lab: 'Lab',
   sr_compare_table_lv_a: 'Lv. A',

@@ -2,14 +2,12 @@ import { useEffect, useId, useState } from 'react'
 import { HoldStepButton } from './HoldStepButton'
 import {
   benefitLineWithNextUpgrade,
-  isCardMasteryResearchItem,
   marginalCostForNextUpgrade,
   researchTimeForNextUpgrade,
   type ResearchItem,
 } from '../types/research'
 import { useI18n } from '../i18n'
 import { CoinGlyph } from './CoinGlyph'
-import { PowerStoneGlyph } from './PowerStoneGlyph'
 
 interface ResearchCardProps {
   /** Parallel to manifest filename stem; used for Spanish name overlay. */
@@ -95,8 +93,6 @@ export function ResearchCard({
     }
     onLevelSet(n)
   }
-
-  const stoneCost = isCardMasteryResearchItem(item)
 
   return (
     <article
@@ -208,14 +204,10 @@ export function ResearchCard({
           ) : (
             <span
               className="research-card__cost"
-              title={stoneCost ? t('researchCard_cost_stones_title') : t('researchCard_cost_coins_title')}
+              title={t('researchCard_cost_coins_title')}
             >
               {nextCost}
-              {stoneCost ? (
-                <PowerStoneGlyph className="research-card__costIcon" />
-              ) : (
-                <CoinGlyph className="research-card__costIcon" />
-              )}
+              <CoinGlyph className="research-card__costIcon" />
             </span>
           )}
         </div>

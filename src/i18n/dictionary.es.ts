@@ -947,6 +947,11 @@ export const STRINGS_ES = {
     'Aumenta el multiplicador de estadísticas de la carta y desbloquea la investigación de maestría {{mastery}}',
   ws_cards_detail_mastery_desc_cash:
     'Añade una probabilidad de que los élites suelten dados de nueva tirada',
+  ws_cards_detail_mastery_desc_slow_aura:
+    'Añade un multiplicador adicional para ralentizar la velocidad de ataque de los enemigos y desbloquea la investigación de maestría de Aura lenta',
+  ws_cards_detail_mastery_ability_desc_slow_aura: 'Retraso entre los ataques enemigos',
+  ws_cards_detail_mastery_research_desc_slow_aura:
+    'Aumenta la reducción de velocidad de ataque enemiga de la maestría de carta',
   ws_cards_detail_mastery_ability_desc_cash:
     'Probabilidad de que los élites suelten dados de nueva tirada',
   ws_cards_detail_mastery_research_desc_cash:
@@ -1501,7 +1506,7 @@ export const STRINGS_ES = {
   sr_budget_aria:
     'Gastado {{spent}}, hasta el máximo {{toMax}}, siguientes mejoras visibles {{next}}.',
   sr_budget_footnote:
-    'Filas de Card Mastery omitidas (piedras). Si faltan datos de monedas del toolkit, se cuenta 0 por paso.',
+    'Si faltan datos de monedas del toolkit, se cuenta 0 por paso.',
   sr_budget_spent_dt: 'Gastado (todos los labs de monedas)',
   sr_budget_to_max_dt: 'Hasta el máximo (topes finitos)',
   sr_budget_next_dt: 'Siguiente mejora (visible)',
@@ -1873,7 +1878,7 @@ export const STRINGS_ES = {
   sr_compare_spent_b: 'Monedas gastadas (B)',
   sr_compare_coin_delta: 'Delta de monedas (B − A)',
   sr_compare_footnote:
-    'Las filas de Card Mastery no cuentan en monedas (igual que el panel de presupuesto). Si faltan datos del toolkit, cada paso cuenta como 0.',
+    'Si faltan datos del toolkit, cada paso cuenta como 0.',
   sr_compare_table_section: 'Sección',
   sr_compare_table_lab: 'Lab',
   sr_compare_table_lv_a: 'Nv. A',
