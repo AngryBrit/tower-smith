@@ -1,22 +1,26 @@
 /**
  * Workshop **Rend Armor Chance** and **Rend Armor Mult** from `tables/workshop/attack/`.
  *
- * Displayed chance: **(Workshop + Submodule) × Enhancement** (enhance caps at **×1.20**, first **20** levels).
- * Displayed mult: **((Workshop × Lab) + Submodule) × Relics × Enhancement** (enhance caps at **×1.40**, first **40** levels).
+ * Displayed chance: **(Workshop + Submodule) × Enhancement** (enhancement applies at **half** rate, 0…400 levels).
+ * Displayed mult: **((Workshop × Lab) + Submodule) × Relics × Enhancement** (full enhancement, 0…400 levels).
  */
 
 import {
   workshopToolkitMarginalCoins,
   workshopToolkitStatValue,
 } from '../workshopCosts'
-import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
+import {
+  WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
+  workshopEnhanceTier400Multiplier,
+} from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL = 299 as const
 
-/** Enhancement levels counted on the workshop Rend Armor Chance card (caps at **×1.20**). */
-export const WORKSHOP_DISPLAYED_REND_ARMOR_CHANCE_ENHANCE_LEVEL_CAP = 20 as const
-
-/** Enhancement × multiplier for displayed rend armor chance (1 when locked). */
+/**
+ * Enhancement × multiplier for displayed rend armor **chance** (1 when locked).
+ * The shared **Rend Armor Max +** enhancement applies to chance at **half** the rate it applies
+ * to mult: e.g. level 46 → mult ×1.46, chance ×1.23 (`1 + (×1.46 − 1) / 2`). 0…400 levels.
+ */
 export function workshopDisplayedRendArmorChanceEnhancementMultiplier(
   enhanceRendArmorLevel: number,
   enhancementsLabUnlocked: boolean,
@@ -24,17 +28,19 @@ export function workshopDisplayedRendArmorChanceEnhancementMultiplier(
   if (!enhancementsLabUnlocked || enhanceRendArmorLevel <= 0) return 1
   const L = Math.min(
     Math.max(0, Math.trunc(enhanceRendArmorLevel)),
-    WORKSHOP_DISPLAYED_REND_ARMOR_CHANCE_ENHANCE_LEVEL_CAP,
+    WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   )
-  return workshopEnhanceTier400Multiplier(L, 'Rend Armor Max')
+  const fullMultiplier = workshopEnhanceTier400Multiplier(L, 'Rend Armor Max')
+  return 1 + (fullMultiplier - 1) / 2
 }
 
 export const WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL = 299 as const
 
-/** Enhancement levels counted on the workshop Rend Armor Mult card (caps at **×1.40**). */
-export const WORKSHOP_DISPLAYED_REND_ARMOR_MULT_ENHANCE_LEVEL_CAP = 40 as const
-
-/** Enhancement × multiplier for displayed rend armor mult (1 when locked). */
+/**
+ * Enhancement × multiplier for displayed rend armor **mult** (1 when locked).
+ * Full **Rend Armor Max +** enhancement (e.g. ×1.46 at level 46), 0…400 levels — same value
+ * shown on the enhancement card.
+ */
 export function workshopDisplayedRendArmorMultEnhancementMultiplier(
   enhanceRendArmorLevel: number,
   enhancementsLabUnlocked: boolean,
@@ -42,7 +48,7 @@ export function workshopDisplayedRendArmorMultEnhancementMultiplier(
   if (!enhancementsLabUnlocked || enhanceRendArmorLevel <= 0) return 1
   const L = Math.min(
     Math.max(0, Math.trunc(enhanceRendArmorLevel)),
-    WORKSHOP_DISPLAYED_REND_ARMOR_MULT_ENHANCE_LEVEL_CAP,
+    WORKSHOP_ENHANCE_TIER_400_MAX_LEVEL,
   )
   return workshopEnhanceTier400Multiplier(L, 'Rend Armor Max')
 }
@@ -90,11 +96,7 @@ export function workshopRendArmorMultStatDisplay(
     enhancementMultiplier,
     relicMultiplier,
   )
-  const s =
-    v > 0 && v < 0.01
-      ? v.toFixed(3)
-      : v.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
-  return `×${s}`
+  return `×${v.toFixed(3)}`
 }
 
 /** Numeric mult before formatting (3-decimal rounded for display). */
