@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   formatWorkshopGameCardStarEffect,
   formatWorkshopGameCardStarEffectForDetail,
+  formatWorkshopGameCardStarEffectWithMastery,
   WORKSHOP_GAME_CARD_WIKI,
   workshopBerserkerCardRateFromStars,
   workshopEnemyBalanceSpawnStarValue,
@@ -48,6 +49,21 @@ describe('workshopGameCardWiki', () => {
   it('uses in-game Fortress summary copy in card detail', () => {
     expect(workshopGameCardDescriptionLineForDetail('fortress', 7)).toBe(
       'Increases Defense Absolute by ×2.20',
+    )
+  })
+
+  it('uses in-game Free Upgrades summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('freeUpgrades', 7)).toBe(
+      'Increases Free Upgrade Chance by 10%',
+    )
+  })
+
+  it('uses in-game Extra Orb summary copy in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('extraOrb', 1)).toBe('.30')
+    expect(formatWorkshopGameCardStarEffectForDetail('extraOrb', 7)).toBe('.90')
+    expect(formatWorkshopGameCardStarEffectWithMastery('extraOrb', 7, 1)).toBe('.90')
+    expect(workshopGameCardDescriptionLineForDetail('extraOrb', 7)).toBe(
+      'Spawns a rotating Orb at .90 speed which instantly kills Common Enemies on contact',
     )
   })
 
@@ -115,6 +131,53 @@ describe('workshopGameCardWiki', () => {
   it('uses in-game Health Regen summary copy in card detail', () => {
     expect(workshopGameCardDescriptionLineForDetail('healthRegen', 7)).toBe(
       'Increases Health Regen by ×2.60 / sec',
+    )
+  })
+
+  it('uses in-game Plasma Cannon summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('plasmaCannon', 7)).toBe(
+      'Fires a Plasma Shot at the Boss, reducing Health by 54%',
+    )
+  })
+
+  it('uses in-game Critical Coin summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('criticalCoin', 7)).toBe(
+      'On Basic Enemy Crit Kill: Base 1 coin drop at a chance of 33%',
+    )
+  })
+
+  it('uses in-game Wave Skip summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('waveSkip', 7)).toBe(
+      'Gain a 19% chance of skipping waves while still earning cash and coins equal to x1.10 the value of the wave enemies',
+    )
+  })
+
+  it('uses in-game Intro Sprint summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('introSprint', 7)).toBe(
+      'Skips 10 Waves at a time for the first 100 Waves (capped at your Highest Wave). Bosses spawn every Wave and no Coins are granted during Intro Sprint',
+    )
+  })
+
+  it('formats Intro Sprint star levels without decimals in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('introSprint', 1)).toBe('20')
+    expect(formatWorkshopGameCardStarEffectForDetail('introSprint', 7)).toBe('100')
+  })
+
+  it('uses in-game Land Mine Stun summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('landMineStun', 7)).toBe(
+      'Land Mines have a 40% chance to Stun for 3.8 sec (except Bosses)',
+    )
+  })
+
+  it('formats Land Mine Stun star levels with one decimal in card detail', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('landMineStun', 1)).toBe('1.4 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('landMineStun', 5)).toBe('3.0 sec')
+    expect(formatWorkshopGameCardStarEffectForDetail('landMineStun', 7)).toBe('3.8 sec')
+  })
+
+  it('uses in-game Recovery Package Chance summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('recoveryPackageChance', 7)).toBe(
+      'Increase Recovery package Chance by 33%',
     )
   })
 

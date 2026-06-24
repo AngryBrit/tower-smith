@@ -20,6 +20,7 @@ type CardMasteryDetailTierLabelStyle =
   | 'incremental_percent'
   | 'plain_percent'
   | 'plain_sec'
+  | 'compact_mult'
 
 /** In-game card detail mastery copy when it differs from the inventory card title. */
 type CardMasteryDetailDisplay = {
@@ -55,6 +56,8 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     researchDescId: 'ws_cards_detail_mastery_research_desc_health_regen',
   },
   cash: {
+    titleId: 'ws_card_elite_farming',
+    abilitySuffixPlus: false,
     masteryDescId: 'ws_cards_detail_mastery_desc_cash',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_cash',
     researchDescId: 'ws_cards_detail_mastery_research_desc_cash',
@@ -65,18 +68,24 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     researchDescId: 'ws_cards_detail_mastery_research_desc_coins',
   },
   slowAura: {
+    titleId: 'ws_card_slow_attack',
+    abilitySuffixPlus: false,
     masteryDescId: 'ws_cards_detail_mastery_desc_slow_aura',
     masteryTierLabelStyle: 'incremental_percent',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_slow_aura',
     researchDescId: 'ws_cards_detail_mastery_research_desc_slow_aura',
   },
   criticalChance: {
+    titleId: 'ws_card_super_critical_chance',
+    abilitySuffixPlus: false,
     masteryDescId: 'ws_cards_detail_mastery_desc_critical_chance',
     masteryTierLabelStyle: 'plain_percent',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_critical_chance',
     researchDescId: 'ws_cards_detail_mastery_research_desc_critical_chance',
   },
   enemyBalance: {
+    titleId: 'ws_card_elite_balance',
+    abilitySuffixPlus: false,
     masteryDescId: 'ws_cards_detail_mastery_desc_enemy_balance',
     masteryTierLabelStyle: 'plain_percent',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_enemy_balance',
@@ -89,10 +98,74 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
     researchDescId: 'ws_cards_detail_mastery_research_desc_extra_defense',
   },
   fortress: {
+    titleId: 'ws_card_fortress_walls',
+    abilitySuffixPlus: false,
     masteryDescId: 'ws_cards_detail_mastery_desc_fortress',
     masteryTierLabelStyle: 'plain_sec',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_fortress',
     researchDescId: 'ws_cards_detail_mastery_research_desc_fortress',
+  },
+  freeUpgrades: {
+    titleId: 'ws_card_locked_upgrade',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_free_upgrades',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_free_upgrades',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_free_upgrades',
+  },
+  extraOrb: {
+    titleId: 'ws_card_coin_orb',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_extra_orb',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_extra_orb',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_extra_orb',
+  },
+  plasmaCannon: {
+    titleId: 'ws_card_elite_cannon',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_plasma_cannon',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_plasma_cannon',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_plasma_cannon',
+  },
+  criticalCoin: {
+    titleId: 'ws_card_double_coins',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_critical_coin',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_critical_coin',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_critical_coin',
+  },
+  waveSkip: {
+    titleId: 'ws_card_double_wave_skip',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_wave_skip',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_wave_skip',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_wave_skip',
+  },
+  introSprint: {
+    titleId: 'ws_card_warp_speed',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_intro_sprint',
+    masteryTierLabelStyle: 'compact_mult',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_intro_sprint',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_intro_sprint',
+  },
+  landMineStun: {
+    titleId: 'ws_card_flashbang',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_land_mine_stun',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_land_mine_stun',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_land_mine_stun',
+  },
+  recoveryPackageChance: {
+    titleId: 'ws_card_care_package',
+    abilitySuffixPlus: false,
+    masteryDescId: 'ws_cards_detail_mastery_desc_recovery_package_chance',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_recovery_package_chance',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_recovery_package_chance',
   },
 }
 
@@ -305,6 +378,15 @@ function formatPlainSecLabel(label: string): string | null {
   return `${m[1]}s`
 }
 
+function formatCompactMultLabel(label: string): string | null {
+  const m = /^x([\d.]+)$/i.exec(label.trim())
+  if (!m) return null
+  const n = Number(m[1])
+  if (!Number.isFinite(n)) return null
+  const num = Number.isInteger(n) ? String(n) : n.toFixed(2).replace(/\.?0+$/, '')
+  return `x${num}`
+}
+
 /** Card detail mastery tier value (e.g. Slow Aura x1.05 → +5%). */
 export function formatCardMasteryTierLabelDetailForCard(
   cardId: WorkshopGameCardId,
@@ -323,6 +405,10 @@ export function formatCardMasteryTierLabelDetailForCard(
   if (style === 'plain_sec') {
     const sec = formatPlainSecLabel(label)
     if (sec) return sec
+  }
+  if (style === 'compact_mult') {
+    const mult = formatCompactMultLabel(label)
+    if (mult) return mult
   }
   return formatCardMasteryTierLabelDetail(label, fixedDecimals)
 }

@@ -2,7 +2,7 @@ import { readFileSync } from 'node:fs'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { FORMAT_EN } from './i18n/dictionary'
+import { FORMAT_EN } from './i18n/dictionary.formatters'
 import { loadResearchData } from './loadResearchData'
 import { parseResearchManifest } from './types/research'
 

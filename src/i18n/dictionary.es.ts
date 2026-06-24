@@ -1,5 +1,3 @@
-import type { StringId } from './dictionary'
-
 export const STRINGS_ES = {
   app_skipToMain: 'Saltar al contenido principal',
   app_first_run_title: 'Empieza aquí',
@@ -951,6 +949,22 @@ export const STRINGS_ES = {
     'Añade una probabilidad de doble aparición de élites y desbloquea la investigación de maestría de Balance enemigos',
   ws_cards_detail_mastery_desc_fortress:
     'Reduce el tiempo de reconstrucción del muro y desbloquea la investigación de maestría de Fortaleza',
+  ws_cards_detail_mastery_desc_free_upgrades:
+    'Añade estadísticas bloqueadas no afectadas por mejoras gratis y desbloquea la investigación de Mejora bloqueada. Se define antes de la partida y no puede cambiarse durante la partida',
+  ws_cards_detail_mastery_desc_extra_orb:
+    'Añade un bonus de monedas a enemigos golpeados por orbes y desbloquea la investigación de Orbe de monedas',
+  ws_cards_detail_mastery_desc_plasma_cannon:
+    'Cañón de plasma dispara a enemigos élite con daño reducido y desbloquea la investigación de maestría de Cañón de élite',
+  ws_cards_detail_mastery_desc_critical_coin:
+    'Añade una probabilidad de soltar dos monedas en lugar de una y desbloquea la investigación de Monedas dobles',
+  ws_cards_detail_mastery_desc_wave_skip:
+    'Añade una probabilidad distinta de duplicar el salto de oleada y desbloquea la investigación de Doble salto de oleada. Esta probabilidad puede acumularse con otros saltos',
+  ws_cards_detail_mastery_desc_intro_sprint:
+    'Aumenta drásticamente cuántas oleadas permanece activo el Sprint inicial y desbloquea la investigación de maestría de Velocidad warp',
+  ws_cards_detail_mastery_desc_land_mine_stun:
+    'Desbloquea Flashbang, que hace que los enemigos aturdidos por una mina terrestre tengan probabilidad de fallar sus ataques, y desbloquea la investigación de maestría de Flashbang',
+  ws_cards_detail_mastery_desc_recovery_package_chance:
+    'Desbloquea Care Package, que da a los paquetes probabilidad de entregar también un módulo común, y desbloquea la investigación de maestría de Prob. paquete recuperación',
   ws_cards_detail_mastery_desc_slow_aura:
     'Añade un multiplicador adicional para ralentizar la velocidad de ataque de los enemigos y desbloquea la investigación de maestría de Aura lenta',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Retraso entre los ataques enemigos',
@@ -967,12 +981,44 @@ export const STRINGS_ES = {
   ws_cards_detail_mastery_ability_desc_enemy_balance:
     'Probabilidad de que ocurra una doble aparición de élite',
   ws_cards_detail_mastery_ability_desc_fortress: 'Reduce el tiempo de reconstrucción del muro',
+  ws_cards_detail_mastery_ability_desc_free_upgrades:
+    'Seleccionar estadísticas no afectadas por mejoras gratis',
+  ws_cards_detail_mastery_ability_desc_extra_orb:
+    'Los enemigos golpeados por orbes sueltan monedas extra',
+  ws_cards_detail_mastery_ability_desc_plasma_cannon:
+    'Porcentaje del daño habitual del cañón de plasma',
+  ws_cards_detail_mastery_ability_desc_critical_coin:
+    'Probabilidad porcentual de soltar dos monedas en lugar de una',
+  ws_cards_detail_mastery_ability_desc_wave_skip:
+    'Probabilidad porcentual de duplicar el salto de oleada',
+  ws_cards_detail_mastery_ability_desc_intro_sprint:
+    'Aumenta el multiplicador de Velocidad warp del Sprint inicial',
+  ws_cards_detail_mastery_ability_desc_land_mine_stun:
+    'Probabilidad de que los enemigos aturdidos por minas terrestres fallen sus ataques',
+  ws_cards_detail_mastery_ability_desc_recovery_package_chance:
+    'Probabilidad de que los paquetes entreguen un módulo común',
   ws_cards_detail_mastery_research_desc_cash:
     'Aumenta la probabilidad de que los élites suelten dados de nueva tirada',
   ws_cards_detail_mastery_research_desc_enemy_balance:
     'Aumenta la probabilidad de que ocurra una doble aparición de élite',
   ws_cards_detail_mastery_research_desc_fortress:
     'Aumenta la reducción de maestría de carta al tiempo de reconstrucción del muro',
+  ws_cards_detail_mastery_research_desc_free_upgrades:
+    'Aumenta el número de estadísticas que pueden bloquearse para no recibir mejoras gratis',
+  ws_cards_detail_mastery_research_desc_extra_orb:
+    'Aumenta el bonus de monedas de maestría de carta por orbes',
+  ws_cards_detail_mastery_research_desc_plasma_cannon:
+    'Aumenta la eficacia del cañón de plasma contra élites',
+  ws_cards_detail_mastery_research_desc_critical_coin:
+    'Aumenta la probabilidad de soltar dos monedas',
+  ws_cards_detail_mastery_research_desc_wave_skip:
+    'Aumenta la probabilidad de doble salto de oleada',
+  ws_cards_detail_mastery_research_desc_intro_sprint:
+    'Aumenta el multiplicador de velocidad warp del Sprint inicial',
+  ws_cards_detail_mastery_research_desc_land_mine_stun:
+    'Aumenta la probabilidad de que los enemigos con flashbang fallen sus ataques',
+  ws_cards_detail_mastery_research_desc_recovery_package_chance:
+    'Aumenta la probabilidad de que los paquetes entreguen un módulo común',
   ws_cards_detail_mastery_ability_prefix: 'Habilidad de maestría:',
   ws_cards_detail_mastery_ability_desc: 'Multiplicador en {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Aumenta el bonus de daño',
@@ -995,6 +1041,14 @@ export const STRINGS_ES = {
   ws_cards_detail_mastery_research_desc_coins: 'Aumenta el bonus de maestría de carta de monedas',
   ws_cards_detail_unlock_mastery: 'Desbloquear {{mastery}}',
   ws_cards_detail_unlock_mastery_generic: 'Desbloquear maestría de carta',
+  ws_cards_detail_lab_enhancements_title: 'Mejoras del laboratorio',
+  ws_cards_detail_lab_enhancements_aria: 'Mejoras del laboratorio',
+  ws_cards_detail_lab_extra_orb_distance_title: 'Ajuste de distancia',
+  ws_cards_detail_lab_extra_orb_distance_desc:
+    'Permite ajustar la distancia de los orbes extra respecto a la torre',
+  ws_cards_detail_lab_extra_orb_additional_title: 'Orbes adicionales',
+  ws_cards_detail_lab_extra_orb_additional_desc:
+    'Añade orbes extra para la carta de Orbes extra',
   ws_card_damage: 'Daño',
   ws_card_attack_speed: 'Vel. de ataque',
   ws_card_health: 'Salud',
@@ -1003,18 +1057,31 @@ export const STRINGS_ES = {
   ws_card_cash: 'Efectivo',
   ws_card_coins: 'Monedas',
   ws_card_slow_aura: 'Aura lenta',
+  ws_card_slow_attack: 'Ataque lento',
   ws_card_critical_chance: 'Prob. crítica',
+  ws_card_super_critical_chance: 'Prob. de super crítico',
   ws_card_enemy_balance: 'Balance enemigos',
+  ws_card_elite_farming: 'Cultivo de élite',
+  ws_card_elite_balance: 'Balance de élite',
   ws_card_extra_defense: 'Defensa extra',
   ws_card_fortress: 'Fortaleza',
+  ws_card_fortress_walls: 'Muros de fortaleza',
   ws_card_free_upgrades: 'Mejoras gratis',
+  ws_card_locked_upgrade: 'Mejora bloqueada',
   ws_card_extra_orb: 'Orbe extra',
+  ws_card_coin_orb: 'Orbe de monedas',
   ws_card_plasma_cannon: 'Cañón de plasma',
+  ws_card_elite_cannon: 'Cañón de élite',
   ws_card_critical_coin: 'Moneda crítica',
+  ws_card_double_coins: 'Monedas dobles',
   ws_card_wave_skip: 'Salto de oleada',
+  ws_card_double_wave_skip: 'Doble salto de oleada',
   ws_card_intro_sprint: 'Sprint inicial',
+  ws_card_warp_speed: 'Velocidad warp',
   ws_card_land_mine_stun: 'Aturdimiento mina',
+  ws_card_flashbang: 'Flashbang',
   ws_card_recovery_package_chance: 'Prob. paquete recuperación',
+  ws_card_care_package: 'Care Package',
   ws_card_death_ray: 'Rayo mortal',
   ws_card_energy_net: 'Red de energía',
   ws_card_super_tower: 'Super torre',
@@ -2075,4 +2142,4 @@ export const STRINGS_ES = {
     'No está en esta fila CSV. Ajusta el nivel en la hoja Lab Calculator, exporta CSV y ejecuta import para que el coste refleje ese nivel.',
   researchCard_cost_stones_title: 'Piedras (coste wiki)',
   researchCard_cost_coins_title: 'Monedas (siguiente mejora)',
-} satisfies Record<StringId, string>
+} as const

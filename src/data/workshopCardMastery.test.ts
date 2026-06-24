@@ -15,6 +15,7 @@ import {
   workshopCardMasteryDetailMasteryDescId,
   workshopCardMasteryDetailMasteryDescStyle,
   workshopCardMasteryDetailResearchDescId,
+  workshopCardMasteryDetailTierLabelStyle,
   workshopCardMasteryDetailTitleId,
   workshopCardMasteryLevel,
   workshopCardMasteryMultiplier,
@@ -96,6 +97,15 @@ describe('workshopCardMastery', () => {
     expect(formatCardMasteryTierLabelDetailForCard('extraDefense', '+1.4%')).toBe('1.4%')
     expect(formatCardMasteryTierLabelDetailForCard('fortress', '-10s')).toBe('10s')
     expect(formatCardMasteryTierLabelDetailForCard('fortress', '-100s')).toBe('100s')
+    expect(formatCardMasteryTierLabelDetailForCard('plasmaCannon', '5%')).toBe('5%')
+    expect(formatCardMasteryTierLabelDetailForCard('plasmaCannon', '25%')).toBe('25%')
+    expect(formatCardMasteryTierLabelDetailForCard('criticalCoin', '10%')).toBe('10%')
+    expect(formatCardMasteryTierLabelDetailForCard('waveSkip', '10%')).toBe('10%')
+    expect(formatCardMasteryTierLabelDetailForCard('introSprint', 'x1.8')).toBe('x1.8')
+    expect(formatCardMasteryTierLabelDetailForCard('introSprint', 'x18')).toBe('x18')
+    expect(formatCardMasteryTierLabelDetailForCard('landMineStun', '2.5%')).toBe('2.5%')
+    expect(formatCardMasteryTierLabelDetailForCard('landMineStun', '5%')).toBe('5%')
+    expect(formatCardMasteryTierLabelDetailForCard('recoveryPackageChance', '0.4%')).toBe('0.4%')
   })
 
   it('formats card detail star levels with plain_percent when configured', () => {
@@ -122,10 +132,18 @@ describe('workshopCardMastery', () => {
     expect(workshopCardMasteryDetailTitleId('damage')).toBe('ws_card_damage')
     expect(workshopCardMasteryDetailAbilityLabel('range', 'Damage / Meter')).toBe('Damage / Meter')
     expect(workshopCardMasteryDetailAbilityLabel('damage', 'Damage')).toBe('Damage+')
+    expect(workshopCardMasteryDetailTitleId('plasmaCannon')).toBe('ws_card_elite_cannon')
+    expect(workshopCardMasteryDetailAbilityLabel('plasmaCannon', 'Elite Cannon')).toBe(
+      'Elite Cannon',
+    )
     expect(workshopCardMasteryDetailMasteryDescId('cash')).toBe('ws_cards_detail_mastery_desc_cash')
+    expect(workshopCardMasteryDetailTitleId('cash')).toBe('ws_card_elite_farming')
+    expect(workshopCardMasteryDetailAbilityLabel('cash', 'Elite Farming')).toBe('Elite Farming')
     expect(workshopCardMasteryDetailMasteryDescId('slowAura')).toBe(
       'ws_cards_detail_mastery_desc_slow_aura',
     )
+    expect(workshopCardMasteryDetailTitleId('slowAura')).toBe('ws_card_slow_attack')
+    expect(workshopCardMasteryDetailAbilityLabel('slowAura', 'Slow Attack')).toBe('Slow Attack')
     expect(workshopCardMasteryDetailAbilityDescId('slowAura')).toBe(
       'ws_cards_detail_mastery_ability_desc_slow_aura',
     )
@@ -134,6 +152,12 @@ describe('workshopCardMastery', () => {
     )
     expect(workshopCardMasteryDetailMasteryDescId('criticalChance')).toBe(
       'ws_cards_detail_mastery_desc_critical_chance',
+    )
+    expect(workshopCardMasteryDetailTitleId('criticalChance')).toBe(
+      'ws_card_super_critical_chance',
+    )
+    expect(workshopCardMasteryDetailAbilityLabel('criticalChance', 'Super Critical Chance')).toBe(
+      'Super Critical Chance',
     )
     expect(workshopCardMasteryDetailAbilityDescId('criticalChance')).toBe(
       'ws_cards_detail_mastery_ability_desc_critical_chance',
@@ -146,6 +170,10 @@ describe('workshopCardMastery', () => {
     )
     expect(workshopCardMasteryDetailResearchDescId('cash')).toBe(
       'ws_cards_detail_mastery_research_desc_cash',
+    )
+    expect(workshopCardMasteryDetailTitleId('enemyBalance')).toBe('ws_card_elite_balance')
+    expect(workshopCardMasteryDetailAbilityLabel('enemyBalance', 'Elite Balance')).toBe(
+      'Elite Balance',
     )
     expect(workshopCardMasteryDetailMasteryDescId('enemyBalance')).toBe(
       'ws_cards_detail_mastery_desc_enemy_balance',
@@ -166,12 +194,116 @@ describe('workshopCardMastery', () => {
     expect(workshopCardMasteryDetailMasteryDescId('fortress')).toBe(
       'ws_cards_detail_mastery_desc_fortress',
     )
+    expect(workshopCardMasteryDetailTitleId('fortress')).toBe('ws_card_fortress_walls')
+    expect(workshopCardMasteryDetailAbilityLabel('fortress', 'Fortress Walls')).toBe(
+      'Fortress Walls',
+    )
     expect(workshopCardMasteryDetailAbilityDescId('fortress')).toBe(
       'ws_cards_detail_mastery_ability_desc_fortress',
     )
     expect(workshopCardMasteryDetailResearchDescId('fortress')).toBe(
       'ws_cards_detail_mastery_research_desc_fortress',
     )
+    expect(workshopCardMasteryDetailMasteryDescId('freeUpgrades')).toBe(
+      'ws_cards_detail_mastery_desc_free_upgrades',
+    )
+    expect(workshopCardMasteryDetailTitleId('freeUpgrades')).toBe('ws_card_locked_upgrade')
+    expect(workshopCardMasteryDetailAbilityLabel('freeUpgrades', 'Locked Upgrade')).toBe(
+      'Locked Upgrade',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('freeUpgrades')).toBe(
+      'ws_cards_detail_mastery_ability_desc_free_upgrades',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('freeUpgrades')).toBe(
+      'ws_cards_detail_mastery_research_desc_free_upgrades',
+    )
+    expect(workshopCardMasteryDetailMasteryDescId('extraOrb')).toBe(
+      'ws_cards_detail_mastery_desc_extra_orb',
+    )
+    expect(workshopCardMasteryDetailTitleId('extraOrb')).toBe('ws_card_coin_orb')
+    expect(workshopCardMasteryDetailAbilityLabel('extraOrb', 'Coin Orb')).toBe('Coin Orb')
+    expect(workshopCardMasteryDetailAbilityDescId('extraOrb')).toBe(
+      'ws_cards_detail_mastery_ability_desc_extra_orb',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('extraOrb')).toBe(
+      'ws_cards_detail_mastery_research_desc_extra_orb',
+    )
+    expect(workshopCardMasteryDetailMasteryDescId('plasmaCannon')).toBe(
+      'ws_cards_detail_mastery_desc_plasma_cannon',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('plasmaCannon')).toBe(
+      'ws_cards_detail_mastery_ability_desc_plasma_cannon',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('plasmaCannon')).toBe(
+      'ws_cards_detail_mastery_research_desc_plasma_cannon',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('plasmaCannon')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('criticalCoin')).toBe(
+      'ws_cards_detail_mastery_desc_critical_coin',
+    )
+    expect(workshopCardMasteryDetailTitleId('criticalCoin')).toBe('ws_card_double_coins')
+    expect(workshopCardMasteryDetailAbilityLabel('criticalCoin', 'Double Coins')).toBe(
+      'Double Coins',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('criticalCoin')).toBe(
+      'ws_cards_detail_mastery_ability_desc_critical_coin',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('criticalCoin')).toBe(
+      'ws_cards_detail_mastery_research_desc_critical_coin',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('criticalCoin')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('waveSkip')).toBe(
+      'ws_cards_detail_mastery_desc_wave_skip',
+    )
+    expect(workshopCardMasteryDetailTitleId('waveSkip')).toBe('ws_card_double_wave_skip')
+    expect(workshopCardMasteryDetailAbilityLabel('waveSkip', 'Double Wave Skip')).toBe(
+      'Double Wave Skip',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('waveSkip')).toBe(
+      'ws_cards_detail_mastery_ability_desc_wave_skip',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('waveSkip')).toBe(
+      'ws_cards_detail_mastery_research_desc_wave_skip',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('waveSkip')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('introSprint')).toBe(
+      'ws_cards_detail_mastery_desc_intro_sprint',
+    )
+    expect(workshopCardMasteryDetailTitleId('introSprint')).toBe('ws_card_warp_speed')
+    expect(workshopCardMasteryDetailAbilityLabel('introSprint', 'Warp Speed')).toBe('Warp Speed')
+    expect(workshopCardMasteryDetailAbilityDescId('introSprint')).toBe(
+      'ws_cards_detail_mastery_ability_desc_intro_sprint',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('introSprint')).toBe(
+      'ws_cards_detail_mastery_research_desc_intro_sprint',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('introSprint')).toBe('compact_mult')
+    expect(workshopCardMasteryDetailMasteryDescId('landMineStun')).toBe(
+      'ws_cards_detail_mastery_desc_land_mine_stun',
+    )
+    expect(workshopCardMasteryDetailTitleId('landMineStun')).toBe('ws_card_flashbang')
+    expect(workshopCardMasteryDetailAbilityLabel('landMineStun', 'Flashbang')).toBe('Flashbang')
+    expect(workshopCardMasteryDetailAbilityDescId('landMineStun')).toBe(
+      'ws_cards_detail_mastery_ability_desc_land_mine_stun',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('landMineStun')).toBe(
+      'ws_cards_detail_mastery_research_desc_land_mine_stun',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('landMineStun')).toBe('plain_percent')
+    expect(workshopCardMasteryDetailMasteryDescId('recoveryPackageChance')).toBe(
+      'ws_cards_detail_mastery_desc_recovery_package_chance',
+    )
+    expect(workshopCardMasteryDetailTitleId('recoveryPackageChance')).toBe('ws_card_care_package')
+    expect(workshopCardMasteryDetailAbilityLabel('recoveryPackageChance', 'Care Package')).toBe(
+      'Care Package',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('recoveryPackageChance')).toBe(
+      'ws_cards_detail_mastery_ability_desc_recovery_package_chance',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('recoveryPackageChance')).toBe(
+      'ws_cards_detail_mastery_research_desc_recovery_package_chance',
+    )
+    expect(workshopCardMasteryDetailTierLabelStyle('recoveryPackageChance')).toBe('plain_percent')
     expect(workshopCardMasteryDetailMasteryDescId('damage')).toBeNull()
     expect(workshopCardMasteryDetailMasteryDescStyle('damage')).toBe('stat_multiplier')
     expect(workshopCardMasteryDetailAbilityDescId('damage')).toBe(

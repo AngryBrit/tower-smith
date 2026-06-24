@@ -8644,6 +8644,56 @@ button.workshop__uw-plus-cost--display:hover {
   height: 1rem;
 }
 
+.cards-detail__lab-enhancements {
+  margin-top: 0.35rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--sr-picker-border, rgba(255, 255, 255, 0.08));
+}
+
+.cards-detail__lab-enhancements-title {
+  margin-bottom: 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+}
+
+.cards-detail__lab-enhancement-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem 0.65rem;
+  align-items: start;
+  padding: 0.45rem 0;
+}
+
+.cards-detail__lab-enhancement-row + .cards-detail__lab-enhancement-row {
+  border-top: 1px solid var(--sr-picker-border, rgba(255, 255, 255, 0.06));
+}
+
+.cards-detail__lab-enhancement-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.cards-detail__lab-enhancement-title {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--sr-picker-stat, #e8f4ff);
+}
+
+.cards-detail__lab-enhancement-desc {
+  font-size: 0.72rem;
+  line-height: 1.35;
+  color: var(--sr-picker-muted, rgba(232, 244, 255, 0.72));
+}
+
+.cards-detail__lab-enhancement-value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--sr-picker-stat, #e8f4ff);
+  white-space: nowrap;
+}
+
 @container (max-width: 36rem) {
   .cards-presets {
     gap: 0.25rem;

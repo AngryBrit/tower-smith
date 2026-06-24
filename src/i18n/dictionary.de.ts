@@ -1,5 +1,3 @@
-import type { StringId } from './dictionary'
-
 export const STRINGS_DE = {
   app_skipToMain: 'Zum Hauptinhalt springen',
   app_first_run_title: 'Hier starten',
@@ -944,6 +942,22 @@ export const STRINGS_DE = {
     'Fügt eine Chance hinzu, Elite-Doppelspawns auszulösen, und schaltet Gegnerbalance-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_desc_fortress:
     'Verkürzt die Mauer-Wiederaufbauzeit und schaltet Festungs-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_free_upgrades:
+    'Fügt gesperrte Werte hinzu, die von Gratis-Upgrades nicht betroffen sind, und schaltet Gesperrtes-Upgrade-Forschung frei. Wird vor dem Lauf festgelegt und kann während des Laufs nicht geändert werden',
+  ws_cards_detail_mastery_desc_extra_orb:
+    'Fügt einen Münzbonus für von Orbs getroffene Gegner hinzu und schaltet Münz-Orb-Forschung frei',
+  ws_cards_detail_mastery_desc_plasma_cannon:
+    'Plasma Cannon feuert auf Elite-Gegner mit reduziertem Schaden und schaltet Elite-Cannon-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_critical_coin:
+    'Fügt eine Chance hinzu, zwei Münzen statt einer fallen zu lassen, und schaltet Doppel-Münzen-Forschung frei',
+  ws_cards_detail_mastery_desc_wave_skip:
+    'Fügt eine eigene Chance hinzu, Wellenüberspringen zu verdoppeln, und schaltet Doppel-Wellenüberspringen-Forschung frei. Diese Chance kann mit anderen Überspringen gestapelt werden',
+  ws_cards_detail_mastery_desc_intro_sprint:
+    'Erhöht dramatisch, wie viele Wellen Start-Sprint aktiv bleibt, und schaltet Warp-Speed-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_land_mine_stun:
+    'Schaltet Flashbang frei, wodurch von Landminen betäubte Gegner eine Chance haben, ihre Angriffe zu verfehlen, und schaltet Flashbang-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_desc_recovery_package_chance:
+    'Schaltet Care Package frei, wodurch Pakete eine Chance haben, zusätzlich ein gewöhnliches Modul zu liefern, und schaltet Heilpaket-Chance-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_desc_slow_aura:
     'Fügt einen zusätzlichen Multiplikator hinzu, um die Angriffsgeschwindigkeit der Gegner zu verlangsamen, und schaltet Slow-Aura-Meisterschaftsforschung frei',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Zeitverzögerung zwischen Gegnerangriffen',
@@ -960,12 +974,44 @@ export const STRINGS_DE = {
   ws_cards_detail_mastery_ability_desc_enemy_balance:
     'Chance auf einen doppelten Elite-Spawn',
   ws_cards_detail_mastery_ability_desc_fortress: 'Verkürzt die Mauer-Wiederaufbauzeit',
+  ws_cards_detail_mastery_ability_desc_free_upgrades:
+    'Werte wählen, die von Gratis-Upgrades nicht betroffen sind',
+  ws_cards_detail_mastery_ability_desc_extra_orb:
+    'Von Orbs getroffene Gegner lassen Bonus-Münzen fallen',
+  ws_cards_detail_mastery_ability_desc_plasma_cannon:
+    'Prozent des regulären Plasma-Cannon-Schadens',
+  ws_cards_detail_mastery_ability_desc_critical_coin:
+    'Prozent-Chance, zwei Münzen statt einer fallen zu lassen',
+  ws_cards_detail_mastery_ability_desc_wave_skip:
+    'Prozent-Chance, Wellenüberspringen zu verdoppeln',
+  ws_cards_detail_mastery_ability_desc_intro_sprint:
+    'Erhöht den Multiplikator von Start-Sprint Warp Speed',
+  ws_cards_detail_mastery_ability_desc_land_mine_stun:
+    'Chance, dass von Landminen betäubte Gegner ihre Angriffe verfehlen',
+  ws_cards_detail_mastery_ability_desc_recovery_package_chance:
+    'Chance, dass Pakete ein gewöhnliches Modul liefern',
   ws_cards_detail_mastery_research_desc_cash:
     'Erhöht die Chance, dass Elites Würfel-Neuwürfe fallen lassen',
   ws_cards_detail_mastery_research_desc_enemy_balance:
     'Erhöht die Chance auf einen doppelten Elite-Spawn',
   ws_cards_detail_mastery_research_desc_fortress:
     'Erhöht die Kartenmeisterschafts-Verkürzung der Mauer-Wiederaufbauzeit',
+  ws_cards_detail_mastery_research_desc_free_upgrades:
+    'Erhöht die Anzahl der Werte, die vor Gratis-Upgrades gesperrt werden können',
+  ws_cards_detail_mastery_research_desc_extra_orb:
+    'Erhöht den Kartenmeisterschafts-Münzbonus von Orbs',
+  ws_cards_detail_mastery_research_desc_plasma_cannon:
+    'Erhöht die Wirksamkeit von Plasma Cannon gegen Elites',
+  ws_cards_detail_mastery_research_desc_critical_coin:
+    'Erhöht die Chance auf zwei Münzen-Drops',
+  ws_cards_detail_mastery_research_desc_wave_skip:
+    'Erhöht die Chance auf doppeltes Wellenüberspringen',
+  ws_cards_detail_mastery_research_desc_intro_sprint:
+    'Erhöht den Start-Sprint-Warp-Speed-Multiplikator',
+  ws_cards_detail_mastery_research_desc_land_mine_stun:
+    'Erhöht die Chance, dass flashbang-betroffene Gegner ihre Angriffe verfehlen',
+  ws_cards_detail_mastery_research_desc_recovery_package_chance:
+    'Erhöht die Chance, dass Pakete ein gewöhnliches Modul liefern',
   ws_cards_detail_mastery_ability_prefix: 'Meisterschaftsfähigkeit:',
   ws_cards_detail_mastery_ability_desc: 'Multiplikator auf {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Erhöht Bonus-Schaden',
@@ -988,6 +1034,13 @@ export const STRINGS_DE = {
   ws_cards_detail_mastery_research_desc_coins: 'Erhöht den Kartenmeisterschafts-Bonus für Münzen',
   ws_cards_detail_unlock_mastery: '{{mastery}} freischalten',
   ws_cards_detail_unlock_mastery_generic: 'Kartenmeisterschaft freischalten',
+  ws_cards_detail_lab_enhancements_title: 'Verstärkungen aus dem Labor',
+  ws_cards_detail_lab_enhancements_aria: 'Labor-Verstärkungen',
+  ws_cards_detail_lab_extra_orb_distance_title: 'Distanzanpassung',
+  ws_cards_detail_lab_extra_orb_distance_desc:
+    'Ermöglicht die Anpassung der Distanz von Extra-Orbs zum Turm',
+  ws_cards_detail_lab_extra_orb_additional_title: 'Zusätzliche Orbs',
+  ws_cards_detail_lab_extra_orb_additional_desc: 'Fügt Extra-Orbs für die Extra-Orbs-Karte hinzu',
   ws_card_damage: 'Schaden',
   ws_card_attack_speed: 'Angriffstempo',
   ws_card_health: 'Leben',
@@ -996,18 +1049,31 @@ export const STRINGS_DE = {
   ws_card_cash: 'Bargeld',
   ws_card_coins: 'Münzen',
   ws_card_slow_aura: 'Verlangsamungsaura',
+  ws_card_slow_attack: 'Verlangsamter Angriff',
   ws_card_critical_chance: 'Krit-Chance',
+  ws_card_super_critical_chance: 'Super-Krit-Chance',
   ws_card_enemy_balance: 'Gegnerbalance',
+  ws_card_elite_farming: 'Elite Farming',
+  ws_card_elite_balance: 'Elite Balance',
   ws_card_extra_defense: 'Extra-Verteidigung',
   ws_card_fortress: 'Festung',
+  ws_card_fortress_walls: 'Festungsmauern',
   ws_card_free_upgrades: 'Gratis-Upgrades',
+  ws_card_locked_upgrade: 'Gesperrtes Upgrade',
   ws_card_extra_orb: 'Extra-Orb',
+  ws_card_coin_orb: 'Münz-Orb',
   ws_card_plasma_cannon: 'Plasma Cannon',
+  ws_card_elite_cannon: 'Elite Cannon',
   ws_card_critical_coin: 'Krit-Münze',
+  ws_card_double_coins: 'Doppel-Münzen',
   ws_card_wave_skip: 'Wellenüberspringen',
+  ws_card_double_wave_skip: 'Doppel-Wellenüberspringen',
   ws_card_intro_sprint: 'Start-Sprint',
+  ws_card_warp_speed: 'Warp Speed',
   ws_card_land_mine_stun: 'Minenbetäubung',
+  ws_card_flashbang: 'Flashbang',
   ws_card_recovery_package_chance: 'Heilpaket-Chance',
+  ws_card_care_package: 'Care Package',
   ws_card_death_ray: 'Death Ray',
   ws_card_energy_net: 'Energienetz',
   ws_card_super_tower: 'Super Tower',
@@ -1978,4 +2044,4 @@ export const STRINGS_DE = {
   researchCard_cost_unknown_title: 'Nicht in dieser CSV-Zeile. Setze die Stufe im Lab Calculator-Blatt, exportiere CSV und importiere erneut, damit die Kosten dieser Stufe entsprechen.',
   researchCard_cost_stones_title: 'Steine (Wiki-Freischaltkosten)',
   researchCard_cost_coins_title: 'Münzen (nächstes Upgrade)',
-} satisfies Record<StringId, string>
+} as const

@@ -28,6 +28,7 @@ import {
   workshopCardMasteryUnlocked,
 } from '../data/workshopCardMastery'
 import { type ResearchData } from '../types/research'
+import { workshopCardDetailLabEnhancements } from '../data/workshopCardDetailLabEnhancements'
 import { useI18n } from '../i18n'
 import type { StringId } from '../i18n/dictionary'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
@@ -121,6 +122,11 @@ export function CardDetailDialog({
     masteryRef && researchData
       ? (researchData.sections[masteryRef.sectionIndex]?.items[masteryRef.itemIndex]?.name ?? '')
       : ''
+  const labEnhancements = workshopCardDetailLabEnhancements(
+    cardId,
+    researchData,
+    labLevelOverrides,
+  )
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -286,6 +292,26 @@ export function CardDetailDialog({
             </button>
           ) : null}
         </section>
+
+        {labEnhancements.length > 0 ? (
+          <section
+            className="modules-picker__section cards-detail__lab-enhancements"
+            aria-label={t('ws_cards_detail_lab_enhancements_aria')}
+          >
+            <h3 className="modules-picker__section-title modules-picker__section-title--center cards-detail__lab-enhancements-title">
+              {t('ws_cards_detail_lab_enhancements_title')}
+            </h3>
+            {labEnhancements.map((row) => (
+              <div key={row.titleId} className="cards-detail__lab-enhancement-row">
+                <div className="cards-detail__lab-enhancement-main">
+                  <span className="cards-detail__lab-enhancement-title">{t(row.titleId)}</span>
+                  <span className="cards-detail__lab-enhancement-desc">{t(row.descId)}</span>
+                </div>
+                <span className="cards-detail__lab-enhancement-value">{row.value}</span>
+              </div>
+            ))}
+          </section>
+        ) : null}
       </div>
     </div>,
     document.body,

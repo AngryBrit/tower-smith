@@ -1,5 +1,3 @@
-import { STRINGS_DE } from './dictionary.de'
-import { STRINGS_ES } from './dictionary.es'
 import type { TowerGalleryApiError } from '../towerGallery/api'
 
 /** UI string ids — English is the source of truth; locales in dictionary.*.ts must define every key. */
@@ -940,6 +938,22 @@ export const STRINGS_EN = {
     'Adds a chance to double spawn elites, and unlocks Enemy Balance Mastery research',
   ws_cards_detail_mastery_desc_fortress:
     'Reduces Wall Rebuild time, and unlocks Fortress Mastery research',
+  ws_cards_detail_mastery_desc_free_upgrades:
+    'Adds a number of locked stats that are not impacted by free upgrades, and unlocks Locked Upgrade research. This is set before the run starts, and cannot be changed mid run',
+  ws_cards_detail_mastery_desc_extra_orb:
+    'Adds a coin bonus to enemies hit by orbs and unlocks Coin Orb research',
+  ws_cards_detail_mastery_desc_plasma_cannon:
+    'Plasma Cannon fires at Elite enemies for reduced damage and unlocks Elite Cannon Mastery research',
+  ws_cards_detail_mastery_desc_critical_coin:
+    'Adds a chance to drop two coins instead of one and unlocks Double Coins research',
+  ws_cards_detail_mastery_desc_wave_skip:
+    'Adds a distinct chance to double wave skip and unlocks Double Wave Skip research. This chance can be stacked with other skips',
+  ws_cards_detail_mastery_desc_intro_sprint:
+    'Dramatically increases how many waves Intro Sprint stays active and unlocks Warp Speed Mastery research',
+  ws_cards_detail_mastery_desc_land_mine_stun:
+    'Unlocks Flashbang, which causes enemies stunned by a Land Mine to have a chance to miss their attacks and unlocks Flashbang Mastery research',
+  ws_cards_detail_mastery_desc_recovery_package_chance:
+    'Unlocks Care Package which gives packages a chance to also deliver a common module, and unlocks Recovery Package Mastery research',
   ws_cards_detail_mastery_desc_slow_aura:
     'Adds an additional multiplier to slow enemies attack speed, and unlocks Slow Aura Mastery research',
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Time delay between enemy attacks',
@@ -955,12 +969,43 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_ability_desc_enemy_balance:
     'Chance for a double elite spawn to occur',
   ws_cards_detail_mastery_ability_desc_fortress: 'Reduces Wall Rebuild time',
+  ws_cards_detail_mastery_ability_desc_free_upgrades:
+    'Select stats not impacted by free upgrades',
+  ws_cards_detail_mastery_ability_desc_extra_orb: 'Enemies hit by orbs drop bonus coins',
+  ws_cards_detail_mastery_ability_desc_plasma_cannon:
+    'Percent of regular plasma cannon damage',
+  ws_cards_detail_mastery_ability_desc_critical_coin:
+    'Percent chance to drop two coins instead of one',
+  ws_cards_detail_mastery_ability_desc_wave_skip:
+    'Percent chance to double wave skip',
+  ws_cards_detail_mastery_ability_desc_intro_sprint:
+    'Increases the multiplier of Intro Sprint Warp Speed',
+  ws_cards_detail_mastery_ability_desc_land_mine_stun:
+    'Chance for enemies stunned by Land Mines to miss their attacks',
+  ws_cards_detail_mastery_ability_desc_recovery_package_chance:
+    'Chance for packages to deliver a common module',
   ws_cards_detail_mastery_research_desc_cash:
     'Increases chance for elites to drop Reroll Dice',
   ws_cards_detail_mastery_research_desc_enemy_balance:
     'Increases chance for double elite spawn to occur',
   ws_cards_detail_mastery_research_desc_fortress:
     'Increases card mastery reduction to Wall Rebuild time',
+  ws_cards_detail_mastery_research_desc_free_upgrades:
+    'Increase the number of stats that can be locked from receiving free upgrades',
+  ws_cards_detail_mastery_research_desc_extra_orb:
+    'Increases card mastery bonus coins from orbs',
+  ws_cards_detail_mastery_research_desc_plasma_cannon:
+    'Increases plasma cannon effective on elites',
+  ws_cards_detail_mastery_research_desc_critical_coin:
+    'Increases two coin drop chance',
+  ws_cards_detail_mastery_research_desc_wave_skip:
+    'Increases double wave skip chance',
+  ws_cards_detail_mastery_research_desc_intro_sprint:
+    'Increases Intro Sprint warp speed multiplier',
+  ws_cards_detail_mastery_research_desc_land_mine_stun:
+    'Increases chance for flashbanged enemies to miss their attacks',
+  ws_cards_detail_mastery_research_desc_recovery_package_chance:
+    'Increases the chance for packages to deliver a common module',
   ws_cards_detail_mastery_ability_prefix: 'Mastery ability:',
   ws_cards_detail_mastery_ability_desc: 'Multiplier on {{stat}}',
   ws_cards_detail_mastery_ability_desc_damage: 'Increases bonus Damage',
@@ -982,6 +1027,13 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_research_desc_coins: 'Increases card mastery bonus coins',
   ws_cards_detail_unlock_mastery: 'Unlock {{mastery}}',
   ws_cards_detail_unlock_mastery_generic: 'Unlock card mastery',
+  ws_cards_detail_lab_enhancements_title: 'Enhancements From Lab',
+  ws_cards_detail_lab_enhancements_aria: 'Lab enhancements',
+  ws_cards_detail_lab_extra_orb_distance_title: 'Distance Adjustment',
+  ws_cards_detail_lab_extra_orb_distance_desc:
+    'Allows adjusting the distance of extra orbs from the tower',
+  ws_cards_detail_lab_extra_orb_additional_title: 'Additional Orbs',
+  ws_cards_detail_lab_extra_orb_additional_desc: 'Adds extra orbs for Extra Orbs card',
   ws_card_damage: 'Damage',
   ws_card_attack_speed: 'Attack Speed',
   ws_card_health: 'Health',
@@ -990,18 +1042,31 @@ export const STRINGS_EN = {
   ws_card_cash: 'Cash',
   ws_card_coins: 'Coins',
   ws_card_slow_aura: 'Slow Aura',
+  ws_card_slow_attack: 'Slow Attack',
   ws_card_critical_chance: 'Critical Chance',
+  ws_card_super_critical_chance: 'Super Critical Chance',
   ws_card_enemy_balance: 'Enemy Balance',
+  ws_card_elite_farming: 'Elite Farming',
+  ws_card_elite_balance: 'Elite Balance',
   ws_card_extra_defense: 'Extra Defense',
   ws_card_fortress: 'Fortress',
+  ws_card_fortress_walls: 'Fortress Walls',
   ws_card_free_upgrades: 'Free Upgrades',
+  ws_card_locked_upgrade: 'Locked Upgrade',
   ws_card_extra_orb: 'Extra Orb',
+  ws_card_coin_orb: 'Coin Orb',
   ws_card_plasma_cannon: 'Plasma Cannon',
+  ws_card_elite_cannon: 'Elite Cannon',
   ws_card_critical_coin: 'Critical Coin',
+  ws_card_double_coins: 'Double Coins',
   ws_card_wave_skip: 'Wave Skip',
+  ws_card_double_wave_skip: 'Double Wave Skip',
   ws_card_intro_sprint: 'Intro Sprint',
+  ws_card_warp_speed: 'Warp Speed',
   ws_card_land_mine_stun: 'Land Mine Stun',
+  ws_card_flashbang: 'Flashbang',
   ws_card_recovery_package_chance: 'Recovery Package Chance',
+  ws_card_care_package: 'Care Package',
   ws_card_death_ray: 'Death Ray',
   ws_card_energy_net: 'Energy Net',
   ws_card_super_tower: 'Super Tower',
@@ -2092,7 +2157,7 @@ export type I18nFormatters = {
   panelErrorDesc: (panel: string) => string
 }
 
-function formatters(s: Record<StringId, string>): I18nFormatters {
+export function createI18nFormatters(s: Record<StringId, string>): I18nFormatters {
   return {
     shareOpenedLevels(count, workshopFromLink = false, buildName?: string) {
       const base =
@@ -2216,11 +2281,3 @@ function formatters(s: Record<StringId, string>): I18nFormatters {
     },
   }
 }
-
-export const FORMAT_EN: I18nFormatters = formatters(
-  STRINGS_EN as unknown as Record<StringId, string>,
-)
-
-export const FORMAT_ES: I18nFormatters = formatters(STRINGS_ES)
-
-export const FORMAT_DE: I18nFormatters = formatters(STRINGS_DE)

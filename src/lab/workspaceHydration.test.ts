@@ -1,6 +1,6 @@
 /** @vitest-environment jsdom */
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { FORMAT_EN } from '../i18n/dictionary'
+import { FORMAT_EN } from '../i18n/dictionary.formatters'
 import { getGalleryTower } from '../towerGallery/api'
 import { loadResearchFixture } from '../test/researchFixture'
 import { hydrateWorkspaceFromStorage } from './workspaceHydration'

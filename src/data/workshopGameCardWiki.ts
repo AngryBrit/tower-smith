@@ -116,55 +116,55 @@ export const WORKSHOP_GAME_CARD_WIKI: Record<
   },
   freeUpgrades: {
     rarity: 'rare',
-    description: 'Increases all free upgrade chances per wave by #%',
+    description: 'Increases Free Upgrade Chance by #%',
     kind: 'percent',
     stars: [4, 5, 6, 7, 8, 9, 10],
   },
   extraOrb: {
     rarity: 'rare',
     description:
-      'A spinning orb with speed # that destroys enemies on contact (except bosses)',
+      'Spawns a rotating Orb at # speed which instantly kills Common Enemies on contact',
     kind: 'flat',
     stars: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
   },
   plasmaCannon: {
     rarity: 'rare',
-    description: 'Fire one big plasma shot at a boss dropping its health by #%',
+    description: 'Fires a Plasma Shot at the Boss, reducing Health by #%',
     kind: 'percent',
     stars: [30, 34, 38, 42, 46, 50, 54],
   },
   criticalCoin: {
     rarity: 'rare',
     description:
-      'If a basic enemy dies from a critical shot it has a chance to drop coins of #%',
+      'On Basic Enemy Crit Kill: Base 1 coin drop at a chance of #%',
     kind: 'percent',
     stars: [15, 18, 21, 24, 27, 30, 33],
   },
   waveSkip: {
     rarity: 'rare',
     description:
-      'Chance to skip a wave and earn coins and cash equal to the previous wave ×1.10 of #%',
+      'Gain a #% chance of skipping waves while still earning cash and coins equal to x1.10 the value of the wave enemies',
     kind: 'percent',
     stars: [9, 10, 11, 13, 15, 17, 19],
   },
   introSprint: {
     rarity: 'rare',
     description:
-      'Waves increase by 10 each time for the first # waves (boss every 10 waves; no coins during sprint)',
+      'Skips 10 Waves at a time for the first # Waves (capped at your Highest Wave). Bosses spawn every Wave and no Coins are granted during Intro Sprint',
     kind: 'flat',
     stars: [20, 30, 40, 50, 60, 80, 100],
   },
   landMineStun: {
     rarity: 'rare',
     description:
-      'Land mines have a 40% chance to stun enemies for # sec (except bosses)',
+      'Land Mines have a 40% chance to Stun for # (except Bosses)',
     kind: 'sec',
     stars: [1.4, 1.8, 2.2, 2.6, 3, 3.4, 3.8],
     milestone: 'Tier 7 Wave 250',
   },
   recoveryPackageChance: {
     rarity: 'rare',
-    description: 'Increase recovery package spawn chance by #%',
+    description: 'Increase Recovery package Chance by #%',
     kind: 'percent',
     stars: [15, 18, 21, 24, 27, 30, 33],
     milestone: 'Tier 2 Wave 750',
@@ -302,9 +302,19 @@ function formatWorkshopGameCardEffectValue(
 }
 
 /** Card detail dialog: two decimals for ×/time values; trim .00 on % cards only. */
+const WORKSHOP_GAME_CARD_DETAIL_INTEGER_FLAT: ReadonlySet<WorkshopGameCardId> = new Set([
+  'introSprint',
+])
+
+const WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_SEC: ReadonlySet<WorkshopGameCardId> = new Set([
+  'landMineStun',
+])
+
 export function workshopGameCardDetailFixedDecimals(
   id: WorkshopGameCardId,
 ): number | undefined {
+  if (WORKSHOP_GAME_CARD_DETAIL_INTEGER_FLAT.has(id)) return undefined
+  if (WORKSHOP_GAME_CARD_DETAIL_ONE_DECIMAL_SEC.has(id)) return 1
   const kind = WORKSHOP_GAME_CARD_WIKI[id].kind
   return kind === 'percent' || kind === 'addPercent' ? undefined : 2
 }
@@ -320,6 +330,11 @@ export function formatWorkshopGameCardStarEffect(
   return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
 }
 
+function formatExtraOrbSpeedForDetail(value: number): string {
+  const t = value.toFixed(2)
+  return t.startsWith('0.') ? t.slice(1) : t
+}
+
 /** Card detail star/% effect (plain % omits + for configured cards). */
 function formatWorkshopGameCardDetailEffect(
   id: WorkshopGameCardId,
@@ -332,11 +347,47 @@ function formatWorkshopGameCardDetailEffect(
   const mult =
     masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
   const scaled = v * mult
+  if (id === 'extraOrb') {
+    return formatExtraOrbSpeedForDetail(scaled)
+  }
+  if (id === 'landMineStun') {
+    return formatLandMineStunSecForSummary(scaled)
+  }
   if (workshopGameCardUsesDetailPlainPercent(id)) {
     return `${formatNum(scaled, fixedDecimals)}%`
   }
   if (mult === 1) return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
   return formatWorkshopGameCardEffectValue(id, scaled, fixedDecimals)
+}
+
+function workshopExtraOrbDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const speed = formatWorkshopGameCardDetailEffect(
+    'extraOrb',
+    stars,
+    masteryMultiplier,
+    workshopGameCardDetailFixedDecimals('extraOrb'),
+  )
+  if (!speed) return ''
+  return `Spawns a rotating Orb at ${speed} speed which instantly kills Common Enemies on contact`
+}
+
+function formatLandMineStunSecForSummary(value: number): string {
+  return `${value.toFixed(1)} sec`
+}
+
+function workshopLandMineStunDescriptionLine(
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  const v = workshopGameCardStarValue('landMineStun', stars)
+  if (v == null) return ''
+  const mult =
+    masteryMultiplier > 0 && Number.isFinite(masteryMultiplier) ? masteryMultiplier : 1
+  const stun = formatLandMineStunSecForSummary(v * mult)
+  return `Land Mines have a 40% chance to Stun for ${stun} (except Bosses)`
 }
 
 /** Card detail dialog star effect (×/s/m keep two decimals; % omit trailing zeros). */
@@ -359,6 +410,9 @@ export function formatWorkshopGameCardStarEffectWithMastery(
   masteryMultiplier: number,
   fixedDecimals?: number,
 ): string {
+  if (id === 'extraOrb') {
+    return formatWorkshopGameCardDetailEffect(id, stars, masteryMultiplier, fixedDecimals)
+  }
   const v = workshopGameCardStarValue(id, stars)
   if (v == null) return ''
   const mult =
@@ -418,6 +472,12 @@ export function workshopGameCardDescriptionLine(
   }
   if (id === 'extraDefense') {
     return workshopExtraDefenseDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'extraOrb') {
+    return workshopExtraOrbDescriptionLine(stars, masteryMultiplier)
+  }
+  if (id === 'landMineStun') {
+    return workshopLandMineStunDescriptionLine(stars, masteryMultiplier)
   }
   const template = WORKSHOP_GAME_CARD_WIKI[id].description
   const effect = formatWorkshopGameCardDetailEffect(

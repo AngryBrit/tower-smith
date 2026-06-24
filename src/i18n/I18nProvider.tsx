@@ -6,12 +6,14 @@ import {
   type ReactNode,
 } from 'react'
 import {
-  FORMAT_DE,
-  FORMAT_EN,
-  FORMAT_ES,
   STRINGS_EN,
   type StringId,
 } from './dictionary'
+import {
+  FORMAT_DE,
+  FORMAT_EN,
+  FORMAT_ES,
+} from './dictionary.formatters'
 import { STRINGS_DE } from './dictionary.de'
 import { STRINGS_ES } from './dictionary.es'
 import { LOCALE_STORAGE_KEY, readStoredLocale } from './constants'
@@ -39,11 +41,11 @@ const HTML_LANG_BY_LOCALE: Record<AppLocale, string> = {
   de: 'de',
 }
 
-const STRINGS_BY_LOCALE = {
-  en: STRINGS_EN,
-  es: STRINGS_ES,
-  de: STRINGS_DE,
-} as const
+const STRINGS_BY_LOCALE: Record<AppLocale, Record<StringId, string>> = {
+  en: STRINGS_EN as unknown as Record<StringId, string>,
+  es: STRINGS_ES as unknown as Record<StringId, string>,
+  de: STRINGS_DE as unknown as Record<StringId, string>,
+}
 
 const FORMAT_BY_LOCALE = {
   en: FORMAT_EN,
