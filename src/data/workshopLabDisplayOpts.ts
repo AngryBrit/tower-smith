@@ -96,10 +96,14 @@ export type WorkshopAttackLabDisplayOpts = {
   damagePerMeterLabMultiplier?: number
   superCritChanceLabPercentPoints?: number
   superCritMultLabMultiplier?: number
+  /** Owned **Super Crit Mult** relic factor `(1 + Σ%)`, separate from lab. */
+  superCritMultRelicMultiplier?: number
   /** Equipped Critical Chance card (additive % points). */
   criticalChanceCardPercentPoints?: number
   /** Owned relic rend armor mult % (multiplicative on workshop mult). */
   rendArmorMultLabMultiplier?: number
+  /** Owned **Rend Armor Mult** relic factor `(1 + Σ%)`, separate from lab. */
+  rendArmorMultRelicMultiplier?: number
   /** Equipped cannon sub-module effects (additive; merged into rows in display). */
   submodule?: WorkshopAttackSubmoduleExtras
 }

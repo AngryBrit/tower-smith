@@ -49,6 +49,7 @@ describe('workshopRendArmor', () => {
     expect(workshopRendArmorMultStatDisplay(102, undefined, 0, 1.4)).toBe('×0.144')
     expect(workshopRendArmorMultStatDisplay(110)).toBe('×0.111')
     expect(workshopRendArmorMultStatDisplay(120, 1.02, 0, 1.4)).toBe('×0.173')
+    expect(workshopRendArmorMultStatDisplay(120, 1.02, 5, 1.4, 1.1)).toBe('×0.267')
     expect(workshopRendArmorMultStatDisplay(299)).toBe('×0.3')
     expect(workshopRendArmorMultValue(299)).toBe(0.3)
     expect(workshopRendArmorMultValue(0)).toBe(0.001)

@@ -120,6 +120,24 @@ describe('workshopRelicWorkshopDisplay', () => {
     expect(workshopRelicsDamageBonusFraction(owned)).toBeCloseTo(0.07)
   })
 
+  it('keeps crit factor, super crit mult, and rend armor mult lab multipliers pure', () => {
+    const owned = new Set(['brave_heroes', 'shadow_puppet', 'elemental_explosion'])
+    const opts = enrichAttackLabDisplayOpts(
+      {
+        criticalFactorLabMultiplier: 2.26,
+        superCritMultLabMultiplier: 1.5,
+        rendArmorMultLabMultiplier: 1.02,
+      },
+      owned,
+    )
+    expect(opts?.criticalFactorLabMultiplier).toBeCloseTo(2.26)
+    expect(opts?.criticalFactorRelicMultiplier).toBeGreaterThan(1)
+    expect(opts?.superCritMultLabMultiplier).toBeCloseTo(1.5)
+    expect(opts?.superCritMultRelicMultiplier).toBeGreaterThan(1)
+    expect(opts?.rendArmorMultLabMultiplier).toBeCloseTo(1.02)
+    expect(opts?.rendArmorMultRelicMultiplier).toBeGreaterThan(1)
+  })
+
   it('does not merge damage/meter relic % into the workshop ×/m card (lab only)', () => {
     const labOnly = enrichAttackLabDisplayOpts(
       { damagePerMeterLabMultiplier: 1.1 },

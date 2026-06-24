@@ -100,6 +100,7 @@ import {
 } from '../data/workshopSuperCritChance'
 import {
   WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL,
+  workshopDisplayedSuperCritMultEnhancementMultiplier,
   workshopSuperCritMultNextMarginalCoins,
   workshopSuperCritMultStatDisplay,
 } from '../data/workshopSuperCritMult'
@@ -1834,6 +1835,7 @@ function WorkshopSuperCritMultCard({
   onCommitDraft,
   onSetLevel,
   bulkStep,
+  enhancementMultiplier,
 }: {
   level: number
   draft: string
@@ -1842,6 +1844,7 @@ function WorkshopSuperCritMultCard({
   onCommitDraft: () => void
   onSetLevel: (level: number) => void
   bulkStep: WorkshopMultiplier
+  enhancementMultiplier: number
 }) {
   const { t } = useI18n()
   const maxed = level >= WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL
@@ -1858,6 +1861,8 @@ function WorkshopSuperCritMultCard({
     level,
     attackLabOpts?.superCritMultLabMultiplier,
     attackLabOpts?.submodule?.superCritMultAdd ?? 0,
+    attackLabOpts?.superCritMultRelicMultiplier ?? 1,
+    enhancementMultiplier,
   )
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
@@ -2057,6 +2062,7 @@ function WorkshopRendArmorMultCard({
     attackLabOpts?.rendArmorMultLabMultiplier,
     attackLabOpts?.submodule?.rendArmorMultAdd ?? 0,
     enhancementMultiplier,
+    attackLabOpts?.rendArmorMultRelicMultiplier ?? 1,
   )
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
@@ -2695,6 +2701,15 @@ export function WorkshopPage({
         workshopEnhancementsLabUnlockedFlag,
       ),
     [workshopEnhancementsLabUnlockedFlag, workshopPersisted.enhanceCritFactorLevel],
+  )
+
+  const superCritMultEnhancementMultiplier = useMemo(
+    () =>
+      workshopDisplayedSuperCritMultEnhancementMultiplier(
+        workshopPersisted.enhanceSuperCritMultLevel,
+        workshopEnhancementsLabUnlockedFlag,
+      ),
+    [workshopEnhancementsLabUnlockedFlag, workshopPersisted.enhanceSuperCritMultLevel],
   )
 
   const rendArmorChanceEnhancementMultiplier = useMemo(
@@ -4333,6 +4348,7 @@ export function WorkshopPage({
                     ...workshopPersisted,
                     superCritMultLevel: clampWorkshopSuperCritMultLevel(n),
                   })}
+                enhancementMultiplier={superCritMultEnhancementMultiplier}
               />
             ) : null}
             {showRendArmorChanceCard ? (

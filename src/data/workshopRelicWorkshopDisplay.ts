@@ -150,14 +150,14 @@ export function enrichAttackLabDisplayOpts(
       base.superCritChanceLabPercentPoints,
       superCritChance,
     ),
-    superCritMultLabMultiplier: mergeRelicMultiplier(
-      base.superCritMultLabMultiplier,
-      superCritMult,
-    ),
-    rendArmorMultLabMultiplier: mergeRelicMultiplier(
-      base.rendArmorMultLabMultiplier,
-      rendArmorMult,
-    ),
+    superCritMultLabMultiplier: base.superCritMultLabMultiplier,
+    superCritMultRelicMultiplier:
+      mergeRelicMultiplier(base.superCritMultRelicMultiplier, superCritMult) ??
+      base.superCritMultRelicMultiplier,
+    rendArmorMultLabMultiplier: base.rendArmorMultLabMultiplier,
+    rendArmorMultRelicMultiplier:
+      mergeRelicMultiplier(base.rendArmorMultRelicMultiplier, rendArmorMult) ??
+      base.rendArmorMultRelicMultiplier,
   }
 }
 

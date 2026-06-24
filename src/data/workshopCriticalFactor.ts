@@ -1,8 +1,8 @@
 /**
  * Workshop **Critical Factor** from `tables/workshop/attack/critical-factor.json`.
- * Displayed value: **((Workshop × Relics × Enhancement) + Submodule) × Lab**. Relics and the
- * Critical Factor + enhancement (0…400 levels, e.g. ×1.43 at level 43) boost only the
- * workshop-derived stat; the flat sub-module bonus is added after, then the lab scales everything.
+ * Displayed value: **((Workshop × Lab) + Submodule) × Relics × Enhancement**. The research **lab**
+ * scales only the workshop-derived stat; the flat sub-module bonus is added next; then **relics**
+ * and the Critical Factor + **enhancement** (0…400 levels, e.g. ×1.43 at level 43) multiply the total.
  */
 
 import {
@@ -42,9 +42,9 @@ export function workshopCriticalFactorStatValue(completedLevels: number): number
 }
 
 /**
- * In-game workshop card value: **((Workshop × Relics × Enhancement) + Submodule) × Lab**.
- * Relics and enhancement boost only the workshop-derived stat — the flat sub-module add is
- * not scaled by them, then the lab multiplies the total.
+ * In-game workshop card value: **((Workshop × Lab) + Submodule) × Relics × Enhancement**.
+ * The lab scales only the workshop stat; the flat sub-module add comes next; then relics and
+ * enhancement multiply the total.
  */
 export function workshopCriticalFactorStatDisplay(
   completedLevels: number,
@@ -71,14 +71,13 @@ export function workshopCriticalFactorDisplayedNumber(
   enhancementMultiplier = 1,
   relicMultiplier = 1,
 ): number {
-  let workshopStat = workshopCriticalFactorStatValue(completedLevels)
-  if (relicMultiplier > 1 + 1e-9) workshopStat *= relicMultiplier
-  if (enhancementMultiplier > 1 + 1e-9) workshopStat *= enhancementMultiplier
-  const withSubmodule = workshopStat + submoduleAdd
-  const v =
-    labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9
-      ? withSubmodule * labMultiplier
-      : withSubmodule
+  let v = workshopCriticalFactorStatValue(completedLevels)
+  if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
+    v *= labMultiplier
+  }
+  v += submoduleAdd
+  if (relicMultiplier > 1 + 1e-9) v *= relicMultiplier
+  if (enhancementMultiplier > 1 + 1e-9) v *= enhancementMultiplier
   // In-game workshop card truncates to 2 decimals (does not round half up).
   return Math.floor(v * 100 + 1e-9) / 100
 }
@@ -89,7 +88,7 @@ export function workshopCriticalFactorNextMarginalCoins(completedLevels: number)
 
 /**
  * Displayed **Tower Critical Factor** multiplier from the player's build, matching the
- * in-game / workshop-card value: **((Workshop × Relics × Enhancement) + Submodule) × Lab**.
+ * in-game / workshop-card value: **((Workshop × Lab) + Submodule) × Relics × Enhancement**.
  * Truncated to 2 decimals. Mirrors the Workshop page's Critical Factor card.
  */
 export function workshopDisplayedCriticalFactorValue(

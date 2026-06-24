@@ -2,7 +2,7 @@
  * Workshop **Rend Armor Chance** and **Rend Armor Mult** from `tables/workshop/attack/`.
  *
  * Displayed chance: **(Workshop + Submodule) × Enhancement** (enhance caps at **×1.20**, first **20** levels).
- * Displayed mult: **(Workshop + Submodule) × Lab × Enhancement** (enhance caps at **×1.40**, first **40** levels).
+ * Displayed mult: **((Workshop × Lab) + Submodule) × Relics × Enhancement** (enhance caps at **×1.40**, first **40** levels).
  */
 
 import {
@@ -81,21 +81,41 @@ export function workshopRendArmorMultStatDisplay(
   labMultiplier?: number,
   submodulePercentAdd = 0,
   enhancementMultiplier = 1,
+  relicMultiplier = 1,
 ): string {
-  let v = workshopRendArmorMultValue(completedLevels) + submodulePercentAdd / 100
+  const v = workshopRendArmorMultDisplayedValue(
+    completedLevels,
+    labMultiplier,
+    submodulePercentAdd,
+    enhancementMultiplier,
+    relicMultiplier,
+  )
+  const s =
+    v > 0 && v < 0.01
+      ? v.toFixed(3)
+      : v.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
+  return `×${s}`
+}
+
+/** Numeric mult before formatting (3-decimal rounded for display). */
+export function workshopRendArmorMultDisplayedValue(
+  completedLevels: number,
+  labMultiplier?: number,
+  submodulePercentAdd = 0,
+  enhancementMultiplier = 1,
+  relicMultiplier = 1,
+): number {
+  let v = workshopRendArmorMultValue(completedLevels)
   if (labMultiplier != null && Number.isFinite(labMultiplier) && labMultiplier > 1 + 1e-9) {
     v = Math.round(v * labMultiplier * 1_000_000) / 1_000_000
   }
+  v += submodulePercentAdd / 100
+  if (relicMultiplier > 1 + 1e-9) v = Math.round(v * relicMultiplier * 1_000_000) / 1_000_000
   if (enhancementMultiplier > 1 + 1e-9) {
     v = Math.round(v * enhancementMultiplier * 1_000_000) / 1_000_000
   }
   // In-game workshop card rounds to **3** decimals (e.g. **×0.173** at raw **0.172788**).
-  const displayed = Math.round(v * 1_000) / 1_000
-  const s =
-    displayed > 0 && displayed < 0.01
-      ? displayed.toFixed(3)
-      : displayed.toFixed(3).replace(/0+$/, '').replace(/\.$/, '')
-  return `×${s}`
+  return Math.round(v * 1_000) / 1_000
 }
 
 
