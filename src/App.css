@@ -8291,6 +8291,12 @@ button.workshop__uw-plus-cost--display:hover {
   border-top: var(--cards-tile-border-width) solid var(--sr-cards-tile-divider);
 }
 
+/* Tiles with controls (inventory) render a stepper below the stars band;
+   restore the divider that closes the stars band when it isn't the last row. */
+.cards-tile__stars:not(:last-child) {
+  border-bottom: var(--cards-tile-border-width) solid var(--sr-cards-tile-divider);
+}
+
 .cards-tile__controls,
 .cards-tile__stat {
   flex-shrink: 0;
