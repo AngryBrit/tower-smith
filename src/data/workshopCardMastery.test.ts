@@ -7,6 +7,7 @@ import {
   cardMasterySectionIndex,
   clearWorkshopCardMasteryOverrides,
   formatCardMasteryTierLabelDetail,
+  formatCardMasteryTierLabelDetailForCard,
   parseCardMasteryTierMultiplier,
   workshopCardMasteryDetailAbilityDescId,
   workshopCardMasteryDetailAbilityLabel,
@@ -80,6 +81,17 @@ describe('workshopCardMastery', () => {
     expect(formatCardMasteryTierLabelDetail('+1%')).toBe('+1.00%')
   })
 
+  it('shows Slow Aura mastery tiers as incremental % in card detail', () => {
+    expect(formatCardMasteryTierLabelDetailForCard('slowAura', 'x1.05')).toBe('+5%')
+    expect(formatCardMasteryTierLabelDetailForCard('slowAura', 'x1.5')).toBe('+50%')
+    expect(formatCardMasteryTierLabelDetailForCard('damage', 'x1.4')).toBe('x1.40')
+  })
+
+  it('shows Critical Chance mastery tiers as plain % in card detail', () => {
+    expect(formatCardMasteryTierLabelDetailForCard('criticalChance', '+1%')).toBe('1%')
+    expect(formatCardMasteryTierLabelDetailForCard('criticalChance', '+10%')).toBe('10%')
+  })
+
   it('uses in-game mastery stat labels in card detail copy', () => {
     expect(workshopCardMasteryDetailTitleId('range')).toBe('ws_stat_damagePerMeter')
     expect(workshopCardMasteryDetailTitleId('damage')).toBe('ws_card_damage')
@@ -94,6 +106,15 @@ describe('workshopCardMastery', () => {
     )
     expect(workshopCardMasteryDetailResearchDescId('slowAura')).toBe(
       'ws_cards_detail_mastery_research_desc_slow_aura',
+    )
+    expect(workshopCardMasteryDetailMasteryDescId('criticalChance')).toBe(
+      'ws_cards_detail_mastery_desc_critical_chance',
+    )
+    expect(workshopCardMasteryDetailAbilityDescId('criticalChance')).toBe(
+      'ws_cards_detail_mastery_ability_desc_critical_chance',
+    )
+    expect(workshopCardMasteryDetailResearchDescId('criticalChance')).toBe(
+      'ws_cards_detail_mastery_research_desc_critical_chance',
     )
     expect(workshopCardMasteryDetailAbilityDescId('cash')).toBe(
       'ws_cards_detail_mastery_ability_desc_cash',

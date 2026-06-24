@@ -1,7 +1,7 @@
 import { useEffect, useId, type CSSProperties } from 'react'
 import { createPortal } from 'react-dom'
 import {
-  formatWorkshopGameCardStarEffect,
+  formatWorkshopGameCardStarEffectForDetail,
   workshopGameCardArtVariant,
   workshopGameCardGlow,
   workshopGameCardGlyph,
@@ -9,11 +9,12 @@ import {
   workshopGameCardMaxStars,
   workshopGameCardRarity,
   workshopGameCardTitleId,
-  workshopGameCardDescriptionLine,
+  workshopGameCardDescriptionLineForDetail,
   type WorkshopGameCardId,
 } from '../data/workshopGameCards'
 import {
   formatCardMasteryTierLabelDetail,
+  formatCardMasteryTierLabelDetailForCard,
   workshopCardMasteryDetailAbilityLabel,
   workshopCardMasteryDetailAbilityDescId,
   workshopCardMasteryDetailMasteryDescId,
@@ -83,11 +84,10 @@ export function CardDetailDialog({
   const glyph = workshopGameCardGlyph(cardId)
   const imageSrc = workshopGameCardImage(cardId)
   const cardTitleId = workshopGameCardTitleId(cardId)
-  const descriptionLine = workshopGameCardDescriptionLine(
+  const descriptionLine = workshopGameCardDescriptionLineForDetail(
     cardId,
     Math.max(stars, 1),
     masteryMultiplier,
-    2,
   )
   const masteryTitleId = workshopCardMasteryDetailTitleId(cardId)
   const masteryStatLabel = t(masteryTitleId)
@@ -112,7 +112,8 @@ export function CardDetailDialog({
   const masteryResearchDescLine = masteryResearchDescId
     ? t(masteryResearchDescId)
     : t('ws_cards_detail_mastery_research_desc').replace('{{stat}}', masteryStatLabelLower)
-  const masteryAbilityValue = formatCardMasteryTierLabelDetail(
+  const masteryAbilityValue = formatCardMasteryTierLabelDetailForCard(
+    cardId,
     workshopCardMasteryTierLabel(cardId, researchData, Math.max(masteryLevel, 1)) ??
       workshopCardMasteryUnlockPreviewLabel(cardId, researchData) ??
       '—',
@@ -239,7 +240,7 @@ export function CardDetailDialog({
                       {t('ws_cards_detail_level').replace('{{level}}', String(level))}
                     </span>
                     <span className="cards-detail__level-value">
-                      {formatWorkshopGameCardStarEffect(cardId, level, 2)}
+                      {formatWorkshopGameCardStarEffectForDetail(cardId, level)}
                     </span>
                   </li>
                 )

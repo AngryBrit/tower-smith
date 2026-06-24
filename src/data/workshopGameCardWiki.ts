@@ -85,7 +85,7 @@ export const WORKSHOP_GAME_CARD_WIKI: Record<
   },
   slowAura: {
     rarity: 'common',
-    description: 'All enemies in tower range speed decreased by #%',
+    description: 'Reduce Enemy Speed in Range by #%',
     kind: 'percent',
     stars: [13, 16, 19, 22, 25, 28, 31],
   },
@@ -291,6 +291,14 @@ function formatWorkshopGameCardEffectValue(
   }
 }
 
+/** Card detail dialog: two decimals for ×/time values; trim .00 on % cards only. */
+export function workshopGameCardDetailFixedDecimals(
+  id: WorkshopGameCardId,
+): number | undefined {
+  const kind = WORKSHOP_GAME_CARD_WIKI[id].kind
+  return kind === 'percent' || kind === 'addPercent' ? undefined : 2
+}
+
 /** Display string for the wiki Lv.N effect (stars 1…7). */
 export function formatWorkshopGameCardStarEffect(
   id: WorkshopGameCardId,
@@ -300,6 +308,14 @@ export function formatWorkshopGameCardStarEffect(
   const v = workshopGameCardStarValue(id, stars)
   if (v == null) return ''
   return formatWorkshopGameCardEffectValue(id, v, fixedDecimals)
+}
+
+/** Card detail dialog star effect (×/s/m keep two decimals; % omit trailing zeros). */
+export function formatWorkshopGameCardStarEffectForDetail(
+  id: WorkshopGameCardId,
+  stars: number,
+): string {
+  return formatWorkshopGameCardStarEffect(id, stars, workshopGameCardDetailFixedDecimals(id))
 }
 
 /** Star effect scaled by Card Mastery tier (× labels from research). */
@@ -342,6 +358,20 @@ export function workshopGameCardDescriptionLine(
     sentence = template.replace('#', effect)
   }
   return sentence.charAt(0).toUpperCase() + sentence.slice(1)
+}
+
+/** Card detail dialog description line (×/s/m keep two decimals; % omit trailing zeros). */
+export function workshopGameCardDescriptionLineForDetail(
+  id: WorkshopGameCardId,
+  stars: number,
+  masteryMultiplier = 1,
+): string {
+  return workshopGameCardDescriptionLine(
+    id,
+    stars,
+    masteryMultiplier,
+    workshopGameCardDetailFixedDecimals(id),
+  )
 }
 
 /** Berserker rate as fraction of damage taken (wiki % → sim). */

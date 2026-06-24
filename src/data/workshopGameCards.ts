@@ -6,10 +6,12 @@ import type { StringId } from '../i18n/dictionary'
 import {
   clampWorkshopCardEquipSlots,
   formatWorkshopGameCardStarEffect,
+  formatWorkshopGameCardStarEffectForDetail,
   formatWorkshopGameCardStarEffectWithMastery,
   WORKSHOP_CARD_DEFAULT_EQUIP_SLOTS,
   WORKSHOP_CARD_PRESET_COUNT,
   workshopGameCardDescriptionLine,
+  workshopGameCardDescriptionLineForDetail,
   workshopGameCardWiki,
   type WorkshopGameCardRarity,
 } from './workshopGameCardWiki'
@@ -256,8 +258,10 @@ export function workshopGameCardEffectLabel(id: WorkshopGameCardId, stars: numbe
 
 export {
   formatWorkshopGameCardStarEffect,
+  formatWorkshopGameCardStarEffectForDetail,
   formatWorkshopGameCardStarEffectWithMastery,
   workshopGameCardDescriptionLine,
+  workshopGameCardDescriptionLineForDetail,
   workshopGameCardWiki,
 }
 

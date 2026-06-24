@@ -14,6 +14,7 @@ import type { StringId } from '../i18n/dictionary'
 const CARD_MASTERY_TIER_LABELS = cardMasteryTierLabels as Record<string, readonly string[]>
 
 type CardMasteryDetailMasteryDescStyle = 'additional_multiplier' | 'stat_multiplier'
+type CardMasteryDetailTierLabelStyle = 'default' | 'incremental_percent' | 'plain_percent'
 
 /** In-game card detail mastery copy when it differs from the inventory card title. */
 type CardMasteryDetailDisplay = {
@@ -21,6 +22,7 @@ type CardMasteryDetailDisplay = {
   abilitySuffixPlus?: boolean
   masteryDescId?: StringId
   masteryDescStyle?: CardMasteryDetailMasteryDescStyle
+  masteryTierLabelStyle?: CardMasteryDetailTierLabelStyle
   abilityDescId?: StringId
   researchDescId?: StringId
 }
@@ -39,8 +41,15 @@ const CARD_MASTERY_DETAIL_DISPLAY: Partial<Record<WorkshopGameCardId, CardMaster
   },
   slowAura: {
     masteryDescId: 'ws_cards_detail_mastery_desc_slow_aura',
+    masteryTierLabelStyle: 'incremental_percent',
     abilityDescId: 'ws_cards_detail_mastery_ability_desc_slow_aura',
     researchDescId: 'ws_cards_detail_mastery_research_desc_slow_aura',
+  },
+  criticalChance: {
+    masteryDescId: 'ws_cards_detail_mastery_desc_critical_chance',
+    masteryTierLabelStyle: 'plain_percent',
+    abilityDescId: 'ws_cards_detail_mastery_ability_desc_critical_chance',
+    researchDescId: 'ws_cards_detail_mastery_research_desc_critical_chance',
   },
 }
 
@@ -70,6 +79,12 @@ export function workshopCardMasteryDetailMasteryDescStyle(
   cardId: WorkshopGameCardId,
 ): CardMasteryDetailMasteryDescStyle {
   return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.masteryDescStyle ?? 'additional_multiplier'
+}
+
+export function workshopCardMasteryDetailTierLabelStyle(
+  cardId: WorkshopGameCardId,
+): CardMasteryDetailTierLabelStyle {
+  return CARD_MASTERY_DETAIL_DISPLAY[cardId]?.masteryTierLabelStyle ?? 'default'
 }
 
 export function workshopCardMasteryDetailAbilityLabel(
@@ -212,6 +227,51 @@ export function formatCardMasteryTierLabelDetail(label: string, fixedDecimals = 
     if (Number.isFinite(n)) return `${pctMatch[1]}${n.toFixed(fixedDecimals)}%`
   }
   return label
+}
+
+function formatIncrementalPercentFromMultiplierLabel(
+  label: string,
+  fixedDecimals = 2,
+): string | null {
+  const m = /^x([\d.]+)$/i.exec(label.trim())
+  if (!m) return null
+  const mult = Number(m[1])
+  if (!Number.isFinite(mult)) return null
+  const pct = (mult - 1) * 100
+  if (!Number.isFinite(pct)) return null
+  const num = Number.isInteger(pct)
+    ? String(pct)
+    : pct.toFixed(fixedDecimals).replace(/\.?0+$/, '')
+  return `+${num}%`
+}
+
+function formatPlainPercentLabel(label: string, fixedDecimals = 2): string | null {
+  const m = /^\+?([\d.]+)%$/.exec(label.trim())
+  if (!m) return null
+  const n = Number(m[1])
+  if (!Number.isFinite(n)) return null
+  const num = Number.isInteger(n)
+    ? String(n)
+    : n.toFixed(fixedDecimals).replace(/\.?0+$/, '')
+  return `${num}%`
+}
+
+/** Card detail mastery tier value (e.g. Slow Aura x1.05 → +5%). */
+export function formatCardMasteryTierLabelDetailForCard(
+  cardId: WorkshopGameCardId,
+  label: string,
+  fixedDecimals = 2,
+): string {
+  const style = workshopCardMasteryDetailTierLabelStyle(cardId)
+  if (style === 'incremental_percent') {
+    const pct = formatIncrementalPercentFromMultiplierLabel(label, fixedDecimals)
+    if (pct) return pct
+  }
+  if (style === 'plain_percent') {
+    const pct = formatPlainPercentLabel(label, fixedDecimals)
+    if (pct) return pct
+  }
+  return formatCardMasteryTierLabelDetail(label, fixedDecimals)
 }
 
 /** Wiki tier multiplier for the simulated Card Mastery level (1 when level ≤ 0). */

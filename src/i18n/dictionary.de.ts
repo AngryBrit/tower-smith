@@ -945,6 +945,12 @@ export const STRINGS_DE = {
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Zeitverzögerung zwischen Gegnerangriffen',
   ws_cards_detail_mastery_research_desc_slow_aura:
     'Erhöht die Kartenmeisterschafts-Verlangsamung der Gegner-Angriffsgeschwindigkeit',
+  ws_cards_detail_mastery_desc_critical_chance:
+    'Fügt einen zusätzlichen Bonus hinzu, um Krit-Chance, Super-Krit-Chance und Super-Krit-Faktor zu erhöhen, und schaltet Krit-Chance-Meisterschaftsforschung frei',
+  ws_cards_detail_mastery_ability_desc_critical_chance:
+    'Bonus auf Krit-Chance, Super-Krit-Chance und Super-Krit-Faktor',
+  ws_cards_detail_mastery_research_desc_critical_chance:
+    'Erhöht den Kartenmeisterschafts-Bonus auf Krit-Chance, Super-Krit-Chance und Super-Krit-Faktor',
   ws_cards_detail_mastery_ability_desc_cash:
     'Chance, dass Elites Würfel-Neuwürfe fallen lassen',
   ws_cards_detail_mastery_research_desc_cash:

@@ -941,6 +941,12 @@ export const STRINGS_EN = {
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Time delay between enemy attacks',
   ws_cards_detail_mastery_research_desc_slow_aura:
     'Increases card mastery enemy attack speed reduction',
+  ws_cards_detail_mastery_desc_critical_chance:
+    'Adds an additional bonus to increase Crit Chance, Super Crit Chance and Super Crit Factor, and unlocks Critical Chance Mastery research',
+  ws_cards_detail_mastery_ability_desc_critical_chance:
+    'Bonus to Crit Chance, Super Crit Chance and Super Crit Factor',
+  ws_cards_detail_mastery_research_desc_critical_chance:
+    'Increases card mastery bonus applied to crit chance, super crit chance and super crit factor',
   ws_cards_detail_mastery_ability_desc_cash: 'Chance for elites to drop Reroll Dice',
   ws_cards_detail_mastery_research_desc_cash:
     'Increases chance for elites to drop Reroll Dice',

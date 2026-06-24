@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
   formatWorkshopGameCardStarEffect,
+  formatWorkshopGameCardStarEffectForDetail,
   WORKSHOP_GAME_CARD_WIKI,
   workshopBerserkerCardRateFromStars,
+  workshopGameCardDescriptionLineForDetail,
   workshopGameCardStarValue,
 } from './workshopGameCardWiki'
 
@@ -26,6 +28,26 @@ describe('workshopGameCardWiki', () => {
     expect(formatWorkshopGameCardStarEffect('damage', 2, 2)).toBe('×2.00')
     expect(formatWorkshopGameCardStarEffect('damage', 4, 2)).toBe('×2.80')
     expect(formatWorkshopGameCardStarEffect('berserker', 1, 2)).toBe('+0.80%')
+  })
+
+  it('omits decimals for cards whose wiki star table is all whole numbers', () => {
+    expect(formatWorkshopGameCardStarEffect('slowAura', 7)).toBe('31%')
+    expect(formatWorkshopGameCardStarEffect('slowAura', 1)).toBe('13%')
+    expect(formatWorkshopGameCardStarEffect('criticalChance', 7)).toBe('+11%')
+  })
+
+  it('formats card detail: two decimals for mult, trimmed % for percent cards', () => {
+    expect(formatWorkshopGameCardStarEffectForDetail('health', 1)).toBe('×1.50')
+    expect(formatWorkshopGameCardStarEffectForDetail('health', 7)).toBe('×4.00')
+    expect(formatWorkshopGameCardStarEffectForDetail('slowAura', 7)).toBe('31%')
+    expect(formatWorkshopGameCardStarEffectForDetail('criticalChance', 7)).toBe('+11%')
+    expect(formatWorkshopGameCardStarEffectForDetail('berserker', 1)).toBe('+0.8%')
+  })
+
+  it('uses in-game Slow Aura summary copy in card detail', () => {
+    expect(workshopGameCardDescriptionLineForDetail('slowAura', 7)).toBe(
+      'Reduce Enemy Speed in Range by 31%',
+    )
   })
 
   it('returns null for zero stars', () => {

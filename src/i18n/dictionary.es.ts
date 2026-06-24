@@ -952,6 +952,12 @@ export const STRINGS_ES = {
   ws_cards_detail_mastery_ability_desc_slow_aura: 'Retraso entre los ataques enemigos',
   ws_cards_detail_mastery_research_desc_slow_aura:
     'Aumenta la reducción de velocidad de ataque enemiga de la maestría de carta',
+  ws_cards_detail_mastery_desc_critical_chance:
+    'Añade un bonus adicional para aumentar la prob. crítica, la prob. de super crítico y el factor de super crítico, y desbloquea la investigación de maestría de Prob. crítica',
+  ws_cards_detail_mastery_ability_desc_critical_chance:
+    'Bonus a prob. crítica, prob. de super crítico y factor de super crítico',
+  ws_cards_detail_mastery_research_desc_critical_chance:
+    'Aumenta el bonus de maestría de carta aplicado a prob. crítica, prob. de super crítico y factor de super crítico',
   ws_cards_detail_mastery_ability_desc_cash:
     'Probabilidad de que los élites suelten dados de nueva tirada',
   ws_cards_detail_mastery_research_desc_cash:
