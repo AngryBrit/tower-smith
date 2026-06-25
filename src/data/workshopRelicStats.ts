@@ -304,9 +304,13 @@ export function workshopRelicsDisplayedHealthBonusFraction(
 
 /**
  * Share of **Damage / Meter** relic % counted toward workshop **Displayed Attack Speed**
- * **(1 + Relics)** (calibrated: +45% DPM relics → +0.28% on top of +10% attack speed).
+ * **(1 + Relics)**. In-game displayed attack speed uses attack-speed relics only; damage/meter
+ * relics fold into displayed Damage instead (see {@link WORKSHOP_DISPLAYED_DAMAGE_DPM_RELIC_SHARE}).
+ *
+ * Calibrated against `playerInfo.dat`: +14% attack-speed relics, +45% damage/meter relics →
+ * displayed Attack Speed **39.08** (relic term ×1.14, not ×1.1428).
  */
-export const WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE = 0.28 / 45
+export const WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE = 0
 
 /** Summed relic % for displayed attack speed (attack speed + partial damage/meter). */
 export function workshopRelicsDisplayedAttackSpeedBonusPercent(

@@ -5,8 +5,8 @@
  */
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
 
-/** Calibrated: workshop DPM +5.5% (L180) + lab ×1.28 (L14) → in-game ×1.1429 / m. */
-export const WORKSHOP_DAMAGE_PER_METER_LAB_EXCESS_FRACTION = 0.0879 / (1.28 - 1)
+/** Calibrated: workshop DPM +5.5% (L180) + lab ×1.40 (L20) → in-game ×1.1597 / m. */
+export const WORKSHOP_DAMAGE_PER_METER_LAB_EXCESS_FRACTION = 0.07329 / (1.28 - 1)
 
 export const WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL = 200 as const
 

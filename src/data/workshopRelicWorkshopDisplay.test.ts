@@ -12,6 +12,7 @@ import {
 } from './workshopRelicWorkshopDisplay'
 import { workshopDamagePerMeterStatDisplay } from './workshopDamagePerMeter'
 import {
+  WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE,
   workshopRelicsDisplayedAttackSpeedBonusPercent,
   workshopRelicsDisplayedAttackSpeedRelicMultiplier,
   workshopRelicsDisplayedDamageBonusFraction,
@@ -160,10 +161,10 @@ describe('workshopRelicWorkshopDisplay', () => {
     expect(label).not.toBe(workshopDamagePerMeterStatDisplay(180, 1.1 * 1.05))
   })
 
-  it('adds partial damage/meter relic % to displayed attack speed relic term', () => {
-    expect(10 + 45 * (0.28 / 45)).toBeCloseTo(10.28, 4)
-    const owned = new Set(['t_iv_harmonic', 't_viii_graviton'])
-    expect(workshopRelicsDisplayedAttackSpeedBonusPercent(owned)).toBeGreaterThan(0)
-    expect(workshopRelicsDisplayedAttackSpeedRelicMultiplier(owned)).toBeGreaterThan(1)
+  it('does not add damage/meter relic % to displayed attack speed relic term', () => {
+    expect(WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE).toBe(0)
+    const owned = new Set(['pet_cat', 't_viii_graviton'])
+    expect(workshopRelicsDisplayedAttackSpeedBonusPercent(owned)).toBeCloseTo(2)
+    expect(workshopRelicsDisplayedAttackSpeedRelicMultiplier(owned)).toBeCloseTo(1.02)
   })
 })

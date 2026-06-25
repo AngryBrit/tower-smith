@@ -15,7 +15,7 @@
   },
   "source": {
     "binaryFunction": "ModuleManager::get_DamagePerMeter (display)",
-    "notes": "1 + workshop_bonus + (labMult−1)×0.0879/(1.28−1) fraction of lab excess",
+    "notes": "1 + workshop_bonus + (labMult−1)×0.07329/(1.28−1) fraction of lab excess",
     "verifiedAgainst": "playerInfo.dat -> workshop card"
   }
 }

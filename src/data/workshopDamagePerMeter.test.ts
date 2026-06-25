@@ -20,12 +20,12 @@ describe('workshopDamagePerMeter', () => {
   })
 
   it('adds partial Damage / Meter research lab (not full × lab)', () => {
-    const label = workshopDamagePerMeterStatDisplay(180, 1.28)
-    expect(label).toBe('x1.1429 / m')
-    expect(label).not.toContain('1.28')
+    expect(workshopDamagePerMeterStatDisplay(180, 1.28)).toBe('x1.1283 / m')
+    expect(workshopDamagePerMeterStatDisplay(180, 1.4)).toBe('x1.1597 / m')
+    expect(workshopDamagePerMeterStatDisplay(180, 1.4)).not.toContain('1.40')
   })
 
   it('does not stack sub-module bonus on the workshop card', () => {
-    expect(workshopDamagePerMeterStatDisplay(180, 1.28)).toBe('x1.1429 / m')
+    expect(workshopDamagePerMeterStatDisplay(180, 1.4)).toBe('x1.1597 / m')
   })
 })

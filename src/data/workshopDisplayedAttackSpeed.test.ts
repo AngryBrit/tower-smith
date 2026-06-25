@@ -47,20 +47,19 @@ describe('workshopDisplayedAttackSpeed', () => {
     expect(v).toBe((5.95 * 2.98 * 2.15 + 5) * 1.75)
   })
 
-  it('relic multiplier includes partial damage/meter relic share', () => {
-    const pct = 10 + 45 * WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE
-    expect(pct).toBeCloseTo(10.28, 4)
+  it('relic multiplier uses attack-speed relics only (not damage/meter)', () => {
+    expect(WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE).toBe(0)
+    expect(10 + 45 * WORKSHOP_DISPLAYED_ATTACK_SPEED_DPM_RELIC_SHARE).toBe(10)
     expect(workshopRelicsDisplayedAttackSpeedRelicMultiplier(new Set())).toBe(1)
-    const mult = 1.1028
     const workshop = 5.95
     const v = computeWorkshopDisplayedAttackSpeed(workshop, {
       labMultiplier: 2.68,
       attackSpeedCardMultiplier: 2.15,
-      relicMultiplier: mult,
-      moduleSubEffect: 1,
+      relicMultiplier: 1.14,
+      moduleSubEffect: 0,
       enhancementsMultiplier: 1,
     })
-    expect(v).toBeCloseTo(38.81, 1)
+    expect(v).toBeCloseTo(39.08, 2)
   })
 
   it('workshopAttackSpeedStatDisplay uses formula when opts passed', () => {
