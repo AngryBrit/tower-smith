@@ -265,14 +265,25 @@ export const WORKSHOP_RELIC_DISPLAYED_DAMAGE_STAT_IDS: readonly RelicStatId[] = 
   'damagePerMeter',
 ]
 
+/**
+ * Share of **Damage / Meter** relic % counted toward workshop **Displayed Damage**
+ * **(1 + Relics)**. Flat tower-damage relics count at full weight; per-meter relics only
+ * partially fold into the displayed Damage stat (the same asymmetry the displayed-damage
+ * **Damage / Meter lab** uses).
+ *
+ * Calibrated against `playerInfo.dat`: +65% damage relics + +45% damage/meter relics →
+ * in-game displayed Damage **21.03B** (vs ×1.40 raw DPM lab, ×1.92 damage lab, ×2.68 attack
+ * speed lab). That requires the (1 + Relics) pool ≈ ×1.986, i.e. damage/meter relics
+ * contribute ≈ 0.747 of their %.
+ */
+export const WORKSHOP_DISPLAYED_DAMAGE_DPM_RELIC_SHARE = 0.747
+
 export function workshopRelicsDisplayedDamageBonusFraction(
   ownedIds: ReadonlySet<string>,
 ): number {
-  let pct = 0
-  for (const statId of WORKSHOP_RELIC_DISPLAYED_DAMAGE_STAT_IDS) {
-    pct += workshopRelicsActiveBonusPercent(ownedIds, statId)
-  }
-  return pct / 100
+  const damage = workshopRelicsActiveBonusPercent(ownedIds, 'damage')
+  const damagePerMeter = workshopRelicsActiveBonusPercent(ownedIds, 'damagePerMeter')
+  return (damage + damagePerMeter * WORKSHOP_DISPLAYED_DAMAGE_DPM_RELIC_SHARE) / 100
 }
 
 /** Relic stats summed into wiki displayed health **(1 + Relics)**. */

@@ -115,9 +115,12 @@ describe('workshopRelicWorkshopDisplay', () => {
   })
 
   it('keeps displayed-damage relic fraction in sync with parsed bonuses', () => {
+    // t_iv_harmonic = +2% tower damage (full weight); t_viii_graviton = +5% damage/meter
+    // (partial: 0.747 share into displayed-damage (1 + Relics)).
     const owned = new Set(['t_iv_harmonic', 't_viii_graviton'])
-    expect(workshopRelicsDisplayedDamageBonusFraction(owned)).toBeCloseTo(0.07)
-    expect(workshopRelicsDamageBonusFraction(owned)).toBeCloseTo(0.07)
+    const expected = (2 + 5 * 0.747) / 100
+    expect(workshopRelicsDisplayedDamageBonusFraction(owned)).toBeCloseTo(expected)
+    expect(workshopRelicsDamageBonusFraction(owned)).toBeCloseTo(expected)
   })
 
   it('keeps crit factor, super crit mult, and rend armor mult lab multipliers pure', () => {
