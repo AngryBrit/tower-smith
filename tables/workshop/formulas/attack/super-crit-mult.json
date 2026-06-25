@@ -1,0 +1,44 @@
+{
+  "name": "Super Crit Mult",
+  "workshopKey": "superCritMultLevel",
+  "category": "attack",
+  "format": "multiplierTimes2",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "labMult"] },
+    { "op": "add", "refs": ["sub"] },
+    { "op": "mul", "refs": ["relicMult", "enhance"] },
+    { "op": "truncateTo", "decimals": 2 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "superCritMultLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "superCritMultAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "relicMult": {
+      "kind": "relicMultiplierField",
+      "field": "superCritMultRelicMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "superCritMultEnhancement",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_SuperCriticalMult (display)",
+    "notes": "((workshop × lab) + submodule) × relic × Super Crit Mult+ enhancement; truncate 2dp",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

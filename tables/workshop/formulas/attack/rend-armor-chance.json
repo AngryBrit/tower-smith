@@ -1,0 +1,32 @@
+{
+  "name": "Rend Armor Chance",
+  "workshopKey": "rendArmorChanceLevel",
+  "category": "attack",
+  "format": "percent2",
+  "pipeline": [
+    { "op": "add", "refs": ["base", "sub"] },
+    { "op": "mul", "refs": ["enhance"] },
+    { "op": "truncateTo", "decimals": 2 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "rendArmorChancePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhance": {
+      "kind": "enhanceHalfRate",
+      "field": "rendArmorChanceEnhancementMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_RendArmorChance",
+    "virtualAddress": "0x01F0A630",
+    "notes": "(workshop% + submodule%) × Rend Armor Max+ enhancement at half rate; floor 2dp",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

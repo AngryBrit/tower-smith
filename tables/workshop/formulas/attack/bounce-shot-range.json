@@ -1,0 +1,22 @@
+{
+  "name": "Bounce Shot Range",
+  "workshopKey": "bounceShotRangeLevel",
+  "category": "attack",
+  "format": "metersLower",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "bounceShotRangeMeters",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_BounceShotRange",
+    "virtualAddress": "0x01F0A5F8",
+    "notes": "workshop_m + submodule_m",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

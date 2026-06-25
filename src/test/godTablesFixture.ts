@@ -22,6 +22,7 @@ function loadJsonTablesFromDir<T extends { name: string }>(
     for (const ent of readdirSync(dir, { withFileTypes: true })) {
       const abs = join(dir, ent.name)
       if (ent.isDirectory()) {
+        if (ent.name === 'formulas') continue
         walk(abs)
         continue
       }

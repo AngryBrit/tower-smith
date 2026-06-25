@@ -32,6 +32,7 @@ function publishGodTables(srcSubdir, destSubdir, excludeBasenames = []) {
       const rel = relPrefix ? `${relPrefix}/${ent.name}` : ent.name
       const abs = path.join(dir, ent.name)
       if (ent.isDirectory()) {
+        if (ent.name === 'formulas') continue
         walk(abs, rel)
         continue
       }

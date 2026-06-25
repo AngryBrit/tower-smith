@@ -1,0 +1,45 @@
+{
+  "name": "Critical Factor",
+  "workshopKey": "critFactorLevel",
+  "category": "attack",
+  "format": "multiplierTimes2",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "labMult"] },
+    { "op": "add", "refs": ["sub"] },
+    { "op": "mul", "refs": ["relicMult", "enhance"] },
+    { "op": "truncateTo", "decimals": 2 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "criticalFactorLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "critFactorAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "relicMult": {
+      "kind": "relicMultiplierField",
+      "field": "criticalFactorRelicMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "critFactorEnhancement",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_CriticalFactor",
+    "virtualAddress": "0x01F0A4A8",
+    "notes": "((workshop × lab) + submodule) × relic × Critical Factor+ enhancement; truncate 2dp",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "Attack Speed",
+  "workshopKey": "attackSpeedLevel",
+  "category": "attack",
+  "format": "decimal2",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "labMult", "cardMult", "relicMult"] },
+    { "op": "add", "refs": ["subEffect"] },
+    { "op": "mul", "refs": ["enhanceMult"] }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "labMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    },
+    "cardMult": {
+      "kind": "optsMultiplier",
+      "field": "attackSpeedCardMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": {
+      "kind": "optsMultiplier",
+      "field": "relicMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "subEffect": {
+      "kind": "optsNumber",
+      "field": "moduleSubEffect",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "enhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_AttackSpeed",
+    "virtualAddress": "0x01F0A13C",
+    "notes": "(workshop × lab × card × relic + submodule) × Attack Speed+ enhancement",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

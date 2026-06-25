@@ -1,0 +1,22 @@
+{
+  "name": "Multishot Targets",
+  "workshopKey": "multishotTargetsLevel",
+  "category": "attack",
+  "format": "integerRound",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "submoduleNumber",
+      "field": "multishotTargetsCount",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundMultishotTargets",
+    "virtualAddress": "0x01EA6320",
+    "notes": "workshop count + submodule count",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

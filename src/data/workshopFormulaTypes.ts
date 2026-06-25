@@ -1,9 +1,21 @@
 /**
  * GOD workshop display-card formula specs (`tables/workshop/formulas/`).
- * Sum additive terms, then multiply factors; format for UI.
+ * Legacy: sum additive terms, then multiply factors.
+ * Pipeline: ordered steps for attack (and future defense) shapes.
  */
 
-export type WorkshopFormulaFormat = 'percent2' | 'multiplierX2' | 'integerRound'
+export type WorkshopFormulaFormat =
+  | 'percent2'
+  | 'multiplierX2'
+  | 'multiplierTimes2'
+  | 'multiplierTimes3'
+  | 'integerRound'
+  | 'decimal2'
+  | 'rangeMeters'
+  | 'metersLower'
+  | 'seconds2'
+  | 'perMeterTrim'
+  | 'coinAbbrev'
 
 export type WorkshopFormulaOperandActiveRule =
   | 'multiplierAboveOne'
@@ -12,20 +24,36 @@ export type WorkshopFormulaOperandActiveRule =
 
 export type WorkshopFormulaOperandKind =
   | 'base'
+  | 'const'
   | 'optsNumber'
   | 'optsMultiplier'
   | 'relicPercentToMultiplier'
+  | 'relicMultiplierField'
   | 'freeUpgradesEnhancement'
   | 'submoduleNumber'
+  | 'perkMultiplier'
+  | 'berserkerAdd'
+  | 'enhanceHalfRate'
+  | 'damagePerMeterLabExcess'
+  | 'onePlusRelicFraction'
 
 export type WorkshopFormulaOperand = {
   kind: WorkshopFormulaOperandKind
-  /** `WorkshopUtilityLabDisplayOpts` field for opts/submodule kinds. */
+  /** `Workshop*LabDisplayOpts` field for opts/submodule kinds. */
   field?: string
   default?: number
+  /** Literal for `const` kind. */
+  value?: number
   /** When set, this operand can trigger enriched display (see evaluator fallback). */
   activeRule?: WorkshopFormulaOperandActiveRule
 }
+
+export type WorkshopFormulaStep =
+  | { op: 'add'; refs: string[] }
+  | { op: 'mul'; refs: string[] }
+  | { op: 'truncateTo'; decimals: number }
+  | { op: 'roundTo'; decimals: number }
+  | { op: 'clampMax'; value: number }
 
 export type WorkshopFormulaSourceConstant = {
   hex: string
@@ -43,12 +71,15 @@ export type WorkshopFormulaSource = {
 
 export type WorkshopFormulaSpec = {
   name: string
-  /** `workshopUtilityStatDisplay` key when category is utility. */
+  /** Workshop persisted level field key. */
   workshopKey: string
-  category: 'utility'
+  category: 'utility' | 'attack'
   format: WorkshopFormulaFormat
-  additiveTerms: string[]
-  multiplicativeFactors: string[]
+  /** Legacy sum-then-product (utility). Ignored when `pipeline` is set. */
+  additiveTerms?: string[]
+  multiplicativeFactors?: string[]
+  /** Ordered evaluation steps (attack). */
+  pipeline?: WorkshopFormulaStep[]
   /** Optional upper bound in display units (binary clamps level-skip chance to 100%). */
   clampMax?: number
   operands: Record<string, WorkshopFormulaOperand>

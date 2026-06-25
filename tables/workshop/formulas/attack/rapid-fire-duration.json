@@ -1,0 +1,22 @@
+{
+  "name": "Rapid Fire Duration",
+  "workshopKey": "rapidFireDurationLevel",
+  "category": "attack",
+  "format": "seconds2",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "rapidFireDurationSeconds",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundRapidFireDuration",
+    "virtualAddress": "0x01EA63EC",
+    "notes": "workshop seconds + submodule seconds",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

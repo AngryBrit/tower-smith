@@ -1,0 +1,22 @@
+{
+  "name": "Multishot Chance",
+  "workshopKey": "multishotChanceLevel",
+  "category": "attack",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "submoduleNumber",
+      "field": "multishotChancePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundMultishotChance",
+    "virtualAddress": "0x01EA62A4",
+    "notes": "workshop% + submodule%",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

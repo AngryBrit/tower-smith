@@ -24,8 +24,8 @@ import {
   workshopFreeUtilityUpgradeStatPercentPoints,
 } from './workshopFreeUtilityUpgrade'
 import { evaluateWorkshopFormula } from './workshopFormulaEval'
-import { getWorkshopFormulaSpec } from './workshopFormulaTables'
 import type { WorkshopFormulaOperand, WorkshopFormulaSpec } from './workshopFormulaTypes'
+import { getWorkshopFormulaSpec } from './workshopFormulaTables'
 import { workshopInterestPerWaveStatDisplay, workshopInterestPerWaveStatPercentPoints } from './workshopInterestPerWave'
 import type { WorkshopUtilityLabDisplayOpts } from './workshopLabDisplayOpts'
 import { workshopMaxRecoveryStatDisplay, workshopMaxRecoveryStatMultiplier } from './workshopMaxRecovery'
@@ -174,7 +174,7 @@ export function buildWorkshopFormulaEvaluationInput(
   opts?: WorkshopUtilityLabDisplayOpts,
 ): WorkshopFormulaEvaluationInput | undefined {
   const spec = getWorkshopFormulaSpec(key)
-  if (spec == null) return undefined
+  if (spec == null || spec.category !== 'utility') return undefined
 
   const { plainDisplay, baseValue } = plainDisplayForKey(key, completedLevels)
   const operandValues: Record<string, number> = {}

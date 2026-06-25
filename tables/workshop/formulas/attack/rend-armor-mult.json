@@ -1,0 +1,49 @@
+{
+  "name": "Rend Armor Mult",
+  "workshopKey": "rendArmorMultLevel",
+  "category": "attack",
+  "format": "multiplierTimes3",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "labMult"] },
+    { "op": "roundTo", "decimals": 6 },
+    { "op": "add", "refs": ["sub"] },
+    { "op": "mul", "refs": ["relicMult"] },
+    { "op": "roundTo", "decimals": 6 },
+    { "op": "mul", "refs": ["enhance"] },
+    { "op": "roundTo", "decimals": 6 },
+    { "op": "roundTo", "decimals": 3 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "rendArmorMultLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "rendArmorMultAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "relicMult": {
+      "kind": "relicMultiplierField",
+      "field": "rendArmorMultRelicMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "rendArmorMultEnhancement",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_RendArmorMult",
+    "virtualAddress": "0x01F0A66C",
+    "notes": "round6(workshop×lab) + submodule/100; ×relic round6; ×enhance round6; round3",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

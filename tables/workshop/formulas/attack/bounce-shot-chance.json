@@ -1,0 +1,22 @@
+{
+  "name": "Bounce Shot Chance",
+  "workshopKey": "bounceShotChanceLevel",
+  "category": "attack",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "submoduleNumber",
+      "field": "bounceShotChancePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundBounceChance",
+    "virtualAddress": "0x01EA6458",
+    "notes": "workshop% + submodule%",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

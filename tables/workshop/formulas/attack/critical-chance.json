@@ -1,0 +1,22 @@
+{
+  "name": "Critical Chance",
+  "workshopKey": "critChanceLevel",
+  "category": "attack",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "criticalChanceCardPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_CriticalChance",
+    "virtualAddress": "0x01F0A46C",
+    "notes": "workshop% + equipped Critical Chance card %",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

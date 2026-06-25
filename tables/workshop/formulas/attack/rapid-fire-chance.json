@@ -1,0 +1,22 @@
+{
+  "name": "Rapid Fire Chance",
+  "workshopKey": "rapidFireChanceLevel",
+  "category": "attack",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "submoduleNumber",
+      "field": "rapidFireChancePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_RapidFireChance",
+    "virtualAddress": "0x01F0A56C",
+    "notes": "workshop% + submodule%",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

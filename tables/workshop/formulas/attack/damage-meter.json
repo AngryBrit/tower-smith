@@ -1,0 +1,21 @@
+{
+  "name": "Damage / Meter",
+  "workshopKey": "damagePerMeterLevel",
+  "category": "attack",
+  "format": "perMeterTrim",
+  "pipeline": [{ "op": "add", "refs": ["unity", "base", "labAdd"] }],
+  "operands": {
+    "unity": { "kind": "const", "value": 1 },
+    "base": { "kind": "base" },
+    "labAdd": {
+      "kind": "damagePerMeterLabExcess",
+      "field": "damagePerMeterLabMultiplier",
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_DamagePerMeter (display)",
+    "notes": "1 + workshop_bonus + (labMult−1)×0.0879/(1.28−1) fraction of lab excess",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

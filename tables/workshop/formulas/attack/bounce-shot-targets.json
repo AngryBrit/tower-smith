@@ -1,0 +1,22 @@
+{
+  "name": "Bounce Shot Targets",
+  "workshopKey": "bounceShotTargetsLevel",
+  "category": "attack",
+  "format": "integerRound",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "submoduleNumber",
+      "field": "bounceShotTargetsCount",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundBounceTargets",
+    "virtualAddress": "0x01EA64C4",
+    "notes": "workshop count + submodule count",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

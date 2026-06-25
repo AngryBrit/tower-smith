@@ -1,0 +1,22 @@
+{
+  "name": "Super Crit Chance",
+  "workshopKey": "superCritChanceLevel",
+  "category": "attack",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "superCritChanceLabPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_SuperCriticalChance",
+    "virtualAddress": "0x01F0A5BC",
+    "notes": "workshop% + Super Crit Chance lab%",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "name": "Range",
+  "workshopKey": "attackRangeLevel",
+  "category": "attack",
+  "format": "rangeMeters",
+  "pipeline": [
+    { "op": "add", "refs": ["base", "sub"] },
+    { "op": "mul", "refs": ["labMult"] },
+    { "op": "roundTo", "decimals": 2 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "attackRangeMetersAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "attackRangeLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_Range (display)",
+    "notes": "round((workshop_m + submodule_m) × Range lab, 2)",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}

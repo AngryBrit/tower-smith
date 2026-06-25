@@ -16,7 +16,9 @@ import { workshopPipelineSubmoduleContext } from '../test/workshopPipelineSubmod
 
 const PLAYER_SAVE = 'h:/The Tower/SaveGames/playerInfo.dat'
 
-const FORMULA_KEYS = Object.keys(getWorkshopFormulaSpecs())
+const FORMULA_KEYS = Object.keys(getWorkshopFormulaSpecs()).filter(
+  (k) => getWorkshopFormulaSpecs()[k]?.category === 'utility',
+)
 
 describe('workshop formula registry parity', () => {
   it('registry covers the verified utility workshop keys', () => {

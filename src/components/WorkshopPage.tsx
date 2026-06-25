@@ -23,24 +23,23 @@ import { CoinGlyph } from './CoinGlyph'
 import { WorkshopLevelStepRow } from './WorkshopLevelStepRow'
 import { WorkshopDemoToolbar } from './workshop/WorkshopDemoToolbar'
 import {
+  workshopAttackStatDisplay,
+} from '../data/workshopAttack'
+import {
   WORKSHOP_ATTACK_RANGE_MAX_LEVEL,
   workshopAttackRangeNextMarginalCoins,
-  workshopAttackRangeStatDisplay,
 } from '../data/workshopAttackRange'
 import {
   WORKSHOP_ATTACK_SPEED_MAX_LEVEL,
   workshopAttackSpeedNextMarginalCoins,
-  workshopAttackSpeedStatDisplay,
 } from '../data/workshopAttackSpeed'
 import {
   WORKSHOP_CRITICAL_CHANCE_MAX_LEVEL,
   workshopCriticalChanceNextMarginalCoins,
-  workshopCriticalChanceStatDisplay,
 } from '../data/workshopCriticalChance'
 import {
   WORKSHOP_CRITICAL_FACTOR_MAX_LEVEL,
   workshopCriticalFactorNextMarginalCoins,
-  workshopCriticalFactorStatDisplay,
   workshopDisplayedCritFactorEnhancementMultiplier,
 } from '../data/workshopCriticalFactor'
 import {
@@ -51,68 +50,55 @@ import {
 import {
   WORKSHOP_DAMAGE_MAX_LEVEL,
   workshopDamageNextMarginalCoins,
-  workshopDamageStatDisplay,
   formatWorkshopDisplayedDamageBreakdown,
   type WorkshopDamageDisplayOpts,
 } from '../data/workshopDamage'
 import {
   WORKSHOP_DAMAGE_PER_METER_MAX_LEVEL,
   workshopDamagePerMeterNextMarginalCoins,
-  workshopDamagePerMeterStatDisplay,
 } from '../data/workshopDamagePerMeter'
 import {
   WORKSHOP_MULTISHOT_CHANCE_MAX_LEVEL,
   workshopMultishotChanceNextMarginalCoins,
-  workshopMultishotChanceStatDisplay,
 } from '../data/workshopMultishotChance'
 import {
   WORKSHOP_MULTISHOT_TARGETS_MAX_LEVEL,
   workshopMultishotTargetsNextMarginalCoins,
-  workshopMultishotTargetsStatDisplay,
 } from '../data/workshopMultishotTargets'
 import {
   WORKSHOP_RAPID_FIRE_CHANCE_MAX_LEVEL,
   WORKSHOP_RAPID_FIRE_DURATION_MAX_LEVEL,
   workshopRapidFireChanceNextMarginalCoins,
-  workshopRapidFireChanceStatDisplay,
   workshopRapidFireDurationNextMarginalCoins,
-  workshopRapidFireDurationStatDisplay,
 } from '../data/workshopRapidFire'
 import {
   WORKSHOP_BOUNCE_SHOT_CHANCE_MAX_LEVEL,
   workshopBounceShotChanceNextMarginalCoins,
-  workshopBounceShotChanceStatDisplay,
 } from '../data/workshopBounceShotChance'
 import {
   WORKSHOP_BOUNCE_SHOT_RANGE_MAX_LEVEL,
   workshopBounceShotRangeNextMarginalCoins,
-  workshopBounceShotRangeStatDisplay,
 } from '../data/workshopBounceShotRange'
 import {
   WORKSHOP_BOUNCE_SHOT_TARGETS_MAX_LEVEL,
   workshopBounceShotTargetsNextMarginalCoins,
-  workshopBounceShotTargetsStatDisplay,
 } from '../data/workshopBounceShotTargets'
 import {
   WORKSHOP_SUPER_CRIT_CHANCE_MAX_LEVEL,
   workshopSuperCritChanceNextMarginalCoins,
-  workshopSuperCritChanceStatDisplay,
 } from '../data/workshopSuperCritChance'
 import {
   WORKSHOP_SUPER_CRIT_MULT_MAX_LEVEL,
   workshopDisplayedSuperCritMultEnhancementMultiplier,
   workshopSuperCritMultNextMarginalCoins,
-  workshopSuperCritMultStatDisplay,
 } from '../data/workshopSuperCritMult'
 import {
   WORKSHOP_REND_ARMOR_CHANCE_MAX_LEVEL,
   WORKSHOP_REND_ARMOR_MULT_MAX_LEVEL,
   workshopRendArmorChanceNextMarginalCoins,
-  workshopRendArmorChanceStatDisplay,
   workshopDisplayedRendArmorChanceEnhancementMultiplier,
   workshopDisplayedRendArmorMultEnhancementMultiplier,
   workshopRendArmorMultNextMarginalCoins,
-  workshopRendArmorMultStatDisplay,
 } from '../data/workshopRendArmor'
 import {
   WORKSHOP_DEFENSE_UPGRADE_ORDER,
@@ -510,7 +496,7 @@ function WorkshopDamageCard({
     workshopDamageNextMarginalCoins,
     coinDiscountPercent,
   )
-  const statLabel = workshopDamageStatDisplay(level, damageDisplayOpts)
+  const statLabel = workshopAttackStatDisplay('damageLevel', level, damageDisplayOpts)
   const breakdownTitle = formatWorkshopDisplayedDamageBreakdown(damageDisplayOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
@@ -607,7 +593,7 @@ function WorkshopAttackSpeedCard({
     workshopAttackSpeedNextMarginalCoins,
     coinDiscountPercent,
   )
-  const statLabel = workshopAttackSpeedStatDisplay(level, attackSpeedDisplayOpts)
+  const statLabel = workshopAttackStatDisplay('attackSpeedLevel', level, attackSpeedDisplayOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -700,10 +686,7 @@ function WorkshopCriticalChanceCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopCriticalChanceStatDisplay(
-    level,
-    attackLabOpts?.criticalChanceCardPercentPoints ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('critChanceLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -798,13 +781,10 @@ function WorkshopCriticalFactorCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopCriticalFactorStatDisplay(
-    level,
-    attackLabOpts?.criticalFactorLabMultiplier,
-    attackLabOpts?.submodule?.critFactorAdd ?? 0,
-    enhancementMultiplier,
-    attackLabOpts?.criticalFactorRelicMultiplier ?? 1,
-  )
+  const statLabel = workshopAttackStatDisplay('critFactorLevel', level, {
+    ...attackLabOpts,
+    critFactorEnhancementMultiplier: enhancementMultiplier,
+  })
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -897,11 +877,7 @@ function WorkshopAttackRangeCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopAttackRangeStatDisplay(
-    level,
-    attackLabOpts?.attackRangeLabMultiplier,
-    attackLabOpts?.submodule?.attackRangeMetersAdd ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('attackRangeLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -996,7 +972,9 @@ function WorkshopDamagePerMeterCard({
     workshopDamagePerMeterNextMarginalCoins,
     coinDiscountPercent,
   )
-  const statLabel = workshopDamagePerMeterStatDisplay(level, damagePerMeterLabMultiplier)
+  const statLabel = workshopAttackStatDisplay('damagePerMeterLevel', level, {
+    damagePerMeterLabMultiplier,
+  })
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1089,10 +1067,7 @@ function WorkshopMultishotChanceCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopMultishotChanceStatDisplay(
-    level,
-    attackLabOpts?.submodule?.multishotChancePercentPoints ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('multishotChanceLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1185,10 +1160,7 @@ function WorkshopMultishotTargetsCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopMultishotTargetsStatDisplay(
-    level,
-    attackLabOpts?.submodule?.multishotTargetsCount ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('multishotTargetsLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1281,10 +1253,7 @@ function WorkshopRapidFireChanceCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopRapidFireChanceStatDisplay(
-    level,
-    attackLabOpts?.submodule?.rapidFireChancePercentPoints ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('rapidFireChanceLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1377,10 +1346,7 @@ function WorkshopRapidFireDurationCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopRapidFireDurationStatDisplay(
-    level,
-    attackLabOpts?.submodule?.rapidFireDurationSeconds ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('rapidFireDurationLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1473,10 +1439,7 @@ function WorkshopBounceShotChanceCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopBounceShotChanceStatDisplay(
-    level,
-    attackLabOpts?.submodule?.bounceShotChancePercentPoints ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('bounceShotChanceLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1569,10 +1532,7 @@ function WorkshopBounceShotTargetsCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopBounceShotTargetsStatDisplay(
-    level,
-    attackLabOpts?.submodule?.bounceShotTargetsCount ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('bounceShotTargetsLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1665,10 +1625,7 @@ function WorkshopBounceShotRangeCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopBounceShotRangeStatDisplay(
-    level,
-    attackLabOpts?.submodule?.bounceShotRangeMeters ?? 0,
-  )
+  const statLabel = workshopAttackStatDisplay('bounceShotRangeLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1761,10 +1718,7 @@ function WorkshopSuperCritChanceCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopSuperCritChanceStatDisplay(
-    level,
-    attackLabOpts?.superCritChanceLabPercentPoints,
-  )
+  const statLabel = workshopAttackStatDisplay('superCritChanceLevel', level, attackLabOpts)
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1859,13 +1813,10 @@ function WorkshopSuperCritMultCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopSuperCritMultStatDisplay(
-    level,
-    attackLabOpts?.superCritMultLabMultiplier,
-    attackLabOpts?.submodule?.superCritMultAdd ?? 0,
-    attackLabOpts?.superCritMultRelicMultiplier ?? 1,
-    enhancementMultiplier,
-  )
+  const statLabel = workshopAttackStatDisplay('superCritMultLevel', level, {
+    ...attackLabOpts,
+    superCritMultEnhancementMultiplier: enhancementMultiplier,
+  })
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -1960,11 +1911,10 @@ function WorkshopRendArmorChanceCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopRendArmorChanceStatDisplay(
-    level,
-    attackLabOpts?.submodule?.rendArmorChancePercentPoints ?? 0,
-    enhancementMultiplier,
-  )
+  const statLabel = workshopAttackStatDisplay('rendArmorChanceLevel', level, {
+    ...attackLabOpts,
+    rendArmorChanceEnhancementMultiplier: enhancementMultiplier,
+  })
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (
@@ -2059,13 +2009,10 @@ function WorkshopRendArmorMultCard({
     coinDiscountPercent,
   )
   const attackLabOpts = useWorkshopAttackLabDisplayOpts()
-  const statLabel = workshopRendArmorMultStatDisplay(
-    level,
-    attackLabOpts?.rendArmorMultLabMultiplier,
-    attackLabOpts?.submodule?.rendArmorMultAdd ?? 0,
-    enhancementMultiplier,
-    attackLabOpts?.rendArmorMultRelicMultiplier ?? 1,
-  )
+  const statLabel = workshopAttackStatDisplay('rendArmorMultLevel', level, {
+    ...attackLabOpts,
+    rendArmorMultEnhancementMultiplier: enhancementMultiplier,
+  })
   const stepHint = formatWorkshopBulkStepLabel(bulkStep)
 
   return (

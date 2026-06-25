@@ -1,0 +1,50 @@
+{
+  "name": "Damage",
+  "workshopKey": "damageLevel",
+  "category": "attack",
+  "format": "coinAbbrev",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "chassisMult", "labMult", "cardMult", "relicMult", "cannonMult", "enhanceMult", "perkMult"] },
+    { "op": "add", "refs": ["berserkerAdd"] }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "chassisMult": {
+      "kind": "optsMultiplier",
+      "field": "chassisTowerDamageMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "labMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    },
+    "cardMult": {
+      "kind": "optsMultiplier",
+      "field": "damageCardMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": { "kind": "onePlusRelicFraction", "activeRule": "multiplierAboveOne" },
+    "cannonMult": {
+      "kind": "const",
+      "value": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "enhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "perkMult": { "kind": "perkMultiplier", "activeRule": "multiplierAboveOne" },
+    "berserkerAdd": { "kind": "berserkerAdd", "activeRule": "positive" }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_AttackDamage (display combine)",
+    "notes": "Workshop × chassis × lab × card × (1+relics) × (1+cannon%) × enhance × perk + berserker. Berserker is in-run; supplied externally.",
+    "verifiedAgainst": "playerInfo.dat -> workshop card"
+  }
+}
