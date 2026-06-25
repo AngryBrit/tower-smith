@@ -47,14 +47,12 @@ describe('workshopChassisModuleHeroStatWorkshop', () => {
     expect(label).toBe(formatCoinAbbrev(Math.round(base * chassis)))
   })
 
-  it('scales cash bonus display by generator chassis mult', () => {
+  it('does not apply generator Coin Bonus chassis to Cash Bonus (it boosts coins, not cash)', () => {
     const level = 10
-    const chassis = 1.5
     const base = workshopCashBonusStatMultiplier(level)
-    const label = workshopUtilityStatDisplay('cashBonusLevel', level, {
-      generatorCashBonusMultiplier: chassis,
-    })
-    expect(label).toBe(`x${(base * chassis).toFixed(2)}`)
+    // No lab/enhance opts → falls back to the plain workshop cash bonus display.
+    const label = workshopUtilityStatDisplay('cashBonusLevel', level)
+    expect(label).toBe(`x${base.toFixed(2)}`)
   })
 
 })

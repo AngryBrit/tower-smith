@@ -194,7 +194,10 @@ export function enrichUtilityLabDisplayOpts(
     cashBonusLabMultiplier: mergeRelicMultiplier(base.cashBonusLabMultiplier, cash),
     // Cash / Wave workshop card: research lab only (cash relic affects combat, not the card).
     cashPerWaveLabMultiplier: base.cashPerWaveLabMultiplier,
-    // Coins / Kill Bonus workshop card: research lab × √(Coins card) only (coins relic is combat-only).
+    // Coins / Kill Bonus workshop card: research lab × Coin Bonus+ only. Coins relics are
+    // combat-only — verified in libil2cpp.so (Main::GetOutOfRoundCoinsBonusUpgrade never reads
+    // relics.coin). The generator's Coin Bonus (coinsMultFromModule) is a transient in-run
+    // accumulation that resets to 1.0, so it is excluded from the steady-state card too.
     coinsKillBonusLabMultiplier: base.coinsKillBonusLabMultiplier,
     // Coins / Wave workshop card: research lab only (coins relic affects combat, not the card).
     coinsWaveLabMultiplier: base.coinsWaveLabMultiplier,

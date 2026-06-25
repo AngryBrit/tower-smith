@@ -1,9 +1,8 @@
 import { existsSync, readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import { mergeLabAndCardMult, workshopCardMultProduct } from './workshopCardWorkshopDisplay'
-import { workshopChassisModuleHeroStatMultiplier } from './workshopChassisModuleHeroStatWorkshop'
 import {
-  workshopDisplayedCashBonusEnhancementAdditive,
+  workshopDisplayedCashBonusEnhancementMultiplier,
   workshopCashBonusStatMultiplier,
 } from './workshopCashBonus'
 import { workshopEnhancementsLabUnlocked } from './workshopEnhanceResearch'
@@ -27,9 +26,8 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopCashBonus pipeline', () => {
     const lab = buildWorkshopUtilityLabDisplayOpts(data, labOverrides)
     const submoduleCtx = workshopPipelineSubmoduleContext(ws, data, labOverrides)
     const cashCard = workshopCardMultProduct(ws, data, labOverrides, 'cash')
-    const generatorChassis = workshopChassisModuleHeroStatMultiplier(ws, 'generator')
     const enhancementsUnlocked = workshopEnhancementsLabUnlocked(data, labOverrides)
-    const cashBonusEnhanceAdd = workshopDisplayedCashBonusEnhancementAdditive(
+    const cashBonusEnhanceMult = workshopDisplayedCashBonusEnhancementMultiplier(
       ws.enhanceCashBonusLevel,
       enhancementsUnlocked,
     )
@@ -37,12 +35,9 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopCashBonus pipeline', () => {
       enrichUtilityLabDisplayOptsWithSubmodules(
         {
           ...(lab ?? {}),
-          ...(generatorChassis > 1 + 1e-9
-            ? { generatorCashBonusMultiplier: generatorChassis }
-            : {}),
           cashBonusLabMultiplier: mergeLabAndCardMult(lab?.cashBonusLabMultiplier, cashCard),
-          cashBonusEnhanceAdditive:
-            cashBonusEnhanceAdd > 0 ? cashBonusEnhanceAdd : undefined,
+          cashBonusEnhanceMultiplier:
+            cashBonusEnhanceMult > 1 + 1e-9 ? cashBonusEnhanceMult : undefined,
         },
         ws.simSubmoduleSelections,
         submoduleCtx,
@@ -51,13 +46,13 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopCashBonus pipeline', () => {
     )
     const level = ws.cashBonusLevel
     const base = workshopCashBonusStatMultiplier(level)
-    const chassis = opts?.generatorCashBonusMultiplier ?? 1
     const labMult = opts?.cashBonusLabMultiplier ?? 1
-    const enhanceAdd = opts?.cashBonusEnhanceAdditive ?? 0
+    const enhanceMult = opts?.cashBonusEnhanceMultiplier ?? 1
     const display = workshopUtilityStatDisplay('cashBonusLevel', level, opts)
 
     expect(enhancementsUnlocked).toBe(true)
-    expect(cashBonusEnhanceAdd).toBe(enhanceAdd)
-    expect(display).toBe(`x${(base * chassis * labMult + enhanceAdd).toFixed(2)}`)
+    expect(cashBonusEnhanceMult).toBe(enhanceMult)
+    expect(display).toBe(`x${(base * labMult * enhanceMult).toFixed(2)}`)
+    expect(display).toBe('x6.71')
   })
 })

@@ -70,14 +70,14 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('cashBonusLevel', 149)).toBe('x2.49')
   })
 
-  it('applies Cash Bonus + enhancement additively on the workshop card', () => {
+  it('applies Cash Bonus + enhancement multiplicatively on the workshop card', () => {
+    // workshop x2.49 (L149) × lab+relics x1.925 (1.54 × 1.25) × Cash Bonus+ x1.40 → x6.71.
     expect(
       workshopUtilityStatDisplay('cashBonusLevel', 149, {
-        generatorCashBonusMultiplier: 1.128,
-        cashBonusLabMultiplier: 1.8172,
-        cashBonusEnhanceAdditive: 0.09,
+        cashBonusLabMultiplier: 1.925,
+        cashBonusEnhanceMultiplier: 1.4,
       }),
-    ).toBe('x5.19')
+    ).toBe('x6.71')
     expect(workshopUtilityNextMarginalCoins('cashBonusLevel', 149)).toBeUndefined()
   })
 
@@ -116,13 +116,13 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('coinsKillBonusLevel', 149)).toBeUndefined()
   })
 
-  it('applies Coins / Kill Bonus research lab and sqrt(Coins card) on workshop card', () => {
+  it('applies Coins / Kill Bonus research lab × Coin Bonus+ enhancement on workshop card', () => {
     expect(
       workshopUtilityStatDisplay('coinsKillBonusLevel', 149, {
         coinsKillBonusLabMultiplier: 2.78,
-        coinsKillBonusCardMultiplier: 1.45,
+        coinsKillBonusEnhanceMultiplier: 1.26,
       }),
-    ).toBe('x8.34')
+    ).toBe('x8.72')
   })
 
   it('Coins / Wave uses workshop wiki ladder (149 levels)', () => {

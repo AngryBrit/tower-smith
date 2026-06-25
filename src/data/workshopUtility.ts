@@ -73,10 +73,7 @@ import type { WorkshopUtilitySubmoduleExtras } from './workshopSubmoduleBonuses'
 import { WORKSHOP_UTILITY_GOD_NAMES, workshopToolkitMarginalCoins } from '../workshopCosts'
 import { workshopCashBonusStatMultiplier } from './workshopCashBonus'
 import { workshopCashPerWaveStatAmount } from './workshopCashPerWave'
-import {
-  workshopCoinsKillBonusStatMultiplier,
-  workshopDisplayedCoinsKillBonusCardFactor,
-} from './workshopCoinsKillBonus'
+import { workshopCoinsKillBonusStatMultiplier } from './workshopCoinsKillBonus'
 import { workshopCoinsWaveStatAmount } from './workshopCoinsWave'
 import { workshopEnemyAttackLevelSkipStatPercent } from './workshopEnemyAttackLevelSkip'
 import { workshopEnemyHealthLevelSkipStatPercent } from './workshopEnemyHealthLevelSkip'
@@ -187,16 +184,12 @@ export function workshopUtilityStatDisplay(
 ): string {
   switch (key) {
     case 'cashBonusLevel': {
-      const chassis = opts?.generatorCashBonusMultiplier ?? 1
-      const workshop = workshopCashBonusStatMultiplier(completedLevels)
-      const base = workshop * chassis
+      const base = workshopCashBonusStatMultiplier(completedLevels)
       const m = opts?.cashBonusLabMultiplier
-      const enhanceAdd = opts?.cashBonusEnhanceAdditive ?? 0
-      const hasLabOrChassis =
-        (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) || chassis > 1 + 1e-9
-      if (hasLabOrChassis || enhanceAdd > 0) {
-        const core = base * (m ?? 1)
-        return `x${(core + enhanceAdd).toFixed(2)}`
+      const enhanceMult = opts?.cashBonusEnhanceMultiplier ?? 1
+      const hasLab = m !== undefined && Number.isFinite(m) && m > 1 + 1e-9
+      if (hasLab || enhanceMult > 1 + 1e-9) {
+        return `x${(base * (m ?? 1) * enhanceMult).toFixed(2)}`
       }
       return workshopCashBonusStatDisplay(completedLevels)
     }
@@ -215,10 +208,8 @@ export function workshopUtilityStatDisplay(
     }
     case 'coinsKillBonusLevel': {
       const lab = opts?.coinsKillBonusLabMultiplier ?? 1
-      const cardFactor = workshopDisplayedCoinsKillBonusCardFactor(
-        opts?.coinsKillBonusCardMultiplier ?? 1,
-      )
-      const m = lab * cardFactor
+      const enhanceMult = opts?.coinsKillBonusEnhanceMultiplier ?? 1
+      const m = lab * enhanceMult
       if (m > 1 + 1e-9) {
         return formatWithDamageStyleLabMultiplier(
           workshopCoinsKillBonusStatMultiplier(completedLevels),

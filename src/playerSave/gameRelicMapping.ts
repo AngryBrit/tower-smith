@@ -160,7 +160,7 @@ export const GAME_RELIC_INDEX_TO_WORKSHOP_ID: readonly (string | null)[] = [
   "rlyeh", // Rlyeh
   "madness_induced", // MadnessInduction
   "cosmic_freedom", // CosmicSovereignty
-  "gnosis", // Omniscience
+  "omniscience", // Omniscience
   "honey_jar", // HoneyJar
   "heavenly_sweet", // HeavenlySweet
   "honey_society", // HoneySociety

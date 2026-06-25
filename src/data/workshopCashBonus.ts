@@ -19,17 +19,18 @@ export function workshopCashBonusStatDisplay(completedLevels: number): string {
 }
 
 /**
- * **Cash Bonus +** contribution on the main Cash Bonus workshop card (additive `x`, not ×).
- * Calibrated: L10 enhance adds **+0.09** on top of **x5.10** → in-game **x5.19**.
+ * **Cash Bonus +** multiplier on the main Cash Bonus workshop card (multiplicative ×).
+ * Calibrated against an in-game save: workshop **x2.49** × lab **x1.54** × Cash Bonus+ **x1.40**
+ * (L40) × (1 + cash relics **0.25**) → in-game **x6.71**.
  */
-export function workshopDisplayedCashBonusEnhancementAdditive(
+export function workshopDisplayedCashBonusEnhancementMultiplier(
   enhanceCashBonusLevel: number,
   enhancementsLabUnlocked: boolean,
 ): number {
-  if (!enhancementsLabUnlocked || enhanceCashBonusLevel <= 0) return 0
+  if (!enhancementsLabUnlocked || enhanceCashBonusLevel <= 0) return 1
   const level = Math.max(0, Math.trunc(enhanceCashBonusLevel))
-  if (level <= 0) return 0
-  return workshopEnhanceTier400Multiplier(level - 1, 'Cash Bonus +') - 1
+  if (level <= 0) return 1
+  return workshopEnhanceTier400Multiplier(level, 'Cash Bonus +')
 }
 
 

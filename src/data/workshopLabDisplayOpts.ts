@@ -109,15 +109,13 @@ export type WorkshopAttackLabDisplayOpts = {
 }
 
 export type WorkshopUtilityLabDisplayOpts = {
-  /** Equipped generator chassis main effect (Coin Bonus). */
-  generatorCashBonusMultiplier?: number
   cashBonusLabMultiplier?: number
-  /** **Cash Bonus +** additive `x` on the main workshop card (omitted when 0). */
-  cashBonusEnhanceAdditive?: number
+  /** **Cash Bonus +** multiplicative × on the main workshop card (omitted when 1). */
+  cashBonusEnhanceMultiplier?: number
   cashPerWaveLabMultiplier?: number
   coinsKillBonusLabMultiplier?: number
-  /** Equipped **Coins** card raw × multiplier (√ applied in display). */
-  coinsKillBonusCardMultiplier?: number
+  /** **Coin Bonus +** multiplicative × on the Coins / Kill Bonus card (omitted when 1). */
+  coinsKillBonusEnhanceMultiplier?: number
   coinsWaveLabMultiplier?: number
   interestPerWaveLabMultiplier?: number
   recoveryAmountLabPercentPoints?: number

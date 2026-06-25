@@ -132,7 +132,8 @@ import {
   workshopHealthRegenRelicsBonusFraction,
 } from '../data/workshopDisplayedHealthRegen'
 import { workshopDisplayedLandMineDamageEnhancementMultiplier } from '../data/workshopLandMineDamage'
-import { workshopDisplayedCashBonusEnhancementAdditive } from '../data/workshopCashBonus'
+import { workshopDisplayedCashBonusEnhancementMultiplier } from '../data/workshopCashBonus'
+import { workshopDisplayedCoinsKillBonusEnhancementMultiplier } from '../data/workshopCoinsKillBonus'
 import { workshopDisplayedWallHealthEnhancementMultiplier } from '../data/workshopWallHealth'
 import { workshopDisplayedRecoveryAmountEnhancementMultiplier } from '../data/workshopRecoveryAmount'
 import { workshopDisplayedMaxRecoveryEnhancementMultiplier } from '../data/workshopMaxRecovery'
@@ -2585,15 +2586,18 @@ export function WorkshopPage({
     const cardAdd = (id: WorkshopGameCardId) =>
       workshopCardAddPercentPoints(workshopPersisted, researchData, labLevelOverrides, id)
     const cash = cardMult('cash')
-    const coins = cardMult('coins')
     const freeUpgrades = cardAdd('freeUpgrades')
     const packageChance = cardAdd('recoveryPackageChance')
     const enhancementsUnlocked = workshopEnhancementsLabUnlocked(
       researchData,
       labLevelOverrides,
     )
-    const cashBonusEnhanceAdd = workshopDisplayedCashBonusEnhancementAdditive(
+    const cashBonusEnhanceMult = workshopDisplayedCashBonusEnhancementMultiplier(
       workshopPersisted.enhanceCashBonusLevel,
+      enhancementsUnlocked,
+    )
+    const coinBonusEnhanceMult = workshopDisplayedCoinsKillBonusEnhancementMultiplier(
+      workshopPersisted.enhanceCoinBonusLevel,
       enhancementsUnlocked,
     )
     const recoveryAmountEnhanceMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(
@@ -2605,24 +2609,16 @@ export function WorkshopPage({
       workshopPersisted.enhanceRecoveryPackageLevel,
       enhancementsUnlocked,
     )
-    const generatorChassis = workshopChassisModuleHeroStatMultiplier(
-      workshopPersisted,
-      'generator',
-    )
-    const chassisUtility: Pick<WorkshopUtilityLabDisplayOpts, 'generatorCashBonusMultiplier'> =
-      generatorChassis > 1 + 1e-9
-        ? { generatorCashBonusMultiplier: generatorChassis }
-        : {}
     const enriched: WorkshopUtilityLabDisplayOpts = {
       ...(lab ?? {}),
-      ...chassisUtility,
       cashBonusLabMultiplier: mergeLabAndCardMult(lab?.cashBonusLabMultiplier, cash),
       cashPerWaveLabMultiplier: mergeLabAndCardMult(lab?.cashPerWaveLabMultiplier, cash),
-      coinsKillBonusCardMultiplier: coins > 1 + 1e-9 ? coins : undefined,
+      coinsKillBonusEnhanceMultiplier:
+        coinBonusEnhanceMult > 1 + 1e-9 ? coinBonusEnhanceMult : undefined,
       freeUpgradesCardPercentPoints: freeUpgrades > 0 ? freeUpgrades : undefined,
       packageChanceCardPercentPoints: packageChance > 0 ? packageChance : undefined,
-      cashBonusEnhanceAdditive:
-        cashBonusEnhanceAdd > 0 ? cashBonusEnhanceAdd : undefined,
+      cashBonusEnhanceMultiplier:
+        cashBonusEnhanceMult > 1 + 1e-9 ? cashBonusEnhanceMult : undefined,
       recoveryAmountEnhancementsMultiplier:
         recoveryAmountEnhanceMult > 1 + 1e-9 ? recoveryAmountEnhanceMult : undefined,
       maxRecoveryEnhancementsMultiplier:
@@ -2633,14 +2629,13 @@ export function WorkshopPage({
     if (
       lab == null &&
       cash === 1 &&
-      coins === 1 &&
       freeUpgrades === 0 &&
       packageChance === 0 &&
-      cashBonusEnhanceAdd <= 0 &&
+      cashBonusEnhanceMult <= 1 + 1e-9 &&
+      coinBonusEnhanceMult <= 1 + 1e-9 &&
       recoveryAmountEnhanceMult <= 1 + 1e-9 &&
       maxRecoveryEnhanceMult <= 1 + 1e-9 &&
-      workshopPersisted.enhanceFreeUpgradesLevel <= 0 &&
-      Object.keys(chassisUtility).length === 0
+      workshopPersisted.enhanceFreeUpgradesLevel <= 0
     ) {
       return enrichUtilityLabDisplayOpts(
         enrichUtilityLabDisplayOptsWithSubmodules(

@@ -4,6 +4,7 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
+import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 export const WORKSHOP_COINS_KILL_BONUS_MAX_LEVEL = 149 as const
 
 /** One-time workshop unlock cost (before level purchases). */
@@ -26,22 +27,24 @@ export function workshopCoinsKillBonusStatDisplay(completedLevels: number): stri
 }
 
 /**
- * Equipped **Coins** card on the workshop card (√ multiplier; combat benefit is squared in-game).
+ * **Coin Bonus +** multiplier on the Coins / Kill Bonus workshop card (multiplicative ×).
+ * Mirrors the **Cash Bonus +** treatment. Calibrated against an in-game save:
+ * workshop **x2.49** × lab **x2.78** × Coin Bonus+ **x1.26** (L26) → **x8.72** (matches in-game).
+ *
+ * NOTE: the equipped generator's Coin Bonus is **not** applied to this card. In `libil2cpp.so`
+ * (`Main::GetOutOfRoundCoinsBonusUpgrade`) the card multiplies by `Main.coinsMultFromModule`
+ * (offset `0x4F0`), but that field is a **transient in-run accumulation** (its writer reads the
+ * prior value and multiplies onto it) that resets to **1.0** on a game reset — so the steady-state
+ * card is x8.72. Coin relics also have no effect here (the getter never reads `relics.coin`).
  */
-export function workshopDisplayedCoinsKillBonusCardFactor(
-  coinsCardMultiplier: number,
+export function workshopDisplayedCoinsKillBonusEnhancementMultiplier(
+  enhanceCoinBonusLevel: number,
+  enhancementsLabUnlocked: boolean,
 ): number {
-  if (!Number.isFinite(coinsCardMultiplier) || coinsCardMultiplier <= 1 + 1e-9) return 1
-  return Math.sqrt(coinsCardMultiplier)
-}
-
-/** Research lab × √(Coins card) for the Coins / Kill Bonus workshop card (no coins relic). */
-export function workshopDisplayedCoinsKillBonusLabMultiplier(
-  researchLabMultiplier: number | undefined,
-  coinsCardMultiplier: number,
-): number {
-  const lab = researchLabMultiplier ?? 1
-  return lab * workshopDisplayedCoinsKillBonusCardFactor(coinsCardMultiplier)
+  if (!enhancementsLabUnlocked || enhanceCoinBonusLevel <= 0) return 1
+  const level = Math.max(0, Math.trunc(enhanceCoinBonusLevel))
+  if (level <= 0) return 1
+  return workshopEnhanceTier400Multiplier(level, 'Coin Bonus +')
 }
 
 
