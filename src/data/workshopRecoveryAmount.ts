@@ -3,7 +3,6 @@
  */
 
 import { workshopToolkitMarginalCoins, workshopToolkitStatValue } from '../workshopCosts'
-import { workshopEnhanceFreeUpgradesMultiplier } from './workshopEnhanceFreeUpgrades'
 import { workshopEnhanceTier400Multiplier } from './workshopEnhanceTier400Ladder'
 
 export const WORKSHOP_RECOVERY_AMOUNT_MAX_LEVEL = 300 as const
@@ -27,16 +26,15 @@ export function workshopRecoveryAmountNextMarginalCoins(completedLevels: number)
 }
 
 /**
- * Share of **Free Upgrades +** enhancement excess in displayed Recovery Amount
- * (calibrated: Recovery Package+ **×1.4** + Free Upgrades+ **×1.1** on **152%** → **220.86%**).
+ * **Recovery Package +** enhancement tier multiplier when unlocked.
+ *
+ * Verified against `Main::GetOutOfRoundRecoveryAmount` in libil2cpp.so:
+ * `((14 + 0.4·level + lab% + module%) × recoveryPackageEnhancement + techTree) × relics.recoveryAmount`.
+ * Only **Recovery Package +** scales the card here — **Free Upgrades +** does **not** apply, and the
+ * recovery relic is a final multiplier (see `recoveryAmountRelicMultiplier`), not additive lab points.
  */
-export const WORKSHOP_DISPLAYED_RECOVERY_AMOUNT_FREE_UPGRADES_ENHANCE_EXCESS_FRACTION =
-  Number('0.53026315789473684')
-
-/** **Recovery Package +** tier plus partial **Free Upgrades +** excess when unlocked. */
 export function workshopDisplayedRecoveryAmountEnhancementMultiplier(
   enhanceRecoveryPackageLevel: number,
-  enhanceFreeUpgradesLevel: number,
   enhancementsLabUnlocked: boolean,
 ): number {
   if (!enhancementsLabUnlocked || enhanceRecoveryPackageLevel <= 0) return 1
@@ -44,14 +42,5 @@ export function workshopDisplayedRecoveryAmountEnhancementMultiplier(
     Math.max(0, Math.trunc(enhanceRecoveryPackageLevel)),
     'Recovery Package +',
   )
-  if (recoveryMult <= 1 + 1e-9) return 1
-  const freeMult =
-    enhanceFreeUpgradesLevel > 0
-      ? workshopEnhanceFreeUpgradesMultiplier(Math.max(0, Math.trunc(enhanceFreeUpgradesLevel)))
-      : 1
-  const freeExcess = Math.max(0, freeMult - 1)
-  return (
-    recoveryMult +
-    freeExcess * WORKSHOP_DISPLAYED_RECOVERY_AMOUNT_FREE_UPGRADES_ENHANCE_EXCESS_FRACTION
-  )
+  return recoveryMult > 1 + 1e-9 ? recoveryMult : 1
 }

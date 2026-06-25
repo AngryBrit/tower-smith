@@ -2602,7 +2602,6 @@ export function WorkshopPage({
     )
     const recoveryAmountEnhanceMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(
       workshopPersisted.enhanceRecoveryPackageLevel,
-      workshopPersisted.enhanceFreeUpgradesLevel,
       enhancementsUnlocked,
     )
     const maxRecoveryEnhanceMult = workshopDisplayedMaxRecoveryEnhancementMultiplier(

@@ -213,10 +213,13 @@ export function enrichUtilityLabDisplayOpts(
       base.freeUtilityUpgradeRelicPercentPoints,
       freeUtility,
     ),
-    recoveryAmountLabPercentPoints: mergeRelicPercentPoints(
-      base.recoveryAmountLabPercentPoints,
-      recovery,
-    ),
+    // Recovery Amount card: recovery relics are a final multiplier, not additive lab points.
+    // Verified in libil2cpp.so (Main::GetOutOfRoundRecoveryAmount multiplies by relics.recoveryAmount
+    // after the Recovery Package+ enhancement).
+    recoveryAmountLabPercentPoints: base.recoveryAmountLabPercentPoints,
+    recoveryAmountRelicMultiplier:
+      mergeRelicMultiplier(base.recoveryAmountRelicMultiplier, recovery) ??
+      base.recoveryAmountRelicMultiplier,
     enemyAttackLevelSkipLabPercentPoints: mergeRelicPercentPoints(
       base.enemyAttackLevelSkipLabPercentPoints,
       enemyAttackSkip,

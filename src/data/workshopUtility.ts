@@ -287,8 +287,9 @@ export function workshopUtilityStatDisplay(
       const base = workshopRecoveryAmountStatPercent(completedLevels)
       const labPts = opts?.recoveryAmountLabPercentPoints ?? 0
       const enhance = opts?.recoveryAmountEnhancementsMultiplier ?? 1
-      if (labPts > 0 || enhance > 1 + 1e-9) {
-        return formatPercentAfterLabAdditionAndMultiplier(base, labPts, enhance)
+      const relicMult = opts?.recoveryAmountRelicMultiplier ?? 1
+      if (labPts > 0 || enhance > 1 + 1e-9 || relicMult > 1 + 1e-9) {
+        return `${((base + labPts) * enhance * relicMult).toFixed(2)}%`
       }
       return workshopRecoveryAmountStatDisplay(completedLevels)
     }

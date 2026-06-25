@@ -229,11 +229,13 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 0)).toBe('14.00%')
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 1)).toBe('14.40%')
     expect(workshopUtilityStatDisplay('recoveryAmountLevel', 300)).toBe('134.00%')
-    const recoveryEnhMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 10, true)
+    const recoveryEnhMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(40, true)
+    // (134 base + 2 lab) × 1.4 (Recovery Package+) × 1.16 (recovery relic) = 220.86%.
     expect(
       workshopUtilityStatDisplay('recoveryAmountLevel', 300, {
-        recoveryAmountLabPercentPoints: 18,
+        recoveryAmountLabPercentPoints: 2,
         recoveryAmountEnhancementsMultiplier: recoveryEnhMult,
+        recoveryAmountRelicMultiplier: 1.16,
       }),
     ).toBe('220.86%')
     expect(workshopUtilityNextMarginalCoins('recoveryAmountLevel', 300)).toBeUndefined()

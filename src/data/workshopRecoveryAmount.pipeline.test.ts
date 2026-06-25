@@ -27,7 +27,6 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopRecoveryAmount pipeline', () 
     const enhancementsUnlocked = workshopEnhancementsLabUnlocked(data, labOverrides)
     const recoveryAmountEnhanceMult = workshopDisplayedRecoveryAmountEnhancementMultiplier(
       ws.enhanceRecoveryPackageLevel,
-      ws.enhanceFreeUpgradesLevel,
       enhancementsUnlocked,
     )
     const opts = enrichUtilityLabDisplayOpts(
@@ -45,15 +44,19 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopRecoveryAmount pipeline', () 
     const level = ws.recoveryAmountLevel
     const base = workshopRecoveryAmountStatPercent(level)
     const labPts = opts?.recoveryAmountLabPercentPoints ?? 0
+    const relicMult = opts?.recoveryAmountRelicMultiplier ?? 1
     const display = workshopUtilityStatDisplay('recoveryAmountLevel', level, opts)
 
     expect(enhancementsUnlocked).toBe(true)
     expect(ws.enhanceRecoveryPackageLevel).toBe(40)
-    expect(ws.enhanceFreeUpgradesLevel).toBe(13)
     expect(recoveryAmountEnhanceMult).toBe(
-      workshopDisplayedRecoveryAmountEnhancementMultiplier(40, 13, true),
+      workshopDisplayedRecoveryAmountEnhancementMultiplier(40, true),
     )
-    expect(display).toBe(`${((base + labPts) * recoveryAmountEnhanceMult).toFixed(2)}%`)
-    expect(display).toBe('223.28%')
+    // Game formula (Main::GetOutOfRoundRecoveryAmount):
+    // (14 + 0.4·level + lab%) × Recovery Package+ × (1 + recovery relic %).
+    expect(display).toBe(
+      `${((base + labPts) * recoveryAmountEnhanceMult * relicMult).toFixed(2)}%`,
+    )
+    expect(display).toBe('220.86%')
   })
 })

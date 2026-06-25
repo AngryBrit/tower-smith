@@ -117,8 +117,10 @@ export type WorkshopUtilityLabDisplayOpts = {
   coinsKillBonusEnhanceMultiplier?: number
   coinsWaveLabMultiplier?: number
   recoveryAmountLabPercentPoints?: number
-  /** **Recovery Package +** (and partial **Free Upgrades +**) × on Recovery Amount card. */
+  /** **Recovery Package +** × on Recovery Amount card. */
   recoveryAmountEnhancementsMultiplier?: number
+  /** **(1 + recovery relic %)** final × on Recovery Amount card (applied after enhancement). */
+  recoveryAmountRelicMultiplier?: number
   /** **Recovery Package +** × on Max Recovery card. */
   maxRecoveryEnhancementsMultiplier?: number
   maxRecoveryLabMultiplier?: number
