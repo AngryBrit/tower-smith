@@ -18,6 +18,7 @@ import {
 } from './workshopRelicWorkshopDisplay'
 import { enrichDefenseStatDisplayOptsWithSubmodules } from './workshopSubmoduleWorkshopDisplay'
 import { workshopHealthRegenStatValue } from './workshopHealthRegen'
+import { workshopHealthStatValue } from './workshopHealth'
 import { formatCoinAbbrev } from '../labCosts'
 import { decodePlayerInfoFile } from '../playerSave/decodePlayerInfo'
 import {
@@ -111,33 +112,48 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
       labOverrides,
       relicSet,
     )
-    const level = ws.healthRegenLevel
-    const display = workshopDefenseStatDisplay('healthRegenLevel', level, opts)
-    const base = workshopHealthRegenStatValue(level)
+    const regenLevel = ws.healthRegenLevel
+    const healthLevel = ws.healthLevel
+    const regenDisplay = workshopDefenseStatDisplay('healthRegenLevel', regenLevel, opts)
+    const healthDisplay = workshopDefenseStatDisplay('healthLevel', healthLevel, opts)
+    const regenBase = workshopHealthRegenStatValue(regenLevel)
+    const healthBase = workshopHealthStatValue(healthLevel)
     const withEnhanceForced = {
       ...opts,
-      healthRegenEnhancementsMultiplier: 1.45438,
+      healthRegenEnhancementsMultiplier: 1.49757,
     }
-    const displayWithEnhance = workshopDefenseStatDisplay(
+    const regenDisplayWithEnhance = workshopDefenseStatDisplay(
       'healthRegenLevel',
-      level,
+      regenLevel,
       withEnhanceForced,
     )
-    const displayInflated = workshopDefenseStatDisplay(
+    const healthDisplayCalibrated = workshopDefenseStatDisplay('healthLevel', 5600, {
+      armorTowerHealthMultiplier: 4.34,
+      healthLabMultiplier: 3.4,
+      healthCardMultiplier: 4,
+      healthRelicsBonus: 0.97,
+      healthEnhancementsMultiplier: 2.4,
+      submodule: { healthRegenPercentBonus: 200 },
+    })
+    const regenDisplayInflated = workshopDefenseStatDisplay(
       'healthRegenLevel',
-      level,
+      regenLevel,
       {
         ...opts,
         healthRegenLabMultiplier: 2.86,
-        healthRegenEnhancementsMultiplier: 1.45438,
+        healthRegenEnhancementsMultiplier: 1.49757,
       },
     )
     console.log({
-      level,
-      base: formatCoinAbbrev(base),
-      display,
-      displayWithEnhance,
-      displayInflated,
+      healthLevel,
+      regenLevel,
+      healthBase: formatCoinAbbrev(healthBase),
+      regenBase: formatCoinAbbrev(regenBase),
+      healthDisplay,
+      regenDisplay,
+      healthDisplayCalibrated,
+      regenDisplayWithEnhance,
+      regenDisplayInflated,
       opts: {
         healthLab: opts?.healthLabMultiplier,
         regenLab: opts?.healthRegenLabMultiplier,
@@ -151,7 +167,8 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
         chassis: opts?.armorTowerHealthMultiplier,
       },
     })
-    expect(displayWithEnhance).toBe('34.34B/sec')
-    expect(displayInflated).toBe('34.34B/sec')
+    expect(regenDisplayWithEnhance).toBe('46.10B/sec')
+    expect(regenDisplayInflated).toBe('46.10B/sec')
+    expect(healthDisplayCalibrated).toBe('870.57B')
   })
 })

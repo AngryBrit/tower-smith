@@ -2,10 +2,13 @@
  * Wiki **Displayed health** (workshop Health card):
  *
  * **Displayed health** = Workshop × Armor chassis × Health Lab × Health Card × (1 + Relics)
- * × Enhancements.
+ * × Enhancements × Submodule.
  *
- * **Enhancements** = **Health +** lab tier + a fraction of **Health Regen +** excess
- * (calibrated: Health+ **×1.5** + Health Regen+ **×1.6** → **×1.687** enhance term).
+ * **Enhancements** = **Health +** × **Health Regen +** tier multipliers (calibrated: L50/L60
+ * **×1.5** × **×1.6** → **×2.40** enhance term).
+ *
+ * **Submodule** = partial armor sub-module **Health Regen [%]** (calibrated: 200% submodule with
+ * the enhance term above → game **870.57B**).
  *
  * **Relics** sums owned **Health** and **Health Regen** relic % (like displayed damage).
  * No rounding until `formatCoinAbbrev`.
@@ -22,15 +25,35 @@ export type WorkshopHealthDisplayOpts = {
   healthCardMultiplier?: number
   relicsBonus?: number
   healthEnhancementsMultiplier?: number
+  /** Armor sub-module **Health Regen [%]** percent points. */
+  submoduleHealthRegenPercentBonus?: number
 }
 
 /**
- * Share of **Health Regen +** enhancement excess in displayed-health **Enhancements**
- * (calibrated: Health+ **×1.5** + Health Regen+ **×1.6** → **×1.687**).
+ * Share of armor sub-module **Health Regen [%]** in displayed health
+ * (calibrated: 200% submodule with Health+ **×1.5** × Health Regen+ **×1.6** → **870.57B**).
  */
-export const WORKSHOP_DISPLAYED_HEALTH_REGEN_ENHANCE_EXCESS_FRACTION = 0.18675 / 0.6
+export const WORKSHOP_DISPLAYED_HEALTH_REGEN_SUBMODULE_PERCENT_SHARE = 0.02281656 / 200
 
-/** **Health +** tier plus partial **Health Regen +** excess when unlocked. */
+/** Partial armor sub-module **Health Regen [%]** when equipped on the armor module. */
+export function workshopDisplayedHealthSubmoduleMultiplier(
+  healthRegenSubmodulePercentBonus?: number,
+): number {
+  if (
+    healthRegenSubmodulePercentBonus == null ||
+    !Number.isFinite(healthRegenSubmodulePercentBonus) ||
+    healthRegenSubmodulePercentBonus <= 0
+  ) {
+    return 1
+  }
+  return (
+    1 +
+    healthRegenSubmodulePercentBonus *
+      WORKSHOP_DISPLAYED_HEALTH_REGEN_SUBMODULE_PERCENT_SHARE
+  )
+}
+
+/** **Health +** × **Health Regen +** tiers when the Workshop Enhancements lab is unlocked. */
 export function workshopDisplayedHealthEnhancementMultiplier(
   enhanceHealthLevel: number,
   enhanceHealthRegenLevel: number,
@@ -52,11 +75,7 @@ export function workshopDisplayedHealthEnhancementMultiplier(
         )
       : 1
   if (healthMult <= 1 + 1e-9 && regenMult <= 1 + 1e-9) return 1
-  const regenExcess = Math.max(0, regenMult - 1)
-  return (
-    healthMult +
-    regenExcess * WORKSHOP_DISPLAYED_HEALTH_REGEN_ENHANCE_EXCESS_FRACTION
-  )
+  return healthMult * regenMult
 }
 
 export function computeWorkshopDisplayedHealth(
@@ -68,7 +87,10 @@ export function computeWorkshopDisplayedHealth(
   const card = opts.healthCardMultiplier ?? 1
   const relics = 1 + (opts.relicsBonus ?? 0)
   const enhance = opts.healthEnhancementsMultiplier ?? 1
-  return workshop * lab * card * relics * enhance
+  const submodule = workshopDisplayedHealthSubmoduleMultiplier(
+    opts.submoduleHealthRegenPercentBonus,
+  )
+  return workshop * lab * card * relics * enhance * submodule
 }
 
 export function workshopDisplayedHealthFromWorkshopLevel(

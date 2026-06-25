@@ -206,7 +206,7 @@ export type WorkshopDefenseStatDisplayOpts = {
   healthCardMultiplier?: number
   /** Summed **Health** + **Health Regen** relic fraction for **(1 + Relics)**. */
   healthRelicsBonus?: number
-  /** **Health +** + partial **Health Regen +** enhancement tier (omitted when ×1). */
+  /** **Health +** × **Health Regen +** enhancement tiers (omitted when ×1). */
   healthEnhancementsMultiplier?: number
   healthRegenLabMultiplier?: number
   healthRegenCardMultiplier?: number
@@ -255,12 +255,14 @@ export function workshopDefenseStatDisplay(
       const relics = opts?.healthRelicsBonus
       const enhance = opts?.healthEnhancementsMultiplier
       const chassis = opts?.armorTowerHealthMultiplier
+      const submoduleHealthRegen = defenseSub(opts).healthRegenPercentBonus
       if (
         (lab !== undefined && Number.isFinite(lab) && lab > 0) ||
         (card !== undefined && Number.isFinite(card) && card > 1 + 1e-9) ||
         (relics !== undefined && relics > 0) ||
         (enhance !== undefined && enhance > 1 + 1e-9) ||
-        (chassis !== undefined && chassis > 1 + 1e-9)
+        (chassis !== undefined && chassis > 1 + 1e-9) ||
+        (submoduleHealthRegen !== undefined && submoduleHealthRegen > 0)
       ) {
         return workshopDisplayedHealthStatDisplay(completedLevels, {
           armorTowerHealthMultiplier: chassis,
@@ -268,6 +270,10 @@ export function workshopDefenseStatDisplay(
           healthCardMultiplier: card,
           relicsBonus: relics,
           healthEnhancementsMultiplier: enhance,
+          submoduleHealthRegenPercentBonus:
+            submoduleHealthRegen != null && submoduleHealthRegen > 0
+              ? submoduleHealthRegen
+              : undefined,
         })
       }
       return workshopHealthStatDisplay(completedLevels)
