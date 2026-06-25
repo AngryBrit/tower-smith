@@ -212,9 +212,9 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('interestPerWaveLevel', 99)).toBe('5.94%')
     expect(
       workshopUtilityStatDisplay('interestPerWaveLevel', 99, {
-        interestPerWaveLabMultiplier: 1.1,
+        cashBonusEnhanceMultiplier: 1.4,
       }),
-    ).toBe('6.53%')
+    ).toBe('8.32%')
     expect(workshopUtilityNextMarginalCoins('interestPerWaveLevel', 99)).toBeUndefined()
   })
 

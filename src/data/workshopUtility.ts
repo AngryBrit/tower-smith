@@ -234,13 +234,10 @@ export function workshopUtilityStatDisplay(
       return workshopCoinsWaveStatDisplay(completedLevels)
     }
     case 'interestPerWaveLevel': {
-      const m = opts?.interestPerWaveLabMultiplier
-      if (m !== undefined && Number.isFinite(m) && m > 1 + 1e-9) {
-        return formatWithDamageStyleLabMultiplier(
-          workshopInterestPerWaveStatPercentPoints(completedLevels),
-          m,
-          (v) => `${v.toFixed(2)}%`,
-        )
+      const base = workshopInterestPerWaveStatPercentPoints(completedLevels)
+      const enhanceMult = opts?.cashBonusEnhanceMultiplier ?? 1
+      if (enhanceMult > 1 + 1e-9) {
+        return `${(base * enhanceMult).toFixed(2)}%`
       }
       return workshopInterestPerWaveStatDisplay(completedLevels)
     }

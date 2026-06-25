@@ -19,7 +19,6 @@ import {
   utilityResearchIncludePercentLabPoints,
 } from '../types/research'
 import type { WorkshopDefenseStatDisplayOpts } from './workshopDefense'
-import { workshopInterestPerWaveLabDisplayMultiplier } from './workshopInterestPerWave'
 import type {
   WorkshopAttackSubmoduleExtras,
   WorkshopUtilitySubmoduleExtras,
@@ -117,7 +116,6 @@ export type WorkshopUtilityLabDisplayOpts = {
   /** **Coin Bonus +** multiplicative × on the Coins / Kill Bonus card (omitted when 1). */
   coinsKillBonusEnhanceMultiplier?: number
   coinsWaveLabMultiplier?: number
-  interestPerWaveLabMultiplier?: number
   recoveryAmountLabPercentPoints?: number
   /** **Recovery Package +** (and partial **Free Upgrades +**) × on Recovery Amount card. */
   recoveryAmountEnhancementsMultiplier?: number
@@ -243,10 +241,6 @@ export function buildWorkshopUtilityLabDisplayOpts(
       research,
       labOverrides,
       'Coins / Wave',
-    ),
-    interestPerWaveLabMultiplier: workshopInterestPerWaveLabDisplayMultiplier(
-      research,
-      labOverrides,
     ),
     recoveryAmountLabPercentPoints: utilityResearchIncludePercentLabPoints(
       research,

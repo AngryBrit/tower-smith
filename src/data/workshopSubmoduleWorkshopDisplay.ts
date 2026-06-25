@@ -115,10 +115,6 @@ export function enrichUtilityLabDisplayOptsWithSubmodules(
     ...base,
     cashBonusLabMultiplier:
       cashAdd !== 0 ? (base.cashBonusLabMultiplier ?? 1) + cashAdd : base.cashBonusLabMultiplier,
-    interestPerWaveLabMultiplier:
-      sub.interestPerWavePercentPoints != null && sub.interestPerWavePercentPoints !== 0
-        ? (base.interestPerWaveLabMultiplier ?? 1) + sub.interestPerWavePercentPoints / 100
-        : base.interestPerWaveLabMultiplier,
     recoveryAmountLabPercentPoints: mergeRelicPercentPoints(
       base.recoveryAmountLabPercentPoints,
       sub.recoveryAmountPercentPoints ?? 0,
