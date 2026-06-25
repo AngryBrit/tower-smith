@@ -1,0 +1,34 @@
+{
+  "name": "Max Recovery",
+  "workshopKey": "maxRecoveryLevel",
+  "category": "utility",
+  "format": "multiplierX2",
+  "additiveTerms": ["base", "submoduleAdd"],
+  "multiplicativeFactors": ["labMult", "enhanceMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "submoduleAdd": {
+      "kind": "submoduleNumber",
+      "field": "maxRecoveryAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "maxRecoveryLabMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "maxRecoveryEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundMaxRecovery",
+    "notes": "(workshop multiplier + submodule) × max-recovery lab × Recovery Package+ enhancement.",
+    "verifiedAgainst": "playerInfo.dat -> x23.10"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "name": "Interest - Wave",
+  "workshopKey": "interestPerWaveLevel",
+  "category": "utility",
+  "format": "percent2",
+  "additiveTerms": ["base"],
+  "multiplicativeFactors": ["enhanceMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "cashBonusEnhanceMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundInterestPerWave",
+    "virtualAddress": "0x01EA8AC8",
+    "notes": "Workshop % × Cash Bonus+ (cashBonusEnhancement). Interest/Cash Wave research labs are not used on this card.",
+    "verifiedAgainst": "playerInfo.dat -> 8.32%"
+  }
+}

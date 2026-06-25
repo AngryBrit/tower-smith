@@ -1,0 +1,37 @@
+{
+  "name": "Free Defense Upgrade",
+  "workshopKey": "freeDefenseUpgradeLevel",
+  "category": "utility",
+  "format": "percent2",
+  "additiveTerms": ["base", "cardPts", "submodulePts"],
+  "multiplicativeFactors": ["enhanceMult", "relicMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "cardPts": {
+      "kind": "optsNumber",
+      "field": "freeUpgradesCardPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "submodulePts": {
+      "kind": "submoduleNumber",
+      "field": "freeDefenseUpgradePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhanceMult": {
+      "kind": "freeUpgradesEnhancement",
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": {
+      "kind": "relicPercentToMultiplier",
+      "field": "freeDefenseUpgradeRelicPercentPoints",
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundFreeDefenseUpgradeChance",
+    "notes": "(workshop% + card + submodule) × allFreeUpgradesEnhancement × (1 + Σrelic%)",
+    "verifiedAgainst": "playerInfo.dat -> 79.94%"
+  }
+}

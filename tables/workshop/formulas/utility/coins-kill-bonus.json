@@ -1,0 +1,28 @@
+{
+  "name": "Coins - Kill Bonus",
+  "workshopKey": "coinsKillBonusLevel",
+  "category": "utility",
+  "format": "multiplierX2",
+  "additiveTerms": ["base"],
+  "multiplicativeFactors": ["labMult", "enhanceMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "coinsKillBonusLabMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "coinsKillBonusEnhanceMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundCoinsBonusUpgrade",
+    "notes": "Workshop × lab × Coin Bonus+ only. Coin relics and transient coinsMultFromModule are excluded from the steady-state card.",
+    "verifiedAgainst": "playerInfo.dat -> x8.72"
+  }
+}

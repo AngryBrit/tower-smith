@@ -1,0 +1,29 @@
+{
+  "name": "Cash / Wave",
+  "workshopKey": "cashPerWaveLevel",
+  "category": "utility",
+  "format": "integerRound",
+  "additiveTerms": ["base", "submoduleAdd"],
+  "multiplicativeFactors": ["labMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "submoduleAdd": {
+      "kind": "submoduleNumber",
+      "field": "cashPerWaveAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "cashPerWaveLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundCashPerWave",
+    "virtualAddress": "0x01EA8B24",
+    "notes": "(workshop + submodule) × cash/wave lab multiplier. Cash relic does not affect this card.",
+    "verifiedAgainst": "playerInfo.dat -> 656"
+  }
+}

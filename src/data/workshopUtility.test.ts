@@ -290,6 +290,16 @@ describe('workshopUtility', () => {
     expect(workshopUtilityNextMarginalCoins('enemyAttackLevelSkipLevel', 699)).toBeUndefined()
   })
 
+  it('applies Enemy Level Skip + enhancement after lab/relic on attack skip', () => {
+    // (14.05 base + 2 lab + 2 relic) × x1.03 (Enemy Level Skip+ L3) = 18.59%.
+    expect(
+      workshopUtilityStatDisplay('enemyAttackLevelSkipLevel', 280, {
+        enemyAttackLevelSkipLabPercentPoints: 4,
+        enemyLevelSkipEnhancementsMultiplier: 1.03,
+      }),
+    ).toBe('18.59%')
+  })
+
   it('Enemy Health Level Skip uses workshop wiki ladder (699 levels)', () => {
     expect(workshopUtilityMaxLevel('enemyHealthLevelSkipLevel')).toBe(
       WORKSHOP_ENEMY_HEALTH_LEVEL_SKIP_MAX_LEVEL,
@@ -304,5 +314,24 @@ describe('workshopUtility', () => {
     expect(workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 0)).toBe('0.05%')
     expect(workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 699)).toBe('35.00%')
     expect(workshopUtilityNextMarginalCoins('enemyHealthLevelSkipLevel', 699)).toBeUndefined()
+  })
+
+  it('applies Enemy Level Skip + enhancement after lab on health skip', () => {
+    // (14.05 base + 2 lab) × x1.03 (Enemy Level Skip+ L3) = 16.53%.
+    expect(
+      workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 280, {
+        enemyHealthLevelSkipLabPercentPoints: 2,
+        enemyLevelSkipEnhancementsMultiplier: 1.03,
+      }),
+    ).toBe('16.53%')
+  })
+
+  it('clamps level-skip chance to 100% (binary max)', () => {
+    expect(
+      workshopUtilityStatDisplay('enemyHealthLevelSkipLevel', 699, {
+        enemyHealthLevelSkipLabPercentPoints: 200,
+        enemyLevelSkipEnhancementsMultiplier: 1.5,
+      }),
+    ).toBe('100.00%')
   })
 })

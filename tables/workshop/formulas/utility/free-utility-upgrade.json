@@ -1,0 +1,37 @@
+{
+  "name": "Free Utility Upgrade",
+  "workshopKey": "freeUtilityUpgradeLevel",
+  "category": "utility",
+  "format": "percent2",
+  "additiveTerms": ["base", "cardPts", "submodulePts"],
+  "multiplicativeFactors": ["enhanceMult", "relicMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "cardPts": {
+      "kind": "optsNumber",
+      "field": "freeUpgradesCardPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "submodulePts": {
+      "kind": "submoduleNumber",
+      "field": "freeUtilityUpgradePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhanceMult": {
+      "kind": "freeUpgradesEnhancement",
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": {
+      "kind": "relicPercentToMultiplier",
+      "field": "freeUtilityUpgradeRelicPercentPoints",
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundFreeUtilityUpgradeChance",
+    "notes": "(workshop% + card + submodule) × allFreeUpgradesEnhancement × (1 + Σrelic%)",
+    "verifiedAgainst": "playerInfo.dat -> 80.68%"
+  }
+}

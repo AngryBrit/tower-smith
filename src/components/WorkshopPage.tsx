@@ -137,6 +137,7 @@ import { workshopDisplayedCoinsKillBonusEnhancementMultiplier } from '../data/wo
 import { workshopDisplayedWallHealthEnhancementMultiplier } from '../data/workshopWallHealth'
 import { workshopDisplayedRecoveryAmountEnhancementMultiplier } from '../data/workshopRecoveryAmount'
 import { workshopDisplayedMaxRecoveryEnhancementMultiplier } from '../data/workshopMaxRecovery'
+import { workshopDisplayedEnemyLevelSkipEnhancementMultiplier } from '../data/workshopEnemyAttackLevelSkip'
 import {
   WORKSHOP_UTILITY_UPGRADE_ORDER,
   workshopUtilityClampLevel,
@@ -2608,6 +2609,10 @@ export function WorkshopPage({
       workshopPersisted.enhanceRecoveryPackageLevel,
       enhancementsUnlocked,
     )
+    const enemyLevelSkipEnhanceMult = workshopDisplayedEnemyLevelSkipEnhancementMultiplier(
+      workshopPersisted.enhanceEnemyLevelSkipLevel,
+      enhancementsUnlocked,
+    )
     const enriched: WorkshopUtilityLabDisplayOpts = {
       ...(lab ?? {}),
       cashBonusLabMultiplier: mergeLabAndCardMult(lab?.cashBonusLabMultiplier, cash),
@@ -2622,6 +2627,8 @@ export function WorkshopPage({
         recoveryAmountEnhanceMult > 1 + 1e-9 ? recoveryAmountEnhanceMult : undefined,
       maxRecoveryEnhancementsMultiplier:
         maxRecoveryEnhanceMult > 1 + 1e-9 ? maxRecoveryEnhanceMult : undefined,
+      enemyLevelSkipEnhancementsMultiplier:
+        enemyLevelSkipEnhanceMult > 1 + 1e-9 ? enemyLevelSkipEnhanceMult : undefined,
       enhanceFreeUpgradesLevel: workshopPersisted.enhanceFreeUpgradesLevel,
       workshopEnhancementsLabUnlocked: enhancementsUnlocked,
     }
@@ -2634,6 +2641,7 @@ export function WorkshopPage({
       coinBonusEnhanceMult <= 1 + 1e-9 &&
       recoveryAmountEnhanceMult <= 1 + 1e-9 &&
       maxRecoveryEnhanceMult <= 1 + 1e-9 &&
+      enemyLevelSkipEnhanceMult <= 1 + 1e-9 &&
       workshopPersisted.enhanceFreeUpgradesLevel <= 0
     ) {
       return enrichUtilityLabDisplayOpts(

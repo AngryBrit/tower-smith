@@ -1,0 +1,34 @@
+{
+  "name": "Enemy Health Level Skip",
+  "workshopKey": "enemyHealthLevelSkipLevel",
+  "category": "utility",
+  "format": "percent2",
+  "additiveTerms": ["base", "labPts"],
+  "multiplicativeFactors": ["enhanceMult"],
+  "clampMax": 100,
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "enemyHealthLevelSkipLabPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "enemyLevelSkipEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundHealthLevelSkipChance",
+    "virtualAddress": "0x01EA8FF0",
+    "constants": [
+      { "hex": "0xb95ae8", "value": 0.0005, "usedFor": "workshop per-level + base (0.05%)" },
+      { "hex": "0xb95c58", "value": 0.01, "usedFor": "lab points scale" }
+    ],
+    "notes": "(workshop% + lab% + module + techTree + relic.enemyHealthSkip) × enemyLevelSkipEnhancement (Main+0x3A0), clamped to 100%. The enemyHealthSkip relic is added before the enhancement multiply.",
+    "verifiedAgainst": "playerInfo.dat -> 16.53%"
+  }
+}

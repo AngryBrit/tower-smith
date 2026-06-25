@@ -127,6 +127,8 @@ export type WorkshopUtilityLabDisplayOpts = {
   packageChanceLabPercentPoints?: number
   enemyAttackLevelSkipLabPercentPoints?: number
   enemyHealthLevelSkipLabPercentPoints?: number
+  /** **Enemy Level Skip +** × on both level-skip cards (applied after lab/relic, omitted when 1). */
+  enemyLevelSkipEnhancementsMultiplier?: number
   /** Equipped Free Upgrades card (additive % to all free-upgrade rows). */
   freeUpgradesCardPercentPoints?: number
   /** Equipped Recovery Package Chance card (additive % points). */

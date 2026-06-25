@@ -1,0 +1,29 @@
+{
+  "name": "Coins / Wave",
+  "workshopKey": "coinsWaveLevel",
+  "category": "utility",
+  "format": "integerRound",
+  "additiveTerms": ["base", "submoduleAdd"],
+  "multiplicativeFactors": ["labMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "submoduleAdd": {
+      "kind": "submoduleNumber",
+      "field": "coinsWaveAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "coinsWaveLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundCoinsPerWave",
+    "virtualAddress": "0x01EA8B50",
+    "notes": "(workshop + submodule) × coins/wave lab multiplier. Coins relic does not affect this card.",
+    "verifiedAgainst": "playerInfo.dat -> 228"
+  }
+}

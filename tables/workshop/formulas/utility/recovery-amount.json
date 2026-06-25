@@ -1,0 +1,39 @@
+{
+  "name": "Recovery Amount",
+  "workshopKey": "recoveryAmountLevel",
+  "category": "utility",
+  "format": "percent2",
+  "additiveTerms": ["base", "labPts"],
+  "multiplicativeFactors": ["enhanceMult", "relicMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "recoveryAmountLabPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "recoveryAmountEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": {
+      "kind": "optsMultiplier",
+      "field": "recoveryAmountRelicMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundRecoveryAmount",
+    "virtualAddress": "0x01EA8B7C",
+    "constants": [
+      { "hex": "0xb94c70", "value": 0.004, "usedFor": "workshop per-level (0.4%)" },
+      { "hex": "0xb94198", "value": 0.14, "usedFor": "base 14%" }
+    ],
+    "notes": "((14 + 0.4·level + lab% + module%) × recoveryPackageEnhancement + techTree) × relics.recoveryAmount",
+    "verifiedAgainst": "playerInfo.dat -> 220.86%"
+  }
+}

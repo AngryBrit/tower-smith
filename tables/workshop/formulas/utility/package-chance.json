@@ -1,0 +1,28 @@
+{
+  "name": "Package Chance",
+  "workshopKey": "packageChanceLevel",
+  "category": "utility",
+  "format": "percent2",
+  "additiveTerms": ["base", "labPts", "cardPts"],
+  "multiplicativeFactors": [],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "packageChanceLabPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "cardPts": {
+      "kind": "optsNumber",
+      "field": "packageChanceCardPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundPackageChance",
+    "notes": "Additive lab and card percent points on workshop base.",
+    "verifiedAgainst": "playerInfo.dat -> 63.00%"
+  }
+}

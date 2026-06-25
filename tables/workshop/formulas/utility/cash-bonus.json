@@ -1,0 +1,28 @@
+{
+  "name": "Cash Bonus",
+  "workshopKey": "cashBonusLevel",
+  "category": "utility",
+  "format": "multiplierX2",
+  "additiveTerms": ["base"],
+  "multiplicativeFactors": ["labMult", "enhanceMult"],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "cashBonusLabMultiplier",
+      "default": 1,
+      "activeRule": "definedAboveOne"
+    },
+    "enhanceMult": {
+      "kind": "optsMultiplier",
+      "field": "cashBonusEnhanceMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::GetOutOfRoundCashBonusUpgrade",
+    "notes": "Workshop × lab/relic cash multiplier × Cash Bonus+ enhancement (cashBonusEnhancement). Cash relics fold into labMult on the card.",
+    "verifiedAgainst": "playerInfo.dat -> x6.71"
+  }
+}

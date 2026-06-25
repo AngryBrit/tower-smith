@@ -118,3 +118,9 @@ const copy = spawnSync(process.execPath, ['scripts/copy-god-tables-to-public.mjs
   stdio: 'inherit',
 })
 if (copy.status !== 0) process.exit(copy.status ?? 1)
+
+const formulas = spawnSync(process.execPath, ['scripts/sync-workshop-formula-tables.mjs'], {
+  cwd: root,
+  stdio: 'inherit',
+})
+if (formulas.status !== 0) process.exit(formulas.status ?? 1)
