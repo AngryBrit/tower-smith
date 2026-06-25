@@ -161,6 +161,7 @@ describe('workshopUtility', () => {
   })
 
   it('applies Free Upgrades + enhancement and stacked relic/submodule on free attack row', () => {
+    // (workshop 49.5 + card 10 + submodule 6) × Free Upgrades+ x1.10 (L10) × (1 + relic 6%) = 76.37%.
     expect(
       workshopUtilityStatDisplay('freeAttackUpgradeLevel', 99, {
         freeUpgradesCardPercentPoints: 10,

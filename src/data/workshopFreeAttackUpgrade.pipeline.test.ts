@@ -45,6 +45,6 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopFreeAttackUpgrade pipeline', 
     expect(enhancementsUnlocked).toBe(true)
     expect(opts?.freeAttackUpgradeRelicPercentPoints).toBe(8)
     expect(opts?.submodule?.freeAttackUpgradePercentPoints).toBe(6)
-    expect(display).toBe('79.25%')
+    expect(display).toBe('79.94%')
   })
 })

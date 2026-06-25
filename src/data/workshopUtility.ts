@@ -21,7 +21,7 @@ import {
   WORKSHOP_COINS_WAVE_MAX_LEVEL,
   workshopCoinsWaveStatDisplay,
 } from './workshopCoinsWave'
-import { workshopDisplayedFreeUpgradesEnhancementWorkshopPercentPoints } from './workshopEnhanceFreeUpgrades'
+import { workshopFreeUpgradeDisplayPercentPoints } from './workshopEnhanceFreeUpgrades'
 import {
   WORKSHOP_FREE_ATTACK_UPGRADE_MAX_LEVEL,
   workshopFreeAttackUpgradeStatDisplay,
@@ -159,6 +159,7 @@ function utilitySub(opts: WorkshopUtilityLabDisplayOpts | undefined): WorkshopUt
   return opts?.submodule ?? {}
 }
 
+/** Returns `displayValue − workshop` so callers can format `workshop + extra` → final value. */
 function freeUpgradeDisplayExtraPercentPoints(
   workshopPercentPoints: number,
   opts: WorkshopUtilityLabDisplayOpts | undefined,
@@ -166,15 +167,15 @@ function freeUpgradeDisplayExtraPercentPoints(
   submodulePercentPoints: number,
 ): number {
   const card = opts?.freeUpgradesCardPercentPoints ?? 0
-  const enhance = workshopDisplayedFreeUpgradesEnhancementWorkshopPercentPoints(
-    opts?.enhanceFreeUpgradesLevel ?? 0,
+  const value = workshopFreeUpgradeDisplayPercentPoints(
     workshopPercentPoints,
     card,
     relicRelicPercentPoints,
     submodulePercentPoints,
+    opts?.enhanceFreeUpgradesLevel ?? 0,
     opts?.workshopEnhancementsLabUnlocked ?? false,
   )
-  return card + relicRelicPercentPoints + submodulePercentPoints + enhance
+  return value - workshopPercentPoints
 }
 
 export function workshopUtilityStatDisplay(
