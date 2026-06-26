@@ -63,7 +63,7 @@ export function workshopCriticalFactorStatDisplay(
   return `×${displayed.toFixed(2)}`
 }
 
-/** Numeric form of {@link workshopCriticalFactorStatDisplay} (2-decimal truncated). */
+/** Numeric form of {@link workshopCriticalFactorStatDisplay} (2-decimal rounded). */
 export function workshopCriticalFactorDisplayedNumber(
   completedLevels: number,
   labMultiplier?: number,
@@ -78,8 +78,8 @@ export function workshopCriticalFactorDisplayedNumber(
   v += submoduleAdd
   if (relicMultiplier > 1 + 1e-9) v *= relicMultiplier
   if (enhancementMultiplier > 1 + 1e-9) v *= enhancementMultiplier
-  // In-game workshop card truncates to 2 decimals (does not round half up).
-  return Math.floor(v * 100 + 1e-9) / 100
+  // In-game workshop card rounds to 2 decimals (verified vs playerInfo.dat: 113.128 → ×113.13).
+  return Math.round(v * 100) / 100
 }
 
 export function workshopCriticalFactorNextMarginalCoins(completedLevels: number): number | undefined {

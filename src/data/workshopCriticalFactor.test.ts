@@ -36,4 +36,14 @@ describe('workshop critical factor displayed value', () => {
   it('defaults (no relics/enhancement) match a plain workshop × lab card', () => {
     expect(workshopCriticalFactorStatDisplay(0, 1.3)).toBe('×1.56')
   })
+
+  it('rounds the displayed 2-decimal value (verified ×113.13 on live save)', () => {
+    // Critical Factor 150 (×16.20), lab ×2.35, relics +58% (×1.58), enhancement ×1.43,
+    // sub-module +12 → raw 113.128158, in-game card reads ×113.13 (rounded, not truncated).
+    expect(workshopCriticalFactorStatDisplay(150, 2.35, 12, 1.43, 1.58)).toBe('×113.13')
+    expect(workshopCriticalFactorDisplayedNumber(150, 2.35, 12, 1.43, 1.58)).toBeCloseTo(
+      113.13,
+      2,
+    )
+  })
 })

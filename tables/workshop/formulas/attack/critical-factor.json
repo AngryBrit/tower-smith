@@ -7,7 +7,7 @@
     { "op": "mul", "refs": ["base", "labMult"] },
     { "op": "add", "refs": ["sub"] },
     { "op": "mul", "refs": ["relicMult", "enhance"] },
-    { "op": "truncateTo", "decimals": 2 }
+    { "op": "roundTo", "decimals": 2 }
   ],
   "operands": {
     "base": { "kind": "base" },
@@ -39,7 +39,7 @@
   "source": {
     "binaryFunction": "ModuleManager::get_CriticalFactor",
     "virtualAddress": "0x01F0A4A8",
-    "notes": "((workshop × lab) + submodule) × relic × Critical Factor+ enhancement; truncate 2dp",
+    "notes": "((workshop × lab) + submodule) × relic × Critical Factor+ enhancement; round 2dp",
     "verifiedAgainst": "playerInfo.dat -> workshop card"
   }
 }
