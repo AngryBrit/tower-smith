@@ -1,0 +1,22 @@
+{
+  "name": "Knockback Chance",
+  "workshopKey": "knockbackChanceLevel",
+  "category": "defense",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "knockbackChancePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (knockback aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "workshop% + armor sub-module Knockback Chance % points. Additive, then toFixed(2)%.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Knockback Chance card"
+  }
+}

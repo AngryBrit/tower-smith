@@ -1,0 +1,28 @@
+{
+  "name": "Defense Percent",
+  "workshopKey": "defensePercentLevel",
+  "category": "defense",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPts", "cardPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "defensePercentLabPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "cardPts": {
+      "kind": "optsNumber",
+      "field": "defensePercentCardPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_DefensePercentage",
+    "virtualAddress": "0x01F0A8A0",
+    "notes": "workshop% + Defense% lab points (lab+relic+submodule merged into labPts) + equipped Extra Defense card points. Additive, then toFixed(2)%.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Defense % card"
+  }
+}

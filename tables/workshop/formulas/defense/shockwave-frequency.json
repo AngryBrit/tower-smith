@@ -1,0 +1,26 @@
+{
+  "name": "Shockwave Frequency",
+  "workshopKey": "shockwaveFrequencyLevel",
+  "category": "defense",
+  "format": "secondsCooldown",
+  "pipeline": [
+    { "op": "add", "refs": ["base"] },
+    { "op": "sub", "refs": ["reduction"] },
+    { "op": "clampMin", "value": 0 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "reduction": {
+      "kind": "submoduleNumber",
+      "field": "shockwaveFrequencySecondsReduction",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_ShockwaveFrequency",
+    "virtualAddress": "0x01F0AAD0",
+    "notes": "max(0, workshop seconds - armor sub-module frequency reduction). Cooldown format (rounds to 0.1s). Plain (no reduction) shows toFixed(2)s via legacy fallback.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Shockwave Frequency card"
+  }
+}

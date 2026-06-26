@@ -1,0 +1,28 @@
+{
+  "name": "Land Mine Damage",
+  "workshopKey": "landMineDamageLevel",
+  "category": "defense",
+  "format": "multiplierX1",
+  "pipeline": [{ "op": "mul", "refs": ["base", "labMult", "enhance"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "relicPercentToMultiplier",
+      "field": "landMineDamageLabPercentPoints",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "landMineDamageEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (land mine damage aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "workshop multiplier x (1 + Land Mine Damage lab %/100; relic+submodule % folded in) x Land Mine Damage+ enhance. Format x{n.toFixed(1)}.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Land Mine Damage card"
+  }
+}

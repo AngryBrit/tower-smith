@@ -1,0 +1,54 @@
+{
+  "name": "Health",
+  "workshopKey": "healthLevel",
+  "category": "defense",
+  "format": "coinAbbrev",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "chassis", "labMult", "cardMult", "relicMult", "enhance", "submodule"] }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "chassis": {
+      "kind": "optsMultiplier",
+      "field": "armorTowerHealthMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "healthLabMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "cardMult": {
+      "kind": "optsMultiplier",
+      "field": "healthCardMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": {
+      "kind": "onePlusOptsFraction",
+      "field": "healthRelicsBonus",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "healthEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "submodule": {
+      "kind": "submoduleNumber",
+      "field": "healthRegenPercentBonus",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (max-health aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "Displayed health = Workshop x Armor chassis x Health lab x Health card x (1 + Health/HealthRegen relics) x (Health+ x HealthRegen+) x armor sub-module Health Regen[%] share. No rounding before formatCoinAbbrev. Level-0 x-multiplier preview defers to legacy.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Health card"
+  }
+}

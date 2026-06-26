@@ -68,6 +68,10 @@ function evaluatePipelineStep(
       const delta = sumRefs(spec, step.refs, operandValues)
       return acc === undefined ? delta : acc + delta
     }
+    case 'sub': {
+      const delta = sumRefs(spec, step.refs, operandValues)
+      return acc === undefined ? -delta : acc - delta
+    }
     case 'mul': {
       const factor = productRefs(spec, step.refs, operandValues)
       return acc === undefined ? factor : acc * factor
@@ -78,6 +82,8 @@ function evaluatePipelineStep(
       return roundTo(acc ?? 0, step.decimals)
     case 'clampMax':
       return Math.min(acc ?? 0, step.value)
+    case 'clampMin':
+      return Math.max(acc ?? 0, step.value)
   }
 }
 
@@ -99,6 +105,12 @@ export function formatWorkshopFormulaValue(value: number, format: WorkshopFormul
   switch (format) {
     case 'percent2':
       return `${value.toFixed(2)}%`
+    case 'percentTrim': {
+      if (Number.isInteger(value)) return `${value}%`
+      return `${value.toFixed(2).replace(/\.?0+$/, '')}%`
+    }
+    case 'multiplierX1':
+      return `x${value.toFixed(1)}`
     case 'multiplierX2':
       return `x${value.toFixed(2)}`
     case 'multiplierTimes2':
@@ -115,6 +127,10 @@ export function formatWorkshopFormulaValue(value: number, format: WorkshopFormul
       return `${value.toFixed(2)}m`
     case 'seconds2':
       return `${value.toFixed(2)} sec`
+    case 'secondsCooldown': {
+      const rounded = Math.round(value * 10) / 10
+      return Number.isInteger(rounded) ? `${rounded}s` : `${rounded.toFixed(1)}s`
+    }
     case 'perMeterTrim': {
       if (Math.abs(value - 1) < EPS) return 'x1.000 / m'
       const s = value.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')
@@ -122,6 +138,8 @@ export function formatWorkshopFormulaValue(value: number, format: WorkshopFormul
     }
     case 'coinAbbrev':
       return formatCoinAbbrev(value)
+    case 'healthRegenPerSec':
+      return `${formatCoinAbbrev(value)}/sec`
   }
 }
 

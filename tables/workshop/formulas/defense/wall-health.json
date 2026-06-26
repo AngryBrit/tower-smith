@@ -1,0 +1,31 @@
+{
+  "name": "Wall Health",
+  "workshopKey": "wallHealthLevel",
+  "category": "defense",
+  "format": "percent2",
+  "pipeline": [
+    { "op": "add", "refs": ["base", "labPts"] },
+    { "op": "mul", "refs": ["enhance"] }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPts": {
+      "kind": "optsNumber",
+      "field": "wallHealthLabPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "wallHealthEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (wall health aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "(workshop% + Wall Health lab points; relic+submodule folded into labPts) x Wall Health+ enhance. toFixed(2)%.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Wall Health card"
+  }
+}

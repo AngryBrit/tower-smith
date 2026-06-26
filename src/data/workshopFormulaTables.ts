@@ -17,27 +17,46 @@ import formula9 from '../../tables/workshop/formulas/attack/critical-chance.json
 import formula10 from '../../tables/workshop/formulas/attack/critical-factor.json' with { type: 'json' }
 import formula11 from '../../tables/workshop/formulas/attack/damage.json' with { type: 'json' }
 import formula12 from '../../tables/workshop/formulas/attack/damage-meter.json' with { type: 'json' }
-import formula13 from '../../tables/workshop/formulas/utility/enemy-attack-level-skip.json' with { type: 'json' }
-import formula14 from '../../tables/workshop/formulas/utility/enemy-health-level-skip.json' with { type: 'json' }
-import formula15 from '../../tables/workshop/formulas/utility/free-attack-upgrade.json' with { type: 'json' }
-import formula16 from '../../tables/workshop/formulas/utility/free-defense-upgrade.json' with { type: 'json' }
-import formula17 from '../../tables/workshop/formulas/utility/free-utility-upgrade.json' with { type: 'json' }
-import formula18 from '../../tables/workshop/formulas/utility/interest-wave.json' with { type: 'json' }
-import formula19 from '../../tables/workshop/formulas/utility/max-recovery.json' with { type: 'json' }
-import formula20 from '../../tables/workshop/formulas/attack/multishot-chance.json' with { type: 'json' }
-import formula21 from '../../tables/workshop/formulas/attack/multishot-targets.json' with { type: 'json' }
-import formula22 from '../../tables/workshop/formulas/utility/package-chance.json' with { type: 'json' }
-import formula23 from '../../tables/workshop/formulas/attack/rapid-fire-chance.json' with { type: 'json' }
-import formula24 from '../../tables/workshop/formulas/attack/rapid-fire-duration.json' with { type: 'json' }
-import formula25 from '../../tables/workshop/formulas/utility/recovery-amount.json' with { type: 'json' }
-import formula26 from '../../tables/workshop/formulas/attack/rend-armor-chance.json' with { type: 'json' }
-import formula27 from '../../tables/workshop/formulas/attack/rend-armor-mult.json' with { type: 'json' }
-import formula28 from '../../tables/workshop/formulas/attack/super-crit-chance.json' with { type: 'json' }
-import formula29 from '../../tables/workshop/formulas/attack/super-crit-mult.json' with { type: 'json' }
+import formula13 from '../../tables/workshop/formulas/defense/death-defy.json' with { type: 'json' }
+import formula14 from '../../tables/workshop/formulas/defense/defense-absolute.json' with { type: 'json' }
+import formula15 from '../../tables/workshop/formulas/defense/defense-percent.json' with { type: 'json' }
+import formula16 from '../../tables/workshop/formulas/utility/enemy-attack-level-skip.json' with { type: 'json' }
+import formula17 from '../../tables/workshop/formulas/utility/enemy-health-level-skip.json' with { type: 'json' }
+import formula18 from '../../tables/workshop/formulas/utility/free-attack-upgrade.json' with { type: 'json' }
+import formula19 from '../../tables/workshop/formulas/utility/free-defense-upgrade.json' with { type: 'json' }
+import formula20 from '../../tables/workshop/formulas/utility/free-utility-upgrade.json' with { type: 'json' }
+import formula21 from '../../tables/workshop/formulas/defense/health.json' with { type: 'json' }
+import formula22 from '../../tables/workshop/formulas/defense/health-regen.json' with { type: 'json' }
+import formula23 from '../../tables/workshop/formulas/utility/interest-wave.json' with { type: 'json' }
+import formula24 from '../../tables/workshop/formulas/defense/knockback-chance.json' with { type: 'json' }
+import formula25 from '../../tables/workshop/formulas/defense/knockback-force.json' with { type: 'json' }
+import formula26 from '../../tables/workshop/formulas/defense/land-mine-chance.json' with { type: 'json' }
+import formula27 from '../../tables/workshop/formulas/defense/land-mine-damage.json' with { type: 'json' }
+import formula28 from '../../tables/workshop/formulas/defense/land-mine-radius.json' with { type: 'json' }
+import formula29 from '../../tables/workshop/formulas/defense/lifesteal.json' with { type: 'json' }
+import formula30 from '../../tables/workshop/formulas/utility/max-recovery.json' with { type: 'json' }
+import formula31 from '../../tables/workshop/formulas/attack/multishot-chance.json' with { type: 'json' }
+import formula32 from '../../tables/workshop/formulas/attack/multishot-targets.json' with { type: 'json' }
+import formula33 from '../../tables/workshop/formulas/defense/orbs.json' with { type: 'json' }
+import formula34 from '../../tables/workshop/formulas/defense/orb-speed.json' with { type: 'json' }
+import formula35 from '../../tables/workshop/formulas/utility/package-chance.json' with { type: 'json' }
+import formula36 from '../../tables/workshop/formulas/attack/rapid-fire-chance.json' with { type: 'json' }
+import formula37 from '../../tables/workshop/formulas/attack/rapid-fire-duration.json' with { type: 'json' }
+import formula38 from '../../tables/workshop/formulas/utility/recovery-amount.json' with { type: 'json' }
+import formula39 from '../../tables/workshop/formulas/attack/rend-armor-chance.json' with { type: 'json' }
+import formula40 from '../../tables/workshop/formulas/attack/rend-armor-mult.json' with { type: 'json' }
+import formula41 from '../../tables/workshop/formulas/defense/shockwave-frequency.json' with { type: 'json' }
+import formula42 from '../../tables/workshop/formulas/defense/shockwave-size.json' with { type: 'json' }
+import formula43 from '../../tables/workshop/formulas/attack/super-crit-chance.json' with { type: 'json' }
+import formula44 from '../../tables/workshop/formulas/attack/super-crit-mult.json' with { type: 'json' }
+import formula45 from '../../tables/workshop/formulas/defense/thorn-damage.json' with { type: 'json' }
+import formula46 from '../../tables/workshop/formulas/defense/wall-health.json' with { type: 'json' }
+import formula47 from '../../tables/workshop/formulas/defense/wall-rebuild.json' with { type: 'json' }
 
-export const WORKSHOP_FORMULA_COUNT = 30
+export const WORKSHOP_FORMULA_COUNT = 48
 export const WORKSHOP_UTILITY_FORMULA_COUNT = 13
 export const WORKSHOP_ATTACK_FORMULA_COUNT = 17
+export const WORKSHOP_DEFENSE_FORMULA_COUNT = 18
 
 const workshopFormulaByKey: Record<string, WorkshopFormulaSpec> = {
   'attackRangeLevel': formula0 as WorkshopFormulaSpec,
@@ -53,23 +72,41 @@ const workshopFormulaByKey: Record<string, WorkshopFormulaSpec> = {
   'critFactorLevel': formula10 as WorkshopFormulaSpec,
   'damageLevel': formula11 as WorkshopFormulaSpec,
   'damagePerMeterLevel': formula12 as WorkshopFormulaSpec,
-  'enemyAttackLevelSkipLevel': formula13 as WorkshopFormulaSpec,
-  'enemyHealthLevelSkipLevel': formula14 as WorkshopFormulaSpec,
-  'freeAttackUpgradeLevel': formula15 as WorkshopFormulaSpec,
-  'freeDefenseUpgradeLevel': formula16 as WorkshopFormulaSpec,
-  'freeUtilityUpgradeLevel': formula17 as WorkshopFormulaSpec,
-  'interestPerWaveLevel': formula18 as WorkshopFormulaSpec,
-  'maxRecoveryLevel': formula19 as WorkshopFormulaSpec,
-  'multishotChanceLevel': formula20 as WorkshopFormulaSpec,
-  'multishotTargetsLevel': formula21 as WorkshopFormulaSpec,
-  'packageChanceLevel': formula22 as WorkshopFormulaSpec,
-  'rapidFireChanceLevel': formula23 as WorkshopFormulaSpec,
-  'rapidFireDurationLevel': formula24 as WorkshopFormulaSpec,
-  'recoveryAmountLevel': formula25 as WorkshopFormulaSpec,
-  'rendArmorChanceLevel': formula26 as WorkshopFormulaSpec,
-  'rendArmorMultLevel': formula27 as WorkshopFormulaSpec,
-  'superCritChanceLevel': formula28 as WorkshopFormulaSpec,
-  'superCritMultLevel': formula29 as WorkshopFormulaSpec,
+  'deathDefyLevel': formula13 as WorkshopFormulaSpec,
+  'defenseAbsoluteLevel': formula14 as WorkshopFormulaSpec,
+  'defensePercentLevel': formula15 as WorkshopFormulaSpec,
+  'enemyAttackLevelSkipLevel': formula16 as WorkshopFormulaSpec,
+  'enemyHealthLevelSkipLevel': formula17 as WorkshopFormulaSpec,
+  'freeAttackUpgradeLevel': formula18 as WorkshopFormulaSpec,
+  'freeDefenseUpgradeLevel': formula19 as WorkshopFormulaSpec,
+  'freeUtilityUpgradeLevel': formula20 as WorkshopFormulaSpec,
+  'healthLevel': formula21 as WorkshopFormulaSpec,
+  'healthRegenLevel': formula22 as WorkshopFormulaSpec,
+  'interestPerWaveLevel': formula23 as WorkshopFormulaSpec,
+  'knockbackChanceLevel': formula24 as WorkshopFormulaSpec,
+  'knockbackForceLevel': formula25 as WorkshopFormulaSpec,
+  'landMineChanceLevel': formula26 as WorkshopFormulaSpec,
+  'landMineDamageLevel': formula27 as WorkshopFormulaSpec,
+  'landMineRadiusLevel': formula28 as WorkshopFormulaSpec,
+  'lifestealLevel': formula29 as WorkshopFormulaSpec,
+  'maxRecoveryLevel': formula30 as WorkshopFormulaSpec,
+  'multishotChanceLevel': formula31 as WorkshopFormulaSpec,
+  'multishotTargetsLevel': formula32 as WorkshopFormulaSpec,
+  'orbsLevel': formula33 as WorkshopFormulaSpec,
+  'orbSpeedLevel': formula34 as WorkshopFormulaSpec,
+  'packageChanceLevel': formula35 as WorkshopFormulaSpec,
+  'rapidFireChanceLevel': formula36 as WorkshopFormulaSpec,
+  'rapidFireDurationLevel': formula37 as WorkshopFormulaSpec,
+  'recoveryAmountLevel': formula38 as WorkshopFormulaSpec,
+  'rendArmorChanceLevel': formula39 as WorkshopFormulaSpec,
+  'rendArmorMultLevel': formula40 as WorkshopFormulaSpec,
+  'shockwaveFrequencyLevel': formula41 as WorkshopFormulaSpec,
+  'shockwaveSizeLevel': formula42 as WorkshopFormulaSpec,
+  'superCritChanceLevel': formula43 as WorkshopFormulaSpec,
+  'superCritMultLevel': formula44 as WorkshopFormulaSpec,
+  'thornDamageLevel': formula45 as WorkshopFormulaSpec,
+  'wallHealthLevel': formula46 as WorkshopFormulaSpec,
+  'wallRebuildLevel': formula47 as WorkshopFormulaSpec,
 }
 
 export function getWorkshopFormulaSpec(workshopKey: string): WorkshopFormulaSpec | undefined {
@@ -81,6 +118,11 @@ export function getWorkshopAttackFormulaSpec(workshopKey: string): WorkshopFormu
   return spec?.category === 'attack' ? spec : undefined
 }
 
+export function getWorkshopDefenseFormulaSpec(workshopKey: string): WorkshopFormulaSpec | undefined {
+  const spec = workshopFormulaByKey[workshopKey]
+  return spec?.category === 'defense' ? spec : undefined
+}
+
 export function getWorkshopFormulaSpecs(): Readonly<Record<string, WorkshopFormulaSpec>> {
   return workshopFormulaByKey
 }
@@ -89,6 +131,14 @@ export function getWorkshopAttackFormulaSpecs(): Readonly<Record<string, Worksho
   const out: Record<string, WorkshopFormulaSpec> = {}
   for (const [key, spec] of Object.entries(workshopFormulaByKey)) {
     if (spec.category === 'attack') out[key] = spec
+  }
+  return out
+}
+
+export function getWorkshopDefenseFormulaSpecs(): Readonly<Record<string, WorkshopFormulaSpec>> {
+  const out: Record<string, WorkshopFormulaSpec> = {}
+  for (const [key, spec] of Object.entries(workshopFormulaByKey)) {
+    if (spec.category === 'defense') out[key] = spec
   }
   return out
 }

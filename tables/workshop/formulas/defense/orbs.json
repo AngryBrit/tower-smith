@@ -1,0 +1,22 @@
+{
+  "name": "Orbs",
+  "workshopKey": "orbsLevel",
+  "category": "defense",
+  "format": "integerRound",
+  "pipeline": [{ "op": "add", "refs": ["base", "labBonus"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labBonus": {
+      "kind": "optsNumber",
+      "field": "orbsLabBonus",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (orb count aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "workshop orb count + Extra Extra Orbs lab bonus + submodule orbs count. Integer.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Orbs card"
+  }
+}

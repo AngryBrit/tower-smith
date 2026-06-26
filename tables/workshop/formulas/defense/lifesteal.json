@@ -1,0 +1,22 @@
+{
+  "name": "Lifesteal",
+  "workshopKey": "lifestealLevel",
+  "category": "defense",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "lifestealPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (lifesteal aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "workshop% + armor sub-module Lifesteal % points. Additive, then toFixed(2)%.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Lifesteal card"
+  }
+}

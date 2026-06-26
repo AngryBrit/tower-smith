@@ -1,0 +1,22 @@
+{
+  "name": "Shockwave Size",
+  "workshopKey": "shockwaveSizeLevel",
+  "category": "defense",
+  "format": "decimal2",
+  "pipeline": [{ "op": "add", "refs": ["base", "labPlus"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "labPlus": {
+      "kind": "optsNumber",
+      "field": "shockwaveSizeLabPlus",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_ShockwaveSize",
+    "virtualAddress": "0x01F0AA94",
+    "notes": "workshop multiplier + Shockwave Size lab add + submodule shockwave size add. toFixed(2).",
+    "verifiedAgainst": "playerInfo.dat -> workshop Shockwave Size card"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "Land Mine Chance",
+  "workshopKey": "landMineChanceLevel",
+  "category": "defense",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "landMineChancePercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_LandMineChance",
+    "virtualAddress": "0x01F0AB0C",
+    "notes": "workshop% + armor sub-module Land Mine Chance % points. Additive, then toFixed(2)%.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Land Mine Chance card"
+  }
+}

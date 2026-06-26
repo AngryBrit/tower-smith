@@ -1,0 +1,37 @@
+{
+  "name": "Health Regen",
+  "workshopKey": "healthRegenLevel",
+  "category": "defense",
+  "format": "healthRegenPerSec",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "cardMult", "relicMult", "enhance"] },
+    { "op": "roundTo", "decimals": 0 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "cardMult": {
+      "kind": "optsMultiplier",
+      "field": "healthRegenCardMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "relicMult": {
+      "kind": "onePlusOptsFraction",
+      "field": "healthRegenRelicsBonus",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    },
+    "enhance": {
+      "kind": "optsMultiplier",
+      "field": "healthRegenEnhancementsMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_HealthRegen",
+    "virtualAddress": "0x01F0A864",
+    "notes": "Displayed regen = Workshop x Health Regen card x (1 + Health/HealthRegen relics) x partial HealthRegen+ enhance. Defense Health Regen lab is NOT shown on this card. Math.round before formatCoinAbbrev + '/sec'. Level-0 x-multiplier preview defers to legacy.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Health Regen card"
+  }
+}

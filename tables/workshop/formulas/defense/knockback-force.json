@@ -1,0 +1,31 @@
+{
+  "name": "Knockback Force",
+  "workshopKey": "knockbackForceLevel",
+  "category": "defense",
+  "format": "decimal2",
+  "pipeline": [
+    { "op": "add", "refs": ["base", "subAdd"] },
+    { "op": "mul", "refs": ["relicMult"] }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "subAdd": {
+      "kind": "submoduleNumber",
+      "field": "knockbackForceAdd",
+      "default": 0,
+      "activeRule": "positive"
+    },
+    "relicMult": {
+      "kind": "relicPercentToMultiplier",
+      "field": "knockbackForceRelicPercentPoints",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (knockback aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "(workshop multiplier + armor sub-module force add) x (1 + knockback force relic %/100). toFixed(2), no x prefix.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Knockback Force card"
+  }
+}

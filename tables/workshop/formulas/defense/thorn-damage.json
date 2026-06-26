@@ -1,0 +1,22 @@
+{
+  "name": "Thorns",
+  "workshopKey": "thornDamageLevel",
+  "category": "defense",
+  "format": "percentTrim",
+  "pipeline": [{ "op": "add", "refs": ["base", "relicPts"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "relicPts": {
+      "kind": "optsNumber",
+      "field": "thornDamageRelicsPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_ThornDamage",
+    "virtualAddress": "0x01F0A910",
+    "notes": "workshop% + owned Thorns relic % points. Additive, then whole-number-trim percent (109% not 109.00%).",
+    "verifiedAgainst": "playerInfo.dat -> workshop Thorn Damage card"
+  }
+}

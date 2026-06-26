@@ -1,0 +1,25 @@
+{
+  "name": "Defense Absolute",
+  "workshopKey": "defenseAbsoluteLevel",
+  "category": "defense",
+  "format": "coinAbbrev",
+  "pipeline": [
+    { "op": "mul", "refs": ["base", "labMult"] },
+    { "op": "roundTo", "decimals": 0 }
+  ],
+  "operands": {
+    "base": { "kind": "base" },
+    "labMult": {
+      "kind": "optsMultiplier",
+      "field": "defenseAbsoluteLabMultiplier",
+      "default": 1,
+      "activeRule": "multiplierAboveOne"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_DefenseAbsolute",
+    "virtualAddress": "0x01F0A8D4",
+    "notes": "workshop x Defense Absolute lab multiplier (Fortress card, relic, and submodule % folded into labMult). Math.round then formatCoinAbbrev. Level-0 x-multiplier preview defers to legacy.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Defense Absolute card"
+  }
+}

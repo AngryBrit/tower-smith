@@ -49,6 +49,7 @@ const entries = files
 
 const utilityCount = files.filter((f) => f.category === 'utility').length
 const attackCount = files.filter((f) => f.category === 'attack').length
+const defenseCount = files.filter((f) => f.category === 'defense').length
 
 const body = `/**
  * Authoritative workshop display-card formula specs from \`tables/workshop/formulas/\`.
@@ -61,6 +62,7 @@ ${imports}
 export const WORKSHOP_FORMULA_COUNT = ${files.length}
 export const WORKSHOP_UTILITY_FORMULA_COUNT = ${utilityCount}
 export const WORKSHOP_ATTACK_FORMULA_COUNT = ${attackCount}
+export const WORKSHOP_DEFENSE_FORMULA_COUNT = ${defenseCount}
 
 const workshopFormulaByKey: Record<string, WorkshopFormulaSpec> = {
 ${entries}
@@ -75,6 +77,11 @@ export function getWorkshopAttackFormulaSpec(workshopKey: string): WorkshopFormu
   return spec?.category === 'attack' ? spec : undefined
 }
 
+export function getWorkshopDefenseFormulaSpec(workshopKey: string): WorkshopFormulaSpec | undefined {
+  const spec = workshopFormulaByKey[workshopKey]
+  return spec?.category === 'defense' ? spec : undefined
+}
+
 export function getWorkshopFormulaSpecs(): Readonly<Record<string, WorkshopFormulaSpec>> {
   return workshopFormulaByKey
 }
@@ -86,7 +93,17 @@ export function getWorkshopAttackFormulaSpecs(): Readonly<Record<string, Worksho
   }
   return out
 }
+
+export function getWorkshopDefenseFormulaSpecs(): Readonly<Record<string, WorkshopFormulaSpec>> {
+  const out: Record<string, WorkshopFormulaSpec> = {}
+  for (const [key, spec] of Object.entries(workshopFormulaByKey)) {
+    if (spec.category === 'defense') out[key] = spec
+  }
+  return out
+}
 `
 
 fs.writeFileSync(outFile, body)
-console.log(`Wrote ${outFile} (${files.length} formulas: ${utilityCount} utility, ${attackCount} attack)`)
+console.log(
+  `Wrote ${outFile} (${files.length} formulas: ${utilityCount} utility, ${attackCount} attack, ${defenseCount} defense)`,
+)

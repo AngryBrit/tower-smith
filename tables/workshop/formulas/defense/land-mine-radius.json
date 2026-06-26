@@ -1,0 +1,22 @@
+{
+  "name": "Land Mine Radius",
+  "workshopKey": "landMineRadiusLevel",
+  "category": "defense",
+  "format": "decimal2",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "landMineRadiusAdd",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "ModuleManager::get_LandMineRadius",
+    "virtualAddress": "0x01F0AB84",
+    "notes": "workshop radius + armor sub-module Land Mine Radius add. toFixed(2).",
+    "verifiedAgainst": "playerInfo.dat -> workshop Land Mine Radius card"
+  }
+}

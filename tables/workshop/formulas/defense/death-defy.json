@@ -1,0 +1,22 @@
+{
+  "name": "Death Defy",
+  "workshopKey": "deathDefyLevel",
+  "category": "defense",
+  "format": "percent2",
+  "pipeline": [{ "op": "add", "refs": ["base", "sub"] }],
+  "operands": {
+    "base": { "kind": "base" },
+    "sub": {
+      "kind": "submoduleNumber",
+      "field": "deathDefyPercentPoints",
+      "default": 0,
+      "activeRule": "positive"
+    }
+  },
+  "source": {
+    "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (death defy aggregate; no dedicated ModuleManager getter)",
+    "virtualAddress": "0x01E930F4",
+    "notes": "workshop% + armor sub-module Death Defy % points. Additive, then toFixed(2)%.",
+    "verifiedAgainst": "playerInfo.dat -> workshop Death Defy card"
+  }
+}

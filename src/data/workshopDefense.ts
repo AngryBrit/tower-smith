@@ -13,6 +13,7 @@ import {
   formatWithHealthStyleLabMultiplier,
 } from './workshopLabDisplayHelpers'
 import type { WorkshopDefenseSubmoduleExtras } from './workshopSubmoduleBonuses'
+import { workshopDefenseFormulaStatDisplay } from './workshopFormulaContextDefense'
 import { workshopDefenseAbsoluteStatValue } from './workshopDefenseAbsolute'
 import { workshopOrbSpeedStatMultiplier } from './workshopOrbSpeed'
 import { workshopOrbsStatCount } from './workshopOrbs'
@@ -243,7 +244,11 @@ function defenseSub(opts: WorkshopDefenseStatDisplayOpts | undefined): WorkshopD
   return opts?.submodule ?? {}
 }
 
-export function workshopDefenseStatDisplay(
+/**
+ * Legacy hand-coded defense stat display (parity target for the GOD formula registry).
+ * Prefer {@link workshopDefenseStatDisplay}, which is formula-first with this as fallback.
+ */
+export function workshopDefenseLegacyStatDisplay(
   key: WorkshopDefenseUpgradeKey,
   completedLevels: number,
   opts?: WorkshopDefenseStatDisplayOpts,
@@ -454,6 +459,22 @@ export function workshopDefenseStatDisplay(
       return workshopWallRebuildStatDisplay(completedLevels)
     }
   }
+}
+
+/**
+ * Defense workshop stat display: GOD formula registry first, legacy hand-coded fallback.
+ * Falls back when no defense formula spec is registered for `key`, or for level-0
+ * `×m` multiplier previews that the numeric→format model cannot express.
+ */
+export function workshopDefenseStatDisplay(
+  key: WorkshopDefenseUpgradeKey,
+  completedLevels: number,
+  opts?: WorkshopDefenseStatDisplayOpts,
+): string {
+  return (
+    workshopDefenseFormulaStatDisplay(key, completedLevels, opts) ??
+    workshopDefenseLegacyStatDisplay(key, completedLevels, opts)
+  )
 }
 
 /** Coins for the next purchase when `completedLevels` upgrades are already done (GOD tables). */

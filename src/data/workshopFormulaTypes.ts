@@ -6,6 +6,8 @@
 
 export type WorkshopFormulaFormat =
   | 'percent2'
+  | 'percentTrim'
+  | 'multiplierX1'
   | 'multiplierX2'
   | 'multiplierTimes2'
   | 'multiplierTimes3'
@@ -14,8 +16,10 @@ export type WorkshopFormulaFormat =
   | 'rangeMeters'
   | 'metersLower'
   | 'seconds2'
+  | 'secondsCooldown'
   | 'perMeterTrim'
   | 'coinAbbrev'
+  | 'healthRegenPerSec'
 
 export type WorkshopFormulaOperandActiveRule =
   | 'multiplierAboveOne'
@@ -36,6 +40,7 @@ export type WorkshopFormulaOperandKind =
   | 'enhanceHalfRate'
   | 'damagePerMeterLabExcess'
   | 'onePlusRelicFraction'
+  | 'onePlusOptsFraction'
 
 export type WorkshopFormulaOperand = {
   kind: WorkshopFormulaOperandKind
@@ -50,10 +55,12 @@ export type WorkshopFormulaOperand = {
 
 export type WorkshopFormulaStep =
   | { op: 'add'; refs: string[] }
+  | { op: 'sub'; refs: string[] }
   | { op: 'mul'; refs: string[] }
   | { op: 'truncateTo'; decimals: number }
   | { op: 'roundTo'; decimals: number }
   | { op: 'clampMax'; value: number }
+  | { op: 'clampMin'; value: number }
 
 export type WorkshopFormulaSourceConstant = {
   hex: string
@@ -73,7 +80,7 @@ export type WorkshopFormulaSpec = {
   name: string
   /** Workshop persisted level field key. */
   workshopKey: string
-  category: 'utility' | 'attack'
+  category: 'utility' | 'attack' | 'defense'
   format: WorkshopFormulaFormat
   /** Legacy sum-then-product (utility). Ignored when `pipeline` is set. */
   additiveTerms?: string[]
