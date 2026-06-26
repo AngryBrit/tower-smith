@@ -21,31 +21,31 @@ describe('workshopDisplayedHealthRegen', () => {
   })
 
   it('uses partial Health Regen+ excess for the enhancement term', () => {
-    expect(workshopDisplayedHealthRegenEnhancementMultiplier(60, true)).toBeCloseTo(
-      1.49757,
+    expect(workshopDisplayedHealthRegenEnhancementMultiplier(61, true)).toBeCloseTo(
+      1.49723,
       3,
     )
     expect(workshopDisplayedHealthRegenEnhancementMultiplier(0, true)).toBe(1)
-    expect(workshopDisplayedHealthRegenEnhancementMultiplier(60, false)).toBe(1)
+    expect(workshopDisplayedHealthRegenEnhancementMultiplier(61, false)).toBe(1)
   })
 
-  it('matches player save overlays at workshop L5820 (game 46.10B/sec)', () => {
-    expect(workshopHealthRegenStatValue(5820)).toBeCloseTo(6_010_000_000, -6)
-    const enhance = workshopDisplayedHealthRegenEnhancementMultiplier(60, true)
-    expect(enhance).toBeCloseTo(1.49757, 3)
+  it('matches player save overlays at workshop L5830 (game 47.47B/sec)', () => {
+    expect(workshopHealthRegenStatValue(5830)).toBeCloseTo(6_190_000_000, -6)
+    const enhance = workshopDisplayedHealthRegenEnhancementMultiplier(61, true)
+    expect(enhance).toBeCloseTo(1.49723, 3)
     expect(
-      workshopDisplayedHealthRegenStatDisplay(5820, {
+      workshopDisplayedHealthRegenStatDisplay(5830, {
         healthRegenCardMultiplier: 2.6,
         relicsBonus: 0.97,
         healthRegenEnhancementsMultiplier: enhance,
       }),
-    ).toBe('46.10B/sec')
+    ).toBe('47.47B/sec')
     expect(
-      workshopDefenseStatDisplay('healthRegenLevel', 5820, {
+      workshopDefenseStatDisplay('healthRegenLevel', 5830, {
         healthRegenCardMultiplier: 2.6,
         healthRegenRelicsBonus: 0.97,
         healthRegenEnhancementsMultiplier: enhance,
       }),
-    ).toBe('46.10B/sec')
+    ).toBe('47.47B/sec')
   })
 })

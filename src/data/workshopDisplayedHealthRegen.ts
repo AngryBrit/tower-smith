@@ -7,7 +7,7 @@
  * card (calibrated: in-game **31.42B/sec** omits the lab term; **Health** lab still applies to HP).
  *
  * **Relics** sums owned **Health** and **Health Regen** relic % (same as displayed health).
- * **Enhancements** = partial **Health Regen +** tier (calibrated: L60 **×1.6** → **×1.498** enhance term).
+ * **Enhancements** = partial **Health Regen +** tier (calibrated: L61 **×1.61** → **×1.49723** enhance term).
  * Armor sub-module **Health Regen [%]** is not folded into this workshop card value.
  *
  * No rounding until `formatCoinAbbrev`.
@@ -28,10 +28,12 @@ export type WorkshopHealthRegenDisplayOpts = {
 
 /**
  * Share of **Health Regen +** enhancement excess in displayed-regen **Enhancements**
- * (calibrated against an in-game save: Regen+ **×1.6** (L60) → **×1.49757** displayed-regen
- * enhance term, i.e. game **46.10B/sec** vs workshop **6.01B** × card **2.6** × (1 + relics **0.97**)).
+ * (calibrated against an in-game save: Regen+ **×1.61** (L61) → **×1.49723** displayed-regen
+ * enhance term, i.e. game **47.47B/sec** vs workshop **6.19B** × card **2.6** × (1 + relics **0.97**)).
+ * The displayed-regen enhance term stays ≈**×1.497** across L60→L61 even as the tier ladder rises,
+ * so this fraction absorbs the gap rather than tracking the raw tier.
  */
-export const WORKSHOP_DISPLAYED_HEALTH_REGEN_REGEN_ENHANCE_EXCESS_FRACTION = 0.49757 / 0.6
+export const WORKSHOP_DISPLAYED_HEALTH_REGEN_REGEN_ENHANCE_EXCESS_FRACTION = 0.49723 / 0.61
 
 /** Partial **Health Regen +** tier when the Workshop Enhancements lab is unlocked. */
 export function workshopDisplayedHealthRegenEnhancementMultiplier(
