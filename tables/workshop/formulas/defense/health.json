@@ -48,7 +48,7 @@
   "source": {
     "binaryFunction": "Main::NeedToCalculateUpgradeBonuses (max-health aggregate; no dedicated ModuleManager getter)",
     "virtualAddress": "0x01E930F4",
-    "notes": "Displayed health = Workshop x Armor chassis x Health lab x Health card x (1 + Health/HealthRegen relics) x (Health+ x HealthRegen+) x armor sub-module Health Regen[%] share. No rounding before formatCoinAbbrev. Level-0 x-multiplier preview defers to legacy.",
+    "notes": "Displayed health = Workshop x Armor chassis x Health lab x Health card x (1 + Health/HealthRegen relics) x Health+ enhance x partial armor sub-module Health Regen[%] share. Health Regen workshop levels and Health Regen+ enhancement do not apply. No rounding before formatCoinAbbrev. Level-0 x-multiplier preview defers to legacy.",
     "verifiedAgainst": "playerInfo.dat -> workshop Health card"
   }
 }

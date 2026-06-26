@@ -71,7 +71,7 @@ const FULL_OPTS: WorkshopDefenseStatDisplayOpts = {
   healthLabMultiplier: 1.92,
   healthCardMultiplier: 1.5,
   healthRelicsBonus: 0.97,
-  healthEnhancementsMultiplier: 2.4,
+  healthEnhancementsMultiplier: 1.5,
   healthRegenCardMultiplier: 2.6,
   healthRegenRelicsBonus: 0.97,
   healthRegenEnhancementsMultiplier: 1.498,
@@ -168,7 +168,6 @@ function buildLiveDefenseFormulaOpts(
   const armorChassis = workshopChassisModuleHeroStatMultiplier(ws, 'armor')
   const healthEnhanceMult = workshopDisplayedHealthEnhancementMultiplier(
     ws.enhanceHealthLevel,
-    ws.enhanceHealthRegenLevel,
     enhancementsUnlocked,
   )
   const healthRegenEnhanceMult = workshopDisplayedHealthRegenEnhancementMultiplier(

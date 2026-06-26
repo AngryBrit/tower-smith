@@ -50,7 +50,6 @@ function buildDefenseStatLabDisplayOptsLikeWorkshopPage(
   )
   const healthEnhanceMult = workshopDisplayedHealthEnhancementMultiplier(
     workshopPersisted.enhanceHealthLevel,
-    workshopPersisted.enhanceHealthRegenLevel,
     enhancementsUnlocked,
   )
   const healthRelicsBonus = workshopHealthRelicsBonusFraction(relicOwnedSet)
@@ -132,7 +131,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
       healthLabMultiplier: 3.4,
       healthCardMultiplier: 4,
       healthRelicsBonus: 0.97,
-      healthEnhancementsMultiplier: 2.4,
+      healthEnhancementsMultiplier: workshopDisplayedHealthEnhancementMultiplier(50, true),
       submodule: { healthRegenPercentBonus: 200 },
     })
     const regenDisplayInflated = workshopDefenseStatDisplay(
@@ -167,8 +166,8 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
         chassis: opts?.armorTowerHealthMultiplier,
       },
     })
-    expect(regenDisplayWithEnhance).toBe('46.10B/sec')
-    expect(regenDisplayInflated).toBe('46.10B/sec')
-    expect(healthDisplayCalibrated).toBe('870.57B')
+    expect(regenDisplayWithEnhance).toBe('47.48B/sec')
+    expect(regenDisplayInflated).toBe('47.48B/sec')
+    expect(healthDisplayCalibrated).toBe('599.77B')
   })
 })

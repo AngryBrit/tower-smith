@@ -27,21 +27,20 @@ describe('workshopDisplayedHealth', () => {
     )
   })
 
-  it('uses Health+ × Health Regen+ for the enhancement term', () => {
-    expect(workshopDisplayedHealthEnhancementMultiplier(50, 60, true)).toBeCloseTo(2.4, 3)
-    expect(workshopDisplayedHealthEnhancementMultiplier(50, 0, true)).toBe(1.5)
-    expect(workshopDisplayedHealthEnhancementMultiplier(0, 60, true)).toBeCloseTo(1.6, 3)
+  it('uses Health+ only for the enhancement term (Health Regen+ omitted)', () => {
+    expect(workshopDisplayedHealthEnhancementMultiplier(50, true)).toBeCloseTo(1.5, 3)
+    expect(workshopDisplayedHealthEnhancementMultiplier(0, true)).toBe(1)
   })
 
   it('applies partial armor submodule Health Regen [%] to displayed health', () => {
-    expect(workshopDisplayedHealthSubmoduleMultiplier(200)).toBeCloseTo(1.02281656, 5)
+    expect(workshopDisplayedHealthSubmoduleMultiplier(200)).toBeCloseTo(1.127454363, 5)
     expect(workshopDisplayedHealthSubmoduleMultiplier(0)).toBe(1)
     expect(workshopDisplayedHealthSubmoduleMultiplier(undefined)).toBe(1)
   })
 
   it('enhancement is ×1 when the Workshop Enhancements lab is locked', () => {
-    expect(workshopDisplayedHealthEnhancementMultiplier(99, 99, false)).toBe(1)
-    expect(workshopDisplayedHealthEnhancementMultiplier(0, 0, true)).toBe(1)
+    expect(workshopDisplayedHealthEnhancementMultiplier(99, false)).toBe(1)
+    expect(workshopDisplayedHealthEnhancementMultiplier(0, true)).toBe(1)
   })
 
   it('sums health and health regen relic % into (1 + Relics)', () => {
@@ -49,12 +48,12 @@ describe('workshopDisplayedHealth', () => {
     expect(workshopRelicsDisplayedHealthBonusFraction(owned)).toBeCloseTo(0.05)
   })
 
-  it('matches player save overlays at workshop L5600 (game 870.57B)', () => {
+  it('matches player save overlays at workshop L5600 (game 599.77B)', () => {
     expect(workshopHealthStatValue(5600)).toBe(3_050_000_000)
-    const enhance = workshopDisplayedHealthEnhancementMultiplier(50, 60, true)
-    expect(enhance).toBeCloseTo(2.4, 3)
+    const enhance = workshopDisplayedHealthEnhancementMultiplier(50, true)
+    expect(enhance).toBeCloseTo(1.5, 3)
     const submodule = workshopDisplayedHealthSubmoduleMultiplier(200)
-    expect(submodule).toBeCloseTo(1.02281656, 5)
+    expect(submodule).toBeCloseTo(1.127454363, 5)
     expect(
       workshopDisplayedHealthStatDisplay(5600, {
         armorTowerHealthMultiplier: 4.34,
@@ -64,7 +63,7 @@ describe('workshopDisplayedHealth', () => {
         healthEnhancementsMultiplier: enhance,
         submoduleHealthRegenPercentBonus: 200,
       }),
-    ).toBe('870.57B')
+    ).toBe('599.77B')
     expect(
       workshopDefenseStatDisplay('healthLevel', 5600, {
         armorTowerHealthMultiplier: 4.34,
@@ -74,6 +73,6 @@ describe('workshopDisplayedHealth', () => {
         healthEnhancementsMultiplier: enhance,
         submodule: { healthRegenPercentBonus: 200 },
       }),
-    ).toBe('870.57B')
+    ).toBe('599.77B')
   })
 })

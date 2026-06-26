@@ -2412,7 +2412,6 @@ export function WorkshopPage({
     )
     const healthEnhanceMult = workshopDisplayedHealthEnhancementMultiplier(
       workshopPersisted.enhanceHealthLevel,
-      workshopPersisted.enhanceHealthRegenLevel,
       enhancementsUnlocked,
     )
     const healthRelicsBonus = workshopHealthRelicsBonusFraction(relicOwnedSet)

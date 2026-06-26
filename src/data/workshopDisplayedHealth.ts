@@ -2,13 +2,17 @@
  * Wiki **Displayed health** (workshop Health card):
  *
  * **Displayed health** = Workshop × Armor chassis × Health Lab × Health Card × (1 + Relics)
- * × Enhancements × Submodule.
+ * × **Health +** enhancement × Submodule.
  *
- * **Enhancements** = **Health +** × **Health Regen +** tier multipliers (calibrated: L50/L60
- * **×1.5** × **×1.6** → **×2.40** enhance term).
+ * **Health Regen does not affect this card**: workshop **Health Regen** levels, **Health Regen +**
+ * enhancement tiers, and **Health Regen +** on the regen card are separate. Relics still sum
+ * owned **Health** and **Health Regen** relic % into **(1 + Relics)** (in-game: +67% health
+ * + +30% health-regen relics → **×1.97**).
+ *
+ * **Enhancements** = **Health +** tier only (calibrated: L50 **×1.5**).
  *
  * **Submodule** = partial armor sub-module **Health Regen [%]** (calibrated: 200% submodule with
- * the enhance term above → game **870.57B**).
+ * Health+ **×1.5** → game **599.77B** equipped / **138.20B** without chassis).
  *
  * **Relics** sums owned **Health** and **Health Regen** relic % (like displayed damage).
  * No rounding until `formatCoinAbbrev`.
@@ -31,9 +35,9 @@ export type WorkshopHealthDisplayOpts = {
 
 /**
  * Share of armor sub-module **Health Regen [%]** in displayed health
- * (calibrated: 200% submodule with Health+ **×1.5** × Health Regen+ **×1.6** → **870.57B**).
+ * (calibrated: 200% submodule with Health+ **×1.5** → **599.77B** / **138.20B** without chassis).
  */
-export const WORKSHOP_DISPLAYED_HEALTH_REGEN_SUBMODULE_PERCENT_SHARE = 0.02281656 / 200
+export const WORKSHOP_DISPLAYED_HEALTH_REGEN_SUBMODULE_PERCENT_SHARE = 0.127454363 / 200
 
 /** Partial armor sub-module **Health Regen [%]** when equipped on the armor module. */
 export function workshopDisplayedHealthSubmoduleMultiplier(
@@ -53,29 +57,17 @@ export function workshopDisplayedHealthSubmoduleMultiplier(
   )
 }
 
-/** **Health +** × **Health Regen +** tiers when the Workshop Enhancements lab is unlocked. */
+/** **Health +** tier when the Workshop Enhancements lab is unlocked. **Health Regen +** is omitted. */
 export function workshopDisplayedHealthEnhancementMultiplier(
   enhanceHealthLevel: number,
-  enhanceHealthRegenLevel: number,
   enhancementsLabUnlocked: boolean,
 ): number {
   if (!enhancementsLabUnlocked) return 1
-  const healthMult =
-    enhanceHealthLevel > 0
-      ? workshopEnhanceTier400Multiplier(
-          Math.max(0, Math.trunc(enhanceHealthLevel)),
-          'Health +',
-        )
-      : 1
-  const regenMult =
-    enhanceHealthRegenLevel > 0
-      ? workshopEnhanceTier400Multiplier(
-          Math.max(0, Math.trunc(enhanceHealthRegenLevel)),
-          'Health Regen +',
-        )
-      : 1
-  if (healthMult <= 1 + 1e-9 && regenMult <= 1 + 1e-9) return 1
-  return healthMult * regenMult
+  if (enhanceHealthLevel <= 0) return 1
+  return workshopEnhanceTier400Multiplier(
+    Math.max(0, Math.trunc(enhanceHealthLevel)),
+    'Health +',
+  )
 }
 
 export function computeWorkshopDisplayedHealth(
