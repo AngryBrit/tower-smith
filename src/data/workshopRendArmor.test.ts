@@ -7,6 +7,7 @@ import {
   workshopRendArmorChanceNextMarginalCoins,
   workshopRendArmorChancePercent,
   workshopRendArmorChanceStatDisplay,
+  workshopRendArmorMultDisplayedValue,
   workshopRendArmorMultNextMarginalCoins,
   workshopRendArmorMultStatDisplay,
   workshopRendArmorMultValue,
@@ -74,5 +75,22 @@ describe('workshopRendArmor', () => {
     expect(workshopRendArmorMultStatDisplay(299)).toBe('×0.300')
     expect(workshopRendArmorMultValue(299)).toBe(0.3)
     expect(workshopRendArmorMultValue(0)).toBe(0.001)
+  })
+
+  it('rounds rend armor mult to 3 decimals (verified ×0.180 on live save)', () => {
+    // Level 120 (×0.121), relic ×1.02, Rend Armor Max+ ×1.46 → raw 0.180193, card reads ×0.180.
+    expect(
+      workshopRendArmorMultStatDisplay(
+        120,
+        undefined,
+        0,
+        workshopDisplayedRendArmorMultEnhancementMultiplier(46, true),
+        1.02,
+      ),
+    ).toBe('×0.180')
+    expect(workshopRendArmorMultDisplayedValue(120, undefined, 0, 1.46, 1.02)).toBeCloseTo(
+      0.18,
+      3,
+    )
   })
 })

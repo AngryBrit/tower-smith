@@ -7,7 +7,7 @@
     { "op": "mul", "refs": ["base", "labMult"] },
     { "op": "add", "refs": ["sub"] },
     { "op": "mul", "refs": ["relicMult", "enhance"] },
-    { "op": "truncateTo", "decimals": 2 }
+    { "op": "roundTo", "decimals": 2 }
   ],
   "operands": {
     "base": { "kind": "base" },
@@ -38,7 +38,7 @@
   },
   "source": {
     "binaryFunction": "ModuleManager::get_SuperCriticalMult (display)",
-    "notes": "((workshop × lab) + submodule) × relic × Super Crit Mult+ enhancement; truncate 2dp",
+    "notes": "((workshop × lab) + submodule) × relic × Super Crit Mult+ enhancement; round 2dp",
     "verifiedAgainst": "playerInfo.dat -> workshop card"
   }
 }

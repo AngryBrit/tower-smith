@@ -38,4 +38,10 @@ describe('workshopSuperCritMult displayed value', () => {
   it('defaults to plain workshop × lab when no relics, submodule, or enhancement', () => {
     expect(workshopSuperCritMultStatDisplay(0, 1.3)).toBe('×1.56')
   })
+
+  it('rounds the displayed 2-decimal value (not truncate)', () => {
+    // (11.20 + 5) × 1.05 × 1.4201 → raw 24.1559…, rounds to ×24.16 (truncation would yield ×24.15).
+    expect(workshopSuperCritMultDisplayedNumber(100, 1, 5, 1.05, 1.4201)).toBe(24.16)
+    expect(workshopSuperCritMultStatDisplay(100, 1, 5, 1.05, 1.4201)).toBe('×24.16')
+  })
 })
