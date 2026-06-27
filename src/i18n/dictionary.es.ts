@@ -249,6 +249,7 @@ export const STRINGS_ES = {
   guardians_chip_level_down_aria: 'Reducir {{track}}',
   guardians_chip_level_up_aria: 'Aumentar {{track}}',
   guardians_chip_upgrades_unavailable: 'Las mejoras de {{chip}} aún no están disponibles.',
+  guardians_chip_detail_close_aria: 'Cerrar detalles del chip',
   guardians_picker_title: 'Elegir guardián',
   guardians_picker_close_aria: 'Cerrar selector de guardián',
   guardian_chip_attack: 'Ataque',
@@ -257,6 +258,18 @@ export const STRINGS_ES = {
   guardian_chip_fetch: 'Buscar',
   guardian_chip_summon: 'Invocar',
   guardian_chip_scout: 'Explorar',
+  guardian_chip_attack_desc:
+    'El Guardián de la Torre ataca a los enemigos con más salud perdida, infligiendo un porcentaje de su salud perdida como daño (50 % de daño a los jefes).',
+  guardian_chip_ally_desc:
+    'Convierte a un enemigo en un Paquete de Recuperación Aliado que puede curar a la Torre más allá del límite básico de Recuperación Máxima.',
+  guardian_chip_bounty_desc:
+    'El Guardián de la Torre pone una recompensa sobre un enemigo no común cercano. Otorga monedas adicionales al eliminarlo.',
+  guardian_chip_fetch_desc:
+    'El Guardián de la Torre recupera botín oculto (Monedas, Gemas, Medallas, Fragmentos, Módulos).',
+  guardian_chip_summon_desc:
+    'Genera 2 enemigos/s. Durante la duración de la invocación: otorga dinero adicional al eliminarlos.',
+  guardian_chip_scout_desc:
+    'Explora a los enemigos en pantalla. Los enemigos explorados cuentan como más alejados de la Torre en los cálculos de daño.',
   app_nav_tools: 'Herramientas y',
   app_nav_settings: 'Ajustes',
   app_nav_gallery_admin: 'ADMIN',

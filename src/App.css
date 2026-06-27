@@ -11185,6 +11185,64 @@ html[data-color-scheme='high-contrast'] .cards-tile {
   background: rgba(2, 6, 23, 0.72);
 }
 
+.guardians-detail__head {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  padding-inline: 1.75rem;
+}
+
+.guardians-detail__icon {
+  width: 1.85rem;
+  height: 1.85rem;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.guardians-detail__title {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--sr-text);
+}
+
+.guardians-detail__desc {
+  margin: 0 0 0.65rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  text-align: center;
+  color: var(--sr-muted);
+}
+
+.guardians-detail .guardians-page__upgrade {
+  border-top: none;
+  background: transparent;
+  padding: 0;
+}
+
+.guardians-detail .guardians-page__upgrade-grid {
+  margin: 0;
+}
+
+/* The popup header already shows the chip name/icon, so hide the panel's inner copies. */
+.guardians-detail .workshop__uw-head,
+.guardians-detail .guardians-page__upgrade-head {
+  justify-content: flex-end;
+}
+
+.guardians-detail .workshop__uw-title,
+.guardians-detail .guardians-page__upgrade-title-row {
+  display: none;
+}
+
+.guardians-detail .workshop__uw-icon-wrap {
+  display: none;
+}
+
 .guardians-page__picker {
   width: min(24rem, 100%);
   max-height: min(80vh, 32rem);

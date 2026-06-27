@@ -125,8 +125,9 @@ export function GuardiansPage({
   const [ownedIds] = useThemeOwned()
   const [guardianPickerOpen, setGuardianPickerOpen] = useState(false)
   const [respecConfirmOpen, setRespecConfirmOpen] = useState(false)
-  const [selectedChipId, setSelectedChipId] = useState<GuardianChipId | null>('attack')
+  const [selectedChipId, setSelectedChipId] = useState<GuardianChipId | null>(null)
   const pickerTitleId = useId().replace(/:/g, '')
+  const detailTitleId = useId().replace(/:/g, '')
   const loadoutRef = useRef<HTMLDivElement>(null)
   const guardianCardRef = useRef<HTMLDivElement>(null)
 
@@ -162,6 +163,10 @@ export function GuardiansPage({
 
   const handleInventoryChipSelect = useCallback((chipId: GuardianChipId) => {
     setSelectedChipId(chipId)
+  }, [])
+
+  const closeChipDetail = useCallback(() => {
+    setSelectedChipId(null)
   }, [])
 
   const handleToggleChipEquip = useCallback(
@@ -302,6 +307,16 @@ export function GuardiansPage({
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [respecConfirmOpen])
+
+  useEffect(() => {
+    if (!selectedChipId) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape') return
+      closeChipDetail()
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [closeChipDetail, selectedChipId])
 
   const toolbar = <GuardiansToolbar onRespec={openRespecConfirm} />
 
@@ -450,6 +465,7 @@ export function GuardiansPage({
                     equipped ? ' guardians-page__chip--equipped' : ''
                   }${selectedChipId === chip.id ? ' guardians-page__chip--selected' : ''}`}
                   onClick={() => handleInventoryChipSelect(chip.id)}
+                  aria-haspopup="dialog"
                   aria-pressed={selectedChipId === chip.id}
                   aria-label={t('guardians_chip_select_aria').replace('{{chip}}', t(chip.nameId))}
                 >
@@ -470,7 +486,41 @@ export function GuardiansPage({
         </ul>
       </section>
 
-      {selectedChipId === 'attack' ? (
+      {selectedChipId
+        ? guardiansOverlayPortal(
+            <div
+              className="modules-picker__backdrop cards-detail__backdrop guardians-detail__backdrop"
+              role="presentation"
+              onClick={closeChipDetail}
+            >
+              <div
+                className="modules-picker__dialog modules-picker__dialog--detail guardians-detail"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby={detailTitleId}
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  type="button"
+                  className="modules-picker__close"
+                  onClick={closeChipDetail}
+                  aria-label={t('guardians_chip_detail_close_aria')}
+                >
+                  ×
+                </button>
+                <header className="guardians-detail__head">
+                  <GuardianChipIcon
+                    chipId={selectedChipId}
+                    className="guardians-detail__icon"
+                  />
+                  <h2 id={detailTitleId} className="guardians-detail__title">
+                    {t(`guardian_chip_${selectedChipId}` as StringId)}
+                  </h2>
+                </header>
+                <p className="guardians-detail__desc">
+                  {t(`guardian_chip_${selectedChipId}_desc` as StringId)}
+                </p>
+                {selectedChipId === 'attack' ? (
         <GuardianChipUpgradePanel
           chipId="attack"
           titleId="guardian_chip_attack"
@@ -633,7 +683,11 @@ export function GuardiansPage({
             )}
           </p>
         </section>
-      ) : null}
+                ) : null}
+              </div>
+            </div>,
+          )
+        : null}
 
       {guardianPickerOpen
         ? guardiansOverlayPortal(

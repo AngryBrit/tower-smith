@@ -249,6 +249,7 @@ export const STRINGS_DE = {
   guardians_chip_level_down_aria: '{{track}} verringern',
   guardians_chip_level_up_aria: '{{track}} erhöhen',
   guardians_chip_upgrades_unavailable: 'Upgrades für {{chip}} sind noch nicht verfügbar.',
+  guardians_chip_detail_close_aria: 'Chip-Details schließen',
   guardians_picker_title: 'Wächter wählen',
   guardians_picker_close_aria: 'Wächter-Auswahl schließen',
   guardian_chip_attack: 'Angriff',
@@ -257,6 +258,18 @@ export const STRINGS_DE = {
   guardian_chip_fetch: 'Suchen',
   guardian_chip_summon: 'Beschwörung',
   guardian_chip_scout: 'Späher',
+  guardian_chip_attack_desc:
+    'Der Turmwächter greift Gegner mit den meisten fehlenden Lebenspunkten an und verursacht einen Prozentsatz ihrer verlorenen Lebenspunkte als Schaden (50 % Schaden gegen Bosse).',
+  guardian_chip_ally_desc:
+    'Verwandelt einen Gegner in ein Verbündeten-Erholungspaket, das den Turm über das normale Maximale-Erholung-Limit hinaus heilen kann.',
+  guardian_chip_bounty_desc:
+    'Der Turmwächter setzt ein Kopfgeld auf einen nahen, nicht gewöhnlichen Gegner aus. Gewährt Bonusmünzen beim Töten.',
+  guardian_chip_fetch_desc:
+    'Der Turmwächter holt versteckte Beute (Münzen, Edelsteine, Medaillen, Splitter, Module).',
+  guardian_chip_summon_desc:
+    'Erzeugt 2 Gegner/s. Während der Beschwörungsdauer: gewährt Bonus-Bargeld beim Töten.',
+  guardian_chip_scout_desc:
+    'Späht Gegner auf dem Bildschirm aus. Ausgespähte Gegner gelten bei Schadensberechnungen als weiter vom Turm entfernt.',
   app_nav_tools: 'WERKZEUGE &',
   app_nav_settings: 'EINSTELLUNGEN',
   app_nav_gallery_admin: 'ADMIN',

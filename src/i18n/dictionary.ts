@@ -250,6 +250,7 @@ export const STRINGS_EN = {
   guardians_chip_level_down_aria: 'Decrease {{track}}',
   guardians_chip_level_up_aria: 'Increase {{track}}',
   guardians_chip_upgrades_unavailable: 'Upgrades for {{chip}} are not available yet.',
+  guardians_chip_detail_close_aria: 'Close chip details',
   guardians_picker_title: 'Select guardian',
   guardians_picker_close_aria: 'Close guardian picker',
   guardian_chip_attack: 'Attack',
@@ -258,6 +259,18 @@ export const STRINGS_EN = {
   guardian_chip_fetch: 'Fetch',
   guardian_chip_summon: 'Summon',
   guardian_chip_scout: 'Scout',
+  guardian_chip_attack_desc:
+    'Tower Guardian attacks enemies with the most missing health, dealing a percentage of their lost health as damage (50% damage to bosses).',
+  guardian_chip_ally_desc:
+    'Converts an enemy into an Ally Recovery Package that can heal the Tower beyond the basic Maximum Recovery limit.',
+  guardian_chip_bounty_desc:
+    'Tower Guardian places a Bounty on a nearby non-Common enemy. Grants Bonus Coins on kill.',
+  guardian_chip_fetch_desc:
+    'Tower Guardian retrieves hidden loot (Coins, Gems, Medals, Shards, Modules).',
+  guardian_chip_summon_desc:
+    'Spawn 2 enemies/s. During Summon Duration: grants Bonus Cash on kill.',
+  guardian_chip_scout_desc:
+    'Scouts on-screen enemies. Scouted enemies count as further from the Tower for damage calculations.',
   app_nav_tools: 'TOOLS &',
   app_nav_settings: 'Settings',
   app_nav_tools_settings: 'Settings',
