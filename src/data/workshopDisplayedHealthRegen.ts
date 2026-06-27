@@ -7,7 +7,9 @@
  * card (calibrated: in-game **31.42B/sec** omits the lab term; **Health** lab still applies to HP).
  *
  * **Relics** sums owned **Health** and **Health Regen** relic % (same as displayed health).
- * **Enhancements** = partial **Health Regen +** tier (calibrated: L61 **×1.61** → **×1.49723** enhance term).
+ * **Enhancements** = partial **Health Regen +** tier. The displayed-regen enhance term is
+ * effectively **level-independent across observed tiers** (tier **×1.60**→**×1.61** left it flat
+ * at **≈×1.4977**), so it is calibrated as a near-constant share rather than tracking the raw tier.
  * Armor sub-module **Health Regen [%]** is not folded into this workshop card value.
  *
  * No rounding until `formatCoinAbbrev`.
@@ -27,13 +29,24 @@ export type WorkshopHealthRegenDisplayOpts = {
 }
 
 /**
- * Share of **Health Regen +** enhancement excess in displayed-regen **Enhancements**
- * (calibrated against an in-game save: Regen+ **×1.61** (L61) → **×1.49723** displayed-regen
- * enhance term, i.e. game **47.47B/sec** vs workshop **6.19B** × card **2.6** × (1 + relics **0.97**)).
- * The displayed-regen enhance term stays ≈**×1.497** across L60→L61 even as the tier ladder rises,
- * so this fraction absorbs the gap rather than tracking the raw tier.
+ * Share of **Health Regen +** enhancement excess in displayed-regen **Enhancements**.
+ *
+ * Calibrated against three in-game saves at the **same relics/card** but different workshop and
+ * Regen+ levels:
+ *
+ * | WS level | Regen+ tier | game     | implied enhance |
+ * |----------|-------------|----------|-----------------|
+ * | 5820     | ×1.60       | 46.10/s  | 1.49757         |
+ * | 5830     | ×1.61       | 47.47/s  | 1.49723         |
+ * | 5840     | ×1.61       | 48.88/s  | 1.49814         |
+ *
+ * The enhance term is flat (**≈×1.4977**) across tier ×1.60→×1.61, so it does **not** track the
+ * raw Regen+ tier. The ≤**0.0009** spread between same-tier points (5830 vs 5840) is 2-decimal
+ * display rounding — the base-regen GOD table is stored to 2 decimals while the game multiplies at
+ * full precision, so no constant fits every point to the cent. This fraction targets enhance
+ * **≈×1.4977** at the observed tier, which lands all three within **0.01B/sec** of the game.
  */
-export const WORKSHOP_DISPLAYED_HEALTH_REGEN_REGEN_ENHANCE_EXCESS_FRACTION = 0.49723 / 0.61
+export const WORKSHOP_DISPLAYED_HEALTH_REGEN_REGEN_ENHANCE_EXCESS_FRACTION = 0.4977 / 0.61
 
 /** Partial **Health Regen +** tier when the Workshop Enhancements lab is unlocked. */
 export function workshopDisplayedHealthRegenEnhancementMultiplier(

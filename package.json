@@ -22,6 +22,7 @@
     "research-unmapped": "npx tsx docs/list-unmapped-research-levels.mjs",
     "decode-wiki-html": "npx tsx scripts/decode-wiki-html.mjs",
     "scrape-wiki-table": "npx tsx scripts/scrape-wiki-table.mjs",
+    "validate:workshop-binary": "npx tsx scripts/validate-workshop-binary-formulas.ts",
     "register-google-risc": "node scripts/register-google-risc.mjs"
   },
   "dependencies": {
