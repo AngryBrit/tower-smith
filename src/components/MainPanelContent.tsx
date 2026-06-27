@@ -127,7 +127,8 @@ export function MainPanelContent({
     mainPanel === 'relics' ||
     mainPanel === 'modules' ||
     mainPanel === 'themes' ||
-    mainPanel === 'guardians'
+    mainPanel === 'guardians' ||
+    mainPanel === 'vault'
       ? inpanelWorkshopToolbarMount
       : null
 
@@ -245,7 +246,7 @@ export function MainPanelContent({
           labelledBy="inpanel-tab-vault"
           {...shellProps}
         >
-          <VaultPage embeddedInPanel />
+          <VaultPage embeddedInPanel toolbarMount={workshopToolbarMount} />
         </PanelTabShell>
       ) : null}
 
