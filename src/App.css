@@ -8497,6 +8497,24 @@ button.workshop__uw-plus-cost--display:hover {
   pointer-events: none;
 }
 
+.cards-detail__equip {
+  width: 100%;
+  margin-top: 0.1rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.cards-detail__equip--on {
+  border-color: var(--sr-active-on-border);
+  background: var(--sr-active-on-bg);
+  color: var(--sr-active-on-text);
+}
+
+.cards-detail__equip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .cards-detail__max-label {
   margin: 0;
   font-size: 0.62rem;

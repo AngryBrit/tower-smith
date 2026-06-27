@@ -37,7 +37,6 @@ import { levelOverrideKey } from '../types/research'
 import { useI18n } from '../i18n'
 import { CardDetailDialog } from './CardDetailDialog'
 import { HoldStepButton } from './HoldStepButton'
-import { useLongPress } from '../hooks/useLongPress'
 import { WorkshopPresetToolbar } from './WorkshopPresetToolbar'
 import type { StringId } from '../i18n/dictionary'
 import type { ResearchData } from '../types/research'
@@ -316,8 +315,7 @@ function CardsStarTile({
   masteryUnlocked = false,
   statsLocked = false,
   statOverlay = true,
-  onToggleEquip,
-  onLongPress,
+  onOpenDetail,
   onBump,
   onCommit,
 }: {
@@ -334,18 +332,11 @@ function CardsStarTile({
   masteryUnlocked?: boolean
   statsLocked?: boolean
   statOverlay?: boolean
-  onToggleEquip?: () => void
-  onLongPress?: () => void
+  onOpenDetail?: () => void
   onBump: (dir: -1 | 1) => void
   onCommit: (parsed: number) => void
 }) {
   const { t } = useI18n()
-  const longPress = useLongPress({
-    enabled: Boolean(onToggleEquip),
-    longPressEnabled: Boolean(onLongPress),
-    onLongPress: () => onLongPress?.(),
-    onShortPress: () => onToggleEquip?.(),
-  })
   const atMax = stars >= maxStars
   const starsGold = stars >= 5
   const rarity = workshopGameCardRarity(cardId)
@@ -372,20 +363,15 @@ function CardsStarTile({
     <li
       className={tileClass}
       title={title}
-      onClick={onToggleEquip ? longPress.onClick : undefined}
-      onPointerDown={onToggleEquip ? longPress.onPointerDown : undefined}
-      onPointerUp={onToggleEquip ? longPress.onPointerUp : undefined}
-      onPointerLeave={onToggleEquip ? longPress.onPointerLeave : undefined}
-      onPointerCancel={onToggleEquip ? longPress.onPointerCancel : undefined}
-      onContextMenu={onLongPress ? longPress.onContextMenu : undefined}
+      onClick={onOpenDetail}
       onKeyDown={(e) => {
-        if (onToggleEquip && (e.key === 'Enter' || e.key === ' ')) {
+        if (onOpenDetail && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault()
-          onToggleEquip()
+          onOpenDetail()
         }
       }}
-      role={onToggleEquip ? 'button' : undefined}
-      tabIndex={onToggleEquip ? 0 : undefined}
+      role={onOpenDetail ? 'button' : undefined}
+      tabIndex={onOpenDetail ? 0 : undefined}
     >
       <div className="cards-tile__body">
         <div className="cards-tile__head">
@@ -625,10 +611,9 @@ export function WorkshopCardsPanel({
         showEquippedCheckmark={opts.inventory === true && equippedSet.has(id)}
         masteryUnlocked={masteryUnlocked.has(id)}
         statsLocked={opts.active === true}
-        onToggleEquip={
-          opts.inventory || opts.active ? () => toggleEquip(id) : undefined
+        onOpenDetail={
+          opts.inventory || opts.active ? () => openCardDetail(id) : undefined
         }
-        onLongPress={opts.inventory ? () => openCardDetail(id) : undefined}
         onBump={(dir) => bumpCardStar(id, dir)}
         onCommit={(n) => setCardStar(id, n)}
       />
@@ -699,6 +684,13 @@ export function WorkshopCardsPanel({
           workshopPersisted={workshopPersisted}
           gameResearchLevel={gameResearchLevel}
           previewTileSize={detailTileSize}
+          equipped={equippedSet.has(detailCardId)}
+          equipDisabled={
+            !equippedSet.has(detailCardId) &&
+            (workshopPersisted.cardStars[detailCardId] <= 0 ||
+              presetLoadout.length >= workshopPersisted.cardEquipSlots)
+          }
+          onToggleEquip={() => toggleEquip(detailCardId)}
           onClose={() => {
             setDetailCardId(null)
             setDetailTileSize(null)

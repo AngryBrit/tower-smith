@@ -43,6 +43,9 @@ type CardDetailDialogProps = {
   workshopPersisted: WorkshopPersistedV1
   gameResearchLevel?: readonly number[] | null
   previewTileSize?: { width: number; height: number } | null
+  equipped: boolean
+  equipDisabled: boolean
+  onToggleEquip: () => void
   onClose: () => void
   onUnlockMastery: () => void
 }
@@ -55,6 +58,9 @@ export function CardDetailDialog({
   workshopPersisted,
   gameResearchLevel,
   previewTileSize,
+  equipped,
+  equipDisabled,
+  onToggleEquip,
   onClose,
   onUnlockMastery,
 }: CardDetailDialogProps) {
@@ -247,6 +253,23 @@ export function CardDetailDialog({
               </div>
             </div>
             </div>
+            <button
+              type="button"
+              className={
+                equipped
+                  ? 'glow-btn glow-btn--block cards-detail__equip cards-detail__equip--on'
+                  : 'glow-btn glow-btn--block cards-detail__equip'
+              }
+              aria-pressed={equipped}
+              disabled={equipDisabled}
+              aria-label={(equipped
+                ? t('ws_cards_detail_unequip_aria')
+                : t('ws_cards_detail_equip_aria')
+              ).replace('{{card}}', t(cardTitleId))}
+              onClick={onToggleEquip}
+            >
+              {equipped ? t('ws_cards_detail_unequip') : t('ws_cards_detail_equip')}
+            </button>
             {atMax ? (
               <p className="cards-detail__max-label">{t('ws_cards_detail_max_level')}</p>
             ) : null}
