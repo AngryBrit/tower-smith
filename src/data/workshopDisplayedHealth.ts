@@ -34,10 +34,11 @@ export type WorkshopHealthDisplayOpts = {
 }
 
 /**
- * Share of armor sub-module **Health Regen [%]** in displayed health
- * (calibrated: 200% submodule with Health+ **×1.5** → **599.77B** / **138.20B** without chassis).
+ * Share of armor sub-module **Health Regen [%]** in displayed health (calibrated against the
+ * full-precision GOD base: 200% submodule with Health+ **×1.5** → **599.77B** equipped / **138.20B**
+ * without chassis, submodule term **≈×1.12622**).
  */
-export const WORKSHOP_DISPLAYED_HEALTH_REGEN_SUBMODULE_PERCENT_SHARE = 0.127454363 / 200
+export const WORKSHOP_DISPLAYED_HEALTH_REGEN_SUBMODULE_PERCENT_SHARE = 0.12622 / 200
 
 /** Partial armor sub-module **Health Regen [%]** when equipped on the armor module. */
 export function workshopDisplayedHealthSubmoduleMultiplier(

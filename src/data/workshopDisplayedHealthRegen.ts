@@ -8,8 +8,8 @@
  *
  * **Relics** sums owned **Health** and **Health Regen** relic % (same as displayed health).
  * **Enhancements** = partial **Health Regen +** tier. The displayed-regen enhance term is
- * effectively **level-independent across observed tiers** (tier **×1.60**→**×1.61** left it flat
- * at **≈×1.4977**), so it is calibrated as a near-constant share rather than tracking the raw tier.
+ * effectively **level-independent across observed tiers** (it stays flat at **≈×1.49745** against
+ * the full-precision base), so it is calibrated as a near-constant share rather than the raw tier.
  * Armor sub-module **Health Regen [%]** is not folded into this workshop card value.
  *
  * No rounding until `formatCoinAbbrev`.
@@ -31,22 +31,20 @@ export type WorkshopHealthRegenDisplayOpts = {
 /**
  * Share of **Health Regen +** enhancement excess in displayed-regen **Enhancements**.
  *
- * Calibrated against three in-game saves at the **same relics/card** but different workshop and
- * Regen+ levels:
+ * Calibrated against three in-game saves at the **same relics/card** (card ×2.6, relics +97%) but
+ * different workshop levels, using the **full-precision** GOD base regen:
  *
  * | WS level | Regen+ tier | game     | implied enhance |
  * |----------|-------------|----------|-----------------|
- * | 5820     | ×1.60       | 46.10/s  | 1.49757         |
- * | 5830     | ×1.61       | 47.47/s  | 1.49723         |
- * | 5840     | ×1.61       | 48.88/s  | 1.49814         |
+ * | 5820     | ×1.61       | 46.10/s  | 1.49748         |
+ * | 5830     | ×1.61       | 47.47/s  | 1.49745         |
+ * | 5840     | ×1.61       | 48.88/s  | 1.49741         |
  *
- * The enhance term is flat (**≈×1.4977**) across tier ×1.60→×1.61, so it does **not** track the
- * raw Regen+ tier. The ≤**0.0009** spread between same-tier points (5830 vs 5840) is 2-decimal
- * display rounding — the base-regen GOD table is stored to 2 decimals while the game multiplies at
- * full precision, so no constant fits every point to the cent. This fraction targets enhance
- * **≈×1.4977** at the observed tier, which lands all three within **0.01B/sec** of the game.
+ * With the full-precision base the implied enhance is flat to **~0.00007** across all three, so it
+ * does **not** track the raw Regen+ tier. The fraction targets enhance **≈×1.49745** at tier ×1.61,
+ * which reproduces every anchor exactly (48.88B/sec at L5840).
  */
-export const WORKSHOP_DISPLAYED_HEALTH_REGEN_REGEN_ENHANCE_EXCESS_FRACTION = 0.4977 / 0.61
+export const WORKSHOP_DISPLAYED_HEALTH_REGEN_REGEN_ENHANCE_EXCESS_FRACTION = 0.49745 / 0.61
 
 /** Partial **Health Regen +** tier when the Workshop Enhancements lab is unlocked. */
 export function workshopDisplayedHealthRegenEnhancementMultiplier(

@@ -119,7 +119,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
     const healthBase = workshopHealthStatValue(healthLevel)
     const withEnhanceForced = {
       ...opts,
-      healthRegenEnhancementsMultiplier: 1.4977,
+      healthRegenEnhancementsMultiplier: 1.49745,
     }
     const regenDisplayWithEnhance = workshopDefenseStatDisplay(
       'healthRegenLevel',
@@ -140,7 +140,7 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
       {
         ...opts,
         healthRegenLabMultiplier: 2.86,
-        healthRegenEnhancementsMultiplier: 1.4977,
+        healthRegenEnhancementsMultiplier: 1.49745,
       },
     )
     console.log({
@@ -166,8 +166,8 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
         chassis: opts?.armorTowerHealthMultiplier,
       },
     })
-    expect(regenDisplayWithEnhance).toBe('48.89B/sec')
-    expect(regenDisplayInflated).toBe('48.89B/sec')
-    expect(healthDisplayCalibrated).toBe('600.42B')
+    expect(regenDisplayWithEnhance).toBe('48.88B/sec')
+    expect(regenDisplayInflated).toBe('48.88B/sec')
+    expect(healthDisplayCalibrated).toBe('599.77B')
   })
 })

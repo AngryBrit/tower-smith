@@ -22,8 +22,8 @@ describe('workshopDisplayedHealthRegen', () => {
 
   it('uses a near-constant Health Regen+ excess term across observed tiers', () => {
     expect(workshopDisplayedHealthRegenEnhancementMultiplier(61, true)).toBeCloseTo(
-      1.4977,
-      3,
+      1.49745,
+      4,
     )
     expect(workshopDisplayedHealthRegenEnhancementMultiplier(0, true)).toBe(1)
     expect(workshopDisplayedHealthRegenEnhancementMultiplier(61, false)).toBe(1)
@@ -33,20 +33,20 @@ describe('workshopDisplayedHealthRegen', () => {
   it('matches player save overlays at workshop L5840', () => {
     expect(workshopHealthRegenStatValue(5840)).toBeCloseTo(6_373_117_241.88547, 0)
     const enhance = workshopDisplayedHealthRegenEnhancementMultiplier(61, true)
-    expect(enhance).toBeCloseTo(1.4977, 3)
+    expect(enhance).toBeCloseTo(1.49745, 4)
     expect(
       workshopDisplayedHealthRegenStatDisplay(5840, {
         healthRegenCardMultiplier: 2.6,
         relicsBonus: 0.97,
         healthRegenEnhancementsMultiplier: enhance,
       }),
-    ).toBe('48.89B/sec')
+    ).toBe('48.88B/sec')
     expect(
       workshopDefenseStatDisplay('healthRegenLevel', 5840, {
         healthRegenCardMultiplier: 2.6,
         healthRegenRelicsBonus: 0.97,
         healthRegenEnhancementsMultiplier: enhance,
       }),
-    ).toBe('48.89B/sec')
+    ).toBe('48.88B/sec')
   })
 })

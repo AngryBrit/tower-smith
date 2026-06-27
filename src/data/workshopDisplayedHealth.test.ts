@@ -33,7 +33,7 @@ describe('workshopDisplayedHealth', () => {
   })
 
   it('applies partial armor submodule Health Regen [%] to displayed health', () => {
-    expect(workshopDisplayedHealthSubmoduleMultiplier(200)).toBeCloseTo(1.127454363, 5)
+    expect(workshopDisplayedHealthSubmoduleMultiplier(200)).toBeCloseTo(1.12622, 5)
     expect(workshopDisplayedHealthSubmoduleMultiplier(0)).toBe(1)
     expect(workshopDisplayedHealthSubmoduleMultiplier(undefined)).toBe(1)
   })
@@ -53,7 +53,7 @@ describe('workshopDisplayedHealth', () => {
     const enhance = workshopDisplayedHealthEnhancementMultiplier(50, true)
     expect(enhance).toBeCloseTo(1.5, 3)
     const submodule = workshopDisplayedHealthSubmoduleMultiplier(200)
-    expect(submodule).toBeCloseTo(1.127454363, 5)
+    expect(submodule).toBeCloseTo(1.12622, 5)
     expect(
       workshopDisplayedHealthStatDisplay(5600, {
         armorTowerHealthMultiplier: 4.34,
@@ -63,7 +63,7 @@ describe('workshopDisplayedHealth', () => {
         healthEnhancementsMultiplier: enhance,
         submoduleHealthRegenPercentBonus: 200,
       }),
-    ).toBe('600.42B')
+    ).toBe('599.77B')
     expect(
       workshopDefenseStatDisplay('healthLevel', 5600, {
         armorTowerHealthMultiplier: 4.34,
@@ -73,6 +73,6 @@ describe('workshopDisplayedHealth', () => {
         healthEnhancementsMultiplier: enhance,
         submodule: { healthRegenPercentBonus: 200 },
       }),
-    ).toBe('600.42B')
+    ).toBe('599.77B')
   })
 })
