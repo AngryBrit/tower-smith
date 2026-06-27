@@ -329,6 +329,26 @@ export function workshopRelicsDisplayedAttackSpeedRelicMultiplier(
   return pct > 0 ? 1 + pct / 100 : 1
 }
 
+/**
+ * Share of owned ultimate-damage relic % counted toward workshop ultimate-weapon
+ * global damage (`Relics` @ +0xd0 × `GetChainLightningDamage`).
+ *
+ * Calibrated against AngryBrit `playerInfo.dat`: seven owned ultimate-damage relics
+ * (+32% from descriptions) reconcile to an effective ~+5.45% on the core-scaled
+ * damage subtotal (×1.0545 → 1398x from 1326x), not flat ×1.32. Refine when tech-tree
+ * and runtime `CalculateRelicBonuses` wiring are fully decoded from save.
+ */
+export const WORKSHOP_ULTIMATE_DAMAGE_RELIC_SHARE = 5.45 / 32
+
+/** Owned ultimate-damage relic multiplier for workshop UW damage display. */
+export function workshopRelicsUltimateDamageRelicMultiplier(
+  ownedIds: ReadonlySet<string>,
+): number {
+  const pct = workshopRelicsActiveBonusPercent(ownedIds, 'ultimateDamage')
+  if (pct <= 0) return 1
+  return 1 + (pct * WORKSHOP_ULTIMATE_DAMAGE_RELIC_SHARE) / 100
+}
+
 export function workshopRelicsBonusTable(
   ownedIds: ReadonlySet<string>,
 ): RelicStatGroup[] {

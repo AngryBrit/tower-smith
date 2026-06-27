@@ -4064,6 +4064,9 @@ export function WorkshopPage({
                     onPlusBump={bumpUltimatePlus}
                     onSetPlusLevel={setUltimatePlusLevel}
                     onPlusUnlock={unlockUltimatePlus}
+                    researchData={researchData}
+                    labLevelOverrides={mergedLabLevelOverrides}
+                    gameResearchLevel={gameResearchLevel}
                   />
                 ))
               : null}

@@ -1612,6 +1612,30 @@ export const STRINGS_EN = {
     'Power stones to buy this ultimate weapon (cost rises with each weapon owned)',
   ws_uw_activate: 'Activate',
   ws_uw_deactivate: 'Deactivate',
+  ws_uw_detail_open_aria: 'view details',
+  ws_uw_detail_close_aria: 'Close ultimate weapon details',
+  ws_uw_detail_stats_title: 'Stats',
+  ws_uw_detail_enhancements_title: 'Enhancements',
+  ws_uw_detail_next_sep: '»',
+  ws_uw_detail_max: 'Max',
+  ws_uw_desc_chainLightning:
+    'On Hit: {0} chance to cast {1} Chain Lightnings dealing {2} Tower Damage (scales with all Crit).',
+  ws_uw_desc_smartMissiles:
+    'Launch {0} missiles that track enemies and explode on impact. Deals {1} Tower Damage (scales with all Crit).',
+  ws_uw_desc_deathWave:
+    'Spawn {0} effect waves before unleashing a death wave that will persist until it deals {1} Tower Damage (scales with all Crit).',
+  ws_uw_desc_chronoField:
+    'Creates a field for {0} that reduces the speed of any enemy inside by {1}.',
+  ws_uw_desc_innerLandMines:
+    'Spawn {0} land mines that explode on contact dealing {1} Tower Damage as AOE (scales with all Crit).',
+  ws_uw_desc_goldenTower:
+    'Turns the tower golden for {0}. While active you receive {1} cash and coins from enemy kills.',
+  ws_uw_desc_poisonSwamp:
+    'Spawn a Poison Swamp that deals {0} damage every second and stays active for {1}.',
+  ws_uw_desc_blackHole:
+    'Creates a black hole for {0} that sucks enemies in, with a range of {1}.',
+  ws_uw_desc_spotlight:
+    'Create {0} spotlights that spin around the tower; enemies in the spotlight receive {1} more damage.',
   ws_uwp_section_title: 'Ultimate Weapon Plus',
   ws_uwp_section_intro:
     'Extra abilities that boost Ultimate Weapons and their base stats. After all 9 weapons are unlocked, buy Plus abilities in any order; each new unlock costs more power stones. Abilities start at level 0 and can be upgraded 10 times.',

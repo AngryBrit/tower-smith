@@ -1577,6 +1577,30 @@ export const STRINGS_DE = {
     'Kraftsteine zum Kauf dieser Ultimate Weapon (steigt mit jeder besessenen Waffe)',
   ws_uw_activate: 'Aktivieren',
   ws_uw_deactivate: 'Deaktivieren',
+  ws_uw_detail_open_aria: 'Details anzeigen',
+  ws_uw_detail_close_aria: 'Ultimate-Weapon-Details schließen',
+  ws_uw_detail_stats_title: 'Werte',
+  ws_uw_detail_enhancements_title: 'Verstärkungen',
+  ws_uw_detail_next_sep: '»',
+  ws_uw_detail_max: 'Max',
+  ws_uw_desc_chainLightning:
+    'Bei Treffer: {0} Chance, {1} Kettenblitze zu wirken, die {2} Turmschaden verursachen (skaliert mit allen Crits).',
+  ws_uw_desc_smartMissiles:
+    'Startet {0} Raketen, die Gegner verfolgen und bei Einschlag explodieren. Verursacht {1} Turmschaden (skaliert mit allen Crits).',
+  ws_uw_desc_deathWave:
+    'Erzeugt {0} Effektwellen, bevor eine Death Wave freigesetzt wird, die bestehen bleibt, bis sie {1} Turmschaden verursacht hat (skaliert mit allen Crits).',
+  ws_uw_desc_chronoField:
+    'Erzeugt ein Feld für {0}, das die Geschwindigkeit aller Gegner darin um {1} reduziert.',
+  ws_uw_desc_innerLandMines:
+    'Platziert {0} Landminen, die bei Kontakt explodieren und {1} Turmschaden als Flächenschaden verursachen (skaliert mit allen Crits).',
+  ws_uw_desc_goldenTower:
+    'Verwandelt den Turm für {0} in Gold. Während aktiv erhältst du {1} Cash und Münzen pro Kill.',
+  ws_uw_desc_poisonSwamp:
+    'Erzeugt einen Gift-Sumpf, der jede Sekunde {0} Schaden verursacht und {1} aktiv bleibt.',
+  ws_uw_desc_blackHole:
+    'Erzeugt ein Schwarzes Loch für {0}, das Gegner einsaugt, mit einer Reichweite von {1}.',
+  ws_uw_desc_spotlight:
+    'Erzeugt {0} Spotlights, die um den Turm rotieren; Gegner im Licht erhalten {1} mehr Schaden.',
   ws_uwp_section_title: 'Ultimate Weapon Plus',
   ws_uwp_section_intro:
     'Zusatzfähigkeiten für Ultimate Weapons und ihre Basiswerte. Nach Freischaltung aller 9 Waffen kannst du Plus-Fähigkeiten in beliebiger Reihenfolge kaufen; jede weitere Freischaltung kostet mehr Kraftsteine. Fähigkeiten starten auf Stufe 0 und lassen sich 10-mal verbessern.',

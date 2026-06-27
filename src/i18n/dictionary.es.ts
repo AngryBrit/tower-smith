@@ -1636,6 +1636,30 @@ export const STRINGS_ES = {
     'Piedras de poder para comprar esta ultimate weapon (sube con cada arma poseída)',
   ws_uw_activate: 'Activar',
   ws_uw_deactivate: 'Desactivar',
+  ws_uw_detail_open_aria: 'ver detalles',
+  ws_uw_detail_close_aria: 'Cerrar detalles de ultimate weapon',
+  ws_uw_detail_stats_title: 'Estadísticas',
+  ws_uw_detail_enhancements_title: 'Mejoras',
+  ws_uw_detail_next_sep: '»',
+  ws_uw_detail_max: 'Máx',
+  ws_uw_desc_chainLightning:
+    'Al golpear: {0} de probabilidad de lanzar {1} rayos en cadena que infligen {2} de daño de torre (escala con todo el crítico).',
+  ws_uw_desc_smartMissiles:
+    'Lanza {0} misiles que rastrean enemigos y explotan al impactar. Inflige {1} de daño de torre (escala con todo el crítico).',
+  ws_uw_desc_deathWave:
+    'Genera {0} ondas de efecto antes de liberar una death wave que persiste hasta infligir {1} de daño de torre (escala con todo el crítico).',
+  ws_uw_desc_chronoField:
+    'Crea un campo durante {0} que reduce la velocidad de los enemigos dentro en {1}.',
+  ws_uw_desc_innerLandMines:
+    'Genera {0} minas terrestres que explotan al contacto e infligen {1} de daño de torre en área (escala con todo el crítico).',
+  ws_uw_desc_goldenTower:
+    'Convierte la torre en dorada durante {0}. Mientras está activa recibes {1} de efectivo y monedas por eliminación.',
+  ws_uw_desc_poisonSwamp:
+    'Genera un pantano venenoso que inflige {0} de daño por segundo y permanece activo {1}.',
+  ws_uw_desc_blackHole:
+    'Crea un agujero negro durante {0} que succiona enemigos, con un alcance de {1}.',
+  ws_uw_desc_spotlight:
+    'Crea {0} focos que giran alrededor de la torre; los enemigos bajo el foco reciben {1} más daño.',
   ws_uwp_section_title: 'Ultimate Weapon Plus',
   ws_uwp_section_intro:
     'Habilidades extra que potencian las Ultimate Weapons y sus mejoras base. Tras desbloquear las 9 armas, compra habilidades Plus en cualquier orden; cada desbloqueo cuesta más piedras de poder. Empiezan en nivel 0 y se pueden mejorar 10 veces.',

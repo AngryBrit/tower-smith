@@ -50,6 +50,14 @@ export function workshopUltimateNextMarginalStones(
   )
 }
 
+/** Numeric stat value (milestone) for a track at `completedLevels`, before submodule add. */
+export function workshopUltimateStatValue(
+  key: WorkshopUltimateUpgradeKey,
+  completedLevels: number,
+): number {
+  return workshopUltimateTrackStatValue(WORKSHOP_ULTIMATE_TRACKS[key], completedLevels)
+}
+
 export function workshopUltimateStatDisplay(
   key: WorkshopUltimateUpgradeKey,
   completedLevels: number,

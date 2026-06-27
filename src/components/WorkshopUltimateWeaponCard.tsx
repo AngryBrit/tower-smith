@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { HoldStepButton } from './HoldStepButton'
 import { PowerStoneGlyph } from './PowerStoneGlyph'
 import { useI18n } from '../i18n'
@@ -29,6 +29,12 @@ import {
   WORKSHOP_ULTIMATE_PLUS_TITLE,
 } from './workshopUltimatePlusAbilityCardMeta'
 import { WorkshopUltimatePlusAbilityCard } from './WorkshopUltimatePlusAbilityCard'
+import {
+  WORKSHOP_ULTIMATE_WEAPON_DETAIL,
+  workshopUltimateWeaponInGameDamageDisplay,
+} from '../data/workshopUltimateWeaponDetail'
+import { WorkshopUltimateWeaponDetailDialog } from './WorkshopUltimateWeaponDetailDialog'
+import type { ResearchData } from '../types/research'
 
 const ULTIMATE_WEAPON_TITLE: Record<WorkshopUltimateWeaponId, StringId> = {
   chainLightning: 'ws_uw_chainLightning',
@@ -66,18 +72,34 @@ const ULTIMATE_WEAPON_ICON_SRC: Record<WorkshopUltimateWeaponId, string> = {
   chronoField: '/ultimate_weapons/weapon_chronoField.webp',
 }
 
-function UltimateWeaponIcon({ weaponId }: { weaponId: WorkshopUltimateWeaponId }) {
+function UltimateWeaponIcon({
+  weaponId,
+  title,
+  onOpenDetail,
+}: {
+  weaponId: WorkshopUltimateWeaponId
+  title: string
+  onOpenDetail: () => void
+}) {
+  const { t } = useI18n()
   const src = ULTIMATE_WEAPON_ICON_SRC[weaponId]
   if (!src) return null
   return (
-    <img
-      src={src}
-      alt=""
-      width={48}
-      height={48}
-      className="workshop__uw-icon-svg"
-      aria-hidden
-    />
+    <button
+      type="button"
+      className="workshop__uw-icon-btn"
+      aria-label={`${title} — ${t('ws_uw_detail_open_aria')}`}
+      onClick={onOpenDetail}
+    >
+      <img
+        src={src}
+        alt=""
+        width={48}
+        height={48}
+        className="workshop__uw-icon-svg"
+        aria-hidden
+      />
+    </button>
   )
 }
 
@@ -95,6 +117,9 @@ export type WorkshopUltimateWeaponCardProps = {
   onPlusBump?: (abilityId: WorkshopUltimatePlusAbilityId, direction: -1 | 1) => void
   onSetPlusLevel?: (abilityId: WorkshopUltimatePlusAbilityId, level: number) => void
   onPlusUnlock?: (abilityId: WorkshopUltimatePlusAbilityId) => void
+  researchData?: ResearchData | null
+  labLevelOverrides?: Record<string, number>
+  gameResearchLevel?: readonly number[] | null
 }
 
 export function WorkshopUltimateWeaponCard({
@@ -111,8 +136,12 @@ export function WorkshopUltimateWeaponCard({
   onPlusBump,
   onSetPlusLevel,
   onPlusUnlock,
+  researchData = null,
+  labLevelOverrides = {},
+  gameResearchLevel = null,
 }: WorkshopUltimateWeaponCardProps) {
   const { t } = useI18n()
+  const [detailOpen, setDetailOpen] = useState(false)
   const stats = WORKSHOP_ULTIMATE_WEAPON_STATS[weaponId]
   const title = t(ULTIMATE_WEAPON_TITLE[weaponId])
   const plusAbilityId = workshopUltimatePlusAbilityForWeapon(weaponId)
@@ -215,7 +244,11 @@ export function WorkshopUltimateWeaponCard({
         ) : (
           <div className="workshop__uw-body">
             <div className="workshop__uw-icon-wrap">
-              <UltimateWeaponIcon weaponId={weaponId} />
+              <UltimateWeaponIcon
+                weaponId={weaponId}
+                title={title}
+                onOpenDetail={() => setDetailOpen(true)}
+              />
             </div>
             <div className="workshop__uw-stats" role="group">
               {stats.map(({ key, stat }) => {
@@ -234,11 +267,23 @@ export function WorkshopUltimateWeaponCard({
                     <div className="workshop__uw-col-top">
                       <span className="workshop__uw-stat-label">{statName}</span>
                       <span className="workshop__uw-stat-value">
-                        {workshopUltimateStatDisplay(
-                          key,
-                          level,
-                          ultimateSubmoduleBonuses[key] ?? 0,
-                        )}
+                        {stat === 'damage' &&
+                        WORKSHOP_ULTIMATE_WEAPON_DETAIL[weaponId].damageStatKey &&
+                        workshop != null
+                          ? workshopUltimateWeaponInGameDamageDisplay(
+                              key,
+                              level,
+                              ultimateSubmoduleBonuses[key] ?? 0,
+                              workshop,
+                              researchData,
+                              labLevelOverrides,
+                              gameResearchLevel,
+                            )
+                          : workshopUltimateStatDisplay(
+                              key,
+                              level,
+                              ultimateSubmoduleBonuses[key] ?? 0,
+                            )}
                       </span>
                     </div>
                     <div className="workshop__uw-col-foot">
@@ -319,6 +364,18 @@ export function WorkshopUltimateWeaponCard({
           )
         ) : null}
       </div>
+      {detailOpen && workshop != null ? (
+        <WorkshopUltimateWeaponDetailDialog
+          weaponId={weaponId}
+          levels={levels}
+          workshop={workshop}
+          researchData={researchData}
+          labLevelOverrides={labLevelOverrides}
+          submoduleBonuses={ultimateSubmoduleBonuses}
+          gameResearchLevel={gameResearchLevel}
+          onClose={() => setDetailOpen(false)}
+        />
+      ) : null}
     </li>
   )
 }
