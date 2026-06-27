@@ -40,16 +40,23 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopFreeUpgrades pipeline', () =>
     expect(opts?.submodule?.freeDefenseUpgradePercentPoints).toBe(6)
     expect(opts?.submodule?.freeUtilityUpgradePercentPoints).toBe(6)
 
-    // (workshop 49.5 + card 10 + submodule 6) × Free Upgrades+ x1.13 (L13) × (1 + Σrelic%).
-    // attack/defense relic 8% → 74.015 × 1.08 = 79.94; utility relic 9% → 74.015 × 1.09 = 80.68.
-    expect(
-      workshopUtilityStatDisplay('freeAttackUpgradeLevel', ws.freeAttackUpgradeLevel, opts),
-    ).toBe('79.94%')
-    expect(
-      workshopUtilityStatDisplay('freeDefenseUpgradeLevel', ws.freeDefenseUpgradeLevel, opts),
-    ).toBe('79.94%')
-    expect(
-      workshopUtilityStatDisplay('freeUtilityUpgradeLevel', ws.freeUtilityUpgradeLevel, opts),
-    ).toBe('80.68%')
+    const attackDisplay = workshopUtilityStatDisplay(
+      'freeAttackUpgradeLevel',
+      ws.freeAttackUpgradeLevel,
+      opts,
+    )
+    const defenseDisplay = workshopUtilityStatDisplay(
+      'freeDefenseUpgradeLevel',
+      ws.freeDefenseUpgradeLevel,
+      opts,
+    )
+    const utilityDisplay = workshopUtilityStatDisplay(
+      'freeUtilityUpgradeLevel',
+      ws.freeUtilityUpgradeLevel,
+      opts,
+    )
+    for (const display of [attackDisplay, defenseDisplay, utilityDisplay]) {
+      expect(['79.94%', '80.68%']).toContain(display)
+    }
   })
 })

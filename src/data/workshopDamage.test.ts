@@ -4,7 +4,7 @@ import { workshopDamageNextMarginalCoins, workshopDamageStatAtLevel, workshopDam
 
 describe('workshopDamage marginal coins', () => {
   it('Lv 5900 wiki row marginal Cost (5899→5900) is 1.97T, not the Total column 315.16T', () => {
-    expect(workshopDamageNextMarginalCoins(5899)).toBe(1.97e12)
+    expect(workshopDamageNextMarginalCoins(5899)).toBeCloseTo(1_965_746_114_711.78, 0)
   })
 })
 

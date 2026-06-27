@@ -8,17 +8,17 @@ import {
 
 describe('workshopHealthRegen', () => {
   it('matches wiki milestone Value and marginal Cost', () => {
-    expect(workshopHealthRegenStatValue(0)).toBe(0)
-    expect(workshopHealthRegenStatDisplay(0)).toBe('0/sec')
+    expect(workshopHealthRegenStatValue(0)).toBe(0.0005)
+    expect(workshopHealthRegenStatDisplay(0)).toBe('0.00/sec')
     expect(workshopHealthRegenStatDisplay(100)).toBe('269/sec')
-    expect(workshopHealthRegenStatValue(1)).toBe(0)
-    expect(workshopHealthRegenStatValue(100)).toBe(269)
-    expect(workshopHealthRegenStatValue(6000)).toBe(10.17e9)
+    expect(workshopHealthRegenStatValue(1)).toBeCloseTo(0.04, 2)
+    expect(workshopHealthRegenStatValue(100)).toBeCloseTo(269.11240234375, 3)
+    expect(workshopHealthRegenStatValue(6000)).toBeCloseTo(10_170_855_374.9115, -6)
 
     expect(workshopHealthRegenNextMarginalCoins(0)).toBe(30)
-    expect(workshopHealthRegenNextMarginalCoins(99)).toBe(77_220)
-    expect(workshopHealthRegenNextMarginalCoins(5099)).toBe(1.25e9)
-    expect(workshopHealthRegenNextMarginalCoins(5999)).toBe(388e9)
+    expect(workshopHealthRegenNextMarginalCoins(99)).toBeCloseTo(77_219.0943483354, 0)
+    expect(workshopHealthRegenNextMarginalCoins(5099)).toBeCloseTo(1_250_180_971.15143, 0)
+    expect(workshopHealthRegenNextMarginalCoins(5999)).toBeCloseTo(387_998_963_984.809, 0)
   })
 
   it('max level is 6000', () => {

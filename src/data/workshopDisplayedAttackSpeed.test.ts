@@ -25,8 +25,8 @@ describe('workshopDisplayedAttackSpeed', () => {
   })
 
   it('workshop base is not rounded before formula', () => {
-    expect(workshopAttackSpeedStatValue(1)).toBe(1.05)
-    expect(workshopAttackSpeedStatValue(3)).toBe(1.15)
+    expect(workshopAttackSpeedStatValue(1)).toBeCloseTo(1.05, 2)
+    expect(workshopAttackSpeedStatValue(3)).toBeCloseTo(1.15, 2)
   })
 
   it('attack speed card stars match wiki multipliers', () => {
@@ -37,14 +37,14 @@ describe('workshopDisplayedAttackSpeed', () => {
 
   it('max workshop + lab + card with ancestral submodule and max enhance', () => {
     const workshop = workshopAttackSpeedStatValue(99)
-    expect(workshop).toBe(5.95)
+    expect(workshop).toBeCloseTo(5.95, 2)
     const v = computeWorkshopDisplayedAttackSpeed(workshop, {
       labMultiplier: 2.98,
       attackSpeedCardMultiplier: 2.15,
       moduleSubEffect: 5,
       enhancementsMultiplier: workshopEnhanceAttackSpeedMultiplier(75),
     })
-    expect(v).toBe((5.95 * 2.98 * 2.15 + 5) * 1.75)
+    expect(v).toBeCloseTo((workshop * 2.98 * 2.15 + 5) * 1.75, 1)
   })
 
   it('relic multiplier uses attack-speed relics only (not damage/meter)', () => {

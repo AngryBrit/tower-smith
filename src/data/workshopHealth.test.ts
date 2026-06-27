@@ -9,12 +9,12 @@ describe('workshopHealth', () => {
   it('matches wiki milestone Value and marginal Cost', () => {
     expect(workshopHealthStatValue(0)).toBe(5)
     expect(workshopHealthStatValue(1)).toBe(10)
-    expect(workshopHealthStatValue(100)).toBe(21_560)
-    expect(workshopHealthStatValue(6000)).toBe(6.71e9)
+    expect(workshopHealthStatValue(100)).toBeCloseTo(21_563.4809248988, 3)
+    expect(workshopHealthStatValue(6000)).toBeCloseTo(6_709_183_277.54009, -6)
 
     expect(workshopHealthNextMarginalCoins(0)).toBe(30)
-    expect(workshopHealthNextMarginalCoins(99)).toBe(77_220)
-    expect(workshopHealthNextMarginalCoins(5999)).toBe(4.68e12)
+    expect(workshopHealthNextMarginalCoins(99)).toBeCloseTo(77_219.0943483354, 0)
+    expect(workshopHealthNextMarginalCoins(5999)).toBeCloseTo(4_677_842_447_733.98, 0)
   })
 
   it('max level is 6000', () => {

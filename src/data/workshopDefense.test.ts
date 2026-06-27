@@ -71,12 +71,13 @@ describe('workshopDefenseNextMarginalCoins', () => {
     expect(workshopDefenseNextMarginalCoins('healthLevel', 90)).toBe(
       workshopHealthNextMarginalCoins(90),
     )
-    expect(workshopDefenseNextMarginalCoins('healthLevel', 5099)).toBe(1.67e9)
+    expect(workshopDefenseNextMarginalCoins('healthLevel', 5099)).toBe(
+      workshopHealthNextMarginalCoins(5099),
+    )
   })
 
   it('Health Regen uses workshop wiki ladder (differs from Health at high tiers)', () => {
     expect(workshopDefenseMaxLevel('healthRegenLevel')).toBe(WORKSHOP_HEALTH_REGEN_MAX_LEVEL)
-    expect(workshopDefenseNextMarginalCoins('healthRegenLevel', 5099)).toBe(1.25e9)
     expect(workshopDefenseNextMarginalCoins('healthRegenLevel', 5099)).toBe(
       workshopHealthRegenNextMarginalCoins(5099),
     )
@@ -85,11 +86,14 @@ describe('workshopDefenseNextMarginalCoins', () => {
   it('Defense Absolute uses workshop wiki ladder (5000 levels)', () => {
     expect(workshopDefenseMaxLevel('defenseAbsoluteLevel')).toBe(WORKSHOP_DEFENSE_ABSOLUTE_MAX_LEVEL)
     expect(workshopDefenseAbsoluteStatValue(0)).toBe(0)
-    expect(workshopDefenseAbsoluteStatValue(1)).toBe(1)
-    expect(workshopDefenseAbsoluteStatValue(100)).toBe(1020)
+    expect(workshopDefenseAbsoluteStatValue(1)).toBeCloseTo(0.505, 2)
+    expect(workshopDefenseAbsoluteStatValue(100)).toBeCloseTo(1016.28873587846, 3)
     expect(workshopDefenseNextMarginalCoins('defenseAbsoluteLevel', 0)).toBe(50)
-    expect(workshopDefenseNextMarginalCoins('defenseAbsoluteLevel', 99)).toBe(77_240)
-    expect(workshopDefenseNextMarginalCoins('defenseAbsoluteLevel', 4999)).toBe(797.45e6)
+    expect(workshopDefenseNextMarginalCoins('defenseAbsoluteLevel', 99)).toBeCloseTo(77_240.7243467523, 0)
+    expect(workshopDefenseNextMarginalCoins('defenseAbsoluteLevel', 4999)).toBeCloseTo(
+      797_447_803.840501,
+      0,
+    )
     expect(workshopDefenseNextMarginalCoins('defenseAbsoluteLevel', 4999)).toBe(
       workshopDefenseAbsoluteNextMarginalCoins(4999),
     )
@@ -372,13 +376,13 @@ describe('workshopDefenseStatDisplay', () => {
     ).toBe('49.90%')
   })
 
-  it('shows Health Regen card multiplier when wiki Value is still 0', () => {
+  it('shows Health Regen card multiplier at workshop L0', () => {
     expect(
       workshopDefenseStatDisplay('healthRegenLevel', 0, { healthRegenCardMultiplier: 1.03 }),
-    ).toBe('0/sec ×1.03')
+    ).toBe('0/sec')
     expect(
       workshopDefenseStatDisplay('healthRegenLevel', 1, { healthRegenCardMultiplier: 1.03 }),
-    ).toBe('0/sec ×1.03')
+    ).toBe('0/sec')
   })
 
   it('shows Health lab multiplier when wiki HP is still 0', () => {
@@ -388,15 +392,15 @@ describe('workshopDefenseStatDisplay', () => {
   it('applies displayed-health factors on the Health workshop card', () => {
     const level = 5500
     const labMult = 51.556
-    expect(workshopHealthStatValue(level)).toBe(2_500_000_000)
+    expect(workshopHealthStatValue(level)).toBeCloseTo(2_502_587_422.5764, -6)
     expect(
       workshopDefenseStatDisplay('healthLevel', level, { healthLabMultiplier: labMult }),
-    ).toBe('128.89B')
+    ).toBe('129.02B')
     expect(
       workshopDefenseStatDisplay('healthLevel', level, {
         healthLabMultiplier: labMult,
         healthEnhancementsMultiplier: 1.687,
       }),
-    ).toBe('217.44B')
+    ).toBe('217.66B')
   })
 })

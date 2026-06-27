@@ -166,8 +166,8 @@ describe.skipIf(!existsSync(PLAYER_SAVE))('workshopDisplayedHealthRegen pipeline
         chassis: opts?.armorTowerHealthMultiplier,
       },
     })
-    expect(regenDisplayWithEnhance).toBe('48.87B/sec')
-    expect(regenDisplayInflated).toBe('48.87B/sec')
-    expect(healthDisplayCalibrated).toBe('599.77B')
+    expect(regenDisplayWithEnhance).toBe('48.89B/sec')
+    expect(regenDisplayInflated).toBe('48.89B/sec')
+    expect(healthDisplayCalibrated).toBe('600.42B')
   })
 })

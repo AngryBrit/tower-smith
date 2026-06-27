@@ -10,21 +10,21 @@
         "display": "60.00",
         "coins": 60
       },
-      "nextCash": {
-        "display": "10.00",
-        "cash": 10
-      },
       "additionalCoins": {
         "display": "0.00",
         "coins": 0
       },
-      "additionalCash": {
-        "display": "0.00",
-        "cash": 0
-      },
       "totalCoins": {
         "display": "0.00",
         "coins": 0
+      },
+      "nextCash": {
+        "display": "10.00",
+        "cash": 10
+      },
+      "additionalCash": {
+        "display": "0.00",
+        "cash": 0
       },
       "totalCash": {
         "display": "0.00",
@@ -47,21 +47,21 @@
         "display": "85.00",
         "coins": 85
       },
-      "nextCash": {
-        "display": "13.00",
-        "cash": 13
-      },
       "additionalCoins": {
         "display": "60.00",
         "coins": 60
       },
-      "additionalCash": {
-        "display": "10.00",
-        "cash": 10
-      },
       "totalCoins": {
         "display": "60.00",
         "coins": 60
+      },
+      "nextCash": {
+        "display": "13.00",
+        "cash": 13
+      },
+      "additionalCash": {
+        "display": "10.00",
+        "cash": 10
       },
       "totalCash": {
         "display": "10.00",
@@ -84,21 +84,21 @@
         "display": "117.00",
         "coins": 117
       },
-      "nextCash": {
-        "display": "18.00",
-        "cash": 18
-      },
       "additionalCoins": {
         "display": "145.00",
         "coins": 145
       },
-      "additionalCash": {
-        "display": "23.00",
-        "cash": 23
-      },
       "totalCoins": {
         "display": "145.00",
         "coins": 145
+      },
+      "nextCash": {
+        "display": "18.00",
+        "cash": 18
+      },
+      "additionalCash": {
+        "display": "23.00",
+        "cash": 23
       },
       "totalCash": {
         "display": "23.00",
@@ -121,21 +121,21 @@
         "display": "157.00",
         "coins": 157
       },
-      "nextCash": {
-        "display": "24.00",
-        "cash": 24
-      },
       "additionalCoins": {
         "display": "262.00",
         "coins": 262
       },
-      "additionalCash": {
-        "display": "41.00",
-        "cash": 41
-      },
       "totalCoins": {
         "display": "262.00",
         "coins": 262
+      },
+      "nextCash": {
+        "display": "24.00",
+        "cash": 24
+      },
+      "additionalCash": {
+        "display": "41.00",
+        "cash": 41
       },
       "totalCash": {
         "display": "41.00",
@@ -158,21 +158,21 @@
         "display": "206.00",
         "coins": 206
       },
-      "nextCash": {
-        "display": "31.00",
-        "cash": 31
-      },
       "additionalCoins": {
         "display": "419.00",
         "coins": 419
       },
-      "additionalCash": {
-        "display": "65.00",
-        "cash": 65
-      },
       "totalCoins": {
         "display": "419.00",
         "coins": 419
+      },
+      "nextCash": {
+        "display": "31.00",
+        "cash": 31
+      },
+      "additionalCash": {
+        "display": "65.00",
+        "cash": 65
       },
       "totalCash": {
         "display": "65.00",
@@ -195,21 +195,21 @@
         "display": "264.00",
         "coins": 264
       },
-      "nextCash": {
-        "display": "39.00",
-        "cash": 39
-      },
       "additionalCoins": {
         "display": "625.00",
         "coins": 625
       },
-      "additionalCash": {
-        "display": "96.00",
-        "cash": 96
-      },
       "totalCoins": {
         "display": "625.00",
         "coins": 625
+      },
+      "nextCash": {
+        "display": "39.00",
+        "cash": 39
+      },
+      "additionalCash": {
+        "display": "96.00",
+        "cash": 96
       },
       "totalCash": {
         "display": "96.00",
@@ -232,21 +232,21 @@
         "display": "331.00",
         "coins": 331
       },
-      "nextCash": {
-        "display": "48.00",
-        "cash": 48
-      },
       "additionalCoins": {
         "display": "889.00",
         "coins": 889
       },
-      "additionalCash": {
-        "display": "135.00",
-        "cash": 135
-      },
       "totalCoins": {
         "display": "889.00",
         "coins": 889
+      },
+      "nextCash": {
+        "display": "48.00",
+        "cash": 48
+      },
+      "additionalCash": {
+        "display": "135.00",
+        "cash": 135
       },
       "totalCash": {
         "display": "135.00",
@@ -269,21 +269,21 @@
         "display": "409.00",
         "coins": 409
       },
-      "nextCash": {
-        "display": "59.00",
-        "cash": 59
-      },
       "additionalCoins": {
         "display": "1.22K",
         "coins": 1220
       },
-      "additionalCash": {
-        "display": "183.00",
-        "cash": 183
-      },
       "totalCoins": {
         "display": "1.22K",
         "coins": 1220
+      },
+      "nextCash": {
+        "display": "59.00",
+        "cash": 59
+      },
+      "additionalCash": {
+        "display": "183.00",
+        "cash": 183
       },
       "totalCash": {
         "display": "183.00",
@@ -306,21 +306,21 @@
         "display": "497.00",
         "coins": 497
       },
-      "nextCash": {
-        "display": "71.00",
-        "cash": 71
-      },
       "additionalCoins": {
         "display": "1.63K",
         "coins": 1630
       },
-      "additionalCash": {
-        "display": "242.00",
-        "cash": 242
-      },
       "totalCoins": {
         "display": "1.63K",
         "coins": 1630
+      },
+      "nextCash": {
+        "display": "71.00",
+        "cash": 71
+      },
+      "additionalCash": {
+        "display": "242.00",
+        "cash": 242
       },
       "totalCash": {
         "display": "242.00",
@@ -343,21 +343,21 @@
         "display": "596.00",
         "coins": 596
       },
-      "nextCash": {
-        "display": "84.00",
-        "cash": 84
-      },
       "additionalCoins": {
         "display": "2.13K",
         "coins": 2130
       },
-      "additionalCash": {
-        "display": "313.00",
-        "cash": 313
-      },
       "totalCoins": {
         "display": "2.13K",
         "coins": 2130
+      },
+      "nextCash": {
+        "display": "84.00",
+        "cash": 84
+      },
+      "additionalCash": {
+        "display": "313.00",
+        "cash": 313
       },
       "totalCash": {
         "display": "313.00",
@@ -380,21 +380,21 @@
         "display": "706.00",
         "coins": 706
       },
-      "nextCash": {
-        "display": "99.00",
-        "cash": 99
-      },
       "additionalCoins": {
         "display": "2.72K",
         "coins": 2720
       },
-      "additionalCash": {
-        "display": "397.00",
-        "cash": 397
-      },
       "totalCoins": {
         "display": "2.72K",
         "coins": 2720
+      },
+      "nextCash": {
+        "display": "99.00",
+        "cash": 99
+      },
+      "additionalCash": {
+        "display": "397.00",
+        "cash": 397
       },
       "totalCash": {
         "display": "397.00",
@@ -417,21 +417,21 @@
         "display": "828.00",
         "coins": 828
       },
-      "nextCash": {
-        "display": "116.00",
-        "cash": 116
-      },
       "additionalCoins": {
         "display": "3.43K",
         "coins": 3430
       },
-      "additionalCash": {
-        "display": "496.00",
-        "cash": 496
-      },
       "totalCoins": {
         "display": "3.43K",
         "coins": 3430
+      },
+      "nextCash": {
+        "display": "116.00",
+        "cash": 116
+      },
+      "additionalCash": {
+        "display": "496.00",
+        "cash": 496
       },
       "totalCash": {
         "display": "496.00",
@@ -454,21 +454,21 @@
         "display": "961.00",
         "coins": 961
       },
-      "nextCash": {
-        "display": "133.00",
-        "cash": 133
-      },
       "additionalCoins": {
         "display": "4.26K",
         "coins": 4260
       },
-      "additionalCash": {
-        "display": "612.00",
-        "cash": 612
-      },
       "totalCoins": {
         "display": "4.26K",
         "coins": 4260
+      },
+      "nextCash": {
+        "display": "133.00",
+        "cash": 133
+      },
+      "additionalCash": {
+        "display": "612.00",
+        "cash": 612
       },
       "totalCash": {
         "display": "612.00",
@@ -491,21 +491,21 @@
         "display": "1.11K",
         "coins": 1110
       },
-      "nextCash": {
-        "display": "152.00",
-        "cash": 152
-      },
       "additionalCoins": {
         "display": "5.22K",
         "coins": 5220
       },
-      "additionalCash": {
-        "display": "745.00",
-        "cash": 745
-      },
       "totalCoins": {
         "display": "5.22K",
         "coins": 5220
+      },
+      "nextCash": {
+        "display": "152.00",
+        "cash": 152
+      },
+      "additionalCash": {
+        "display": "745.00",
+        "cash": 745
       },
       "totalCash": {
         "display": "745.00",
@@ -528,21 +528,21 @@
         "display": "1.26K",
         "coins": 1260
       },
-      "nextCash": {
-        "display": "173.00",
-        "cash": 173
-      },
       "additionalCoins": {
         "display": "6.32K",
         "coins": 6320
       },
-      "additionalCash": {
-        "display": "897.00",
-        "cash": 897
-      },
       "totalCoins": {
         "display": "6.32K",
         "coins": 6320
+      },
+      "nextCash": {
+        "display": "173.00",
+        "cash": 173
+      },
+      "additionalCash": {
+        "display": "897.00",
+        "cash": 897
       },
       "totalCash": {
         "display": "897.00",
@@ -565,21 +565,21 @@
         "display": "1.43K",
         "coins": 1430
       },
-      "nextCash": {
-        "display": "195.00",
-        "cash": 195
-      },
       "additionalCoins": {
         "display": "7.59K",
         "coins": 7590
       },
-      "additionalCash": {
-        "display": "1.07K",
-        "cash": 1070
-      },
       "totalCoins": {
         "display": "7.59K",
         "coins": 7590
+      },
+      "nextCash": {
+        "display": "195.00",
+        "cash": 195
+      },
+      "additionalCash": {
+        "display": "1.07K",
+        "cash": 1070
       },
       "totalCash": {
         "display": "1.07K",
@@ -602,21 +602,21 @@
         "display": "1.62K",
         "coins": 1620
       },
-      "nextCash": {
-        "display": "219.00",
-        "cash": 219
-      },
       "additionalCoins": {
         "display": "9.02K",
         "coins": 9020
       },
-      "additionalCash": {
-        "display": "1.26K",
-        "cash": 1260
-      },
       "totalCoins": {
         "display": "9.02K",
         "coins": 9020
+      },
+      "nextCash": {
+        "display": "219.00",
+        "cash": 219
+      },
+      "additionalCash": {
+        "display": "1.26K",
+        "cash": 1260
       },
       "totalCash": {
         "display": "1.26K",
@@ -639,21 +639,21 @@
         "display": "1.81K",
         "coins": 1810
       },
-      "nextCash": {
-        "display": "244.00",
-        "cash": 244
-      },
       "additionalCoins": {
         "display": "10.63K",
         "coins": 10630
       },
-      "additionalCash": {
-        "display": "1.48K",
-        "cash": 1480
-      },
       "totalCoins": {
         "display": "10.63K",
         "coins": 10630
+      },
+      "nextCash": {
+        "display": "244.00",
+        "cash": 244
+      },
+      "additionalCash": {
+        "display": "1.48K",
+        "cash": 1480
       },
       "totalCash": {
         "display": "1.48K",
@@ -676,21 +676,21 @@
         "display": "2.02K",
         "coins": 2020
       },
-      "nextCash": {
-        "display": "270.00",
-        "cash": 270
-      },
       "additionalCoins": {
         "display": "12.44K",
         "coins": 12440
       },
-      "additionalCash": {
-        "display": "1.73K",
-        "cash": 1730
-      },
       "totalCoins": {
         "display": "12.44K",
         "coins": 12440
+      },
+      "nextCash": {
+        "display": "270.00",
+        "cash": 270
+      },
+      "additionalCash": {
+        "display": "1.73K",
+        "cash": 1730
       },
       "totalCash": {
         "display": "1.73K",
@@ -713,21 +713,21 @@
         "display": "2.24K",
         "coins": 2240
       },
-      "nextCash": {
-        "display": "298.00",
-        "cash": 298
-      },
       "additionalCoins": {
         "display": "14.46K",
         "coins": 14460
       },
-      "additionalCash": {
-        "display": "2.00K",
-        "cash": 2000
-      },
       "totalCoins": {
         "display": "14.46K",
         "coins": 14460
+      },
+      "nextCash": {
+        "display": "298.00",
+        "cash": 298
+      },
+      "additionalCash": {
+        "display": "2.00K",
+        "cash": 2000
       },
       "totalCash": {
         "display": "2.00K",
@@ -750,21 +750,21 @@
         "display": "2.47K",
         "coins": 2470
       },
-      "nextCash": {
-        "display": "328.00",
-        "cash": 328
-      },
       "additionalCoins": {
         "display": "16.70K",
         "coins": 16700
       },
-      "additionalCash": {
-        "display": "2.30K",
-        "cash": 2300
-      },
       "totalCoins": {
         "display": "16.70K",
         "coins": 16700
+      },
+      "nextCash": {
+        "display": "328.00",
+        "cash": 328
+      },
+      "additionalCash": {
+        "display": "2.30K",
+        "cash": 2300
       },
       "totalCash": {
         "display": "2.30K",
@@ -787,21 +787,21 @@
         "display": "2.72K",
         "coins": 2720
       },
-      "nextCash": {
-        "display": "359.00",
-        "cash": 359
-      },
       "additionalCoins": {
         "display": "19.17K",
         "coins": 19170
       },
-      "additionalCash": {
-        "display": "2.62K",
-        "cash": 2620
-      },
       "totalCoins": {
         "display": "19.17K",
         "coins": 19170
+      },
+      "nextCash": {
+        "display": "359.00",
+        "cash": 359
+      },
+      "additionalCash": {
+        "display": "2.62K",
+        "cash": 2620
       },
       "totalCash": {
         "display": "2.62K",
@@ -824,21 +824,21 @@
         "display": "2.98K",
         "coins": 2980
       },
-      "nextCash": {
-        "display": "392.00",
-        "cash": 392
-      },
       "additionalCoins": {
         "display": "21.89K",
         "coins": 21890
       },
-      "additionalCash": {
-        "display": "2.98K",
-        "cash": 2980
-      },
       "totalCoins": {
         "display": "21.89K",
         "coins": 21890
+      },
+      "nextCash": {
+        "display": "392.00",
+        "cash": 392
+      },
+      "additionalCash": {
+        "display": "2.98K",
+        "cash": 2980
       },
       "totalCash": {
         "display": "2.98K",
@@ -861,21 +861,21 @@
         "display": "3.26K",
         "coins": 3260
       },
-      "nextCash": {
-        "display": "426.00",
-        "cash": 426
-      },
       "additionalCoins": {
         "display": "24.87K",
         "coins": 24870
       },
-      "additionalCash": {
-        "display": "3.38K",
-        "cash": 3380
-      },
       "totalCoins": {
         "display": "24.87K",
         "coins": 24870
+      },
+      "nextCash": {
+        "display": "426.00",
+        "cash": 426
+      },
+      "additionalCash": {
+        "display": "3.38K",
+        "cash": 3380
       },
       "totalCash": {
         "display": "3.38K",
@@ -898,21 +898,21 @@
         "display": "3.54K",
         "coins": 3540
       },
-      "nextCash": {
-        "display": "462.00",
-        "cash": 462
-      },
       "additionalCoins": {
         "display": "28.13K",
         "coins": 28130
       },
-      "additionalCash": {
-        "display": "3.80K",
-        "cash": 3800
-      },
       "totalCoins": {
         "display": "28.13K",
         "coins": 28130
+      },
+      "nextCash": {
+        "display": "462.00",
+        "cash": 462
+      },
+      "additionalCash": {
+        "display": "3.80K",
+        "cash": 3800
       },
       "totalCash": {
         "display": "3.80K",
@@ -935,21 +935,21 @@
         "display": "3.85K",
         "coins": 3850
       },
-      "nextCash": {
-        "display": "499.00",
-        "cash": 499
-      },
       "additionalCoins": {
         "display": "31.67K",
         "coins": 31670
       },
-      "additionalCash": {
-        "display": "4.26K",
-        "cash": 4260
-      },
       "totalCoins": {
         "display": "31.67K",
         "coins": 31670
+      },
+      "nextCash": {
+        "display": "499.00",
+        "cash": 499
+      },
+      "additionalCash": {
+        "display": "4.26K",
+        "cash": 4260
       },
       "totalCash": {
         "display": "4.26K",
@@ -972,21 +972,21 @@
         "display": "4.16K",
         "coins": 4160
       },
-      "nextCash": {
-        "display": "538.00",
-        "cash": 538
-      },
       "additionalCoins": {
         "display": "35.51K",
         "coins": 35510
       },
-      "additionalCash": {
-        "display": "4.76K",
-        "cash": 4760
-      },
       "totalCoins": {
         "display": "35.51K",
         "coins": 35510
+      },
+      "nextCash": {
+        "display": "538.00",
+        "cash": 538
+      },
+      "additionalCash": {
+        "display": "4.76K",
+        "cash": 4760
       },
       "totalCash": {
         "display": "4.76K",
@@ -1009,21 +1009,21 @@
         "display": "4.49K",
         "coins": 4490
       },
-      "nextCash": {
-        "display": "578.00",
-        "cash": 578
-      },
       "additionalCoins": {
         "display": "39.67K",
         "coins": 39670
       },
-      "additionalCash": {
-        "display": "5.30K",
-        "cash": 5300
-      },
       "totalCoins": {
         "display": "39.67K",
         "coins": 39670
+      },
+      "nextCash": {
+        "display": "578.00",
+        "cash": 578
+      },
+      "additionalCash": {
+        "display": "5.30K",
+        "cash": 5300
       },
       "totalCash": {
         "display": "5.30K",
@@ -1046,21 +1046,21 @@
         "display": "4.84K",
         "coins": 4840
       },
-      "nextCash": {
-        "display": "620.00",
-        "cash": 620
-      },
       "additionalCoins": {
         "display": "44.17K",
         "coins": 44170
       },
-      "additionalCash": {
-        "display": "5.88K",
-        "cash": 5880
-      },
       "totalCoins": {
         "display": "44.17K",
         "coins": 44170
+      },
+      "nextCash": {
+        "display": "620.00",
+        "cash": 620
+      },
+      "additionalCash": {
+        "display": "5.88K",
+        "cash": 5880
       },
       "totalCash": {
         "display": "5.88K",
@@ -1083,21 +1083,21 @@
         "display": "5.20K",
         "coins": 5200
       },
-      "nextCash": {
-        "display": "664.00",
-        "cash": 664
-      },
       "additionalCoins": {
         "display": "49.01K",
         "coins": 49010
       },
-      "additionalCash": {
-        "display": "6.50K",
-        "cash": 6500
-      },
       "totalCoins": {
         "display": "49.01K",
         "coins": 49010
+      },
+      "nextCash": {
+        "display": "664.00",
+        "cash": 664
+      },
+      "additionalCash": {
+        "display": "6.50K",
+        "cash": 6500
       },
       "totalCash": {
         "display": "6.50K",
@@ -1120,21 +1120,21 @@
         "display": "5.57K",
         "coins": 5570
       },
-      "nextCash": {
-        "display": "709.00",
-        "cash": 709
-      },
       "additionalCoins": {
         "display": "54.20K",
         "coins": 54200
       },
-      "additionalCash": {
-        "display": "7.16K",
-        "cash": 7160
-      },
       "totalCoins": {
         "display": "54.20K",
         "coins": 54200
+      },
+      "nextCash": {
+        "display": "709.00",
+        "cash": 709
+      },
+      "additionalCash": {
+        "display": "7.16K",
+        "cash": 7160
       },
       "totalCash": {
         "display": "7.16K",
@@ -1157,21 +1157,21 @@
         "display": "5.96K",
         "coins": 5960
       },
-      "nextCash": {
-        "display": "756.00",
-        "cash": 756
-      },
       "additionalCoins": {
         "display": "59.77K",
         "coins": 59770
       },
-      "additionalCash": {
-        "display": "7.87K",
-        "cash": 7870
-      },
       "totalCoins": {
         "display": "59.77K",
         "coins": 59770
+      },
+      "nextCash": {
+        "display": "756.00",
+        "cash": 756
+      },
+      "additionalCash": {
+        "display": "7.87K",
+        "cash": 7870
       },
       "totalCash": {
         "display": "7.87K",
@@ -1194,21 +1194,21 @@
         "display": "6.36K",
         "coins": 6360
       },
-      "nextCash": {
-        "display": "804.00",
-        "cash": 804
-      },
       "additionalCoins": {
         "display": "65.73K",
         "coins": 65730
       },
-      "additionalCash": {
-        "display": "8.63K",
-        "cash": 8630
-      },
       "totalCoins": {
         "display": "65.73K",
         "coins": 65730
+      },
+      "nextCash": {
+        "display": "804.00",
+        "cash": 804
+      },
+      "additionalCash": {
+        "display": "8.63K",
+        "cash": 8630
       },
       "totalCash": {
         "display": "8.63K",
@@ -1231,21 +1231,21 @@
         "display": "6.78K",
         "coins": 6780
       },
-      "nextCash": {
-        "display": "855.00",
-        "cash": 855
-      },
       "additionalCoins": {
         "display": "72.10K",
         "coins": 72100
       },
-      "additionalCash": {
-        "display": "9.43K",
-        "cash": 9430
-      },
       "totalCoins": {
         "display": "72.10K",
         "coins": 72100
+      },
+      "nextCash": {
+        "display": "855.00",
+        "cash": 855
+      },
+      "additionalCash": {
+        "display": "9.43K",
+        "cash": 9430
       },
       "totalCash": {
         "display": "9.43K",
@@ -1268,21 +1268,21 @@
         "display": "7.22K",
         "coins": 7220
       },
-      "nextCash": {
-        "display": "906.00",
-        "cash": 906
-      },
       "additionalCoins": {
         "display": "78.88K",
         "coins": 78880
       },
-      "additionalCash": {
-        "display": "10.29K",
-        "cash": 10290
-      },
       "totalCoins": {
         "display": "78.88K",
         "coins": 78880
+      },
+      "nextCash": {
+        "display": "906.00",
+        "cash": 906
+      },
+      "additionalCash": {
+        "display": "10.29K",
+        "cash": 10290
       },
       "totalCash": {
         "display": "10.29K",
@@ -1305,21 +1305,21 @@
         "display": "7.66K",
         "coins": 7660
       },
-      "nextCash": {
-        "display": "960.00",
-        "cash": 960
-      },
       "additionalCoins": {
         "display": "86.09K",
         "coins": 86090
       },
-      "additionalCash": {
-        "display": "11.19K",
-        "cash": 11190
-      },
       "totalCoins": {
         "display": "86.09K",
         "coins": 86090
+      },
+      "nextCash": {
+        "display": "960.00",
+        "cash": 960
+      },
+      "additionalCash": {
+        "display": "11.19K",
+        "cash": 11190
       },
       "totalCash": {
         "display": "11.19K",
@@ -1342,21 +1342,21 @@
         "display": "8.13K",
         "coins": 8130.000000000001
       },
-      "nextCash": {
-        "display": "1.01K",
-        "cash": 1010
-      },
       "additionalCoins": {
         "display": "93.76K",
         "coins": 93760
       },
-      "additionalCash": {
-        "display": "12.15K",
-        "cash": 12150
-      },
       "totalCoins": {
         "display": "93.76K",
         "coins": 93760
+      },
+      "nextCash": {
+        "display": "1.01K",
+        "cash": 1010
+      },
+      "additionalCash": {
+        "display": "12.15K",
+        "cash": 12150
       },
       "totalCash": {
         "display": "12.15K",
@@ -1379,21 +1379,21 @@
         "display": "8.61K",
         "coins": 8610
       },
-      "nextCash": {
-        "display": "1.07K",
-        "cash": 1070
-      },
       "additionalCoins": {
         "display": "101.89K",
         "coins": 101890
       },
-      "additionalCash": {
-        "display": "13.17K",
-        "cash": 13170
-      },
       "totalCoins": {
         "display": "101.89K",
         "coins": 101890
+      },
+      "nextCash": {
+        "display": "1.07K",
+        "cash": 1070
+      },
+      "additionalCash": {
+        "display": "13.17K",
+        "cash": 13170
       },
       "totalCash": {
         "display": "13.17K",
@@ -1416,21 +1416,21 @@
         "display": "9.10K",
         "coins": 9100
       },
-      "nextCash": {
-        "display": "1.13K",
-        "cash": 1130
-      },
       "additionalCoins": {
         "display": "110.49K",
         "coins": 110490
       },
-      "additionalCash": {
-        "display": "14.24K",
-        "cash": 14240
-      },
       "totalCoins": {
         "display": "110.49K",
         "coins": 110490
+      },
+      "nextCash": {
+        "display": "1.13K",
+        "cash": 1130
+      },
+      "additionalCash": {
+        "display": "14.24K",
+        "cash": 14240
       },
       "totalCash": {
         "display": "14.24K",
@@ -1453,21 +1453,21 @@
         "display": "9.61K",
         "coins": 9610
       },
-      "nextCash": {
-        "display": "1.19K",
-        "cash": 1190
-      },
       "additionalCoins": {
         "display": "119.59K",
         "coins": 119590
       },
-      "additionalCash": {
-        "display": "15.37K",
-        "cash": 15370
-      },
       "totalCoins": {
         "display": "119.59K",
         "coins": 119590
+      },
+      "nextCash": {
+        "display": "1.19K",
+        "cash": 1190
+      },
+      "additionalCash": {
+        "display": "15.37K",
+        "cash": 15370
       },
       "totalCash": {
         "display": "15.37K",
@@ -1490,21 +1490,21 @@
         "display": "10.14K",
         "coins": 10140
       },
-      "nextCash": {
-        "display": "1.25K",
-        "cash": 1250
-      },
       "additionalCoins": {
         "display": "129.21K",
         "coins": 129210.00000000001
       },
-      "additionalCash": {
-        "display": "16.56K",
-        "cash": 16560
-      },
       "totalCoins": {
         "display": "129.21K",
         "coins": 129210.00000000001
+      },
+      "nextCash": {
+        "display": "1.25K",
+        "cash": 1250
+      },
+      "additionalCash": {
+        "display": "16.56K",
+        "cash": 16560
       },
       "totalCash": {
         "display": "16.56K",
@@ -1527,21 +1527,21 @@
         "display": "10.68K",
         "coins": 10680
       },
-      "nextCash": {
-        "display": "1.31K",
-        "cash": 1310
-      },
       "additionalCoins": {
         "display": "139.34K",
         "coins": 139340
       },
-      "additionalCash": {
-        "display": "17.81K",
-        "cash": 17810
-      },
       "totalCoins": {
         "display": "139.34K",
         "coins": 139340
+      },
+      "nextCash": {
+        "display": "1.31K",
+        "cash": 1310
+      },
+      "additionalCash": {
+        "display": "17.81K",
+        "cash": 17810
       },
       "totalCash": {
         "display": "17.81K",
@@ -1564,21 +1564,21 @@
         "display": "11.24K",
         "coins": 11240
       },
-      "nextCash": {
-        "display": "1.38K",
-        "cash": 1380
-      },
       "additionalCoins": {
         "display": "150.02K",
         "coins": 150020
       },
-      "additionalCash": {
-        "display": "19.12K",
-        "cash": 19120
-      },
       "totalCoins": {
         "display": "150.02K",
         "coins": 150020
+      },
+      "nextCash": {
+        "display": "1.38K",
+        "cash": 1380
+      },
+      "additionalCash": {
+        "display": "19.12K",
+        "cash": 19120
       },
       "totalCash": {
         "display": "19.12K",
@@ -1601,21 +1601,21 @@
         "display": "11.81K",
         "coins": 11810
       },
-      "nextCash": {
-        "display": "1.45K",
-        "cash": 1450
-      },
       "additionalCoins": {
         "display": "161.26K",
         "coins": 161260
       },
-      "additionalCash": {
-        "display": "20.50K",
-        "cash": 20500
-      },
       "totalCoins": {
         "display": "161.26K",
         "coins": 161260
+      },
+      "nextCash": {
+        "display": "1.45K",
+        "cash": 1450
+      },
+      "additionalCash": {
+        "display": "20.50K",
+        "cash": 20500
       },
       "totalCash": {
         "display": "20.50K",
@@ -1638,21 +1638,21 @@
         "display": "12.40K",
         "coins": 12400
       },
-      "nextCash": {
-        "display": "1.51K",
-        "cash": 1510
-      },
       "additionalCoins": {
         "display": "173.07K",
         "coins": 173070
       },
-      "additionalCash": {
-        "display": "21.95K",
-        "cash": 21950
-      },
       "totalCoins": {
         "display": "173.07K",
         "coins": 173070
+      },
+      "nextCash": {
+        "display": "1.51K",
+        "cash": 1510
+      },
+      "additionalCash": {
+        "display": "21.95K",
+        "cash": 21950
       },
       "totalCash": {
         "display": "21.95K",
@@ -1675,21 +1675,21 @@
         "display": "13.00K",
         "coins": 13000
       },
-      "nextCash": {
-        "display": "1.58K",
-        "cash": 1580
-      },
       "additionalCoins": {
         "display": "185.46K",
         "coins": 185460
       },
-      "additionalCash": {
-        "display": "23.46K",
-        "cash": 23460
-      },
       "totalCoins": {
         "display": "185.46K",
         "coins": 185460
+      },
+      "nextCash": {
+        "display": "1.58K",
+        "cash": 1580
+      },
+      "additionalCash": {
+        "display": "23.46K",
+        "cash": 23460
       },
       "totalCash": {
         "display": "23.46K",
@@ -1712,21 +1712,21 @@
         "display": "13.62K",
         "coins": 13620
       },
-      "nextCash": {
-        "display": "1.66K",
-        "cash": 1660
-      },
       "additionalCoins": {
         "display": "198.47K",
         "coins": 198470
       },
-      "additionalCash": {
-        "display": "25.04K",
-        "cash": 25040
-      },
       "totalCoins": {
         "display": "198.47K",
         "coins": 198470
+      },
+      "nextCash": {
+        "display": "1.66K",
+        "cash": 1660
+      },
+      "additionalCash": {
+        "display": "25.04K",
+        "cash": 25040
       },
       "totalCash": {
         "display": "25.04K",
@@ -1749,21 +1749,21 @@
         "display": "14.26K",
         "coins": 14260
       },
-      "nextCash": {
-        "display": "1.73K",
-        "cash": 1730
-      },
       "additionalCoins": {
         "display": "212.09K",
         "coins": 212090
       },
-      "additionalCash": {
-        "display": "26.70K",
-        "cash": 26700
-      },
       "totalCoins": {
         "display": "212.09K",
         "coins": 212090
+      },
+      "nextCash": {
+        "display": "1.73K",
+        "cash": 1730
+      },
+      "additionalCash": {
+        "display": "26.70K",
+        "cash": 26700
       },
       "totalCash": {
         "display": "26.70K",
@@ -1786,21 +1786,21 @@
         "display": "14.92K",
         "coins": 14920
       },
-      "nextCash": {
-        "display": "1.80K",
-        "cash": 1800
-      },
       "additionalCoins": {
         "display": "226.35K",
         "coins": 226350
       },
-      "additionalCash": {
-        "display": "28.43K",
-        "cash": 28430
-      },
       "totalCoins": {
         "display": "226.35K",
         "coins": 226350
+      },
+      "nextCash": {
+        "display": "1.80K",
+        "cash": 1800
+      },
+      "additionalCash": {
+        "display": "28.43K",
+        "cash": 28430
       },
       "totalCash": {
         "display": "28.43K",
@@ -1823,21 +1823,21 @@
         "display": "15.59K",
         "coins": 15590
       },
-      "nextCash": {
-        "display": "1.88K",
-        "cash": 1880
-      },
       "additionalCoins": {
         "display": "241.27K",
         "coins": 241270
       },
-      "additionalCash": {
-        "display": "30.23K",
-        "cash": 30230
-      },
       "totalCoins": {
         "display": "241.27K",
         "coins": 241270
+      },
+      "nextCash": {
+        "display": "1.88K",
+        "cash": 1880
+      },
+      "additionalCash": {
+        "display": "30.23K",
+        "cash": 30230
       },
       "totalCash": {
         "display": "30.23K",
@@ -1860,21 +1860,21 @@
         "display": "16.76K",
         "coins": 16760
       },
-      "nextCash": {
-        "display": "1.96K",
-        "cash": 1960
-      },
       "additionalCoins": {
         "display": "256.85K",
         "coins": 256850.00000000003
       },
-      "additionalCash": {
-        "display": "32.11K",
-        "cash": 32110
-      },
       "totalCoins": {
         "display": "256.85K",
         "coins": 256850.00000000003
+      },
+      "nextCash": {
+        "display": "1.96K",
+        "cash": 1960
+      },
+      "additionalCash": {
+        "display": "32.11K",
+        "cash": 32110
       },
       "totalCash": {
         "display": "32.11K",
@@ -1897,21 +1897,21 @@
         "display": "17.48K",
         "coins": 17480
       },
-      "nextCash": {
-        "display": "2.04K",
-        "cash": 2040
-      },
       "additionalCoins": {
         "display": "273.61K",
         "coins": 273610
       },
-      "additionalCash": {
-        "display": "34.07K",
-        "cash": 34070
-      },
       "totalCoins": {
         "display": "273.61K",
         "coins": 273610
+      },
+      "nextCash": {
+        "display": "2.04K",
+        "cash": 2040
+      },
+      "additionalCash": {
+        "display": "34.07K",
+        "cash": 34070
       },
       "totalCash": {
         "display": "34.07K",
@@ -1934,21 +1934,21 @@
         "display": "18.22K",
         "coins": 18220
       },
-      "nextCash": {
-        "display": "2.12K",
-        "cash": 2120
-      },
       "additionalCoins": {
         "display": "291.10K",
         "coins": 291100
       },
-      "additionalCash": {
-        "display": "36.11K",
-        "cash": 36110
-      },
       "totalCoins": {
         "display": "291.10K",
         "coins": 291100
+      },
+      "nextCash": {
+        "display": "2.12K",
+        "cash": 2120
+      },
+      "additionalCash": {
+        "display": "36.11K",
+        "cash": 36110
       },
       "totalCash": {
         "display": "36.11K",
@@ -1971,21 +1971,21 @@
         "display": "18.98K",
         "coins": 18980
       },
-      "nextCash": {
-        "display": "2.21K",
-        "cash": 2210
-      },
       "additionalCoins": {
         "display": "309.32K",
         "coins": 309320
       },
-      "additionalCash": {
-        "display": "38.23K",
-        "cash": 38230
-      },
       "totalCoins": {
         "display": "309.32K",
         "coins": 309320
+      },
+      "nextCash": {
+        "display": "2.21K",
+        "cash": 2210
+      },
+      "additionalCash": {
+        "display": "38.23K",
+        "cash": 38230
       },
       "totalCash": {
         "display": "38.23K",
@@ -2008,21 +2008,21 @@
         "display": "19.76K",
         "coins": 19760
       },
-      "nextCash": {
-        "display": "2.29K",
-        "cash": 2290
-      },
       "additionalCoins": {
         "display": "328.30K",
         "coins": 328300
       },
-      "additionalCash": {
-        "display": "40.44K",
-        "cash": 40440
-      },
       "totalCoins": {
         "display": "328.30K",
         "coins": 328300
+      },
+      "nextCash": {
+        "display": "2.29K",
+        "cash": 2290
+      },
+      "additionalCash": {
+        "display": "40.44K",
+        "cash": 40440
       },
       "totalCash": {
         "display": "40.44K",
@@ -2045,21 +2045,21 @@
         "display": "20.55K",
         "coins": 20550
       },
-      "nextCash": {
-        "display": "2.38K",
-        "cash": 2380
-      },
       "additionalCoins": {
         "display": "348.06K",
         "coins": 348060
       },
-      "additionalCash": {
-        "display": "42.73K",
-        "cash": 42730
-      },
       "totalCoins": {
         "display": "348.06K",
         "coins": 348060
+      },
+      "nextCash": {
+        "display": "2.38K",
+        "cash": 2380
+      },
+      "additionalCash": {
+        "display": "42.73K",
+        "cash": 42730
       },
       "totalCash": {
         "display": "42.73K",
@@ -2082,21 +2082,21 @@
         "display": "21.36K",
         "coins": 21360
       },
-      "nextCash": {
-        "display": "2.47K",
-        "cash": 2470
-      },
       "additionalCoins": {
         "display": "368.62K",
         "coins": 368620
       },
-      "additionalCash": {
-        "display": "45.11K",
-        "cash": 45110
-      },
       "totalCoins": {
         "display": "368.62K",
         "coins": 368620
+      },
+      "nextCash": {
+        "display": "2.47K",
+        "cash": 2470
+      },
+      "additionalCash": {
+        "display": "45.11K",
+        "cash": 45110
       },
       "totalCash": {
         "display": "45.11K",
@@ -2119,21 +2119,21 @@
         "display": "22.19K",
         "coins": 22190
       },
-      "nextCash": {
-        "display": "2.56K",
-        "cash": 2560
-      },
       "additionalCoins": {
         "display": "389.98K",
         "coins": 389980
       },
-      "additionalCash": {
-        "display": "47.57K",
-        "cash": 47570
-      },
       "totalCoins": {
         "display": "389.98K",
         "coins": 389980
+      },
+      "nextCash": {
+        "display": "2.56K",
+        "cash": 2560
+      },
+      "additionalCash": {
+        "display": "47.57K",
+        "cash": 47570
       },
       "totalCash": {
         "display": "47.57K",
@@ -2156,21 +2156,21 @@
         "display": "23.04K",
         "coins": 23040
       },
-      "nextCash": {
-        "display": "2.65K",
-        "cash": 2650
-      },
       "additionalCoins": {
         "display": "412.17K",
         "coins": 412170
       },
-      "additionalCash": {
-        "display": "50.13K",
-        "cash": 50130
-      },
       "totalCoins": {
         "display": "412.17K",
         "coins": 412170
+      },
+      "nextCash": {
+        "display": "2.65K",
+        "cash": 2650
+      },
+      "additionalCash": {
+        "display": "50.13K",
+        "cash": 50130
       },
       "totalCash": {
         "display": "50.13K",
@@ -2193,21 +2193,21 @@
         "display": "23.90K",
         "coins": 23900
       },
-      "nextCash": {
-        "display": "2.74K",
-        "cash": 2740
-      },
       "additionalCoins": {
         "display": "435.20K",
         "coins": 435200
       },
-      "additionalCash": {
-        "display": "52.78K",
-        "cash": 52780
-      },
       "totalCoins": {
         "display": "435.20K",
         "coins": 435200
+      },
+      "nextCash": {
+        "display": "2.74K",
+        "cash": 2740
+      },
+      "additionalCash": {
+        "display": "52.78K",
+        "cash": 52780
       },
       "totalCash": {
         "display": "52.78K",
@@ -2230,21 +2230,21 @@
         "display": "24.78K",
         "coins": 24780
       },
-      "nextCash": {
-        "display": "2.84K",
-        "cash": 2840
-      },
       "additionalCoins": {
         "display": "459.10K",
         "coins": 459100
       },
-      "additionalCash": {
-        "display": "55.52K",
-        "cash": 55520
-      },
       "totalCoins": {
         "display": "459.10K",
         "coins": 459100
+      },
+      "nextCash": {
+        "display": "2.84K",
+        "cash": 2840
+      },
+      "additionalCash": {
+        "display": "55.52K",
+        "cash": 55520
       },
       "totalCash": {
         "display": "55.52K",
@@ -2267,21 +2267,21 @@
         "display": "25.68K",
         "coins": 25680
       },
-      "nextCash": {
-        "display": "2.94K",
-        "cash": 2940
-      },
       "additionalCoins": {
         "display": "483.88K",
         "coins": 483880
       },
-      "additionalCash": {
-        "display": "58.36K",
-        "cash": 58360
-      },
       "totalCoins": {
         "display": "483.88K",
         "coins": 483880
+      },
+      "nextCash": {
+        "display": "2.94K",
+        "cash": 2940
+      },
+      "additionalCash": {
+        "display": "58.36K",
+        "cash": 58360
       },
       "totalCash": {
         "display": "58.36K",
@@ -2304,21 +2304,21 @@
         "display": "26.59K",
         "coins": 26590
       },
-      "nextCash": {
-        "display": "3.03K",
-        "cash": 3030
-      },
       "additionalCoins": {
         "display": "509.56K",
         "coins": 509560
       },
-      "additionalCash": {
-        "display": "61.29K",
-        "cash": 61290
-      },
       "totalCoins": {
         "display": "509.56K",
         "coins": 509560
+      },
+      "nextCash": {
+        "display": "3.03K",
+        "cash": 3030
+      },
+      "additionalCash": {
+        "display": "61.29K",
+        "cash": 61290
       },
       "totalCash": {
         "display": "61.29K",
@@ -2341,21 +2341,21 @@
         "display": "27.53K",
         "coins": 27530
       },
-      "nextCash": {
-        "display": "3.14K",
-        "cash": 3140
-      },
       "additionalCoins": {
         "display": "536.15K",
         "coins": 536150
       },
-      "additionalCash": {
-        "display": "64.32K",
-        "cash": 64319.99999999999
-      },
       "totalCoins": {
         "display": "536.15K",
         "coins": 536150
+      },
+      "nextCash": {
+        "display": "3.14K",
+        "cash": 3140
+      },
+      "additionalCash": {
+        "display": "64.32K",
+        "cash": 64319.99999999999
       },
       "totalCash": {
         "display": "64.32K",
@@ -2378,21 +2378,21 @@
         "display": "28.48K",
         "coins": 28480
       },
-      "nextCash": {
-        "display": "3.24K",
-        "cash": 3240
-      },
       "additionalCoins": {
         "display": "563.68K",
         "coins": 563680
       },
-      "additionalCash": {
-        "display": "67.46K",
-        "cash": 67460
-      },
       "totalCoins": {
         "display": "563.68K",
         "coins": 563680
+      },
+      "nextCash": {
+        "display": "3.24K",
+        "cash": 3240
+      },
+      "additionalCash": {
+        "display": "67.46K",
+        "cash": 67460
       },
       "totalCash": {
         "display": "67.46K",
@@ -2415,21 +2415,21 @@
         "display": "29.45K",
         "coins": 29450
       },
-      "nextCash": {
-        "display": "3.34K",
-        "cash": 3340
-      },
       "additionalCoins": {
         "display": "592.16K",
         "coins": 592160
       },
-      "additionalCash": {
-        "display": "70.70K",
-        "cash": 70700
-      },
       "totalCoins": {
         "display": "592.16K",
         "coins": 592160
+      },
+      "nextCash": {
+        "display": "3.34K",
+        "cash": 3340
+      },
+      "additionalCash": {
+        "display": "70.70K",
+        "cash": 70700
       },
       "totalCash": {
         "display": "70.70K",
@@ -2452,21 +2452,21 @@
         "display": "30.44K",
         "coins": 30440
       },
-      "nextCash": {
-        "display": "3.45K",
-        "cash": 3450
-      },
       "additionalCoins": {
         "display": "621.61K",
         "coins": 621610
       },
-      "additionalCash": {
-        "display": "74.04K",
-        "cash": 74040
-      },
       "totalCoins": {
         "display": "621.61K",
         "coins": 621610
+      },
+      "nextCash": {
+        "display": "3.45K",
+        "cash": 3450
+      },
+      "additionalCash": {
+        "display": "74.04K",
+        "cash": 74040
       },
       "totalCash": {
         "display": "74.04K",
@@ -2489,21 +2489,21 @@
         "display": "31.44K",
         "coins": 31440
       },
-      "nextCash": {
-        "display": "3.56K",
-        "cash": 3560
-      },
       "additionalCoins": {
         "display": "652.05K",
         "coins": 652050
       },
-      "additionalCash": {
-        "display": "77.49K",
-        "cash": 77490
-      },
       "totalCoins": {
         "display": "652.05K",
         "coins": 652050
+      },
+      "nextCash": {
+        "display": "3.56K",
+        "cash": 3560
+      },
+      "additionalCash": {
+        "display": "77.49K",
+        "cash": 77490
       },
       "totalCash": {
         "display": "77.49K",
@@ -2526,21 +2526,21 @@
         "display": "32.47K",
         "coins": 32470
       },
-      "nextCash": {
-        "display": "3.67K",
-        "cash": 3670
-      },
       "additionalCoins": {
         "display": "683.49K",
         "coins": 683490
       },
-      "additionalCash": {
-        "display": "81.05K",
-        "cash": 81050
-      },
       "totalCoins": {
         "display": "683.49K",
         "coins": 683490
+      },
+      "nextCash": {
+        "display": "3.67K",
+        "cash": 3670
+      },
+      "additionalCash": {
+        "display": "81.05K",
+        "cash": 81050
       },
       "totalCash": {
         "display": "81.05K",
@@ -2563,21 +2563,21 @@
         "display": "33.51K",
         "coins": 33510
       },
-      "nextCash": {
-        "display": "3.78K",
-        "cash": 3780
-      },
       "additionalCoins": {
         "display": "715.96K",
         "coins": 715960
       },
-      "additionalCash": {
-        "display": "84.71K",
-        "cash": 84710
-      },
       "totalCoins": {
         "display": "715.96K",
         "coins": 715960
+      },
+      "nextCash": {
+        "display": "3.78K",
+        "cash": 3780
+      },
+      "additionalCash": {
+        "display": "84.71K",
+        "cash": 84710
       },
       "totalCash": {
         "display": "84.71K",
@@ -2600,21 +2600,21 @@
         "display": "34.57K",
         "coins": 34570
       },
-      "nextCash": {
-        "display": "3.89K",
-        "cash": 3890
-      },
       "additionalCoins": {
         "display": "749.47K",
         "coins": 749470
       },
-      "additionalCash": {
-        "display": "88.49K",
-        "cash": 88490
-      },
       "totalCoins": {
         "display": "749.47K",
         "coins": 749470
+      },
+      "nextCash": {
+        "display": "3.89K",
+        "cash": 3890
+      },
+      "additionalCash": {
+        "display": "88.49K",
+        "cash": 88490
       },
       "totalCash": {
         "display": "88.49K",
@@ -2637,21 +2637,21 @@
         "display": "35.65K",
         "coins": 35650
       },
-      "nextCash": {
-        "display": "4.01K",
-        "cash": 4010
-      },
       "additionalCoins": {
         "display": "784.05K",
         "coins": 784050
       },
-      "additionalCash": {
-        "display": "92.38K",
-        "cash": 92380
-      },
       "totalCoins": {
         "display": "784.05K",
         "coins": 784050
+      },
+      "nextCash": {
+        "display": "4.01K",
+        "cash": 4010
+      },
+      "additionalCash": {
+        "display": "92.38K",
+        "cash": 92380
       },
       "totalCash": {
         "display": "92.38K",
@@ -2674,21 +2674,21 @@
         "display": "36.75K",
         "coins": 36750
       },
-      "nextCash": {
-        "display": "4.12K",
-        "cash": 4120
-      },
       "additionalCoins": {
         "display": "819.70K",
         "coins": 819700
       },
-      "additionalCash": {
-        "display": "96.39K",
-        "cash": 96390
-      },
       "totalCoins": {
         "display": "819.70K",
         "coins": 819700
+      },
+      "nextCash": {
+        "display": "4.12K",
+        "cash": 4120
+      },
+      "additionalCash": {
+        "display": "96.39K",
+        "cash": 96390
       },
       "totalCash": {
         "display": "96.39K",
@@ -2711,21 +2711,21 @@
         "display": "37.87K",
         "coins": 37870
       },
-      "nextCash": {
-        "display": "4.24K",
-        "cash": 4240
-      },
       "additionalCoins": {
         "display": "856.45K",
         "coins": 856450
       },
-      "additionalCash": {
-        "display": "100.51K",
-        "cash": 100510
-      },
       "totalCoins": {
         "display": "856.45K",
         "coins": 856450
+      },
+      "nextCash": {
+        "display": "4.24K",
+        "cash": 4240
+      },
+      "additionalCash": {
+        "display": "100.51K",
+        "cash": 100510
       },
       "totalCash": {
         "display": "100.51K",
@@ -2748,21 +2748,21 @@
         "display": "39.00K",
         "coins": 39000
       },
-      "nextCash": {
-        "display": "4.36K",
-        "cash": 4360
-      },
       "additionalCoins": {
         "display": "894.32K",
         "coins": 894320
       },
-      "additionalCash": {
-        "display": "104.75K",
-        "cash": 104750
-      },
       "totalCoins": {
         "display": "894.32K",
         "coins": 894320
+      },
+      "nextCash": {
+        "display": "4.36K",
+        "cash": 4360
+      },
+      "additionalCash": {
+        "display": "104.75K",
+        "cash": 104750
       },
       "totalCash": {
         "display": "104.75K",
@@ -2785,21 +2785,21 @@
         "display": "42.16K",
         "coins": 42160
       },
-      "nextCash": {
-        "display": "4.49K",
-        "cash": 4490
-      },
       "additionalCoins": {
         "display": "933.32K",
         "coins": 933320
       },
-      "additionalCash": {
-        "display": "109.11K",
-        "cash": 109110
-      },
       "totalCoins": {
         "display": "933.32K",
         "coins": 933320
+      },
+      "nextCash": {
+        "display": "4.49K",
+        "cash": 4490
+      },
+      "additionalCash": {
+        "display": "109.11K",
+        "cash": 109110
       },
       "totalCash": {
         "display": "109.11K",
@@ -2822,21 +2822,21 @@
         "display": "43.39K",
         "coins": 43390
       },
-      "nextCash": {
-        "display": "4.61K",
-        "cash": 4610
-      },
       "additionalCoins": {
         "display": "975.48K",
         "coins": 975480
       },
-      "additionalCash": {
-        "display": "113.60K",
-        "cash": 113600
-      },
       "totalCoins": {
         "display": "975.48K",
         "coins": 975480
+      },
+      "nextCash": {
+        "display": "4.61K",
+        "cash": 4610
+      },
+      "additionalCash": {
+        "display": "113.60K",
+        "cash": 113600
       },
       "totalCash": {
         "display": "113.60K",
@@ -2859,21 +2859,21 @@
         "display": "44.64K",
         "coins": 44640
       },
-      "nextCash": {
-        "display": "4.73K",
-        "cash": 4730
-      },
       "additionalCoins": {
         "display": "1.02M",
         "coins": 1020000
       },
-      "additionalCash": {
-        "display": "118.21K",
-        "cash": 118210
-      },
       "totalCoins": {
         "display": "1.02M",
         "coins": 1020000
+      },
+      "nextCash": {
+        "display": "4.73K",
+        "cash": 4730
+      },
+      "additionalCash": {
+        "display": "118.21K",
+        "cash": 118210
       },
       "totalCash": {
         "display": "118.21K",
@@ -2896,21 +2896,21 @@
         "display": "45.92K",
         "coins": 45920
       },
-      "nextCash": {
-        "display": "4.86K",
-        "cash": 4860
-      },
       "additionalCoins": {
         "display": "1.06M",
         "coins": 1060000
       },
-      "additionalCash": {
-        "display": "122.94K",
-        "cash": 122940
-      },
       "totalCoins": {
         "display": "1.06M",
         "coins": 1060000
+      },
+      "nextCash": {
+        "display": "4.86K",
+        "cash": 4860
+      },
+      "additionalCash": {
+        "display": "122.94K",
+        "cash": 122940
       },
       "totalCash": {
         "display": "122.94K",
@@ -2933,21 +2933,21 @@
         "display": "47.21K",
         "coins": 47210
       },
-      "nextCash": {
-        "display": "4.99K",
-        "cash": 4990
-      },
       "additionalCoins": {
         "display": "1.11M",
         "coins": 1110000
       },
-      "additionalCash": {
-        "display": "127.80K",
-        "cash": 127800
-      },
       "totalCoins": {
         "display": "1.11M",
         "coins": 1110000
+      },
+      "nextCash": {
+        "display": "4.99K",
+        "cash": 4990
+      },
+      "additionalCash": {
+        "display": "127.80K",
+        "cash": 127800
       },
       "totalCash": {
         "display": "127.80K",
@@ -2970,21 +2970,21 @@
         "display": "48.52K",
         "coins": 48520
       },
-      "nextCash": {
-        "display": "5.12K",
-        "cash": 5120
-      },
       "additionalCoins": {
         "display": "1.16M",
         "coins": 1160000
       },
-      "additionalCash": {
-        "display": "132.79K",
-        "cash": 132790
-      },
       "totalCoins": {
         "display": "1.16M",
         "coins": 1160000
+      },
+      "nextCash": {
+        "display": "5.12K",
+        "cash": 5120
+      },
+      "additionalCash": {
+        "display": "132.79K",
+        "cash": 132790
       },
       "totalCash": {
         "display": "132.79K",
@@ -3007,21 +3007,21 @@
         "display": "49.85K",
         "coins": 49850
       },
-      "nextCash": {
-        "display": "5.26K",
-        "cash": 5260
-      },
       "additionalCoins": {
         "display": "1.21M",
         "coins": 1210000
       },
-      "additionalCash": {
-        "display": "137.92K",
-        "cash": 137920
-      },
       "totalCoins": {
         "display": "1.21M",
         "coins": 1210000
+      },
+      "nextCash": {
+        "display": "5.26K",
+        "cash": 5260
+      },
+      "additionalCash": {
+        "display": "137.92K",
+        "cash": 137920
       },
       "totalCash": {
         "display": "137.92K",
@@ -3044,21 +3044,21 @@
         "display": "51.19K",
         "coins": 51190
       },
-      "nextCash": {
-        "display": "5.39K",
-        "cash": 5390
-      },
       "additionalCoins": {
         "display": "1.26M",
         "coins": 1260000
       },
-      "additionalCash": {
-        "display": "143.17K",
-        "cash": 143170
-      },
       "totalCoins": {
         "display": "1.26M",
         "coins": 1260000
+      },
+      "nextCash": {
+        "display": "5.39K",
+        "cash": 5390
+      },
+      "additionalCash": {
+        "display": "143.17K",
+        "cash": 143170
       },
       "totalCash": {
         "display": "143.17K",
@@ -3081,21 +3081,21 @@
         "display": "52.57K",
         "coins": 52570
       },
-      "nextCash": {
-        "display": "5.53K",
-        "cash": 5530
-      },
       "additionalCoins": {
         "display": "1.31M",
         "coins": 1310000
       },
-      "additionalCash": {
-        "display": "148.56K",
-        "cash": 148560
-      },
       "totalCoins": {
         "display": "1.31M",
         "coins": 1310000
+      },
+      "nextCash": {
+        "display": "5.53K",
+        "cash": 5530
+      },
+      "additionalCash": {
+        "display": "148.56K",
+        "cash": 148560
       },
       "totalCash": {
         "display": "148.56K",
@@ -3118,21 +3118,21 @@
         "display": "53.95K",
         "coins": 53950
       },
-      "nextCash": {
-        "display": "5.67K",
-        "cash": 5670
-      },
       "additionalCoins": {
         "display": "1.36M",
         "coins": 1360000
       },
-      "additionalCash": {
-        "display": "154.09K",
-        "cash": 154090
-      },
       "totalCoins": {
         "display": "1.36M",
         "coins": 1360000
+      },
+      "nextCash": {
+        "display": "5.67K",
+        "cash": 5670
+      },
+      "additionalCash": {
+        "display": "154.09K",
+        "cash": 154090
       },
       "totalCash": {
         "display": "154.09K",
@@ -3155,21 +3155,21 @@
         "display": "55.37K",
         "coins": 55370
       },
-      "nextCash": {
-        "display": "5.81K",
-        "cash": 5810
-      },
       "additionalCoins": {
         "display": "1.41M",
         "coins": 1410000
       },
-      "additionalCash": {
-        "display": "159.76K",
-        "cash": 159760
-      },
       "totalCoins": {
         "display": "1.41M",
         "coins": 1410000
+      },
+      "nextCash": {
+        "display": "5.81K",
+        "cash": 5810
+      },
+      "additionalCash": {
+        "display": "159.76K",
+        "cash": 159760
       },
       "totalCash": {
         "display": "159.76K",
@@ -3192,21 +3192,21 @@
         "display": "56.79K",
         "coins": 56790
       },
-      "nextCash": {
-        "display": "5.95K",
-        "cash": 5950
-      },
       "additionalCoins": {
         "display": "1.47M",
         "coins": 1470000
       },
-      "additionalCash": {
-        "display": "165.56K",
-        "cash": 165560
-      },
       "totalCoins": {
         "display": "1.47M",
         "coins": 1470000
+      },
+      "nextCash": {
+        "display": "5.95K",
+        "cash": 5950
+      },
+      "additionalCash": {
+        "display": "165.56K",
+        "cash": 165560
       },
       "totalCash": {
         "display": "165.56K",
@@ -3229,21 +3229,21 @@
         "display": "58.25K",
         "coins": 58250
       },
-      "nextCash": {
-        "display": "6.09K",
-        "cash": 6090
-      },
       "additionalCoins": {
         "display": "1.52M",
         "coins": 1520000
       },
-      "additionalCash": {
-        "display": "171.51K",
-        "cash": 171510
-      },
       "totalCoins": {
         "display": "1.52M",
         "coins": 1520000
+      },
+      "nextCash": {
+        "display": "6.09K",
+        "cash": 6090
+      },
+      "additionalCash": {
+        "display": "171.51K",
+        "cash": 171510
       },
       "totalCash": {
         "display": "171.51K",
@@ -3266,21 +3266,21 @@
         "display": "59.72K",
         "coins": 59720
       },
-      "nextCash": {
-        "display": "6.24K",
-        "cash": 6240
-      },
       "additionalCoins": {
         "display": "1.58M",
         "coins": 1580000
       },
-      "additionalCash": {
-        "display": "177.60K",
-        "cash": 177600
-      },
       "totalCoins": {
         "display": "1.58M",
         "coins": 1580000
+      },
+      "nextCash": {
+        "display": "6.24K",
+        "cash": 6240
+      },
+      "additionalCash": {
+        "display": "177.60K",
+        "cash": 177600
       },
       "totalCash": {
         "display": "177.60K",
@@ -3303,21 +3303,21 @@
         "display": "61.21K",
         "coins": 61210
       },
-      "nextCash": {
-        "display": "6.39K",
-        "cash": 6390
-      },
       "additionalCoins": {
         "display": "1.64M",
         "coins": 1640000
       },
-      "additionalCash": {
-        "display": "183.84K",
-        "cash": 183840
-      },
       "totalCoins": {
         "display": "1.64M",
         "coins": 1640000
+      },
+      "nextCash": {
+        "display": "6.39K",
+        "cash": 6390
+      },
+      "additionalCash": {
+        "display": "183.84K",
+        "cash": 183840
       },
       "totalCash": {
         "display": "183.84K",
@@ -3340,21 +3340,21 @@
         "display": "62.72K",
         "coins": 62720
       },
-      "nextCash": {
-        "display": "6.54K",
-        "cash": 6540
-      },
       "additionalCoins": {
         "display": "1.70M",
         "coins": 1700000
       },
-      "additionalCash": {
-        "display": "190.23K",
-        "cash": 190230
-      },
       "totalCoins": {
         "display": "1.70M",
         "coins": 1700000
+      },
+      "nextCash": {
+        "display": "6.54K",
+        "cash": 6540
+      },
+      "additionalCash": {
+        "display": "190.23K",
+        "cash": 190230
       },
       "totalCash": {
         "display": "190.23K",
@@ -3377,21 +3377,21 @@
         "display": "64.25K",
         "coins": 64250
       },
-      "nextCash": {
-        "display": "6.69K",
-        "cash": 6690
-      },
       "additionalCoins": {
         "display": "1.77M",
         "coins": 1770000
       },
-      "additionalCash": {
-        "display": "196.76K",
-        "cash": 196760
-      },
       "totalCoins": {
         "display": "1.77M",
         "coins": 1770000
+      },
+      "nextCash": {
+        "display": "6.69K",
+        "cash": 6690
+      },
+      "additionalCash": {
+        "display": "196.76K",
+        "cash": 196760
       },
       "totalCash": {
         "display": "196.76K",
@@ -3414,21 +3414,21 @@
         "display": "65.80K",
         "coins": 65800
       },
-      "nextCash": {
-        "display": "6.84K",
-        "cash": 6840
-      },
       "additionalCoins": {
         "display": "1.83M",
         "coins": 1830000
       },
-      "additionalCash": {
-        "display": "203.45K",
-        "cash": 203450
-      },
       "totalCoins": {
         "display": "1.83M",
         "coins": 1830000
+      },
+      "nextCash": {
+        "display": "6.84K",
+        "cash": 6840
+      },
+      "additionalCash": {
+        "display": "203.45K",
+        "cash": 203450
       },
       "totalCash": {
         "display": "203.45K",
@@ -3451,21 +3451,21 @@
         "display": "67.38K",
         "coins": 67380
       },
-      "nextCash": {
-        "display": "6.99K",
-        "cash": 6990
-      },
       "additionalCoins": {
         "display": "1.90M",
         "coins": 1900000
       },
-      "additionalCash": {
-        "display": "210.29K",
-        "cash": 210290
-      },
       "totalCoins": {
         "display": "1.90M",
         "coins": 1900000
+      },
+      "nextCash": {
+        "display": "6.99K",
+        "cash": 6990
+      },
+      "additionalCash": {
+        "display": "210.29K",
+        "cash": 210290
       },
       "totalCash": {
         "display": "210.29K",
@@ -3488,21 +3488,21 @@
         "display": "68.97K",
         "coins": 68970
       },
-      "nextCash": {
-        "display": "7.15K",
-        "cash": 7150
-      },
       "additionalCoins": {
         "display": "1.96M",
         "coins": 1960000
       },
-      "additionalCash": {
-        "display": "217.28K",
-        "cash": 217280
-      },
       "totalCoins": {
         "display": "1.96M",
         "coins": 1960000
+      },
+      "nextCash": {
+        "display": "7.15K",
+        "cash": 7150
+      },
+      "additionalCash": {
+        "display": "217.28K",
+        "cash": 217280
       },
       "totalCash": {
         "display": "217.28K",
@@ -3525,21 +3525,21 @@
         "display": "70.59K",
         "coins": 70590
       },
-      "nextCash": {
-        "display": "7.31K",
-        "cash": 7310
-      },
       "additionalCoins": {
         "display": "2.03M",
         "coins": 2029999.9999999998
       },
-      "additionalCash": {
-        "display": "224.43K",
-        "cash": 224430
-      },
       "totalCoins": {
         "display": "2.03M",
         "coins": 2029999.9999999998
+      },
+      "nextCash": {
+        "display": "7.31K",
+        "cash": 7310
+      },
+      "additionalCash": {
+        "display": "224.43K",
+        "cash": 224430
       },
       "totalCash": {
         "display": "224.43K",
@@ -3562,21 +3562,21 @@
         "display": "72.22K",
         "coins": 72220
       },
-      "nextCash": {
-        "display": "7.47K",
-        "cash": 7470
-      },
       "additionalCoins": {
         "display": "2.10M",
         "coins": 2100000
       },
-      "additionalCash": {
-        "display": "231.74K",
-        "cash": 231740
-      },
       "totalCoins": {
         "display": "2.10M",
         "coins": 2100000
+      },
+      "nextCash": {
+        "display": "7.47K",
+        "cash": 7470
+      },
+      "additionalCash": {
+        "display": "231.74K",
+        "cash": 231740
       },
       "totalCash": {
         "display": "231.74K",
@@ -3599,21 +3599,21 @@
         "display": "73.88K",
         "coins": 73880
       },
-      "nextCash": {
-        "display": "7.63K",
-        "cash": 7630
-      },
       "additionalCoins": {
         "display": "2.18M",
         "coins": 2180000
       },
-      "additionalCash": {
-        "display": "239.21K",
-        "cash": 239210
-      },
       "totalCoins": {
         "display": "2.18M",
         "coins": 2180000
+      },
+      "nextCash": {
+        "display": "7.63K",
+        "cash": 7630
+      },
+      "additionalCash": {
+        "display": "239.21K",
+        "cash": 239210
       },
       "totalCash": {
         "display": "239.21K",
@@ -3636,21 +3636,21 @@
         "display": "75.55K",
         "coins": 75550
       },
-      "nextCash": {
-        "display": "7.80K",
-        "cash": 7800
-      },
       "additionalCoins": {
         "display": "2.25M",
         "coins": 2250000
       },
-      "additionalCash": {
-        "display": "246.84K",
-        "cash": 246840
-      },
       "totalCoins": {
         "display": "2.25M",
         "coins": 2250000
+      },
+      "nextCash": {
+        "display": "7.80K",
+        "cash": 7800
+      },
+      "additionalCash": {
+        "display": "246.84K",
+        "cash": 246840
       },
       "totalCash": {
         "display": "246.84K",
@@ -3674,22 +3674,22 @@
         "coins": null,
         "maxed": true
       },
+      "additionalCoins": {
+        "display": "2.33M",
+        "coins": 2330000
+      },
+      "totalCoins": {
+        "display": "2.33M",
+        "coins": 2330000
+      },
       "nextCash": {
         "display": "Maxed",
         "cash": null,
         "maxed": true
       },
-      "additionalCoins": {
-        "display": "2.33M",
-        "coins": 2330000
-      },
       "additionalCash": {
         "display": "254.64K",
         "cash": 254640
-      },
-      "totalCoins": {
-        "display": "2.33M",
-        "coins": 2330000
       },
       "totalCash": {
         "display": "254.64K",

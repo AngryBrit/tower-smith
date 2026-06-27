@@ -29,12 +29,9 @@ describe('workshopDisplayedHealthRegen', () => {
     expect(workshopDisplayedHealthRegenEnhancementMultiplier(61, false)).toBe(1)
   })
 
-  // Game values 46.10/47.47/48.88B/sec across L5820/5830/5840. The base-regen GOD table is
-  // stored to 2 decimals while the game multiplies at full precision, so same-tier points
-  // disagree by ~0.0009 in the implied enhance term; the calibrated constant lands every point
-  // within 0.01B/sec (the 2-decimal display floor).
-  it('matches player save overlays at workshop L5840 within the rounding floor', () => {
-    expect(workshopHealthRegenStatValue(5840)).toBeCloseTo(6_370_000_000, -6)
+  // Game values 46.10/47.47/48.88B/sec across L5820/5830/5840 with full-precision GOD base.
+  it('matches player save overlays at workshop L5840', () => {
+    expect(workshopHealthRegenStatValue(5840)).toBeCloseTo(6_373_117_241.88547, 0)
     const enhance = workshopDisplayedHealthRegenEnhancementMultiplier(61, true)
     expect(enhance).toBeCloseTo(1.4977, 3)
     expect(
@@ -43,13 +40,13 @@ describe('workshopDisplayedHealthRegen', () => {
         relicsBonus: 0.97,
         healthRegenEnhancementsMultiplier: enhance,
       }),
-    ).toBe('48.87B/sec')
+    ).toBe('48.89B/sec')
     expect(
       workshopDefenseStatDisplay('healthRegenLevel', 5840, {
         healthRegenCardMultiplier: 2.6,
         healthRegenRelicsBonus: 0.97,
         healthRegenEnhancementsMultiplier: enhance,
       }),
-    ).toBe('48.87B/sec')
+    ).toBe('48.89B/sec')
   })
 })

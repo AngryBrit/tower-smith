@@ -23,6 +23,7 @@ function collectJsonFiles() {
       if (ent.isDirectory()) walk(p)
       else if (ent.name.endsWith('.json')) {
         const rel = path.relative(base, p).replace(/\\/g, '/')
+        if (rel.startsWith('formulas/')) continue
         const doc = JSON.parse(fs.readFileSync(p, 'utf8'))
         if (doc.name) files.push({ rel, name: doc.name })
       }

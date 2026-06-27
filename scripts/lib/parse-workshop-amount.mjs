@@ -19,10 +19,16 @@ export function parseWorkshopAmount(raw, kind) {
     return { display, [kind]: null, maxed: true }
   }
   const m = display.match(/^([\d.]+)([KMBTqQs])?$/)
-  if (!m) throw new Error(`bad ${kind}: ${raw}`)
-  const n = parseFloat(m[1])
-  const amount = m[2] ? n * WORKSHOP_AMOUNT_MULT[m[2]] : n
-  return { display, [kind]: amount }
+  if (m) {
+    const n = parseFloat(m[1])
+    const amount = m[2] ? n * WORKSHOP_AMOUNT_MULT[m[2]] : n
+    return { display, [kind]: amount }
+  }
+  const direct = Number(display)
+  if (Number.isFinite(direct)) {
+    return { display, [kind]: direct }
+  }
+  throw new Error(`bad ${kind}: ${raw}`)
 }
 
 /** @param {string} raw */

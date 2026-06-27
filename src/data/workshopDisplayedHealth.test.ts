@@ -49,7 +49,7 @@ describe('workshopDisplayedHealth', () => {
   })
 
   it('matches player save overlays at workshop L5600 (game 599.77B)', () => {
-    expect(workshopHealthStatValue(5600)).toBe(3_050_000_000)
+    expect(workshopHealthStatValue(5600)).toBeCloseTo(3_053_328_257.82416, -6)
     const enhance = workshopDisplayedHealthEnhancementMultiplier(50, true)
     expect(enhance).toBeCloseTo(1.5, 3)
     const submodule = workshopDisplayedHealthSubmoduleMultiplier(200)
@@ -63,7 +63,7 @@ describe('workshopDisplayedHealth', () => {
         healthEnhancementsMultiplier: enhance,
         submoduleHealthRegenPercentBonus: 200,
       }),
-    ).toBe('599.77B')
+    ).toBe('600.42B')
     expect(
       workshopDefenseStatDisplay('healthLevel', 5600, {
         armorTowerHealthMultiplier: 4.34,
@@ -73,6 +73,6 @@ describe('workshopDisplayedHealth', () => {
         healthEnhancementsMultiplier: enhance,
         submodule: { healthRegenPercentBonus: 200 },
       }),
-    ).toBe('599.77B')
+    ).toBe('600.42B')
   })
 })

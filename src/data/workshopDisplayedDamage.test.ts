@@ -19,10 +19,10 @@ import {
 describe('workshopDisplayedDamage', () => {
   it('matches wiki product at max workshop + ×3 lab (213.33 M)', () => {
     const workshop = workshopDamageStatAtLevel(6000)
-    expect(workshop).toBeCloseTo(71.11e6, -3)
+    expect(workshop).toBeCloseTo(71.114385e6, 0)
     const displayed = computeWorkshopDisplayedDamage(workshop, { labMultiplier: 3 })
-    expect(displayed).toBeCloseTo(213.33e6, -3)
-    expect(formatCoinAbbrev(displayed)).toBe('213.33M')
+    expect(displayed).toBeCloseTo(213.343155e6, 0)
+    expect(formatCoinAbbrev(displayed)).toBe('213.34M')
   })
 
   it('wiki formula: Workshop × Lab × Card × (1+Relics) × (1+Cannon%) × Enhancements × Perk + Berserker', () => {
@@ -106,7 +106,7 @@ describe('workshopDisplayedDamage', () => {
 
   it('in-game displayed damage at workshop L5500 with typical endgame overlays', () => {
     const workshop = workshopDamageStatAtLevel(5500)
-    expect(workshop).toBe(47_060_000)
+    expect(workshop).toBeCloseTo(47_059_877.92, 0)
     const dpm = attackResearchDisplayedDamageDpmLabMultiplier(1.28)
     const lab = 1.92 * dpm * 2.68
     const opts = {

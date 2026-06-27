@@ -44,7 +44,7 @@ describe('workshopChassisModuleHeroStatWorkshop', () => {
     const label = workshopDefenseStatDisplay('healthLevel', level, {
       armorTowerHealthMultiplier: chassis,
     })
-    expect(label).toBe(formatCoinAbbrev(Math.round(base * chassis)))
+    expect(label).toBe(formatCoinAbbrev(base * chassis))
   })
 
   it('does not apply generator Coin Bonus chassis to Cash Bonus (it boosts coins, not cash)', () => {

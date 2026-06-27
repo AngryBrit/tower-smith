@@ -11,6 +11,9 @@
  *   npx tsx scripts/scrape-wiki-table.mjs --preset lab-calculator --all-labs ./lab-tables/
  * Lab calculator Cost Tables options (set automatically):
  *   Hide Maxed: off | Use Current Lab Level: off | Include %: off
+ * Workshop calculator Data options (set automatically):
+ *   Format: off (full-precision values, e.g. 6373117241.88547 not 6.37B) | Use Current Level: off
+ *   Attack/Defense/Utility Discount Level: cleared (raw, un-discounted costs)
  *   npx tsx scripts/scrape-wiki-table.mjs --preset workshop-calculator --category defense --upgrade "Health" output.tsv
  *   npx tsx scripts/scrape-wiki-table.mjs --preset workshop-calculator --category attack --all-upgrades ./tables-out/
  *   npx tsx scripts/scrape-wiki-table.mjs --preset workshop-calculator --all-categories --all-upgrades ./tables-out/
@@ -175,6 +178,78 @@ async function configureLabCalculatorCostTableOptions(page) {
   await page.waitForTimeout(800)
 }
 
+/** Optional checkbox: uncheck only when present (workshop options vary by view/version). */
+async function setCheckboxIfPresent(page, selector, checked) {
+  const box = page.locator(selector)
+  if ((await box.count()) === 0) return false
+  if (checked) await box.check()
+  else await box.uncheck()
+  return true
+}
+
+/**
+ * Upgrades whose **Value** column must be scraped with Format **off** (full float precision).
+ * All other upgrades use Format **on** so suffix encodings (seconds×1e21, meters×1e6, ×multipliers) import correctly.
+ */
+const WORKSHOP_RAW_PRECISION_UPGRADES = new Set([
+  'Health',
+  'Health Regen',
+  'Damage',
+  'Defense Absolute',
+  'Attack Speed',
+])
+
+function upgradeUsesRawPrecision(upgradeLabel) {
+  return WORKSHOP_RAW_PRECISION_UPGRADES.has(upgradeLabel.trim())
+}
+
+/**
+ * Workshop Data view options. Format **on** keeps wiki suffix encodings; **off** emits raw floats
+ * for high-level polynomial stats (Health Regen L5840, etc.). "Use Current Level" stays off.
+ */
+async function configureWorkshopCalculatorDataOptions(page, { formatValues = true } = {}) {
+  const formatToggled = await setCheckboxIfPresent(page, '#option-formatValues', formatValues)
+  if (!formatToggled) {
+    console.warn('Workshop "Format" toggle (#option-formatValues) not found — values may be abbreviated')
+  }
+  await setCheckboxIfPresent(page, '#option-useCurrentLevel', false)
+  await page.waitForTimeout(500)
+}
+
+/**
+ * Workshop **Input** tab: clear the Attack/Defense/Utility **Discount Level** inputs so scraped
+ * cost columns are raw (un-discounted). Only the active category's `#<cat>-discount` renders, so
+ * each category tab is selected in turn. A fresh Playwright context already defaults these to
+ * empty; this is belt-and-suspenders against any persisted/pre-filled value.
+ */
+async function clearWorkshopCalculatorDiscounts(page) {
+  const inputTab = page.locator('.nav-bar button', { hasText: 'Input' }).first()
+  if ((await inputTab.count()) === 0) {
+    console.warn('Workshop "Input" tab not found — cannot clear discount levels')
+    return
+  }
+  await inputTab.click()
+  await page.waitForTimeout(400)
+
+  for (const category of WORKSHOP_CATEGORIES) {
+    const label = category.charAt(0).toUpperCase() + category.slice(1)
+    const catBtn = page.locator(`button.${category}`, { hasText: label }).first()
+    if ((await catBtn.count()) > 0) {
+      await catBtn.click()
+      await page.waitForTimeout(300)
+    }
+    const discount = page.locator(`#${category}-discount`)
+    if ((await discount.count()) === 0) {
+      console.warn(`Discount input #${category}-discount not found — skipping`)
+      continue
+    }
+    await discount.fill('')
+    await discount.dispatchEvent('input')
+    await discount.dispatchEvent('change')
+  }
+  await page.waitForTimeout(300)
+}
+
 const extractPageFn = extractWikiTableRowsFromDocument
   .toString()
   .replace(/\b__name\([^)]*\)/g, '')
@@ -247,7 +322,7 @@ async function selectWorkshopDataSection(page, section) {
   return key
 }
 
-async function openWorkshopCalculatorDataView(page, section = 'upgrades') {
+async function openWorkshopCalculatorDataView(page, section = 'upgrades', { formatValues = true } = {}) {
   const dataTab = page.locator('.nav-bar button[value="4"], .nav-bar button:has-text("Data")').first()
   await dataTab.waitFor({ state: 'visible', timeout: 30_000 })
   await dataTab.click()
@@ -255,6 +330,7 @@ async function openWorkshopCalculatorDataView(page, section = 'upgrades') {
   await selectWorkshopDataSection(page, section)
   await page.waitForSelector('select[name="upgrade"]', { timeout: 60_000 })
   await page.waitForSelector('.upgrade-table table', { timeout: 60_000 })
+  await configureWorkshopCalculatorDataOptions(page, { formatValues })
 }
 
 async function openLabCalculatorCostTables(page) {
@@ -503,7 +579,8 @@ try {
   }
 
   if (args.preset === 'workshop-calculator') {
-    await openWorkshopCalculatorDataView(page, args.section || 'upgrades')
+    await clearWorkshopCalculatorDiscounts(page)
+    await openWorkshopCalculatorDataView(page, args.section || 'upgrades', { formatValues: true })
   } else if (args.preset === 'lab-calculator') {
     await openLabCalculatorCostTables(page)
   }
@@ -582,6 +659,11 @@ try {
       const label = await selectUpgrade(page, args.itemSelector, job.upgrade)
       console.log(`\n=== ${job.category ? `${job.category} / ` : ''}${label} ===`)
       job.upgrade = label
+      if (args.preset === 'workshop-calculator') {
+        const raw = upgradeUsesRawPrecision(label)
+        await configureWorkshopCalculatorDataOptions(page, { formatValues: !raw })
+        if (raw) console.log('  (Format off — raw Value precision)')
+      }
     }
 
     const merged = await scrapePaginatedTable(page, args)
