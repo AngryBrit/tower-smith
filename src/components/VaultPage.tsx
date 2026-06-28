@@ -2,7 +2,6 @@ import {
   useCallback,
   useEffect,
   useLayoutEffect,
-  useMemo,
   useRef,
   useState,
   type ReactNode,
@@ -32,7 +31,6 @@ import {
   respecVault,
   setPowerNodeTier,
   toggleHarmonyNode,
-  totalKeysSpent,
   useVaultState,
   type VaultState,
 } from '../vaultStorage'
@@ -126,8 +124,6 @@ export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: Vaul
     if (viewport) viewport.scrollTop = viewport.scrollHeight
   }, [activeTree])
 
-  const keysSpentTotal = useMemo(() => totalKeysSpent(state), [state])
-
   const handleSelect = useCallback((id: string) => setSelectedId(id), [])
 
   const performReset = useCallback(() => {
@@ -162,14 +158,6 @@ export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: Vaul
   return (
     <div className={embeddedInPanel ? 'vault-page vault-page--embedded' : 'vault-page'}>
       {toolbarMount ? createPortal(toolbar, toolbarMount) : toolbar}
-
-      <div className="vault-page__head">
-        <h2 className="vault-page__title">{t('vault_title')}</h2>
-        <span className="vault-page__keys" aria-label={t('vault_keys_spent').replace('{n}', String(keysSpentTotal))}>
-          <VaultKeyGlyph />
-          {keysSpentTotal}
-        </span>
-      </div>
 
       <div className="vault-page__tabs" role="tablist" aria-label={t('vault_title')}>
         {(['harmony', 'power'] as const).map((tree) => (

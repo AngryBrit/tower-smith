@@ -493,7 +493,8 @@ export default function App() {
                     mainPanel !== 'relics' &&
                     mainPanel !== 'modules' &&
                     mainPanel !== 'themes' &&
-                    mainPanel !== 'guardians'
+                    mainPanel !== 'guardians' &&
+                    mainPanel !== 'vault'
                   }
                 />
 
