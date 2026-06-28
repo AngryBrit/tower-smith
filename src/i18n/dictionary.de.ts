@@ -93,6 +93,17 @@ export const STRINGS_DE = {
     'Fehler oder falsche Werte melden. Dein Spielstand wird nie automatisch mitgesendet.',
   whats_new_dismiss: 'Schließen',
   whats_new_changelog: 'Vollständiges Changelog',
+  whats_new_320_headline: 'Neu in v3.2.0',
+  whats_new_320_body_vault:
+    'Vault-Planer — interaktive Power- und Harmony-Techbäume mit Spielsymbolen und Bonus-Tooltips.',
+  whats_new_320_body_cards:
+    'Detailfenster für Karten und Wächter-Chips — tippe auf ein Symbol für Sternwerte, Meisterschafts-Labore und einen Ausrüsten-Button.',
+  whats_new_320_body_workshop:
+    'Angezeigte Werkstattwerte für Angriffs-, Verteidigungs- und Hilfskarten an die Spielwerte angeglichen.',
+  whats_new_320_body_dialog:
+    'Detailfenster für Ultimative Waffen — tippe auf ein Waffensymbol für die Spielbeschreibung und Labor-Verbesserungen.',
+  whats_new_320_body_damage:
+    'Die Schaden-Spalte der Werkstatt zeigt jetzt das krit-skalierte Tower-Damage-Vielfache aus dem Spiel (Core-Modul, Ultimativer Schaden und ausgerüstetes Ultimate Crit).',
   whats_new_3118_headline: 'Neu in v3.1.18',
   whats_new_3118_body_event:
     'Meteorschauer-Event — Meteorit-Turm-Skin und Meteorschauer-Hintergrund.',

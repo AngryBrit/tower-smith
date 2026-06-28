@@ -5,6 +5,38 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-06-28
+
+### Added
+
+- **Vault planner** — Interactive **Power** and **Harmony** tech trees on the Vault tab: plan unlocks, see node benefits, and trace connector paths between tiers. Icons wired from game assets.
+- **Card detail dialog** — Tap a card icon to open an in-game-style popup with star stats, Card Mastery labs (coin costs from GOD tables), mastery unlock/reset, and an **Equip** button. Long-press equip removed in favour of the dialog.
+- **Guardian chip detail dialog** — Chip upgrades open in the same detail-dialog pattern as cards.
+- **Ultimate weapon detail dialog** — Tap an ultimate-weapon icon for its in-game description and lab Enhancements.
+- **GOD formula registry** — Documented in-game workshop formulas for attack, defense, and utility cards (damage, health, cash, coins, free upgrades, recovery, interest, and related stats).
+- **Health Regen oracle** — Binary validator for workshop Health Regen GOD table rows.
+
+### Changed
+
+- **Workshop displayed stats** — Attack, defense, and utility workshop cards recalibrated to match in-game values: Damage (partial damage/meter relic fold-in), Attack Speed, Critical Factor and Super Crit Mult (two-decimal rounding), Health and Health Regen (full-precision GOD bases; Health Regen+ enhancement term), Cash Bonus, Coins/Kill Bonus, free upgrades, Interest/Wave, Recovery Amount, and mult display order (lab → relics → submodule → enhancement).
+- **Ultimate weapon Damage column** — Damage-dealing weapons show the in-game crit-scaled **Tower Damage** multiple (Core Module, Ultimate Damage from harmony/relics, crit when **Ultimate Crit** is equipped) instead of the raw upgrade stat (e.g. `x191` → `1398x`). Re-import `playerInfo.dat` to refresh.
+- **GOD workshop tables** — Re-scraped with hybrid full-precision Values for health-related stats.
+- **Equipped checkmarks** — Shared glow style for equipped cards and guardian chips; card checkmark at bottom-right of inventory tiles.
+- **SEO / social preview** — Updated site metadata and Open Graph image.
+
+### Fixed
+
+- **Rend Armor enhancement** — Half-rate chance, full mult to level 400.
+- **Ultimate Crit card detail** — In-game copy; displayed tower crit factor applies full Critical Factor+ enhancement.
+- **Critical Factor workshop display** — Correct term order; Rapid Fire Duration shows `sec` suffix.
+- **Effective Paths** — Workshop enhancement unlock labels and cannon assist level cell on export/import.
+- **Vault UI** — Tree connectors branch from the spine; hub-row loops; Critical Chance icon; connectors centred on tile icons.
+
+### Docs
+
+- README: version **3.2.0**; Vault tab description (no longer a placeholder).
+- What's new banner (en/de/es).
+
 ## [3.1.18] - 2026-06-23
 
 ### Added

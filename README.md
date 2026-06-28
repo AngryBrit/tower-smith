@@ -11,7 +11,7 @@
 ![React](https://img.shields.io/badge/React-19-61dafb?logo=react&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-6-3178c6?logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5-646cff?logo=vite&logoColor=white)
-![Version](https://img.shields.io/badge/version-3.1.18-2ea44f)
+![Version](https://img.shields.io/badge/version-3.2.0-2ea44f)
 [![Netlify Status](https://api.netlify.com/api/v1/badges/7c57c118-c5d2-4b8c-a8db-3cd2eb32a4de/deploy-status)](https://app.netlify.com/projects/towerlabs/deploys)
 
 ---
@@ -44,7 +44,7 @@
 | **Relics** | Catalog all 268 wiki relics with art, filter by unlock group, and have owned relics feed automatically into workshop stat formulas. |
 | **Themes** | Track owned tower skins, backgrounds, banners, music, and guardians — including coin-bonus rollups per category. |
 | **Guardians** | **GUARDIANS** tab: active guardian (ties to Themes), four chip slots (Bits unlock costs), six chips (Attack, Ally, Bounty, Fetch, Scout, Summon) with three upgrade tracks each from GOD tables under `tables/guardians/`. Import from **playerInfo.dat** or tower CSV; respec and workspace undo. |
-| **Vault** | Placeholder tab reserved for future vault tooling (Effective Paths **Vault** workbook category). |
+| **Vault** | Plan **Power** and **Harmony** tech-tree unlocks on an interactive tree with in-game icons and benefit tooltips. |
 | **Displayed stats** | Workshop cards show in-game-aligned values: damage, DPM, health, defense, and utility rows fold in labs, cards, relics, sub-modules, and **Enhance** tiers (e.g. Recovery Package+ on Recovery Amount and Max Recovery). Stat values and upgrade costs come from GOD tables under `tables/`. |
 
 ---

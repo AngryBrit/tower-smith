@@ -95,6 +95,17 @@ export const STRINGS_EN = {
   bug_buster_settings_hint: 'Send bugs or incorrect stats. We never attach your save unless you paste it yourself.',
   whats_new_dismiss: 'Dismiss',
   whats_new_changelog: 'Full changelog',
+  whats_new_320_headline: "What's new in v3.2.0",
+  whats_new_320_body_vault:
+    'Vault planner — interactive Power and Harmony tech trees with in-game icons and benefit tooltips.',
+  whats_new_320_body_cards:
+    'Card and guardian-chip detail dialogs — tap an icon for star stats, mastery labs, and an Equip button.',
+  whats_new_320_body_workshop:
+    'Workshop displayed stats recalibrated to match in-game values across attack, defense, and utility cards.',
+  whats_new_320_body_dialog:
+    'Ultimate weapon detail popup — tap a weapon icon for its in-game description and lab Enhancements.',
+  whats_new_320_body_damage:
+    'Workshop Damage column now shows the in-game crit-scaled Tower Damage multiple (core module, ultimate-damage, and equipped Ultimate Crit).',
   whats_new_3118_headline: "What's new in v3.1.18",
   whats_new_3118_body_event:
     'Meteor Shower event — Meteorite tower skin and Meteor Shower background.',

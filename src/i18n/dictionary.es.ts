@@ -93,6 +93,17 @@ export const STRINGS_ES = {
     'Envía errores o stats incorrectos. Nunca adjuntamos tu guardado salvo que lo pegues tú.',
   whats_new_dismiss: 'Cerrar',
   whats_new_changelog: 'Changelog completo',
+  whats_new_320_headline: 'Novedades en v3.2.0',
+  whats_new_320_body_vault:
+    'Planificador del Vault — árboles de tecnología Power y Harmony interactivos con iconos del juego e información de beneficios.',
+  whats_new_320_body_cards:
+    'Ventanas de detalles de cartas y chips de guardián — toca un icono para ver estadísticas de estrellas, laboratorios de maestría y un botón de Equipar.',
+  whats_new_320_body_workshop:
+    'Estadísticas mostradas del taller recalibradas para coincidir con los valores del juego en cartas de ataque, defensa y utilidad.',
+  whats_new_320_body_dialog:
+    'Ventana de detalles de armas definitivas — toca el icono de un arma para ver su descripción en el juego y sus mejoras de laboratorio.',
+  whats_new_320_body_damage:
+    'La columna de Daño del taller ahora muestra el múltiplo de Daño de Torre escalado por críticos del juego (módulo core, daño definitivo y Crítico Definitivo equipado).',
   whats_new_3118_headline: 'Novedades en v3.1.18',
   whats_new_3118_body_event:
     'Evento Lluvia de meteoritos — skin de torre Meteorito y fondo Lluvia de meteoritos.',
