@@ -112,7 +112,7 @@ const HARMONY_NODES: VaultNode[] = [
   h('h-r-cardslot2', 'right', 11, 'card-slot', '+1', 'card_slot', 35, 95, 'h-m12'),
   h('h-r-berzerker', 'right', 12, 'auto-charge-berzerker', '', 'auto_charge_berzerker', 10, 75, 'h-m13'),
   h('h-r-damagecap', 'right', 13, 'damage-cap-slider', '', 'damage_cap_slider', 35, 110, 'h-r-berzerker'),
-  h('h-r-orbadjuster', 'right', 14, 'workshop-orb-adjuster', '', 'workshop_orb_adjuster', 20, 95, 'h-r-berzerker'),
+  h('h-r-orbadjuster', 'right', 14, 'workshop-orb-adjuster', '', 'workshop_orb_adjuster', 20, 95, 'h-m15'),
   h('h-r-cardslot3', 'right', 15, 'card-slot', '+1', 'card_slot', 45, 125, 'h-m16'),
   h('h-r-cooldown', 'right', 16, 'bot-cooldown-sliders', '', 'bot_cooldown_sliders', 25, 110, 'h-m17'),
 ]
