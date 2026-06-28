@@ -154,7 +154,7 @@ const POWER_NODES: VaultNode[] = [
   p('p-r-coins-kill', 'right', 3, 'coins-kill', '5%', 'coins_kill', 15, 55, 'p-r-cash'),
   p('p-r-enemy-atk-skip', 'right', 4, 'enemy-attack-skip', '0.5%', 'enemy_attack_skip', 25, 80, 'p-r-coins-kill'),
   p('p-r-enemy-hp-skip', 'right', 5, 'enemy-health-skip', '0.5%', 'enemy_health_skip', 25, 105, 'p-r-enemy-atk-skip'),
-  tier('p-tier2', 6, 'tier-x2', 'tier2_unlock', 50, 'p-r-enemy-hp-skip', 't2'),
+  tier('p-tier2', 6, 'tier-x2', 'tier2_unlock', 50, 'p-m7', 't2'),
 
   // Section 2 left wing
   p('p-l-thorn', 'left', 8, 'thorn-damage', '5%', 'thorn_damage', 20, 155, 'p-m8'),
@@ -166,7 +166,7 @@ const POWER_NODES: VaultNode[] = [
   p('p-r-free-atk', 'right', 9, 'free-attack-upgrade', '5%', 'free_attack_upgrade', 25, 175, 'p-r-recovery'),
   p('p-r-free-def', 'right', 10, 'free-defense-upgrade', '5%', 'free_defense_upgrade', 25, 200, 'p-r-free-atk'),
   p('p-r-free-util', 'right', 11, 'free-utility-upgrade', '5%', 'free_utility_upgrade', 25, 225, 'p-r-free-def'),
-  tier('p-tier3', 12, 'tier-x3', 'tier3_unlock', 100, 'p-r-free-util', 't3'),
+  tier('p-tier3', 12, 'tier-x3', 'tier3_unlock', 100, 'p-m13', 't3'),
 
   // Section 3 left wing
   p('p-l-knockback-chance', 'left', 14, 'knockback-chance', '2%', 'knockback_chance', 20, 285, 'p-m14'),
