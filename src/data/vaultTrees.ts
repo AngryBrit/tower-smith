@@ -38,6 +38,11 @@ export type VaultNode = {
   kind: VaultNodeKind
   /** For tier-unlock nodes: which global tier they unlock. */
   tierGate?: VaultTierGate
+  /**
+   * Middle-spine node on the same row; draws a horizontal connector in the tree.
+   * Unlock still follows `parentId` (column chain).
+   */
+  hubId?: string
 }
 
 /** Tier cost multipliers: T1 x1, T2 x2, T3 x4. */
@@ -148,36 +153,36 @@ const POWER_NODES: VaultNode[] = [
   p('p-l-defense-abs', 'left', 2, 'defense-absolute', '5%', 'defense_absolute', 5, 40, 'p-m2'),
   p('p-l-health-regen', 'left', 3, 'health-regen', '5%', 'health_regen', 10, 50, 'p-l-defense-abs'),
   p('p-l-health', 'left', 4, 'health', '5%', 'health', 15, 65, 'p-l-health-regen'),
-  p('p-l-defense-pct', 'left', 5, 'defense-percent', '0.5%', 'defense_percent', 25, 90, 'p-l-health'),
+  p('p-l-defense-pct', 'left', 5, 'defense-percent', '0.5%', 'defense_percent', 25, 90, 'p-l-health', 'p-m6'),
   // Section 1 right wing (economy) + Tier x2
   p('p-r-cash', 'right', 2, 'cash', '5%', 'cash', 5, 40, 'p-m2'),
   p('p-r-coins-kill', 'right', 3, 'coins-kill', '5%', 'coins_kill', 15, 55, 'p-r-cash'),
   p('p-r-enemy-atk-skip', 'right', 4, 'enemy-attack-skip', '0.5%', 'enemy_attack_skip', 25, 80, 'p-r-coins-kill'),
-  p('p-r-enemy-hp-skip', 'right', 5, 'enemy-health-skip', '0.5%', 'enemy_health_skip', 25, 105, 'p-r-enemy-atk-skip'),
+  p('p-r-enemy-hp-skip', 'right', 5, 'enemy-health-skip', '0.5%', 'enemy_health_skip', 25, 105, 'p-r-enemy-atk-skip', 'p-m6'),
   tier('p-tier2', 6, 'tier-x2', 'tier2_unlock', 50, 'p-m7', 't2'),
 
   // Section 2 left wing
   p('p-l-thorn', 'left', 8, 'thorn-damage', '5%', 'thorn_damage', 20, 155, 'p-m8'),
   p('p-l-knockback-force', 'left', 9, 'knockback-force', '5%', 'knockback_force', 25, 180, 'p-l-thorn'),
   p('p-l-orb-speed', 'left', 10, 'orb-speed', '5%', 'orb_speed', 25, 205, 'p-l-knockback-force'),
-  one('p-l-wall-rebuild', 'power', 11, 'wall-rebuild', '-20s', 'wall_rebuild', 25, 230, 'p-l-orb-speed', 'left'),
+  one('p-l-wall-rebuild', 'power', 11, 'wall-rebuild', '-20s', 'wall_rebuild', 25, 230, 'p-l-orb-speed', 'left', 'p-m12'),
   // Section 2 right wing + Tier x3
   p('p-r-recovery', 'right', 8, 'recovery-amount', '5%', 'recovery_amount', 15, 150, 'p-m8'),
   p('p-r-free-atk', 'right', 9, 'free-attack-upgrade', '5%', 'free_attack_upgrade', 25, 175, 'p-r-recovery'),
   p('p-r-free-def', 'right', 10, 'free-defense-upgrade', '5%', 'free_defense_upgrade', 25, 200, 'p-r-free-atk'),
-  p('p-r-free-util', 'right', 11, 'free-utility-upgrade', '5%', 'free_utility_upgrade', 25, 225, 'p-r-free-def'),
+  p('p-r-free-util', 'right', 11, 'free-utility-upgrade', '5%', 'free_utility_upgrade', 25, 225, 'p-r-free-def', 'p-m12'),
   tier('p-tier3', 12, 'tier-x3', 'tier3_unlock', 100, 'p-m13', 't3'),
 
   // Section 3 left wing
   p('p-l-knockback-chance', 'left', 14, 'knockback-chance', '2%', 'knockback_chance', 20, 285, 'p-m14'),
   one('p-l-shockwave', 'power', 15, 'shockwave-frequency', '-1s', 'shockwave_frequency', 20, 305, 'p-l-knockback-chance', 'left'),
   p('p-l-death-defy', 'left', 16, 'death-defy', '2%', 'death_defy', 25, 330, 'p-l-shockwave'),
-  one('p-l-orbs', 'power', 17, 'orbs', '1', 'orbs', 30, 360, 'p-l-death-defy', 'left'),
+  one('p-l-orbs', 'power', 17, 'orbs', '1', 'orbs', 30, 360, 'p-l-death-defy', 'left', 'p-m18'),
   // Section 3 right wing (wave economy)
   p('p-r-max-recovery', 'right', 14, 'max-recovery', '20%', 'max_recovery', 10, 275, 'p-m14'),
   p('p-r-interest', 'right', 15, 'interest-wave', '100%', 'interest_wave', 10, 285, 'p-r-max-recovery'),
   p('p-r-cash-wave', 'right', 16, 'cash-wave', '100%', 'cash_wave', 10, 295, 'p-r-interest'),
-  p('p-r-coins-wave', 'right', 17, 'coins-wave', '100%', 'coins_wave', 10, 305, 'p-r-cash-wave'),
+  p('p-r-coins-wave', 'right', 17, 'coins-wave', '100%', 'coins_wave', 10, 305, 'p-r-cash-wave', 'p-m18'),
 ]
 
 // ---------------------------------------------------------------------------
@@ -260,6 +265,7 @@ function p(
   keyCost: number,
   total: number,
   parentId: string,
+  hubId?: string,
 ): VaultNode {
   return {
     id,
@@ -273,6 +279,7 @@ function p(
     keyCost,
     total,
     parentId,
+    hubId,
     kind: 'upgrade',
   }
 }
@@ -289,6 +296,7 @@ function one(
   total: number,
   parentId: string | null,
   column: VaultColumn = 'middle',
+  hubId?: string,
 ): VaultNode {
   return {
     id,
@@ -302,6 +310,7 @@ function one(
     keyCost,
     total,
     parentId,
+    hubId,
     oneLevelOnly: true,
     kind: 'upgrade',
   }

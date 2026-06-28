@@ -40,7 +40,7 @@ export const VAULT_ICON_OVERRIDES: Readonly<Record<string, string>> = {
   'bot-range': 'power/botRange.webp',
   'defense-absolute': 'power/Fortress.webp',
   'damage-meter': 'power/bullseye.webp',
-  'critical-chance': 'power/bullseye.webp',
+  'critical-chance': 'power/CriticalChance.webp',
   'health-regen': 'power/heartbeat.webp',
   health: 'power/heart.webp',
   damage: 'power/sword.webp',

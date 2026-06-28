@@ -18,6 +18,16 @@ describe('vault trees', () => {
     }
   })
 
+  it('every hub reference resolves on the same row', () => {
+    for (const node of VAULT_NODES) {
+      if (!node.hubId) continue
+      const hub = vaultNodeById(node.hubId)
+      expect(hub, `hub of ${node.id}`).toBeDefined()
+      expect(hub!.order, `${node.id} hub order`).toBe(node.order)
+      expect(hub!.column, `${node.id} hub column`).toBe('middle')
+    }
+  })
+
   it('parents live in the same tree at or below the node (a hub branch shares its row)', () => {
     for (const node of VAULT_NODES) {
       const parent = node.parentId ? vaultNodeById(node.parentId) : undefined

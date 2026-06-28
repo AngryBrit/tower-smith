@@ -58,11 +58,14 @@ function VaultKeyGlyph({ className }: { className?: string }) {
 }
 
 type Segment = {
-  childId: string
+  key: string
   cx: number
   cy: number
   px: number
   py: number
+  /** When true, draw a straight horizontal line (hub row). */
+  horizontal?: boolean
+  owned: boolean
 }
 
 export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: VaultPageProps) {
@@ -95,19 +98,39 @@ export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: Vaul
       const base = tree.getBoundingClientRect()
       const segs: Segment[] = []
       for (const node of nodes) {
-        if (!node.parentId) continue
-        const childEl = nodeRefs.current.get(node.id)
-        const parentEl = nodeRefs.current.get(node.parentId)
-        if (!childEl || !parentEl) continue
-        const c = childEl.getBoundingClientRect()
-        const p = parentEl.getBoundingClientRect()
-        segs.push({
-          childId: node.id,
-          cx: c.left - base.left + c.width / 2,
-          cy: c.top - base.top + c.height / 2,
-          px: p.left - base.left + p.width / 2,
-          py: p.top - base.top + p.height / 2,
-        })
+        if (node.parentId) {
+          const childEl = nodeRefs.current.get(node.id)
+          const parentEl = nodeRefs.current.get(node.parentId)
+          if (childEl && parentEl) {
+            const c = childEl.getBoundingClientRect()
+            const p = parentEl.getBoundingClientRect()
+            segs.push({
+              key: `${node.id}->${node.parentId}`,
+              cx: c.left - base.left + c.width / 2,
+              cy: c.top - base.top + c.height / 2,
+              px: p.left - base.left + p.width / 2,
+              py: p.top - base.top + p.height / 2,
+              owned: isNodeOwned(state, node),
+            })
+          }
+        }
+        if (node.hubId) {
+          const wingEl = nodeRefs.current.get(node.id)
+          const hubEl = nodeRefs.current.get(node.hubId)
+          if (wingEl && hubEl) {
+            const w = wingEl.getBoundingClientRect()
+            const h = hubEl.getBoundingClientRect()
+            segs.push({
+              key: `${node.id}->hub:${node.hubId}`,
+              cx: w.left - base.left + w.width / 2,
+              cy: w.top - base.top + w.height / 2,
+              px: h.left - base.left + h.width / 2,
+              py: h.top - base.top + h.height / 2,
+              horizontal: true,
+              owned: isNodeOwned(state, node),
+            })
+          }
+        }
       }
       setSegments(segs)
       setTreeSize({ w: base.width, h: base.height })
@@ -116,7 +139,7 @@ export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: Vaul
     const ro = new ResizeObserver(compute)
     ro.observe(tree)
     return () => ro.disconnect()
-  }, [nodes])
+  }, [nodes, state])
 
   // Pin the scroll to the bottom (root) when switching trees, like the game.
   useLayoutEffect(() => {
@@ -190,22 +213,22 @@ export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: Vaul
             height={treeSize.h || undefined}
             aria-hidden
           >
-            {segments.map((seg) => {
-              const child = vaultNodeById(seg.childId)
-              const owned = child ? isNodeOwned(state, child) : false
-              return (
-                <polyline
-                  key={seg.childId}
-                  className={
-                    owned
-                      ? 'vault-page__connector vault-page__connector--on'
-                      : 'vault-page__connector'
-                  }
-                  points={`${seg.cx},${seg.cy} ${seg.cx},${seg.py} ${seg.px},${seg.py}`}
-                  fill="none"
-                />
-              )
-            })}
+            {segments.map((seg) => (
+              <polyline
+                key={seg.key}
+                className={
+                  seg.owned
+                    ? 'vault-page__connector vault-page__connector--on'
+                    : 'vault-page__connector'
+                }
+                points={
+                  seg.horizontal
+                    ? `${seg.cx},${seg.cy} ${seg.px},${seg.py}`
+                    : `${seg.cx},${seg.cy} ${seg.cx},${seg.py} ${seg.px},${seg.py}`
+                }
+                fill="none"
+              />
+            ))}
           </svg>
 
           {nodes.map((node) => {
