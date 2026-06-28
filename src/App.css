@@ -1304,7 +1304,7 @@ html[data-color-scheme='high-contrast'] {
 }
 
 .vault-page {
-  --vault-tile-size: 3.4rem;
+  --vault-tile-size: 4rem;
   --vault-tile-radius: 0.7rem;
   --vault-key: #e0556a;
   --vault-accent: #7c83ff;
@@ -1348,7 +1348,8 @@ html[data-color-scheme='high-contrast'] {
 .vault-key-glyph {
   width: 0.95em;
   height: 0.95em;
-  color: var(--vault-key);
+  object-fit: contain;
+  vertical-align: -0.12em;
   flex: none;
 }
 
@@ -1447,8 +1448,8 @@ html[data-color-scheme='high-contrast'] {
 }
 
 .vault-node__icon {
-  width: 64%;
-  height: 64%;
+  width: 88%;
+  height: 88%;
   object-fit: contain;
 }
 

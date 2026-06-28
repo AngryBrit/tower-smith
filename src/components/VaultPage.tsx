@@ -45,23 +45,17 @@ type VaultPageProps = {
 
 const COLUMN_INDEX: Record<VaultNode['column'], number> = { left: 1, middle: 2, right: 3 }
 
+const VAULT_KEY_ICON_SRC = `${import.meta.env.BASE_URL}icons/vault_key.webp`
+
 function VaultKeyGlyph({ className }: { className?: string }) {
   return (
-    <svg
+    <img
+      src={VAULT_KEY_ICON_SRC}
       className={className ? `vault-key-glyph ${className}` : 'vault-key-glyph'}
-      viewBox="0 0 24 24"
-      fill="none"
+      alt=""
       aria-hidden
-    >
-      <circle cx="8" cy="8" r="4.5" stroke="currentColor" strokeWidth="2" />
-      <path
-        d="M11 11l8 8m-3 0 2-2m-5-1 2-2"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
+      draggable={false}
+    />
   )
 }
 
@@ -76,8 +70,8 @@ type Segment = {
 export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: VaultPageProps) {
   const { t } = useI18n()
   const [state, updateState] = useVaultState()
-  const [activeTree, setActiveTree] = useState<VaultTreeId>('power')
-  const [selectedId, setSelectedId] = useState<string>('p-m1')
+  const [activeTree, setActiveTree] = useState<VaultTreeId>('harmony')
+  const [selectedId, setSelectedId] = useState<string>('h-m1')
   const [resetConfirmOpen, setResetConfirmOpen] = useState(false)
   const [segments, setSegments] = useState<Segment[]>([])
   const [treeSize, setTreeSize] = useState({ w: 0, h: 0 })
