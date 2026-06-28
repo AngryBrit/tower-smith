@@ -96,36 +96,44 @@ export function VaultPage({ embeddedInPanel = false, toolbarMount = null }: Vaul
     if (!tree) return
     const compute = () => {
       const base = tree.getBoundingClientRect()
+      // Measure the tile, not the button (the button also wraps the cost label
+      // below the tile, which would push connector centers downward).
+      const tileCenter = (id: string) => {
+        const el = nodeRefs.current.get(id)
+        const tile = el?.querySelector<HTMLElement>('.vault-node__tile')
+        const rect = (tile ?? el)?.getBoundingClientRect()
+        if (!rect) return null
+        return {
+          x: rect.left - base.left + rect.width / 2,
+          y: rect.top - base.top + rect.height / 2,
+        }
+      }
       const segs: Segment[] = []
       for (const node of nodes) {
         if (node.parentId) {
-          const childEl = nodeRefs.current.get(node.id)
-          const parentEl = nodeRefs.current.get(node.parentId)
-          if (childEl && parentEl) {
-            const c = childEl.getBoundingClientRect()
-            const p = parentEl.getBoundingClientRect()
+          const c = tileCenter(node.id)
+          const p = tileCenter(node.parentId)
+          if (c && p) {
             segs.push({
               key: `${node.id}->${node.parentId}`,
-              cx: c.left - base.left + c.width / 2,
-              cy: c.top - base.top + c.height / 2,
-              px: p.left - base.left + p.width / 2,
-              py: p.top - base.top + p.height / 2,
+              cx: c.x,
+              cy: c.y,
+              px: p.x,
+              py: p.y,
               owned: isNodeOwned(state, node),
             })
           }
         }
         if (node.hubId) {
-          const wingEl = nodeRefs.current.get(node.id)
-          const hubEl = nodeRefs.current.get(node.hubId)
-          if (wingEl && hubEl) {
-            const w = wingEl.getBoundingClientRect()
-            const h = hubEl.getBoundingClientRect()
+          const w = tileCenter(node.id)
+          const h = tileCenter(node.hubId)
+          if (w && h) {
             segs.push({
               key: `${node.id}->hub:${node.hubId}`,
-              cx: w.left - base.left + w.width / 2,
-              cy: w.top - base.top + w.height / 2,
-              px: h.left - base.left + h.width / 2,
-              py: h.top - base.top + h.height / 2,
+              cx: w.x,
+              cy: w.y,
+              px: h.x,
+              py: h.y,
               horizontal: true,
               owned: isNodeOwned(state, node),
             })
